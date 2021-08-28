@@ -1033,11 +1033,11 @@ class BotBase(GroupMixin):
     async def on_message(self, message):
         await self.process_commands(message)
 
-class Bot(BotBase, discord.Client):
+class Bot(BotBase, discord.Bot):
     """Represents a discord bot.
 
-    This class is a subclass of :class:`discord.Client` and as a result
-    anything that you can do with a :class:`discord.Client` you can do with
+    This class is a subclass of :class:`discord.Bot` and as a result
+    anything that you can do with a :class:`discord.Bot` you can do with
     this bot.
 
     This class also subclasses :class:`.GroupMixin` to provide the functionality
@@ -1105,7 +1105,7 @@ class Bot(BotBase, discord.Client):
     """
     pass
 
-class AutoShardedBot(BotBase, discord.AutoShardedClient):
+class AutoShardedBot(BotBase, discord.AutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
     :class:`discord.AutoShardedClient` instead.
     """
