@@ -1,22 +1,17 @@
-discord.py
+pycord
 ==========
 
 .. image:: https://discord.com/api/guilds/336642139381301249/embed.png
-   :target: https://discord.gg/r3sSKJJ
+   :target: https://discord.gg/dK2qkEJ37N
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/discord.py.svg
+.. image:: https://img.shields.io/pypi/v/py-cord.svg
    :target: https://pypi.python.org/pypi/discord.py
    :alt: PyPI version info
 .. image:: https://img.shields.io/pypi/pyversions/discord.py.svg
    :target: https://pypi.python.org/pypi/discord.py
    :alt: PyPI supported Python versions
 
-A modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
-
-The Future of discord.py
---------------------------
-
-Please read the `gist <https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1>`_ for the future of this project. It's been a good one.
+A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 Key Features
 -------------
@@ -35,28 +30,28 @@ To install the library without full voice support, you can just run the followin
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U discord.py
+    python3 -m pip install -U py-cord
 
     # Windows
-    py -3 -m pip install -U discord.py
+    py -3 -m pip install -U py-cord
 
 Otherwise to get voice support you should run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "discord.py[voice]"
+    python3 -m pip install -U "py-cord[voice]"
 
     # Windows
-    py -3 -m pip install -U discord.py[voice]
+    py -3 -m pip install -U py-cord[voice]
 
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/Rapptz/discord.py
-    $ cd discord.py
+    $ git clone https://github.com/Pycord-Development/pycord.py
+    $ cd pycord
     $ python3 -m pip install -U .[voice]
 
 
@@ -75,9 +70,9 @@ Quick Example
 
 .. code:: py
 
-    import discord
+    import pycord
 
-    class MyClient(discord.Client):
+    class MyClient(pycord.Client):
         async def on_ready(self):
             print('Logged on as', self.user)
 
@@ -97,10 +92,10 @@ Bot Example
 
 .. code:: py
 
-    import discord
-    from discord.ext import commands
+    import pycord
+    from pycord.ext import commands
 
-    bot = commands.Bot(command_prefix='>')
+    bot = pycord.Bot(command_prefix='>')
 
     @bot.command()
     async def ping(ctx):
@@ -113,6 +108,6 @@ You can find more examples in the examples directory.
 Links
 ------
 
-- `Documentation <https://discordpy.readthedocs.io/en/latest/index.html>`_
-- `Official Discord Server <https://discord.gg/r3sSKJJ>`_
+- `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
+- `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
 - `Discord API <https://discord.gg/discord-api>`_
