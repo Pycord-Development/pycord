@@ -70,9 +70,9 @@ Quick Example
 
 .. code:: py
 
-    import pycord
+    import discord
 
-    class MyClient(pycord.Client):
+    class MyClient(discord.Client):
         async def on_ready(self):
             print('Logged on as', self.user)
 
@@ -92,10 +92,10 @@ Bot Example
 
 .. code:: py
 
-    import pycord
-    from pycord.ext import commands
+    import discord
+    from discord.ext import commands
 
-    bot = pycord.Bot(command_prefix='>')
+    bot = commands.Bot(command_prefix='>')
 
     @bot.command()
     async def ping(ctx):
