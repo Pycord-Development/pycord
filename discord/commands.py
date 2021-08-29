@@ -26,13 +26,10 @@ from __future__ import annotations
 
 import asyncio
 import inspect
-from enum import Enum
 from collections import OrderedDict
 
-from .member import Member
-from .abc import GuildChannel
-from .role import Role
 from .enums import SlashCommandOptionType
+
 
 class SlashCommand:
     type = 1
@@ -42,44 +39,50 @@ class SlashCommand:
 
         self.__original_kwargs__ = kwargs.copy()
         return self
+
     def __init__(self, func, *args, **kwargs):
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Callback must be a coroutine.')
+            raise TypeError("Callback must be a coroutine.")
+        self.callback = func
 
-        name = kwargs.get('name') or func.__name__
+        self.guild_ids = kwargs.get("guild_ids", None)
+
+        name = kwargs.get("name") or func.__name__
         if not isinstance(name, str):
-            raise TypeError('Name of a command must be a string.')
+            raise TypeError("Name of a command must be a string.")
         self.name = name
 
-        description = kwargs.get('description') or inspect.cleandoc(func.__doc__)
-        if description == None:
-            description = "No description set"
-        elif not isinstance(name, str):
-            raise TypeError('Description of a command must be a string.')
+        description = (
+            kwargs.get("description")
+            or inspect.cleandoc(func.__doc__)
+            or "No description set"
+        )
+        if not isinstance(name, str):
+            raise TypeError("Description of a command must be a string.")
         self.description = description
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
         for a, o in options:
-            if o.name == None:
+            if not o.name:
                 o.name == a
         self.options = dict(options)
 
-
-        self.callback = func
-    
     def to_dict(self):
         return {
-            "name":self.name,
-            "description":self.description,
-            "options":[o.to_dict() for o in self.options]
+            "name": self.name,
+            "description": self.description,
+            "options": [o.to_dict() for o in self.options],
+            "guild_ids": self.guild_ids,
         }
+
     def __eq__(self, other):
         return (
             isinstance(other, SlashCommand)
             and other.name == self.name
             and other.description == self.description
         )
+
 
 class Option:
     def __init__(self, type, /, **kwargs):
@@ -90,27 +93,29 @@ class Option:
         self.type = type
         self.required = kwargs.pop("required", False)
         self.choices = list(i for i in kwargs.pop("choices", list()))
+
     def to_dict(self):
         return {
-            "name":self.name,
-            "description":self.description,
-            "type":int(self.type),
-            "required":self.required,
-            "choices":[c.to_dict() for c in self.choices]
+            "name": self.name,
+            "description": self.description,
+            "type": int(self.type),
+            "required": self.required,
+            "choices": [c.to_dict() for c in self.choices],
         }
-    
+
+
 class OptionChoice:
     def __init__(self, name, value=None):
         self.name = name
         self.value = value or name
+
     def to_dict(self):
-        return {
-            "name":self.name,
-            "value":self.value
-        }
+        return {"name": self.name, "value": self.value}
+
 
 class UserCommand:
     type = 2
+
 
 class MessageCommand:
     type = 3
