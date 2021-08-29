@@ -58,6 +58,13 @@ class ApplicationCommandMixin:
             new_cmds[i["id"]] = cmd
 
     async def register_commands(self):
+        """|coro|
+        Needs documentation
+
+        By default, this coroutine is called inside the :func:`.on_connect`
+        event. If you choose to override the :func:`.on_connect` event, then
+        you should invoke this coroutine as well.
+        """
         if len(self.app_commands) == 0:
             return
 
@@ -76,10 +83,9 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     def __init__(self, *args, **kwargs):
         super(Client, self).__init__(*args, **kwargs)
 
-    async def start(self, token, *, reconnect=True) -> None:
-        await self.login(token)
-        await self.connect(reconnect=reconnect)
+    async def on_connect(self):
         await self.register_commands()
+
     def slash(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
             command = SlashCommand(func, **kwargs)
