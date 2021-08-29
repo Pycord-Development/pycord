@@ -92,7 +92,7 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
 
 
 class Bot(BotBase, Client):
-
+    pass
 
 class AutoShardedBot(BotBase, AutoShardedClient):
     pass
