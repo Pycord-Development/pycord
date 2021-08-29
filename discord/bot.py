@@ -21,10 +21,60 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
+import asyncio
+import inspect
+
+from .ext.commands._types import _BaseCommand
 from .client import *
 
 
-class BotBase:
+class ApplicationCommand(_BaseCommand):
+    def __new__(cls, *args, **kwargs):
+        self = super().__new__(cls)
+
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
+    def __init__(self, func, *args, **kwargs):
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+
+        name = kwargs.get("name") or func.__name__
+        if not isinstance(name, str):
+            raise TypeError("Name of a command must be a string.")
+        self.name = name
+
+        description = kwargs.get("description") or inspect.cleandoc(func.__doc__)
+        if not isinstance(description, str):
+            raise TypeError("Description of a command must be a string.")
+        self.description = description
+
+        self.callback = func
+
+    def to_dict(self):
+        _data = {
+            "name": self.name,
+            "description": self.description
+            }
+        return _data
+
+
+class ApplicationMixin:
+    def __init__(self):
+        self.application_commands = []
+
+    def add_application_command(self, command):
+        self.application_commands.append(command)
+
+    async def register_application_commands(self):
+        if len(self.application_commands) == 0:
+            return
+        dbg = await self.http.bulk_upsert_global_commands(self.user.id, [i.to_dict for i in self.application_commands])
+        print(dbg)
+
+
+class BotBase(ApplicationMixin):
     pass
 
 
