@@ -24,8 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 import asyncio
 import inspect
+from typing import Callable
 
-from .client import *
+from .client import Client
 
 
 class ApplicationCommand:
@@ -76,7 +77,7 @@ class BotBase(ApplicationMixin):
 
 class Bot(BotBase, Client):
     def interaction_command(self, **kwargs):
-        def wrap(func: callable) -> ApplicationCommand:
+        def wrap(func: Callable) -> ApplicationCommand:
             command = ApplicationCommand(func, **kwargs)
             self.add_application_command(command)
             return command
