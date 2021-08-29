@@ -76,7 +76,7 @@ class BotBase(ApplicationMixin):
 
 
 class Bot(BotBase, Client):
-    def interaction_command(self, **kwargs):
+    def slash(self, **kwargs):
         def wrap(func: Callable) -> ApplicationCommand:
             command = ApplicationCommand(func, **kwargs)
             self.add_application_command(command)
@@ -84,7 +84,7 @@ class Bot(BotBase, Client):
 
         return wrap
 
-    command = slash = interaction_command
+    command = slash
 
 
 class AutoShardedBot(BotBase, Client):
