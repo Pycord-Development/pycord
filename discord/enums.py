@@ -615,8 +615,6 @@ class SlashCommandOptionType(Enum):
             return cls.channel
         if isinstance(datatype, Role):
             return cls.role
-        if isinstance(datatype, None):   # FIXME uhm
-            return cls.mentionable
         if isinstance(datatype, float):
             return cls.number
         return cls.custom
