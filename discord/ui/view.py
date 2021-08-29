@@ -152,7 +152,7 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *, timeout: Optional[float] = 180.0):
+    def __init__(self, *, timeout: Optional[float] = None):
         self.timeout = timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
