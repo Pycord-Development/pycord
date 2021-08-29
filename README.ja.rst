@@ -16,7 +16,7 @@ discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最�
 主な特徴
 -------------
 
-- ``async``と``await``を使用する最新のPythonicAPI。
+-  ``async``と``await`` を使用する最新のPythonicAPI。
 - 適切なレート制限の処理。
 - 速度とメモリの両方で最適化されています。
 
