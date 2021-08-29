@@ -24,8 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 import asyncio
 import inspect
+from typing import Callable
 
-from .client import *
+from .client import Client
 
 
 class ApplicationCommand:
@@ -52,11 +53,7 @@ class ApplicationCommand:
         self.callback = func
 
     def to_dict(self):
-        _data = {
-            "name": self.name,
-            "description": self.description
-            }
-        return _data
+        return {"name": self.name, "description": self.description}
 
 
 class ApplicationMixin:
@@ -69,8 +66,9 @@ class ApplicationMixin:
     async def register_application_commands(self):
         if len(self.application_commands) == 0:
             return
-        dbg = await self.http.bulk_upsert_global_commands(self.user.id, [i.to_dict for i in self.application_commands])
-        print(dbg)
+        await self.http.bulk_upsert_global_commands(
+            self.user.id, [i.to_dict() for i in self.application_commands]
+        )
 
 
 class BotBase(ApplicationMixin):
@@ -78,7 +76,15 @@ class BotBase(ApplicationMixin):
 
 
 class Bot(BotBase, Client):
-    pass
+    def interaction_command(self, **kwargs):
+        def wrap(func: Callable) -> ApplicationCommand:
+            command = ApplicationCommand(func, **kwargs)
+            self.add_application_command(command)
+            return command
+
+        return wrap
+
+    command = slash = interaction_command
 
 
 class AutoShardedBot(BotBase, Client):
