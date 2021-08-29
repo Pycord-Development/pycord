@@ -588,6 +588,39 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
+class SlashCommandOptionType(Enum):
+    custom = 0
+    #sub_command = 1
+    #sub_command_group = 2
+    string = 3
+    integer = 4
+    boolean = 5
+    user = 6
+    channel = 7
+    role = 8
+    mentionable = 9
+    number = 10
+
+    @classmethod
+    def from_datatype(cls, datatype):
+        if isinstance(datatype, str):
+            return cls.string
+        if isinstance(datatype, str):
+            return cls.integer
+        if isinstance(datatype, str):
+            return cls.boolean
+        if isinstance(datatype, Member):
+            return cls.user
+        if isinstance(datatype, GuildChannel):
+            return cls.channel
+        if isinstance(datatype, Role):
+            return cls.role
+        if isinstance(datatype, None):   # FIXME uhm
+            return cls.mentionable
+        if isinstance(datatype, float):
+            return cls.number
+        return cls.custom
+
 
 T = TypeVar('T')
 
