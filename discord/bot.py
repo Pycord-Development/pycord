@@ -42,7 +42,7 @@ class Option:
         User: 6,
         abc.GuildChannel: 7,
         Role: 8,
-        Union[Role, User]: 9
+        Union[Role, User]: 9,
         float: 10
     }
 
