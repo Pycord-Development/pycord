@@ -22,6 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations # will probably need in future for type hinting
+
 import asyncio
 import inspect
 from typing import Callable
@@ -29,65 +31,17 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-
-
-class SlashCommand:
-    type = 1
-
-    def __new__(cls, *args, **kwargs):
-        self = super().__new__(cls)
-
-        self.__original_kwargs__ = kwargs.copy()
-        return self
-
-    def __init__(self, func, *args, **kwargs):
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-
-        name = kwargs.get("name") or func.__name__
-        if not isinstance(name, str):
-            raise TypeError("Name of a command must be a string.")
-        self.name = name
-
-        description = (
-            kwargs.get("description")
-            or inspect.cleandoc(func.__doc__)
-            or "No description set"
-        )
-        if not isinstance(name, str):
-            raise TypeError("Description of a command must be a string.")
-        self.description = description
-
-        self.callback = func
-
-    def to_dict(self):
-        return {"name": self.name, "description": self.description}
-
-    def __eq__(self, other):
-        return (
-            isinstance(other, SlashCommand)
-            and other.name == self.name
-            and other.description == self.description
-        )
-
-
-class UserCommand:
-    type = 2
-
-
-class MessageCommand:
-    type = 3
-
+from .commands import SlashCommand, MessageCommand, UserCommand
 
 class ApplicationCommandMixin:
     def __init__(self):
         self.to_register = []
         self.app_commands = {}
 
-    def add_command(self, command):
+    def add_application_command(self, command):
         self.to_register.append(command)
 
-    def remove_command(self, command):
+    def remove_application_command(self, command):
         self.app_commands.remove(command)
 
     async def sync_commands(self):
@@ -126,9 +80,6 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
         await self.login(token)
         await self.connect(reconnect=reconnect)
         await self.register_commands()
-
-
-class Bot(BotBase, Client):
     def slash(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
             command = SlashCommand(func, **kwargs)
@@ -138,6 +89,9 @@ class Bot(BotBase, Client):
         return wrap
 
     command = slash
+
+
+class Bot(BotBase, Client):
 
 
 class AutoShardedBot(BotBase, AutoShardedClient):
