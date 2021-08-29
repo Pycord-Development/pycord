@@ -76,7 +76,7 @@ class BotBase(ApplicationMixin):
 
 class Bot(BotBase, Client):
     def interaction_command(self, **kwargs):
-        def wrap(func: function) -> ApplicationCommand:
+        def wrap(func: callable) -> ApplicationCommand:
             command = ApplicationCommand(func, **kwargs)
             self.add_application_command(command)
             return command
