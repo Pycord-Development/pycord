@@ -5,7 +5,7 @@ pycord
    :target: https://discord.gg/dK2qkEJ37N
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
-   :target: https://pypi.python.org/pypi/py-cord.py
+   :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
