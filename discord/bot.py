@@ -26,7 +26,8 @@ import asyncio
 import inspect
 from typing import Callable
 
-from .client import AutoShardedClient, Client
+from .client import Client
+from .shard import AutoShardedClient
 from .utils import get
 
 
