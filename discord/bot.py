@@ -25,11 +25,10 @@ DEALINGS IN THE SOFTWARE.
 import asyncio
 import inspect
 
-from .ext.commands._types import _BaseCommand
 from .client import *
 
 
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand:
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
 
