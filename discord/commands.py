@@ -59,6 +59,9 @@ class SlashCommand:
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
+        for a, o in options:
+            if o.name == None:
+                o.name == a
         self.options = dict(options)
 
 
@@ -120,11 +123,24 @@ class Option:
         self.type = type
         self.required = kwargs.pop("required", False)
         self.choices = list(i for i in kwargs.pop("choices", list()))
+    def to_dict(self):
+        return {
+            "name":self.name,
+            "description":self.description,
+            "type":int(self.type),
+            "required":self.required,
+            "choices":[c.to_dict() for c in self.choices]
+        }
     
 class OptionChoice:
     def __init__(self, name, value=None):
         self.name = name
         self.value = value or name
+    def to_dict(self):
+        return {
+            "name":self.name",
+            "value":self.value
+        }
 
 class UserCommand:
     type = 2
