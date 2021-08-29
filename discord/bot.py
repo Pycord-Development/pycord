@@ -33,7 +33,6 @@ class SlashCommand(_BaseCommand):
     type = 1
 
     def __new__(cls, *args, **kwargs):
-
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
