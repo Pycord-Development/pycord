@@ -324,6 +324,11 @@ class Colour:
         .. versionadded:: 2.0
         """
         return cls(0xFEE75C)
-
+    @classmethod
+    def discord(cls: Type[CT]) -> CT:
+        """A factory method that returns a :class:`Colour` with a value of ``0x5862FC``.
+        .. versionadded:: 2.0
+        """
+        return cls(0x5862FC)
 
 Color = Colour
