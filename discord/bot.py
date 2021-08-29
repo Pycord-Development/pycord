@@ -24,11 +24,67 @@ DEALINGS IN THE SOFTWARE.
 
 import asyncio
 import inspect
-from typing import Callable
+from typing import Callable, Union
 
-from .client import AutoShardedClient, Client
+from .client import Client
+from .shard import AutoShardedClient
+
+from .user import User
+from .role import Role
+from . import abc 
 from .utils import get
 
+class Option:
+    option_types = {
+        str: 3,
+        int: 4,
+        bool: 5,
+        User: 6,
+        abc.GuildChannel: 7,
+        Role: 8,
+        Union[Role, User]: 9
+        float: 10
+    }
+
+    def __init__(self, type_, name, description, required=None, choices=None):
+        self.type = type_
+        self.name = name
+        self.description = description
+        self.choices = choices
+        self.required = required
+
+    def to_dict(self):
+        _data = {
+            'type': Option.option_types[self.type],
+            'name': self.name,
+            'description': self.description,
+            'required': self.required
+        }
+        if self.choices is not None:
+            _data['choices'] = self.choices
+
+        return _data
+
+def get_options(callback):
+    sig = inspect.signature(callback)
+    options = []
+
+    iterator = iter(sig.parameters.items())
+    # Assuming that we want to pass some sort of Context/Interaction
+    next(iterator)
+
+    for name, param in iterator:
+        option = Option(
+            type_=param.annotation,
+            name=name,
+            # TODO: implement this properly
+            description=name,
+            required=param.default == inspect._empty
+        )
+
+        options.append(option)
+
+    return options if options else None
 
 class SlashCommand:
     type = 1
@@ -58,9 +114,11 @@ class SlashCommand:
         self.description = description
 
         self.callback = func
+        self.options = get_options(func)
 
     def to_dict(self):
-        return {"name": self.name, "description": self.description}
+        options = [option.to_dict() for option in self.options]
+        return {"name": self.name, "description": self.description, 'options': options}
 
     def __eq__(self, other):
         return (
