@@ -26,10 +26,11 @@ import asyncio
 import inspect
 from typing import Callable
 
-from .client import Client, AutoShardedClient
+from .client import AutoShardedClient, Client
+from .utils import get
 
 
-class SlashCommand(_BaseCommand):
+class SlashCommand:
     type = 1
 
     def __new__(cls, *args, **kwargs):
@@ -37,36 +38,43 @@ class SlashCommand(_BaseCommand):
 
         self.__original_kwargs__ = kwargs.copy()
         return self
+
     def __init__(self, func, *args, **kwargs):
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Callback must be a coroutine.')
+            raise TypeError("Callback must be a coroutine.")
 
-        name = kwargs.get('name') or func.__name__
+        name = kwargs.get("name") or func.__name__
         if not isinstance(name, str):
-            raise TypeError('Name of a command must be a string.')
+            raise TypeError("Name of a command must be a string.")
         self.name = name
 
-        description = kwargs.get('description') or inspect.cleandoc(func.__doc__)
-        if description == None:
-            description = "No description set"
-        elif not isinstance(name, str):
-            raise TypeError('Description of a command must be a string.')
+        description = (
+            kwargs.get("description")
+            or inspect.cleandoc(func.__doc__)
+            or "No description set"
+        )
+        if not isinstance(name, str):
+            raise TypeError("Description of a command must be a string.")
         self.description = description
 
         self.callback = func
-    
-    def to_dict(self):
-        return {
-            "name":self.name,
-            "description":self.description
-        }
-    def __eq__(self, other):
-        return isinstance(other, SlashCommand) and other.name == self.name and other.description == self.description
 
-class UserCommand(_BaseCommand):
+    def to_dict(self):
+        return {"name": self.name, "description": self.description}
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, SlashCommand)
+            and other.name == self.name
+            and other.description == self.description
+        )
+
+
+class UserCommand:
     type = 2
 
-class MessageCommand(_BaseCommand):
+
+class MessageCommand:
     type = 3
 
 
@@ -77,7 +85,7 @@ class ApplicationCommandMixin:
 
     def add_command(self, command):
         self.to_register.append(command)
-            
+
     def remove_command(self, command):
         self.app_commands.remove(command)
 
@@ -85,7 +93,8 @@ class ApplicationCommandMixin:
         to_add = [i for i in self.to_register] + [i for i in self.app_commands.values()]
         cmds = await self.http.bulk_upsert_global_commands(
             self.user.id,
-            [i.to_dict() for i in self.to_register] + [i.to_dict() for i in self.app_commands.values()]
+            [i.to_dict() for i in self.to_register]
+            + [i.to_dict() for i in self.app_commands.values()],
         )
         new_cmds = {}
         self.app_commands = {}
@@ -96,29 +105,32 @@ class ApplicationCommandMixin:
     async def register_commands(self):
         if len(self.app_commands) == 0:
             return
-        
+
         cmds = await self.http.bulk_upsert_global_commands(
-            self.user.id,
-            [i.to_dict() for i in self.to_register]
+            self.user.id, [i.to_dict() for i in self.to_register]
         )
         for i in cmds:
-            cmd = get(self.to_register, name=i["name"], description=i["description"], type=1)
+            cmd = get(
+                self.to_register, name=i["name"], description=i["description"], type=1
+            )
             self.app_commands[i["id"]] = cmd
 
 
-class BotBase(ApplicationCommandMixin): # To Insert: CogMixin
-    #TODO I think
+class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
+    # TODO I think
     def __init__(self, *args, **kwargs):
         super(Client, self).__init__(*args, **kwargs)
-    async def start(self, token, *, reconnect = True) -> None:
+
+    async def start(self, token, *, reconnect=True) -> None:
         await self.login(token)
         await self.connect(reconnect=reconnect)
         await self.register_commands()
 
+
 class Bot(BotBase, Client):
     def slash(self, **kwargs):
-        def wrap(func: Callable) -> ApplicationCommand:
-            command = ApplicationCommand(func, **kwargs)
+        def wrap(func: Callable) -> SlashCommand:
+            command = SlashCommand(func, **kwargs)
             self.add_application_command(command)
             return command
 
