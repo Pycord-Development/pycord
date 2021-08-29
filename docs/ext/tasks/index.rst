@@ -11,7 +11,7 @@ One of the most common operations when making a bot is having a loop run in the 
 - What do I do if the internet goes out?
 - What is the maximum number of seconds I can sleep anyway?
 
-The goal of this discord.py extension is to abstract all these worries away from you.
+The goal of this Pycord extension is to abstract all these worries away from you.
 
 Recipes
 ---------
