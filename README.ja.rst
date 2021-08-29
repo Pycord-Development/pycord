@@ -49,7 +49,7 @@ discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最�
 開発版をインストールしたいのならば、次の手順に従ってください:
 .. code:: sh
 
-    $ git clone https://github.com/Pycord-Development/pycord.py
+    $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
 
