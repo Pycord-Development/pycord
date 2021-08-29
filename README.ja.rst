@@ -3,17 +3,17 @@ pycord
 
 .. image:: https://discord.com/api/guilds/681882711945641997/embed.png
    :target: https://discord.gg/dK2qkEJ37N
-   :alt: Discord server invite
+   :alt: Discordサーバーの招待
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
-   :target: https://pypi.python.org/pypi/py-cord.py
-   :alt: PyPI version info
+   :target: https://pypi.python.org/pypi/py-cord
+   :alt: PyPIのバージョン情報
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
-   :alt: PyPI supported Python versions
+   :alt: PyPIのサポートしているPythonのバージョン
 
-discord.pyのフォーク。 PyCordは、Pythonで記述されたDiscord用の最新の使いやすい機能豊富な非同期対応APIラッパーです。
+discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最新の使いやすい機能豊富な非同期対応APIラッパーです。
 
-主な機能
+主な特徴
 -------------
 
 - ``async``と``await``を使用する最新のPythonicAPI。
@@ -23,9 +23,9 @@ discord.pyのフォーク。 PyCordは、Pythonで記述されたDiscord用の�
 インストール
 ----------
 
-**Python3.8以降が必要です**
+**Python 3.8 以降のバージョンが必須です**
 
-音声を完全にサポートせずにライブラリをインストールするには、次のコマンドを実行するだけです。
+完全な音声サポートなしでライブラリをインストールする場合は次のコマンドを実行してください:
 
 .. code:: sh
 
@@ -35,7 +35,7 @@ discord.pyのフォーク。 PyCordは、Pythonで記述されたDiscord用の�
     # Windows
     py -3 -m pip install -U py-cord
 
-それ以外の場合、音声サポートを受けるには、次のコマンドを実行する必要があります。
+音声サポートが必要なら、次のコマンドを実行しましょう:
 
 .. code:: sh
 
@@ -46,8 +46,7 @@ discord.pyのフォーク。 PyCordは、Pythonで記述されたDiscord用の�
     py -3 -m pip install -U py-cord[voice]
 
 
-開発バージョンをインストールするには、次の手順を実行します。
-
+開発版をインストールしたいのならば、次の手順に従ってください:
 .. code:: sh
 
     $ git clone https://github.com/Pycord-Development/pycord.py
@@ -60,10 +59,10 @@ discord.pyのフォーク。 PyCordは、Pythonで記述されたDiscord用の�
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (音声サポート用)
 
-Linuxのインストール音声では、上記のコマンドを実行する前に、お気に入りのパッケージマネージャー（apt、dnfなど）を介して次のパッケージをインストールする必要があることに注意してください。
+Linuxで音声サポートを導入するには、前述のコマンドを実行する前にお気に入りのパッケージマネージャー(例えば ``apt`` や ``dnf`` など)を使って以下のパッケージをインストールする必要があります:
 
-* libffi-dev (または一部のシステムでは ``libffi-devel``)
-* python-dev (例： ``python3.6-dev`` Python 3.6の場合)
+* libffi-dev (システムによっては ``libffi-devel``)
+* python-dev (例えばPython 3.6用の ``python3.6-dev``)
 
 簡単な例
 --------------
@@ -103,11 +102,11 @@ Botの例
 
     bot.run('token')
 
-例のディレクトリには、さらに多くの例があります。
+examplesディレクトリに更に多くのサンプルがあります。
 
 リンク
 ------
 
-- `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
-- `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
+- `ドキュメント <https://pycord.readthedocs.io/en/latest/index.html>`_
+- `公式Discordサーバー <https://discord.gg/dK2qkEJ37N>`_
 - `Discord API <https://discord.gg/discord-api>`_
