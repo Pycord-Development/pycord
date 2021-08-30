@@ -74,16 +74,19 @@ class SlashCommand:
             if o.name is None:
                 o.name = a
             self.options.append(o)
-        self.subcommands = []
+        self.is_subcommand = False    
 
     def to_dict(self):
         as_dict = {
             "name": self.name,
             "description": self.description,
-            "options": [o.to_dict() for o in self.options + self.subcommands],
+            "options": [o.to_dict() for o in self.options],
         }
         if self.guild_ids is not None:
             as_dict["guild_ids"] = self.guild_ids
+        if self.is_subcommand:
+            as_dict["guild_ids"]["type"] = SlashCommandOptionType.sub_command
+
         return as_dict
 
     def __eq__(self, other):
@@ -127,6 +130,24 @@ class SubCommandGroup(Option):
             name=name,
             description=description,
         )
+        self.subcommands = []
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "description": self.description,
+            "type": self.type.value,
+            "options": [c.to_dict() for c in self.options],
+        }
+
+    def command(self, **kwargs):
+        def wrap(func) -> SlashCommand:
+            command = SlashCommand(func, **kwargs)
+            command.is_subcommand = True
+            self.subcommands.append(command)
+            return command
+
+        return wrap
         
 class OptionChoice:
     def __init__(self, name, value=None):
