@@ -107,7 +107,7 @@ class Option:
         self.description = description
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
-        self.type = input_type
+        self.input_type = input_type
         self.required = kwargs.pop("required", True)
         self.choices = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
@@ -118,13 +118,14 @@ class Option:
         return {
             "name": self.name,
             "description": self.description,
-            "type": self.type.value,
+            "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
 
 class SubCommandGroup(Option):
-    def __init__(self, name, description, guild_ids = None):
+    type = 1
+    def __init__(self, name, description, guild_ids = None, parent_group=None):
         super().__init__(
             SlashCommandOptionType.sub_command_group, 
             name=name,
@@ -132,7 +133,7 @@ class SubCommandGroup(Option):
         )
         self.subcommands = []
         self.guild_ids = guild_ids
-        self.parent_group = None
+        self.parent_group = parent_group
 
     def to_dict(self):
         as_dict =  {
@@ -144,7 +145,7 @@ class SubCommandGroup(Option):
             as_dict["guild_ids"] = self.guild_ids
 
         if self.parent_group is not None:
-            as_dict["type"] = self.type.value
+            as_dict["type"] = self.input_type.value
 
         return as_dict
 
@@ -161,12 +162,14 @@ class SubCommandGroup(Option):
         if self.parent_group is not None:
             raise Exception('Subcommands can only be nested once') # TODO: Improve this
 
-        sub_command_group = SubCommandGroup(name, description)
-        sub_command_group.parent_group = self
+        sub_command_group = SubCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
        
-        
+    async def invoke(self, interaction):
+        # TODO
+        pass
+
 class OptionChoice:
     def __init__(self, name, value=None):
         self.name = name
