@@ -139,8 +139,6 @@ class SubCommandGroup(Option):
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
         }
-        if self.guild_ids is not None:
-            as_dict["guild_ids"] = self.guild_ids
 
         if self.parent_group is not None:
             as_dict["type"] = self.input_type.value
