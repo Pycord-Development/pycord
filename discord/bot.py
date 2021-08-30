@@ -148,7 +148,9 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
 
         return wrap
 
-    command = slash
+    @property
+    def command(self):
+        return self.slash
 
 
 class Bot(BotBase, Client):
