@@ -79,10 +79,12 @@ class ApplicationCommandMixin:
             commands.append(as_dict)
 
         update_guild_commands = {}
+        async for guild in self.fetch_guilds(limit=None):
+            update_guild_commands[guild.id] = []
         for command in [cmd for cmd in self.to_register if cmd.guild_ids is not None]:
             as_dict = command.to_dict()
             for guild_id in command.guild_ids:
-                to_update = update_guild_commands.get(guild_id, [])
+                to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
         for guild_id in update_guild_commands:
