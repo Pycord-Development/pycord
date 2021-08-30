@@ -138,6 +138,11 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
 
         return wrap
 
+    def command_group(self, name, description, guild_ids=None):
+        group = SubCommandGroup(name, description, guild_ids)
+        self.add_application_command(group)
+        return group
+
     @property
     def command(self):
         return self.slash
