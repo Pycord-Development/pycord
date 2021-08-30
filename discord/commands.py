@@ -82,8 +82,6 @@ class SlashCommand:
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
         }
-        if self.guild_ids is not None:
-            as_dict["guild_ids"] = self.guild_ids
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
