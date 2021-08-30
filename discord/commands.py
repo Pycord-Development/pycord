@@ -54,10 +54,16 @@ class SlashCommand:
 
         description = (
             kwargs.get("description")
-            or inspect.cleandoc(func.__doc__)
-            or None
+            or (
+                inspect.cleandoc(func.__doc__) 
+                if func.__doc__ is not None 
+                else None
+            )
         )
-        if not isinstance(name, str):
+        if description is None:
+            raise ValueError("Description of a command is required and cannot be empty.")
+
+        if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
         self.description = description
 
