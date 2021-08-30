@@ -73,10 +73,10 @@ class ApplicationCommandMixin:
 
         registered_commands = await self.http.get_global_commands(self.user.id)
         for command in self.to_register:
+            as_dict = command.to_dict()
             if not len(registered_commands) == 0:
                 match = [x for x in registered_commands if x["name"] == command.name and x["description"] ==
                          command.description][0]  # TODO: rewrite this, it seems inefficient
-                as_dict = command.to_dict()
                 if match:
                     as_dict['id'] = match["id"]
                     as_dict['version'] = match["version"]
