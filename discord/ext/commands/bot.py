@@ -60,6 +60,7 @@ __all__ = (
     'AutoShardedBot',
 )
 
+
 MISSING: Any = discord.utils.MISSING
 
 T = TypeVar('T')
@@ -135,17 +136,19 @@ class BotBase(GroupMixin):
         self.owner_id = options.get('owner_id')
         self.owner_ids = options.get('owner_ids', set())
         self.strip_after_prefix = options.get('strip_after_prefix', False)
-
+        self._disable_list = ["disable", "no", "disabled", "false", "off"]
         if self.owner_id and self.owner_ids:
             raise TypeError('Both owner_id and owner_ids are set.')
 
         if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
             raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
-
         if help_command is _default:
             self.help_command = DefaultHelpCommand()
+        elif help_command in _disable_list:
+            self.help_command = False
         else:
             self.help_command = help_command
+
 
     # internal helpers
 
