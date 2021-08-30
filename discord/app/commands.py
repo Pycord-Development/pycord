@@ -33,6 +33,7 @@ from ..enums import SlashCommandOptionType
 from ..interactions import Interaction
 from ..member import Member
 from ..user import User
+from ..message import Message
 from .context import InteractionContext
 
 class ApplicationCommand:
