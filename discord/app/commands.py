@@ -127,6 +127,13 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
         }
 
+class OptionChoice:
+    def __init__(self, name: str, value: Optional[str] = None):
+        self.name = name
+        self.value = value or name
+
+    def to_dict(self) -> Dict[str, str]:
+        return {"name": self.name, "value": self.value}
 
 class SubCommandGroup(Option):
     type = 1
@@ -182,16 +189,6 @@ class SubCommandGroup(Option):
         interaction.data = option
         await command.invoke(interaction)
 
-
-class OptionChoice:
-    def __init__(self, name: str, value: Optional[str] = None):
-        self.name = name
-        self.value = value or name
-
-    def to_dict(self) -> Dict[str, str]:
-        return {"name": self.name, "value": self.value}
-
-
 class UserCommand:
     type = 2
 
@@ -244,3 +241,42 @@ class UserCommand:
 
 class MessageCommand:
     type = 3
+    
+    def __new__(cls, *args, **kwargs):
+        self = super().__new__(cls)
+
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
+    def __init__(self, func, *args, **kwargs):
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+        self.callback = func
+
+        self.guild_ids = kwargs.get("guild_ids", None)
+
+        self.description = ""
+        self.name = kwargs.pop("name", func.__name__)
+        if not isinstance(self.name, str):
+            raise TypeError("Name of a command must be a string.")
+    
+    def to_dict(self):
+        return {
+            "name":self.name,
+            "description":self.description,
+            "type":self.type
+        }
+    
+    async def invoke(self, interaction):
+        _data = interaction.data["resolved"]["messages"]
+        for i, v in _data.items():
+            v["id"] = int(i)
+            message = v
+        channel = interaction._state.get_channel(int(message["channel_id"]))
+        if channel == None:
+            data = await interaction._state.http.start_private_message(int(message["author"]["id"]))
+            channel = interaction._state.add_dm_channel(data)
+
+        target = Message(state=interaction._state, channel=channel, data=message)
+        ctx = InteractionContext(interaction)
+        await self.callback(ctx, target)
