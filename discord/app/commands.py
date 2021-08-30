@@ -27,33 +27,35 @@ from __future__ import annotations
 import asyncio
 import inspect
 from collections import OrderedDict
+from typing import Callable, Dict, List, Optional, Union
 
 from ..enums import SlashCommandOptionType
-from .context import InteractionContext
+from ..interactions import Interaction
 from ..member import Member
 from ..user import User
+from .context import InteractionContext
 
 
 class SlashCommand:
     type = 1
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> SlashCommand:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func, *args, **kwargs):
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids = kwargs.get("guild_ids", None)
+        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
         if not isinstance(name, str):
             raise TypeError("Name of a command must be a string.")
-        self.name = name
+        self.name: str = name
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__) if func.__doc__ is not None else None
@@ -65,7 +67,7 @@ class SlashCommand:
 
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
-        self.description = description
+        self.description: str = description
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
@@ -75,9 +77,9 @@ class SlashCommand:
             if o.name is None:
                 o.name = a
             self.options.append(o)
-        self.is_subcommand = False    
+        self.is_subcommand = False
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -88,32 +90,35 @@ class SlashCommand:
 
         return as_dict
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return (
             isinstance(other, SlashCommand)
             and other.name == self.name
             and other.description == self.description
         )
 
-    async def invoke(self, interaction):
-        args = (o['value'] for o in interaction.data.get('options', []))
+    async def invoke(self, interaction) -> None:
+        args = (o["value"] for o in interaction.data.get("options", []))
         ctx = InteractionContext(interaction)
         await self.callback(ctx, *args)
 
+
 class Option:
-    def __init__(self, input_type, /, description, **kwargs):
-        self.name = kwargs.pop("name", None)
+    def __init__(
+        self, input_type: SlashCommandOptionType, /, description: str, **kwargs
+    ) -> None:
+        self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type = input_type
-        self.required = kwargs.pop("required", True)
-        self.choices = [
+        self.required: bool = kwargs.pop("required", True)
+        self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         return {
             "name": self.name,
             "description": self.description,
@@ -122,20 +127,28 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
         }
 
+
 class SubCommandGroup(Option):
     type = 1
-    def __init__(self, name, description, guild_ids = None, parent_group=None):
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        guild_ids: Optional[List[int]] = None,
+        parent_group: Optional[SubCommandGroup] = None,
+    ) -> None:
         super().__init__(
-            SlashCommandOptionType.sub_command_group, 
+            SlashCommandOptionType.sub_command_group,
             name=name,
             description=description,
         )
-        self.subcommands = []
+        self.subcommands: List[SlashCommand] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
 
-    def to_dict(self):
-        as_dict =  {
+    def to_dict(self) -> Dict:
+        as_dict = {
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
@@ -146,7 +159,7 @@ class SubCommandGroup(Option):
 
         return as_dict
 
-    def command(self, **kwargs):
+    def command(self, **kwargs) -> SlashCommand:
         def wrap(func) -> SlashCommand:
             command = SlashCommand(func, **kwargs)
             command.is_subcommand = True
@@ -155,60 +168,55 @@ class SubCommandGroup(Option):
 
         return wrap
 
-    def command_group(self, name, description):
+    def command_group(self, name, description) -> SubCommandGroup:
         if self.parent_group is not None:
-            raise Exception('Subcommands can only be nested once') # TODO: Improve this
+            raise Exception("Subcommands can only be nested once")  # TODO: Improve this
 
         sub_command_group = SubCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
-       
-    async def invoke(self, interaction):
+
+    async def invoke(self, interaction: Interaction) -> None:
         option = interaction.data["options"][0]
-        # command can be SubCommandGroup or SlashCommand
-        # but we don't need to worry about that
         command = list(filter(lambda x: x.name == option["name"], self.subcommands))[0]
         interaction.data = option
-        return await command.invoke(interaction)
-        
+        await command.invoke(interaction)
+
+
 class OptionChoice:
-    def __init__(self, name, value=None):
+    def __init__(self, name: str, value: Optional[str] = None):
         self.name = name
         self.value = value or name
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, str]:
         return {"name": self.name, "value": self.value}
 
 
 class UserCommand:
     type = 2
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> UserCommand:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func, *args, **kwargs):
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids = kwargs.get("guild_ids", None)
+        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         self.description = ""
-        self.name = kwargs.pop("name", func.__name__)
+        self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
 
-    def to_dict(self):
-        return {
-            "name":self.name,
-            "description":self.description,
-            "type":self.type
-        }
+    def to_dict(self) -> Dict[str, Union[str, int]]:
+        return {"name": self.name, "description": self.description, "type": self.type}
 
-    async def invoke(self, interaction):
+    async def invoke(self, interaction: Interaction) -> None:
         if "members" not in interaction.data["resolved"]:
             _data = interaction.data["resolved"]["users"]
             for i, v in _data.items():
@@ -225,7 +233,11 @@ class UserCommand:
                 v["id"] = int(i)
                 user = v
             member["user"] = user
-            target = Member(data=member, guild=interaction._state._get_guild(interaction.guild_id), state=interaction._state)
+            target = Member(
+                data=member,
+                guild=interaction._state._get_guild(interaction.guild_id),
+                state=interaction._state,
+            )
         ctx = InteractionContext(interaction)
         await self.callback(ctx, target)
 
