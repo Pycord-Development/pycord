@@ -34,7 +34,8 @@ from .utils import get
 from .commands import SlashCommand, MessageCommand, UserCommand
 
 class ApplicationCommandMixin:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.to_register = []
         self.app_commands = {}
 
@@ -65,26 +66,55 @@ class ApplicationCommandMixin:
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
         """
-        if len(self.app_commands) == 0:
+        if len(self.to_register) == 0:
             return
 
-        cmds = await self.http.bulk_upsert_global_commands(
-            self.user.id, [i.to_dict() for i in self.to_register]
-        )
+        commands = []
+
+        registered_commands = await self.http.get_global_commands(self.user.id)
+        for command in self.to_register:
+            match = [x for x in registered_commands if x["name"] == command.name and x["description"] ==
+                     command.description][0]  # TODO: rewrite this, it seems inefficient
+            as_dict = command.to_dict()
+            if match:
+                as_dict['id'] = match["id"]
+                as_dict['version'] = match["version"]
+            commands.append(as_dict)
+
+        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+
         for i in cmds:
             cmd = get(
                 self.to_register, name=i["name"], description=i["description"], type=1
             )
             self.app_commands[i["id"]] = cmd
 
+    async def handle_interaction(self, interaction):
+        """|coro|
+        Needs documentation
+
+        By default, this coroutine is called inside the :func:`.on_interaction`
+        event. If you choose to override the :func:`.on_interaction` event, then
+        you should invoke this coroutine as well.
+        """
+        try:
+            command = self.app_commands[interaction.data["id"]]
+            await command.callback(interaction)  # TODO: pass in command arguments
+        except KeyError:
+            print(f"Received unknown application command: {interaction.data} {interaction.id}")
+            await interaction.response.send_message("I didn't recognize that command")
+
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     # TODO I think
-    def __init__(self, *args, **kwargs):
-        super(Client, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(Client, self).__init__(*args, **kwargs)
 
     async def on_connect(self):
         await self.register_commands()
+
+    async def on_interaction(self, interaction):
+        await self.handle_interaction(interaction)
 
     def slash(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
