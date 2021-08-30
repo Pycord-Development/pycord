@@ -75,7 +75,7 @@ class SlashCommand:
             if o.name is None:
                 o.name = a
             self.options.append(o)
-        
+
     def to_dict(self):
         as_dict = {
             "name": self.name,
@@ -93,6 +93,10 @@ class SlashCommand:
             and other.description == self.description
         )
 
+    async def invoke(self, interaction):
+        args = (o['value'] for o in interaction.data['options'])
+        ctx = interaction
+        await self.callback(ctx, *args)
 
 class Option:
     def __init__(self, input_type, /, description, **kwargs):
