@@ -72,15 +72,38 @@ class ApplicationCommandMixin:
         commands = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in self.to_register:
+        for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
             as_dict = command.to_dict()
             if not len(registered_commands) == 0:
                 match = [x for x in registered_commands if x["name"] == command.name and x["description"] ==
                          command.description][0]  # TODO: rewrite this, it seems inefficient
                 if match:
                     as_dict['id'] = match["id"]
-                    as_dict['version'] = match["version"]
             commands.append(as_dict)
+
+        fetched_guild_commands = {}
+        update_guild_commands = {}
+        for guild_ids in [cmd.guild_ids for cmd in self.to_register if cmd.guild_ids is not None]:
+            for guild_id in guild_ids:
+                if not fetched_guild_commands.get(guild_id):
+                    fetched_guild_commands[guild_id] = await self.http.get_guild_commands(self.user.id, guild_id)
+        for command in [cmd for cmd in self.to_register if cmd.guild_ids is not None]:
+            as_dict = command.to_dict()
+            for guild_id in command.guild_ids:
+                fetched = fetched_guild_commands.get(guild_id)
+                to_update = update_guild_commands.get(guild_id, [])
+                match = [x for x in fetched if x["name"] == command.name and x["description"] == command.description][0]
+                if match:
+                    as_dict['id'] = match["id"]
+                elif as_dict.get('id'):  # matched in another guild but not this one
+                    del as_dict['id']
+                update_guild_commands[guild_id] = to_update + [match]
+
+        for guild_id in update_guild_commands:
+            cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id, update_guild_commands[guild_id])
+            for i in cmds:
+                cmd = get(self.to_register, name=i["name"], description=i["description"], type=1)
+                self.app_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
