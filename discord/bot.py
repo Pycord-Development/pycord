@@ -75,8 +75,8 @@ class ApplicationCommandMixin:
         for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
             as_dict = command.to_dict()
             if not len(registered_commands) == 0:
-                matches = [x for x in registered_commands if x["name"] == command.name and x["description"] ==
-                         command.description]  # TODO: rewrite this, it seems inefficient
+                matches = [x for x in registered_commands if x["name"] == command.name]
+                # TODO: rewrite this, it seems inefficient
                 if len(matches) > 0:
                     as_dict['id'] = matches[0]["id"]
             commands.append(as_dict)
@@ -92,7 +92,7 @@ class ApplicationCommandMixin:
             for guild_id in command.guild_ids:
                 fetched = fetched_guild_commands.get(guild_id)
                 to_update = update_guild_commands.get(guild_id, [])
-                matches = [x for x in fetched if x["name"] == command.name and x["description"] == command.description]
+                matches = [x for x in fetched if x["name"] == command.name]
                 if len(matches) > 0:
                     as_dict['id'] = matches[0]["id"]
                 elif as_dict.get('id'):  # matched in another guild but not this one
