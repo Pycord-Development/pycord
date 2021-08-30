@@ -55,7 +55,7 @@ class SlashCommand:
         description = (
             kwargs.get("description")
             or inspect.cleandoc(func.__doc__)
-            or "No description set"
+            or None
         )
         if not isinstance(name, str):
             raise TypeError("Description of a command must be a string.")
@@ -64,17 +64,19 @@ class SlashCommand:
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
         for a, o in options:
-            if not o.name:
+            if o.name is None:
                 o.name == a
         self.options = dict(options)
 
     def to_dict(self):
-        return {
+        as_dict = {
             "name": self.name,
             "description": self.description,
-            "options": [o.to_dict() for o in self.options],
-            "guild_ids": self.guild_ids,
+            "options": [o.to_dict() for o in self.options]
         }
+        if self.guild_ids is not None:
+            as_dict["guild_ids"] = self.guild_ids
+        return as_dict
 
     def __eq__(self, other):
         return (
