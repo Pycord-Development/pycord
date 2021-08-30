@@ -63,7 +63,7 @@ class SlashCommand:
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
-        for a, o in options:
+        for a, o in options.items():
             if o.name is None:
                 o.name == a
         self.options = dict(options)
@@ -87,12 +87,12 @@ class SlashCommand:
 
 
 class Option:
-    def __init__(self, type, /, **kwargs):
+    def __init__(self, input_type, /, **kwargs):
         self.name = kwargs.pop("name", None)
         self.description = kwargs.pop("description")
-        if not isinstance(type, SlashCommandOptionType):
-            type = SlashCommandOptionType.from_datatype(type)
-        self.type = type
+        if not isinstance(input_type, SlashCommandOptionType):
+            input_type = SlashCommandOptionType.from_datatype(input_type)
+        self.type = input_type
         self.required = kwargs.pop("required", False)
         self.choices = list(i for i in kwargs.pop("choices", list()))
 
