@@ -102,7 +102,11 @@ class Option:
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.type = input_type
         self.required = kwargs.pop("required", True)
-        self.choices = list(i for i in kwargs.pop("choices", list()))
+        self.choices = [
+            o if isinstance(o, OptionChoice) else OptionChoice(o)
+            for o in kwargs.pop("choices", list())
+        ]
+        
 
     def to_dict(self):
         return {
@@ -122,10 +126,8 @@ class OptionChoice:
     def to_dict(self):
         return {"name": self.name, "value": self.value}
 
-
 class UserCommand:
     type = 2
-
 
 class MessageCommand:
     type = 3
