@@ -603,19 +603,19 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
-        if isinstance(datatype, str):
+        if issubclass(datatype, str):
             return cls.string
-        if isinstance(datatype, int):
-            return cls.integer
-        if isinstance(datatype, bool):
+        if issubclass(datatype, bool):
             return cls.boolean
+        if issubclass(datatype, int):
+            return cls.integer
         if type(datatype).__name__ == "Member":  # TODO: Make a better solution for this
             return cls.user
         if type(datatype).__name__ == "GuildChannel":
             return cls.channel
         if type(datatype).__name__ == "Role":
             return cls.role
-        if isinstance(datatype, float):
+        if issubclass(datatype, float):
             return cls.number
         return cls.custom
 

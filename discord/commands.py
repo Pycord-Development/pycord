@@ -69,11 +69,13 @@ class SlashCommand:
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
+        self.options = list()
         for a, o in options.items():
+            o = o.annotation
             if o.name is None:
-                o.name == a
-        self.options = dict(options)
-
+                o.name = a
+            self.options.append(o)
+        
     def to_dict(self):
         as_dict = {
             "name": self.name,
@@ -106,7 +108,7 @@ class Option:
         return {
             "name": self.name,
             "description": self.description,
-            "type": int(self.type),
+            "type": self.type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }

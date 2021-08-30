@@ -123,7 +123,8 @@ class ApplicationCommandMixin:
         """
         try:
             command = self.app_commands[interaction.data["id"]]
-            await command.callback(interaction)  # TODO: pass in command arguments
+            args = (o['value'] for o in interaction.data['options'])
+            await command.callback(interaction, *args)  # TODO: handle this more efficiently
         except KeyError:
             print(f"Received unknown application command: {interaction.data} {interaction.id}")
             await interaction.response.send_message("I didn't recognize that command")
