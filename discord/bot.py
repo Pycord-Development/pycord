@@ -31,7 +31,7 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand
+from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand, ApplicationCommand
 
 class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs):
@@ -40,6 +40,16 @@ class ApplicationCommandMixin:
         self.app_commands = {}
 
     def add_application_command(self, command):
+        """Adds a :class:`.ApplicationCommand` into the internal list of commands.
+
+        This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
+        other shortcut decorators are used instead.
+
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command to add.
+        """
         self.to_register.append(command)
 
     def remove_application_command(self, command):
@@ -117,18 +127,6 @@ class ApplicationCommandMixin:
         else:
             await command.invoke(interaction)
 
-
-class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
-    # TODO I think
-    # def __init__(self, *args, **kwargs):
-    #     super(Client, self).__init__(*args, **kwargs)
-
-    async def on_connect(self):
-        await self.register_commands()
-
-    async def on_interaction(self, interaction):
-        await self.handle_interaction(interaction)
-
     def slash(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
             if isinstance(func, (UserCommand, MessageCommand)):
@@ -163,6 +161,18 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     @property
     def command(self):
         return self.slash
+
+
+class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
+    # TODO I think
+    # def __init__(self, *args, **kwargs):
+    #     super(Client, self).__init__(*args, **kwargs)
+
+    async def on_connect(self):
+        await self.register_commands()
+
+    async def on_interaction(self, interaction):
+        await self.handle_interaction(interaction)
 
 
 class Bot(BotBase, Client):
