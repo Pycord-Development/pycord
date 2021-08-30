@@ -94,7 +94,7 @@ class SlashCommand:
 
     async def invoke(self, interaction):
         args = (o['value'] for o in interaction.data['options'])
-        ctx = interaction
+        ctx = InteractionContext(interaction)
         await self.callback(ctx, *args)
 
 class Option:
