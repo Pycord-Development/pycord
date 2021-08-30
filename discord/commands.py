@@ -144,7 +144,7 @@ class SubCommandGroup(Option):
             as_dict["guild_ids"] = self.guild_ids
 
         if self.parent_group is not None:
-            as_dict["type"] = self.type.value,
+            as_dict["type"] = self.type.value
 
         return as_dict
 
