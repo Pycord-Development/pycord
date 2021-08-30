@@ -101,7 +101,7 @@ class Option:
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.type = input_type
-        self.required = kwargs.pop("required", False)
+        self.required = kwargs.pop("required", True)
         self.choices = list(i for i in kwargs.pop("choices", list()))
 
     def to_dict(self):
