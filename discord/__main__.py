@@ -40,7 +40,7 @@ def show_version():
     if version_info.releaselevel != 'final':
         pkg = pkg_resources.get_distribution('discord.py')
         if pkg:
-            entries.append(f'    - discord.py pkg_resources: v{pkg.version}')
+            entries.append(f'    - pycord pkg_resources: v{pkg.version}')
 
     entries.append(f'- aiohttp v{aiohttp.__version__}')
     uname = platform.uname()
