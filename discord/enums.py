@@ -605,15 +605,15 @@ class SlashCommandOptionType(Enum):
     def from_datatype(cls, datatype):
         if isinstance(datatype, str):
             return cls.string
-        if isinstance(datatype, str):
+        if isinstance(datatype, int):
             return cls.integer
-        if isinstance(datatype, str):
+        if isinstance(datatype, bool):
             return cls.boolean
-        if isinstance(datatype, Member):
+        if type(datatype).__name__ == "Member":  # TODO: Make a better solution for this
             return cls.user
-        if isinstance(datatype, GuildChannel):
+        if type(datatype).__name__ == "GuildChannel":
             return cls.channel
-        if isinstance(datatype, Role):
+        if type(datatype).__name__ == "Role":
             return cls.role
         if isinstance(datatype, float):
             return cls.number
