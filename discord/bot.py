@@ -31,7 +31,7 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-from .commands import SlashCommand, SubCommandGroup, MessageCommand, UserCommand
+from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand
 
 class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs):
@@ -135,6 +135,19 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
                 raise TypeError("func needs to be a callable, UserCommand, or MessageCommand object.")
 
             command = SlashCommand(func, **kwargs)
+            self.add_application_command(command)
+            return command
+
+        return wrap
+
+    def app_user(self, **kwargs):
+        def wrap(func: Callable) -> UserCommand:
+            if isinstance(func, (SlashCommand, MessageCommand)):
+                func = func.callback
+            elif callable(func) == False:
+                raise TypeError("func needs to be a callable, SlashCommand, or MessageCommand object.")
+
+            command = UserCommand(func, **kwargs)
             self.add_application_command(command)
             return command
 

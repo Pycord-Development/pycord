@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -28,9 +28,10 @@ import asyncio
 import inspect
 from collections import OrderedDict
 
-from .enums import SlashCommandOptionType
-from .interactions import Interaction
-from .utils import cached_property
+from ..enums import SlashCommandOptionType
+from .context import InteractionContext
+from ..member import Member
+from ..user import User
 
 
 class SlashCommand:
@@ -182,43 +183,52 @@ class OptionChoice:
 class UserCommand:
     type = 2
 
+    def __new__(cls, *args, **kwargs):
+        self = super().__new__(cls)
+
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
+    def __init__(self, func, *args, **kwargs):
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+        self.callback = func
+
+        self.guild_ids = kwargs.get("guild_ids", None)
+
+        self.description = ""
+        self.name = kwargs.pop("name", func.__name__)
+        if not isinstance(self.name, str):
+            raise TypeError("Name of a command must be a string.")
+
+    def to_dict(self):
+        return {
+            "name":self.name,
+            "description":self.description,
+            "type":self.type
+        }
+
+    async def invoke(self, interaction):
+        if "members" not in interaction.data["resolved"]:
+            _data = interaction.data["resolved"]["users"]
+            for i, v in _data.items():
+                v["id"] = int(i)
+                user = v
+            target = User(state=interaction._state, data=user)
+        else:
+            _data = interaction.data["resolved"]["members"]
+            for i, v in _data.items():
+                v["id"] = int(i)
+                member = v
+            _data = interaction.data["resolved"]["users"]
+            for i, v in _data.items():
+                v["id"] = int(i)
+                user = v
+            member["user"] = user
+            target = Member(data=member, guild=interaction._state._get_guild(interaction.guild_id), state=interaction._state)
+        ctx = InteractionContext(interaction)
+        await self.callback(ctx, target)
+
 
 class MessageCommand:
     type = 3
-
-
-class InteractionContext:
-    def __init__(self, interaction: Interaction):
-        self.interaction = interaction
-
-    @cached_property
-    def channel(self):
-        return self.interaction.channel
-
-    @cached_property
-    def channel_id(self):
-        return self.interaction.channel_id
-
-    @cached_property
-    def guild(self):
-        return self.interaction.guild
-
-    @cached_property
-    def guild_id(self):
-        return self.interaction.guild_id
-
-    @cached_property
-    def message(self):
-        return self.interaction.message
-
-    @cached_property
-    def user(self):
-        return self.interaction.user
-
-    @property
-    def respond(self):
-        return self.interaction.response.send_message
-
-    @property
-    def edit(self):
-        return self.interaction.response.edit_message
