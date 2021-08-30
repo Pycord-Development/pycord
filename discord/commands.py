@@ -137,7 +137,7 @@ class SubCommandGroup(Option):
             "name": self.name,
             "description": self.description,
             "type": self.type.value,
-            "options": [c.to_dict() for c in self.options],
+            "options": [c.to_dict() for c in self.subcommands],
         }
 
     def command(self, **kwargs):
