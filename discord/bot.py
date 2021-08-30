@@ -97,7 +97,7 @@ class ApplicationCommandMixin:
                     as_dict['id'] = matches[0]["id"]
                 elif as_dict.get('id'):  # matched in another guild but not this one
                     del as_dict['id']
-                update_guild_commands[guild_id] = to_update + [[matches][0]]
+                update_guild_commands[guild_id] = to_update + [as_dict]
 
         for guild_id in update_guild_commands:
             cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id, update_guild_commands[guild_id])
