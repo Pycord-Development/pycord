@@ -132,12 +132,30 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
 
     def slash(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
+            if isinstance(func, (UserCommand, MessageCommand)):
+                func = func.callback
+            elif callable(func) == False:
+                raise TypeError("func needs to be a callable, UserCommand, or MessageCommand object.")
+
             command = SlashCommand(func, **kwargs)
             self.add_application_command(command)
             return command
 
         return wrap
+    
+    def app_user(self, **kwargs):
+        def wrap(func: Callable) -> UserCommand:
+            if isinstance(func, (SlashCommand, MessageCommand)):
+                func = func.callback
+            elif callable(func) == False:
+                raise TypeError("func needs to be a callable, SlashCommand, or MessageCommand object.")
 
+            command = UserCommand(func, **kwargs)
+            self.add_application_command(command)
+            return command
+
+        return wrap
+    
     def command_group(self, name, description, guild_ids=None):
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
