@@ -60,6 +60,7 @@ from .interactions import *
 from .components import *
 from .threads import *
 from .bot import *
+from .app import *
 
 
 class VersionInfo(NamedTuple):
