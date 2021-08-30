@@ -590,8 +590,8 @@ class NSFWLevel(Enum, comparable=True):
 
 class SlashCommandOptionType(Enum):
     custom = 0
-    #sub_command = 1
-    #sub_command_group = 2
+    sub_command = 1
+    sub_command_group = 2
     string = 3
     integer = 4
     boolean = 5
