@@ -95,7 +95,7 @@ class SlashCommand:
         )
 
     async def invoke(self, interaction):
-        args = (o['value'] for o in interaction.data['options'])
+        args = (o['value'] for o in interaction.data.get('options', []))
         ctx = InteractionContext(interaction)
         await self.callback(ctx, *args)
 
