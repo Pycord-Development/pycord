@@ -85,7 +85,7 @@ class SlashCommand:
         if self.guild_ids is not None:
             as_dict["guild_ids"] = self.guild_ids
         if self.is_subcommand:
-            as_dict["guild_ids"]["type"] = SlashCommandOptionType.sub_command
+            as_dict["type"] = SlashCommandOptionType.sub_command
 
         return as_dict
 
