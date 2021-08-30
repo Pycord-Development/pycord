@@ -66,9 +66,6 @@ class ApplicationCommandMixin:
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
         """
-        if len(self.to_register) == 0:
-            return
-
         commands = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
