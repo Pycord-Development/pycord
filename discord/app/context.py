@@ -56,7 +56,3 @@ class InteractionContext:
     @property
     def respond(self):
         return self.interaction.response.send_message
-
-    @property
-    def edit(self):
-        return self.interaction.response.edit_message

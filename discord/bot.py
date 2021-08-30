@@ -127,7 +127,7 @@ class ApplicationCommandMixin:
         else:
             await command.invoke(interaction)
 
-    def slash(self, **kwargs):
+    def slash_command(self, **kwargs):
         def wrap(func: Callable) -> SlashCommand:
             if isinstance(func, (UserCommand, MessageCommand)):
                 func = func.callback
@@ -140,7 +140,7 @@ class ApplicationCommandMixin:
 
         return wrap
 
-    def app_user(self, **kwargs):
+    def user_command(self, **kwargs):
         def wrap(func: Callable) -> UserCommand:
             if isinstance(func, (SlashCommand, MessageCommand)):
                 func = func.callback
@@ -148,6 +148,19 @@ class ApplicationCommandMixin:
                 raise TypeError("func needs to be a callable, SlashCommand, or MessageCommand object.")
 
             command = UserCommand(func, **kwargs)
+            self.add_application_command(command)
+            return command
+
+        return wrap
+    
+    def message_command(self, **kwargs):
+        def wrap(func: Callable) -> MessageCommand:
+            if isinstance(func, (SlashCommand, UserCommand)):
+                func = func.callback
+            elif callable(func) == False:
+                raise TypeError("func needs to be a callable, SlashCommand, or UserCommand object.")
+
+            command = MessageCommand(func, **kwargs)
             self.add_application_command(command)
             return command
 
