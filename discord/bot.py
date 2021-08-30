@@ -55,7 +55,7 @@ class ApplicationCommandMixin:
         new_cmds = {}
         self.app_commands = {}
         for i in cmds:
-            cmd = get(to_add, name=i["name"], description=i["description"], type=1)
+            cmd = get(to_add, name=i["name"], description=i["description"], type=i["type"])
             new_cmds[i["id"]] = cmd
 
     async def register_commands(self):
