@@ -52,6 +52,8 @@ packages = [
     'discord.webhook',
     'discord.ext.commands',
     'discord.ext.tasks',
+    'discord.ext.slash',
+    "discord.ext.slash.utils"
 ]
 
 setup(name='pycord',
