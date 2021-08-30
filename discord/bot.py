@@ -31,7 +31,7 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand, ApplicationCommand
+from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand
 
 class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs):
