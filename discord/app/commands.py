@@ -35,8 +35,15 @@ from ..member import Member
 from ..user import User
 from .context import InteractionContext
 
+class ApplicationCommand:
+    def __repr__(self):
+        return "<discord.app.commands.ApplicationCommand>"
+    def __eq__(self, other):
+        return (
+            isinstance(other, self.__class__)
+        )
 
-class SlashCommand:
+class SlashCommand(ApplicationCommand):
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -189,7 +196,7 @@ class SubCommandGroup(Option):
         interaction.data = option
         await command.invoke(interaction)
 
-class UserCommand:
+class UserCommand(ApplicationCommand):
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -238,8 +245,7 @@ class UserCommand:
         ctx = InteractionContext(interaction)
         await self.callback(ctx, target)
 
-
-class MessageCommand:
+class MessageCommand(ApplicationCommand):
     type = 3
     
     def __new__(cls, *args, **kwargs):
