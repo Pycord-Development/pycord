@@ -104,21 +104,25 @@ Bot Example
     bot.run('token')
 
 SlashCommand Example
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 .. code:: py
-from discord import Client, Intents, Embed
-from discord_slash import SlashCommand, SlashContext
 
-bot = Client(intents=Intents.default())
-slash = SlashCommand(bot)
 
-@slash.slash(name="test")
-async def test(ctx: SlashContext):
-    embed = Embed(title="Embed Test")
-    await ctx.send(embed=embed)
+.. code:: py
 
-bot.run("discord_token")
+    from discord import ext, Intents, Embed
+    from discord_slash import SlashCommand, SlashContext
+
+    bot = ext.commands.bot(intents=Intents.default())
+    slash = SlashCommand(bot)
+
+    @slash.slash(name="test")
+    async def test(ctx: SlashContext):
+        embed = Embed(title="Embed Test")
+         await ctx.send(embed=embed)
+
+    bot.run("discord_token")
 
 You can find more examples in the examples directory.
 
