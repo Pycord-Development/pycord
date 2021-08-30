@@ -163,9 +163,13 @@ class SubCommandGroup(Option):
         return sub_command_group
        
     async def invoke(self, interaction):
-        # TODO
-        pass
-
+        option = interaction.data["options"][0]
+        # command can be SubCommandGroup or SlashCommand
+        # but we don't need to worry about that
+        command = list(filter(lambda x: x.name == option["name"], self.subcommands))[0]
+        interaction.data = option
+        return await command.invoke(interaction)
+        
 class OptionChoice:
     def __init__(self, name, value=None):
         self.name = name
