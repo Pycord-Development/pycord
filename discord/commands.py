@@ -85,7 +85,7 @@ class SlashCommand:
         if self.guild_ids is not None:
             as_dict["guild_ids"] = self.guild_ids
         if self.is_subcommand:
-            as_dict["type"] = SlashCommandOptionType.sub_command
+            as_dict["type"] = SlashCommandOptionType.sub_command.value
 
         return as_dict
 
@@ -124,21 +124,29 @@ class Option:
         }
 
 class SubCommandGroup(Option):
-    def __init__(self, name, description):
+    def __init__(self, name, description, guild_ids = None):
         super().__init__(
             SlashCommandOptionType.sub_command_group, 
             name=name,
             description=description,
         )
         self.subcommands = []
+        self.guild_ids = guild_ids
+        self.parent_group = None
 
     def to_dict(self):
-        return {
+        as_dict =  {
             "name": self.name,
             "description": self.description,
-            "type": self.type.value,
             "options": [c.to_dict() for c in self.subcommands],
         }
+        if self.guild_ids is not None:
+            as_dict["guild_ids"] = self.guild_ids
+
+        if self.parent_group is not None:
+            as_dict["type"] = self.type.value,
+
+        return as_dict
 
     def command(self, **kwargs):
         def wrap(func) -> SlashCommand:
@@ -148,6 +156,16 @@ class SubCommandGroup(Option):
             return command
 
         return wrap
+
+    def command_group(self, name, description):
+        if self.parent_group is not None:
+            raise Exception('Subcommands can only be nested once') # TODO: Improve this
+
+        sub_command_group = SubCommandGroup(name, description)
+        sub_command_group.parent_group = self
+        self.subcommands.append(sub_command_group)
+        return sub_command_group
+       
         
 class OptionChoice:
     def __init__(self, name, value=None):
