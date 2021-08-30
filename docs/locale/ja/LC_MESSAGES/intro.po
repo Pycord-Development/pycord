@@ -22,16 +22,16 @@ msgid "Introduction"
 msgstr "はじめに"
 
 #: ../../intro.rst:8
-msgid "This is the documentation for discord.py, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "これはDiscord APIを利用したアプリケーションを作成するのに便利なPythonライブラリ、discord.pyのドキュメントです。"
+msgid "This is the documentation for Pycord , a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "これはDiscord APIを利用したアプリケーションを作成するのに便利なPythonライブラリ、Pycordのドキュメントです。"
 
 #: ../../intro.rst:12
 msgid "Prerequisites"
 msgstr "前提"
 
 #: ../../intro.rst:14
-msgid "discord.py works with Python 3.5.3 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.4 or lower is not supported due to one of the dependencies (:doc:`aiohttp <aio:index>`) not supporting Python 3.4."
-msgstr "discord.pyは3.5.3以降のバージョンのPythonで動作します。Python2.7のような旧バージョンはサポートされていません。Python3.4以下は依存関係にあるライブラリ (:doc:`aiohttp <aio:index>`) がサポートされていないため、サポートしていません。"
+msgid "Pycord works with Python 3.5.3 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.4 or lower is not supported due to one of the dependencies (:doc:`aiohttp <aio:index>`) not supporting Python 3.4."
+msgstr "Pycordは3.5.3以降のバージョンのPythonで動作します。Python2.7のような旧バージョンはサポートされていません。Python3.4以下は依存関係にあるライブラリ (:doc:`aiohttp <aio:index>`) がサポートされていないため、サポートしていません。"
 
 #: ../../intro.rst:22
 msgid "Installing"
@@ -46,8 +46,8 @@ msgid "If you are using Windows, then the following should be used instead: ::"
 msgstr "Windowsを使用している場合は、以下のコマンドで実行してください。"
 
 #: ../../intro.rst:33
-msgid "To get voice support, you should use ``discord.py[voice]`` instead of ``discord.py``, e.g. ::"
-msgstr "音声のサポートが必要な場合は、 ``discord.py`` ではなく、以下の例のように ``discord.py[voice]`` を使うべきです。"
+msgid "To get voice support, you should use ``pycord[voice]`` instead of ``discordy``, e.g. ::"
+msgstr "音声のサポートが必要な場合は、 ``く、以下の例のように ``discord.py[voice]`` を使うべきです。"
 
 #: ../../intro.rst:37
 msgid "On Linux environments, installing voice requires getting the following dependencies:"

@@ -31,7 +31,11 @@ If you are using Windows, then the following should be used instead: ::
     py -3 -m pip install -U py-cord
 
 
+<<<<<<< HEAD
+To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::
+=======
 To get voice support, you should use ``py-cord[voice]`` instead of ``pycord``, e.g. ::
+>>>>>>> 3004610cda084629c8afd0c2bbb37c0fb820b66a
 
     python3 -m pip install -U py-cord[voice]
 
