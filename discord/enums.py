@@ -589,7 +589,6 @@ class NSFWLevel(Enum, comparable=True):
     age_restricted = 3
 
 class SlashCommandOptionType(Enum):
-    custom = 0
     sub_command = 1
     sub_command_group = 2
     string = 3
@@ -609,15 +608,18 @@ class SlashCommandOptionType(Enum):
             return cls.boolean
         if issubclass(datatype, int):
             return cls.integer
-        if datatype.__name__ == "Member":  # TODO: Make a better solution for this
+        if issubclass(datatype, float):
+            return cls.number
+            
+        if datatype.__name__ == "Member":
             return cls.user
         if datatype.__name__ == "GuildChannel":
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
-        if issubclass(datatype, float):
-            return cls.number
-        return cls.custom
+
+        # TODO: Improve the error message
+        raise Exception('Invalid class used as an input type for an Option')
 
 
 T = TypeVar('T')
