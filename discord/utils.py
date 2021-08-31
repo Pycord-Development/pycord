@@ -61,7 +61,8 @@ import sys
 import types
 import warnings
 
-from .errors import InvalidArgument
+from .errors import InvalidArgument, NotFound
+from .guild import Guild
 
 try:
     import orjson
@@ -447,6 +448,16 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
         if _all(pred(elem) == value for pred, value in converted):
             return elem
     return None
+
+async def get_or_fetch(self, guild: Guild, type: str, id: int):
+    try:
+        getter = getattr(guild, f'get_{type}')(id)
+    except AttributeError:
+        try:
+            getter = await getattr(guild, f'fetch_{type}')(id)
+        except NotFound:
+            raise NotFound(404, 'HTTP request operation failed.')
+    return getter
 
 
 def _unique(iterable: Iterable[T]) -> List[T]:
