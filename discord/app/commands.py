@@ -139,7 +139,8 @@ class SlashCommand(ApplicationCommand):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                arg = await get_or_fetch(ctx.guild, op.input_type.name, int(arg))
+                name = 'member' if op.input_type.name == 'user' else op.input_type.name
+                arg = await get_or_fetch(ctx.guild, name, int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 try:
