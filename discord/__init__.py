@@ -9,8 +9,8 @@ A basic wrapper for the Discord API.
 
 """
 
-__title__ = 'discord'
-__author__ = 'Rapptz'
+__title__ = 'Pycord'
+__author__ = 'Pycord Devolopment'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2015-present Rapptz'
 __version__ = '2.0.0a'
