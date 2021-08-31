@@ -1107,6 +1107,6 @@ class Bot(BotBase, discord.Bot):
 
 class AutoShardedBot(BotBase, discord.AutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
-    :class:`discord.AutoShardedClient` instead.
+    :class:`discord.AutoShardedBot` instead.
     """
     pass
