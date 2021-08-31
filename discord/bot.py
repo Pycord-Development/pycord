@@ -131,7 +131,7 @@ class ApplicationCommandMixin:
         def wrap(func: Callable) -> SlashCommand:
             if isinstance(func, (UserCommand, MessageCommand)):
                 func = func.callback
-            elif callable(func) == False:
+            elif callable(func) is False:
                 raise TypeError("func needs to be a callable, UserCommand, or MessageCommand object.")
 
             command = SlashCommand(func, **kwargs)
@@ -144,7 +144,7 @@ class ApplicationCommandMixin:
         def wrap(func: Callable) -> UserCommand:
             if isinstance(func, (SlashCommand, MessageCommand)):
                 func = func.callback
-            elif callable(func) == False:
+            elif callable(func) is False:
                 raise TypeError("func needs to be a callable, SlashCommand, or MessageCommand object.")
 
             command = UserCommand(func, **kwargs)
@@ -157,7 +157,7 @@ class ApplicationCommandMixin:
         def wrap(func: Callable) -> MessageCommand:
             if isinstance(func, (SlashCommand, UserCommand)):
                 func = func.callback
-            elif callable(func) == False:
+            elif callable(func) is False:
                 raise TypeError("func needs to be a callable, SlashCommand, or UserCommand object.")
 
             command = MessageCommand(func, **kwargs)
