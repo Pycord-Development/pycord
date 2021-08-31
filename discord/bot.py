@@ -67,7 +67,7 @@ class ApplicationCommandMixin:
 
         Returns
         --------
-        Optional[:class:`.Command`]
+        Optional[:class:`.ApplicationCommand`]
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
