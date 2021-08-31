@@ -79,12 +79,16 @@ class SlashCommand(ApplicationCommand):
 
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
-        self.options = []
+
+        # SlashCommand. options will be strictly for args 
+        # and not for subcommands
+        self.options = [] 
         for a, o in options.items():
             o = o.annotation
             if o.name is None:
                 o.name = a
             self.options.append(o)
+
         self.is_subcommand = False
 
     def to_dict(self) -> Dict:
@@ -106,6 +110,8 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def invoke(self, interaction) -> None:
+        # TODO: Parse the args better, apply converters etc. 
+
         args = (o["value"] for o in interaction.data.get("options", []))
         ctx = InteractionContext(interaction)
         await self.callback(ctx, *args)
@@ -136,11 +142,11 @@ class Option:
         }
 
 class OptionChoice:
-    def __init__(self, name: str, value: Optional[str] = None):
+    def __init__(self, name: str, value: Optional[Union[str,int,float]] = None):
         self.name = name
         self.value = value or name
 
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self) -> Dict[str, Union[str,int,float]]:
         return {"name": self.name, "value": self.value}
 
 class SubCommandGroup(Option):
