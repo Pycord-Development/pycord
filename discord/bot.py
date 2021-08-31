@@ -31,7 +31,7 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand
+from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand, ApplicationCommand
 
 class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs):
@@ -171,9 +171,17 @@ class ApplicationCommandMixin:
         self.add_application_command(group)
         return group
 
-    @property
-    def command(self):
-        return self.slash
+    def command(self, type=SlashCommand, **kwargs):
+        if not issubclass(type, ApplicationCommand):
+            raise TypeError("type must be a subclass of ApplicationCommand")
+        if type.type == 1:
+            return self.slash_command(**kwargs)
+        elif type.type == 2:
+            return self.user_command(**kwargs)
+        elif type.type == 3:
+            return self.message_command(**kwargs)
+        else:
+            raise TypeError("type must be one of SlashCommand, UserCommand, MessageCommand")
 
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
