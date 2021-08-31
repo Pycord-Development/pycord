@@ -71,7 +71,7 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        self.app_commands.pop(command.id)
+        return self.app_commands.pop(command.id)
 
     async def sync_commands(self):
         """
