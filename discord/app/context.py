@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from ..interactions import Interaction
 from ..utils import cached_property
 
+
 class InteractionContext:
     def __init__(self, interaction: Interaction):
         self.interaction = interaction

@@ -36,7 +36,7 @@ from ..user import User
 from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch
-
+from ..errors import NotFound
 
 class ApplicationCommand:
     def __repr__(self):
@@ -88,7 +88,7 @@ class SlashCommand(ApplicationCommand):
         for a, o in options.items():
             o = o.annotation
             if not isinstance(o, Option):
-                o = Option(o, 'No description provided')
+                o = Option(o, "No description provided")
             if o.name is None:
                 o.name = a
             self.options.append(o)
@@ -128,7 +128,12 @@ class SlashCommand(ApplicationCommand):
             ):
                 arg = await get_or_fetch(ctx.guild, op.input_type.name, int(arg))
 
-            # TODO: Add discord.Mentionable
+            elif op.input_type == SlashCommandOptionType.mentionable:
+                try:
+                    arg = await get_or_fetch(ctx.guild, "member", int(arg))
+                except NotFound: 
+                    arg = await get_or_fetch(ctx.guild, "role", int(arg))
+
             final_args.append(arg)
 
         await self.callback(ctx, *final_args)
