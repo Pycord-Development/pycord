@@ -185,7 +185,8 @@ class SubCommandGroup(Option):
 
     def command_group(self, name, description) -> SubCommandGroup:
         if self.parent_group is not None:
-            raise Exception("Subcommands can only be nested once")  # TODO: Improve this
+            # TODO: Improve this error message
+            raise Exception("Subcommands can only be nested once")
 
         sub_command_group = SubCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
@@ -213,7 +214,7 @@ class UserCommand(ApplicationCommand):
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
-        self.description = ""
+        self.description = "" # Discord API doesn't support setting descriptions for User commands
         self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")

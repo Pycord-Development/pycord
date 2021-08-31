@@ -609,11 +609,11 @@ class SlashCommandOptionType(Enum):
             return cls.boolean
         if issubclass(datatype, int):
             return cls.integer
-        if type(datatype).__name__ == "Member":  # TODO: Make a better solution for this
+        if datatype.__name__ == "Member":  # TODO: Make a better solution for this
             return cls.user
-        if type(datatype).__name__ == "GuildChannel":
+        if datatype.__name__ == "GuildChannel":
             return cls.channel
-        if type(datatype).__name__ == "Role":
+        if datatype.__name__ == "Role":
             return cls.role
         if issubclass(datatype, float):
             return cls.number

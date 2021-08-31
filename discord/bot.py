@@ -128,48 +128,25 @@ class ApplicationCommandMixin:
             await command.invoke(interaction)
 
     def slash_command(self, **kwargs):
-        def wrap(func: Callable) -> SlashCommand:
-            if isinstance(func, (UserCommand, MessageCommand)):
-                func = func.callback
-            elif callable(func) is False:
-                raise TypeError("func needs to be a callable, UserCommand, or MessageCommand object.")
-
-            command = SlashCommand(func, **kwargs)
-            self.add_application_command(command)
-            return command
-
-        return wrap
+        return self._command_wrapper(SlashCommand, **kwargs)
 
     def user_command(self, **kwargs):
-        def wrap(func: Callable) -> UserCommand:
-            if isinstance(func, (SlashCommand, MessageCommand)):
-                func = func.callback
-            elif callable(func) is False:
-                raise TypeError("func needs to be a callable, SlashCommand, or MessageCommand object.")
-
-            command = UserCommand(func, **kwargs)
-            self.add_application_command(command)
-            return command
-
-        return wrap
+        return self._command_wrapper(UserCommand, **kwargs)
     
     def message_command(self, **kwargs):
-        def wrap(func: Callable) -> MessageCommand:
+        return self._command_wrapper(MessageCommand, **kwargs)
+
+    def _command_wrapper(self, cls, **kwargs):
+        def wrap(func: Callable) -> cls:
             if isinstance(func, (SlashCommand, UserCommand)):
                 func = func.callback
-            elif callable(func) is False:
+            elif not callable(func):
                 raise TypeError("func needs to be a callable, SlashCommand, or UserCommand object.")
 
-            command = MessageCommand(func, **kwargs)
+            command = cls(func, **kwargs)
             self.add_application_command(command)
             return command
-
-        return wrap
-
-    def command_group(self, name, description, guild_ids=None):
-        group = SubCommandGroup(name, description, guild_ids)
-        self.add_application_command(group)
-        return group
+        return wrap        
 
     def command(self, type=SlashCommand, **kwargs):
         if not issubclass(type, ApplicationCommand):
@@ -183,6 +160,10 @@ class ApplicationCommandMixin:
         else:
             raise TypeError("type must be one of SlashCommand, UserCommand, MessageCommand")
 
+    def command_group(self, name, description, guild_ids=None):
+        group = SubCommandGroup(name, description, guild_ids)
+        self.add_application_command(group)
+        return group
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     # TODO I think
