@@ -22,8 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import \
-    annotations  # will probably need in future for type hinting
+from __future__ import annotations  # will probably need in future for type hinting
 
 from typing import Callable, Dict, List
 
