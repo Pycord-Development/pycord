@@ -35,14 +35,16 @@ from ..member import Member
 from ..user import User
 from ..message import Message
 from .context import InteractionContext
+from ..utils import find, get_or_fetch
+
 
 class ApplicationCommand:
     def __repr__(self):
         return "<discord.app.commands.ApplicationCommand>"
+
     def __eq__(self, other):
-        return (
-            isinstance(other, self.__class__)
-        )
+        return isinstance(other, self.__class__)
+
 
 class SlashCommand(ApplicationCommand):
     type = 1
@@ -80,9 +82,9 @@ class SlashCommand(ApplicationCommand):
         options = OrderedDict(inspect.signature(func).parameters)
         options.pop(list(options)[0])
 
-        # SlashCommand. options will be strictly for args 
+        # SlashCommand. options will be strictly for args
         # and not for subcommands
-        self.options = [] 
+        self.options = []
         for a, o in options.items():
             o = o.annotation
             if o.name is None:
@@ -110,20 +112,23 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def invoke(self, interaction) -> None:
-        # TODO: Parse the args better, apply custom converters etc. 
+        # TODO: Parse the args better, apply custom converters etc.
         ctx = InteractionContext(interaction)
 
         args = (o["value"] for o in interaction.data.get("options", []))
         final_args = []
         for op, arg in zip(self.options, args):
-            # TODO: Add a get_or_fetch method
-            if op.input_type == SlashCommandOptionType.user:
-                arg = ctx.guild.get_member(int(arg)) or await ctx.guild.fetch_member(int(arg))
-            elif op.input_type == SlashCommandOptionType.role:
-                arg = ctx.guild.get_role(int(arg)) or await ctx.guild.fetch_role(int(arg))
-            elif op.input_type == SlashCommandOptionType.channel:
-                arg = ctx.guild.get_channel(int(arg)) or await ctx.guild.fetch_channel(int(arg))
+            # TODO: Checks if input_type is user, role or channel
+            if (
+                SlashCommandOptionType.user.value
+                <= op.input_type.value
+                <= SlashCommandOptionType.role.value
+            ):
+                arg = await get_or_fetch(ctx.guild, op.input_type.name, int(arg))
+
+            # TODO: Add discord.Mentionable
             final_args.append(arg)
+
         await self.callback(ctx, *final_args)
 
 
@@ -151,13 +156,15 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
         }
 
+
 class OptionChoice:
-    def __init__(self, name: str, value: Optional[Union[str,int,float]] = None):
+    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
         self.value = value or name
 
-    def to_dict(self) -> Dict[str, Union[str,int,float]]:
+    def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
+
 
 class SubCommandGroup(Option):
     type = 1
@@ -210,9 +217,10 @@ class SubCommandGroup(Option):
 
     async def invoke(self, interaction: Interaction) -> None:
         option = interaction.data["options"][0]
-        command = list(filter(lambda x: x.name == option["name"], self.subcommands))[0]
+        command = find(lambda x: x.name == option["name"], self.subcommands)
         interaction.data = option
         await command.invoke(interaction)
+
 
 class UserCommand(ApplicationCommand):
     type = 2
@@ -230,7 +238,9 @@ class UserCommand(ApplicationCommand):
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
-        self.description = "" # Discord API doesn't support setting descriptions for User commands
+        self.description = (
+            ""  # Discord API doesn't support setting descriptions for User commands
+        )
         self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
@@ -263,9 +273,10 @@ class UserCommand(ApplicationCommand):
         ctx = InteractionContext(interaction)
         await self.callback(ctx, target)
 
+
 class MessageCommand(ApplicationCommand):
     type = 3
-    
+
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
 
@@ -283,14 +294,10 @@ class MessageCommand(ApplicationCommand):
         self.name = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
-    
+
     def to_dict(self):
-        return {
-            "name":self.name,
-            "description":self.description,
-            "type":self.type
-        }
-    
+        return {"name": self.name, "description": self.description, "type": self.type}
+
     async def invoke(self, interaction):
         _data = interaction.data["resolved"]["messages"]
         for i, v in _data.items():
@@ -298,7 +305,9 @@ class MessageCommand(ApplicationCommand):
             message = v
         channel = interaction._state.get_channel(int(message["channel_id"]))
         if channel == None:
-            data = await interaction._state.http.start_private_message(int(message["author"]["id"]))
+            data = await interaction._state.http.start_private_message(
+                int(message["author"]["id"])
+            )
             channel = interaction._state.add_dm_channel(data)
 
         target = Message(state=interaction._state, channel=channel, data=message)
