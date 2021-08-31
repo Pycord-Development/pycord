@@ -78,17 +78,22 @@ class SlashCommand(ApplicationCommand):
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
         self.description: str = description
-
-        options = OrderedDict(inspect.signature(func).parameters)
+        options = OrderedDict(inspect.signature(self.callback).parameters)
         options.pop(list(options)[0])
+        self.param_signature = options
 
-        # SlashCommand. options will be strictly for args
-        # and not for subcommands
         self.options = []
-        for a, o in options.items():
-            o = o.annotation
+        for a, op in options.items():
+            
+            o = op.annotation
             if not isinstance(o, Option):
                 o = Option(o, "No description provided")
+
+            o.default = o.default or op.default
+            
+            if o.default == inspect.Parameter.empty:
+                o.default = None
+
             if o.name is None:
                 o.name = a
             self.options.append(o)
@@ -117,9 +122,11 @@ class SlashCommand(ApplicationCommand):
         # TODO: Parse the args better, apply custom converters etc.
         ctx = InteractionContext(interaction)
 
-        args = (o["value"] for o in interaction.data.get("options", []))
-        final_args = []
-        for op, arg in zip(self.options, args):
+        kwargs = {}
+        for arg in interaction.data.get("options", []):
+            op = find(lambda x: x.name == arg['name'], self.options)
+            arg = arg['value']
+
             # TODO: Checks if input_type is user, role or channel
             if (
                 SlashCommandOptionType.user.value
@@ -134,9 +141,12 @@ class SlashCommand(ApplicationCommand):
                 except NotFound: 
                     arg = await get_or_fetch(ctx.guild, "role", int(arg))
 
-            final_args.append(arg)
+            kwargs[op.name] = arg
 
-        await self.callback(ctx, *final_args)
+        for a, o in self.param_signature.items():
+            if a not in kwargs:
+                kwargs[a] = o.annotation.default
+        await self.callback(ctx, **kwargs)
 
 
 class Option:
@@ -153,6 +163,7 @@ class Option:
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
+        self.default = kwargs.pop("default", None)
 
     def to_dict(self) -> Dict:
         return {
