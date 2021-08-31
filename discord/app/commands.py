@@ -110,11 +110,21 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def invoke(self, interaction) -> None:
-        # TODO: Parse the args better, apply converters etc. 
+        # TODO: Parse the args better, apply custom converters etc. 
+        ctx = InteractionContext(interaction)
 
         args = (o["value"] for o in interaction.data.get("options", []))
-        ctx = InteractionContext(interaction)
-        await self.callback(ctx, *args)
+        final_args = []
+        for op, arg in zip(self.options, args):
+            # TODO: Add a get_or_fetch method
+            if op.input_type == SlashCommandOptionType.user:
+                arg = ctx.guild.get_member(int(arg)) or await ctx.guild.fetch_member(int(arg))
+            elif op.input_type == SlashCommandOptionType.role:
+                arg = ctx.guild.get_role(int(arg)) or await ctx.guild.fetch_role(int(arg))
+            elif op.input_type == SlashCommandOptionType.channel:
+                arg = ctx.guild.get_channel(int(arg)) or await ctx.guild.fetch_channel(int(arg))
+            final_args.append(arg)
+        await self.callback(ctx, *final_args)
 
 
 class Option:
@@ -164,7 +174,7 @@ class SubCommandGroup(Option):
             name=name,
             description=description,
         )
-        self.subcommands: List[SlashCommand] = []
+        self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
 

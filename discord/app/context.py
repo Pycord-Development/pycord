@@ -56,3 +56,7 @@ class InteractionContext:
     @property
     def respond(self):
         return self.interaction.response.send_message
+
+    @property
+    def defer(self):
+        return self.interaction.response.defer
