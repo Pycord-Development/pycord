@@ -36,6 +36,7 @@ from .channel import PartialMessageable, ChannelType
 from .user import User
 from .member import Member
 from .message import Message, Attachment
+from .mentions import AllowedMentions
 from .object import Object
 from .permissions import Permissions
 from .webhook.async_ import async_context, Webhook, handle_message_parameters
@@ -459,6 +460,7 @@ class InteractionResponse:
         view: View = MISSING,
         tts: bool = False,
         ephemeral: bool = False,
+        allowed_mentions: AllowedMentions = None
     ) -> None:
         """|coro|
 
@@ -520,6 +522,9 @@ class InteractionResponse:
 
         if view is not MISSING:
             payload['components'] = view.to_components()
+
+        if allowed_mentions:
+            payload['allowed_mentions'] = allowed_mentions.to_dict()
 
         parent = self._parent
         adapter = async_context.get()
