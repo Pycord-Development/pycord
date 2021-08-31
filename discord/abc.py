@@ -1687,3 +1687,7 @@ class Connectable(Protocol):
             raise  # re-raise
 
         return voice
+
+class Mentionable:
+    # TODO: documentation, methods if needed
+    pass

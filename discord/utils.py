@@ -448,6 +448,12 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
+async def get_or_fetch(obj, attr: str, id: int):
+    # TODO: Document this
+    getter = getattr(obj, f'get_{attr}')(id)
+    if getter is None:
+        getter = await getattr(obj, f'fetch_{attr}')(id)
+    return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
     return [x for x in dict.fromkeys(iterable)]

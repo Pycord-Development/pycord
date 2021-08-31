@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from ..interactions import Interaction
 from ..utils import cached_property
 
+
 class InteractionContext:
     def __init__(self, interaction: Interaction):
         self.interaction = interaction
@@ -56,3 +57,7 @@ class InteractionContext:
     @property
     def respond(self):
         return self.interaction.response.send_message
+
+    @property
+    def defer(self):
+        return self.interaction.response.defer
