@@ -87,6 +87,8 @@ class SlashCommand(ApplicationCommand):
         self.options = []
         for a, o in options.items():
             o = o.annotation
+            if not isinstance(o, Option):
+                o = Option(o, 'No description provided')
             if o.name is None:
                 o.name = a
             self.options.append(o)
