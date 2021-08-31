@@ -80,25 +80,31 @@ class SlashCommand(ApplicationCommand):
         self.description: str = description
         options = OrderedDict(inspect.signature(self.callback).parameters)
         options.pop(list(options)[0])
-        self.param_signature = options
 
         self.options = []
         for a, op in options.items():
             
             o = op.annotation
+            if self._is_typing_optional(o):
+                o = Option(o.__args__[0], "No description provided", required=False)
+
             if not isinstance(o, Option):
                 o = Option(o, "No description provided")
 
             o.default = o.default or op.default
-            
+
             if o.default == inspect.Parameter.empty:
                 o.default = None
 
             if o.name is None:
                 o.name = a
             self.options.append(o)
+            
 
         self.is_subcommand = False
+
+    def _is_typing_optional(self, annotation):
+        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -143,9 +149,9 @@ class SlashCommand(ApplicationCommand):
 
             kwargs[op.name] = arg
 
-        for a, o in self.param_signature.items():
-            if a not in kwargs:
-                kwargs[a] = o.annotation.default
+        for o in self.options:
+            if o.name not in kwargs:
+                kwargs[o.name] = o.default
         await self.callback(ctx, **kwargs)
 
 
