@@ -45,6 +45,8 @@ class ApplicationCommandMixin:
         This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
         other shortcut decorators are used instead.
 
+        .. versionadded:: 2.0
+
         Parameters
         -----------
         command: :class:`.ApplicationCommand`
@@ -53,9 +55,28 @@ class ApplicationCommandMixin:
         self.to_register.append(command)
 
     def remove_application_command(self, command):
-        self.app_commands.remove(command)
+        """Remove a :class:`.ApplicationCommand` from the internal list
+        of commands.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command to remove.
+
+        Returns
+        --------
+        Optional[:class:`.Command`]
+            The command that was removed. If the name is not valid then
+            ``None`` is returned instead.
+        """
+        self.app_commands.pop(command.id)
 
     async def sync_commands(self):
+        """
+        pending removal
+        """
         to_add = [i for i in self.to_register] + [i for i in self.app_commands.values()]
         cmds = await self.http.bulk_upsert_global_commands(
             self.user.id,
@@ -70,11 +91,15 @@ class ApplicationCommandMixin:
 
     async def register_commands(self):
         """|coro|
-        Needs documentation
+
+        Registers all commands that have been added through :meth:`.ApplicationCommandMixin.add_application_command`.
+        This method cleans up all commands over the API and should sync them with the internal cache of commands.
 
         By default, this coroutine is called inside the :func:`.on_connect`
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
+
+        .. versionadded:: 2.0
         """
         commands = []
 
@@ -113,11 +138,25 @@ class ApplicationCommandMixin:
 
     async def handle_interaction(self, interaction):
         """|coro|
-        Needs documentation
+
+        This function processes the commands that have been registered
+        to the bot and other groups. Without this coroutine, none of the
+        commands will be triggered.
 
         By default, this coroutine is called inside the :func:`.on_interaction`
         event. If you choose to override the :func:`.on_interaction` event, then
         you should invoke this coroutine as well.
+
+        This function finds a registered command matching the interaction id from
+        :attr:`.ApplicationCommandMixin.app_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
+        command was found, it replies to the interaction with a default message.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction to process
         """
         try:
             command = self.app_commands[interaction.data["id"]]
