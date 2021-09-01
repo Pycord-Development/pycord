@@ -41,7 +41,7 @@ from ..errors import NotFound
 
 class ApplicationCommand:
     def __repr__(self):
-        return "<discord.app.commands.ApplicationCommand>"
+        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
@@ -185,6 +185,9 @@ class Option:
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
+        
+    def __repr__(self):
+        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
 
 class OptionChoice:
