@@ -56,6 +56,23 @@ AutoShardedClient
 .. autoclass:: AutoShardedClient
     :members:
 
+Bots
+-----
+
+Bot
+~~~~
+.. attributetable:: Bot
+
+.. autoclass:: Bot
+    :members:
+
+AutoShardedBot
+~~~~~~~~~~~~~~~
+.. attributetable:: AutoShardedBot
+
+.. autoclass:: AutoShardedBot
+    :members:
+
 Application Info
 ------------------
 
