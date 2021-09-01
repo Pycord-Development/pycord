@@ -66,6 +66,23 @@ Bot
 .. autoclass:: Bot
     :members:
     :inherited-members:
+    :exclude-members: event, command, slash_command, user_command, message_command
+
+    .. automethod:: Bot.event()
+        :decorator:
+
+    .. automethod:: Bot.command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.slash_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.user_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.message_command(**kwargs)
+        :decorator:
+
 
 AutoShardedBot
 ~~~~~~~~~~~~~~~
