@@ -346,7 +346,7 @@ class MessageCommand(ApplicationCommand):
             v["id"] = int(i)
             message = v
         channel = interaction._state.get_channel(int(message["channel_id"]))
-        if channel == None:
+        if not channel:
             data = await interaction._state.http.start_private_message(
                 int(message["author"]["id"])
             )
