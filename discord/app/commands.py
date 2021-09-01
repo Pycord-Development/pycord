@@ -147,7 +147,7 @@ class SlashCommand(ApplicationCommand):
             op = find(lambda x: x.name == arg["name"], self.options)
             arg = arg["value"]
 
-            # TODO: Checks if input_type is user, role or channel
+            # Checks if input_type is user, role or channel
             if (
                 SlashCommandOptionType.user.value
                 <= op.input_type.value
