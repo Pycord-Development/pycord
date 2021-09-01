@@ -38,9 +38,10 @@ from .context import InteractionContext
 from ..utils import find, get_or_fetch
 from ..errors import NotFound
 
+
 class ApplicationCommand:
     def __repr__(self):
-        return "<discord.app.commands.ApplicationCommand>"
+        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
@@ -68,43 +69,56 @@ class SlashCommand(ApplicationCommand):
         self.name: str = name
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__) if func.__doc__ is not None else None
+            inspect.cleandoc(func.__doc__)
+            if func.__doc__ is not None
+            else "No description provided"
         )
-        if description is None:
-            raise ValueError(
-                "Description of a command is required and cannot be empty."
-            )
 
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
         self.description: str = description
-        options = OrderedDict(inspect.signature(self.callback).parameters)
-        options.pop(list(options)[0])
+        self.is_subcommand: bool = False
 
-        self.options = []
-        for a, op in options.items():
+        params = OrderedDict(inspect.signature(self.callback).parameters)
+        self.options = self.parse_options(params)
+
+    def parse_options(self, params: OrderedDict) -> List[Option]:
+        final_options = []
+
+        # Remove ctx, this needs to refactored when used in Cogs
+        params.pop(list(params)[0]) 
+
+        final_options = []
+        
+        for p_name, p_obj in params.items():
+
+            option = p_obj.annotation
+            if option == inspect.Parameter.empty:
+                option = str
             
-            o = op.annotation
-            if self._is_typing_optional(o):
-                o = Option(o.__args__[0], "No description provided", required=False)
+            if self._is_typing_optional(option):
+                option = Option(option.__args__[0], "No description provided", required=False)
 
-            if not isinstance(o, Option):
-                o = Option(o, "No description provided")
+            if not isinstance(option, Option):
+                option = Option(option, "No description provided")
+                if p_obj.default != inspect.Parameter.empty:
+                    option.required = False
+                
+            option.default = option.default or p_obj.default
 
-            o.default = o.default or op.default
+            if option.default == inspect.Parameter.empty:
+                option.default = None
 
-            if o.default == inspect.Parameter.empty:
-                o.default = None
+            if option.name is None:
+                option.name = p_name
+                
+            final_options.append(option)
 
-            if o.name is None:
-                o.name = a
-            self.options.append(o)
-            
+        return final_options
 
-        self.is_subcommand = False
-
+        
     def _is_typing_optional(self, annotation):
-        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
+        return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -130,22 +144,22 @@ class SlashCommand(ApplicationCommand):
 
         kwargs = {}
         for arg in interaction.data.get("options", []):
-            op = find(lambda x: x.name == arg['name'], self.options)
-            arg = arg['value']
+            op = find(lambda x: x.name == arg["name"], self.options)
+            arg = arg["value"]
 
-            # TODO: Checks if input_type is user, role or channel
+            # Checks if input_type is user, role or channel
             if (
                 SlashCommandOptionType.user.value
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = 'member' if op.input_type.name == 'user' else op.input_type.name
+                name = "member" if op.input_type.name == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 try:
                     arg = await get_or_fetch(ctx.guild, "member", int(arg))
-                except NotFound: 
+                except NotFound:
                     arg = await get_or_fetch(ctx.guild, "role", int(arg))
 
             kwargs[op.name] = arg
@@ -180,6 +194,9 @@ class Option:
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
+
+    def __repr__(self):
+        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
 
 class OptionChoice:
@@ -329,7 +346,7 @@ class MessageCommand(ApplicationCommand):
             v["id"] = int(i)
             message = v
         channel = interaction._state.get_channel(int(message["channel_id"]))
-        if channel == None:
+        if channel is None:
             data = await interaction._state.http.start_private_message(
                 int(message["author"]["id"])
             )
