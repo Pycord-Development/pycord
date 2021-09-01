@@ -27,6 +27,14 @@ from ..utils import cached_property
 
 
 class InteractionContext:
+    """Represents a Discord interaction context.
+ 
+    This class is not created manually and is instead passed to application
+    commands as the first parameter.
+
+    .. versionadded:: 2.0
+    """
+
     def __init__(self, interaction: Interaction):
         self.interaction = interaction
 
@@ -54,6 +62,10 @@ class InteractionContext:
     def user(self):
         return self.interaction.user
 
+    @cached_property
+    def response(self):
+        return self.interaction.response
+
     author = user
 
     @property
@@ -61,7 +73,12 @@ class InteractionContext:
         return self.interaction.response.send_message
 
     send = respond
-    
+
     @property
     def defer(self):
         return self.interaction.response.defer
+
+    @property
+    def followup(self):
+        return self.interaction.followup
+
