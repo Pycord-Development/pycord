@@ -73,43 +73,50 @@ class SlashCommand(ApplicationCommand):
             if func.__doc__ is not None
             else "No description provided"
         )
-        # if description is None:
-        #     raise ValueError(
-        #         "Description of a command is required and cannot be empty."
-        #     )
 
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
         self.description: str = description
-        options = OrderedDict(inspect.signature(self.callback).parameters)
-        options.pop(list(options)[0])
+        self.is_subcommand: bool = False
 
-        self.options = []
-        for a, op in options.items():
+        params = OrderedDict(inspect.signature(self.callback).parameters)
+        self.options = self.parse_options(params)
 
-            o = op.annotation
-            if o == inspect.Parameter.empty:
-                o = str
+    def parse_options(self, params: OrderedDict) -> List[Option]:
+        final_options = []
+
+        # Remove ctx, this needs to refactored when used in Cogs
+        params.pop(list(params)[0]) 
+
+        final_options = []
+        
+        for p_name, p_obj in params.items():
+
+            option = p_obj.annotation
+            if option == inspect.Parameter.empty:
+                option = str
             
-            if self._is_typing_optional(o):
-                o = Option(o.__args__[0], "No description provided", required=False)
+            if self._is_typing_optional(option):
+                option = Option(option.__args__[0], "No description provided", required=False)
 
-            if not isinstance(o, Option):
-                o = Option(o, "No description provided")
-                if o.default != inspect.Parameter.empty:
-                    o.required = False
+            if not isinstance(option, Option):
+                option = Option(option, "No description provided")
+                if p_obj.default != inspect.Parameter.empty:
+                    option.required = False
                 
-            o.default = o.default or op.default
+            option.default = option.default or p_obj.default
 
-            if o.default == inspect.Parameter.empty:
-                o.default = None
+            if option.default == inspect.Parameter.empty:
+                option.default = None
 
-            if o.name is None:
-                o.name = a
-            self.options.append(o)
+            if option.name is None:
+                option.name = p_name
+                
+            final_options.append(option)
 
-        self.is_subcommand = False
+        return final_options
 
+        
     def _is_typing_optional(self, annotation):
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
