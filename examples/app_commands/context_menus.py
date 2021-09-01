@@ -8,7 +8,7 @@ async def mention(ctx, member: discord.Member): # user commands return the membe
 
 # user commands and message commands can have spaces in their names
 @bot.message_command(name='Show ID')  # creates a global message command
-async def show_id(ctx, message: discord.Message): # user commands return the message
+async def show_id(ctx, message: discord.Message): # message commands return the message
     await ctx.respond(f"{ctx.author.name}, here's the message id: {message.id}!")
 
 bot.run("TOKEN")
