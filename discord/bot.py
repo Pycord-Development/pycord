@@ -188,29 +188,12 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        for guild_id, value in update_guild_commands.items():
-            if value:
-                try:
-                    cmds = await self.http.bulk_upsert_guild_commands(
-                        self.user.id, guild_id, value
-                    )
-                except Forbidden as e:
-                    if "Missing Access" in e.args[0]:
-                        print(
-                            f"Bot is missing access to create application commands in this guild: {guild_id}."
-                        )
-                        continue  # raising an error causes the function to stop but the bot still runs
-                    else:
-                        raise e
-
-                for i in cmds:
-                    cmd = get(
-                        self.to_register,
-                        name=i["name"],
-                        description=i["description"],
-                        type=i["type"],
-                    )
-                    self.app_commands[i["id"]] = cmd
+        for guild_id in update_guild_commands:
+            cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
+                                                              update_guild_commands[guild_id])
+            for i in cmds:
+                cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                self.app_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
