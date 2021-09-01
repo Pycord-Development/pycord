@@ -247,8 +247,7 @@ class ApplicationCommandMixin:
         try:
             command = self.app_commands[interaction.data["id"]]
         except KeyError:
-            print(f"Received unknown application command: {interaction.data}")
-            await interaction.response.send_message("I didn't recognize that command")
+            self.dispatch("unknown_command", interaction)
         else:
             await command.invoke(interaction)
 
