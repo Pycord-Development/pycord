@@ -233,7 +233,7 @@ class ApplicationCommandMixin:
             A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot,
             then returns it.
         """
-        return self.command(cls=SlashCommand, **kwargs)
+        return self.application_command(cls=SlashCommand, **kwargs)
 
     def user_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -248,7 +248,7 @@ class ApplicationCommandMixin:
             A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot,
             then returns it.
         """
-        return self.command(cls=UserCommand, **kwargs)
+        return self.application_command(cls=UserCommand, **kwargs)
     
     def message_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -263,9 +263,9 @@ class ApplicationCommandMixin:
             A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot,
             then returns it.
         """
-        return self.command(cls=MessageCommand, **kwargs)
+        return self.application_command(cls=MessageCommand, **kwargs)
 
-    def command(self, **kwargs):
+    def application_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
 
@@ -283,6 +283,23 @@ class ApplicationCommandMixin:
             self.add_application_command(result)
             return result
         return decorator
+
+    def command(self, **kwargs):
+        """ There is an alias for :meth:`application_command`.
+
+        .. note::
+
+            This decorator is overriden by :class:`commands.Bot`.
+
+        .. versionadded:: 2.0
+
+        Returns
+        --------
+        Callable[..., :class:`ApplicationCommand`]
+            A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
+            then returns it.
+        """
+        return self.application_command(**kwargs)       
 
     def command_group(self, name, description, guild_ids=None):
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
