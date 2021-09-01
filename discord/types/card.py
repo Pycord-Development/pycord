@@ -2,7 +2,6 @@ from typing import Tuple
 from PIL import Image, Image, ImageDraw
 
 
-
 class Card:
 
     def __init__(self, size:Tuple = None, color:hex = None, image_path:str = None):
