@@ -96,7 +96,9 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(o, Option):
                 o = Option(o, "No description provided")
-
+                if o.default != inspect.Parameter.empty:
+                    o.required = False
+                
             o.default = o.default or op.default
 
             if o.default == inspect.Parameter.empty:
@@ -185,7 +187,7 @@ class Option:
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
-        
+
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 

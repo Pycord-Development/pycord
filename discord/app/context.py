@@ -54,14 +54,14 @@ class InteractionContext:
     def user(self):
         return self.interaction.user
 
-    @cached_property
-    def author(self):
-        return self.interaction.user
+    author = user
 
     @property
     def respond(self):
         return self.interaction.response.send_message
 
+    send = respond
+    
     @property
     def defer(self):
         return self.interaction.response.defer
