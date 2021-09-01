@@ -90,6 +90,13 @@ AutoShardedBot
 .. autoclass:: AutoShardedBot
     :members:
 
+Application Commands
+---------------------
+.. attributetable:: ApplicationCommandMixin
+
+.. autoclass:: ApplicationCommandMixin
+    :members:
+
 Application Info
 ------------------
 
