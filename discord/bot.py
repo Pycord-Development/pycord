@@ -200,16 +200,12 @@ class ApplicationCommandMixin:
                 for i in cmds:
                     cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
                     self.app_commands[i["id"]] = cmd
-            except Forbidden as e:
-                raised_error = e
+            except Forbidden:
+                raised_error = raised_error or traceback.format_exc()
                 raised_guilds.append(guild_id)
         if raised_error:
-            try:  # TODO: this is awful
-                raise raised_error
-            except Forbidden:
-                print(f'Ignoring exception running bulk_upsert_guild_commands on guilds {raised_guilds}',
-                      file=sys.stderr)
-                traceback.print_exc()
+            print(f'Ignoring exception running bulk_upsert_guild_commands on guilds {raised_guilds}', file=sys.stderr)
+            print(raised_error, file=sys.stderr)
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
