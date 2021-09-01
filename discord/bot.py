@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations # will probably need in future for type hinting
+from __future__ import annotations  # will probably need in future for type hinting
 
 import asyncio
 import inspect
@@ -31,7 +31,14 @@ from typing import Callable
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
-from .app import SlashCommand, SubCommandGroup, MessageCommand, UserCommand, ApplicationCommand
+from .app import (
+    SlashCommand,
+    SubCommandGroup,
+    MessageCommand,
+    UserCommand,
+    ApplicationCommand,
+)
+from .errors import Forbidden
 
 
 def command(cls=SlashCommand, **attrs):
@@ -67,12 +74,15 @@ def command(cls=SlashCommand, **attrs):
         if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
-            raise TypeError("func needs to be a callable or a subclass of ApplicationCommand.")
+            raise TypeError(
+                "func needs to be a callable or a subclass of ApplicationCommand."
+            )
 
         command = cls(func, **attrs)
         return command
 
     return decorator
+
 
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
@@ -85,6 +95,7 @@ class ApplicationCommandMixin:
     to_register: :class:`list`
         A list of commands that have been added but not yet registered.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.to_register = []
@@ -160,10 +171,14 @@ class ApplicationCommandMixin:
         for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
             as_dict = command.to_dict()
             if len(registered_commands) > 0:
-                matches = [x for x in registered_commands if x["name"] == command.name and x['type'] == command.type]
+                matches = [
+                    x
+                    for x in registered_commands
+                    if x["name"] == command.name and x["type"] == command.type
+                ]
                 # TODO: rewrite this, it seems inefficient
                 if len(matches) > 0:
-                    as_dict['id'] = matches[0]["id"]
+                    as_dict["id"] = matches[0]["id"]
             commands.append(as_dict)
 
         update_guild_commands = {}
@@ -177,16 +192,36 @@ class ApplicationCommandMixin:
 
         for guild_id in update_guild_commands:
             if update_guild_commands[guild_id]:
-                cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id, update_guild_commands[guild_id])
+                try:
+                    cmds = await self.http.bulk_upsert_guild_commands(
+                        self.user.id, guild_id, update_guild_commands[guild_id]
+                    )
+                except Forbidden as e:
+                    if "Missing Access" in e.args[0]:
+                        print(
+                            f"Bot is missing access to create application commands in this guild: {guild_id}."
+                        )
+                        continue  # raising an error causes the function to stop but the bot still runs
+                    else:
+                        raise e
+
                 for i in cmds:
-                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                    cmd = get(
+                        self.to_register,
+                        name=i["name"],
+                        description=i["description"],
+                        type=i["type"],
+                    )
                     self.app_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in cmds:
             cmd = get(
-                self.to_register, name=i["name"], description=i["description"], type=i['type']
+                self.to_register,
+                name=i["name"],
+                description=i["description"],
+                type=i["type"],
             )
             self.app_commands[i["id"]] = cmd
 
@@ -249,7 +284,7 @@ class ApplicationCommandMixin:
             then returns it.
         """
         return self.application_command(cls=UserCommand, **kwargs)
-    
+
     def message_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
@@ -277,15 +312,17 @@ class ApplicationCommandMixin:
             A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
             then returns it.
         """
+
         def decorator(func):
-            kwargs.setdefault('parent', self)
+            kwargs.setdefault("parent", self)
             result = command(**kwargs)(func)
             self.add_application_command(result)
             return result
+
         return decorator
 
     def command(self, **kwargs):
-        """ There is an alias for :meth:`application_command`.
+        """There is an alias for :meth:`application_command`.
 
         .. note::
 
@@ -299,13 +336,14 @@ class ApplicationCommandMixin:
             A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
             then returns it.
         """
-        return self.application_command(**kwargs)       
+        return self.application_command(**kwargs)
 
     def command_group(self, name, description, guild_ids=None):
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     # TODO I think
@@ -331,7 +369,9 @@ class Bot(BotBase, Client):
 
     .. versionadded:: 2.0
     """
+
     pass
+
 
 class AutoShardedBot(BotBase, AutoShardedClient):
     """This is similar to :class:`.Bot` except that it is inherited from
@@ -339,4 +379,5 @@ class AutoShardedBot(BotBase, AutoShardedClient):
 
     .. versionadded:: 2.0
     """
+
     pass
