@@ -66,12 +66,15 @@ Bot
 .. autoclass:: Bot
     :members:
     :inherited-members:
-    :exclude-members: event, command, slash_command, user_command, message_command
+    :exclude-members: command, event, message_command, slash_command, user_command
+
+    .. automethod:: Bot.command(**kwargs)
+        :decorator:
 
     .. automethod:: Bot.event()
         :decorator:
 
-    .. automethod:: Bot.command(**kwargs)
+    .. automethod:: Bot.message_command(**kwargs)
         :decorator:
 
     .. automethod:: Bot.slash_command(**kwargs)
@@ -79,10 +82,6 @@ Bot
 
     .. automethod:: Bot.user_command(**kwargs)
         :decorator:
-
-    .. automethod:: Bot.message_command(**kwargs)
-        :decorator:
-
 
 AutoShardedBot
 ~~~~~~~~~~~~~~~
