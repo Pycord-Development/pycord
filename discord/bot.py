@@ -22,23 +22,22 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations  # will probably need in future for type hinting
+from __future__ import annotations
 
-import asyncio
-import inspect
-from typing import Callable
+from typing import Callable, Dict, List, Optional
 
-from .client import Client
-from .shard import AutoShardedClient
-from .utils import get
 from .app import (
+    ApplicationCommand,
+    MessageCommand,
     SlashCommand,
     SubCommandGroup,
-    MessageCommand,
     UserCommand,
-    ApplicationCommand,
 )
+from .client import Client
 from .errors import Forbidden
+from .interactions import Interaction
+from .shard import AutoShardedClient
+from .utils import get
 
 
 def command(cls=SlashCommand, **attrs):
@@ -78,8 +77,7 @@ def command(cls=SlashCommand, **attrs):
                 "func needs to be a callable or a subclass of ApplicationCommand."
             )
 
-        command = cls(func, **attrs)
-        return command
+        return cls(func, **attrs)
 
     return decorator
 
@@ -96,12 +94,12 @@ class ApplicationCommandMixin:
         A list of commands that have been added but not yet registered.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.to_register = []
-        self.app_commands = {}
+        self.to_register: List[ApplicationCommand] = []
+        self.app_commands: Dict[str, ApplicationCommand] = {}
 
-    def add_application_command(self, command):
+    def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
 
         This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
@@ -116,7 +114,9 @@ class ApplicationCommandMixin:
         """
         self.to_register.append(command)
 
-    def remove_application_command(self, command):
+    def remove_application_command(
+        self, command: ApplicationCommand
+    ) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -135,7 +135,7 @@ class ApplicationCommandMixin:
         """
         return self.app_commands.pop(command.id)
 
-    async def sync_commands(self):
+    async def sync_commands(self) -> None:
         """|coro|
 
         Registers all commands that have been added through :meth:`.add_application_command`
@@ -153,7 +153,7 @@ class ApplicationCommandMixin:
         # TODO: Write this function as described in the docstring (bob will do this)
         return
 
-    async def register_commands(self):
+    async def register_commands(self) -> None:
         """|coro|
 
         Registers all commands that have been added through :meth:`.add_application_command`.
@@ -177,7 +177,7 @@ class ApplicationCommandMixin:
                     if x["name"] == command.name and x["type"] == command.type
                 ]
                 # TODO: rewrite this, it seems inefficient
-                if len(matches) > 0:
+                if matches:
                     as_dict["id"] = matches[0]["id"]
             commands.append(as_dict)
 
@@ -190,21 +190,20 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        for guild_id in update_guild_commands:
-            if update_guild_commands[guild_id]:
+        for guild_id, value in update_guild_commands.items():
+            if value:
                 try:
                     cmds = await self.http.bulk_upsert_guild_commands(
                         self.user.id, guild_id, update_guild_commands[guild_id]
                     )
                 except Forbidden as e:
-                    if "Missing Access" in e.args[0]:
-                        print(
-                            f"Bot is missing access to create application commands in this guild: {guild_id}."
-                        )
-                        continue  # raising an error causes the function to stop but the bot still runs
-                    else:
+                    if "Missing Access" not in e.args[0]:
                         raise e
+                    print(
+                        f"Bot is missing access to create application commands in this guild: {guild_id}."
+                    )
 
+                    continue
                 for i in cmds:
                     cmd = get(
                         self.to_register,
@@ -225,7 +224,7 @@ class ApplicationCommandMixin:
             )
             self.app_commands[i["id"]] = cmd
 
-    async def handle_interaction(self, interaction):
+    async def handle_interaction(self, interaction: Interaction) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -255,7 +254,7 @@ class ApplicationCommandMixin:
         else:
             await command.invoke(interaction)
 
-    def slash_command(self, **kwargs):
+    def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
@@ -270,7 +269,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=SlashCommand, **kwargs)
 
-    def user_command(self, **kwargs):
+    def user_command(self, **kwargs) -> UserCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
@@ -285,7 +284,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=UserCommand, **kwargs)
 
-    def message_command(self, **kwargs):
+    def message_command(self, **kwargs) -> MessageCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
@@ -313,7 +312,7 @@ class ApplicationCommandMixin:
             then returns it.
         """
 
-        def decorator(func):
+        def decorator(func) -> ApplicationCommand:
             kwargs.setdefault("parent", self)
             result = command(**kwargs)(func)
             self.add_application_command(result)
@@ -338,7 +337,9 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name, description, guild_ids=None):
+    def command_group(
+        self, name: str, description: str, guild_ids=None
+    ) -> SubCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
@@ -350,10 +351,10 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     # def __init__(self, *args, **kwargs):
     #     super(Client, self).__init__(*args, **kwargs)
 
-    async def on_connect(self):
+    async def on_connect(self) -> None:
         await self.register_commands()
 
-    async def on_interaction(self, interaction):
+    async def on_interaction(self, interaction: Interaction) -> None:
         await self.handle_interaction(interaction)
 
 
