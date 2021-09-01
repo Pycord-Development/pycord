@@ -85,7 +85,7 @@ Quick Example
                 await message.channel.send('pong')
 
     client = MyClient()
-    client.run('token')
+    client.run("token")
 
 Bot Example
 ~~~~~~~~~~~~~
@@ -94,6 +94,7 @@ Bot Example
 
     import discord
     from discord.ext import commands
+    
 
     bot = commands.Bot(command_prefix='>')
 
@@ -101,7 +102,7 @@ Bot Example
     async def ping(ctx):
         await ctx.send('pong')
 
-    bot.run('token')
+    bot.run("token")
 
 You can find more examples in the examples directory.
 
