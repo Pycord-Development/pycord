@@ -38,6 +38,7 @@ from .app import (
     MessageCommand,
     UserCommand,
     ApplicationCommand,
+    InteractionContext,
 )
 from .errors import Forbidden
 from .interactions import Interaction
@@ -245,7 +246,8 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
-            await command.invoke(interaction)
+            context = await self.get_application_context(interaction)
+            await command.invoke(context)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -335,6 +337,30 @@ class ApplicationCommandMixin:
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
+    async def get_application_context(
+        self, interaction: Interaction, cls=None
+    ) -> InteractionContext:
+        r"""|coro|
+
+        Returns the invocation context from the interaction.
+
+        This is a more low-level counter-part for :meth:`.handle_interaction`
+        to allow users more fine grained control over the processing.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction to get the invocation context from.
+
+        Returns
+        --------
+        :class:`.InteractionContext`
+            The invocation context.
+        """
+        if cls == None:
+            cls = InteractionContext
+        return cls(self, interaction)
 
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
