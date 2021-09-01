@@ -88,6 +88,9 @@ class SlashCommand(ApplicationCommand):
         for a, op in options.items():
 
             o = op.annotation
+            if o == inspect.Parameter.empty:
+                o = str
+            
             if self._is_typing_optional(o):
                 o = Option(o.__args__[0], "No description provided", required=False)
 
