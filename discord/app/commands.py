@@ -38,6 +38,7 @@ from .context import InteractionContext
 from ..utils import find, get_or_fetch
 from ..errors import NotFound
 
+
 class ApplicationCommand:
     def __repr__(self):
         return "<discord.app.commands.ApplicationCommand>"
@@ -68,12 +69,14 @@ class SlashCommand(ApplicationCommand):
         self.name: str = name
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__) if func.__doc__ is not None else None
+            inspect.cleandoc(func.__doc__)
+            if func.__doc__ is not None
+            else "No description provided"
         )
-        if description is None:
-            raise ValueError(
-                "Description of a command is required and cannot be empty."
-            )
+        # if description is None:
+        #     raise ValueError(
+        #         "Description of a command is required and cannot be empty."
+        #     )
 
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
@@ -83,7 +86,7 @@ class SlashCommand(ApplicationCommand):
 
         self.options = []
         for a, op in options.items():
-            
+
             o = op.annotation
             if self._is_typing_optional(o):
                 o = Option(o.__args__[0], "No description provided", required=False)
@@ -99,12 +102,11 @@ class SlashCommand(ApplicationCommand):
             if o.name is None:
                 o.name = a
             self.options.append(o)
-            
 
         self.is_subcommand = False
 
     def _is_typing_optional(self, annotation):
-        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
+        return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -130,8 +132,8 @@ class SlashCommand(ApplicationCommand):
 
         kwargs = {}
         for arg in interaction.data.get("options", []):
-            op = find(lambda x: x.name == arg['name'], self.options)
-            arg = arg['value']
+            op = find(lambda x: x.name == arg["name"], self.options)
+            arg = arg["value"]
 
             # TODO: Checks if input_type is user, role or channel
             if (
@@ -139,13 +141,13 @@ class SlashCommand(ApplicationCommand):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = 'member' if op.input_type.name == 'user' else op.input_type.name
+                name = "member" if op.input_type.name == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 try:
                     arg = await get_or_fetch(ctx.guild, "member", int(arg))
-                except NotFound: 
+                except NotFound:
                     arg = await get_or_fetch(ctx.guild, "role", int(arg))
 
             kwargs[op.name] = arg
