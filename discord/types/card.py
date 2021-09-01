@@ -1,5 +1,14 @@
+'''
+
+New Card feature to return instantly manipulated image
+
+'''
+
+
+import io
 from typing import Tuple
-from PIL import Image, Image, ImageDraw
+from PIL import Image, ImageDraw
+
 
 
 class Card:
@@ -8,28 +17,38 @@ class Card:
 
         color = 0x000000 if color is None else color
 
-        if len(size) == 2 and image_path is None:
-            self.card = Image.new("RGB", size, color=color)
+        if size is not None and len(size) == 2 and image_path is None:
+            card = Image.new("RGB", size, color=color)
+            buff = io.BytesIO()
+            card.save(buff, 'png')
+            buff.seek(0)
+            self.card = buff
             self.height = size[1]
             self.width = size[0]
 
-        elif 0 not in size and len(size) != 2 and image_path is not None:
+        elif size is None and image_path is not None:
             local_card_image = Image.open(image_path)
-            self.card = local_card_image
+            buff = io.BytesIO()
+            local_card_image.save(buff, 'png')
+            buff.seek(0)
+            self.card = buff
             self.width, self.height = local_card_image.size
 
-        elif len(size) == 2 and image_path is not None:
-            self.card = None
-            print('<-- use image path only or craete a blank image -->')
+        elif size is not None and image_path is not None:
+            local_card_image = Image.open(image_path).resize(size, resample=0)
+            buff = io.BytesIO()
+            local_card_image.save(buff,'png')
+            buff.seek(0)
+            self.card = buff
 
         else:
             self.card = None
-            print('<-- incorrect image dimenions or path -->')
-            
+            print('<-- incorrect image dimensions or path -->')
 
-        
+
+
     def add_image_with_resize(self, image_path:str = None, resize:Tuple = None, position:Tuple = None):
-         
+
         image_path = None if image_path is None else image_path
 
         if image_path is not None:
@@ -42,13 +61,19 @@ class Card:
                     offset = (position[0],position[1])
 
                 added_img = Image.open(image_path).resize(resize, resample=0)
-                Image.Image.paste(self.card, added_img, offset)
+                card = Image.open(self.card)
+                Image.Image.paste(card, added_img, offset)
 
-                return self.card
+                buff = io.BytesIO()
+                card.save(buff,'png')
+                buff.seek(0)
+                return buff
 
         else:
             print('<-- image source not found -->')
-            
+            return None
+
+
 
 
     def add_image_with_crop(self, image_path:str = None, crop:Tuple = None, position:Tuple = None):
@@ -57,7 +82,7 @@ class Card:
 
         if image_path is not None:
             added_img = Image.open(image_path)
-            
+
             if len(crop) == 4:
                 cropped_img = added_img.crop(crop)
                 h = cropped_img.height
@@ -71,29 +96,22 @@ class Card:
                     else:
                         offset = (position[0],position[1])
 
-                    Image.Image.paste(self.card, cropped_img, offset)
+                    card = Image.open(self.card)
 
-                    return self.card
+                    Image.Image.paste(card, cropped_img, offset)
+
+                    buff = io.BytesIO()
+                    card.save(buff,'png')
+                    buff.seek(0)
+
+                    return buff
 
             else:
-                print('<-- crop takes positions of 4 sides -->')
+                print('<-- crop takes positions ( LEFT, TOP, RIGHT, BOTTOM) -->')
+                return None
 
 
     def add_image_with_circular_crop(self, image_path:str = None, crop:Tuple = None, position:Tuple = None):
         #coming soon
         return None
-
-
-
-
-    def show_image(self,img:Image):
-
-        # for checking and testing
-
-        if self.card != None:
-
-            img.show()
-
-        else:
-            print('<-- error happened while creating the image -->')
-
+    
