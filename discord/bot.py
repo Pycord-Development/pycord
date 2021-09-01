@@ -64,7 +64,7 @@ def command(cls=SlashCommand, **attrs):
     """
 
     def decorator(func: Callable) -> cls:
-        if issubclass(func, ApplicationCommand):
+        if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
             raise TypeError("func needs to be a callable or a subclass of ApplicationCommand.")
