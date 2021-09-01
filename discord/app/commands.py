@@ -69,7 +69,7 @@ class SlashCommand(ApplicationCommand):
         self.name: str = name
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__.splitlines[0])
+            inspect.cleandoc(func.__doc__.splitlines()[0])
             if func.__doc__ is not None
             else "No description provided"
         )
