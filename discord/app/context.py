@@ -22,6 +22,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import discord
+
 from ..interactions import Interaction
 from ..utils import cached_property
 
@@ -35,7 +40,8 @@ class InteractionContext:
     .. versionadded:: 2.0
     """
 
-    def __init__(self, interaction: Interaction):
+    def __init__(self, bot: "discord.Bot", interaction: Interaction):
+        self.bot = bot
         self.interaction = interaction
 
     @cached_property
