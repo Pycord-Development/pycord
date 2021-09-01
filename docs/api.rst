@@ -65,6 +65,7 @@ Bot
 
 .. autoclass:: Bot
     :members:
+    :inherited-members:
 
 AutoShardedBot
 ~~~~~~~~~~~~~~~
