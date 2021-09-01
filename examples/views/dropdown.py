@@ -11,22 +11,35 @@ class Dropdown(discord.ui.Select):
 
         # Set the options that will be presented inside the dropdown
         options = [
-            discord.SelectOption(label='Red', description='Your favourite colour is red', emoji='🟥'),
-            discord.SelectOption(label='Green', description='Your favourite colour is green', emoji='🟩'),
-            discord.SelectOption(label='Blue', description='Your favourite colour is blue', emoji='🟦')
+            discord.SelectOption(
+                label="Red", description="Your favourite colour is red", emoji="🟥"
+            ),
+            discord.SelectOption(
+                label="Green", description="Your favourite colour is green", emoji="🟩"
+            ),
+            discord.SelectOption(
+                label="Blue", description="Your favourite colour is blue", emoji="🟦"
+            ),
         ]
 
         # The placeholder is what will be shown when no option is chosen
         # The min and max values indicate we can only pick one of the three options
         # The options parameter defines the dropdown options. We defined this above
-        super().__init__(placeholder='Choose your favourite colour...', min_values=1, max_values=1, options=options)
+        super().__init__(
+            placeholder="Choose your favourite colour...",
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
 
     async def callback(self, interaction: discord.Interaction):
         # Use the interaction object to send a response message containing
         # the user's favourite colour or choice. The self object refers to the
-        # Select object, and the values attribute gets a list of the user's 
+        # Select object, and the values attribute gets a list of the user's
         # selected options. We only want the first one.
-        await interaction.response.send_message(f'Your favourite colour is {self.values[0]}')
+        await interaction.response.send_message(
+            f"Your favourite colour is {self.values[0]}"
+        )
 
 
 class DropdownView(discord.ui.View):
@@ -39,13 +52,13 @@ class DropdownView(discord.ui.View):
 
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or('$'))
+        super().__init__(command_prefix=commands.when_mentioned_or("$"))
 
     async def on_ready(self):
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
-    
-    
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
+        print("------")
+
+
 bot = Bot()
 
 
@@ -57,7 +70,7 @@ async def colour(ctx):
     view = DropdownView()
 
     # Sending a message containing our view
-    await ctx.send('Pick your favourite colour:', view=view)
+    await ctx.send("Pick your favourite colour:", view=view)
 
 
-bot.run('token')
+bot.run("token")
