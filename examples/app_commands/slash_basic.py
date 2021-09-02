@@ -41,7 +41,7 @@ async def avatar(
     embed.set_image(url=av)
     await ctx.send(embed=embed)
 
-    # This will send an embed of the user's avatar!
+    # This will send the mentioned user or the authors avatar in an embed!
 
 
 
