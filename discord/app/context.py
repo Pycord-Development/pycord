@@ -98,4 +98,4 @@ class InteractionContext:
 
     @property
     def edit(self):
-        return self.interaction.edit_original_message()
+        return self.interaction.edit_original_message
