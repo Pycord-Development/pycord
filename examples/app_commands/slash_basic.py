@@ -35,7 +35,7 @@ async def avatar(
         
         # If no one is passed in for the member argument, it will make the author the member.   
     
-    av = member.avatar
+    av = member.avatar.url
 
     embed = discord.Embed(title=f"{member}'s avatar",color = discord.Color.blurple())
     embed.set_image(url=av)
