@@ -117,7 +117,7 @@ class ApplicationCommandMixin:
             The command to add.
         """
         
-        if self.debug_guild is not None and command.guild_ids is None:
+        if self.debug_guild and command.guild_ids is None:
             command.guild_ids = [self.debug_guild]
         self.to_register.append(command)
 
@@ -555,7 +555,8 @@ class Bot(BotBase, Client):
     Attributes
     -----------
     debug_guild: Optional[:class:`int`]
-        Guild ID of guild to use for testing commands. Prevents setting global commands in favor of guild commands, which update instantly.
+        Guild ID of a guild to use for testing commands. Prevents setting global commands 
+        in favor of guild commands, which update instantly.
         .. note::
             The bot will not create any global commands if a debug_guild is passed.
 
