@@ -108,4 +108,5 @@ Links
 
 - `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
 - `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
+- `Discord Developers <https://discord.gg/discord-developers>`_
 - `Discord API <https://discord.gg/discord-api>`_
