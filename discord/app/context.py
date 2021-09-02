@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 from ..abc import Messageable
 from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse
+from ..interactions import Interaction, InteractionResponse, InteractionChannel
 from ..member import Member
 from ..message import Message
 from ..user import User
@@ -61,7 +61,7 @@ class InteractionContext:
 
     @cached_property
     @copy_doc(Interaction.channel)
-    def channel(self) -> Optional[int]:
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
