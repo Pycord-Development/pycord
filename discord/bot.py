@@ -362,7 +362,7 @@ class ApplicationCommandMixin:
             The invocation context. Tye type of this can change via the
             ``cls`` parameter.
         """
-        if cls == None:
+        if cls is None:
             cls = InteractionContext
         return cls(self, interaction)
 
