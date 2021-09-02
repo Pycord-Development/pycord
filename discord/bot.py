@@ -26,7 +26,6 @@ from __future__ import annotations  # will probably need in future for type hint
 
 from typing import Callable, Optional
 
-import traceback
 import sys
 
 from .client import Client
@@ -38,6 +37,7 @@ from .app import (
     MessageCommand,
     UserCommand,
     ApplicationCommand,
+    InteractionContext,
 )
 from .errors import Forbidden
 from .interactions import Interaction
@@ -191,25 +191,20 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        raised_error = None
-        raised_guilds = []
         for guild_id in update_guild_commands:
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
                                                                   update_guild_commands[guild_id])
-            except Forbidden as e:
-                raised_error = e
-                raised_guilds.append(guild_id)
-            for i in cmds:
-                cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
-                self.app_commands[i["id"]] = cmd
-        if raised_error:
-            try:
-                raise raised_error
             except Forbidden:
-                print(f'Ignoring exception running bulk_upsert_guild_commands on guilds {raised_guilds}',
-                      file=sys.stderr)
-                traceback.print_exc()
+                if not update_guild_commands[guild_id]:
+                    continue
+                else:
+                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+                    raise
+            else:
+                for i in cmds:
+                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                    self.app_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
@@ -249,7 +244,8 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
-            await command.invoke(interaction)
+            context = await self.get_application_context(interaction)
+            await command.invoke(context)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -339,6 +335,36 @@ class ApplicationCommandMixin:
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
+    async def get_application_context(
+        self, interaction: Interaction, cls=None
+    ) -> InteractionContext:
+        r"""|coro|
+
+        Returns the invocation context from the interaction.
+
+        This is a more low-level counter-part for :meth:`.handle_interaction`
+        to allow users more fine grained control over the processing.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction to get the invocation context from.
+        cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.InteractionContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.InteractionContext`\'s interface.
+
+        Returns
+        --------
+        :class:`.InteractionContext`
+            The invocation context. Tye type of this can change via the
+            ``cls`` parameter.
+        """
+        if cls is None:
+            cls = InteractionContext
+        return cls(self, interaction)
 
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin

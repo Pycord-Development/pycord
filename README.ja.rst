@@ -1,27 +1,27 @@
-discord.py
+pycord
 ==========
 
-.. image:: https://discord.com/api/guilds/336642139381301249/embed.png
-   :target: https://discord.gg/nXzj3dg
+.. image:: https://discord.com/api/guilds/681882711945641997/embed.png
+   :target: https://discord.gg/dK2qkEJ37N
    :alt: Discordサーバーの招待
-.. image:: https://img.shields.io/pypi/v/discord.py.svg
-   :target: https://pypi.python.org/pypi/discord.py
+.. image:: https://img.shields.io/pypi/v/py-cord.svg
+   :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPIのバージョン情報
-.. image:: https://img.shields.io/pypi/pyversions/discord.py.svg
-   :target: https://pypi.python.org/pypi/discord.py
+.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
+   :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPIのサポートしているPythonのバージョン
 
-discord.py は機能豊富かつモダンで使いやすい、非同期処理にも対応したDiscord用のAPIラッパーです。
+discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最新の使いやすい機能豊富な非同期対応APIラッパーです。
 
 主な特徴
 -------------
 
 - ``async`` と ``await`` を使ったモダンなPythonらしいAPI。
-- 適切なレート制限処理
-- メモリと速度の両方を最適化。
+- 適切なレート制限の処理。
+- 速度とメモリの両方で最適化されています。
 
 インストール
--------------
+----------
 
 **Python 3.8 以降のバージョンが必須です**
 
@@ -29,36 +29,35 @@ discord.py は機能豊富かつモダンで使いやすい、非同期処理に
 
 .. code:: sh
 
-    # Linux/OS X
-    python3 -m pip install -U discord.py
+    # Linux/macOS
+    python3 -m pip install -U py-cord
 
     # Windows
-    py -3 -m pip install -U discord.py
+    py -3 -m pip install -U py-cord
 
 音声サポートが必要なら、次のコマンドを実行しましょう:
 
 .. code:: sh
 
-    # Linux/OS X
-    python3 -m pip install -U discord.py[voice]
+    # Linux/macOS
+    python3 -m pip install -U "py-cord[voice]"
 
     # Windows
-    py -3 -m pip install -U discord.py[voice]
+    py -3 -m pip install -U py-cord[voice]
 
 
 開発版をインストールしたいのならば、次の手順に従ってください:
-
 .. code:: sh
 
-    $ git clone https://github.com/Rapptz/discord.py
-    $ cd discord.py
+    $ git clone https://github.com/Pycord-Development/pycord
+    $ cd pycord
     $ python3 -m pip install -U .[voice]
 
 
 オプションパッケージ
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
-* PyNaCl (音声サポート用)
+* `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (音声サポート用)
 
 Linuxで音声サポートを導入するには、前述のコマンドを実行する前にお気に入りのパッケージマネージャー(例えば ``apt`` や ``dnf`` など)を使って以下のパッケージをインストールする必要があります:
 
@@ -108,6 +107,6 @@ examplesディレクトリに更に多くのサンプルがあります。
 リンク
 ------
 
-- `ドキュメント <https://discordpy.readthedocs.io/ja/latest/index.html>`_
-- `公式Discordサーバー <https://discord.gg/nXzj3dg>`_
+- `ドキュメント <https://pycord.readthedocs.io/en/latest/index.html>`_
+- `公式Discordサーバー <https://discord.gg/dK2qkEJ37N>`_
 - `Discord API <https://discord.gg/discord-api>`_

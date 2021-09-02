@@ -120,7 +120,7 @@ class _DefaultRepr:
 _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
-    def __init__(self, command_prefix, help_command=_default, description=None, **options):
+    def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
         self.extra_events: Dict[str, List[CoroFunc]] = {}

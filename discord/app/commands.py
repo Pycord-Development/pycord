@@ -30,7 +30,6 @@ from collections import OrderedDict
 from typing import Callable, Dict, List, Optional, Union
 
 from ..enums import SlashCommandOptionType
-from ..interactions import Interaction
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -64,18 +63,29 @@ class SlashCommand(ApplicationCommand):
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
+
+        # TODO: Use custom exception classes for these (ValidationError)
         if not isinstance(name, str):
             raise TypeError("Name of a command must be a string.")
+        if " " in name:
+            raise ValueError("Name of a slash command cannot have spaces.")
+        if not name.islower():
+            raise ValueError("Name of a slash command must be lowercase.")
+        if len(name) > 32 or len(name) < 1:
+            raise ValueError("Name of a slash command must be less than 32 characters and non empty.")
         self.name: str = name
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__.splitlines()[0])
+            inspect.cleandoc(func.__doc__).splitlines()[0]
             if func.__doc__ is not None
             else "No description provided"
         )
 
+        if len(description) > 100 or len(description) < 1:
+            raise ValueError("Description of a slash command must be less than 100 characters and non empty.")
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
+
         self.description: str = description
         self.is_subcommand: bool = False
 
@@ -138,12 +148,10 @@ class SlashCommand(ApplicationCommand):
             and other.description == self.description
         )
 
-    async def invoke(self, interaction) -> None:
+    async def invoke(self, ctx: InteractionContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
-        ctx = InteractionContext(interaction)
-
         kwargs = {}
-        for arg in interaction.data.get("options", []):
+        for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
             arg = arg["value"]
 
@@ -208,7 +216,7 @@ class OptionChoice:
         return {"name": self.name, "value": self.value}
 
 
-class SubCommandGroup(Option):
+class SubCommandGroup(ApplicationCommand, Option):
     type = 1
 
     def __init__(
@@ -257,11 +265,11 @@ class SubCommandGroup(Option):
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
-    async def invoke(self, interaction: Interaction) -> None:
-        option = interaction.data["options"][0]
+    async def invoke(self, ctx: InteractionContext) -> None:
+        option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
-        interaction.data = option
-        await command.invoke(interaction)
+        ctx.interaction.data = option
+        await command.invoke(ctx)
 
 
 class UserCommand(ApplicationCommand):
@@ -290,29 +298,28 @@ class UserCommand(ApplicationCommand):
     def to_dict(self) -> Dict[str, Union[str, int]]:
         return {"name": self.name, "description": self.description, "type": self.type}
 
-    async def invoke(self, interaction: Interaction) -> None:
-        if "members" not in interaction.data["resolved"]:
-            _data = interaction.data["resolved"]["users"]
+    async def invoke(self, ctx: InteractionContext) -> None:
+        if "members" not in ctx.interaction.data["resolved"]:
+            _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
                 v["id"] = int(i)
                 user = v
-            target = User(state=interaction._state, data=user)
+            target = User(state=ctx.interaction._state, data=user)
         else:
-            _data = interaction.data["resolved"]["members"]
+            _data = ctx.interaction.data["resolved"]["members"]
             for i, v in _data.items():
                 v["id"] = int(i)
                 member = v
-            _data = interaction.data["resolved"]["users"]
+            _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
                 v["id"] = int(i)
                 user = v
             member["user"] = user
             target = Member(
                 data=member,
-                guild=interaction._state._get_guild(interaction.guild_id),
-                state=interaction._state,
+                guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
+                state=ctx.interaction._state,
             )
-        ctx = InteractionContext(interaction)
         await self.callback(ctx, target)
 
 
@@ -340,18 +347,17 @@ class MessageCommand(ApplicationCommand):
     def to_dict(self):
         return {"name": self.name, "description": self.description, "type": self.type}
 
-    async def invoke(self, interaction):
-        _data = interaction.data["resolved"]["messages"]
+    async def invoke(self, ctx: InteractionContext):
+        _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
             v["id"] = int(i)
             message = v
-        channel = interaction._state.get_channel(int(message["channel_id"]))
+        channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await interaction._state.http.start_private_message(
+            data = await ctx.interaction._state.http.start_private_message(
                 int(message["author"]["id"])
             )
-            channel = interaction._state.add_dm_channel(data)
+            channel = ctx.interaction._state.add_dm_channel(data)
 
-        target = Message(state=interaction._state, channel=channel, data=message)
-        ctx = InteractionContext(interaction)
+        target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
