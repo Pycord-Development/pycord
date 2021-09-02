@@ -37,6 +37,7 @@ from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import DiscordException, NotFound, ValidationError, ClientException
+from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 
 __all__ = (
     "ApplicationCommand",
@@ -49,14 +50,31 @@ __all__ = (
     "MessageCommand",
 )
 
+def wrap_callback(coro):
+    @functools.wraps(coro)
+    async def wrapped(*args, **kwargs):
+        try:
+            ret = await coro(*args, **kwargs)
+        except ApplicationCommandError:
+            raise
+        except asyncio.CancelledError:
+            return
+        except Exception as exc:
+            raise ApplicationCommandInvokeError(exc) from exc
+        return ret
+    return wrapped
+
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
             ret = await coro(arg)
-        except Exception:
-            # Handle this here
+        except ApplicationCommandError:
             raise
+        except asyncio.CancelledError:
+            return
+        except ApplicationCommandInvokeError as exc:
+            raise ApplicationCommandInvokeError(exc) from exc
         finally:
             await command.call_after_hooks(ctx)
         return ret
@@ -75,7 +93,7 @@ class ApplicationCommand:
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise DiscordException('The check functions for the command {self.name} failed')
+            raise CheckFailure('The check functions for the command {self.name} failed')
 
         # TODO: Add cooldown
 
@@ -83,10 +101,7 @@ class ApplicationCommand:
         pass
 
     async def invoke(self, ctx: InteractionContext) -> None:
-        try:
-            await self.prepare(ctx)
-        except Exception as error:
-            return ctx.bot.dispatch("application_command_error", ctx, error)
+        await self.prepare(ctx)
 
         injected = hooked_wrapped_callback(self, ctx, self._invoke)
         await injected(ctx)
@@ -102,6 +117,29 @@ class ApplicationCommand:
             return True
 
         return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
+    
+    async def dispatch_error(self, ctx: InteractionContext, error: Exception) -> None:
+        ctx.command_failed = True
+        cog = self.cog
+        try:
+            coro = self.on_error
+        except AttributeError:
+            pass
+        else:
+            injected = wrap_callback(coro)
+            if cog is not None:
+                await injected(cog, ctx, error)
+            else:
+                await injected(ctx, error)
+
+        try:
+            if cog is not None:
+                local = cog.__class__._get_overridden_method(cog.cog_command_error)
+                if local is not None:
+                    wrapped = wrap_callback(local)
+                    await wrapped(ctx, error)
+        finally:
+            ctx.bot.dispatch('application_command_error', ctx, error)
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)

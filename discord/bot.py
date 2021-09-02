@@ -23,7 +23,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-import asyncio  # will probably need in future for type hinting
+import asyncio
+from discord.app.errors import ApplicationCommandError, CheckFailure  # will probably need in future for type hinting
 
 from typing import Callable, Optional
 
@@ -248,8 +249,18 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
-            context = await self.get_application_context(interaction)
-            await command.invoke(context)
+            ctx = await self.get_application_context(interaction)
+            self.dispatch('application_command', ctx)
+            try:
+                if await self.can_run(ctx, call_once=True):
+                    await ctx.command.invoke(ctx)
+                else:
+                    raise CheckFailure('The global check once functions failed.')
+            except ApplicationCommandError as exc:
+                await ctx.command.dispatch_error(ctx, exc)
+            else:
+                self.dispatch('application_command_completion', ctx)
+            await command.invoke(ctx)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
