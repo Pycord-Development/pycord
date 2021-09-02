@@ -26,6 +26,24 @@ async def joined(
     user = member or ctx.author
     await ctx.send(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
 
+@bot.command(guild_ids=[...])
+async def avatar(
+    ctx,member : discord.Member = None
+):
+    if not member:
+        member = ctx.author 
+        
+        # If no one is passed in for the member argument, it will make the author the member.   
+    
+    av = member.avatar
+
+    embed = discord.Embed(title=f"{member}'s avatar",color = discord.Color.blurple())
+    embed.set_image(url=av)
+    await ctx.send(embed=embed)
+
+    # This will send an embed of the user's avatar!
+
+
 
 # To learn how to add descriptions, choices to options check slash_options.py
 bot.run("TOKEN")
