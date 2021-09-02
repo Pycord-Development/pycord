@@ -152,7 +152,7 @@ class ApplicationCommandMixin:
         .. versionadded:: 2.0
         """
         # TODO: Write this function as described in the docstring (bob will do this)
-        return
+        raise NotImplementedError
 
     async def register_commands(self) -> None:
         """|coro|
