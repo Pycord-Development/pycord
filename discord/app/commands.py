@@ -36,7 +36,7 @@ from ..user import User
 from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch, async_all
-from ..errors import NotFound, ValidationError, ClientException
+from ..errors import DiscordException, NotFound, ValidationError, ClientException
 
 __all__ = (
     "ApplicationCommand",
@@ -51,11 +51,11 @@ __all__ = (
 
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
+    async def wrapped(arg):
         try:
-            ret = await coro(*args, **kwargs)
+            ret = await coro(arg)
         except Exception:
-            # Handle this
+            # Handle this here
             raise
         finally:
             await command.call_after_hooks(ctx)
@@ -72,9 +72,30 @@ class ApplicationCommand:
 
     async def prepare(self, ctx: InteractionContext) -> None:
         # This should be same across all 3 types
+        ctx.command = self
+
+        if not await self.can_run(ctx):
+            raise DiscordException('The check functions for the command {self.name} failed')
+
+        # TODO: Add cooldown
+
+        await self.call_before_hooks(ctx)
         pass
 
+    async def invoke(self, ctx: InteractionContext) -> None:
+        try:
+            await self.prepare(ctx)
+        except DiscordException as e:
+            return await ctx.send(f'{e}') # checks failed
+
+        injected = hooked_wrapped_callback(self, ctx, self._invoke)
+        await injected(ctx)
+
     async def can_run(self, ctx: InteractionContext) -> bool:
+
+        if not await ctx.bot.can_run(ctx):
+            raise DiscordException(f'The global check functions for command {self.name} failed.')
+
         predicates = self.checks
         if not predicates:
             # since we have no checks, then we just return True.
@@ -85,6 +106,93 @@ class ApplicationCommand:
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
 
+    def before_invoke(self, coro):
+        """A decorator that registers a coroutine as a pre-invoke hook.
+        A pre-invoke hook is called directly before the command is
+        called. This makes it a useful function to set up database
+        connections or any type of set up required.
+        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+        See :meth:`.Bot.before_invoke` for more info.
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the pre-invoke hook.
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The pre-invoke hook must be a coroutine.')
+
+        self._before_invoke = coro
+        return coro
+
+    def after_invoke(self, coro):
+        """A decorator that registers a coroutine as a post-invoke hook.
+        A post-invoke hook is called directly after the command is
+        called. This makes it a useful function to clean-up database
+        connections or any type of clean up required.
+        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        See :meth:`.Bot.after_invoke` for more info.
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the post-invoke hook.
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The post-invoke hook must be a coroutine.')
+
+        self._after_invoke = coro
+        return coro
+
+    async def call_before_hooks(self, ctx: InteractionContext) -> None:
+        # now that we're done preparing we can call the pre-command hooks
+        # first, call the command local hook:
+        cog = self.cog
+        if self._before_invoke is not None:
+            # should be cog if @commands.before_invoke is used
+            instance = getattr(self._before_invoke, '__self__', cog)
+            # __self__ only exists for methods, not functions
+            # however, if @command.before_invoke is used, it will be a function
+            if instance:
+                await self._before_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._before_invoke(ctx)  # type: ignore
+
+        # call the cog local hook if applicable:
+        if cog is not None:
+            hook = cog.__class__._get_overridden_method(cog.cog_before_invoke)
+            if hook is not None:
+                await hook(ctx)
+
+        # call the bot global hook if necessary
+        hook = ctx.bot._before_invoke
+        if hook is not None:
+            await hook(ctx)
+
+    async def call_after_hooks(self, ctx: InteractionContext) -> None:
+        cog = self.cog
+        if self._after_invoke is not None:
+            instance = getattr(self._after_invoke, '__self__', cog)
+            if instance:
+                await self._after_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._after_invoke(ctx)  # type: ignore
+
+        # call the cog local hook if applicable:
+        if cog is not None:
+            hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
+            if hook is not None:
+                await hook(ctx)
+
+        hook = ctx.bot._after_invoke
+        if hook is not None:
+            await hook(ctx)
 
 class SlashCommand(ApplicationCommand):
     type = 1
@@ -116,6 +224,9 @@ class SlashCommand(ApplicationCommand):
         self.is_subcommand: bool = False
         self.cog = None
 
+        params = self._get_signature_parameters()
+        self.options = self.parse_options(params)
+
         try:
             checks = func.__commands_checks__
             checks.reverse()
@@ -124,8 +235,9 @@ class SlashCommand(ApplicationCommand):
 
         self.checks = checks
 
-        params = self._get_signature_parameters()
-        self.options = self.parse_options(params)
+        self._before_invoke = None
+        self._after_invoke = None
+        
 
     def parse_options(self, params) -> List[Option]:
         params = iter(params.items())
@@ -200,7 +312,7 @@ class SlashCommand(ApplicationCommand):
             and other.description == self.description
         )
 
-    async def invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: InteractionContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -325,7 +437,7 @@ class SubCommandGroup(ApplicationCommand, Option):
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
-    async def invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: InteractionContext) -> None:
         option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
@@ -362,6 +474,8 @@ class ContextMenuCommand(ApplicationCommand):
             checks = kwargs.get('checks', [])
 
         self.checks = checks
+        self._before_invoke = None
+        self._after_invoke = None
         
         self.validate_parameters()
 
@@ -416,7 +530,7 @@ class UserCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: InteractionContext) -> None:
         if "members" not in ctx.interaction.data["resolved"]:
             _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
@@ -450,7 +564,7 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def invoke(self, ctx: InteractionContext):
+    async def _invoke(self, ctx: InteractionContext):
         _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
             v["id"] = int(i)

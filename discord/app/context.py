@@ -43,7 +43,8 @@ class InteractionContext:
     def __init__(self, bot: "discord.Bot", interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
-
+        self.command = None
+        
     @cached_property
     def channel(self):
         return self.interaction.channel

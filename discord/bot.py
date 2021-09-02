@@ -22,7 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations  # will probably need in future for type hinting
+from __future__ import annotations
+import asyncio  # will probably need in future for type hinting
 
 from typing import Callable, Optional
 
@@ -30,7 +31,7 @@ import sys
 
 from .client import Client
 from .shard import AutoShardedClient
-from .utils import get
+from .utils import get, async_all
 from .app import (
     SlashCommand,
     SubCommandGroup,
@@ -245,13 +246,7 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             context = await self.get_application_context(interaction)
-            try:
-                if not await command.can_run(context):
-                    raise Exception('Checks failed')
-            except DiscordException as e:
-                await context.send(f'{e}')
-            else:
-                await command.invoke(context)
+            await command.invoke(context)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -375,8 +370,14 @@ class ApplicationCommandMixin:
 
 class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     # TODO I think
-    # def __init__(self, *args, **kwargs):
-    #     super(Client, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        # super(Client, self).__init__(*args, **kwargs)
+        # I replaced ^ with v and it worked
+        super().__init__(*args, **kwargs) 
+        self._checks = []
+        self._check_once = []
+        self._before_invoke = None
+        self._after_invoke = None
 
     async def on_connect(self):
         await self.register_commands()
@@ -384,6 +385,156 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
     async def on_interaction(self, interaction):
         await self.handle_interaction(interaction)
 
+    # global check registration
+    # TODO: Remove these from commands.Bot
+
+    def check(self, func):
+        r"""A decorator that adds a global check to the bot.
+        A global check is similar to a :func:`.check` that is applied
+        on a per command basis except it is run before any command checks
+        have been verified and applies to every command the bot has.
+        .. note::
+            This function can either be a regular function or a coroutine.
+        Similar to a command :func:`.check`\, this takes a single parameter
+        of type :class:`.Context` and can only raise exceptions inherited from
+        :exc:`.CommandError`.
+        Example
+        ---------
+        .. code-block:: python3
+            @bot.check
+            def check_commands(ctx):
+                return ctx.command.qualified_name in allowed_commands
+        """
+        # T was used instead of Check to ensure the type matches on return
+        self.add_check(func)  # type: ignore
+        return func
+
+    def add_check(self, func, *, call_once: bool = False) -> None:
+        """Adds a global check to the bot.
+        This is the non-decorator interface to :meth:`.check`
+        and :meth:`.check_once`.
+        Parameters
+        -----------
+        func
+            The function that was used as a global check.
+        call_once: :class:`bool`
+            If the function should only be called once per
+            :meth:`.invoke` call.
+        """
+
+        if call_once:
+            self._check_once.append(func)
+        else:
+            self._checks.append(func)
+
+    def remove_check(self, func, *, call_once: bool = False) -> None:
+        """Removes a global check from the bot.
+        This function is idempotent and will not raise an exception
+        if the function is not in the global checks.
+        Parameters
+        -----------
+        func
+            The function to remove from the global checks.
+        call_once: :class:`bool`
+            If the function was added with ``call_once=True`` in
+            the :meth:`.Bot.add_check` call or using :meth:`.check_once`.
+        """
+        l = self._check_once if call_once else self._checks
+
+        try:
+            l.remove(func)
+        except ValueError:
+            pass
+
+    def check_once(self, func):
+        r"""A decorator that adds a "call once" global check to the bot.
+        Unlike regular global checks, this one is called only once
+        per :meth:`.invoke` call.
+        Regular global checks are called whenever a command is called
+        or :meth:`.Command.can_run` is called. This type of check
+        bypasses that and ensures that it's called only once, even inside
+        the default help command.
+        .. note::
+            When using this function the :class:`.Context` sent to a group subcommand
+            may only parse the parent command and not the subcommands due to it
+            being invoked once per :meth:`.Bot.invoke` call.
+        .. note::
+            This function can either be a regular function or a coroutine.
+        Similar to a command :func:`.check`\, this takes a single parameter
+        of type :class:`.Context` and can only raise exceptions inherited from
+        :exc:`.CommandError`.
+        Example
+        ---------
+        .. code-block:: python3
+            @bot.check_once
+            def whitelist(ctx):
+                return ctx.message.author.id in my_whitelist
+        """
+        self.add_check(func, call_once=True)
+        return func
+
+    async def can_run(self, ctx: InteractionContext, *, call_once: bool = False) -> bool:
+        data = self._check_once if call_once else self._checks
+
+        if len(data) == 0:
+            return True
+
+        # type-checker doesn't distinguish between functions and methods
+        return await async_all(f(ctx) for f in data)  # type: ignore
+
+
+    def before_invoke(self, coro):
+        """A decorator that registers a coroutine as a pre-invoke hook.
+        A pre-invoke hook is called directly before the command is
+        called. This makes it a useful function to set up database
+        connections or any type of set up required.
+        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+        .. note::
+            The :meth:`~.Bot.before_invoke` and :meth:`~.Bot.after_invoke` hooks are
+            only called if all checks and argument parsing procedures pass
+            without error. If any check or argument parsing procedures fail
+            then the hooks are not called.
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the pre-invoke hook.
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The pre-invoke hook must be a coroutine.')
+
+        self._before_invoke = coro
+        return coro
+
+    def after_invoke(self, coro):
+        r"""A decorator that registers a coroutine as a post-invoke hook.
+        A post-invoke hook is called directly after the command is
+        called. This makes it a useful function to clean-up database
+        connections or any type of clean up required.
+        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        .. note::
+            Similar to :meth:`~.Bot.before_invoke`\, this is not called unless
+            checks and argument parsing procedures succeed. This hook is,
+            however, **always** called regardless of the internal command
+            callback raising an error (i.e. :exc:`.CommandInvokeError`\).
+            This makes it ideal for clean-up scenarios.
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the post-invoke hook.
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The post-invoke hook must be a coroutine.')
+
+        self._after_invoke = coro
+        return coro
 
 class Bot(BotBase, Client):
     """Represents a discord bot.
