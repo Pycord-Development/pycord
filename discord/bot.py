@@ -350,11 +350,17 @@ class ApplicationCommandMixin:
         -----------
         interaction: :class:`discord.Interaction`
             The interaction to get the invocation context from.
+        cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.InteractionContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.InteractionContext`\'s interface.
 
         Returns
         --------
         :class:`.InteractionContext`
-            The invocation context.
+            The invocation context. Tye type of this can change via the
+            ``cls`` parameter.
         """
         if cls == None:
             cls = InteractionContext
