@@ -109,7 +109,7 @@ class ApplicationCommand:
     async def can_run(self, ctx: InteractionContext) -> bool:
 
         if not await ctx.bot.can_run(ctx):
-            raise DiscordException(f'The global check functions for command {self.name} failed.')
+            raise CheckFailure(f'The global check functions for command {self.name} failed.')
 
         predicates = self.checks
         if not predicates:
