@@ -27,7 +27,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -37,7 +37,15 @@ from .context import InteractionContext
 from ..utils import find, get_or_fetch
 from ..errors import NotFound, ValidationError
 
-
+__all__ = (
+    "ApplicationCommand",
+    "SlashCommand",
+    "Option",
+    "OptionChoice",
+    "SubCommandGroup",
+    "UserCommand",
+    "MessageCommand"
+)
 class ApplicationCommand:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
@@ -63,15 +71,7 @@ class SlashCommand(ApplicationCommand):
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
-
-        if not isinstance(name, str):
-            raise TypeError("Name of a command must be a string.")
-        if " " in name:
-            raise ValidationError("Name of a slash command cannot have spaces.")
-        if not name.islower():
-            raise ValidationError("Name of a slash command must be lowercase.")
-        if len(name) > 32 or len(name) < 1:
-            raise ValidationError("Name of a slash command must be less than 32 characters and non empty.")
+        validate_chat_input_name(name)
         self.name: str = name
 
         description = kwargs.get("description") or (
@@ -79,12 +79,7 @@ class SlashCommand(ApplicationCommand):
             if func.__doc__ is not None
             else "No description provided"
         )
-
-        if not isinstance(description, str):
-            raise TypeError("Description of a command must be a string.")
-        if len(description) > 100 or len(description) < 1:
-            raise ValidationError("Description of a slash command must be less than 100 characters and non empty.")
-
+        validate_chat_input_description(description)
         self.description: str = description
         self.is_subcommand: bool = False
 
@@ -225,6 +220,8 @@ class SubCommandGroup(ApplicationCommand, Option):
         guild_ids: Optional[List[int]] = None,
         parent_group: Optional[SubCommandGroup] = None,
     ) -> None:
+        validate_chat_input_name(name)
+        validate_chat_input_description(description)
         super().__init__(
             SlashCommandOptionType.sub_command_group,
             name=name,
@@ -360,3 +357,21 @@ class MessageCommand(ApplicationCommand):
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
+
+
+# Validation
+def validate_chat_input_name(name: Any):
+    if not isinstance(name, str):
+        raise TypeError("Name of a command must be a string.")
+    if " " in name:
+        raise ValidationError("Name of a chat input command cannot have spaces.")
+    if not name.islower():
+        raise ValidationError("Name of a chat input command must be lowercase.")
+    if len(name) > 32 or len(name) < 1:
+        raise ValidationError("Name of a chat input command must be less than 32 characters and non empty.")
+
+def validate_chat_input_description(description: Any):
+    if not isinstance(description, str):
+        raise TypeError("Description of a command must be a string.")
+    if len(description) > 100 or len(description) < 1:
+        raise ValidationError("Description of a chat input command must be less than 100 characters and non empty.")
