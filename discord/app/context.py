@@ -27,7 +27,6 @@ from typing import TYPE_CHECKING, Optional, Union
 if TYPE_CHECKING:
     import discord
 
-from ..abc import Messageable
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse, InteractionChannel
 from ..member import Member
@@ -102,8 +101,8 @@ class InteractionContext:
         return self.interaction.response.send_message
 
     @property
-    @copy_doc(Messageable.send)
     def send(self):
+        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.InteractionContext.respond`"""
         return self.channel.send if self.response.is_done() else self.respond
 
     @property
@@ -116,8 +115,9 @@ class InteractionContext:
     def followup(self):
         return self.interaction.followup
 
-    @copy_doc(Interaction.delete_original_message)
     async def delete(self):
+        """Calls :attr:`~discord.app.InteractionContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
 
