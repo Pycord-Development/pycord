@@ -85,7 +85,7 @@ class ApplicationCommand:
     async def invoke(self, ctx: InteractionContext) -> None:
         try:
             await self.prepare(ctx)
-        except DiscordException as error:
+        except Exception as error:
             return ctx.bot.dispatch("application_command_error", ctx, error)
 
         injected = hooked_wrapped_callback(self, ctx, self._invoke)
