@@ -76,7 +76,7 @@ class InteractionContext:
     def respond(self):
         return self.interaction.response.send_message
 
-    reply = repsond
+    reply = respond
     
     @property
     def send(self):
