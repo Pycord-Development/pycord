@@ -63,8 +63,16 @@ class SlashCommand(ApplicationCommand):
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
+
+        # TODO: Use custom exception classes for these (ValidationError)
         if not isinstance(name, str):
             raise TypeError("Name of a command must be a string.")
+        if " " in name:
+            raise ValueError("Name of a slash command cannot have spaces.")
+        if not name.islower():
+            raise ValueError("Name of a slash command must be lowercase.")
+        if len(name) > 32 or len(name) < 1:
+            raise ValueError("Name of a slash command must be less than 32 characters and non empty.")
         self.name: str = name
 
         description = kwargs.get("description") or (
@@ -73,8 +81,11 @@ class SlashCommand(ApplicationCommand):
             else "No description provided"
         )
 
+        if len(description) > 100 or len(description) < 1:
+            raise ValueError("Description of a slash command must be less than 100 characters and non empty.")
         if not isinstance(description, str):
             raise TypeError("Description of a command must be a string.")
+
         self.description: str = description
         self.is_subcommand: bool = False
 
@@ -205,7 +216,7 @@ class OptionChoice:
         return {"name": self.name, "value": self.value}
 
 
-class SubCommandGroup(Option):
+class SubCommandGroup(ApplicationCommand, Option):
     type = 1
 
     def __init__(
