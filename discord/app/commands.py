@@ -35,7 +35,7 @@ from ..user import User
 from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch
-from ..errors import NotFound, ValidationError
+from ..errors import NotFound, ValidationError, ClientException
 
 __all__ = (
     "ApplicationCommand",
@@ -43,6 +43,7 @@ __all__ = (
     "Option",
     "OptionChoice",
     "SubCommandGroup",
+    "ContextMenuCommand",
     "UserCommand",
     "MessageCommand"
 )
@@ -53,6 +54,11 @@ class ApplicationCommand:
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
+    def prepare(self, ctx: InteractionContext) -> None:
+        pass
+
+    def _get_signature_parameters(self):
+        return OrderedDict(inspect.signature(self.callback).parameters)
 
 class SlashCommand(ApplicationCommand):
     type = 1
@@ -82,19 +88,32 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.is_subcommand: bool = False
+        self.cog = None
 
-        params = OrderedDict(inspect.signature(self.callback).parameters)
+        params = self._get_signature_parameters()
         self.options = self.parse_options(params)
 
-    def parse_options(self, params: OrderedDict) -> List[Option]:
+    def parse_options(self, params) -> List[Option]:
+        params = iter(params.items())
         final_options = []
 
-        # Remove ctx, this needs to refactored when used in Cogs
-        params.pop(list(params)[0]) 
+        if self.cog is not None:
+            # we have 'self' as the first parameter so just advance
+            # the iterator and resume parsing
+            try:
+                next(params)
+            except StopIteration:
+                raise ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
 
         final_options = []
         
-        for p_name, p_obj in params.items():
+        for p_name, p_obj in params:
 
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
@@ -267,8 +286,66 @@ class SubCommandGroup(ApplicationCommand, Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
+class ContextMenuCommand(ApplicationCommand):
+    def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
+        self = super().__new__(cls)
 
-class UserCommand(ApplicationCommand):
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
+
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+        self.callback = func
+        
+        
+        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+
+        # Discord API doesn't support setting descriptions for User commands
+        # so it must be empty
+        self.description = ""
+        self.name: str = kwargs.pop("name", func.__name__)
+        if not isinstance(self.name, str):
+            raise TypeError("Name of a command must be a string.")
+
+        self.cog = None
+        self.validate_parameters()
+
+    def validate_parameters(self):
+        params = iter(self._get_signature_parameters().items())
+        if self.cog is not None:
+            # we have 'self' as the first parameter so just advance
+            # the iterator and resume parsing
+            try:
+                next(params)
+            except StopIteration:
+                raise ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+
+        # next we have the 'user/message' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            cmd = 'user' if type(self) == UserCommand else 'message'
+            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
+
+        # next there should be no more parameters
+        try:
+            next(params)
+            raise ClientException(f'Callback for {self.name} command has too many parameters.')
+        except StopIteration:
+            pass
+
+    def to_dict(self) -> Dict[str, Union[str, int]]:
+        return {"name": self.name, "description": self.description, "type": self.type}
+
+class UserCommand(ContextMenuCommand):
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -276,23 +353,6 @@ class UserCommand(ApplicationCommand):
 
         self.__original_kwargs__ = kwargs.copy()
         return self
-
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
-
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-
-        self.description = (
-            ""  # Discord API doesn't support setting descriptions for User commands
-        )
-        self.name: str = kwargs.pop("name", func.__name__)
-        if not isinstance(self.name, str):
-            raise TypeError("Name of a command must be a string.")
-
-    def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {"name": self.name, "description": self.description, "type": self.type}
 
     async def invoke(self, ctx: InteractionContext) -> None:
         if "members" not in ctx.interaction.data["resolved"]:
@@ -319,29 +379,15 @@ class UserCommand(ApplicationCommand):
         await self.callback(ctx, target)
 
 
-class MessageCommand(ApplicationCommand):
+class MessageCommand(ContextMenuCommand):
     type = 3
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> MessageCommand:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func, *args, **kwargs):
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
-
-        self.guild_ids = kwargs.get("guild_ids", None)
-
-        self.description = ""
-        self.name = kwargs.pop("name", func.__name__)
-        if not isinstance(self.name, str):
-            raise TypeError("Name of a command must be a string.")
-
-    def to_dict(self):
-        return {"name": self.name, "description": self.description, "type": self.type}
 
     async def invoke(self, ctx: InteractionContext):
         _data = ctx.interaction.data["resolved"]["messages"]
