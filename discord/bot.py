@@ -26,9 +26,6 @@ from __future__ import annotations  # will probably need in future for type hint
 
 from typing import Callable, Optional
 
-import traceback
-import sys
-
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
@@ -192,8 +189,6 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        raised_error = None
-        raised_guilds = []
         for guild_id in update_guild_commands:
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
@@ -202,11 +197,10 @@ class ApplicationCommandMixin:
                     cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
                     self.app_commands[i["id"]] = cmd
             except Forbidden:
-                raised_error = raised_error or traceback.format_exc()
-                raised_guilds.append(guild_id)
-        if raised_error:
-            print(f'Ignoring exception running bulk_upsert_guild_commands on guilds {raised_guilds}', file=sys.stderr)
-            print(raised_error, file=sys.stderr)
+                if update_guild_commands[guild_id]:
+                    continue
+                else:
+                    raise
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
