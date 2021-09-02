@@ -80,7 +80,7 @@ class InteractionContext:
 
     @property
     def send(self):
-        return self.respond
+        return self.channel.send if self.response.is_done() else self.respond
 
     @property
     def defer(self):
