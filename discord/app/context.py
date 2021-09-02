@@ -67,10 +67,6 @@ class InteractionContext:
     @cached_property
     def user(self):
         return self.interaction.user
-    
-    @cached_property
-    def author(self):
-        return self.interaction.user
 
     @cached_property
     def response(self):
