@@ -26,6 +26,8 @@ from __future__ import annotations  # will probably need in future for type hint
 
 from typing import Callable, Optional
 
+import sys
+
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get
@@ -194,9 +196,10 @@ class ApplicationCommandMixin:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
                                                                   update_guild_commands[guild_id])
             except Forbidden:
-                if update_guild_commands[guild_id] == []:
+                if not update_guild_commands[guild_id]:
                     continue
                 else:
+                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
                     raise
             else:
                 for i in cmds:
