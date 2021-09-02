@@ -5,7 +5,13 @@ from discord import abc
 from discord.ui.button import button
 
 class Paginate(discord.ui.View):
-    """Creates a paginator for embeds that is navigated with buttons."""
+    """Creates a paginator for embeds that is navigated with buttons.
+    
+    Parameters
+    ------------
+    send_to: :class:`discord.abc.Messageable`
+    embed: List[:class:`discord.Embed`]
+    """
 
     def __init__(self, send_to, embeds: List[discord.Embed]):
         super().__init__()
