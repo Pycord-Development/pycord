@@ -39,7 +39,7 @@ from .app import (
     ApplicationCommand,
     InteractionContext,
 )
-from .errors import Forbidden
+from .errors import Forbidden, DiscordException
 from .interactions import Interaction
 
 
@@ -248,7 +248,7 @@ class ApplicationCommandMixin:
             try:
                 if not await command.can_run(context):
                     raise Exception('Checks failed')
-            except Exception as e:
+            except DiscordException as e:
                 await context.send(f'{e}')
             else:
                 await command.invoke(context)

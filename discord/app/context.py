@@ -89,3 +89,13 @@ class InteractionContext:
     @property
     def followup(self):
         return self.interaction.followup
+
+    async def delete(self):
+        if not self.response.is_done():
+            await self.defer()
+        
+        return await self.interaction.delete_original_message()
+
+    @property
+    def edit(self):
+        return self.interaction.edit_original_message()
