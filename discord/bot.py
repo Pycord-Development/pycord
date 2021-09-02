@@ -193,14 +193,15 @@ class ApplicationCommandMixin:
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
                                                                   update_guild_commands[guild_id])
-                for i in cmds:
-                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
-                    self.app_commands[i["id"]] = cmd
             except Forbidden:
                 if update_guild_commands[guild_id] == []:
                     continue
                 else:
                     raise
+            else:
+                for i in cmds:
+                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                    self.app_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
