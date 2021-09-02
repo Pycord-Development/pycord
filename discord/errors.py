@@ -53,7 +53,6 @@ __all__ = (
     'ConnectionClosed',
     'PrivilegedIntentsRequired',
     'InteractionResponded',
-    'ApplicationCommandError'
 )
 
 
