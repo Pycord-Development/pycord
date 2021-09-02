@@ -261,7 +261,6 @@ class ApplicationCommandMixin:
                 await ctx.command.dispatch_error(ctx, exc)
             else:
                 self.dispatch('application_command_completion', ctx)
-            await command.invoke(ctx)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
