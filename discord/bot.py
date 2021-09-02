@@ -197,7 +197,7 @@ class ApplicationCommandMixin:
                     cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
                     self.app_commands[i["id"]] = cmd
             except Forbidden:
-                if update_guild_commands[guild_id]:
+                if update_guild_commands[guild_id] == []:
                     continue
                 else:
                     raise
