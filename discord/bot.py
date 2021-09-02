@@ -250,6 +250,7 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             ctx = await self.get_application_context(interaction)
+            ctx.command = command
             self.dispatch('application_command', ctx)
             try:
                 if await self.can_run(ctx, call_once=True):
