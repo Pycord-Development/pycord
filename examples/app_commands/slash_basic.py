@@ -30,18 +30,25 @@ async def joined(
 async def avatar(
     ctx,member : discord.Member = None
 ):
-    if not member:
-        member = ctx.author 
-        
-        # If no one is passed in for the member argument, it will make the author the member.   
+    ''' Display a users avatar     '''
     
-    av = member.avatar.url
+    member = (
+        member or ctx.author
+        
+        # If no one is passed in for the member argument, it will make the author the member.
+    )   
+    
+    
 
     embed = discord.Embed(title=f"{member}'s avatar",color = discord.Color.blurple())
-    embed.set_image(url=av)
-    await ctx.send(embed=embed)
-
-    # This will send the mentioned user or the authors avatar in an embed!
+    embed.set_image(url=member.display_avatar.url)
+    
+    
+    await ctx.send(
+        
+        embed=embed
+        # This will send the mentioned user or the authors avatar in an embed!
+    )
 
 
 
