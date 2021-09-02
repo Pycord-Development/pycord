@@ -245,7 +245,13 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             context = await self.get_application_context(interaction)
-            await command.invoke(context)
+            try:
+                if not await command.can_run(context):
+                    raise Exception('Checks failed')
+            except Exception as e:
+                await context.send(f'{e}')
+            else:
+                await command.invoke(context)
 
     def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to

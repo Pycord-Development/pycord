@@ -35,7 +35,7 @@ from ..member import Member
 from ..user import User
 from ..message import Message
 from .context import InteractionContext
-from ..utils import find, get_or_fetch
+from ..utils import find, get_or_fetch, async_all
 from ..errors import NotFound, ValidationError, ClientException
 
 __all__ = (
@@ -70,9 +70,17 @@ class ApplicationCommand:
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
-    def prepare(self, ctx: InteractionContext) -> None:
+    async def prepare(self, ctx: InteractionContext) -> None:
         # This should be same across all 3 types
         pass
+
+    async def can_run(self, ctx: InteractionContext) -> bool:
+        predicates = self.checks
+        if not predicates:
+            # since we have no checks, then we just return True.
+            return True
+
+        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
@@ -107,6 +115,14 @@ class SlashCommand(ApplicationCommand):
         self.description: str = description
         self.is_subcommand: bool = False
         self.cog = None
+
+        try:
+            checks = func.__commands_checks__
+            checks.reverse()
+        except AttributeError:
+            checks = kwargs.get('checks', [])
+
+        self.checks = checks
 
         params = self._get_signature_parameters()
         self.options = self.parse_options(params)
@@ -338,6 +354,15 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Name of a command must be a string.")
 
         self.cog = None
+
+        try:
+            checks = func.__commands_checks__
+            checks.reverse()
+        except AttributeError:
+            checks = kwargs.get('checks', [])
+
+        self.checks = checks
+        
         self.validate_parameters()
 
     def validate_parameters(self):
