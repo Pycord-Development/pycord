@@ -526,8 +526,15 @@ class InteractionResponse:
         if view is not MISSING:
             payload['components'] = view.to_components()
 
-        if allowed_mentions:
-            payload['allowed_mentions'] = allowed_mentions.to_dict()
+        state = self._parent._state
+
+        if allowed_mentions is not None:
+            if state.allowed_mentions is not None:
+                payload['allowed_mentions'] = state.allowed_mentions.merge(allowed_mentions).to_dict()
+            else:
+                payload['allowed_mentions'] = allowed_mentions.to_dict()
+        else:
+            payload['allowed_mentions'] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
         parent = self._parent
         adapter = async_context.get()
