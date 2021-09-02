@@ -116,6 +116,9 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
+        
+        if self.debug_guild is not None and command.guild_ids is None:
+            command.guild_ids = [self.debug_guild]
         self.to_register.append(command)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
@@ -374,6 +377,7 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
         super().__init__(*args, **kwargs) 
+        self.debug_guild = kwargs.pop("debug_guild", None)
         self._checks = []
         self._check_once = []
         self._before_invoke = None
@@ -547,6 +551,14 @@ class Bot(BotBase, Client):
     to manage commands.
 
     .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    debug_guild: Optional[:class:`int`]
+        Guild ID of guild to use for testing commands. Prevents setting global commands in favor of guild commands, which update instantly.
+        .. note::
+            The bot will not create any global commands if a debug_guild is passed.
+
     """
 
     pass
