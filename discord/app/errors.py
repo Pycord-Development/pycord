@@ -41,7 +41,7 @@ class CheckFailure(ApplicationCommandError):
     """
     pass
 
-class CommandInvokeError(ApplicationCommandError):
+class ApplicationCommandInvokeError(ApplicationCommandError):
     """Exception raised when the command being invoked raised an exception.
 
     This inherits from :exc:`ApplicationCommandError`
