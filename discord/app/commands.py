@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import functools
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
@@ -45,8 +46,23 @@ __all__ = (
     "SubCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
-    "MessageCommand"
+    "MessageCommand",
 )
+
+def hooked_wrapped_callback(command, ctx, coro):
+    @functools.wraps(coro)
+    async def wrapped(*args, **kwargs):
+        try:
+            ret = await coro(*args, **kwargs)
+        except Exception:
+            # Handle this
+            raise
+        finally:
+            await command.call_after_hooks(ctx)
+        return ret
+    return wrapped
+    
+
 class ApplicationCommand:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
@@ -55,10 +71,12 @@ class ApplicationCommand:
         return isinstance(other, self.__class__)
 
     def prepare(self, ctx: InteractionContext) -> None:
+        # This should be same across all 3 types
         pass
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
+
 
 class SlashCommand(ApplicationCommand):
     type = 1
@@ -103,30 +121,36 @@ class SlashCommand(ApplicationCommand):
             try:
                 next(params)
             except StopIteration:
-                raise ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+                raise ClientException(
+                    f'Callback for {self.name} command is missing "self" parameter.'
+                )
 
         # next we have the 'ctx' as the next parameter
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         final_options = []
-        
+
         for p_name, p_obj in params:
 
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
-            
+
             if self._is_typing_optional(option):
-                option = Option(option.__args__[0], "No description provided", required=False)
+                option = Option(
+                    option.__args__[0], "No description provided", required=False
+                )
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
-                
+
             option.default = option.default or p_obj.default
 
             if option.default == inspect.Parameter.empty:
@@ -134,12 +158,11 @@ class SlashCommand(ApplicationCommand):
 
             if option.name is None:
                 option.name = p_name
-                
+
             final_options.append(option)
 
         return final_options
 
-        
     def _is_typing_optional(self, annotation):
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
@@ -232,6 +255,12 @@ class OptionChoice:
 class SubCommandGroup(ApplicationCommand, Option):
     type = 1
 
+    def __new__(cls, *args, **kwargs) -> SubCommandGroup:
+        self = super().__new__(cls)
+
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
     def __init__(
         self,
         name: str,
@@ -286,6 +315,7 @@ class SubCommandGroup(ApplicationCommand, Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
+
 class ContextMenuCommand(ApplicationCommand):
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
@@ -293,13 +323,11 @@ class ContextMenuCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
-        
-        
+
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
         # Discord API doesn't support setting descriptions for User commands
@@ -320,30 +348,39 @@ class ContextMenuCommand(ApplicationCommand):
             try:
                 next(params)
             except StopIteration:
-                raise ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+                raise ClientException(
+                    f'Callback for {self.name} command is missing "self" parameter.'
+                )
 
         # next we have the 'ctx' as the next parameter
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         # next we have the 'user/message' as the next parameter
         try:
             next(params)
         except StopIteration:
-            cmd = 'user' if type(self) == UserCommand else 'message'
-            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
+            cmd = "user" if type(self) == UserCommand else "message"
+            raise ClientException(
+                f'Callback for {self.name} command is missing "{cmd}" parameter.'
+            )
 
         # next there should be no more parameters
         try:
             next(params)
-            raise ClientException(f'Callback for {self.name} command has too many parameters.')
+            raise ClientException(
+                f"Callback for {self.name} command has too many parameters."
+            )
         except StopIteration:
             pass
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
         return {"name": self.name, "description": self.description, "type": self.type}
+
 
 class UserCommand(ContextMenuCommand):
     type = 2
@@ -388,7 +425,6 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-
     async def invoke(self, ctx: InteractionContext):
         _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
@@ -414,10 +450,15 @@ def validate_chat_input_name(name: Any):
     if not name.islower():
         raise ValidationError("Name of a chat input command must be lowercase.")
     if len(name) > 32 or len(name) < 1:
-        raise ValidationError("Name of a chat input command must be less than 32 characters and non empty.")
+        raise ValidationError(
+            "Name of a chat input command must be less than 32 characters and non empty."
+        )
+
 
 def validate_chat_input_description(description: Any):
     if not isinstance(description, str):
         raise TypeError("Description of a command must be a string.")
     if len(description) > 100 or len(description) < 1:
-        raise ValidationError("Description of a chat input command must be less than 100 characters and non empty.")
+        raise ValidationError(
+            "Description of a chat input command must be less than 100 characters and non empty."
+        )
