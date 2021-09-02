@@ -1,17 +1,17 @@
 import discord, asyncio
-from typing import List
+from typing import List, Union
 from .context import Context
+from app import InteractionContext
 from discord.ui.button import button
 
 class Paginate(discord.ui.View):
     """Creates a paginator for embeds that is navigated with buttons."""
 
-    def __init__(self, ctx: Context, embeds: List[discord.Embed]):
+    def __init__(self, ctx: Union[Context, InteractionContext], embeds: List[discord.Embed]):
         super().__init__()
         self.ctx = ctx
         self.embeds = embeds
         self.current_page = 1
-        self.replied = False
 
     @discord.ui.button(label = "<", style = discord.ButtonStyle.green, disabled=True)
     async def previous(self, button: discord.ui.Button, interaction = discord.Interaction):
