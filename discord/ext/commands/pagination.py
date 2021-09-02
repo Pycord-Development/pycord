@@ -1,15 +1,15 @@
 import discord, asyncio
 from typing import List, Union
-from .context import Context
-from app import InteractionContext
+
+from discord import abc
 from discord.ui.button import button
 
 class Paginate(discord.ui.View):
     """Creates a paginator for embeds that is navigated with buttons."""
 
-    def __init__(self, ctx: Union[Context, InteractionContext], embeds: List[discord.Embed]):
+    def __init__(self, send_to, embeds: List[discord.Embed]):
         super().__init__()
-        self.ctx = ctx
+        self.send_to = send_to
         self.embeds = embeds
         self.current_page = 1
 
@@ -47,8 +47,6 @@ class Paginate(discord.ui.View):
         """Sends a message with the paginated embeds."""
         if len(self.embeds) == 1:
             self.children[1].disabled = True
-        await self.ctx.reply(embed = self.embeds[0], view = self)
-
-
-            
-        
+        if not isinstance(self.send_to, abc.Messageable):
+            raise TypeError("send_to is not a messageable object")
+        await self.send_to.send(embed = self.embeds[0], view = self)
