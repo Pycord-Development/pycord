@@ -34,7 +34,7 @@ from ..abc import Messageable
 
 class InteractionContext(Messageable):
     """Represents a Discord interaction context.
- 
+
     This class is not created manually and is instead passed to application
     commands as the first parameter.
 
@@ -90,4 +90,3 @@ class InteractionContext(Messageable):
     @property
     def followup(self):
         return self.interaction.followup
-
