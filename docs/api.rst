@@ -410,6 +410,17 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param when: When the typing started as an aware datetime in UTC.
     :type when: :class:`datetime.datetime`
 
+.. function:: on_raw_typing(payload)
+
+    Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
+    called regardless if the user can be found or not. This most often happens
+    when a user types in the bot's DMs.
+
+    This requires :attr:`Intents.typing` to be enabled.
+
+    :param payload: The raw typing payload.
+    :type payload: :class:`RawTypingEvent`
+
 .. function:: on_message(message)
 
     Called when a :class:`Message` is created and sent.
@@ -3885,6 +3896,14 @@ GuildSticker
 .. attributetable:: GuildSticker
 
 .. autoclass:: GuildSticker()
+    :members:
+
+RawTypingEvent
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawTypingEvent
+
+.. autoclass:: RawTypingEvent()
     :members:
 
 RawMessageDeleteEvent

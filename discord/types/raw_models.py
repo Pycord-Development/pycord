@@ -85,3 +85,13 @@ class _IntegrationDeleteEventOptional(TypedDict, total=False):
 class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
     id: Snowflake
     guild_id: Snowflake
+
+
+class _TypingEventOptional(TypedDict, total=False):
+    guild_id: Snowflake
+    member: Member
+
+class TypingEvent(_TypingEventOptional):
+    channel_id: Snowflake
+    user_id: Snowflake
+    timestamp: int
