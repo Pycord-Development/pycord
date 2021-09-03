@@ -76,7 +76,7 @@ class InteractionContext:
         return self.interaction.guild_id
 
     @cached_property
-    def message(self) -> Message:
+    def message(self) -> Optional[Message]:
         return self.interaction.message
 
     @cached_property
