@@ -28,11 +28,11 @@ if TYPE_CHECKING:
     import discord
 
 from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse, InteractionChannel
+from ..interactions import Interaction, InteractionResponse
 from ..member import Member
 from ..message import Message
 from ..user import User
-from ..utils import cached_property, copy_doc
+from ..utils import cached_property
 
 
 class InteractionContext:
@@ -59,44 +59,36 @@ class InteractionContext:
         self.command = None
 
     @cached_property
-    @copy_doc(Interaction.channel)
-    def channel(self) -> Optional[InteractionChannel]:
+    def channel(self):
         return self.interaction.channel
 
     @cached_property
-    @copy_doc(Interaction.channel_id)
     def channel_id(self) -> Optional[int]:
         return self.interaction.channel_id
 
     @cached_property
-    @copy_doc(Interaction.guild)
     def guild(self) -> Optional[Guild]:
         return self.interaction.guild
 
     @cached_property
-    @copy_doc(Interaction.guild_id)
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
 
     @cached_property
-    @copy_doc(Interaction.message)
     def message(self) -> Message:
         return self.interaction.message
 
     @cached_property
-    @copy_doc(Interaction.user)
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
     @cached_property
-    @copy_doc(Interaction.response)
     def response(self) -> InteractionResponse:
         return self.interaction.response
 
     author = user
 
     @property
-    @copy_doc(InteractionResponse.send_message)
     def respond(self):
         return self.interaction.response.send_message
 
@@ -106,12 +98,10 @@ class InteractionContext:
         return self.channel.send if self.response.is_done() else self.respond
 
     @property
-    @copy_doc(InteractionResponse.defer)
     def defer(self):
         return self.interaction.response.defer
 
     @property
-    @copy_doc(Interaction.followup)
     def followup(self):
         return self.interaction.followup
 
@@ -124,6 +114,5 @@ class InteractionContext:
         return await self.interaction.delete_original_message()
 
     @property
-    @copy_doc(Interaction.edit_original_message)
     def edit(self):
         return self.interaction.edit_original_message
