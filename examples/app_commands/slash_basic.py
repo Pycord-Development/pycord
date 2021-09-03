@@ -47,7 +47,7 @@ async def avatar(ctx,member : discord.Member = None):
 async def ephemeral(ctx,text : str):
     '''Sends an empherial message, when a slash command is used!'''
 
-    await ctx.reply(content=text,ephemeral=True)
+    await ctx.reply(content=text, ephemeral=True)
     # This will send the text back in an ephemeral message!
 
 
