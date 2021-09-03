@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
+import traceback
 from discord.app.errors import ApplicationCommandError, CheckFailure  
 
 from typing import Callable, Optional
@@ -257,7 +258,7 @@ class ApplicationCommandMixin:
                     await ctx.command.invoke(ctx)
                 else:
                     raise CheckFailure('The global check once functions failed.')
-            except ApplicationCommandError as exc:
+            except DiscordException as exc:
                 await ctx.command.dispatch_error(ctx, exc)
             else:
                 self.dispatch('application_command_completion', ctx)
@@ -399,6 +400,33 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
 
     async def on_interaction(self, interaction):
         await self.handle_interaction(interaction)
+
+
+    async def on_application_command_error(self, context: InteractionContext, exception: DiscordException) -> None:
+        """|coro|
+
+        The default command error handler provided by the bot.
+
+        By default this prints to :data:`sys.stderr` however it could be
+        overridden to have a different implementation.
+
+        This only fires if you do not specify any listeners for command error.
+        """
+        # TODO
+        # if self.extra_events.get('on_application_command_error', None):
+        #     return
+
+        command = context.command
+        if command and command.has_error_handler():
+            return
+
+        # TODO
+        # cog = context.cog
+        # if cog and cog.has_error_handler():
+        #     return
+
+        print(f'Ignoring exception in command {context.command}:', file=sys.stderr)
+        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     # global check registration
     # TODO: Remove these from commands.Bot

@@ -93,7 +93,7 @@ class ApplicationCommand:
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure('The check functions for the command {self.name} failed')
+            raise CheckFailure(f'The check functions for the command {self.name} failed')
 
         # TODO: Add cooldown
 
@@ -143,6 +143,11 @@ class ApplicationCommand:
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
+
+    def has_error_handler(self) -> bool:
+        """:class:`bool`: Checks whether the command has an error handler registered.
+        """
+        return hasattr(self, 'on_error')
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.
