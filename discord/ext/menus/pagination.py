@@ -92,11 +92,43 @@ class Paginate(discord.ui.View):
         return message
 
     def forward_button(self, label: str, color: str = "green"):
+        """Customize your forward button
+        
+        Parameters
+        ------------
+        label: :class:`str`
+            The text you want on your button
+            
+        color: :class:`str`
+            The color of the button.
+            
+        Raises
+        --------
+        AttributeError
+            The color provided isn't supported
+            """
+
         self.forbutton.label = label
         color = getattr(discord.ButtonStyle, color.lower())
         self.forbutton.style = color
 
     def back_button(self, label: str, color: str = "green"):
+        """Customize your back button
+        
+        Parameters
+        ------------
+        label: :class:`str`
+            The text you want on your button
+            
+        color: :class:`str`
+            The color of the button.
+            
+        Raises
+        --------
+        AttributeError
+            The color provided isn't supported
+            """
+
         self.prevbutton.label = label
         color = getattr(discord.ButtonStyle, color.lower())
         self.prevbutton.style = color
