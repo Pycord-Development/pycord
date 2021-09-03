@@ -27,40 +27,28 @@ async def joined(
     await ctx.send(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
 
 @bot.command(guild_ids=[...])
-async def avatar(
-    ctx,member : discord.Member = None
-):
-    ''' Display a users avatar     '''
+async def avatar(ctx,member : discord.Member = None):
+    ''' Display a users avatar'''
     
-    member = (
-        member or ctx.author
-        
-        # If no one is passed in for the member argument, it will make the author the member.
-    )   
+    member = member or ctx.author
+    
+    # If no one is passed in for the member argument, it will make the author the member.  
     
     
 
-    embed = discord.Embed(title=f"{member}'s avatar",color = discord.Color.blurple())
+    embed = discord.Embed(title=f"{member}'s avatar",color=discord.Color.blurple())
     embed.set_image(url=member.display_avatar.url)
     
     
-    await ctx.send(
-        
-        embed=embed
-        # This will send the mentioned user or the authors avatar in an embed!
-    )
+    await ctx.send(embed=embed)
+    # This will send the mentioned user or the authors avatar in an embed!
 
 @bot.command(guild_ids=[...])
-async def ephemeral(
-    ctx,*,text : str
-):
-    ''' Sends an empherial message, when a slash command is used! '''
+async def ephemeral(ctx,text : str):
+    '''Sends an empherial message, when a slash command is used!'''
 
-    await ctx.reply(
-        
-        content=text,ephemeral=True
-        # This will send the text back in an ephemeral message!
-    )
+    await ctx.reply(content=text,ephemeral=True)
+    # This will send the text back in an ephemeral message!
 
 
 
