@@ -80,8 +80,11 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
     
-
-class ApplicationCommand:
+class _BaseCommand:
+    __slots__ = ()
+    
+    
+class ApplicationCommand(_BaseCommand):
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -617,6 +620,65 @@ class MessageCommand(ContextMenuCommand):
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
 
+def slash_command(self, **kwargs) -> SlashCommand:
+    """Decorator for slash commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`SlashCommand`]
+        A decorator that converts the provided method into a :class:`.SlashCommand`.
+    """
+    return self.application_command(cls=SlashCommand, **kwargs)
+
+def user_command(self, **kwargs) -> UserCommand:
+    """Decorator for user commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`UserCommand`]
+        A decorator that converts the provided method into a :class:`.UserCommand`.
+    """
+    return application_command(cls=UserCommand, **kwargs)
+
+def message_command(self, **kwargs) -> MessageCommand:
+    """Decorator for message commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`MessageCommand`]
+        A decorator that converts the provided method into a :class:`.MessageCommand`.
+    """
+    return application_command(cls=MessageCommand, **kwargs)
+
+def application_command(**kwargs):
+    """Decorator for application commands.
+    .. note::
+        This decorator is overriden by :func:`commands.command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`ApplicationCommand`]
+        A decorator that converts the provided method into an :class:`.ApplicationCommand`.
+    """
+
+    def decorator(func) -> ApplicationCommand:
+        kwargs.setdefault("parent", self)
+        result = command(**kwargs)(func)
+        return result
+
+    return decorator
+
+def command(self, **kwargs):
+    """There is an alias for :meth:`application_command`.
+    .. note::
+        This decorator is overriden by :func:`commands.command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`ApplicationCommand`]
+        A decorator that converts the provided method into an :class:`.ApplicationCommand`.
+    """
+    return application_command(**kwargs)
 
 # Validation
 def validate_chat_input_name(name: Any):
