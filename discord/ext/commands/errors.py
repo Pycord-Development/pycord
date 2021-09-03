@@ -109,7 +109,7 @@ class CommandError(DiscordException):
     in a special way as they are caught and passed into a special event
     from :class:`.Bot`\, :func:`.on_command_error`.
     """
-    def __init__(self, message: Optional[str] = None, *args: Any) -> None:
+    def __init__(self, message: str | None = None, *args: Any) -> None:
         if message is not None:
             # clean-up @everyone and @here mentions
             m = message.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
@@ -206,9 +206,9 @@ class CheckAnyFailure(CheckFailure):
         A list of check predicates that failed.
     """
 
-    def __init__(self, checks: List[CheckFailure], errors: List[Callable[[Context], bool]]) -> None:
-        self.checks: List[CheckFailure] = checks
-        self.errors: List[Callable[[Context], bool]] = errors
+    def __init__(self, checks: list[CheckFailure], errors: list[Callable[[Context], bool]]) -> None:
+        self.checks: list[CheckFailure] = checks
+        self.errors: list[Callable[[Context], bool]] = errors
         super().__init__('You do not have permission to run this command.')
 
 class PrivateMessageOnly(CheckFailure):
@@ -217,7 +217,7 @@ class PrivateMessageOnly(CheckFailure):
 
     This inherits from :exc:`CheckFailure`
     """
-    def __init__(self, message: Optional[str] = None) -> None:
+    def __init__(self, message: str | None = None) -> None:
         super().__init__(message or 'This command can only be used in private messages.')
 
 class NoPrivateMessage(CheckFailure):
@@ -227,7 +227,7 @@ class NoPrivateMessage(CheckFailure):
     This inherits from :exc:`CheckFailure`
     """
 
-    def __init__(self, message: Optional[str] = None) -> None:
+    def __init__(self, message: str | None = None) -> None:
         super().__init__(message or 'This command cannot be used in private messages.')
 
 class NotOwner(CheckFailure):
@@ -333,8 +333,8 @@ class ChannelNotReadable(BadArgument):
     argument: Union[:class:`.abc.GuildChannel`, :class:`.Thread`]
         The channel supplied by the caller that was not readable
     """
-    def __init__(self, argument: Union[GuildChannel, Thread]) -> None:
-        self.argument: Union[GuildChannel, Thread] = argument
+    def __init__(self, argument: GuildChannel | Thread) -> None:
+        self.argument: GuildChannel | Thread = argument
         super().__init__(f"Can't read messages in {argument.mention}.")
 
 class ChannelNotFound(BadArgument):
@@ -648,8 +648,8 @@ class NSFWChannelRequired(CheckFailure):
     channel: Union[:class:`.abc.GuildChannel`, :class:`.Thread`]
         The channel that does not have NSFW enabled.
     """
-    def __init__(self, channel: Union[GuildChannel, Thread]) -> None:
-        self.channel: Union[GuildChannel, Thread] = channel
+    def __init__(self, channel: GuildChannel | Thread) -> None:
+        self.channel: GuildChannel | Thread = channel
         super().__init__(f"Channel '{channel}' needs to be NSFW for this command to work.")
 
 class MissingPermissions(CheckFailure):
@@ -663,8 +663,8 @@ class MissingPermissions(CheckFailure):
     missing_permissions: List[:class:`str`]
         The required permissions that are missing.
     """
-    def __init__(self, missing_permissions: List[str], *args: Any) -> None:
-        self.missing_permissions: List[str] = missing_permissions
+    def __init__(self, missing_permissions: list[str], *args: Any) -> None:
+        self.missing_permissions: list[str] = missing_permissions
 
         missing = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in missing_permissions]
 
@@ -686,8 +686,8 @@ class BotMissingPermissions(CheckFailure):
     missing_permissions: List[:class:`str`]
         The required permissions that are missing.
     """
-    def __init__(self, missing_permissions: List[str], *args: Any) -> None:
-        self.missing_permissions: List[str] = missing_permissions
+    def __init__(self, missing_permissions: list[str], *args: Any) -> None:
+        self.missing_permissions: list[str] = missing_permissions
 
         missing = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in missing_permissions]
 
@@ -713,10 +713,10 @@ class BadUnionArgument(UserInputError):
     errors: List[:class:`CommandError`]
         A list of errors that were caught from failing the conversion.
     """
-    def __init__(self, param: Parameter, converters: Tuple[Type, ...], errors: List[CommandError]) -> None:
+    def __init__(self, param: Parameter, converters: tuple[type, ...], errors: list[CommandError]) -> None:
         self.param: Parameter = param
-        self.converters: Tuple[Type, ...] = converters
-        self.errors: List[CommandError] = errors
+        self.converters: tuple[type, ...] = converters
+        self.errors: list[CommandError] = errors
 
         def _get_name(x):
             try:
@@ -751,10 +751,10 @@ class BadLiteralArgument(UserInputError):
     errors: List[:class:`CommandError`]
         A list of errors that were caught from failing the conversion.
     """
-    def __init__(self, param: Parameter, literals: Tuple[Any, ...], errors: List[CommandError]) -> None:
+    def __init__(self, param: Parameter, literals: tuple[Any, ...], errors: list[CommandError]) -> None:
         self.param: Parameter = param
-        self.literals: Tuple[Any, ...] = literals
-        self.errors: List[CommandError] = errors
+        self.literals: tuple[Any, ...] = literals
+        self.errors: list[CommandError] = errors
 
         to_string = [repr(l) for l in literals]
         if len(to_string) > 2:
@@ -828,7 +828,7 @@ class ExtensionError(DiscordException):
     name: :class:`str`
         The extension that had an error.
     """
-    def __init__(self, message: Optional[str] = None, *args: Any, name: str) -> None:
+    def __init__(self, message: str | None = None, *args: Any, name: str) -> None:
         self.name: str = name
         message = message or f'Extension {name!r} had an error.'
         # clean-up @everyone and @here mentions
@@ -938,9 +938,9 @@ class TooManyFlags(FlagError):
     values: List[:class:`str`]
         The values that were passed.
     """
-    def __init__(self, flag: Flag, values: List[str]) -> None:
+    def __init__(self, flag: Flag, values: list[str]) -> None:
         self.flag: Flag = flag
-        self.values: List[str] = values
+        self.values: list[str] = values
         super().__init__(f'Too many flag values, expected {flag.max_args} but received {len(values)}.')
 
 class BadFlagArgument(FlagError):

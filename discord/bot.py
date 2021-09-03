@@ -117,7 +117,7 @@ class ApplicationCommandMixin:
         """
         self.to_register.append(command)
 
-    def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
+    def remove_application_command(self, command: ApplicationCommand) -> ApplicationCommand | None:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 

@@ -78,11 +78,11 @@ class RawMessageDeleteEvent(_RawReprMixin):
     def __init__(self, data: MessageDeleteEvent) -> None:
         self.message_id: int = int(data['id'])
         self.channel_id: int = int(data['channel_id'])
-        self.cached_message: Optional[Message] = None
+        self.cached_message: Message | None = None
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawBulkMessageDeleteEvent(_RawReprMixin):
@@ -103,14 +103,14 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
     __slots__ = ('message_ids', 'channel_id', 'guild_id', 'cached_messages')
 
     def __init__(self, data: BulkMessageDeleteEvent) -> None:
-        self.message_ids: Set[int] = {int(x) for x in data.get('ids', [])}
+        self.message_ids: set[int] = {int(x) for x in data.get('ids', [])}
         self.channel_id: int = int(data['channel_id'])
-        self.cached_messages: List[Message] = []
+        self.cached_messages: list[Message] = []
 
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawMessageUpdateEvent(_RawReprMixin):
@@ -142,12 +142,12 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.message_id: int = int(data['id'])
         self.channel_id: int = int(data['channel_id'])
         self.data: MessageUpdateEvent = data
-        self.cached_message: Optional[Message] = None
+        self.cached_message: Message | None = None
 
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -188,12 +188,12 @@ class RawReactionActionEvent(_RawReprMixin):
         self.user_id: int = int(data['user_id'])
         self.emoji: PartialEmoji = emoji
         self.event_type: str = event_type
-        self.member: Optional[Member] = None
+        self.member: Member | None = None
 
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionClearEvent(_RawReprMixin):
@@ -216,9 +216,9 @@ class RawReactionClearEvent(_RawReprMixin):
         self.channel_id: int = int(data['channel_id'])
 
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionClearEmojiEvent(_RawReprMixin):
@@ -246,9 +246,9 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.channel_id: int = int(data['channel_id'])
 
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id: int | None = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawIntegrationDeleteEvent(_RawReprMixin):
@@ -273,6 +273,6 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
         self.guild_id: int = int(data['guild_id'])
 
         try:
-            self.application_id: Optional[int] = int(data['application_id'])
+            self.application_id: int | None = int(data['application_id'])
         except KeyError:
-            self.application_id: Optional[int] = None
+            self.application_id: int | None = None

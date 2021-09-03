@@ -105,11 +105,11 @@ class CogMeta(type):
                     pass # hidden -> False
     """
     __cog_name__: str
-    __cog_settings__: Dict[str, Any]
-    __cog_commands__: List[Command]
-    __cog_listeners__: List[Tuple[str, str]]
+    __cog_settings__: dict[str, Any]
+    __cog_commands__: list[Command]
+    __cog_listeners__: list[tuple[str, str]]
 
-    def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
+    def __new__(cls: type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
         attrs['__cog_name__'] = kwargs.pop('name', name)
         attrs['__cog_settings__'] = kwargs.pop('command_attrs', {})
@@ -184,11 +184,11 @@ class Cog(metaclass=CogMeta):
     are equally valid here.
     """
     __cog_name__: ClassVar[str]
-    __cog_settings__: ClassVar[Dict[str, Any]]
-    __cog_commands__: ClassVar[List[Command]]
-    __cog_listeners__: ClassVar[List[Tuple[str, str]]]
+    __cog_settings__: ClassVar[dict[str, Any]]
+    __cog_commands__: ClassVar[list[Command]]
+    __cog_listeners__: ClassVar[list[tuple[str, str]]]
 
-    def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
+    def __new__(cls: type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
@@ -218,7 +218,7 @@ class Cog(metaclass=CogMeta):
 
         return self
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self) -> list[Command]:
         r"""
         Returns
         --------
@@ -261,7 +261,7 @@ class Cog(metaclass=CogMeta):
                 if isinstance(command, GroupMixin):
                     yield from command.walk_commands()
 
-    def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
+    def get_listeners(self) -> list[tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.
 
         Returns
@@ -272,7 +272,7 @@ class Cog(metaclass=CogMeta):
         return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
 
     @classmethod
-    def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
+    def _get_overridden_method(cls, method: FuncT) -> FuncT | None:
         """Return None if the method is not overridden. Otherwise returns the overridden method."""
         return getattr(method.__func__, '__cog_special_method__', method)
 

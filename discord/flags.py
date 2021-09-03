@@ -47,14 +47,14 @@ class flag_value:
         self.__doc__ = func.__doc__
 
     @overload
-    def __get__(self: FV, instance: None, owner: Type[BF]) -> FV:
+    def __get__(self: FV, instance: None, owner: type[BF]) -> FV:
         ...
 
     @overload
-    def __get__(self, instance: BF, owner: Type[BF]) -> bool:
+    def __get__(self, instance: BF, owner: type[BF]) -> bool:
         ...
 
-    def __get__(self, instance: Optional[BF], owner: Type[BF]) -> Any:
+    def __get__(self, instance: BF | None, owner: type[BF]) -> Any:
         if instance is None:
             return self
         return instance._has_flag(self.flag)
@@ -71,7 +71,7 @@ class alias_flag_value(flag_value):
 
 
 def fill_with_flags(*, inverted: bool = False):
-    def decorator(cls: Type[BF]):
+    def decorator(cls: type[BF]):
         # fmt: off
         cls.VALID_FLAGS = {
             name: value.flag
@@ -93,7 +93,7 @@ def fill_with_flags(*, inverted: bool = False):
 
 # n.b. flags must inherit from this and use the decorator above
 class BaseFlags:
-    VALID_FLAGS: ClassVar[Dict[str, int]]
+    VALID_FLAGS: ClassVar[dict[str, int]]
     DEFAULT_VALUE: ClassVar[int]
 
     value: int
@@ -125,7 +125,7 @@ class BaseFlags:
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__} value={self.value}>'
 
-    def __iter__(self) -> Iterator[Tuple[str, bool]]:
+    def __iter__(self) -> Iterator[tuple[str, bool]]:
         for name, value in self.__class__.__dict__.items():
             if isinstance(value, alias_flag_value):
                 continue
@@ -410,7 +410,7 @@ class PublicUserFlags(BaseFlags):
         """
         return UserFlags.discord_certified_moderator.value
 
-    def all(self) -> List[UserFlags]:
+    def all(self) -> list[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
         return [public_flag for public_flag in UserFlags if self._has_flag(public_flag.value)]
 
@@ -465,7 +465,7 @@ class Intents(BaseFlags):
             setattr(self, key, value)
 
     @classmethod
-    def all(cls: Type[Intents]) -> Intents:
+    def all(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled."""
         bits = max(cls.VALID_FLAGS.values()).bit_length()
         value = (1 << bits) - 1
@@ -474,14 +474,14 @@ class Intents(BaseFlags):
         return self
 
     @classmethod
-    def none(cls: Type[Intents]) -> Intents:
+    def none(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything disabled."""
         self = cls.__new__(cls)
         self.value = self.DEFAULT_VALUE
         return self
 
     @classmethod
-    def default(cls: Type[Intents]) -> Intents:
+    def default(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
         except :attr:`presences` and :attr:`members`.
         """
@@ -921,7 +921,7 @@ class MemberCacheFlags(BaseFlags):
             setattr(self, key, value)
 
     @classmethod
-    def all(cls: Type[MemberCacheFlags]) -> MemberCacheFlags:
+    def all(cls: type[MemberCacheFlags]) -> MemberCacheFlags:
         """A factory method that creates a :class:`MemberCacheFlags` with everything enabled."""
         bits = max(cls.VALID_FLAGS.values()).bit_length()
         value = (1 << bits) - 1
@@ -930,7 +930,7 @@ class MemberCacheFlags(BaseFlags):
         return self
 
     @classmethod
-    def none(cls: Type[MemberCacheFlags]) -> MemberCacheFlags:
+    def none(cls: type[MemberCacheFlags]) -> MemberCacheFlags:
         """A factory method that creates a :class:`MemberCacheFlags` with everything disabled."""
         self = cls.__new__(cls)
         self.value = self.DEFAULT_VALUE
@@ -962,7 +962,7 @@ class MemberCacheFlags(BaseFlags):
         return 2
 
     @classmethod
-    def from_intents(cls: Type[MemberCacheFlags], intents: Intents) -> MemberCacheFlags:
+    def from_intents(cls: type[MemberCacheFlags], intents: Intents) -> MemberCacheFlags:
         """A factory method that creates a :class:`MemberCacheFlags` based on
         the currently selected :class:`Intents`.
 

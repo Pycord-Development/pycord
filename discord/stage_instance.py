@@ -104,7 +104,7 @@ class StageInstance(Hashable):
         return f'<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>'
 
     @cached_slot_property('_cs_channel')
-    def channel(self) -> Optional[StageChannel]:
+    def channel(self) -> StageChannel | None:
         """Optional[:class:`StageChannel`]: The channel that stage instance is running in."""
         # the returned channel will always be a StageChannel or None
         return self._state.get_channel(self.channel_id) # type: ignore
@@ -112,7 +112,7 @@ class StageInstance(Hashable):
     def is_public(self) -> bool:
         return self.privacy_level is StagePrivacyLevel.public
 
-    async def edit(self, *, topic: str = MISSING, privacy_level: StagePrivacyLevel = MISSING, reason: Optional[str] = None) -> None:
+    async def edit(self, *, topic: str = MISSING, privacy_level: StagePrivacyLevel = MISSING, reason: str | None = None) -> None:
         """|coro|
 
         Edits the stage instance.
@@ -153,7 +153,7 @@ class StageInstance(Hashable):
         if payload:
             await self._state.http.edit_stage_instance(self.channel_id, **payload, reason=reason)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the stage instance.

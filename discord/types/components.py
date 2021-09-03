@@ -33,7 +33,7 @@ ButtonStyle = Literal[1, 2, 3, 4, 5]
 
 class ActionRow(TypedDict):
     type: Literal[1]
-    components: List[Component]
+    components: list[Component]
 
 
 class _ButtonComponentOptional(TypedDict, total=False):
@@ -70,7 +70,7 @@ class SelectOption(_SelectOptionsOptional):
 class SelectMenu(_SelectMenuOptional):
     type: Literal[3]
     custom_id: str
-    options: List[SelectOption]
+    options: list[SelectOption]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu]

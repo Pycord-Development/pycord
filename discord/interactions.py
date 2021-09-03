@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 The MIT License (MIT)
 
@@ -100,7 +98,7 @@ class Interaction:
         The raw interaction data.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         'id',
         'type',
         'guild_id',
@@ -123,26 +121,26 @@ class Interaction:
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
-        self._original_message: Optional[InteractionMessage] = None
+        self._original_message: InteractionMessage | None = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
         self.id: int = int(data['id'])
         self.type: InteractionType = try_enum(InteractionType, data['type'])
-        self.data: Optional[InteractionData] = data.get('data')
+        self.data: InteractionData | None = data.get('data')
         self.token: str = data['token']
         self.version: int = data['version']
-        self.channel_id: Optional[int] = utils._get_as_snowflake(data, 'channel_id')
-        self.guild_id: Optional[int] = utils._get_as_snowflake(data, 'guild_id')
+        self.channel_id: int | None = utils._get_as_snowflake(data, 'channel_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.application_id: int = int(data['application_id'])
 
-        self.message: Optional[Message]
+        self.message: Message | None
         try:
             self.message = Message(state=self._state, channel=self.channel, data=data['message'])  # type: ignore
         except KeyError:
             self.message = None
 
-        self.user: Optional[Union[User, Member]] = None
+        self.user: User | Member | None = None
         self._permissions: int = 0
 
         # TODO: there's a potential data loss here
@@ -162,12 +160,12 @@ class Interaction:
                 pass
 
     @property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild the interaction was sent from."""
         return self._state and self._state._get_guild(self.guild_id)
 
     @utils.cached_slot_property('_cs_channel')
-    def channel(self) -> Optional[InteractionChannel]:
+    def channel(self) -> InteractionChannel | None:
         """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
@@ -255,13 +253,13 @@ class Interaction:
     async def edit_original_message(
         self,
         *,
-        content: Optional[str] = MISSING,
-        embeds: List[Embed] = MISSING,
-        embed: Optional[Embed] = MISSING,
+        content: str | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        embed: Embed | None = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
-        view: Optional[View] = MISSING,
-        allowed_mentions: Optional[AllowedMentions] = None,
+        files: list[File] = MISSING,
+        view: View | None = MISSING,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -311,7 +309,7 @@ class Interaction:
             The newly edited message.
         """
 
-        previous_mentions: Optional[AllowedMentions] = self._state.allowed_mentions
+        previous_mentions: AllowedMentions | None = self._state.allowed_mentions
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -369,7 +367,7 @@ class InteractionResponse:
     .. versionadded:: 2.0
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         '_responded',
         '_parent',
     )
@@ -410,7 +408,7 @@ class InteractionResponse:
             raise InteractionResponded(self._parent)
 
         defer_type: int = 0
-        data: Optional[Dict[str, Any]] = None
+        data: dict[str, Any] | None = None
         parent = self._parent
         if parent.type is InteractionType.component:
             defer_type = InteractionResponseType.deferred_message_update.value
@@ -453,10 +451,10 @@ class InteractionResponse:
 
     async def send_message(
         self,
-        content: Optional[Any] = None,
+        content: Any | None = None,
         *,
         embed: Embed = MISSING,
-        embeds: List[Embed] = MISSING,
+        embeds: list[Embed] = MISSING,
         view: View = MISSING,
         tts: bool = False,
         ephemeral: bool = False,
@@ -502,7 +500,7 @@ class InteractionResponse:
         if self._responded:
             raise InteractionResponded(self._parent)
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             'tts': tts,
         }
 
@@ -550,11 +548,11 @@ class InteractionResponse:
     async def edit_message(
         self,
         *,
-        content: Optional[Any] = MISSING,
-        embed: Optional[Embed] = MISSING,
-        embeds: List[Embed] = MISSING,
-        attachments: List[Attachment] = MISSING,
-        view: Optional[View] = MISSING,
+        content: Any | None = MISSING,
+        embed: Embed | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        attachments: list[Attachment] = MISSING,
+        view: View | None = MISSING,
     ) -> None:
         """|coro|
 
@@ -681,13 +679,13 @@ class InteractionMessage(Message):
 
     async def edit(
         self,
-        content: Optional[str] = MISSING,
-        embeds: List[Embed] = MISSING,
-        embed: Optional[Embed] = MISSING,
+        content: str | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        embed: Embed | None = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
-        view: Optional[View] = MISSING,
-        allowed_mentions: Optional[AllowedMentions] = None,
+        files: list[File] = MISSING,
+        view: View | None = MISSING,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -740,7 +738,7 @@ class InteractionMessage(Message):
             allowed_mentions=allowed_mentions,
         )
 
-    async def delete(self, *, delay: Optional[float] = None) -> None:
+    async def delete(self, *, delay: float | None = None) -> None:
         """|coro|
 
         Deletes the message.

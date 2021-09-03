@@ -138,15 +138,15 @@ class Template:
         self.code: str = data['code']
         self.uses: int = data['usage_count']
         self.name: str = data['name']
-        self.description: Optional[str] = data['description']
+        self.description: str | None = data['description']
         creator_data = data.get('creator')
-        self.creator: Optional[User] = None if creator_data is None else self._state.create_user(creator_data)
+        self.creator: User | None = None if creator_data is None else self._state.create_user(creator_data)
 
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get('created_at'))
-        self.updated_at: Optional[datetime.datetime] = parse_time(data.get('updated_at'))
+        self.created_at: datetime.datetime | None = parse_time(data.get('created_at'))
+        self.updated_at: datetime.datetime | None = parse_time(data.get('updated_at'))
 
         guild_id = int(data['source_guild_id'])
-        guild: Optional[Guild] = self._state._get_guild(guild_id)
+        guild: Guild | None = self._state._get_guild(guild_id)
 
         self.source_guild: Guild
         if guild is None:
@@ -158,7 +158,7 @@ class Template:
         else:
             self.source_guild = guild
 
-        self.is_dirty: Optional[bool] = data.get('is_dirty', None)
+        self.is_dirty: bool | None = data.get('is_dirty', None)
 
     def __repr__(self) -> str:
         return (
@@ -166,7 +166,7 @@ class Template:
             f' creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>'
         )
 
-    async def create_guild(self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None) -> Guild:
+    async def create_guild(self, name: str, region: VoiceRegion | None = None, icon: Any = None) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild` using the template.
@@ -241,7 +241,7 @@ class Template:
         self,
         *,
         name: str = MISSING,
-        description: Optional[str] = MISSING,
+        description: str | None = MISSING,
     ) -> Template:
         """|coro|
 

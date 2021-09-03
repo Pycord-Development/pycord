@@ -111,13 +111,13 @@ signal_ctl: SignalCtl = {
     'music': 3002,
 }
 
-def _err_lt(result: int, func: Callable, args: List) -> int:
+def _err_lt(result: int, func: Callable, args: list) -> int:
     if result < OK:
         _log.info('error has happened in %s', func.__name__)
         raise OpusError(result)
     return result
 
-def _err_ne(result: T, func: Callable, args: List) -> T:
+def _err_ne(result: T, func: Callable, args: list) -> T:
     ret = args[-1]._obj
     if ret.value != OK:
         _log.info('error has happened in %s', func.__name__)
@@ -129,7 +129,7 @@ def _err_ne(result: T, func: Callable, args: List) -> T:
 # The second one are the types of arguments it takes.
 # The third is the result type.
 # The fourth is the error handler.
-exported_functions: List[Tuple[Any, ...]] = [
+exported_functions: list[tuple[Any, ...]] = [
     # Generic
     ('opus_get_version_string',
         None, ctypes.c_char_p, None),
@@ -433,7 +433,7 @@ class Decoder(_OpusStruct):
     def decode(self, data: Literal[None], *, fec: Literal[False]) -> bytes:
         ...
 
-    def decode(self, data: Optional[bytes], *, fec: bool = False) -> bytes:
+    def decode(self, data: bytes | None, *, fec: bool = False) -> bytes:
         if data is None and fec:
             raise InvalidArgument("Invalid arguments: FEC cannot be used with null data")
 

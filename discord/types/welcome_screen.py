@@ -30,11 +30,11 @@ from .snowflake import Snowflake
 
 class WelcomeScreen(TypedDict):
     description: str
-    welcome_channels: List[WelcomeScreenChannel]
+    welcome_channels: list[WelcomeScreenChannel]
 
 
 class WelcomeScreenChannel(TypedDict):
     channel_id: Snowflake
     description: str
-    emoji_id: Optional[Snowflake]
-    emoji_name: Optional[str]
+    emoji_id: Snowflake | None
+    emoji_name: str | None

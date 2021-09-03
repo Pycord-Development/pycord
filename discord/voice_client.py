@@ -223,7 +223,7 @@ class VoiceClient(VoiceProtocol):
     """
     endpoint_ip: str
     voice_port: int
-    secret_key: List[int]
+    secret_key: list[int]
     ssrc: int
 
 
@@ -251,20 +251,20 @@ class VoiceClient(VoiceProtocol):
         self.timestamp: int = 0
         self.timeout: float = 0
         self._runner: asyncio.Task = MISSING
-        self._player: Optional[AudioPlayer] = None
+        self._player: AudioPlayer | None = None
         self.encoder: Encoder = MISSING
         self._lite_nonce: int = 0
         self.ws: DiscordVoiceWebSocket = MISSING
 
     warn_nacl = not has_nacl
-    supported_modes: Tuple[SupportedModes, ...] = (
+    supported_modes: tuple[SupportedModes, ...] = (
         'xsalsa20_poly1305_lite',
         'xsalsa20_poly1305_suffix',
         'xsalsa20_poly1305',
     )
 
     @property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild we're connected to, if applicable."""
         return getattr(self.channel, 'guild', None)
 
@@ -556,7 +556,7 @@ class VoiceClient(VoiceProtocol):
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
-    def play(self, source: AudioSource, *, after: Callable[[Optional[Exception]], Any]=None) -> None:
+    def play(self, source: AudioSource, *, after: Callable[[Exception | None], Any]=None) -> None:
         """Plays an :class:`AudioSource`.
 
         The finalizer, ``after`` is called after the source has been exhausted
@@ -625,7 +625,7 @@ class VoiceClient(VoiceProtocol):
             self._player.resume()
 
     @property
-    def source(self) -> Optional[AudioSource]:
+    def source(self) -> AudioSource | None:
         """Optional[:class:`AudioSource`]: The audio source being played, if playing.
 
         This property can also be used to change the audio source currently being played.

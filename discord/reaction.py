@@ -77,9 +77,9 @@ class Reaction:
     """
     __slots__ = ('message', 'count', 'emoji', 'me')
 
-    def __init__(self, *, message: Message, data: ReactionPayload, emoji: Optional[Union[PartialEmoji, Emoji, str]] = None):
+    def __init__(self, *, message: Message, data: ReactionPayload, emoji: PartialEmoji | Emoji | str | None = None):
         self.message: Message = message
-        self.emoji: Union[PartialEmoji, Emoji, str] = emoji or message._state.get_reaction_emoji(data['emoji'])
+        self.emoji: PartialEmoji | Emoji | str = emoji or message._state.get_reaction_emoji(data['emoji'])
         self.count: int = data.get('count', 1)
         self.me: bool = data.get('me')
 
@@ -155,7 +155,7 @@ class Reaction:
         """
         await self.message.clear_reaction(self.emoji)
 
-    def users(self, *, limit: Optional[int] = None, after: Optional[Snowflake] = None) -> ReactionIterator:
+    def users(self, *, limit: int | None = None, after: Snowflake | None = None) -> ReactionIterator:
         """Returns an :class:`AsyncIterator` representing the users that have reacted to the message.
 
         The ``after`` parameter must represent a member

@@ -203,27 +203,27 @@ class Client:
     def __init__(
         self,
         *,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: asyncio.AbstractEventLoop | None = None,
         **options: Any,
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
         self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
-        self._listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
-        self.shard_id: Optional[int] = options.get('shard_id')
-        self.shard_count: Optional[int] = options.get('shard_count')
+        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = {}
+        self.shard_id: int | None = options.get('shard_id')
+        self.shard_count: int | None = options.get('shard_count')
 
-        connector: Optional[aiohttp.BaseConnector] = options.pop('connector', None)
-        proxy: Optional[str] = options.pop('proxy', None)
-        proxy_auth: Optional[aiohttp.BasicAuth] = options.pop('proxy_auth', None)
+        connector: aiohttp.BaseConnector | None = options.pop('connector', None)
+        proxy: str | None = options.pop('proxy', None)
+        proxy_auth: aiohttp.BasicAuth | None = options.pop('proxy_auth', None)
         unsync_clock: bool = options.pop('assume_unsync_clock', True)
         self.http: HTTPClient = HTTPClient(connector, proxy=proxy, proxy_auth=proxy_auth, unsync_clock=unsync_clock, loop=self.loop)
 
-        self._handlers: Dict[str, Callable] = {
+        self._handlers: dict[str, Callable] = {
             'ready': self._handle_ready
         }
 
-        self._hooks: Dict[str, Callable] = {
+        self._hooks: dict[str, Callable] = {
             'before_identify': self._call_before_identify_hook
         }
 
@@ -241,7 +241,7 @@ class Client:
 
     # internals
 
-    def _get_websocket(self, guild_id: Optional[int] = None, *, shard_id: Optional[int] = None) -> DiscordWebSocket:
+    def _get_websocket(self, guild_id: int | None = None, *, shard_id: int | None = None) -> DiscordWebSocket:
         return self.ws
 
     def _get_state(self, **options: Any) -> ConnectionState:
@@ -273,22 +273,22 @@ class Client:
         return False
 
     @property
-    def user(self) -> Optional[ClientUser]:
+    def user(self) -> ClientUser | None:
         """Optional[:class:`.ClientUser`]: Represents the connected client. ``None`` if not logged in."""
         return self._connection.user
 
     @property
-    def guilds(self) -> List[Guild]:
+    def guilds(self) -> list[Guild]:
         """List[:class:`.Guild`]: The guilds that the connected client is a member of."""
         return self._connection.guilds
 
     @property
-    def emojis(self) -> List[Emoji]:
+    def emojis(self) -> list[Emoji]:
         """List[:class:`.Emoji`]: The emojis that the connected client has."""
         return self._connection.emojis
 
     @property
-    def stickers(self) -> List[GuildSticker]:
+    def stickers(self) -> list[GuildSticker]:
         """List[:class:`.GuildSticker`]: The stickers that the connected client has.
 
         .. versionadded:: 2.0
@@ -304,7 +304,7 @@ class Client:
         return utils.SequenceProxy(self._connection._messages or [])
 
     @property
-    def private_channels(self) -> List[PrivateChannel]:
+    def private_channels(self) -> list[PrivateChannel]:
         """List[:class:`.abc.PrivateChannel`]: The private channels that the connected client is participating on.
 
         .. note::
@@ -315,7 +315,7 @@ class Client:
         return self._connection.private_channels
 
     @property
-    def voice_clients(self) -> List[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceProtocol]:
         """List[:class:`.VoiceProtocol`]: Represents a list of voice connections.
 
         These are usually :class:`.VoiceClient` instances.
@@ -323,7 +323,7 @@ class Client:
         return self._connection.voice_clients
 
     @property
-    def application_id(self) -> Optional[int]:
+    def application_id(self) -> int | None:
         """Optional[:class:`int`]: The client's application ID.
 
         If this is not passed via ``__init__`` then this is retrieved
@@ -416,13 +416,13 @@ class Client:
 
     # hooks
 
-    async def _call_before_identify_hook(self, shard_id: Optional[int], *, initial: bool = False) -> None:
+    async def _call_before_identify_hook(self, shard_id: int | None, *, initial: bool = False) -> None:
         # This hook is an internal hook that actually calls the public one.
         # It allows the library to have its own hook without stepping on the
         # toes of those who need to override their own hook.
         await self.before_identify_hook(shard_id, initial=initial)
 
-    async def before_identify_hook(self, shard_id: Optional[int], *, initial: bool = False) -> None:
+    async def before_identify_hook(self, shard_id: int | None, *, initial: bool = False) -> None:
         """|coro|
 
         A hook that is called before IDENTIFYing a session. This is useful
@@ -672,14 +672,14 @@ class Client:
         return self._closed
 
     @property
-    def activity(self) -> Optional[ActivityTypes]:
+    def activity(self) -> ActivityTypes | None:
         """Optional[:class:`.BaseActivity`]: The activity being used upon
         logging in.
         """
         return create_activity(self._connection._activity)
 
     @activity.setter
-    def activity(self, value: Optional[ActivityTypes]) -> None:
+    def activity(self, value: ActivityTypes | None) -> None:
         if value is None:
             self._connection._activity = None
         elif isinstance(value, BaseActivity):
@@ -695,7 +695,7 @@ class Client:
 
         .. versionadded: 2.0
         """
-        if self._connection._status in set(state.value for state in Status):
+        if self._connection._status in {state.value for state in Status}:
             return Status(self._connection._status)
         return Status.online
 
@@ -709,7 +709,7 @@ class Client:
             raise TypeError('status must derive from Status.')
 
     @property
-    def allowed_mentions(self) -> Optional[AllowedMentions]:
+    def allowed_mentions(self) -> AllowedMentions | None:
         """Optional[:class:`~discord.AllowedMentions`]: The allowed mention configuration.
 
         .. versionadded:: 1.4
@@ -717,7 +717,7 @@ class Client:
         return self._connection.allowed_mentions
 
     @allowed_mentions.setter
-    def allowed_mentions(self, value: Optional[AllowedMentions]) -> None:
+    def allowed_mentions(self, value: AllowedMentions | None) -> None:
         if value is None or isinstance(value, AllowedMentions):
             self._connection.allowed_mentions = value
         else:
@@ -734,11 +734,11 @@ class Client:
     # helpers/getters
 
     @property
-    def users(self) -> List[User]:
+    def users(self) -> list[User]:
         """List[:class:`~discord.User`]: Returns a list of all the users the bot can see."""
         return list(self._connection._users.values())
 
-    def get_channel(self, id: int, /) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
+    def get_channel(self, id: int, /) -> GuildChannel | Thread | PrivateChannel | None:
         """Returns a channel or thread with the given ID.
 
         Parameters
@@ -753,7 +753,7 @@ class Client:
         """
         return self._connection.get_channel(id)
 
-    def get_partial_messageable(self, id: int, *, type: Optional[ChannelType] = None) -> PartialMessageable:
+    def get_partial_messageable(self, id: int, *, type: ChannelType | None = None) -> PartialMessageable:
         """Returns a partial messageable with the given channel ID.
 
         This is useful if you have a channel_id but don't want to do an API call
@@ -775,7 +775,7 @@ class Client:
         """
         return PartialMessageable(state=self._connection, id=id, type=type)
 
-    def get_stage_instance(self, id: int, /) -> Optional[StageInstance]:
+    def get_stage_instance(self, id: int, /) -> StageInstance | None:
         """Returns a stage instance with the given stage channel ID.
 
         .. versionadded:: 2.0
@@ -797,7 +797,7 @@ class Client:
         if isinstance(channel, StageChannel):
             return channel.instance
 
-    def get_guild(self, id: int, /) -> Optional[Guild]:
+    def get_guild(self, id: int, /) -> Guild | None:
         """Returns a guild with the given ID.
 
         Parameters
@@ -812,7 +812,7 @@ class Client:
         """
         return self._connection._get_guild(id)
 
-    def get_user(self, id: int, /) -> Optional[User]:
+    def get_user(self, id: int, /) -> User | None:
         """Returns a user with the given ID.
 
         Parameters
@@ -827,7 +827,7 @@ class Client:
         """
         return self._connection.get_user(id)
 
-    def get_emoji(self, id: int, /) -> Optional[Emoji]:
+    def get_emoji(self, id: int, /) -> Emoji | None:
         """Returns an emoji with the given ID.
 
         Parameters
@@ -842,7 +842,7 @@ class Client:
         """
         return self._connection.get_emoji(id)
 
-    def get_sticker(self, id: int, /) -> Optional[GuildSticker]:
+    def get_sticker(self, id: int, /) -> GuildSticker | None:
         """Returns a guild sticker with the given ID.
 
         .. versionadded:: 2.0
@@ -913,8 +913,8 @@ class Client:
         self,
         event: str,
         *,
-        check: Optional[Callable[..., bool]] = None,
-        timeout: Optional[float] = None,
+        check: Callable[..., bool] | None = None,
+        timeout: float | None = None,
     ) -> Any:
         """|coro|
 
@@ -1047,8 +1047,8 @@ class Client:
     async def change_presence(
         self,
         *,
-        activity: Optional[BaseActivity] = None,
-        status: Optional[Status] = None,
+        activity: BaseActivity | None = None,
+        status: Status | None = None,
     ):
         """|coro|
 
@@ -1107,7 +1107,7 @@ class Client:
     def fetch_guilds(
         self,
         *,
-        limit: Optional[int] = 100,
+        limit: int | None = 100,
         before: SnowflakeTime = None,
         after: SnowflakeTime = None
     ) -> GuildIterator:
@@ -1165,7 +1165,7 @@ class Client:
         """
         return GuildIterator(self, limit=limit, before=before, after=after)
 
-    async def fetch_template(self, code: Union[Template, str]) -> Template:
+    async def fetch_template(self, code: Template | str) -> Template:
         """|coro|
 
         Gets a :class:`.Template` from a discord.new URL or code.
@@ -1229,7 +1229,7 @@ class Client:
         self,
         *,
         name: str,
-        region: Union[VoiceRegion, str] = VoiceRegion.us_west,
+        region: VoiceRegion | str = VoiceRegion.us_west,
         icon: bytes = MISSING,
         code: str = MISSING,
     ) -> Guild:
@@ -1310,7 +1310,7 @@ class Client:
 
     # Invite management
 
-    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True) -> Invite:
+    async def fetch_invite(self, url: Invite | str, *, with_counts: bool = True, with_expiration: bool = True) -> Invite:
         """|coro|
 
         Gets an :class:`.Invite` from a discord.gg URL or ID.
@@ -1352,7 +1352,7 @@ class Client:
         data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration)
         return Invite.from_incomplete(state=self._connection, data=data)
 
-    async def delete_invite(self, invite: Union[Invite, str]) -> None:
+    async def delete_invite(self, invite: Invite | str) -> None:
         """|coro|
 
         Revokes an :class:`.Invite`, URL, or ID to an invite.
@@ -1461,7 +1461,7 @@ class Client:
         data = await self.http.get_user(user_id)
         return User(state=self._connection, data=data)
 
-    async def fetch_channel(self, channel_id: int, /) -> Union[GuildChannel, PrivateChannel, Thread]:
+    async def fetch_channel(self, channel_id: int, /) -> GuildChannel | PrivateChannel | Thread:
         """|coro|
 
         Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID.
@@ -1528,7 +1528,7 @@ class Client:
         data = await self.http.get_webhook(webhook_id)
         return Webhook.from_state(data, state=self._connection)
 
-    async def fetch_sticker(self, sticker_id: int, /) -> Union[StandardSticker, GuildSticker]:
+    async def fetch_sticker(self, sticker_id: int, /) -> StandardSticker | GuildSticker:
         """|coro|
 
         Retrieves a :class:`.Sticker` with the specified ID.
@@ -1551,7 +1551,7 @@ class Client:
         cls, _ = _sticker_factory(data['type'])  # type: ignore
         return cls(state=self._connection, data=data) # type: ignore
 
-    async def fetch_premium_sticker_packs(self) -> List[StickerPack]:
+    async def fetch_premium_sticker_packs(self) -> list[StickerPack]:
         """|coro|
 
         Retrieves all available premium sticker packs.
@@ -1599,7 +1599,7 @@ class Client:
         data = await state.http.start_private_message(user.id)
         return state.add_dm_channel(data)
 
-    def add_view(self, view: View, *, message_id: Optional[int] = None) -> None:
+    def add_view(self, view: View, *, message_id: int | None = None) -> None:
         """Registers a :class:`~discord.ui.View` for persistent listening.
 
         This method should be used for when a view is comprised of components

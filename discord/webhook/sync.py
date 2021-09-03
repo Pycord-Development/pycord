@@ -74,7 +74,7 @@ MISSING = utils.MISSING
 class DeferredLock:
     def __init__(self, lock: threading.Lock):
         self.lock = lock
-        self.delta: Optional[float] = None
+        self.delta: float | None = None
 
     def __enter__(self):
         self.lock.acquire()
@@ -91,23 +91,23 @@ class DeferredLock:
 
 class WebhookAdapter:
     def __init__(self):
-        self._locks: Dict[Any, threading.Lock] = {}
+        self._locks: dict[Any, threading.Lock] = {}
 
     def request(
         self,
         route: Route,
         session: Session,
         *,
-        payload: Optional[Dict[str, Any]] = None,
-        multipart: Optional[List[Dict[str, Any]]] = None,
-        files: Optional[List[File]] = None,
-        reason: Optional[str] = None,
-        auth_token: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None,
+        payload: dict[str, Any] | None = None,
+        multipart: list[dict[str, Any]] | None = None,
+        files: list[File] | None = None,
+        reason: str | None = None,
+        auth_token: str | None = None,
+        params: dict[str, Any] | None = None,
     ) -> Any:
-        headers: Dict[str, str] = {}
+        headers: dict[str, str] = {}
         files = files or []
-        to_send: Optional[Union[str, Dict[str, Any]]] = None
+        to_send: str | dict[str, Any] | None = None
         bucket = (route.webhook_id, route.webhook_token)
 
         try:
@@ -125,9 +125,9 @@ class WebhookAdapter:
         if reason is not None:
             headers['X-Audit-Log-Reason'] = urlquote(reason, safe='/ ')
 
-        response: Optional[Response] = None
-        data: Optional[Union[Dict[str, Any], str]] = None
-        file_data: Optional[Dict[str, Any]] = None
+        response: Response | None = None
+        data: dict[str, Any] | str | None = None
+        file_data: dict[str, Any] | None = None
         method = route.method
         url = route.url
         webhook_id = route.webhook_id
@@ -213,9 +213,9 @@ class WebhookAdapter:
         self,
         webhook_id: int,
         *,
-        token: Optional[str] = None,
+        token: str | None = None,
         session: Session,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ):
         route = Route('DELETE', '/webhooks/{webhook_id}', webhook_id=webhook_id)
         return self.request(route, session, reason=reason, auth_token=token)
@@ -226,7 +226,7 @@ class WebhookAdapter:
         token: str,
         *,
         session: Session,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ):
         route = Route('DELETE', '/webhooks/{webhook_id}/{webhook_token}', webhook_id=webhook_id, webhook_token=token)
         return self.request(route, session, reason=reason)
@@ -235,10 +235,10 @@ class WebhookAdapter:
         self,
         webhook_id: int,
         token: str,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         *,
         session: Session,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ):
         route = Route('PATCH', '/webhooks/{webhook_id}', webhook_id=webhook_id)
         return self.request(route, session, reason=reason, payload=payload, auth_token=token)
@@ -247,10 +247,10 @@ class WebhookAdapter:
         self,
         webhook_id: int,
         token: str,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         *,
         session: Session,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ):
         route = Route('PATCH', '/webhooks/{webhook_id}/{webhook_token}', webhook_id=webhook_id, webhook_token=token)
         return self.request(route, session, reason=reason, payload=payload)
@@ -261,10 +261,10 @@ class WebhookAdapter:
         token: str,
         *,
         session: Session,
-        payload: Optional[Dict[str, Any]] = None,
-        multipart: Optional[List[Dict[str, Any]]] = None,
-        files: Optional[List[File]] = None,
-        thread_id: Optional[int] = None,
+        payload: dict[str, Any] | None = None,
+        multipart: list[dict[str, Any]] | None = None,
+        files: list[File] | None = None,
+        thread_id: int | None = None,
         wait: bool = False,
     ):
         params = {'wait': int(wait)}
@@ -297,9 +297,9 @@ class WebhookAdapter:
         message_id: int,
         *,
         session: Session,
-        payload: Optional[Dict[str, Any]] = None,
-        multipart: Optional[List[Dict[str, Any]]] = None,
-        files: Optional[List[File]] = None,
+        payload: dict[str, Any] | None = None,
+        multipart: list[dict[str, Any]] | None = None,
+        files: list[File] | None = None,
     ):
         route = Route(
             'PATCH',
@@ -349,7 +349,7 @@ class WebhookAdapter:
 
 
 class _WebhookContext(threading.local):
-    adapter: Optional[WebhookAdapter] = None
+    adapter: WebhookAdapter | None = None
 
 
 _context = _WebhookContext()
@@ -377,12 +377,12 @@ class SyncWebhookMessage(Message):
 
     def edit(
         self,
-        content: Optional[str] = MISSING,
-        embeds: List[Embed] = MISSING,
-        embed: Optional[Embed] = MISSING,
+        content: str | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        embed: Embed | None = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
-        allowed_mentions: Optional[AllowedMentions] = None,
+        files: list[File] = MISSING,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> SyncWebhookMessage:
         """Edits the message.
 
@@ -432,7 +432,7 @@ class SyncWebhookMessage(Message):
             allowed_mentions=allowed_mentions,
         )
 
-    def delete(self, *, delay: Optional[float] = None) -> None:
+    def delete(self, *, delay: float | None = None) -> None:
         """Deletes the message.
 
         Parameters
@@ -512,9 +512,9 @@ class SyncWebhook(BaseWebhook):
         .. versionadded:: 2.0
     """
 
-    __slots__: Tuple[str, ...] = ('session',)
+    __slots__: tuple[str, ...] = ('session',)
 
-    def __init__(self, data: WebhookPayload, session: Session, token: Optional[str] = None, state=None):
+    def __init__(self, data: WebhookPayload, session: Session, token: str | None = None, state=None):
         super().__init__(data, token, state)
         self.session = session
 
@@ -527,7 +527,7 @@ class SyncWebhook(BaseWebhook):
         return f'https://discord.com/api/webhooks/{self.id}/{self.token}'
 
     @classmethod
-    def partial(cls, id: int, token: str, *, session: Session = MISSING, bot_token: Optional[str] = None) -> SyncWebhook:
+    def partial(cls, id: int, token: str, *, session: Session = MISSING, bot_token: str | None = None) -> SyncWebhook:
         """Creates a partial :class:`Webhook`.
 
         Parameters
@@ -566,7 +566,7 @@ class SyncWebhook(BaseWebhook):
         return cls(data, session, token=bot_token)
 
     @classmethod
-    def from_url(cls, url: str, *, session: Session = MISSING, bot_token: Optional[str] = None) -> SyncWebhook:
+    def from_url(cls, url: str, *, session: Session = MISSING, bot_token: str | None = None) -> SyncWebhook:
         """Creates a partial :class:`Webhook` from a webhook URL.
 
         Parameters
@@ -597,7 +597,7 @@ class SyncWebhook(BaseWebhook):
         if m is None:
             raise InvalidArgument('Invalid webhook URL given.')
 
-        data: Dict[str, Any] = m.groupdict()
+        data: dict[str, Any] = m.groupdict()
         data['type'] = 1
         import requests
 
@@ -650,7 +650,7 @@ class SyncWebhook(BaseWebhook):
 
         return SyncWebhook(data, self.session, token=self.auth_token, state=self._state)
 
-    def delete(self, *, reason: Optional[str] = None, prefer_auth: bool = True) -> None:
+    def delete(self, *, reason: str | None = None, prefer_auth: bool = True) -> None:
         """Deletes this Webhook.
 
         Parameters
@@ -687,10 +687,10 @@ class SyncWebhook(BaseWebhook):
     def edit(
         self,
         *,
-        reason: Optional[str] = None,
-        name: Optional[str] = MISSING,
-        avatar: Optional[bytes] = MISSING,
-        channel: Optional[Snowflake] = None,
+        reason: str | None = None,
+        name: str | None = MISSING,
+        avatar: bytes | None = MISSING,
+        channel: Snowflake | None = None,
         prefer_auth: bool = True,
     ) -> SyncWebhook:
         """Edits this Webhook.
@@ -738,7 +738,7 @@ class SyncWebhook(BaseWebhook):
 
         adapter: WebhookAdapter = _get_webhook_adapter()
 
-        data: Optional[WebhookPayload] = None
+        data: WebhookPayload | None = None
         # If a channel is given, always use the authenticated endpoint
         if channel is not None:
             if self.auth_token is None:
@@ -773,9 +773,9 @@ class SyncWebhook(BaseWebhook):
         avatar_url: Any = MISSING,
         tts: bool = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
+        files: list[File] = MISSING,
         embed: Embed = MISSING,
-        embeds: List[Embed] = MISSING,
+        embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         wait: Literal[True],
     ) -> SyncWebhookMessage:
@@ -790,9 +790,9 @@ class SyncWebhook(BaseWebhook):
         avatar_url: Any = MISSING,
         tts: bool = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
+        files: list[File] = MISSING,
         embed: Embed = MISSING,
-        embeds: List[Embed] = MISSING,
+        embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         wait: Literal[False] = ...,
     ) -> None:
@@ -806,13 +806,13 @@ class SyncWebhook(BaseWebhook):
         avatar_url: Any = MISSING,
         tts: bool = False,
         file: File = MISSING,
-        files: List[File] = MISSING,
+        files: list[File] = MISSING,
         embed: Embed = MISSING,
-        embeds: List[Embed] = MISSING,
+        embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
         wait: bool = False,
-    ) -> Optional[SyncWebhookMessage]:
+    ) -> SyncWebhookMessage | None:
         """Sends a message using the webhook.
 
         The content must be a type that can convert to a string through ``str(content)``.
@@ -885,7 +885,7 @@ class SyncWebhook(BaseWebhook):
         if self.token is None:
             raise InvalidArgument('This webhook does not have a token associated with it')
 
-        previous_mentions: Optional[AllowedMentions] = getattr(self._state, 'allowed_mentions', None)
+        previous_mentions: AllowedMentions | None = getattr(self._state, 'allowed_mentions', None)
         if content is None:
             content = MISSING
 
@@ -902,7 +902,7 @@ class SyncWebhook(BaseWebhook):
             previous_allowed_mentions=previous_mentions,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
-        thread_id: Optional[int] = None
+        thread_id: int | None = None
         if thread is not MISSING:
             thread_id = thread.id
 
@@ -962,12 +962,12 @@ class SyncWebhook(BaseWebhook):
         self,
         message_id: int,
         *,
-        content: Optional[str] = MISSING,
-        embeds: List[Embed] = MISSING,
-        embed: Optional[Embed] = MISSING,
+        content: str | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        embed: Embed | None = MISSING,
         file: File = MISSING,
-        files: List[File] = MISSING,
-        allowed_mentions: Optional[AllowedMentions] = None,
+        files: list[File] = MISSING,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> SyncWebhookMessage:
         """Edits a message owned by this webhook.
 
@@ -1013,7 +1013,7 @@ class SyncWebhook(BaseWebhook):
         if self.token is None:
             raise InvalidArgument('This webhook does not have a token associated with it')
 
-        previous_mentions: Optional[AllowedMentions] = getattr(self._state, 'allowed_mentions', None)
+        previous_mentions: AllowedMentions | None = getattr(self._state, 'allowed_mentions', None)
         params = handle_message_parameters(
             content=content,
             file=file,

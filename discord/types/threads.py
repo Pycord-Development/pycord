@@ -52,8 +52,8 @@ class ThreadMetadata(_ThreadMetadataOptional):
 
 class _ThreadOptional(TypedDict, total=False):
     member: ThreadMember
-    last_message_id: Optional[Snowflake]
-    last_pin_timestamp: Optional[Snowflake]
+    last_message_id: Snowflake | None
+    last_pin_timestamp: Snowflake | None
 
 
 class Thread(_ThreadOptional):
@@ -70,6 +70,6 @@ class Thread(_ThreadOptional):
 
 
 class ThreadPaginationPayload(TypedDict):
-    threads: List[Thread]
-    members: List[ThreadMember]
+    threads: list[Thread]
+    members: list[ThreadMember]
     has_more: bool

@@ -70,9 +70,9 @@ class Component:
         The type of component.
     """
 
-    __slots__: Tuple[str, ...] = ('type',)
+    __slots__: tuple[str, ...] = ('type',)
 
-    __repr_info__: ClassVar[Tuple[str, ...]]
+    __repr_info__: ClassVar[tuple[str, ...]]
     type: ComponentType
 
     def __repr__(self) -> str:
@@ -80,7 +80,7 @@ class Component:
         return f'<{self.__class__.__name__} {attrs}>'
 
     @classmethod
-    def _raw_construct(cls: Type[C], **kwargs) -> C:
+    def _raw_construct(cls: type[C], **kwargs) -> C:
         self: C = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
@@ -91,7 +91,7 @@ class Component:
                 setattr(self, slot, value)
         return self
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
 
@@ -112,13 +112,13 @@ class ActionRow(Component):
         The children components that this holds, if any.
     """
 
-    __slots__: Tuple[str, ...] = ('children',)
+    __slots__: tuple[str, ...] = ('children',)
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data['type'])
-        self.children: List[Component] = [_component_factory(d) for d in data.get('components', [])]
+        self.children: list[Component] = [_component_factory(d) for d in data.get('components', [])]
 
     def to_dict(self) -> ActionRowPayload:
         return {
@@ -156,7 +156,7 @@ class Button(Component):
         The emoji of the button, if available.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         'style',
         'custom_id',
         'url',
@@ -165,16 +165,16 @@ class Button(Component):
         'emoji',
     )
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data['type'])
         self.style: ButtonStyle = try_enum(ButtonStyle, data['style'])
-        self.custom_id: Optional[str] = data.get('custom_id')
-        self.url: Optional[str] = data.get('url')
+        self.custom_id: str | None = data.get('custom_id')
+        self.url: str | None = data.get('url')
         self.disabled: bool = data.get('disabled', False)
-        self.label: Optional[str] = data.get('label')
-        self.emoji: Optional[PartialEmoji]
+        self.label: str | None = data.get('label')
+        self.emoji: PartialEmoji | None
         try:
             self.emoji = PartialEmoji.from_dict(data['emoji'])
         except KeyError:
@@ -230,7 +230,7 @@ class SelectMenu(Component):
         Whether the select is disabled or not.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         'custom_id',
         'placeholder',
         'min_values',
@@ -239,15 +239,15 @@ class SelectMenu(Component):
         'disabled',
     )
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: SelectMenuPayload):
         self.type = ComponentType.select
         self.custom_id: str = data['custom_id']
-        self.placeholder: Optional[str] = data.get('placeholder')
+        self.placeholder: str | None = data.get('placeholder')
         self.min_values: int = data.get('min_values', 1)
         self.max_values: int = data.get('max_values', 1)
-        self.options: List[SelectOption] = [SelectOption.from_dict(option) for option in data.get('options', [])]
+        self.options: list[SelectOption] = [SelectOption.from_dict(option) for option in data.get('options', [])]
         self.disabled: bool = data.get('disabled', False)
 
     def to_dict(self) -> SelectMenuPayload:
@@ -291,7 +291,7 @@ class SelectOption:
         Whether this option is selected by default.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         'label',
         'value',
         'description',
@@ -304,8 +304,8 @@ class SelectOption:
         *,
         label: str,
         value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
         default: bool = False,
     ) -> None:
         self.label = label

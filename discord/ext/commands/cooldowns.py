@@ -99,7 +99,7 @@ class Cooldown:
         self._tokens: int = self.rate
         self._last: float = 0.0
 
-    def get_tokens(self, current: Optional[float] = None) -> int:
+    def get_tokens(self, current: float | None = None) -> int:
         """Returns the number of available tokens before rate limiting is applied.
 
         Parameters
@@ -122,7 +122,7 @@ class Cooldown:
             tokens = self.rate
         return tokens
 
-    def get_retry_after(self, current: Optional[float] = None) -> float:
+    def get_retry_after(self, current: float | None = None) -> float:
         """Returns the time in seconds until the cooldown will be reset.
 
         Parameters
@@ -144,7 +144,7 @@ class Cooldown:
 
         return 0.0
 
-    def update_rate_limit(self, current: Optional[float] = None) -> Optional[float]:
+    def update_rate_limit(self, current: float | None = None) -> float | None:
         """Updates the cooldown rate limit.
 
         Parameters
@@ -195,14 +195,14 @@ class Cooldown:
 class CooldownMapping:
     def __init__(
         self,
-        original: Optional[Cooldown],
+        original: Cooldown | None,
         type: Callable[[Message], Any],
     ) -> None:
         if not callable(type):
             raise TypeError('Cooldown type must be a BucketType or callable')
 
-        self._cache: Dict[Any, Cooldown] = {}
-        self._cooldown: Optional[Cooldown] = original
+        self._cache: dict[Any, Cooldown] = {}
+        self._cooldown: Cooldown | None = original
         self._type: Callable[[Message], Any] = type
 
     def copy(self) -> CooldownMapping:
@@ -219,13 +219,13 @@ class CooldownMapping:
         return self._type
 
     @classmethod
-    def from_cooldown(cls: Type[C], rate, per, type) -> C:
+    def from_cooldown(cls: type[C], rate, per, type) -> C:
         return cls(Cooldown(rate, per), type)
 
     def _bucket_key(self, msg: Message) -> Any:
         return self._type(msg)
 
-    def _verify_cache_integrity(self, current: Optional[float] = None) -> None:
+    def _verify_cache_integrity(self, current: float | None = None) -> None:
         # we want to delete all cache objects that haven't been used
         # in a cooldown window. e.g. if we have a  command that has a
         # cooldown of 60s and it has not been used in 60s then that key should be deleted
@@ -237,7 +237,7 @@ class CooldownMapping:
     def create_bucket(self, message: Message) -> Cooldown:
         return self._cooldown.copy()  # type: ignore
 
-    def get_bucket(self, message: Message, current: Optional[float] = None) -> Cooldown:
+    def get_bucket(self, message: Message, current: float | None = None) -> Cooldown:
         if self._type is BucketType.default:
             return self._cooldown  # type: ignore
 
@@ -252,7 +252,7 @@ class CooldownMapping:
 
         return bucket
 
-    def update_rate_limit(self, message: Message, current: Optional[float] = None) -> Optional[float]:
+    def update_rate_limit(self, message: Message, current: float | None = None) -> float | None:
         bucket = self.get_bucket(message, current)
         return bucket.update_rate_limit(current)
 
@@ -341,7 +341,7 @@ class MaxConcurrency:
     __slots__ = ('number', 'per', 'wait', '_mapping')
 
     def __init__(self, number: int, *, per: BucketType, wait: bool) -> None:
-        self._mapping: Dict[Any, _Semaphore] = {}
+        self._mapping: dict[Any, _Semaphore] = {}
         self.per: BucketType = per
         self.number: int = number
         self.wait: bool = wait

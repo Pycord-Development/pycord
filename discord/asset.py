@@ -49,7 +49,7 @@ MISSING = utils.MISSING
 
 class AssetMixin:
     url: str
-    _state: Optional[Any]
+    _state: Any | None
 
     async def read(self) -> bytes:
         """|coro|
@@ -75,7 +75,7 @@ class AssetMixin:
 
         return await self._state.http.get_from_cdn(self.url)
 
-    async def save(self, fp: Union[str, bytes, os.PathLike, io.BufferedIOBase], *, seek_begin: bool = True) -> int:
+    async def save(self, fp: str | bytes | os.PathLike | io.BufferedIOBase, *, seek_begin: bool = True) -> int:
         """|coro|
 
         Saves this asset into a file-like object.
@@ -142,7 +142,7 @@ class Asset(AssetMixin):
             Returns the hash of the asset.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         '_state',
         '_url',
         '_animated',

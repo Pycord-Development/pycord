@@ -78,9 +78,9 @@ class BaseUser(_UserTag):
         bot: bool
         system: bool
         _state: ConnectionState
-        _avatar: Optional[str]
-        _banner: Optional[str]
-        _accent_colour: Optional[str]
+        _avatar: str | None
+        _banner: str | None
+        _accent_colour: str | None
         _public_flags: int
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
@@ -117,7 +117,7 @@ class BaseUser(_UserTag):
         self.system = data.get('system', False)
 
     @classmethod
-    def _copy(cls: Type[BU], user: BU) -> BU:
+    def _copy(cls: type[BU], user: BU) -> BU:
         self = cls.__new__(cls)  # bypass __init__
 
         self.name = user.name
@@ -132,7 +132,7 @@ class BaseUser(_UserTag):
 
         return self
 
-    def _to_minimal_user_json(self) -> Dict[str, Any]:
+    def _to_minimal_user_json(self) -> dict[str, Any]:
         return {
             'username': self.name,
             'id': self.id,
@@ -147,7 +147,7 @@ class BaseUser(_UserTag):
         return PublicUserFlags._from_value(self._public_flags)
 
     @property
-    def avatar(self) -> Optional[Asset]:
+    def avatar(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns an :class:`Asset` for the avatar the user has.
 
         If the user does not have a traditional avatar, ``None`` is returned.
@@ -173,7 +173,7 @@ class BaseUser(_UserTag):
         return self.avatar or self.default_avatar
 
     @property
-    def banner(self) -> Optional[Asset]:
+    def banner(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the user's banner asset, if available.
 
         .. versionadded:: 2.0
@@ -187,7 +187,7 @@ class BaseUser(_UserTag):
         return Asset._from_user_banner(self._state, self.id, self._banner)
 
     @property
-    def accent_colour(self) -> Optional[Colour]:
+    def accent_colour(self) -> Colour | None:
         """Optional[:class:`Colour`]: Returns the user's accent colour, if applicable.
 
         There is an alias for this named :attr:`accent_color`.
@@ -203,7 +203,7 @@ class BaseUser(_UserTag):
         return Colour(self._accent_colour)
 
     @property
-    def accent_color(self) -> Optional[Colour]:
+    def accent_color(self) -> Colour | None:
         """Optional[:class:`Colour`]: Returns the user's accent color, if applicable.
 
         There is an alias for this named :attr:`accent_colour`.
@@ -325,7 +325,7 @@ class ClientUser(BaseUser):
 
     if TYPE_CHECKING:
         verified: bool
-        locale: Optional[str]
+        locale: str | None
         mfa_enabled: bool
         _flags: int
 
@@ -383,7 +383,7 @@ class ClientUser(BaseUser):
         :class:`ClientUser`
             The newly edited client user.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if username is not MISSING:
             payload['username'] = username
 
@@ -456,7 +456,7 @@ class User(BaseUser, discord.abc.Messageable):
         return ch
 
     @property
-    def dm_channel(self) -> Optional[DMChannel]:
+    def dm_channel(self) -> DMChannel | None:
         """Optional[:class:`DMChannel`]: Returns the channel associated with this user if it exists.
 
         If this returns ``None``, you can create a DM channel by calling the
@@ -465,7 +465,7 @@ class User(BaseUser, discord.abc.Messageable):
         return self._state._get_private_channel_by_user(self.id)
 
     @property
-    def mutual_guilds(self) -> List[Guild]:
+    def mutual_guilds(self) -> list[Guild]:
         """List[:class:`Guild`]: The guilds that the user shares with the client.
 
         .. note::

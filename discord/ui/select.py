@@ -88,7 +88,7 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = (
+    __item_repr_attributes__: tuple[str, ...] = (
         'placeholder',
         'min_values',
         'max_values',
@@ -100,15 +100,15 @@ class Select(Item[V]):
         self,
         *,
         custom_id: str = MISSING,
-        placeholder: Optional[str] = None,
+        placeholder: str | None = None,
         min_values: int = 1,
         max_values: int = 1,
-        options: List[SelectOption] = MISSING,
+        options: list[SelectOption] = MISSING,
         disabled: bool = False,
-        row: Optional[int] = None,
+        row: int | None = None,
     ) -> None:
         super().__init__()
-        self._selected_values: List[str] = []
+        self._selected_values: list[str] = []
         self._provided_custom_id = custom_id is not MISSING
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
         options = [] if options is MISSING else options
@@ -136,12 +136,12 @@ class Select(Item[V]):
         self._underlying.custom_id = value
 
     @property
-    def placeholder(self) -> Optional[str]:
+    def placeholder(self) -> str | None:
         """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
-    def placeholder(self, value: Optional[str]):
+    def placeholder(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError('placeholder must be None or str')
 
@@ -166,12 +166,12 @@ class Select(Item[V]):
         self._underlying.max_values = int(value)
 
     @property
-    def options(self) -> List[SelectOption]:
+    def options(self) -> list[SelectOption]:
         """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu."""
         return self._underlying.options
 
     @options.setter
-    def options(self, value: List[SelectOption]):
+    def options(self, value: list[SelectOption]):
         if not isinstance(value, list):
             raise TypeError('options must be a list of SelectOption')
         if not all(isinstance(obj, SelectOption) for obj in value):
@@ -184,8 +184,8 @@ class Select(Item[V]):
         *,
         label: str,
         value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
         default: bool = False,
     ):
         """Adds an option to the select menu.
@@ -256,7 +256,7 @@ class Select(Item[V]):
         self._underlying.disabled = bool(value)
 
     @property
-    def values(self) -> List[str]:
+    def values(self) -> list[str]:
         """List[:class:`str`]: A list of values that have been selected by the user."""
         return self._selected_values
 
@@ -275,7 +275,7 @@ class Select(Item[V]):
         self._selected_values = data.get('values', [])
 
     @classmethod
-    def from_component(cls: Type[S], component: SelectMenu) -> S:
+    def from_component(cls: type[S], component: SelectMenu) -> S:
         return cls(
             custom_id=component.custom_id,
             placeholder=component.placeholder,
@@ -296,13 +296,13 @@ class Select(Item[V]):
 
 def select(
     *,
-    placeholder: Optional[str] = None,
+    placeholder: str | None = None,
     custom_id: str = MISSING,
     min_values: int = 1,
     max_values: int = 1,
-    options: List[SelectOption] = MISSING,
+    options: list[SelectOption] = MISSING,
     disabled: bool = False,
-    row: Optional[int] = None,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 

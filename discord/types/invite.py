@@ -49,11 +49,11 @@ class _InviteMetadata(TypedDict, total=False):
     max_age: int
     temporary: bool
     created_at: str
-    expires_at: Optional[str]
+    expires_at: str | None
 
 
 class VanityInvite(_InviteMetadata):
-    code: Optional[str]
+    code: str | None
 
 
 class IncompleteInvite(_InviteMetadata):

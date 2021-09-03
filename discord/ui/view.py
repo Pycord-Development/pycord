@@ -53,7 +53,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
 
 
-def _walk_all_components(components: List[Component]) -> Iterator[Component]:
+def _walk_all_components(components: list[Component]) -> Iterator[Component]:
     for item in components:
         if isinstance(item, ActionRowComponent):
             yield from item.children
@@ -78,8 +78,8 @@ class _ViewWeights:
         'weights',
     )
 
-    def __init__(self, children: List[Item]):
-        self.weights: List[int] = [0, 0, 0, 0, 0]
+    def __init__(self, children: list[Item]):
+        self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
         children = sorted(children, key=key)
@@ -138,10 +138,10 @@ class View:
     """
 
     __discord_ui_view__: ClassVar[bool] = True
-    __view_children_items__: ClassVar[List[ItemCallbackType]] = []
+    __view_children_items__: ClassVar[list[ItemCallbackType]] = []
 
     def __init_subclass__(cls) -> None:
-        children: List[ItemCallbackType] = []
+        children: list[ItemCallbackType] = []
         for base in reversed(cls.__mro__):
             for member in base.__dict__.values():
                 if hasattr(member, '__discord_ui_model_type__'):
@@ -152,9 +152,9 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *, timeout: Optional[float] = 180.0):
+    def __init__(self, *, timeout: float | None = 180.0):
         self.timeout = timeout
-        self.children: List[Item] = []
+        self.children: list[Item] = []
         for func in self.__view_children_items__:
             item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
@@ -165,9 +165,9 @@ class View:
         self.__weights = _ViewWeights(self.children)
         loop = asyncio.get_running_loop()
         self.id: str = os.urandom(16).hex()
-        self.__cancel_callback: Optional[Callable[[View], None]] = None
-        self.__timeout_expiry: Optional[float] = None
-        self.__timeout_task: Optional[asyncio.Task[None]] = None
+        self.__cancel_callback: Callable[[View], None] | None = None
+        self.__timeout_expiry: float | None = None
+        self.__timeout_task: asyncio.Task[None] | None = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
 
     def __repr__(self) -> str:
@@ -190,12 +190,12 @@ class View:
             # Wait N seconds to see if timeout data has been refreshed
             await asyncio.sleep(self.__timeout_expiry - now)
 
-    def to_components(self) -> List[Dict[str, Any]]:
+    def to_components(self) -> list[dict[str, Any]]:
         def key(item: Item) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
-        components: List[Dict[str, Any]] = []
+        components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
             children = [item.to_component_dict() for item in group]
             if not children:
@@ -211,7 +211,7 @@ class View:
         return components
 
     @classmethod
-    def from_message(cls, message: Message, /, *, timeout: Optional[float] = 180.0) -> View:
+    def from_message(cls, message: Message, /, *, timeout: float | None = 180.0) -> View:
         """Converts a message's components into a :class:`View`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -238,7 +238,7 @@ class View:
         return view
 
     @property
-    def _expires_at(self) -> Optional[float]:
+    def _expires_at(self) -> float | None:
         if self.timeout:
             return time.monotonic() + self.timeout
         return None
@@ -385,16 +385,16 @@ class View:
 
         asyncio.create_task(self._scheduled_task(item, interaction), name=f'discord-ui-view-dispatch-{self.id}')
 
-    def refresh(self, components: List[Component]):
+    def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         # fmt: off
-        old_state: Dict[Tuple[int, str], Item] = {
+        old_state: dict[tuple[int, str], Item] = {
             (item.type.value, item.custom_id): item  # type: ignore
             for item in self.children
             if item.is_dispatchable()
         }
         # fmt: on
-        children: List[Item] = [item for item in self.children if not item.is_dispatchable()]
+        children: list[Item] = [item for item in self.children if not item.is_dispatchable()]
         for component in _walk_all_components(components):
             try:
                 older = old_state[(component.type.value, component.custom_id)]  # type: ignore
@@ -460,9 +460,9 @@ class View:
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (View, Item)
-        self._views: Dict[Tuple[int, Optional[int], str], Tuple[View, Item]] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[View, Item]] = {}
         # message_id: View
-        self._synced_message_views: Dict[int, View] = {}
+        self._synced_message_views: dict[int, View] = {}
         self._state: ConnectionState = state
 
     @property
@@ -477,7 +477,7 @@ class ViewStore:
         return list(views.values())
 
     def __verify_integrity(self):
-        to_remove: List[Tuple[int, Optional[int], str]] = []
+        to_remove: list[tuple[int, int | None, str]] = []
         for (k, (view, _)) in self._views.items():
             if view.is_finished():
                 to_remove.append(k)
@@ -485,7 +485,7 @@ class ViewStore:
         for k in to_remove:
             del self._views[k]
 
-    def add_view(self, view: View, message_id: Optional[int] = None):
+    def add_view(self, view: View, message_id: int | None = None):
         self.__verify_integrity()
 
         view._start_listening_from_store(self)
@@ -508,7 +508,7 @@ class ViewStore:
 
     def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
         self.__verify_integrity()
-        message_id: Optional[int] = interaction.message and interaction.message.id
+        message_id: int | None = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
         # Fallback to None message_id searches in case a persistent view
         # was added without an associated message_id
@@ -523,10 +523,10 @@ class ViewStore:
     def is_message_tracked(self, message_id: int):
         return message_id in self._synced_message_views
 
-    def remove_message_tracking(self, message_id: int) -> Optional[View]:
+    def remove_message_tracking(self, message_id: int) -> View | None:
         return self._synced_message_views.pop(message_id, None)
 
-    def update_from_message(self, message_id: int, components: List[ComponentPayload]):
+    def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         view.refresh([_component_factory(d) for d in components])

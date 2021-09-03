@@ -75,7 +75,7 @@ class Button(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = (
+    __item_repr_attributes__: tuple[str, ...] = (
         'style',
         'url',
         'disabled',
@@ -88,12 +88,12 @@ class Button(Item[V]):
         self,
         *,
         style: ButtonStyle = ButtonStyle.secondary,
-        label: Optional[str] = None,
+        label: str | None = None,
         disabled: bool = False,
-        custom_id: Optional[str] = None,
-        url: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
-        row: Optional[int] = None,
+        custom_id: str | None = None,
+        url: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
+        row: int | None = None,
     ):
         super().__init__()
         if custom_id is not None and url is not None:
@@ -135,7 +135,7 @@ class Button(Item[V]):
         self._underlying.style = value
 
     @property
-    def custom_id(self) -> Optional[str]:
+    def custom_id(self) -> str | None:
         """Optional[:class:`str`]: The ID of the button that gets received during an interaction.
 
         If this button is for a URL, it does not have a custom ID.
@@ -143,19 +143,19 @@ class Button(Item[V]):
         return self._underlying.custom_id
 
     @custom_id.setter
-    def custom_id(self, value: Optional[str]):
+    def custom_id(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError('custom_id must be None or str')
 
         self._underlying.custom_id = value
 
     @property
-    def url(self) -> Optional[str]:
+    def url(self) -> str | None:
         """Optional[:class:`str`]: The URL this button sends you to."""
         return self._underlying.url
 
     @url.setter
-    def url(self, value: Optional[str]):
+    def url(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError('url must be None or str')
         self._underlying.url = value
@@ -170,21 +170,21 @@ class Button(Item[V]):
         self._underlying.disabled = bool(value)
 
     @property
-    def label(self) -> Optional[str]:
+    def label(self) -> str | None:
         """Optional[:class:`str`]: The label of the button, if available."""
         return self._underlying.label
 
     @label.setter
-    def label(self, value: Optional[str]):
+    def label(self, value: str | None):
         self._underlying.label = str(value) if value is not None else value
 
     @property
-    def emoji(self) -> Optional[PartialEmoji]:
+    def emoji(self) -> PartialEmoji | None:
         """Optional[:class:`.PartialEmoji`]: The emoji of the button, if available."""
         return self._underlying.emoji
 
     @emoji.setter
-    def emoji(self, value: Optional[Union[str, Emoji, PartialEmoji]]):  # type: ignore
+    def emoji(self, value: str | Emoji | PartialEmoji | None):  # type: ignore
         if value is not None:
             if isinstance(value, str):
                 self._underlying.emoji = PartialEmoji.from_str(value)
@@ -196,7 +196,7 @@ class Button(Item[V]):
             self._underlying.emoji = None
 
     @classmethod
-    def from_component(cls: Type[B], button: ButtonComponent) -> B:
+    def from_component(cls: type[B], button: ButtonComponent) -> B:
         return cls(
             style=button.style,
             label=button.label,
@@ -228,12 +228,12 @@ class Button(Item[V]):
 
 def button(
     *,
-    label: Optional[str] = None,
-    custom_id: Optional[str] = None,
+    label: str | None = None,
+    custom_id: str | None = None,
     disabled: bool = False,
     style: ButtonStyle = ButtonStyle.secondary,
-    emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
-    row: Optional[int] = None,
+    emoji: str | Emoji | PartialEmoji | None = None,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a button to a component.
 

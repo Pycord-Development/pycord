@@ -112,7 +112,7 @@ class StickerPack(Hashable):
     def _from_data(self, data: StickerPackPayload) -> None:
         self.id: int = int(data['id'])
         stickers = data['stickers']
-        self.stickers: List[StandardSticker] = [StandardSticker(state=self._state, data=sticker) for sticker in stickers]
+        self.stickers: list[StandardSticker] = [StandardSticker(state=self._state, data=sticker) for sticker in stickers]
         self.name: str = data['name']
         self.sku_id: int = int(data['sku_id'])
         self.cover_sticker_id: int = int(data['cover_sticker_id'])
@@ -212,7 +212,7 @@ class StickerItem(_StickerTag):
     def __str__(self) -> str:
         return self.name
 
-    async def fetch(self) -> Union[Sticker, StandardSticker, GuildSticker]:
+    async def fetch(self) -> Sticker | StandardSticker | GuildSticker:
         """|coro|
 
         Attempts to retrieve the full sticker data of the sticker item.
@@ -338,7 +338,7 @@ class StandardSticker(Sticker):
         self.type: StickerType = StickerType.standard
 
         try:
-            self.tags: List[str] = [tag.strip() for tag in data['tags'].split(',')]
+            self.tags: list[str] = [tag.strip() for tag in data['tags'].split(',')]
         except KeyError:
             self.tags = []
 
@@ -418,7 +418,7 @@ class GuildSticker(Sticker):
         self.available: bool = data['available']
         self.guild_id: int = int(data['guild_id'])
         user = data.get('user')
-        self.user: Optional[User] = self._state.store_user(user) if user else None
+        self.user: User | None = self._state.store_user(user) if user else None
         self.emoji: str = data['tags']
         self.type: StickerType = StickerType.guild
 
@@ -426,7 +426,7 @@ class GuildSticker(Sticker):
         return f'<GuildSticker name={self.name!r} id={self.id} guild_id={self.guild_id} user={self.user!r}>'
 
     @cached_slot_property('_cs_guild')
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild that this sticker is from.
         Could be ``None`` if the bot is not in the guild.
 
@@ -440,7 +440,7 @@ class GuildSticker(Sticker):
         name: str = MISSING,
         description: str = MISSING,
         emoji: str = MISSING,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> GuildSticker:
         """|coro|
 
@@ -490,7 +490,7 @@ class GuildSticker(Sticker):
         data: GuildStickerPayload = await self._state.http.modify_guild_sticker(self.guild_id, self.id, payload, reason)
         return GuildSticker(state=self._state, data=data)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the custom :class:`Sticker` from the guild.
@@ -513,7 +513,7 @@ class GuildSticker(Sticker):
         await self._state.http.delete_guild_sticker(self.guild_id, self.id, reason)
 
 
-def _sticker_factory(sticker_type: Literal[1, 2]) -> Tuple[Type[Union[StandardSticker, GuildSticker, Sticker]], StickerType]:
+def _sticker_factory(sticker_type: Literal[1, 2]) -> tuple[type[StandardSticker | GuildSticker | Sticker], StickerType]:
     value = try_enum(StickerType, sticker_type)
     if value == StickerType.standard:
         return StandardSticker, value

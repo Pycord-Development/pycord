@@ -152,21 +152,21 @@ class WidgetMember(BaseUser):
                  'connected_channel')
 
     if TYPE_CHECKING:
-        activity: Optional[Union[BaseActivity, Spotify]]
+        activity: BaseActivity | Spotify | None
 
     def __init__(
         self,
         *,
         state: ConnectionState,
         data: WidgetMemberPayload,
-        connected_channel: Optional[WidgetChannel] = None
+        connected_channel: WidgetChannel | None = None
     ) -> None:
         super().__init__(state=state, data=data)
-        self.nick: Optional[str] = data.get('nick')
+        self.nick: str | None = data.get('nick')
         self.status: Status = try_enum(Status, data.get('status'))
-        self.deafened: Optional[bool] = data.get('deaf', False) or data.get('self_deaf', False)
-        self.muted: Optional[bool] = data.get('mute', False) or data.get('self_mute', False)
-        self.suppress: Optional[bool] = data.get('suppress', False)
+        self.deafened: bool | None = data.get('deaf', False) or data.get('self_deaf', False)
+        self.muted: bool | None = data.get('mute', False) or data.get('self_mute', False)
+        self.suppress: bool | None = data.get('suppress', False)
 
         try:
             game = data['game']
@@ -175,9 +175,9 @@ class WidgetMember(BaseUser):
         else:
             activity = create_activity(game)
 
-        self.activity: Optional[Union[BaseActivity, Spotify]] = activity
+        self.activity: BaseActivity | Spotify | None = activity
 
-        self.connected_channel: Optional[WidgetChannel] = connected_channel
+        self.connected_channel: WidgetChannel | None = connected_channel
 
     def __repr__(self) -> str:
         return (
@@ -235,12 +235,12 @@ class Widget:
         self.name: str = data['name']
         self.id: int = int(data['id'])
 
-        self.channels: List[WidgetChannel] = []
+        self.channels: list[WidgetChannel] = []
         for channel in data.get('channels', []):
             _id = int(channel['id'])
             self.channels.append(WidgetChannel(id=_id, name=channel['name'], position=channel['position']))
 
-        self.members: List[WidgetMember] = []
+        self.members: list[WidgetMember] = []
         channels = {channel.id: channel for channel in self.channels}
         for member in data.get('members', []):
             connected_channel = _get_as_snowflake(member, 'channel_id')

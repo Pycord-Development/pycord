@@ -93,7 +93,7 @@ class Emoji(_EmojiTag, AssetMixin):
         having the :attr:`~Permissions.manage_emojis` permission.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         'require_colons',
         'animated',
         'managed',
@@ -120,12 +120,12 @@ class Emoji(_EmojiTag, AssetMixin):
         self.available: bool = emoji.get('available', True)
         self._roles: SnowflakeList = SnowflakeList(map(int, emoji.get('roles', [])))
         user = emoji.get('user')
-        self.user: Optional[User] = User(state=self._state, data=user) if user else None
+        self.user: User | None = User(state=self._state, data=user) if user else None
 
     def _to_partial(self) -> PartialEmoji:
         return PartialEmoji(name=self.name, animated=self.animated, id=self.id)
 
-    def __iter__(self) -> Iterator[Tuple[str, Any]]:
+    def __iter__(self) -> Iterator[tuple[str, Any]]:
         for attr in self.__slots__:
             if attr[0] != '_':
                 value = getattr(self, attr, None)
@@ -161,7 +161,7 @@ class Emoji(_EmojiTag, AssetMixin):
         return f'{Asset.BASE}/emojis/{self.id}.{fmt}'
 
     @property
-    def roles(self) -> List[Role]:
+    def roles(self) -> list[Role]:
         """List[:class:`Role`]: A :class:`list` of roles that is allowed to use this emoji.
 
         If roles is empty, the emoji is unrestricted.
@@ -189,7 +189,7 @@ class Emoji(_EmojiTag, AssetMixin):
         emoji_roles, my_roles = self._roles, self.guild.me._roles
         return any(my_roles.has(role_id) for role_id in emoji_roles)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the custom emoji.
@@ -212,7 +212,7 @@ class Emoji(_EmojiTag, AssetMixin):
 
         await self._state.http.delete_custom_emoji(self.guild.id, self.id, reason=reason)
 
-    async def edit(self, *, name: str = MISSING, roles: List[Snowflake] = MISSING, reason: Optional[str] = None) -> Emoji:
+    async def edit(self, *, name: str = MISSING, roles: list[Snowflake] = MISSING, reason: str | None = None) -> Emoji:
         r"""|coro|
 
         Edits the custom emoji.

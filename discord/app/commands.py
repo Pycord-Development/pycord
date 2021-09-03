@@ -60,7 +60,7 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.guild_ids: list[int] | None = kwargs.get("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
         if not isinstance(name, str):
@@ -81,7 +81,7 @@ class SlashCommand(ApplicationCommand):
         params = OrderedDict(inspect.signature(self.callback).parameters)
         self.options = self.parse_options(params)
 
-    def parse_options(self, params: OrderedDict) -> List[Option]:
+    def parse_options(self, params: OrderedDict) -> list[Option]:
         final_options = []
 
         # Remove ctx, this needs to refactored when used in Cogs
@@ -119,7 +119,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_optional(self, annotation):
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -171,19 +171,19 @@ class Option:
     def __init__(
         self, input_type: SlashCommandOptionType, /, description: str, **kwargs
     ) -> None:
-        self.name: Optional[str] = kwargs.pop("name", None)
+        self.name: str | None = kwargs.pop("name", None)
         self.description = description
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
-        self.choices: List[OptionChoice] = [
+        self.choices: list[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "description": self.description,
@@ -197,11 +197,11 @@ class Option:
 
 
 class OptionChoice:
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
+    def __init__(self, name: str, value: str | int | float | None = None):
         self.name = name
         self.value = value or name
 
-    def to_dict(self) -> Dict[str, Union[str, int, float]]:
+    def to_dict(self) -> dict[str, str | int | float]:
         return {"name": self.name, "value": self.value}
 
 
@@ -212,19 +212,19 @@ class SubCommandGroup(Option):
         self,
         name: str,
         description: str,
-        guild_ids: Optional[List[int]] = None,
-        parent_group: Optional[SubCommandGroup] = None,
+        guild_ids: list[int] | None = None,
+        parent_group: SubCommandGroup | None = None,
     ) -> None:
         super().__init__(
             SlashCommandOptionType.sub_command_group,
             name=name,
             description=description,
         )
-        self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
+        self.subcommands: list[SlashCommand | SubCommandGroup] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -275,7 +275,7 @@ class UserCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.guild_ids: list[int] | None = kwargs.get("guild_ids", None)
 
         self.description = (
             ""  # Discord API doesn't support setting descriptions for User commands
@@ -284,7 +284,7 @@ class UserCommand(ApplicationCommand):
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
 
-    def to_dict(self) -> Dict[str, Union[str, int]]:
+    def to_dict(self) -> dict[str, str | int]:
         return {"name": self.name, "description": self.description, "type": self.type}
 
     async def invoke(self, ctx: InteractionContext) -> None:

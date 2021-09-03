@@ -50,7 +50,7 @@ EmptyEmbed: Final = _EmptyEmbed()
 
 
 class EmbedProxy:
-    def __init__(self, layer: Dict[str, Any]):
+    def __init__(self, layer: dict[str, Any]):
         self.__dict__.update(layer)
 
     def __len__(self) -> int:
@@ -177,8 +177,8 @@ class Embed:
     def __init__(
         self,
         *,
-        colour: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
-        color: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
+        colour: int | Colour | _EmptyEmbed = EmptyEmbed,
+        color: int | Colour | _EmptyEmbed = EmptyEmbed,
         title: MaybeEmpty[Any] = EmptyEmbed,
         type: EmbedType = 'rich',
         url: MaybeEmpty[Any] = EmptyEmbed,
@@ -205,7 +205,7 @@ class Embed:
             self.timestamp = timestamp
 
     @classmethod
-    def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
+    def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
         """Converts a :class:`dict` to a :class:`Embed` provided it is in the
         format that Discord expects it to be in.
 
@@ -309,7 +309,7 @@ class Embed:
         return getattr(self, '_colour', EmptyEmbed)
 
     @colour.setter
-    def colour(self, value: Union[int, Colour, _EmptyEmbed]):  # type: ignore
+    def colour(self, value: int | Colour | _EmptyEmbed):  # type: ignore
         if isinstance(value, (Colour, _EmptyEmbed)):
             self._colour = value
         elif isinstance(value, int):
@@ -544,7 +544,7 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> List[_EmbedFieldProxy]:
+    def fields(self) -> list[_EmbedFieldProxy]:
         """List[Union[``EmbedProxy``, :attr:`Empty`]]: Returns a :class:`list` of ``EmbedProxy`` denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.

@@ -187,15 +187,15 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
     def _update(self, guild: Guild, data: TextChannelPayload) -> None:
         self.guild: Guild = guild
         self.name: str = data['name']
-        self.category_id: Optional[int] = utils._get_as_snowflake(data, 'parent_id')
-        self.topic: Optional[str] = data.get('topic')
+        self.category_id: int | None = utils._get_as_snowflake(data, 'parent_id')
+        self.topic: str | None = data.get('topic')
         self.position: int = data['position']
         self.nsfw: bool = data.get('nsfw', False)
         # Does this need coercion into `int`? No idea yet.
         self.slowmode_delay: int = data.get('rate_limit_per_user', 0)
         self.default_auto_archive_duration: ThreadArchiveDuration = data.get('default_auto_archive_duration', 1440)
         self._type: int = data.get('type', self._type)
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, 'last_message_id')
+        self.last_message_id: int | None = utils._get_as_snowflake(data, 'last_message_id')
         self._fill_overwrites(data)
 
     async def _get_channel(self):
@@ -211,7 +211,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         return ChannelType.text.value
 
     @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
         # text channels do not have voice related permissions
@@ -220,12 +220,12 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         return base
 
     @property
-    def members(self) -> List[Member]:
+    def members(self) -> list[Member]:
         """List[:class:`Member`]: Returns all members that can see this channel."""
         return [m for m in self.guild.members if self.permissions_for(m).read_messages]
 
     @property
-    def threads(self) -> List[Thread]:
+    def threads(self) -> list[Thread]:
         """List[:class:`Thread`]: Returns all the threads that you can see.
 
         .. versionadded:: 2.0
@@ -241,7 +241,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         return self._type == ChannelType.news.value
 
     @property
-    def last_message(self) -> Optional[Message]:
+    def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
 
         The message might not be valid or point to an existing message.
@@ -265,22 +265,22 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
     async def edit(
         self,
         *,
-        reason: Optional[str] = ...,
+        reason: str | None = ...,
         name: str = ...,
         topic: str = ...,
         position: int = ...,
         nsfw: bool = ...,
         sync_permissions: bool = ...,
-        category: Optional[CategoryChannel] = ...,
+        category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         type: ChannelType = ...,
-        overwrites: Mapping[Union[Role, Member, Snowflake], PermissionOverwrite] = ...,
-    ) -> Optional[TextChannel]:
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> TextChannel | None:
         ...
 
     @overload
-    async def edit(self) -> Optional[TextChannel]:
+    async def edit(self) -> TextChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -355,7 +355,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> TextChannel:
+    async def clone(self, *, name: str | None = None, reason: str | None = None) -> TextChannel:
         return await self._clone_impl(
             {'topic': self.topic, 'nsfw': self.nsfw, 'rate_limit_per_user': self.slowmode_delay}, name=name, reason=reason
         )
@@ -412,14 +412,14 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
     async def purge(
         self,
         *,
-        limit: Optional[int] = 100,
+        limit: int | None = 100,
         check: Callable[[Message], bool] = MISSING,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = False,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = False,
         bulk: bool = True,
-    ) -> List[Message]:
+    ) -> list[Message]:
         """|coro|
 
         Purges a list of messages that meet the criteria given by the predicate
@@ -480,7 +480,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             check = lambda m: True
 
         iterator = self.history(limit=limit, before=before, after=after, oldest_first=oldest_first, around=around)
-        ret: List[Message] = []
+        ret: list[Message] = []
         count = 0
 
         minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
@@ -521,7 +521,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
 
         return ret
 
-    async def webhooks(self) -> List[Webhook]:
+    async def webhooks(self) -> list[Webhook]:
         """|coro|
 
         Gets the list of webhooks from this channel.
@@ -544,7 +544,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         data = await self._state.http.channel_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
 
-    async def create_webhook(self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None) -> Webhook:
+    async def create_webhook(self, *, name: str, avatar: bytes | None = None, reason: str | None = None) -> Webhook:
         """|coro|
 
         Creates a webhook for this channel.
@@ -585,7 +585,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
 
-    async def follow(self, *, destination: TextChannel, reason: Optional[str] = None) -> Webhook:
+    async def follow(self, *, destination: TextChannel, reason: str | None = None) -> Webhook:
         """
         Follows a channel using a webhook.
 
@@ -654,7 +654,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
 
         return PartialMessage(channel=self, id=message_id)
 
-    def get_thread(self, thread_id: int, /) -> Optional[Thread]:
+    def get_thread(self, thread_id: int, /) -> Thread | None:
         """Returns a thread with the given ID.
 
         .. versionadded:: 2.0
@@ -675,10 +675,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         self,
         *,
         name: str,
-        message: Optional[Snowflake] = None,
+        message: Snowflake | None = None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
-        type: Optional[ChannelType] = None,
-        reason: Optional[str] = None,
+        type: ChannelType | None = None,
+        reason: str | None = None,
     ) -> Thread:
         """|coro|
 
@@ -747,8 +747,8 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         *,
         private: bool = False,
         joined: bool = False,
-        limit: Optional[int] = 50,
-        before: Optional[Union[Snowflake, datetime.datetime]] = None,
+        limit: int | None = 50,
+        before: Snowflake | datetime.datetime | None = None,
     ) -> ArchivedThreadIterator:
         """Returns an :class:`~discord.AsyncIterator` that iterates over all archived threads in the guild.
 
@@ -801,24 +801,24 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         'video_quality_mode',
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, data: Union[VoiceChannelPayload, StageChannelPayload]):
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: VoiceChannelPayload | StageChannelPayload):
         self._state: ConnectionState = state
         self.id: int = int(data['id'])
         self._update(guild, data)
 
-    def _get_voice_client_key(self) -> Tuple[int, str]:
+    def _get_voice_client_key(self) -> tuple[int, str]:
         return self.guild.id, 'guild_id'
 
-    def _get_voice_state_pair(self) -> Tuple[int, int]:
+    def _get_voice_state_pair(self) -> tuple[int, int]:
         return self.guild.id, self.id
 
-    def _update(self, guild: Guild, data: Union[VoiceChannelPayload, StageChannelPayload]) -> None:
+    def _update(self, guild: Guild, data: VoiceChannelPayload | StageChannelPayload) -> None:
         self.guild = guild
         self.name: str = data['name']
         rtc = data.get('rtc_region')
-        self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
+        self.rtc_region: VoiceRegion | None = try_enum(VoiceRegion, rtc) if rtc is not None else None
         self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get('video_quality_mode', 1))
-        self.category_id: Optional[int] = utils._get_as_snowflake(data, 'parent_id')
+        self.category_id: int | None = utils._get_as_snowflake(data, 'parent_id')
         self.position: int = data['position']
         self.bitrate: int = data.get('bitrate')
         self.user_limit: int = data.get('user_limit')
@@ -829,7 +829,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         return ChannelType.voice.value
 
     @property
-    def members(self) -> List[Member]:
+    def members(self) -> list[Member]:
         """List[:class:`Member`]: Returns all members that are currently inside this voice channel."""
         ret = []
         for user_id, state in self.guild._voice_states.items():
@@ -840,7 +840,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         return ret
 
     @property
-    def voice_states(self) -> Dict[int, VoiceState]:
+    def voice_states(self) -> dict[int, VoiceState]:
         """Returns a mapping of member IDs who have voice states in this channel.
 
         .. versionadded:: 1.3
@@ -864,7 +864,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         # fmt: on
 
     @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
         # voice channels cannot be edited by people who can't connect to them
@@ -947,7 +947,7 @@ class VoiceChannel(VocalGuildChannel):
         return ChannelType.voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> VoiceChannel:
+    async def clone(self, *, name: str | None = None, reason: str | None = None) -> VoiceChannel:
         return await self._clone_impl({'bitrate': self.bitrate, 'user_limit': self.user_limit}, name=name, reason=reason)
 
     @overload
@@ -959,16 +959,16 @@ class VoiceChannel(VocalGuildChannel):
         user_limit: int = ...,
         position: int = ...,
         sync_permissions: int = ...,
-        category: Optional[CategoryChannel] = ...,
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = ...,
-        rtc_region: Optional[VoiceRegion] = ...,
+        category: CategoryChannel | None = ...,
+        overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
+        rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
-        reason: Optional[str] = ...,
-    ) -> Optional[VoiceChannel]:
+        reason: str | None = ...,
+    ) -> VoiceChannel | None:
         ...
 
     @overload
-    async def edit(self) -> Optional[VoiceChannel]:
+    async def edit(self) -> VoiceChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -1111,12 +1111,12 @@ class StageChannel(VocalGuildChannel):
         self.topic = data.get('topic')
 
     @property
-    def requesting_to_speak(self) -> List[Member]:
+    def requesting_to_speak(self) -> list[Member]:
         """List[:class:`Member`]: A list of members who are requesting to speak in the stage channel."""
         return [member for member in self.members if member.voice and member.voice.requested_to_speak_at is not None]
 
     @property
-    def speakers(self) -> List[Member]:
+    def speakers(self) -> list[Member]:
         """List[:class:`Member`]: A list of members who have been permitted to speak in the stage channel.
 
         .. versionadded:: 2.0
@@ -1128,7 +1128,7 @@ class StageChannel(VocalGuildChannel):
         ]
 
     @property
-    def listeners(self) -> List[Member]:
+    def listeners(self) -> list[Member]:
         """List[:class:`Member`]: A list of members who are listening in the stage channel.
 
         .. versionadded:: 2.0
@@ -1136,7 +1136,7 @@ class StageChannel(VocalGuildChannel):
         return [member for member in self.members if member.voice and member.voice.suppress]
 
     @property
-    def moderators(self) -> List[Member]:
+    def moderators(self) -> list[Member]:
         """List[:class:`Member`]: A list of members who are moderating the stage channel.
 
         .. versionadded:: 2.0
@@ -1150,11 +1150,11 @@ class StageChannel(VocalGuildChannel):
         return ChannelType.stage_voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> StageChannel:
+    async def clone(self, *, name: str | None = None, reason: str | None = None) -> StageChannel:
         return await self._clone_impl({}, name=name, reason=reason)
 
     @property
-    def instance(self) -> Optional[StageInstance]:
+    def instance(self) -> StageInstance | None:
         """Optional[:class:`StageInstance`]: The running stage instance of the stage channel.
 
         .. versionadded:: 2.0
@@ -1162,7 +1162,7 @@ class StageChannel(VocalGuildChannel):
         return utils.get(self.guild.stage_instances, channel_id=self.id)
 
     async def create_instance(
-        self, *, topic: str, privacy_level: StagePrivacyLevel = MISSING, reason: Optional[str] = None
+        self, *, topic: str, privacy_level: StagePrivacyLevel = MISSING, reason: str | None = None
     ) -> StageInstance:
         """|coro|
 
@@ -1197,7 +1197,7 @@ class StageChannel(VocalGuildChannel):
             The newly created stage instance.
         """
 
-        payload: Dict[str, Any] = {'channel_id': self.id, 'topic': topic}
+        payload: dict[str, Any] = {'channel_id': self.id, 'topic': topic}
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):
@@ -1235,19 +1235,19 @@ class StageChannel(VocalGuildChannel):
         self,
         *,
         name: str = ...,
-        topic: Optional[str] = ...,
+        topic: str | None = ...,
         position: int = ...,
         sync_permissions: int = ...,
-        category: Optional[CategoryChannel] = ...,
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = ...,
-        rtc_region: Optional[VoiceRegion] = ...,
+        category: CategoryChannel | None = ...,
+        overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
+        rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
-        reason: Optional[str] = ...,
-    ) -> Optional[StageChannel]:
+        reason: str | None = ...,
+    ) -> StageChannel | None:
         ...
 
     @overload
-    async def edit(self) -> Optional[StageChannel]:
+    async def edit(self) -> StageChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -1366,7 +1366,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
         self.guild: Guild = guild
         self.name: str = data['name']
-        self.category_id: Optional[int] = utils._get_as_snowflake(data, 'parent_id')
+        self.category_id: int | None = utils._get_as_snowflake(data, 'parent_id')
         self.nsfw: bool = data.get('nsfw', False)
         self.position: int = data['position']
         self._fill_overwrites(data)
@@ -1385,7 +1385,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> CategoryChannel:
+    async def clone(self, *, name: str | None = None, reason: str | None = None) -> CategoryChannel:
         return await self._clone_impl({'nsfw': self.nsfw}, name=name, reason=reason)
 
     @overload
@@ -1395,13 +1395,13 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         name: str = ...,
         position: int = ...,
         nsfw: bool = ...,
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = ...,
-        reason: Optional[str] = ...,
-    ) -> Optional[CategoryChannel]:
+        overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
+        reason: str | None = ...,
+    ) -> CategoryChannel | None:
         ...
 
     @overload
-    async def edit(self) -> Optional[CategoryChannel]:
+    async def edit(self) -> CategoryChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -1459,7 +1459,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         await super().move(**kwargs)
 
     @property
-    def channels(self) -> List[GuildChannelType]:
+    def channels(self) -> list[GuildChannelType]:
         """List[:class:`abc.GuildChannel`]: Returns the channels that are under this category.
 
         These are sorted by the official Discord UI, which places voice channels below the text channels.
@@ -1473,21 +1473,21 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return ret
 
     @property
-    def text_channels(self) -> List[TextChannel]:
+    def text_channels(self) -> list[TextChannel]:
         """List[:class:`TextChannel`]: Returns the text channels that are under this category."""
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, TextChannel)]
         ret.sort(key=lambda c: (c.position, c.id))
         return ret
 
     @property
-    def voice_channels(self) -> List[VoiceChannel]:
+    def voice_channels(self) -> list[VoiceChannel]:
         """List[:class:`VoiceChannel`]: Returns the voice channels that are under this category."""
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, VoiceChannel)]
         ret.sort(key=lambda c: (c.position, c.id))
         return ret
 
     @property
-    def stage_channels(self) -> List[StageChannel]:
+    def stage_channels(self) -> list[StageChannel]:
         """List[:class:`StageChannel`]: Returns the stage channels that are under this category.
 
         .. versionadded:: 1.7
@@ -1599,7 +1599,7 @@ class StoreChannel(discord.abc.GuildChannel, Hashable):
     def _update(self, guild: Guild, data: StoreChannelPayload) -> None:
         self.guild: Guild = guild
         self.name: str = data['name']
-        self.category_id: Optional[int] = utils._get_as_snowflake(data, 'parent_id')
+        self.category_id: int | None = utils._get_as_snowflake(data, 'parent_id')
         self.position: int = data['position']
         self.nsfw: bool = data.get('nsfw', False)
         self._fill_overwrites(data)
@@ -1614,7 +1614,7 @@ class StoreChannel(discord.abc.GuildChannel, Hashable):
         return ChannelType.store
 
     @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
         # store channels do not have voice related permissions
@@ -1627,7 +1627,7 @@ class StoreChannel(discord.abc.GuildChannel, Hashable):
         return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> StoreChannel:
+    async def clone(self, *, name: str | None = None, reason: str | None = None) -> StoreChannel:
         return await self._clone_impl({'nsfw': self.nsfw}, name=name, reason=reason)
 
     @overload
@@ -1638,14 +1638,14 @@ class StoreChannel(discord.abc.GuildChannel, Hashable):
         position: int = ...,
         nsfw: bool = ...,
         sync_permissions: bool = ...,
-        category: Optional[CategoryChannel],
-        reason: Optional[str],
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite],
-    ) -> Optional[StoreChannel]:
+        category: CategoryChannel | None,
+        reason: str | None,
+        overwrites: Mapping[Role | Member, PermissionOverwrite],
+    ) -> StoreChannel | None:
         ...
 
     @overload
-    async def edit(self) -> Optional[StoreChannel]:
+    async def edit(self) -> StoreChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -1744,7 +1744,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     def __init__(self, *, me: ClientUser, state: ConnectionState, data: DMChannelPayload):
         self._state: ConnectionState = state
-        self.recipient: Optional[User] = state.store_user(data['recipients'][0])
+        self.recipient: User | None = state.store_user(data['recipients'][0])
         self.me: ClientUser = me
         self.id: int = int(data['id'])
 
@@ -1760,7 +1760,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
         return f'<DMChannel id={self.id} recipient={self.recipient!r}>'
 
     @classmethod
-    def _from_message(cls: Type[DMC], state: ConnectionState, channel_id: int) -> DMC:
+    def _from_message(cls: type[DMC], state: ConnectionState, channel_id: int) -> DMC:
         self: DMC = cls.__new__(cls)
         self._state = state
         self.id = channel_id
@@ -1881,12 +1881,12 @@ class GroupChannel(discord.abc.Messageable, Hashable):
         self._update_group(data)
 
     def _update_group(self, data: GroupChannelPayload) -> None:
-        self.owner_id: Optional[int] = utils._get_as_snowflake(data, 'owner_id')
-        self._icon: Optional[str] = data.get('icon')
-        self.name: Optional[str] = data.get('name')
-        self.recipients: List[User] = [self._state.store_user(u) for u in data.get('recipients', [])]
+        self.owner_id: int | None = utils._get_as_snowflake(data, 'owner_id')
+        self._icon: str | None = data.get('icon')
+        self.name: str | None = data.get('name')
+        self.recipients: list[User] = [self._state.store_user(u) for u in data.get('recipients', [])]
 
-        self.owner: Optional[BaseUser]
+        self.owner: BaseUser | None
         if self.owner_id == self.me.id:
             self.owner = self.me
         else:
@@ -1913,7 +1913,7 @@ class GroupChannel(discord.abc.Messageable, Hashable):
         return ChannelType.group
 
     @property
-    def icon(self) -> Optional[Asset]:
+    def icon(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the channel's icon asset if available."""
         if self._icon is None:
             return None
@@ -2008,11 +2008,11 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
         The channel type associated with this partial messageable, if given.
     """
 
-    def __init__(self, state: ConnectionState, id: int, type: Optional[ChannelType] = None):
+    def __init__(self, state: ConnectionState, id: int, type: ChannelType | None = None):
         self._state: ConnectionState = state
         self._channel: Object = Object(id=id)
         self.id: int = id
-        self.type: Optional[ChannelType] = type
+        self.type: ChannelType | None = type
 
     async def _get_channel(self) -> Object:
         return self._channel

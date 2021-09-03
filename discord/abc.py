@@ -248,13 +248,13 @@ class GuildChannel:
     guild: Guild
     type: ChannelType
     position: int
-    category_id: Optional[int]
+    category_id: int | None
     _state: ConnectionState
-    _overwrites: List[_Overwrites]
+    _overwrites: list[_Overwrites]
 
     if TYPE_CHECKING:
 
-        def __init__(self, *, state: ConnectionState, guild: Guild, data: Dict[str, Any]):
+        def __init__(self, *, state: ConnectionState, guild: Guild, data: dict[str, Any]):
             ...
 
     def __str__(self) -> str:
@@ -264,23 +264,23 @@ class GuildChannel:
     def _sorting_bucket(self) -> int:
         raise NotImplementedError
 
-    def _update(self, guild: Guild, data: Dict[str, Any]) -> None:
+    def _update(self, guild: Guild, data: dict[str, Any]) -> None:
         raise NotImplementedError
 
     async def _move(
         self,
         position: int,
-        parent_id: Optional[Any] = None,
+        parent_id: Any | None = None,
         lock_permissions: bool = False,
         *,
-        reason: Optional[str],
+        reason: str | None,
     ) -> None:
         if position < 0:
             raise InvalidArgument('Channel position cannot be less than 0.')
 
         http = self._state.http
         bucket = self._sorting_bucket
-        channels: List[GuildChannel] = [c for c in self.guild.channels if c._sorting_bucket == bucket]
+        channels: list[GuildChannel] = [c for c in self.guild.channels if c._sorting_bucket == bucket]
 
         channels.sort(key=lambda c: c.position)
 
@@ -297,14 +297,14 @@ class GuildChannel:
 
         payload = []
         for index, c in enumerate(channels):
-            d: Dict[str, Any] = {'id': c.id, 'position': index}
+            d: dict[str, Any] = {'id': c.id, 'position': index}
             if parent_id is not _undefined and c.id == self.id:
                 d.update(parent_id=parent_id, lock_permissions=lock_permissions)
             payload.append(d)
 
         await http.bulk_channel_update(self.guild.id, payload, reason=reason)
 
-    async def _edit(self, options: Dict[str, Any], reason: Optional[str]) -> Optional[ChannelPayload]:
+    async def _edit(self, options: dict[str, Any], reason: str | None) -> ChannelPayload | None:
         try:
             parent = options.pop('category')
         except KeyError:
@@ -411,7 +411,7 @@ class GuildChannel:
             tmp[everyone_index], tmp[0] = tmp[0], tmp[everyone_index]
 
     @property
-    def changed_roles(self) -> List[Role]:
+    def changed_roles(self) -> list[Role]:
         """List[:class:`~discord.Role`]: Returns a list of roles that have been overridden from
         their default values in the :attr:`~discord.Guild.roles` attribute."""
         ret = []
@@ -436,7 +436,7 @@ class GuildChannel:
         """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
-    def overwrites_for(self, obj: Union[Role, User]) -> PermissionOverwrite:
+    def overwrites_for(self, obj: Role | User) -> PermissionOverwrite:
         """Returns the channel-specific overwrites for a member or a role.
 
         Parameters
@@ -467,7 +467,7 @@ class GuildChannel:
         return PermissionOverwrite()
 
     @property
-    def overwrites(self) -> Dict[Union[Role, Member], PermissionOverwrite]:
+    def overwrites(self) -> dict[Role | Member, PermissionOverwrite]:
         """Returns all of the channel's overwrites.
 
         This is returned as a dictionary where the key contains the target which
@@ -501,7 +501,7 @@ class GuildChannel:
         return ret
 
     @property
-    def category(self) -> Optional[CategoryChannel]:
+    def category(self) -> CategoryChannel | None:
         """Optional[:class:`~discord.CategoryChannel`]: The category this channel belongs to.
 
         If there is no category then this is ``None``.
@@ -523,7 +523,7 @@ class GuildChannel:
         category = self.guild.get_channel(self.category_id)
         return bool(category and category.overwrites == self.overwrites)
 
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Handles permission resolution for the :class:`~discord.Member`
         or :class:`~discord.Role`.
 
@@ -659,7 +659,7 @@ class GuildChannel:
 
         return base
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the channel.
@@ -686,19 +686,19 @@ class GuildChannel:
     @overload
     async def set_permissions(
         self,
-        target: Union[Member, Role],
+        target: Member | Role,
         *,
-        overwrite: Optional[Union[PermissionOverwrite, _Undefined]] = ...,
-        reason: Optional[str] = ...,
+        overwrite: PermissionOverwrite | _Undefined | None = ...,
+        reason: str | None = ...,
     ) -> None:
         ...
 
     @overload
     async def set_permissions(
         self,
-        target: Union[Member, Role],
+        target: Member | Role,
         *,
-        reason: Optional[str] = ...,
+        reason: str | None = ...,
         **permissions: bool,
     ) -> None:
         ...
@@ -804,10 +804,10 @@ class GuildChannel:
 
     async def _clone_impl(
         self: GCH,
-        base_attrs: Dict[str, Any],
+        base_attrs: dict[str, Any],
         *,
-        name: Optional[str] = None,
-        reason: Optional[str] = None,
+        name: str | None = None,
+        reason: str | None = None,
     ) -> GCH:
         base_attrs['permission_overwrites'] = [x._asdict() for x in self._overwrites]
         base_attrs['parent_id'] = self.category_id
@@ -821,7 +821,7 @@ class GuildChannel:
         self.guild._channels[obj.id] = obj  # type: ignore
         return obj
 
-    async def clone(self: GCH, *, name: Optional[str] = None, reason: Optional[str] = None) -> GCH:
+    async def clone(self: GCH, *, name: str | None = None, reason: str | None = None) -> GCH:
         """|coro|
 
         Clones this channel. This creates a channel with the same properties
@@ -860,9 +860,9 @@ class GuildChannel:
         *,
         beginning: bool,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
-        reason: Optional[str] = MISSING,
+        reason: str | None = MISSING,
     ) -> None:
         ...
 
@@ -872,7 +872,7 @@ class GuildChannel:
         *,
         end: bool,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -884,7 +884,7 @@ class GuildChannel:
         *,
         before: Snowflake,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -896,7 +896,7 @@ class GuildChannel:
         *,
         after: Snowflake,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -973,7 +973,7 @@ class GuildChannel:
         bucket = self._sorting_bucket
         parent_id = kwargs.get('category', MISSING)
         # fmt: off
-        channels: List[GuildChannel]
+        channels: list[GuildChannel]
         if parent_id not in (MISSING, None):
             parent_id = parent_id.id
             channels = [
@@ -1028,14 +1028,14 @@ class GuildChannel:
     async def create_invite(
         self,
         *,
-        reason: Optional[str] = None,
+        reason: str | None = None,
         max_age: int = 0,
         max_uses: int = 0,
         temporary: bool = False,
         unique: bool = True,
-        target_type: Optional[InviteTarget] = None,
-        target_user: Optional[User] = None,
-        target_application_id: Optional[int] = None,
+        target_type: InviteTarget | None = None,
+        target_user: User | None = None,
+        target_application_id: int | None = None,
     ) -> Invite:
         """|coro|
 
@@ -1103,7 +1103,7 @@ class GuildChannel:
         )
         return Invite.from_incomplete(data=data, state=self._state)
 
-    async def invites(self) -> List[Invite]:
+    async def invites(self) -> list[Invite]:
         """|coro|
 
         Returns a list of all active instant invites from this channel.
@@ -1152,16 +1152,16 @@ class Messageable:
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
         embed: Embed = ...,
         file: File = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
     ) -> Message:
@@ -1170,16 +1170,16 @@ class Messageable:
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
         embed: Embed = ...,
-        files: List[File] = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        files: list[File] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
     ) -> Message:
@@ -1188,16 +1188,16 @@ class Messageable:
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
-        embeds: List[Embed] = ...,
+        embeds: list[Embed] = ...,
         file: File = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
     ) -> Message:
@@ -1206,16 +1206,16 @@ class Messageable:
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
-        embeds: List[Embed] = ...,
-        files: List[File] = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        embeds: list[Embed] = ...,
+        files: list[File] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
     ) -> Message:
@@ -1501,7 +1501,7 @@ class Messageable:
         data = await self._state.http.get_message(channel.id, id)
         return self._state.create_message(channel=channel, data=data)
 
-    async def pins(self) -> List[Message]:
+    async def pins(self) -> list[Message]:
         """|coro|
 
         Retrieves all messages that are currently pinned in the channel.
@@ -1531,11 +1531,11 @@ class Messageable:
     def history(
         self,
         *,
-        limit: Optional[int] = 100,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = None,
+        limit: int | None = 100,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = None,
     ) -> HistoryIterator:
         """Returns an :class:`~discord.AsyncIterator` that enables receiving the destination's message history.
 
@@ -1615,10 +1615,10 @@ class Connectable(Protocol):
     __slots__ = ()
     _state: ConnectionState
 
-    def _get_voice_client_key(self) -> Tuple[int, str]:
+    def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError
 
-    def _get_voice_state_pair(self) -> Tuple[int, int]:
+    def _get_voice_state_pair(self) -> tuple[int, int]:
         raise NotImplementedError
 
     async def connect(

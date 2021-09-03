@@ -122,10 +122,10 @@ class BaseActivity:
     __slots__ = ('_created_at',)
 
     def __init__(self, **kwargs):
-        self._created_at: Optional[float] = kwargs.pop('created_at', None)
+        self._created_at: float | None = kwargs.pop('created_at', None)
 
     @property
-    def created_at(self) -> Optional[datetime.datetime]:
+    def created_at(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user started doing this activity in UTC.
 
         .. versionadded:: 1.3
@@ -218,18 +218,18 @@ class Activity(BaseActivity):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.state: Optional[str] = kwargs.pop('state', None)
-        self.details: Optional[str] = kwargs.pop('details', None)
+        self.state: str | None = kwargs.pop('state', None)
+        self.details: str | None = kwargs.pop('details', None)
         self.timestamps: ActivityTimestamps = kwargs.pop('timestamps', {})
         self.assets: ActivityAssets = kwargs.pop('assets', {})
         self.party: ActivityParty = kwargs.pop('party', {})
-        self.application_id: Optional[int] = _get_as_snowflake(kwargs, 'application_id')
-        self.name: Optional[str] = kwargs.pop('name', None)
-        self.url: Optional[str] = kwargs.pop('url', None)
+        self.application_id: int | None = _get_as_snowflake(kwargs, 'application_id')
+        self.name: str | None = kwargs.pop('name', None)
+        self.url: str | None = kwargs.pop('url', None)
         self.flags: int = kwargs.pop('flags', 0)
-        self.sync_id: Optional[str] = kwargs.pop('sync_id', None)
-        self.session_id: Optional[str] = kwargs.pop('session_id', None)
-        self.buttons: List[ActivityButton] = kwargs.pop('buttons', [])
+        self.sync_id: str | None = kwargs.pop('sync_id', None)
+        self.session_id: str | None = kwargs.pop('session_id', None)
+        self.buttons: list[ActivityButton] = kwargs.pop('buttons', [])
 
         activity_type = kwargs.pop('type', -1)
         self.type: ActivityType = (
@@ -237,7 +237,7 @@ class Activity(BaseActivity):
         )
 
         emoji = kwargs.pop('emoji', None)
-        self.emoji: Optional[PartialEmoji] = PartialEmoji.from_dict(emoji) if emoji is not None else None
+        self.emoji: PartialEmoji | None = PartialEmoji.from_dict(emoji) if emoji is not None else None
 
     def __repr__(self) -> str:
         attrs = (
@@ -252,8 +252,8 @@ class Activity(BaseActivity):
         inner = ' '.join('%s=%r' % t for t in attrs)
         return f'<Activity {inner}>'
 
-    def to_dict(self) -> Dict[str, Any]:
-        ret: Dict[str, Any] = {}
+    def to_dict(self) -> dict[str, Any]:
+        ret: dict[str, Any] = {}
         for attr in self.__slots__:
             value = getattr(self, attr, None)
             if value is None:
@@ -269,7 +269,7 @@ class Activity(BaseActivity):
         return ret
 
     @property
-    def start(self) -> Optional[datetime.datetime]:
+    def start(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user started doing this activity in UTC, if applicable."""
         try:
             timestamp = self.timestamps['start'] / 1000
@@ -279,7 +279,7 @@ class Activity(BaseActivity):
             return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
 
     @property
-    def end(self) -> Optional[datetime.datetime]:
+    def end(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user will stop doing this activity in UTC, if applicable."""
         try:
             timestamp = self.timestamps['end'] / 1000
@@ -289,7 +289,7 @@ class Activity(BaseActivity):
             return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
 
     @property
-    def large_image_url(self) -> Optional[str]:
+    def large_image_url(self) -> str | None:
         """Optional[:class:`str`]: Returns a URL pointing to the large image asset of this activity if applicable."""
         if self.application_id is None:
             return None
@@ -302,7 +302,7 @@ class Activity(BaseActivity):
             return Asset.BASE + f'/app-assets/{self.application_id}/{large_image}.png'
 
     @property
-    def small_image_url(self) -> Optional[str]:
+    def small_image_url(self) -> str | None:
         """Optional[:class:`str`]: Returns a URL pointing to the small image asset of this activity if applicable."""
         if self.application_id is None:
             return None
@@ -315,12 +315,12 @@ class Activity(BaseActivity):
             return Asset.BASE + f'/app-assets/{self.application_id}/{small_image}.png'
 
     @property
-    def large_image_text(self) -> Optional[str]:
+    def large_image_text(self) -> str | None:
         """Optional[:class:`str`]: Returns the large image asset hover text of this activity if applicable."""
         return self.assets.get('large_text', None)
 
     @property
-    def small_image_text(self) -> Optional[str]:
+    def small_image_text(self) -> str | None:
         """Optional[:class:`str`]: Returns the small image asset hover text of this activity if applicable."""
         return self.assets.get('small_text', None)
 
@@ -383,14 +383,14 @@ class Game(BaseActivity):
         return ActivityType.playing
 
     @property
-    def start(self) -> Optional[datetime.datetime]:
+    def start(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user started playing this game in UTC, if applicable."""
         if self._start:
             return datetime.datetime.fromtimestamp(self._start / 1000, tz=datetime.timezone.utc)
         return None
 
     @property
-    def end(self) -> Optional[datetime.datetime]:
+    def end(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user will stop playing this game in UTC, if applicable."""
         if self._end:
             return datetime.datetime.fromtimestamp(self._end / 1000, tz=datetime.timezone.utc)
@@ -402,8 +402,8 @@ class Game(BaseActivity):
     def __repr__(self) -> str:
         return f'<Game name={self.name!r}>'
 
-    def to_dict(self) -> Dict[str, Any]:
-        timestamps: Dict[str, Any] = {}
+    def to_dict(self) -> dict[str, Any]:
+        timestamps: dict[str, Any] = {}
         if self._start:
             timestamps['start'] = self._start
 
@@ -475,13 +475,13 @@ class Streaming(BaseActivity):
 
     __slots__ = ('platform', 'name', 'game', 'url', 'details', 'assets')
 
-    def __init__(self, *, name: Optional[str], url: str, **extra: Any):
+    def __init__(self, *, name: str | None, url: str, **extra: Any):
         super().__init__(**extra)
-        self.platform: Optional[str] = name
-        self.name: Optional[str] = extra.pop('details', name)
-        self.game: Optional[str] = extra.pop('state', None)
+        self.platform: str | None = name
+        self.name: str | None = extra.pop('details', name)
+        self.game: str | None = extra.pop('state', None)
         self.url: str = url
-        self.details: Optional[str] = extra.pop('details', self.name)  # compatibility
+        self.details: str | None = extra.pop('details', self.name)  # compatibility
         self.assets: ActivityAssets = extra.pop('assets', {})
 
     @property
@@ -513,9 +513,9 @@ class Streaming(BaseActivity):
         else:
             return name[7:] if name[:7] == 'twitch:' else None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         # fmt: off
-        ret: Dict[str, Any] = {
+        ret: dict[str, Any] = {
             'type': ActivityType.streaming.value,
             'name': str(self.name),
             'url': str(self.url),
@@ -564,12 +564,12 @@ class Spotify:
     def __init__(self, **data):
         self._state: str = data.pop('state', '')
         self._details: str = data.pop('details', '')
-        self._timestamps: Dict[str, int] = data.pop('timestamps', {})
+        self._timestamps: dict[str, int] = data.pop('timestamps', {})
         self._assets: ActivityAssets = data.pop('assets', {})
         self._party: ActivityParty = data.pop('party', {})
         self._sync_id: str = data.pop('sync_id')
         self._session_id: str = data.pop('session_id')
-        self._created_at: Optional[float] = data.pop('created_at', None)
+        self._created_at: float | None = data.pop('created_at', None)
 
     @property
     def type(self) -> ActivityType:
@@ -580,7 +580,7 @@ class Spotify:
         return ActivityType.listening
 
     @property
-    def created_at(self) -> Optional[datetime.datetime]:
+    def created_at(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the user started listening in UTC.
 
         .. versionadded:: 1.3
@@ -602,7 +602,7 @@ class Spotify:
         There is an alias for this named :attr:`colour`"""
         return self.colour
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             'flags': 48,  # SYNC | PLAY
             'name': 'Spotify',
@@ -646,7 +646,7 @@ class Spotify:
         return self._details
 
     @property
-    def artists(self) -> List[str]:
+    def artists(self) -> list[str]:
         """List[:class:`str`]: The artists of the song being played."""
         return self._state.split('; ')
 
@@ -740,14 +740,14 @@ class CustomActivity(BaseActivity):
 
     __slots__ = ('name', 'emoji', 'state')
 
-    def __init__(self, name: Optional[str], *, emoji: Optional[PartialEmoji] = None, **extra: Any):
+    def __init__(self, name: str | None, *, emoji: PartialEmoji | None = None, **extra: Any):
         super().__init__(**extra)
-        self.name: Optional[str] = name
-        self.state: Optional[str] = extra.pop('state', None)
+        self.name: str | None = name
+        self.state: str | None = extra.pop('state', None)
         if self.name == 'Custom Status':
             self.name = self.state
 
-        self.emoji: Optional[PartialEmoji]
+        self.emoji: PartialEmoji | None
         if emoji is None:
             self.emoji = emoji
         elif isinstance(emoji, dict):
@@ -767,7 +767,7 @@ class CustomActivity(BaseActivity):
         """
         return ActivityType.custom
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         if self.name == self.state:
             o = {
                 'type': ActivityType.custom.value,
@@ -815,7 +815,7 @@ def create_activity(data: ActivityPayload) -> ActivityTypes:
 def create_activity(data: None) -> None:
     ...
 
-def create_activity(data: Optional[ActivityPayload]) -> Optional[ActivityTypes]:
+def create_activity(data: ActivityPayload | None) -> ActivityTypes | None:
     if not data:
         return None
 

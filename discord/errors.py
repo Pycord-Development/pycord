@@ -87,14 +87,14 @@ class GatewayNotFound(DiscordException):
         super().__init__(message)
 
 
-def _flatten_error_dict(d: Dict[str, Any], key: str = '') -> Dict[str, str]:
-    items: List[Tuple[str, str]] = []
+def _flatten_error_dict(d: dict[str, Any], key: str = '') -> dict[str, str]:
+    items: list[tuple[str, str]] = []
     for k, v in d.items():
         new_key = key + '.' + k if key else k
 
         if isinstance(v, dict):
             try:
-                _errors: List[Dict[str, Any]] = v['_errors']
+                _errors: list[dict[str, Any]] = v['_errors']
             except KeyError:
                 items.extend(_flatten_error_dict(v, new_key).items())
             else:
@@ -123,7 +123,7 @@ class HTTPException(DiscordException):
         The Discord specific error code for the failure.
     """
 
-    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(self, response: _ResponseType, message: str | dict[str, Any] | None):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
@@ -221,13 +221,13 @@ class ConnectionClosed(ClientException):
         The shard ID that got closed if applicable.
     """
 
-    def __init__(self, socket: ClientWebSocketResponse, *, shard_id: Optional[int], code: Optional[int] = None):
+    def __init__(self, socket: ClientWebSocketResponse, *, shard_id: int | None, code: int | None = None):
         # This exception is just the same exception except
         # reconfigured to subclass ClientException for users
         self.code: int = code or socket.close_code or -1
         # aiohttp doesn't seem to consistently provide close reason
         self.reason: str = ''
-        self.shard_id: Optional[int] = shard_id
+        self.shard_id: int | None = shard_id
         super().__init__(f'Shard ID {self.shard_id} WebSocket closed with {self.code}')
 
 
@@ -247,8 +247,8 @@ class PrivilegedIntentsRequired(ClientException):
         The shard ID that got closed if applicable.
     """
 
-    def __init__(self, shard_id: Optional[int]):
-        self.shard_id: Optional[int] = shard_id
+    def __init__(self, shard_id: int | None):
+        self.shard_id: int | None = shard_id
         msg = (
             'Shard ID %s is requesting privileged intents that have not been explicitly enabled in the '
             'developer portal. It is recommended to go to https://discord.com/developers/applications/ '

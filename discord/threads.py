@@ -148,7 +148,7 @@ class Thread(Messageable, Hashable):
     def __init__(self, *, guild: Guild, state: ConnectionState, data: ThreadPayload):
         self._state: ConnectionState = state
         self.guild = guild
-        self._members: Dict[int, ThreadMember] = {}
+        self._members: dict[int, ThreadMember] = {}
         self._from_data(data)
 
     async def _get_channel(self):
@@ -209,12 +209,12 @@ class Thread(Messageable, Hashable):
         return self._type
 
     @property
-    def parent(self) -> Optional[TextChannel]:
+    def parent(self) -> TextChannel | None:
         """Optional[:class:`TextChannel`]: The parent channel this thread belongs to."""
         return self.guild.get_channel(self.parent_id)  # type: ignore
 
     @property
-    def owner(self) -> Optional[Member]:
+    def owner(self) -> Member | None:
         """Optional[:class:`Member`]: The member this thread belongs to."""
         return self.guild.get_member(self.owner_id)
 
@@ -224,7 +224,7 @@ class Thread(Messageable, Hashable):
         return f'<#{self.id}>'
 
     @property
-    def members(self) -> List[ThreadMember]:
+    def members(self) -> list[ThreadMember]:
         """List[:class:`ThreadMember`]: A list of thread members in this thread.
 
         This requires :attr:`Intents.members` to be properly filled. Most of the time however,
@@ -234,7 +234,7 @@ class Thread(Messageable, Hashable):
         return list(self._members.values())
 
     @property
-    def last_message(self) -> Optional[Message]:
+    def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
 
         The message might not be valid or point to an existing message.
@@ -255,7 +255,7 @@ class Thread(Messageable, Hashable):
         return self._state._get_message(self.last_message_id) if self.last_message_id else None
 
     @property
-    def category(self) -> Optional[CategoryChannel]:
+    def category(self) -> CategoryChannel | None:
         """The category channel the parent channel belongs to, if applicable.
 
         Raises
@@ -275,7 +275,7 @@ class Thread(Messageable, Hashable):
         return parent.category
     
     @property
-    def category_id(self) -> Optional[int]:
+    def category_id(self) -> int | None:
         """The category channel ID the parent channel belongs to, if applicable.
 
         Raises
@@ -319,7 +319,7 @@ class Thread(Messageable, Hashable):
         parent = self.parent
         return parent is not None and parent.is_nsfw()
 
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Handles permission resolution for the :class:`~discord.Member`
         or :class:`~discord.Role`.
 
@@ -406,14 +406,14 @@ class Thread(Messageable, Hashable):
     async def purge(
         self,
         *,
-        limit: Optional[int] = 100,
+        limit: int | None = 100,
         check: Callable[[Message], bool] = MISSING,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = False,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = False,
         bulk: bool = True,
-    ) -> List[Message]:
+    ) -> list[Message]:
         """|coro|
 
         Purges a list of messages that meet the criteria given by the predicate
@@ -474,7 +474,7 @@ class Thread(Messageable, Hashable):
             check = lambda m: True
 
         iterator = self.history(limit=limit, before=before, after=after, oldest_first=oldest_first, around=around)
-        ret: List[Message] = []
+        ret: list[Message] = []
         count = 0
 
         minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
@@ -663,7 +663,7 @@ class Thread(Messageable, Hashable):
         """
         await self._state.http.remove_user_from_thread(self.id, user.id)
 
-    async def fetch_members(self) -> List[ThreadMember]:
+    async def fetch_members(self) -> list[ThreadMember]:
         """|coro|
 
         Retrieves all :class:`ThreadMember` that are in this thread.
@@ -727,7 +727,7 @@ class Thread(Messageable, Hashable):
     def _add_member(self, member: ThreadMember) -> None:
         self._members[member.id] = member
 
-    def _pop_member(self, member_id: int) -> Optional[ThreadMember]:
+    def _pop_member(self, member_id: int) -> ThreadMember | None:
         return self._members.pop(member_id, None)
 
 

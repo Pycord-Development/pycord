@@ -155,8 +155,8 @@ class _AuditLogChange_Int(TypedDict):
 
 class _AuditLogChange_ListRole(TypedDict):
     key: Literal['$add', '$remove']
-    new_value: List[Role]
-    old_value: List[Role]
+    new_value: list[Role]
+    old_value: list[Role]
 
 
 class _AuditLogChange_MFALevel(TypedDict):
@@ -203,8 +203,8 @@ class _AuditLogChange_VideoQualityMode(TypedDict):
 
 class _AuditLogChange_Overwrites(TypedDict):
     key: Literal['permission_overwrites']
-    new_value: List[PermissionOverwrite]
-    old_value: List[PermissionOverwrite]
+    new_value: list[PermissionOverwrite]
+    old_value: list[PermissionOverwrite]
 
 
 AuditLogChange = Union[
@@ -237,21 +237,21 @@ class AuditEntryInfo(TypedDict):
 
 
 class _AuditLogEntryOptional(TypedDict, total=False):
-    changes: List[AuditLogChange]
+    changes: list[AuditLogChange]
     options: AuditEntryInfo
     reason: str
 
 
 class AuditLogEntry(_AuditLogEntryOptional):
-    target_id: Optional[str]
-    user_id: Optional[Snowflake]
+    target_id: str | None
+    user_id: Snowflake | None
     id: Snowflake
     action_type: AuditLogEvent
 
 
 class AuditLog(TypedDict):
-    webhooks: List[Webhook]
-    users: List[User]
-    audit_log_entries: List[AuditLogEntry]
-    integrations: List[PartialIntegration]
-    threads: List[Thread]
+    webhooks: list[Webhook]
+    users: list[User]
+    audit_log_entries: list[AuditLogEntry]
+    integrations: list[PartialIntegration]
+    threads: list[Thread]

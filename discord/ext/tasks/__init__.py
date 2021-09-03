@@ -96,15 +96,15 @@ class Loop(Generic[LF]):
         seconds: float,
         hours: float,
         minutes: float,
-        time: Union[datetime.time, Sequence[datetime.time]],
-        count: Optional[int],
+        time: datetime.time | Sequence[datetime.time],
+        count: int | None,
         reconnect: bool,
         loop: asyncio.AbstractEventLoop,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
         self.loop: asyncio.AbstractEventLoop = loop
-        self.count: Optional[int] = count
+        self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
         self._task: asyncio.Task[None] = MISSING
@@ -203,7 +203,7 @@ class Loop(Generic[LF]):
             self._stop_next_iteration = False
             self._has_failed = False
 
-    def __get__(self, obj: T, objtype: Type[T]) -> Loop[LF]:
+    def __get__(self, obj: T, objtype: type[T]) -> Loop[LF]:
         if obj is None:
             return self
 
@@ -225,7 +225,7 @@ class Loop(Generic[LF]):
         return copy
 
     @property
-    def seconds(self) -> Optional[float]:
+    def seconds(self) -> float | None:
         """Optional[:class:`float`]: Read-only value for the number of seconds
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
@@ -235,7 +235,7 @@ class Loop(Generic[LF]):
             return self._seconds
 
     @property
-    def minutes(self) -> Optional[float]:
+    def minutes(self) -> float | None:
         """Optional[:class:`float`]: Read-only value for the number of minutes
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
@@ -245,7 +245,7 @@ class Loop(Generic[LF]):
             return self._minutes
 
     @property
-    def hours(self) -> Optional[float]:
+    def hours(self) -> float | None:
         """Optional[:class:`float`]: Read-only value for the number of hours
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
@@ -255,7 +255,7 @@ class Loop(Generic[LF]):
             return self._hours
 
     @property
-    def time(self) -> Optional[List[datetime.time]]:
+    def time(self) -> list[datetime.time] | None:
         """Optional[List[:class:`datetime.time`]]: Read-only list for the exact times this loop runs at.
         ``None`` if relative times were passed instead.
 
@@ -270,7 +270,7 @@ class Loop(Generic[LF]):
         return self._current_loop
 
     @property
-    def next_iteration(self) -> Optional[datetime.datetime]:
+    def next_iteration(self) -> datetime.datetime | None:
         """Optional[:class:`datetime.datetime`]: When the next iteration of the loop will occur.
 
         .. versionadded:: 1.3
@@ -387,7 +387,7 @@ class Loop(Generic[LF]):
             self._task.add_done_callback(restart_when_over)
             self._task.cancel()
 
-    def add_exception_type(self, *exceptions: Type[BaseException]) -> None:
+    def add_exception_type(self, *exceptions: type[BaseException]) -> None:
         r"""Adds exception types to be handled during the reconnect logic.
 
         By default the exception types handled are those handled by
@@ -425,7 +425,7 @@ class Loop(Generic[LF]):
         """
         self._valid_exception = tuple()
 
-    def remove_exception_type(self, *exceptions: Type[BaseException]) -> bool:
+    def remove_exception_type(self, *exceptions: type[BaseException]) -> bool:
         r"""Removes exception types from being handled during the reconnect logic.
 
         Parameters
@@ -442,7 +442,7 @@ class Loop(Generic[LF]):
         self._valid_exception = tuple(x for x in self._valid_exception if x not in exceptions)
         return len(self._valid_exception) == old_length - len(exceptions)
 
-    def get_task(self) -> Optional[asyncio.Task[None]]:
+    def get_task(self) -> asyncio.Task[None] | None:
         """Optional[:class:`asyncio.Task`]: Fetches the internal task or ``None`` if there isn't one running."""
         return self._task if self._task is not MISSING else None
 
@@ -591,11 +591,11 @@ class Loop(Generic[LF]):
 
     def _get_time_parameter(
         self,
-        time: Union[datetime.time, Sequence[datetime.time]],
+        time: datetime.time | Sequence[datetime.time],
         *,
-        dt: Type[datetime.time] = datetime.time,
+        dt: type[datetime.time] = datetime.time,
         utc: datetime.timezone = datetime.timezone.utc,
-    ) -> List[datetime.time]:
+    ) -> list[datetime.time]:
         if isinstance(time, dt):
             inner = time if time.tzinfo is not None else time.replace(tzinfo=utc)
             return [inner]
@@ -606,7 +606,7 @@ class Loop(Generic[LF]):
         if not time:
             raise ValueError('time parameter must not be an empty sequence.')
 
-        ret: List[datetime.time] = []
+        ret: list[datetime.time] = []
         for index, t in enumerate(time):
             if not isinstance(t, dt):
                 raise TypeError(
@@ -623,7 +623,7 @@ class Loop(Generic[LF]):
         seconds: float = 0,
         minutes: float = 0,
         hours: float = 0,
-        time: Union[datetime.time, Sequence[datetime.time]] = MISSING,
+        time: datetime.time | Sequence[datetime.time] = MISSING,
     ) -> None:
         """Changes the interval for the sleep time.
 
@@ -669,7 +669,7 @@ class Loop(Generic[LF]):
             self._seconds = float(seconds)
             self._hours = float(hours)
             self._minutes = float(minutes)
-            self._time: List[datetime.time] = MISSING
+            self._time: list[datetime.time] = MISSING
         else:
             if any((seconds, minutes, hours)):
                 raise TypeError('Cannot mix explicit time with relative time')
@@ -692,8 +692,8 @@ def loop(
     seconds: float = MISSING,
     minutes: float = MISSING,
     hours: float = MISSING,
-    time: Union[datetime.time, Sequence[datetime.time]] = MISSING,
-    count: Optional[int] = None,
+    time: datetime.time | Sequence[datetime.time] = MISSING,
+    count: int | None = None,
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop = MISSING,
 ) -> Callable[[LF], Loop[LF]]:

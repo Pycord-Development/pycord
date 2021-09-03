@@ -80,7 +80,7 @@ class PyAttributeTable(SphinxDirective):
             if not modulename:
                 modulename = self.env.ref_context.get('py:module')
         if modulename is None:
-            raise RuntimeError('modulename somehow None for %s in %s.' % (content, self.env.docname))
+            raise RuntimeError(f'modulename somehow None for {content} in {self.env.docname}.')
 
         return modulename, name
 

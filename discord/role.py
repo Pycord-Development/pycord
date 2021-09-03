@@ -74,13 +74,13 @@ class RoleTags:
     )
 
     def __init__(self, data: RoleTagPayload):
-        self.bot_id: Optional[int] = _get_as_snowflake(data, 'bot_id')
-        self.integration_id: Optional[int] = _get_as_snowflake(data, 'integration_id')
+        self.bot_id: int | None = _get_as_snowflake(data, 'bot_id')
+        self.integration_id: int | None = _get_as_snowflake(data, 'integration_id')
         # NOTE: The API returns "null" for this if it's valid, which corresponds to None.
         # This is different from other fields where "null" means "not there".
         # So in this case, a value of None is the same as True.
         # Which means we would need a different sentinel.
-        self._premium_subscriber: Optional[Any] = data.get('premium_subscriber', MISSING)
+        self._premium_subscriber: Any | None = data.get('premium_subscriber', MISSING)
 
     def is_bot_managed(self) -> bool:
         """:class:`bool`: Whether the role is associated with a bot."""
@@ -242,7 +242,7 @@ class Role(Hashable):
         self.hoist: bool = data.get('hoist', False)
         self.managed: bool = data.get('managed', False)
         self.mentionable: bool = data.get('mentionable', False)
-        self.tags: Optional[RoleTags]
+        self.tags: RoleTags | None
 
         try:
             self.tags = RoleTags(data['tags'])
@@ -308,7 +308,7 @@ class Role(Hashable):
         return f'<@&{self.id}>'
 
     @property
-    def members(self) -> List[Member]:
+    def members(self) -> list[Member]:
         """List[:class:`Member`]: Returns all the members with this role."""
         all_members = self.guild.members
         if self.is_default():
@@ -317,7 +317,7 @@ class Role(Hashable):
         role_id = self.id
         return [member for member in all_members if member._roles.has(role_id)]
 
-    async def _move(self, position: int, reason: Optional[str]) -> None:
+    async def _move(self, position: int, reason: str | None) -> None:
         if position <= 0:
             raise InvalidArgument("Cannot move role to position 0 or below")
 
@@ -337,7 +337,7 @@ class Role(Hashable):
         else:
             roles.append(self.id)
 
-        payload: List[RolePositionUpdate] = [{"id": z[0], "position": z[1]} for z in zip(roles, change_range)]
+        payload: list[RolePositionUpdate] = [{"id": z[0], "position": z[1]} for z in zip(roles, change_range)]
         await http.move_role_position(self.guild.id, payload, reason=reason)
 
     async def edit(
@@ -345,13 +345,13 @@ class Role(Hashable):
         *,
         name: str = MISSING,
         permissions: Permissions = MISSING,
-        colour: Union[Colour, int] = MISSING,
-        color: Union[Colour, int] = MISSING,
+        colour: Colour | int = MISSING,
+        color: Colour | int = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         position: int = MISSING,
-        reason: Optional[str] = MISSING,
-    ) -> Optional[Role]:
+        reason: str | None = MISSING,
+    ) -> Role | None:
         """|coro|
 
         Edits the role.
@@ -403,7 +403,7 @@ class Role(Hashable):
         if position is not MISSING:
             await self._move(position, reason=reason)
 
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if color is not MISSING:
             colour = color
 
@@ -428,7 +428,7 @@ class Role(Hashable):
         data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the role.

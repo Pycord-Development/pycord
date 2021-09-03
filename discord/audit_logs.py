@@ -74,26 +74,26 @@ def _transform_snowflake(entry: AuditLogEntry, data: Snowflake) -> int:
     return int(data)
 
 
-def _transform_channel(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Union[abc.GuildChannel, Object]]:
+def _transform_channel(entry: AuditLogEntry, data: Snowflake | None) -> abc.GuildChannel | Object | None:
     if data is None:
         return None
     return entry.guild.get_channel(int(data)) or Object(id=data)
 
 
-def _transform_member_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Union[Member, User, None]:
+def _transform_member_id(entry: AuditLogEntry, data: Snowflake | None) -> Member | User | None:
     if data is None:
         return None
     return entry._get_member(int(data))
 
-def _transform_guild_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Guild]:
+def _transform_guild_id(entry: AuditLogEntry, data: Snowflake | None) -> Guild | None:
     if data is None:
         return None
     return entry._state._get_guild(data)
 
 
 def _transform_overwrites(
-    entry: AuditLogEntry, data: List[PermissionOverwritePayload]
-) -> List[Tuple[Object, PermissionOverwrite]]:
+    entry: AuditLogEntry, data: list[PermissionOverwritePayload]
+) -> list[tuple[Object, PermissionOverwrite]]:
     overwrites = []
     for elem in data:
         allow = Permissions(int(elem['allow']))
@@ -116,20 +116,20 @@ def _transform_overwrites(
     return overwrites
 
 
-def _transform_icon(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _transform_icon(entry: AuditLogEntry, data: str | None) -> Asset | None:
     if data is None:
         return None
     return Asset._from_guild_icon(entry._state, entry.guild.id, data)
 
 
-def _transform_avatar(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _transform_avatar(entry: AuditLogEntry, data: str | None) -> Asset | None:
     if data is None:
         return None
     return Asset._from_avatar(entry._state, entry._target_id, data)  # type: ignore
 
 
-def _guild_hash_transformer(path: str) -> Callable[[AuditLogEntry, Optional[str]], Optional[Asset]]:
-    def _transform(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _guild_hash_transformer(path: str) -> Callable[[AuditLogEntry, str | None], Asset | None]:
+    def _transform(entry: AuditLogEntry, data: str | None) -> Asset | None:
         if data is None:
             return None
         return Asset._from_guild_image(entry._state, entry.guild.id, data, path=path)
@@ -140,13 +140,13 @@ def _guild_hash_transformer(path: str) -> Callable[[AuditLogEntry, Optional[str]
 T = TypeVar('T', bound=enums.Enum)
 
 
-def _enum_transformer(enum: Type[T]) -> Callable[[AuditLogEntry, int], T]:
+def _enum_transformer(enum: type[T]) -> Callable[[AuditLogEntry, int], T]:
     def _transform(entry: AuditLogEntry, data: int) -> T:
         return enums.try_enum(enum, data)
 
     return _transform
 
-def _transform_type(entry: AuditLogEntry, data: Union[int]) -> Union[enums.ChannelType, enums.StickerType]:
+def _transform_type(entry: AuditLogEntry, data: int) -> enums.ChannelType | enums.StickerType:
     if entry.action.name.startswith('sticker_'):
         return enums.try_enum(enums.StickerType, data)
     else:
@@ -156,7 +156,7 @@ class AuditLogDiff:
     def __len__(self) -> int:
         return len(self.__dict__)
 
-    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+    def __iter__(self) -> Generator[tuple[str, Any], None, None]:
         yield from self.__dict__.items()
 
     def __repr__(self) -> str:
@@ -177,7 +177,7 @@ Transformer = Callable[["AuditLogEntry", Any], Any]
 
 class AuditLogChanges:
     # fmt: off
-    TRANSFORMERS: ClassVar[Dict[str, Tuple[Optional[str], Optional[Transformer]]]] = {
+    TRANSFORMERS: ClassVar[dict[str, tuple[str | None, Transformer | None]]] = {
         'verification_level':            (None, _enum_transformer(enums.VerificationLevel)),
         'explicit_content_filter':       (None, _enum_transformer(enums.ContentFilter)),
         'allow':                         (None, _transform_permissions),
@@ -212,7 +212,7 @@ class AuditLogChanges:
     }
     # fmt: on
 
-    def __init__(self, entry: AuditLogEntry, data: List[AuditLogChangePayload]):
+    def __init__(self, entry: AuditLogEntry, data: list[AuditLogChangePayload]):
         self.before = AuditLogDiff()
         self.after = AuditLogDiff()
 
@@ -235,7 +235,7 @@ class AuditLogChanges:
                 if key:
                     attr = key
 
-            transformer: Optional[Transformer]
+            transformer: Transformer | None
 
             try:
                 before = elem['old_value']
@@ -268,7 +268,7 @@ class AuditLogChanges:
     def __repr__(self) -> str:
         return f'<AuditLogChanges before={self.before!r} after={self.after!r}>'
 
-    def _handle_role(self, first: AuditLogDiff, second: AuditLogDiff, entry: AuditLogEntry, elem: List[RolePayload]) -> None:
+    def _handle_role(self, first: AuditLogDiff, second: AuditLogDiff, entry: AuditLogEntry, elem: list[RolePayload]) -> None:
         if not hasattr(first, 'roles'):
             setattr(first, 'roles', [])
 
@@ -354,7 +354,7 @@ class AuditLogEntry(Hashable):
         which actions have this field filled out.
     """
 
-    def __init__(self, *, users: Dict[int, User], data: AuditLogEntryPayload, guild: Guild):
+    def __init__(self, *, users: dict[int, User], data: AuditLogEntryPayload, guild: Guild):
         self._state = guild._state
         self.guild = guild
         self._users = users
@@ -413,15 +413,15 @@ class AuditLogEntry(Hashable):
                 self.extra: _AuditLogProxyStageInstanceAction = type('_AuditLogProxy', (), elems)()
 
         # fmt: off
-        self.extra: Union[
-            _AuditLogProxyMemberPrune,
-            _AuditLogProxyMemberMoveOrMessageDelete,
-            _AuditLogProxyMemberDisconnect,
-            _AuditLogProxyPinAction,
-            _AuditLogProxyStageInstanceAction,
-            Member, User, None,
-            Role,
-        ]
+        self.extra: (
+            _AuditLogProxyMemberPrune |
+            _AuditLogProxyMemberMoveOrMessageDelete |
+            _AuditLogProxyMemberDisconnect |
+            _AuditLogProxyPinAction |
+            _AuditLogProxyStageInstanceAction |
+            Member | User | None |
+            Role
+        )
         # fmt: on
 
         # this key is not present when the above is present, typically.
@@ -434,7 +434,7 @@ class AuditLogEntry(Hashable):
         self.user = self._get_member(utils._get_as_snowflake(data, 'user_id'))  # type: ignore
         self._target_id = utils._get_as_snowflake(data, 'target_id')
 
-    def _get_member(self, user_id: int) -> Union[Member, User, None]:
+    def _get_member(self, user_id: int) -> Member | User | None:
         return self.guild.get_member(user_id) or self._users.get(user_id)
 
     def __repr__(self) -> str:
@@ -446,7 +446,7 @@ class AuditLogEntry(Hashable):
         return utils.snowflake_time(self.id)
 
     @utils.cached_property
-    def target(self) -> Union[Guild, abc.GuildChannel, Member, User, Role, Invite, Emoji, StageInstance, GuildSticker, Thread, Object, None]:
+    def target(self) -> Guild | abc.GuildChannel | Member | User | Role | Invite | Emoji | StageInstance | GuildSticker | Thread | Object | None:
         try:
             converter = getattr(self, '_convert_target_' + self.action.target_type)
         except AttributeError:
@@ -479,13 +479,13 @@ class AuditLogEntry(Hashable):
     def _convert_target_guild(self, target_id: int) -> Guild:
         return self.guild
 
-    def _convert_target_channel(self, target_id: int) -> Union[abc.GuildChannel, Object]:
+    def _convert_target_channel(self, target_id: int) -> abc.GuildChannel | Object:
         return self.guild.get_channel(target_id) or Object(id=target_id)
 
-    def _convert_target_user(self, target_id: int) -> Union[Member, User, None]:
+    def _convert_target_user(self, target_id: int) -> Member | User | None:
         return self._get_member(target_id)
 
-    def _convert_target_role(self, target_id: int) -> Union[Role, Object]:
+    def _convert_target_role(self, target_id: int) -> Role | Object:
         return self.guild.get_role(target_id) or Object(id=target_id)
 
     def _convert_target_invite(self, target_id: int) -> Invite:
@@ -508,17 +508,17 @@ class AuditLogEntry(Hashable):
             pass
         return obj
 
-    def _convert_target_emoji(self, target_id: int) -> Union[Emoji, Object]:
+    def _convert_target_emoji(self, target_id: int) -> Emoji | Object:
         return self._state.get_emoji(target_id) or Object(id=target_id)
 
-    def _convert_target_message(self, target_id: int) -> Union[Member, User, None]:
+    def _convert_target_message(self, target_id: int) -> Member | User | None:
         return self._get_member(target_id)
 
-    def _convert_target_stage_instance(self, target_id: int) -> Union[StageInstance, Object]:
+    def _convert_target_stage_instance(self, target_id: int) -> StageInstance | Object:
         return self.guild.get_stage_instance(target_id) or Object(id=target_id)
 
-    def _convert_target_sticker(self, target_id: int) -> Union[GuildSticker, Object]:
+    def _convert_target_sticker(self, target_id: int) -> GuildSticker | Object:
         return self._state.get_sticker(target_id) or Object(id=target_id)
 
-    def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
+    def _convert_target_thread(self, target_id: int) -> Thread | Object:
         return self.guild.get_thread(target_id) or Object(id=target_id)

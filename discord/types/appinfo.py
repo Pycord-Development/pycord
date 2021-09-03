@@ -34,7 +34,7 @@ class BaseAppInfo(TypedDict):
     id: Snowflake
     name: str
     verify_key: str
-    icon: Optional[str]
+    icon: str | None
     summary: str
     description: str
 
@@ -49,13 +49,13 @@ class _AppInfoOptional(TypedDict, total=False):
     max_participants: int
 
 class AppInfo(BaseAppInfo, _AppInfoOptional):
-    rpc_origins: List[str]
+    rpc_origins: list[str]
     owner: User
     bot_public: bool
     bot_require_code_grant: bool
 
 class _PartialAppInfoOptional(TypedDict, total=False):
-    rpc_origins: List[str]
+    rpc_origins: list[str]
     cover_image: str
     hook: bool
     terms_of_service_url: str

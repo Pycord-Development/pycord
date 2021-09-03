@@ -150,14 +150,14 @@ class CachedSlotProperty(Generic[T, T_co]):
         self.__doc__ = getattr(function, '__doc__')
 
     @overload
-    def __get__(self, instance: None, owner: Type[T]) -> CachedSlotProperty[T, T_co]:
+    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]:
         ...
 
     @overload
-    def __get__(self, instance: T, owner: Type[T]) -> T_co:
+    def __get__(self, instance: T, owner: type[T]) -> T_co:
         ...
 
-    def __get__(self, instance: Optional[T], owner: Type[T]) -> Any:
+    def __get__(self, instance: T | None, owner: type[T]) -> Any:
         if instance is None:
             return self
 
@@ -173,7 +173,7 @@ class classproperty(Generic[T_co]):
     def __init__(self, fget: Callable[[Any], T_co]) -> None:
         self.fget = fget
 
-    def __get__(self, instance: Optional[Any], owner: Type[Any]) -> T_co:
+    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
         return self.fget(owner)
 
     def __set__(self, instance, value) -> None:
@@ -226,11 +226,11 @@ def parse_time(timestamp: str) -> datetime.datetime:
 
 
 @overload
-def parse_time(timestamp: Optional[str]) -> Optional[datetime.datetime]:
+def parse_time(timestamp: str | None) -> datetime.datetime | None:
     ...
 
 
-def parse_time(timestamp: Optional[str]) -> Optional[datetime.datetime]:
+def parse_time(timestamp: str | None) -> datetime.datetime | None:
     if timestamp:
         return datetime.datetime.fromisoformat(timestamp)
     return None
@@ -245,7 +245,7 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
     return decorator
 
 
-def deprecated(instead: Optional[str] = None) -> Callable[[Callable[P, T]], Callable[P, T]]:
+def deprecated(instead: str | None = None) -> Callable[[Callable[P, T]], Callable[P, T]]:
     def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
@@ -265,7 +265,7 @@ def deprecated(instead: Optional[str] = None) -> Callable[[Callable[P, T]], Call
 
 
 def oauth_url(
-    client_id: Union[int, str],
+    client_id: int | str,
     *,
     permissions: Permissions = MISSING,
     guild: Snowflake = MISSING,
@@ -358,7 +358,7 @@ def time_snowflake(dt: datetime.datetime, high: bool = False) -> int:
     return (discord_millis << 22) + (2 ** 22 - 1 if high else 0)
 
 
-def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> Optional[T]:
+def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:
     """A helper to return the first element found in the sequence
     that meets the predicate. For example: ::
 
@@ -384,7 +384,7 @@ def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> Optional[T]:
     return None
 
 
-def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
+def get(iterable: Iterable[T], **attrs: Any) -> T | None:
     r"""A helper that returns the first element in the iterable that meets
     all the traits passed in ``attrs``. This is an alternative for
     :func:`~discord.utils.find`.
@@ -455,11 +455,11 @@ async def get_or_fetch(obj, attr: str, id: int):
         getter = await getattr(obj, f'fetch_{attr}')(id)
     return getter
 
-def _unique(iterable: Iterable[T]) -> List[T]:
+def _unique(iterable: Iterable[T]) -> list[T]:
     return [x for x in dict.fromkeys(iterable)]
 
 
-def _get_as_snowflake(data: Any, key: str) -> Optional[int]:
+def _get_as_snowflake(data: Any, key: str) -> int | None:
     try:
         value = data[key]
     except KeyError:
@@ -504,7 +504,7 @@ else:
 
 
 def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
-    reset_after: Optional[str] = request.headers.get('X-Ratelimit-Reset-After')
+    reset_after: str | None = request.headers.get('X-Ratelimit-Reset-After')
     if use_clock or not reset_after:
         utc = datetime.timezone.utc
         now = datetime.datetime.now(utc)
@@ -541,7 +541,7 @@ async def sane_wait_for(futures, *, timeout):
     return done
 
 
-def get_slots(cls: Type[Any]) -> Iterator[str]:
+def get_slots(cls: type[Any]) -> Iterator[str]:
     for mro in reversed(cls.__mro__):
         try:
             yield from mro.__slots__
@@ -556,7 +556,7 @@ def compute_timedelta(dt: datetime.datetime):
     return max((dt - now).total_seconds(), 0)
 
 
-async def sleep_until(when: datetime.datetime, result: Optional[T] = None) -> Optional[T]:
+async def sleep_until(when: datetime.datetime, result: T | None = None) -> T | None:
     """|coro|
 
     Sleep until a specified time.
@@ -624,7 +624,7 @@ class SnowflakeList(array.array):
         i = bisect_left(self, element)
         self.insert(i, element)
 
-    def get(self, element: int) -> Optional[int]:
+    def get(self, element: int) -> int | None:
         i = bisect_left(self, element)
         return self[i] if i != len(self) and self[i] == element else None
 
@@ -647,7 +647,7 @@ def _string_width(string: str, *, _IS_ASCII=_IS_ASCII) -> int:
     return sum(2 if func(char) in UNICODE_WIDE_CHAR_TYPE else 1 for char in string)
 
 
-def resolve_invite(invite: Union[Invite, str]) -> str:
+def resolve_invite(invite: Invite | str) -> str:
     """
     Resolves an invite from a :class:`~discord.Invite`, URL or code.
 
@@ -673,7 +673,7 @@ def resolve_invite(invite: Union[Invite, str]) -> str:
     return invite
 
 
-def resolve_template(code: Union[Template, str]) -> str:
+def resolve_template(code: Template | str) -> str:
     """
     Resolves a template code from a :class:`~discord.Template`, URL or code.
 
@@ -815,7 +815,7 @@ def escape_mentions(text: str) -> str:
     return re.sub(r'@(everyone|here|[!&]?[0-9]{17,20})', '@\u200b\\1', text)
 
 
-def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[List[T]]:
+def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
     ret = []
     n = 0
     for item in iterator:
@@ -829,7 +829,7 @@ def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[List[T]]:
         yield ret
 
 
-async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[List[T]]:
+async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
     ret = []
     n = 0
     async for item in iterator:
@@ -844,16 +844,16 @@ async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[Li
 
 
 @overload
-def as_chunks(iterator: Iterator[T], max_size: int) -> Iterator[List[T]]:
+def as_chunks(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
     ...
 
 
 @overload
-def as_chunks(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[List[T]]:
+def as_chunks(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
     ...
 
 
-def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[List[T]]:
+def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     """A helper function that collects an iterator into chunks of a given size.
 
     .. versionadded:: 2.0
@@ -886,7 +886,7 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[List[T]]:
 PY_310 = sys.version_info >= (3, 10)
 
 
-def flatten_literal_params(parameters: Iterable[Any]) -> Tuple[Any, ...]:
+def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
     params = []
     literal_cls = type(Literal[0])
     for p in parameters:
@@ -897,16 +897,16 @@ def flatten_literal_params(parameters: Iterable[Any]) -> Tuple[Any, ...]:
     return tuple(params)
 
 
-def normalise_optional_params(parameters: Iterable[Any]) -> Tuple[Any, ...]:
+def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
     none_cls = type(None)
     return tuple(p for p in parameters if p is not none_cls) + (none_cls,)
 
 
 def evaluate_annotation(
     tp: Any,
-    globals: Dict[str, Any],
-    locals: Dict[str, Any],
-    cache: Dict[str, Any],
+    globals: dict[str, Any],
+    locals: dict[str, Any],
+    cache: dict[str, Any],
     *,
     implicit_str: bool = True,
 ):
@@ -962,9 +962,9 @@ def evaluate_annotation(
 
 def resolve_annotation(
     annotation: Any,
-    globalns: Dict[str, Any],
-    localns: Optional[Dict[str, Any]],
-    cache: Optional[Dict[str, Any]],
+    globalns: dict[str, Any],
+    localns: dict[str, Any] | None,
+    cache: dict[str, Any] | None,
 ) -> Any:
     if annotation is None:
         return type(None)
@@ -980,7 +980,7 @@ def resolve_annotation(
 TimestampStyle = Literal['f', 'F', 'd', 'D', 't', 'T', 'R']
 
 
-def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) -> str:
+def format_dt(dt: datetime.datetime, /, style: TimestampStyle | None = None) -> str:
     """A helper function to format a :class:`datetime.datetime` for presentation within Discord.
 
     This allows for a locale-independent way of presenting data using Discord specific Markdown.

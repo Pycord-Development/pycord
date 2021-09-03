@@ -66,7 +66,7 @@ T = TypeVar('T')
 CFT = TypeVar('CFT', bound='CoroFunc')
 CXT = TypeVar('CXT', bound='Context')
 
-def when_mentioned(bot: Union[Bot, AutoShardedBot], msg: Message) -> List[str]:
+def when_mentioned(bot: Bot | AutoShardedBot, msg: Message) -> list[str]:
     """A callable that implements a command prefix equivalent to being mentioned.
 
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
@@ -74,7 +74,7 @@ def when_mentioned(bot: Union[Bot, AutoShardedBot], msg: Message) -> List[str]:
     # bot.user will never be None when this is called
     return [f'<@{bot.user.id}> ', f'<@!{bot.user.id}> ']  # type: ignore
 
-def when_mentioned_or(*prefixes: str) -> Callable[[Union[Bot, AutoShardedBot], Message], List[str]]:
+def when_mentioned_or(*prefixes: str) -> Callable[[Bot | AutoShardedBot, Message], list[str]]:
     """A callable that implements when mentioned or other prefixes provided.
 
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
@@ -123,10 +123,10 @@ class BotBase(GroupMixin):
     def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.extra_events: Dict[str, List[CoroFunc]] = {}
-        self.__cogs: Dict[str, Cog] = {}
-        self.__extensions: Dict[str, types.ModuleType] = {}
-        self._checks: List[Check] = []
+        self.extra_events: dict[str, list[CoroFunc]] = {}
+        self.__cogs: dict[str, Cog] = {}
+        self.__extensions: dict[str, types.ModuleType] = {}
+        self._checks: list[Check] = []
         self._check_once = []
         self._before_invoke = None
         self._after_invoke = None
@@ -554,7 +554,7 @@ class BotBase(GroupMixin):
         cog = cog._inject(self)
         self.__cogs[cog_name] = cog
 
-    def get_cog(self, name: str) -> Optional[Cog]:
+    def get_cog(self, name: str) -> Cog | None:
         """Gets the cog instance requested.
 
         If the cog is not found, ``None`` is returned instead.
@@ -573,7 +573,7 @@ class BotBase(GroupMixin):
         """
         return self.__cogs.get(name)
 
-    def remove_cog(self, name: str) -> Optional[Cog]:
+    def remove_cog(self, name: str) -> Cog | None:
         """Removes a cog from the bot and returns it.
 
         All registered commands and event listeners that the
@@ -678,13 +678,13 @@ class BotBase(GroupMixin):
         else:
             self.__extensions[key] = lib
 
-    def _resolve_name(self, name: str, package: Optional[str]) -> str:
+    def _resolve_name(self, name: str, package: str | None) -> str:
         try:
             return importlib.util.resolve_name(name, package)
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
-    def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def load_extension(self, name: str, *, package: str | None = None) -> None:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -731,7 +731,7 @@ class BotBase(GroupMixin):
 
         self._load_from_module_spec(spec, name)
 
-    def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def unload_extension(self, name: str, *, package: str | None = None) -> None:
         """Unloads an extension.
 
         When the extension is unloaded, all commands, listeners, and cogs are
@@ -772,7 +772,7 @@ class BotBase(GroupMixin):
         self._remove_module_references(lib.__name__)
         self._call_module_finalizers(lib, name)
 
-    def reload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def reload_extension(self, name: str, *, package: str | None = None) -> None:
         """Atomically reloads an extension.
 
         This replaces the extension with the same extension, only refreshed. This is
@@ -843,11 +843,11 @@ class BotBase(GroupMixin):
     # help command stuff
 
     @property
-    def help_command(self) -> Optional[HelpCommand]:
+    def help_command(self) -> HelpCommand | None:
         return self._help_command
 
     @help_command.setter
-    def help_command(self, value: Optional[HelpCommand]) -> None:
+    def help_command(self, value: HelpCommand | None) -> None:
         if value is not None:
             if not isinstance(value, HelpCommand):
                 raise TypeError('help_command must be a subclass of HelpCommand')
@@ -863,7 +863,7 @@ class BotBase(GroupMixin):
 
     # command processing
 
-    async def get_prefix(self, message: Message) -> Union[List[str], str]:
+    async def get_prefix(self, message: Message) -> list[str] | str:
         """|coro|
 
         Retrieves the prefix the bot is listening to
@@ -901,7 +901,7 @@ class BotBase(GroupMixin):
 
         return ret
 
-    async def get_context(self, message: Message, *, cls: Type[CXT] = Context) -> CXT:
+    async def get_context(self, message: Message, *, cls: type[CXT] = Context) -> CXT:
         r"""|coro|
 
         Returns the invocation context from the message.

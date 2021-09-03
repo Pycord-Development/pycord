@@ -36,7 +36,7 @@ class _IntegrationApplicationOptional(TypedDict, total=False):
 class IntegrationApplication(_IntegrationApplicationOptional):
     id: Snowflake
     name: str
-    icon: Optional[str]
+    icon: str | None
     description: str
     summary: str
 
@@ -69,7 +69,7 @@ class BaseIntegration(PartialIntegration):
 
 
 class StreamIntegration(BaseIntegration):
-    role_id: Optional[Snowflake]
+    role_id: Snowflake | None
     enable_emoticons: bool
     subscriber_count: int
     revoked: bool
