@@ -53,6 +53,7 @@ packages = [
     'discord.app',
     'discord.ext.commands',
     'discord.ext.tasks',
+    'discord.ext.menus'
 ]
 
 setup(name='pycord',
