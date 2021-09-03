@@ -44,6 +44,7 @@ __all__ = (
     "SlashCommand",
     "Option",
     "OptionChoice",
+    "option",
     "SubCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
@@ -73,18 +74,14 @@ def hooked_wrapped_callback(command, ctx, coro):
             raise
         except asyncio.CancelledError:
             return
-        except ApplicationCommandInvokeError as exc:
+        except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
             await command.call_after_hooks(ctx)
         return ret
     return wrapped
-    
-class _BaseCommand:
-    __slots__ = ()
-    
-    
-class ApplicationCommand(_BaseCommand):
+
+class ApplicationCommand:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -96,7 +93,7 @@ class ApplicationCommand(_BaseCommand):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure('The check functions for the command {self.name} failed')
+            raise CheckFailure(f'The check functions for the command {self.name} failed')
 
         # TODO: Add cooldown
 
@@ -146,6 +143,35 @@ class ApplicationCommand(_BaseCommand):
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
+
+    def error(self, coro):
+        """A decorator that registers a coroutine as a local error handler.
+
+        A local error handler is an :func:`.on_command_error` event limited to
+        a single command. However, the :func:`.on_command_error` is still
+        invoked afterwards as the catch-all.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The error handler must be a coroutine.')
+
+        self.on_error = coro
+        return coro
+
+    def has_error_handler(self) -> bool:
+        """:class:`bool`: Checks whether the command has an error handler registered.
+        """
+        return hasattr(self, 'on_error')
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.
@@ -381,7 +407,7 @@ class SlashCommand(ApplicationCommand):
             if o.name not in kwargs:
                 kwargs[o.name] = o.default
         await self.callback(ctx, **kwargs)
-        
+    
     def copy(self):
         """Creates a copy of this command.
 
@@ -419,12 +445,13 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
+
 class Option:
     def __init__(
-        self, input_type: SlashCommandOptionType, /, description: str, **kwargs
+        self, input_type: SlashCommandOptionType, /, description = None,**kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = description
+        self.description = description or "No description provided"
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type = input_type
@@ -456,6 +483,12 @@ class OptionChoice:
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
 
+def option(name, type, **kwargs):
+    """A decorator that can be used instead of typehinting Option"""
+    def decor(func):
+        func.__annotations__[name] = Option(type, **kwargs)
+        return func
+    return decor
 
 class SubCommandGroup(ApplicationCommand, Option):
     type = 1
@@ -483,6 +516,11 @@ class SubCommandGroup(ApplicationCommand, Option):
         self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
+        self.checks = []
+
+        self._before_invoke = None
+        self._after_invoke = None
+        self.cog = None
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -519,7 +557,6 @@ class SubCommandGroup(ApplicationCommand, Option):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke(ctx)
-
 
 class ContextMenuCommand(ApplicationCommand):
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -630,7 +667,7 @@ class UserCommand(ContextMenuCommand):
                 state=ctx.interaction._state,
             )
         await self.callback(ctx, target)
-        
+    
     def copy(self):
         """Creates a copy of this command.
 
@@ -668,6 +705,7 @@ class UserCommand(ContextMenuCommand):
         else:
             return self.copy()
 
+
 class MessageCommand(ContextMenuCommand):
     type = 3
 
@@ -691,7 +729,7 @@ class MessageCommand(ContextMenuCommand):
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
-        
+    
     def copy(self):
         """Creates a copy of this command.
 
@@ -788,7 +826,7 @@ def command(self, **kwargs):
         A decorator that converts the provided method into an :class:`.ApplicationCommand`.
     """
     return application_command(**kwargs)
-
+        
 # Validation
 def validate_chat_input_name(name: Any):
     if not isinstance(name, str):
