@@ -247,7 +247,7 @@ class ConnectionState:
 
         # Since this is undesirable, a mapping is now used instead with stored
         # references now using a regular dictionary with eviction being done
-        # using __del__. Testing this for memory leaks led to no discernable leaks,
+        # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: Dict[int, User] = {}
         self._emojis: Dict[int, Emoji] = {}

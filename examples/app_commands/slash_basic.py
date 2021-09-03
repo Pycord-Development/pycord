@@ -3,7 +3,7 @@ import discord
 bot = discord.Bot()
 
 # If you use commands.Bot, @bot.slash_command should be used for
-# slash commands. You can use @bot.slash_command with discord.Bot aswell
+# slash commands. You can use @bot.slash_command with discord.Bot as well
 
 
 @bot.command(guild_ids=[...])  # create a slash command for the supplied guilds
