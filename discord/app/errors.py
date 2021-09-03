@@ -33,6 +33,7 @@ class ApplicationCommandError(DiscordException):
     in a special way as they are caught and passed into a special event
     from :class:`.Bot`\, :func:`.on_command_error`.
     """
+    pass
 
 class CheckFailure(ApplicationCommandError):
     """Exception raised when the predicates in :attr:`.Command.checks` have failed.
