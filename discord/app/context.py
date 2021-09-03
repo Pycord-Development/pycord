@@ -33,6 +33,7 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
+from ..context_managers import Typing
 
 
 class InteractionContext:
@@ -81,6 +82,13 @@ class InteractionContext:
     @cached_property
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
+
+    @property
+    def voice_client(self):
+        return self.guild.voice_client
+
+    def typing(self):
+        return Typing(self.channel)
 
     @cached_property
     def response(self) -> InteractionResponse:
