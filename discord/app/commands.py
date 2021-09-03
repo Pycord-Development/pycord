@@ -44,6 +44,7 @@ __all__ = (
     "SlashCommand",
     "Option",
     "OptionChoice",
+    "option",
     "SubCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
@@ -412,10 +413,10 @@ class SlashCommand(ApplicationCommand):
 
 class Option:
     def __init__(
-        self, input_type: SlashCommandOptionType, /, description: str, **kwargs
+        self, input_type: SlashCommandOptionType, /, **kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = description
+        self.description = kwargs.pop("description", "No description provided")
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type = input_type
@@ -447,6 +448,12 @@ class OptionChoice:
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
 
+def option(name, type, **kwargs):
+    """A decorator that can be used instead of typehinting Option"""
+    def decor(func):
+        func.__annotations__[name] = Option(type, **kwargs)
+        return func
+    return decor
 
 class SubCommandGroup(ApplicationCommand, Option):
     type = 1
