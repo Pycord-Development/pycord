@@ -80,11 +80,8 @@ def hooked_wrapped_callback(command, ctx, coro):
             await command.call_after_hooks(ctx)
         return ret
     return wrapped
-    
-class _BaseCommand:
-    __slots__ = ()
 
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -807,37 +804,6 @@ class MessageCommand(ContextMenuCommand):
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
-
-def slash_command(**kwargs):
-    return _command_wrapper(SlashCommand, **kwargs)
-
-def user_command(**kwargs):
-    return _command_wrapper(UserCommand, **kwargs)
-
-def message_command(**kwargs):
-    return _command_wrapper(MessageCommand, **kwargs)
-
-def _command_wrapper(cls, **kwargs):
-    def wrap(func: Callable) -> cls:
-        if isinstance(func, (SlashCommand, UserCommand)):
-            func = func.callback
-        elif not callable(func):
-            raise TypeError("func needs to be a callable, SlashCommand, or UserCommand object.")
-
-        return cls(func, **kwargs)
-    return wrap        
-
-def command(type=SlashCommand, **kwargs):
-    if not issubclass(type, ApplicationCommand):
-        raise TypeError("type must be a subclass of ApplicationCommand")
-    if type.type == 1:
-        return slash_command(**kwargs)
-    elif type.type == 2:
-        return user_command(**kwargs)
-    elif type.type == 3:
-        return message_command(**kwargs)
-    else:
-        raise TypeError("type must be one of SlashCommand, UserCommand, MessageCommand")
 
 # Validation
 def validate_chat_input_name(name: Any):
