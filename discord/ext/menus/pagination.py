@@ -12,8 +12,6 @@ class Paginate(discord.ui.View):
     
     Parameters
     ------------
-    messageable: :class:`discord.abc.Messageable`
-        The messageable channel to send to.
 
     pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
         Your list of strings or embeds to paginate
@@ -23,9 +21,8 @@ class Paginate(discord.ui.View):
 
     """
 
-    def __init__(self, messageable: abc.Messageable, pages: Union[List[str], List[discord.Embed]], show_disabled = True):
+    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled = True):
         super().__init__()
-        self.messageable = messageable
         self.pages = pages
         self.current_page = 1
         self.page_count = len(self.pages)
@@ -76,19 +73,32 @@ class Paginate(discord.ui.View):
         page = self.pages[self.current_page-1]
         await interaction.response.edit_message(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING, view = self)
 
-    async def send(self):
+    async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
         
+        Parameters
+        ------------
+
+        messageable: :class:`discord.abc.Messageable`
+            The messageable channel to send to.
+
+        ephemeral: :class:`bool`
+            Choose whether or not the message is ephemeral. Only works with slash commands.
+
         Returns
         --------
+
         :class:`~discord.Message`
             The message that was sent.
         """
 
-        if not isinstance(self.messageable, abc.Messageable):
+        if not isinstance(messageable, abc.Messageable):
             raise TypeError("messageable is not a messageable object")
         page = self.pages[0]
-        message = await self.messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING if isinstance(self.messageable, discord.app.context.InteractionContext) else None, view = self)
+        if isinstance(messageable, discord.app.context.InteractionContext):
+            message = await messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING , view = self, ephemeral = ephemeral)
+        else:
+            message = await messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else None, view = self)
         return message
 
     def forward_button(self, label: str, color: str = "green"):
