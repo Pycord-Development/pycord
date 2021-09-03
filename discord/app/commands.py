@@ -481,6 +481,11 @@ class SubCommandGroup(ApplicationCommand, Option):
         self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
+        self.checks = []
+
+        self._before_invoke = None
+        self._after_invoke = None
+        self.cog = None
 
     def to_dict(self) -> Dict:
         as_dict = {
