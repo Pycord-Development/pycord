@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - run: pip install flake8 flake8-bugbear flake8-comprehensions
-      - run: flake8 . --count --select=C,E501,E9,F63,F7,F82 --max-complexity=36
+      - run: flake8 . --count --select=C901,E501,E9,F63,F7,F82 --max-complexity=36
                       --max-line-length=179 --show-source --statistics
       - run: flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88
                       --show-source --statistics
