@@ -413,10 +413,10 @@ class SlashCommand(ApplicationCommand):
 
 class Option:
     def __init__(
-        self, input_type: SlashCommandOptionType, /, **kwargs
+        self, input_type: SlashCommandOptionType, /, description = None,**kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = kwargs.pop("description", "No description provided")
+        self.description = description or "No description provided"
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type = input_type
