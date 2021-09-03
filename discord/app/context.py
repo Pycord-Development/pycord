@@ -22,13 +22,17 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     import discord
 
-from ..interactions import Interaction
-from ..utils import cached_property
+from ..guild import Guild
+from ..interactions import Interaction, InteractionResponse, InteractionChannel
+from ..member import Member
+from ..message import Message
+from ..user import User
+from ..utils import cached_property, copy_doc
 
 
 class InteractionContext:
@@ -38,65 +42,88 @@ class InteractionContext:
     commands as the first parameter.
 
     .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    bot: :class:`.Bot`
+        The bot that the command belongs to.
+    interaction: :class:`.Interaction`
+        The interaction object that invoked the command.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
     """
 
     def __init__(self, bot: "discord.Bot", interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
         self.command = None
-        
+
     @cached_property
-    def channel(self):
+    @copy_doc(Interaction.channel)
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
-    def channel_id(self):
+    @copy_doc(Interaction.channel_id)
+    def channel_id(self) -> Optional[int]:
         return self.interaction.channel_id
 
     @cached_property
-    def guild(self):
+    @copy_doc(Interaction.guild)
+    def guild(self) -> Optional[Guild]:
         return self.interaction.guild
 
     @cached_property
-    def guild_id(self):
+    @copy_doc(Interaction.guild_id)
+    def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
 
     @cached_property
-    def message(self):
+    @copy_doc(Interaction.message)
+    def message(self) -> Message:
         return self.interaction.message
 
     @cached_property
-    def user(self):
+    @copy_doc(Interaction.user)
+    def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
     @cached_property
-    def response(self):
+    @copy_doc(Interaction.response)
+    def response(self) -> InteractionResponse:
         return self.interaction.response
 
     author = user
 
     @property
+    @copy_doc(InteractionResponse.send_message)
     def respond(self):
         return self.interaction.response.send_message
 
     @property
     def send(self):
+        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.InteractionContext.respond`"""
         return self.channel.send if self.response.is_done() else self.respond
 
     @property
+    @copy_doc(InteractionResponse.defer)
     def defer(self):
         return self.interaction.response.defer
 
     @property
+    @copy_doc(Interaction.followup)
     def followup(self):
         return self.interaction.followup
 
     async def delete(self):
+        """Calls :attr:`~discord.app.InteractionContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
-        
+
         return await self.interaction.delete_original_message()
 
     @property
+    @copy_doc(Interaction.edit_original_message)
     def edit(self):
         return self.interaction.edit_original_message
