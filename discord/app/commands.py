@@ -29,7 +29,7 @@ import functools
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
-
+from copy import copy
 from ..enums import SlashCommandOptionType
 from ..member import Member
 from ..user import User
@@ -357,7 +357,16 @@ class SlashCommand(ApplicationCommand):
 
             final_options.append(option)
 
-        return final_options
+            if p_obj.kind == inspect.Parameter.VAR_POSITIONAL:
+                option.variadic = True
+                option.required = False
+                for i in range(25-len(final_options)):
+                    o = copy(option)
+                    o.name = f'{option.name}{i}'
+                    final_options.append(o)
+
+
+        return final_options[:25]
 
     def _is_typing_optional(self, annotation):
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
@@ -383,6 +392,7 @@ class SlashCommand(ApplicationCommand):
     async def _invoke(self, ctx: InteractionContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
         kwargs = {}
+        args = []
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
             arg = arg["value"]
@@ -401,13 +411,16 @@ class SlashCommand(ApplicationCommand):
                     arg = await get_or_fetch(ctx.guild, "member", int(arg))
                 except NotFound:
                     arg = await get_or_fetch(ctx.guild, "role", int(arg))
-
-            kwargs[op.name] = arg
+            if op.variadic:
+                args.append(arg)
+            else:
+                kwargs[op.name] = arg
 
         for o in self.options:
-            if o.name not in kwargs:
+            if o.name not in kwargs and not o.variadic:
                 kwargs[o.name] = o.default
-        await self.callback(ctx, **kwargs)
+
+        await self.callback(ctx, *args, **kwargs)
 
 
 class Option:
@@ -425,6 +438,7 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+        self.variadic = False
 
     def to_dict(self) -> Dict:
         return {
