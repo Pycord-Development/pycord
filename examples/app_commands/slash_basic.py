@@ -50,6 +50,18 @@ async def avatar(
         # This will send the mentioned user or the authors avatar in an embed!
     )
 
+@bot.command(guild_ids=[...])
+async def ephemeral(ctx,*,text : str):
+
+    ''' Sends an empherial message, when a slash command is used! '''
+
+    await ctx.reply(
+        
+        
+        content=text,ephemeral=True
+        # This will send the text back in an ephemeral message!
+    )
+
 
 
 # To learn how to add descriptions, choices to options check slash_options.py
