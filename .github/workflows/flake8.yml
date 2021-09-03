@@ -1,0 +1,13 @@
+name: flake8
+on: [pull_request, push]
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install flake8 flake8-bugbear flake8-comprehensions
+      - run: flake8 . --count --select=C,E501,E9,F63,F7,F82 --max-complexity=36
+                      --max-line-length=179 --show-source --statistics
+      - run: flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88
+                      --show-source --statistics
