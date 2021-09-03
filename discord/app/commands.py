@@ -80,7 +80,8 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
     
-
+# TODO: In the future ApplicationCommand should be inheriting from discord.BaseCommand
+# so it can share methods with commands.Command
 class ApplicationCommand:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
@@ -143,6 +144,30 @@ class ApplicationCommand:
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
+
+    def error(self, coro):
+        """A decorator that registers a coroutine as a local error handler.
+
+        A local error handler is an :func:`.on_command_error` event limited to
+        a single command. However, the :func:`.on_command_error` is still
+        invoked afterwards as the catch-all.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError('The error handler must be a coroutine.')
+
+        self.on_error = coro
+        return coro
 
     def has_error_handler(self) -> bool:
         """:class:`bool`: Checks whether the command has an error handler registered.
