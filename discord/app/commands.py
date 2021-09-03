@@ -73,7 +73,7 @@ def hooked_wrapped_callback(command, ctx, coro):
             raise
         except asyncio.CancelledError:
             return
-        except ApplicationCommandInvokeError as exc:
+        except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
             await command.call_after_hooks(ctx)
