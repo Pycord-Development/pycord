@@ -24,12 +24,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-import discord.utils
 from discord.cog import Cog
 
 from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
 
-from discord.app import _BaseCommand
+from ...app import _BaseCommand
 
 if TYPE_CHECKING:
     from .bot import BotBase
