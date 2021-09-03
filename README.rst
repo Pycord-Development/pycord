@@ -45,6 +45,14 @@ Otherwise to get voice support you should run the following command:
     # Windows
     py -3 -m pip install -U py-cord[voice]
 
+To install additional packages for speedup, run the following command:
+
+.. code:: sh
+    # Linux/macOS
+    python3 -m pip install -U "nextcord[speed]"
+    # Windows
+    py -3 -m pip install -U nextcord[speed]
+
 
 To install the development version, do the following:
 
@@ -59,6 +67,8 @@ Optional Packages
 ~~~~~~~~~~~~~~~~~~
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
+* `aiodns <https://pypi.org/project/aiodns/>`__, `Brotli <https://pypi.org/project/Brotli/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
+* `orjson <https://pypi.org/project/orjson/>`__ (for json speedup)
 
 Please note that on Linux installing voice you must install the following packages via your favourite package manager (e.g. ``apt``, ``dnf``, etc) before running the above commands:
 
