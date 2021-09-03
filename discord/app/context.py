@@ -90,3 +90,6 @@ class InteractionContext:
     def followup(self):
         return self.interaction.followup
 
+    @property
+    def command(self):
+        return self._command

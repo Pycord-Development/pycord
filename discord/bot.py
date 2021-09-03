@@ -245,6 +245,7 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             context = await self.get_application_context(interaction)
+            context._command = command
             await command.invoke(context)
 
     def slash_command(self, **kwargs) -> SlashCommand:
