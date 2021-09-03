@@ -51,12 +51,12 @@ async def avatar(
     )
 
 @bot.command(guild_ids=[...])
-async def ephemeral(ctx,*,text : str):
-
+async def ephemeral(
+    ctx,*,text : str
+):
     ''' Sends an empherial message, when a slash command is used! '''
 
     await ctx.reply(
-        
         
         content=text,ephemeral=True
         # This will send the text back in an ephemeral message!
