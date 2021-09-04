@@ -41,51 +41,11 @@ from .app import (
     UserCommand,
     ApplicationCommand,
     InteractionContext,
+    command
 )
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
 
-
-def command(cls=SlashCommand, **attrs):
-    """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
-    depends on the ``cls`` parameter.
-
-    By default the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-
-    The ``name`` attribute also defaults to the function name unchanged.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    cls: :class:`.ApplicationCommand`
-        The class to construct with. By default this is :class:`.SlashCommand`.
-        You usually do not change this.
-    attrs
-        Keyword arguments to pass into the construction of the class denoted
-        by ``cls``.
-
-    Raises
-    -------
-    TypeError
-        If the function is not a coroutine or is already a command.
-    """
-
-    def decorator(func: Callable) -> cls:
-        if isinstance(func, ApplicationCommand):
-            func = func.callback
-        elif not callable(func):
-            raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
-            )
-
-        return cls(func, **attrs)
-
-    return decorator
 
 
 class ApplicationCommandMixin:
