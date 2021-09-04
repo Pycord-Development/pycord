@@ -242,6 +242,7 @@ class Cog(metaclass=CogMeta):
                     parent.remove_command(command.name)  # type: ignore
                     parent.add_command(command)  # type: ignore
             else:
+                command.cog = self
                 bot.add_application_command(command)
 
     @property
@@ -433,16 +434,16 @@ class Cog(metaclass=CogMeta):
         self._load_commands(bot)
         
         for index, command in enumerate(self.__cog_commands__):
-            command.cog = self
-            if command.parent is None:
-                try:
-                    bot.add_command(command)
-                except Exception as e:
-                    # undo our additions
-                    for to_undo in self.__cog_commands__[:index]:
-                        if to_undo.parent is None:
-                            bot.remove_command(to_undo.name)
-                    raise e
+            if not isinstance(command, ApplicationCommand):
+                if command.parent is None:
+                    try:
+                        bot.add_command(command)
+                    except Exception as e:
+                        # undo our additions
+                        for to_undo in self.__cog_commands__[:index]:
+                            if to_undo.parent is None:
+                                bot.remove_command(to_undo.name)
+                        raise e
 
         # check if we're overriding the default
         if cls.bot_check is not Cog.bot_check:
@@ -485,6 +486,7 @@ class Cog(metaclass=CogMeta):
 class CogMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__cogs: Dict[str, Cog] = {}
         
     def add_cog(self, cog: Cog, *, override: bool = False) -> None:
         """Adds a "cog" to the bot.
