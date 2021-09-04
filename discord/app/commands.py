@@ -433,16 +433,16 @@ class SlashCommand(ApplicationCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-            other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-            # _max_concurrency won't be None at this point
-            other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
+        #try:
+        #    other.on_error = self.on_error
+        #except AttributeError:
+        #    pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
@@ -692,16 +692,16 @@ class UserCommand(ContextMenuCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-            other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-            # _max_concurrency won't be None at this point
-            other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
+        #try:
+        #    other.on_error = self.on_error
+        #except AttributeError:
+        #    pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
@@ -754,16 +754,16 @@ class MessageCommand(ContextMenuCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-            other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-            # _max_concurrency won't be None at this point
-            other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
+        #try:
+        #    other.on_error = self.on_error
+        #except AttributeError:
+        #    pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
