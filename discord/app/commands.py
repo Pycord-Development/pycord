@@ -91,6 +91,8 @@ class _BaseCommand:
     __slots__ = ()
 
 class ApplicationCommand:
+    cog = None
+    
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -316,18 +318,14 @@ class SlashCommand(ApplicationCommand):
         
 
     def parse_options(self, params) -> List[Option]:
-        params = iter(params.items())
         final_options = []
 
-        if self.cog is not None:
-            # we have 'self' as the first parameter so just advance
-            # the iterator and resume parsing
-            try:
-                next(params)
-            except StopIteration:
-                raise ClientException(
-                    f'Callback for {self.name} command is missing "self" parameter.'
-                )
+        params = self._get_signature_parameters()
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params.items())
 
         # next we have the 'ctx' as the next parameter
         try:
@@ -415,7 +413,11 @@ class SlashCommand(ApplicationCommand):
         for o in self.options:
             if o.name not in kwargs:
                 kwargs[o.name] = o.default
-        await self.callback(ctx, **kwargs)
+        
+        if self.cog != None:
+            await self.callback(self.cog, ctx, **kwargs)
+        else:
+            await self.callback(ctx, **kwargs)
     
     def copy(self):
         """Creates a copy of this command.
@@ -602,16 +604,12 @@ class ContextMenuCommand(ApplicationCommand):
         self.validate_parameters()
 
     def validate_parameters(self):
-        params = iter(self._get_signature_parameters().items())
-        if self.cog is not None:
-            # we have 'self' as the first parameter so just advance
-            # the iterator and resume parsing
-            try:
-                next(params)
-            except StopIteration:
-                raise ClientException(
-                    f'Callback for {self.name} command is missing "self" parameter.'
-                )
+        params = self._get_signature_parameters()
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params)
 
         # next we have the 'ctx' as the next parameter
         try:
@@ -638,6 +636,9 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
+    
+    def qualified_name(self):
+        return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
         return {"name": self.name, "description": self.description, "type": self.type}
@@ -674,7 +675,11 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        await self.callback(ctx, target)
+        
+        if self.cog != None:
+            await self.callback(self.cog, ctx, target)
+        else:
+            await self.callback(ctx, target)
     
     def copy(self):
         """Creates a copy of this command.
@@ -736,7 +741,11 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        await self.callback(ctx, target)
+        
+        if self.cog != None:
+            await self.callback(self.cog, ctx, target)
+        else:
+            await self.callback(ctx, target)
     
     def copy(self):
         """Creates a copy of this command.
