@@ -49,6 +49,11 @@ __all__ = (
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
+    "command",
+    "application_command",
+    "slash_command",
+    "user_command",
+    "message_command",
 )
 
 def wrap_callback(coro):
@@ -733,7 +738,7 @@ def command(**kwargs):
         A decorator that converts the provided method into an :class:`.ApplicationCommand`.
     """
     return application_command(**kwargs)
-    
+
 # Validation
 def validate_chat_input_name(name: Any):
     if not isinstance(name, str):
