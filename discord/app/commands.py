@@ -439,10 +439,10 @@ class SlashCommand(ApplicationCommand):
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        #try:
-        #    other.on_error = self.on_error
-        #except AttributeError:
-        #    pass
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
@@ -698,10 +698,10 @@ class UserCommand(ContextMenuCommand):
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        #try:
-        #    other.on_error = self.on_error
-        #except AttributeError:
-        #    pass
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
@@ -760,10 +760,10 @@ class MessageCommand(ContextMenuCommand):
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-        #try:
-        #    other.on_error = self.on_error
-        #except AttributeError:
-        #    pass
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
         return other
 
     def _update_copy(self, kwargs: Dict[str, Any]):
