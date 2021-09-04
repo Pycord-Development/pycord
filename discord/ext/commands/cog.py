@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
+import discord
 from discord.cog import Cog
 
 from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
