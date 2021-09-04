@@ -445,7 +445,6 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
-
 class Option:
     def __init__(
         self, input_type: SlashCommandOptionType, /, description = None,**kwargs
