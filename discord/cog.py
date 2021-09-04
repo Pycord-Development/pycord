@@ -27,6 +27,8 @@ import inspect
 import importlib
 import sys
 import discord.utils
+import types
+from . import errors
 from .app import SlashCommand, UserCommand, MessageCommand, ApplicationCommand#, _BaseCommand
 
 from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Union
@@ -47,6 +49,9 @@ CogT = TypeVar('CogT', bound='Cog')
 FuncT = TypeVar('FuncT', bound=Callable[..., Any])
 
 MISSING: Any = discord.utils.MISSING
+
+def _is_submodule(parent: str, child: str) -> bool:
+    return parent == child or child.startswith(parent + ".")
 
 class CogMeta(type):
     """A metaclass for defining a cog.
