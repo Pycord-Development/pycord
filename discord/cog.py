@@ -181,7 +181,7 @@ class Cog(metaclass=CogMeta):
         listeners = {}
         no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
 
-        for base in reversed(self.__mro__):
+        for base in reversed(self.__class__.__mro__):
             for elem, value in base.__dict__.items():
                 if elem in commands:
                     del commands[elem]
@@ -430,7 +430,8 @@ class Cog(metaclass=CogMeta):
         # is essentially just the command loading, which raises if there are
         # duplicates. When this condition is met, we want to undo all what
         # we've added so far for some form of atomic loading.
-        self._load_commands(self, bot)
+        self._load_commands(bot)
+        
         for index, command in enumerate(self.__cog_commands__):
             command.cog = self
             if command.parent is None:
