@@ -90,7 +90,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 class _BaseCommand:
     __slots__ = ()
 
-class ApplicationCommand:
+class ApplicationCommand(_BaseCommand):
     cog = None
     
     def __repr__(self):
