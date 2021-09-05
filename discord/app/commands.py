@@ -351,6 +351,7 @@ class SlashCommand(ApplicationCommand):
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
 
+            option._parameter = p_name
             option.default = option.default or p_obj.default
 
             if option.default == inspect.Parameter.empty:
@@ -406,11 +407,12 @@ class SlashCommand(ApplicationCommand):
                 except NotFound:
                     arg = await get_or_fetch(ctx.guild, "role", int(arg))
 
-            kwargs[op.name] = arg
+            kwargs[op._parameter] = arg
 
         for o in self.options:
-            if o.name not in kwargs:
-                kwargs[o.name] = o.default
+            if o._parameter not in kwargs:
+                kwargs[o._parameter] = o.default
+
         await self.callback(ctx, **kwargs)
 
 class Option:
@@ -428,6 +430,8 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+
+        self._parameter: Optional[str] = None
 
     def to_dict(self) -> Dict:
         return {
