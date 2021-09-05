@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
 import traceback
-from discord.app.errors import ApplicationCommandError, CheckFailure  
+from .app.errors import ApplicationCommandError, CheckFailure  
 
 from typing import Callable, Optional
 
