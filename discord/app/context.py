@@ -98,7 +98,7 @@ class InteractionContext:
 
     @property
     def respond(self):
-        return self.interaction.response.send_message
+        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
 
     @property
     def send(self):
