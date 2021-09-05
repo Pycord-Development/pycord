@@ -45,6 +45,10 @@ msgstr "PyPIから直接ライブラリをインストールできます。"
 msgid "If you are using Windows, then the following should be used instead: ::"
 msgstr "Windowsを使用している場合は、以下のコマンドで実行してください。"
 
+#: ../../intro.rst:34
+msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``pycord``, e.g. ::"
+msgstr "高速化のために追加のパッケージをインストールするには、 ``py-cord`` ではなく、以下の例のように ``py-cord[speed]`` を使うべきです。"
+
 #: ../../intro.rst:44
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
 msgstr "音声のサポートが必要な場合は、 ``py-cord`` ではなく、以下の例のように ``py-cord[voice]`` を使うべきです。"
