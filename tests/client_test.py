@@ -28,10 +28,7 @@ def test_client_properties():
     assert client.private_channels == []
     assert client.voice_clients == []
     assert client.application_id is None
-    # assert isinstance(client.application_flags, discord.flags.ApplicationFlags)
-    # Issue #102 -- The previous line raises:
-    # AttributeError: 'ConnectionState' object has no attribute 'application_flags'
-    # import discord ; discord.client.Client().application_flags
+    assert client.application_flags is None
 
 
 @pytest.mark.asyncio
