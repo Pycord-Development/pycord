@@ -260,6 +260,11 @@ class SubCommandGroup(Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
+class CogSlashCommand(SlashCommand):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.cog=None
+        
 
 class UserCommand(ApplicationCommand):
     type = 2
