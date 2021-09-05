@@ -418,7 +418,10 @@ class SlashCommand(ApplicationCommand):
             await self.callback(self.cog, ctx, **kwargs)
         else:
             await self.callback(ctx, **kwargs)
-    
+
+    def qualified_name(self):
+        return self.name
+
     def copy(self):
         """Creates a copy of this command.
 
