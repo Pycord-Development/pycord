@@ -355,5 +355,5 @@ class ExtensionNotFound(ExtensionError):
         The extension that had the error.
     """
     def __init__(self, name: str) -> None:
-        msg = f'Extension {name!r} could not be loaded.'
+        msg = f'Extension {name!r} could not be found.'
         super().__init__(msg, name=name)
