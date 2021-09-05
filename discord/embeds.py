@@ -424,7 +424,7 @@ class Embed:
 
         return self
 
-    def remove_image(self):
+    def remove_image(self: E) -> E:
         """Removes the embed's image.
 
         This function returns the class instance to allow for fluent-style
@@ -482,7 +482,7 @@ class Embed:
 
         return self
 
-    def remove_thumbnail(self):
+    def remove_thumbnail(self: E) -> E:
         """Removes the embed's thumbnail.
         
         This function returns the class instance to allow for fluent-style
