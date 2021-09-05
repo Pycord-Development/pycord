@@ -64,7 +64,10 @@ class Cog(Cog):
         """
         from .core import GroupMixin
         for command in self.__cog_commands__:
-            if command.parent is None:
+            if isinstance(command, ApplicationCommand):
                 yield command
-                if isinstance(command, GroupMixin):
-                    yield from command.walk_commands()
+            else:
+                if command.parent is None:
+                    yield command
+                    if isinstance(command, GroupMixin):
+                        yield from command.walk_commands()
