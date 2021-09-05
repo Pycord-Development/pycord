@@ -29,10 +29,9 @@ if TYPE_CHECKING:
 
 from ..interactions import Interaction
 from ..utils import cached_property
-from ..abc import Messageable
 
 
-class InteractionContext(Messageable):
+class InteractionContext:
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
