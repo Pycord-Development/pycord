@@ -236,6 +236,7 @@ class Cog(metaclass=CogMeta):
 
         # Update the Command instances dynamically as well
         for command in self.__cog_commands__:
+            command.cog = self
             if not isinstance(command, ApplicationCommand):
                 setattr(self, command.callback.__name__, command)
                 parent = command.parent
@@ -247,7 +248,6 @@ class Cog(metaclass=CogMeta):
                     parent.remove_command(command.name)  # type: ignore
                     parent.add_command(command)  # type: ignore
             else:
-                command.cog = self
                 bot.add_application_command(command)
 
     @property
@@ -471,8 +471,11 @@ class Cog(metaclass=CogMeta):
 
         try:
             for command in self.__cog_commands__:
-                if command.parent is None:
-                    bot.remove_command(command.name)
+                if isinstance(command, ApplicationCommand):
+                    bot.remove_application_command(command)
+                else:
+                    if command.parent is None:
+                        bot.remove_command(command.name)
 
             for _, method_name in self.__cog_listeners__:
                 bot.remove_listener(getattr(self, method_name))
@@ -492,6 +495,7 @@ class CogMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__cogs: Dict[str, Cog] = {}
+        self.__extensions: Dict[str, types.ModuleType] = {}
         
     def add_cog(self, cog: Cog, *, override: bool = False) -> None:
         """Adds a "cog" to the bot.
