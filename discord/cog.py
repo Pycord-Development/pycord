@@ -133,6 +133,7 @@ class CogMeta(type):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args)
+        self.__cog_commands__ = []
 
     @classmethod
     def qualified_name(cls) -> str:
@@ -212,7 +213,7 @@ class Cog(metaclass=CogMeta):
                             raise TypeError(no_bot_cog.format(base, elem))
                         listeners[elem] = value
 
-        self.__cog_commands__ = list(commands.values()) # this will be copied in Cog.__new__
+        self.__cog_commands__ = list(self.__cog_commands__) + list(commands.values())
 
         listeners_as_list = []
         for listener in listeners.values():
