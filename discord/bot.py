@@ -38,6 +38,7 @@ from .app import (
     UserCommand,
     ApplicationCommand,
     InteractionContext,
+    CogSlashCommand
 )
 from .errors import Forbidden
 from .interactions import Interaction
@@ -261,6 +262,21 @@ class ApplicationCommandMixin:
             then returns it.
         """
         return self.application_command(cls=SlashCommand, **kwargs)
+    
+    def cog_slash_command(self, **kwargs) -> CogSlashCommand:
+        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
+        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        This shortcut is made specifically for :class:`.CogSlashCommand`. For use in cogs.
+
+        .. versionadded:: 2.0
+
+        Returns
+        --------
+        Callable[..., :class:`CogSlashCommand`]
+            A decorator that converts the provided method into a :class:`.CogSlashCommand`, adds it to the bot,
+            then returns it. For use in cogs.
+        """
+        return self.application_command(cls=CogSlashCommand, **kwargs)
 
     def user_command(self, **kwargs) -> UserCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
