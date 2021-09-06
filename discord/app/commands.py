@@ -51,7 +51,7 @@ __all__ = (
     "user_command",
     "message_command",
     "command",
-    "SubCommandGroup",
+    "SlashCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
@@ -503,10 +503,10 @@ def option(name, type, **kwargs):
         return func
     return decor
 
-class SubCommandGroup(ApplicationCommand, Option):
+class SlashCommandGroup(ApplicationCommand, Option):
     type = 1
 
-    def __new__(cls, *args, **kwargs) -> SubCommandGroup:
+    def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -517,7 +517,7 @@ class SubCommandGroup(ApplicationCommand, Option):
         name: str,
         description: str,
         guild_ids: Optional[List[int]] = None,
-        parent_group: Optional[SubCommandGroup] = None,
+        parent_group: Optional[SlashCommandGroup] = None,
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -526,7 +526,7 @@ class SubCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
-        self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
+        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = []
         self.guild_ids = guild_ids
         self.parent_group = parent_group
         self.checks = []
@@ -556,12 +556,12 @@ class SubCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def command_group(self, name, description) -> SubCommandGroup:
+    def command_group(self, name, description) -> SlashCommandGroup:
         if self.parent_group is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
 
-        sub_command_group = SubCommandGroup(name, description, parent_group=self)
+        sub_command_group = SlashCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 

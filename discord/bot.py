@@ -36,7 +36,7 @@ from .shard import AutoShardedClient
 from .utils import get, async_all
 from .app import (
     SlashCommand,
-    SubCommandGroup,
+    SlashCommandGroup,
     MessageCommand,
     UserCommand,
     ApplicationCommand,
@@ -307,9 +307,9 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name: str, description: str, guild_ids=None) -> SubCommandGroup:
+    def command_group(self, name: str, description: str, guild_ids=None) -> SlashCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
-        group = SubCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
 
