@@ -188,7 +188,6 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            command.cog = new_cls
             if not isinstance(command, ApplicationCommand):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
@@ -438,6 +437,7 @@ class Cog(metaclass=CogMeta):
         # we've added so far for some form of atomic loading.
         
         for index, command in enumerate(self.__cog_commands__):
+            command.cog = self
             if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
                     try:
