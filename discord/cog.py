@@ -234,8 +234,6 @@ class Cog(metaclass=CogMeta):
         # To do this, we need to interfere with the Cog creation process.
         self = super().__new__(cls)
 
-        self._load_commands(ApplicationCommand)
-
         return self
 
     def get_commands(self) -> List[ApplicationCommand]:
