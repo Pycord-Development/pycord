@@ -666,7 +666,7 @@ class BotBase(GroupMixin):
             setup = getattr(lib, 'setup')
         except AttributeError:
             del sys.modules[key]
-            raise errors.NoEntryPointError(key)
+            raise discord.NoEntryPointError(key)
 
         try:
             setup(self)
