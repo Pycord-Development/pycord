@@ -2,7 +2,7 @@ import discord
 
 bot = discord.Bot()
 
-# Note: If you want you can use commands.Bot as well
+# Note: If you want you can use commands.Bot instead of discord.Bot
 # Use discord.Bot if you don't want prefixed message commands
 
 # With discord.Bot you can use @bot.command as an alias 
