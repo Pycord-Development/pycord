@@ -414,7 +414,7 @@ class SlashCommand(ApplicationCommand):
             if o.name not in kwargs:
                 kwargs[o.name] = o.default
         
-        if self.cog != None:
+        if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
         else:
             await self.callback(ctx, **kwargs)
@@ -679,7 +679,7 @@ class UserCommand(ContextMenuCommand):
                 state=ctx.interaction._state,
             )
         
-        if self.cog != None:
+        if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
@@ -745,7 +745,7 @@ class MessageCommand(ContextMenuCommand):
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         
-        if self.cog != None:
+        if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
