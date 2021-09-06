@@ -36,8 +36,7 @@ from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Opti
 from .app.commands import _BaseCommand
 
 if TYPE_CHECKING:
-    from .app import InteractionContext
-    from .app  import ApplicationCommand
+    from .app import InteractionContext, ApplicationCommand
 
 __all__ = (
     'CogMeta',
@@ -128,7 +127,6 @@ class CogMeta(type):
         attrs['__cog_description__'] = description
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
-        new_cls.__cog_commands__ = []
 
         return new_cls
 
@@ -164,25 +162,11 @@ class Cog(metaclass=CogMeta):
         # To do this, we need to interfere with the Cog creation process.
         self = super().__new__(cls)
 
-        self.__filter__ = ApplicationCommand
+        self._load_commands(ApplicationCommand)
 
         return self
-
-    def get_commands(self) -> List[ApplicationCommand]:
-        r"""
-        Returns
-        --------
-        List[:class:`.Command`]
-            A :class:`list` of :class:`.Command`\s that are
-            defined inside this cog.
-
-            .. note::
-
-                This does not include subcommands.
-        """
-        return [c for c in self.__cog_commands__ if c.parent is None]
     
-    def _load_commands(self, bot):
+    def _load_commands(self, _filter):
         commands = {}
         listeners = {}
         no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
@@ -197,7 +181,7 @@ class Cog(metaclass=CogMeta):
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
                     value = value.__func__
-                if isinstance(value, self.__filter__):
+                if isinstance(value, _filter):
                     if is_static_method:
                         raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
                     if elem.startswith(('cog_', 'bot_')):
@@ -213,7 +197,7 @@ class Cog(metaclass=CogMeta):
                             raise TypeError(no_bot_cog.format(base, elem))
                         listeners[elem] = value
 
-        self.__cog_commands__ = list(self.__cog_commands__) + list(commands.values())
+        self.__cog_commands__ = list(commands.values())
 
         listeners_as_list = []
         for listener in listeners.values():
@@ -248,8 +232,20 @@ class Cog(metaclass=CogMeta):
                     # Update our parent's reference to our self
                     parent.remove_command(command.name)  # type: ignore
                     parent.add_command(command)  # type: ignore
-            else:
-                bot.add_application_command(command)
+
+    def get_commands(self) -> List[ApplicationCommand]:
+        r"""
+        Returns
+        --------
+        List[:class:`.Command`]
+            A :class:`list` of :class:`.Command`\s that are
+            defined inside this cog.
+
+            .. note::
+
+                This does not include subcommands.
+        """
+        return [c for c in self.__cog_commands__ if c.parent is None]
 
     @property
     def qualified_name(self) -> str:
@@ -290,7 +286,7 @@ class Cog(metaclass=CogMeta):
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
         """Return None if the method is not overridden. Otherwise returns the overridden method."""
-        return getattr(method.__func__, '__cog_special_method__', method)
+        return getattr(getattr(method, "__func__", method), '__cog_special_method__', method)
 
     @classmethod
     def listener(cls, name: str = MISSING) -> Callable[[FuncT], FuncT]:
@@ -437,7 +433,6 @@ class Cog(metaclass=CogMeta):
         # is essentially just the command loading, which raises if there are
         # duplicates. When this condition is met, we want to undo all what
         # we've added so far for some form of atomic loading.
-        self._load_commands(bot)
         
         for index, command in enumerate(self.__cog_commands__):
             if not isinstance(command, ApplicationCommand):
@@ -450,6 +445,8 @@ class Cog(metaclass=CogMeta):
                             if to_undo.parent is None:
                                 bot.remove_command(to_undo.name)
                         raise e
+            else:
+                bot.add_application_command(command)
 
         # check if we're overriding the default
         if cls.bot_check is not Cog.bot_check:
