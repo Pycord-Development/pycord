@@ -91,6 +91,7 @@ class _TypingEventOptional(TypedDict, total=False):
     guild_id: Snowflake
     member: Member
 
+
 class TypingEvent(_TypingEventOptional):
     channel_id: Snowflake
     user_id: Snowflake

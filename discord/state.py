@@ -152,7 +152,6 @@ class ConnectionState:
         handlers: Dict[str, Callable],
         hooks: Dict[str, Callable],
         http: HTTPClient,
-        intents: Intents,
         loop: asyncio.AbstractEventLoop,
         **options: Any,
     ) -> None:
@@ -195,8 +194,12 @@ class ConnectionState:
             else:
                 status = str(status)
 
-        if not isinstance(intents, Intents):
-            raise TypeError(f'intents parameter must be Intent not {type(intents)!r}')
+        intents = options.get('intents', None)
+        if intents is not None:
+            if not isinstance(intents, Intents):
+                raise TypeError(f'intents parameter must be Intent not {type(intents)!r}')
+        else:
+            intents = Intents.default()
 
         if not intents.guilds:
             _log.warning('Guilds intent seems to be disabled. This may cause state related issues.')
@@ -1349,7 +1352,7 @@ class ConnectionState:
 
     def _get_typing_user(self, channel: Optional[MessageableChannel], user_id: int) -> Optional[Union[User, Member]]:
         if isinstance(channel, DMChannel):
-            return channel.recipient
+            return channel.recipient or self.get_user(user_id)
 
         elif isinstance(channel, (Thread, TextChannel)) and channel.guild is not None:
             return channel.guild.get_member(user_id)  # type: ignore
