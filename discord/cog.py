@@ -128,12 +128,12 @@ class CogMeta(type):
         attrs['__cog_description__'] = description
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
+        new_cls.__cog_commands__ = []
 
         return new_cls
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args)
-        self.__cog_commands__ = []
 
     @classmethod
     def qualified_name(cls) -> str:
