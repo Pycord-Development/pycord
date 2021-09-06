@@ -15,3 +15,5 @@ async def hello(
     age: Option(int, "Enter your age", required=False, default=18),
 ):
     await ctx.send(f"Hello {name}")
+
+bot.run('TOKEN')
