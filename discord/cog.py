@@ -36,8 +36,8 @@ from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYP
 from .app.commands import _BaseCommand
 
 if TYPE_CHECKING:
-    from .context import Context
-    from .core import Command
+    from .app import InteractionContext
+    from .app  import ApplicationCommand
 
 __all__ = (
     'CogMeta',
@@ -114,7 +114,7 @@ class CogMeta(type):
     """
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
-    __cog_commands__: List[Command]
+    __cog_commands__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
@@ -155,7 +155,7 @@ class Cog(metaclass=CogMeta):
     """
     __cog_name__: ClassVar[str]
     __cog_settings__: ClassVar[Dict[str, Any]]
-    __cog_commands__: ClassVar[List[Command]]
+    __cog_commands__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
@@ -168,7 +168,7 @@ class Cog(metaclass=CogMeta):
 
         return self
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self) -> List[ApplicationCommand]:
         r"""
         Returns
         --------
@@ -265,7 +265,7 @@ class Cog(metaclass=CogMeta):
     def description(self, description: str) -> None:
         self.__cog_description__ = description
 
-    def walk_commands(self) -> Generator[Command, None, None]:
+    def walk_commands(self) -> Generator[ApplicationCommand, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields
@@ -352,7 +352,7 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    def bot_check_once(self, ctx: Context) -> bool:
+    def bot_check_once(self, ctx: InteractionContext) -> bool:
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 

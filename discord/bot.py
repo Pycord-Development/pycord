@@ -344,7 +344,7 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
 
-class BotBase(ApplicationCommandMixin, CogMixin):  # To Insert: CogMixin
+class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO I think
     def __init__(self, *args, **kwargs):
         # super(Client, self).__init__(*args, **kwargs)
