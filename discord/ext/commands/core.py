@@ -51,7 +51,7 @@ from .errors import *
 from ...errors import *
 from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
 from .converter import run_converters, get_converter, Greedy
-from ...app import _BaseCommand
+from ...app import _BaseCommand, slash_command, user_command, message_command
 from .cog import Cog
 from .context import Context
 
@@ -94,7 +94,10 @@ __all__ = (
     'is_owner',
     'is_nsfw',
     'has_guild_permissions',
-    'bot_has_guild_permissions'
+    'bot_has_guild_permissions',
+    'slash_command',
+    'user_command',
+    'message_command'
 )
 
 MISSING: Any = discord.utils.MISSING
