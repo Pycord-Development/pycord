@@ -126,7 +126,79 @@ class CogMeta(type):
             description = inspect.cleandoc(attrs.get('__doc__', ''))
         attrs['__cog_description__'] = description
 
+        commands = {}
+        listeners = {}
+        no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
+
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
+
+        valid_commands = [(c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)]
+        if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(not isinstance(i, _BaseCommand) for i in valid_commands):
+            _filter = ApplicationCommand
+        else:
+            _filter = _BaseCommand
+
+        for base in reversed(new_cls.__mro__):
+            for elem, value in base.__dict__.items():
+                if elem in commands:
+                    del commands[elem]
+                if elem in listeners:
+                    del listeners[elem]
+
+                is_static_method = isinstance(value, staticmethod)
+                if is_static_method:
+                    value = value.__func__
+                if isinstance(value, _filter):
+                    if is_static_method:
+                        raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
+                    if elem.startswith(('cog_', 'bot_')):
+                        raise TypeError(no_bot_cog.format(base, elem))
+                    commands[elem] = value
+                elif inspect.iscoroutinefunction(value):
+                    try:
+                        getattr(value, '__cog_listener__')
+                    except AttributeError:
+                        continue
+                    else:
+                        if elem.startswith(('cog_', 'bot_')):
+                            raise TypeError(no_bot_cog.format(base, elem))
+                        listeners[elem] = value
+
+        new_cls.__cog_commands__ = list(commands.values())
+
+        listeners_as_list = []
+        for listener in listeners.values():
+            for listener_name in listener.__cog_listener_names__:
+                # I use __name__ instead of just storing the value so I can inject
+                # the self attribute when the time comes to add them to the bot
+                listeners_as_list.append((listener_name, listener.__name__))
+
+        new_cls.__cog_listeners__ = listeners_as_list
+
+        cmd_attrs = new_cls.__cog_settings__
+
+        # Either update the command with the cog provided defaults or copy it.
+        # r.e type ignore, type-checker complains about overriding a ClassVar
+        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
+
+        lookup = {
+            cmd.qualified_name: cmd
+            for cmd in new_cls.__cog_commands__
+        }
+
+        # Update the Command instances dynamically as well
+        for command in new_cls.__cog_commands__:
+            command.cog = new_cls
+            if not isinstance(command, ApplicationCommand):
+                setattr(new_cls, command.callback.__name__, command)
+                parent = command.parent
+                if parent is not None:
+                    # Get the latest parent reference
+                    parent = lookup[parent.qualified_name]  # type: ignore
+
+                    # Update our parent's reference to our self
+                    parent.remove_command(command.name)  # type: ignore
+                    parent.add_command(command)  # type: ignore
 
         return new_cls
 
@@ -165,73 +237,6 @@ class Cog(metaclass=CogMeta):
         self._load_commands(ApplicationCommand)
 
         return self
-    
-    def _load_commands(self, _filter):
-        commands = {}
-        listeners = {}
-        no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
-
-        for base in reversed(self.__class__.__mro__):
-            for elem, value in base.__dict__.items():
-                if elem in commands:
-                    del commands[elem]
-                if elem in listeners:
-                    del listeners[elem]
-
-                is_static_method = isinstance(value, staticmethod)
-                if is_static_method:
-                    value = value.__func__
-                if isinstance(value, _filter):
-                    if is_static_method:
-                        raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
-                    if elem.startswith(('cog_', 'bot_')):
-                        raise TypeError(no_bot_cog.format(base, elem))
-                    commands[elem] = value
-                elif inspect.iscoroutinefunction(value):
-                    try:
-                        getattr(value, '__cog_listener__')
-                    except AttributeError:
-                        continue
-                    else:
-                        if elem.startswith(('cog_', 'bot_')):
-                            raise TypeError(no_bot_cog.format(base, elem))
-                        listeners[elem] = value
-
-        self.__cog_commands__ = list(commands.values())
-
-        listeners_as_list = []
-        for listener in listeners.values():
-            for listener_name in listener.__cog_listener_names__:
-                # I use __name__ instead of just storing the value so I can inject
-                # the self attribute when the time comes to add them to the bot
-                listeners_as_list.append((listener_name, listener.__name__))
-
-        self.__cog_listeners__ = listeners_as_list
-
-        cmd_attrs = self.__cog_settings__
-
-        # Either update the command with the cog provided defaults or copy it.
-        # r.e type ignore, type-checker complains about overriding a ClassVar
-        self.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in self.__cog_commands__)  # type: ignore
-
-        lookup = {
-            cmd.qualified_name: cmd
-            for cmd in self.__cog_commands__
-        }
-
-        # Update the Command instances dynamically as well
-        for command in self.__cog_commands__:
-            command.cog = self
-            if not isinstance(command, ApplicationCommand):
-                setattr(self, command.callback.__name__, command)
-                parent = command.parent
-                if parent is not None:
-                    # Get the latest parent reference
-                    parent = lookup[parent.qualified_name]  # type: ignore
-
-                    # Update our parent's reference to our self
-                    parent.remove_command(command.name)  # type: ignore
-                    parent.add_command(command)  # type: ignore
 
     def get_commands(self) -> List[ApplicationCommand]:
         r"""
