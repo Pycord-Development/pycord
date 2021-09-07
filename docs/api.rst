@@ -760,7 +760,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 .. function:: on_thread_delete(thread)
 
     Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache 
-    then this will not be called. Consider using :func:`on_raw_thread_delete`
+    then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
 
 
     Note that you can get the guild from :attr:`Thread.guild`.
@@ -3951,6 +3951,14 @@ RawIntegrationDeleteEvent
 .. attributetable:: RawIntegrationDeleteEvent
 
 .. autoclass:: RawIntegrationDeleteEvent()
+    :members:
+
+RawThreadDeleteEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawThreadDeleteEvent
+
+.. autoclass:: RawThreadDeleteEvent()
     :members:
 
 PartialWebhookGuild
