@@ -169,7 +169,7 @@ class SlashCommand(ApplicationCommand):
 
 class Option:
     def __init__(
-        self, input_type: SlashCommandOptionType, /, description: str, **kwargs
+        self, input_type, /, description: str, **kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description
