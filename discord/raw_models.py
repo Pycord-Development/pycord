@@ -26,6 +26,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Set, List
 
+from .enums import ChannelType, try_enum
+
 if TYPE_CHECKING:
     from .types.raw_models import (
         MessageDeleteEvent,
@@ -293,7 +295,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
         The ID of the guild the deleted thread belonged to.
     parent_id: :class:`int`
         The ID of the channel the thread belonged to.
-    thread: :class:`Optional[discord.Thread]`
+    thread: Optional[:class:`discord.Thread`]
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     """
     # TODO: Typehint data as RawThreadDeleteEvent when added to types.raw_models
@@ -302,6 +304,6 @@ class RawThreadDeleteEvent(_RawReprMixin):
         self.thread_type: ChannelType = try_enum(ChannelType, data.get('type'))
         self.guild_id: int = data.get('guild_id')
         self.parent_id: int = data.get('parent_id')
-        self.thread: Thread = None
+        self.thread: Optional[Thread] = None
 
    
