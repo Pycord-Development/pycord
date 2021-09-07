@@ -80,8 +80,8 @@ class ApplicationCommandMixin:
             The command to add.
         """
         
-        if self.debug_guild and command.guild_ids is None:
-            command.guild_ids = [self.debug_guild]
+        if self.debug_guilds and command.guild_ids is None:
+            command.guild_ids = self.debug_guilds
         self.to_register.append(command)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
@@ -351,6 +351,9 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         # I replaced ^ with v and it worked
         super().__init__(*args, **kwargs) 
         self.debug_guild = kwargs.pop("debug_guild", None)
+        self.debug_guilds = kwargs.pop("debug_guilds", None)
+        if self.debug_guilds is None and self.debug_guild:
+            self.debug_guilds = [self.debug_guild]
         self._checks = []
         self._check_once = []
         self._before_invoke = None
