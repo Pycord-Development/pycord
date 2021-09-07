@@ -36,7 +36,8 @@ if TYPE_CHECKING:
         MessageUpdateEvent,
         ReactionClearEvent,
         ReactionClearEmojiEvent,
-        IntegrationDeleteEvent
+        IntegrationDeleteEvent,
+        ThreadDeleteEvent,
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
@@ -51,6 +52,7 @@ __all__ = (
     'RawReactionClearEvent',
     'RawReactionClearEmojiEvent',
     'RawIntegrationDeleteEvent',
+    'RawThreadDeleteEvent',
 )
 
 
@@ -298,12 +300,12 @@ class RawThreadDeleteEvent(_RawReprMixin):
     thread: Optional[:class:`discord.Thread`]
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     """
-    # TODO: Typehint data as RawThreadDeleteEvent when added to types.raw_models
-    def __init__(self, data) -> None:
-        self.thread_id: int = data.get('id')
-        self.thread_type: ChannelType = try_enum(ChannelType, data.get('type'))
-        self.guild_id: int = data.get('guild_id')
-        self.parent_id: int = data.get('parent_id')
+    
+    def __init__(self, data: ThreadDeleteEvent) -> None:
+        self.thread_id: int = data['id']
+        self.thread_type: ChannelType = try_enum(ChannelType, data['type'])
+        self.guild_id: int = data['guild_id']
+        self.parent_id: int = data['parent_id']
         self.thread: Optional[Thread] = None
 
    
