@@ -276,3 +276,32 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: Optional[int] = int(data['application_id'])
         except KeyError:
             self.application_id: Optional[int] = None
+
+class RawThreadDeleteEvent(_RawReprMixin):
+    """Represents the payload for :func:`on_raw_thread_delete` event.
+
+    .. versionadded:: 2.0
+    
+    Attributes
+    ----------
+
+    thread_id: :class:`int`
+        The ID of the thread that was deleted.
+    thread_type: :class:`discord.ChannelType`
+        The channel type of the deleted thread.
+    guild_id: :class:`int`
+        The ID of the guild the deleted thread belonged to.
+    parent_id: :class:`int`
+        The ID of the channel the thread belonged to.
+    thread: :class:`Optional[discord.Thread]`
+        The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
+    """
+    # TODO: Typehint data as RawThreadDeleteEvent when added to types.raw_models
+    def __init__(self, data) -> None:
+        self.thread_id: int = data.get('id')
+        self.thread_type: ChannelType = try_enum(ChannelType, data.get('type'))
+        self.guild_id: int = data.get('guild_id')
+        self.parent_id: int = data.get('parent_id')
+        self.thread: Thread = None
+
+   
