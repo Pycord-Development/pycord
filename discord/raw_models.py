@@ -300,12 +300,13 @@ class RawThreadDeleteEvent(_RawReprMixin):
     thread: Optional[:class:`discord.Thread`]
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     """
-    
+    __slots__ = ('thread_id', 'thread_type', 'guild_id', 'parent_id', 'thread')
+
     def __init__(self, data: ThreadDeleteEvent) -> None:
-        self.thread_id: int = data['id']
-        self.thread_type: ChannelType = try_enum(ChannelType, data['type'])
-        self.guild_id: int = data['guild_id']
-        self.parent_id: int = data['parent_id']
+        self.thread_id: int = int(data['id'])
+        self.thread_type: ChannelType = try_enum(ChannelType, int(data['type']))
+        self.guild_id: int = int(data['guild_id'])
+        self.parent_id: int = int(data['parent_id'])
         self.thread: Optional[Thread] = None
 
    
