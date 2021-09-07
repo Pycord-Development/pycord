@@ -42,6 +42,8 @@ if TYPE_CHECKING:
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .member import Member
+    from .threads import Thread
+
 
 
 __all__ = (
