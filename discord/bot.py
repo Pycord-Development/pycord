@@ -352,8 +352,13 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         super().__init__(*args, **kwargs) 
         self.debug_guild = kwargs.pop("debug_guild", None)
         self.debug_guilds = kwargs.pop("debug_guilds", None)
-        if self.debug_guilds is None and self.debug_guild:
-            self.debug_guilds = [self.debug_guild]
+
+        if self.debug_guild:
+            if self.debug_guilds is None:
+                self.debug_guilds = [self.debug_guild]
+            else:
+                raise TypeError('Both debug_guild and debug_guilds are set.')
+                         
         self._checks = []
         self._check_once = []
         self._before_invoke = None
@@ -562,7 +567,10 @@ class Bot(BotBase, Client):
         in favor of guild commands, which update instantly.
         .. note::
             The bot will not create any global commands if a debug_guild is passed.
-
+    debug_guilds: Optional[List[:class:`int`]]
+        Guild IDs of guilds to use for testing commands. This is similar to debug_guild. 
+        .. note::
+            You cannot set both debug_guild and debug_guilds.
     """
 
     pass
