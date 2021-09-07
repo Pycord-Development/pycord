@@ -247,7 +247,7 @@ class ApplicationCommandMixin:
             context = await self.get_application_context(interaction)
             await command.invoke(context)
 
-    def slash_command(self, **kwargs) -> SlashCommand:
+    def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
@@ -262,7 +262,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=SlashCommand, **kwargs)
 
-    def user_command(self, **kwargs) -> UserCommand:
+    def user_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
@@ -277,7 +277,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=UserCommand, **kwargs)
 
-    def message_command(self, **kwargs) -> MessageCommand:
+    def message_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
