@@ -328,9 +328,9 @@ class SlashCommand(ApplicationCommand):
             checks = func.__commands_checks__
             checks.reverse()
         except AttributeError:
-            checks = kwargs.get('checks', [])
+            checks = []
 
-        self.checks = checks
+        self.checks = checks + kwargs.get('checks', [])
 
         self._before_invoke = None
         self._after_invoke = None
@@ -605,9 +605,9 @@ class ContextMenuCommand(ApplicationCommand):
             checks = func.__commands_checks__
             checks.reverse()
         except AttributeError:
-            checks = kwargs.get('checks', [])
+            checks = []
 
-        self.checks = checks
+        self.checks = checks + kwargs.get('checks', [])
         self._before_invoke = None
         self._after_invoke = None
         
