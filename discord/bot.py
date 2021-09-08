@@ -205,6 +205,9 @@ class ApplicationCommandMixin:
         interaction: :class:`discord.Interaction`
             The interaction to process
         """
+        if not interaction.is_command():
+            return
+            
         try:
             command = self.app_commands[interaction.data["id"]]
         except KeyError:
