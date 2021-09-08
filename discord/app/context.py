@@ -61,7 +61,7 @@ class InteractionContext:
         self.command = None
 
     @cached_property
-    def channel(self):
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
@@ -111,7 +111,7 @@ class InteractionContext:
         return self.interaction.response.defer
 
     @property
-    def followup(self):
+    def followup(self) -> Webhook:
         return self.interaction.followup
 
     async def delete(self) -> None:
