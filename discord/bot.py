@@ -57,14 +57,19 @@ class ApplicationCommandMixin:
     -----------
     app_commands: :class:`dict`
         A mapping of command id string to :class:`.ApplicationCommand` objects.
-    to_register: :class:`list`
-        A list of commands that have been added but not yet registered.
+    pending_application_commands: :class:`list`
+        A list of commands that have been added but not yet registered. This is read-only and is modified via other
+        methods.
     """
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.to_register = []
+        self._pending_application_commands = []
         self.app_commands = {}
+
+    @property
+    def pending_application_commands(self):
+        return self._pending_application_commands
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
@@ -79,10 +84,10 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-        
+
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
-        self.to_register.append(command)
+        self._pending_application_commands.append(command)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
@@ -227,7 +232,7 @@ class ApplicationCommandMixin:
             else:
                 self.dispatch('application_command_completion', ctx)
 
-    def slash_command(self, **kwargs):
+    def slash_command(self, **kwargs) -> SlashCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
@@ -242,7 +247,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=SlashCommand, **kwargs)
 
-    def user_command(self, **kwargs):
+    def user_command(self, **kwargs) -> UserCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
@@ -257,7 +262,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=UserCommand, **kwargs)
 
-    def message_command(self, **kwargs):
+    def message_command(self, **kwargs) -> MessageCommand:
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
@@ -352,7 +357,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     def __init__(self, *args, **kwargs):
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
-        super().__init__(*args, **kwargs) 
+        super().__init__(*args, **kwargs)
         self.debug_guild = kwargs.pop("debug_guild", None)
         self.debug_guilds = kwargs.pop("debug_guilds", None)
 
@@ -361,7 +366,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
                 self.debug_guilds = [self.debug_guild]
             else:
                 raise TypeError('Both debug_guild and debug_guilds are set.')
-                         
+
         self._checks = []
         self._check_once = []
         self._before_invoke = None
@@ -372,7 +377,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
     async def on_interaction(self, interaction):
         await self.handle_interaction(interaction)
-
 
     async def on_application_command_error(self, context: InteractionContext, exception: DiscordException) -> None:
         """|coro|
@@ -566,12 +570,12 @@ class Bot(BotBase, Client):
     Attributes
     -----------
     debug_guild: Optional[:class:`int`]
-        Guild ID of a guild to use for testing commands. Prevents setting global commands 
+        Guild ID of a guild to use for testing commands. Prevents setting global commands
         in favor of guild commands, which update instantly.
         .. note::
             The bot will not create any global commands if a debug_guild is passed.
     debug_guilds: Optional[List[:class:`int`]]
-        Guild IDs of guilds to use for testing commands. This is similar to debug_guild. 
+        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
         .. note::
             You cannot set both debug_guild and debug_guilds.
     """
