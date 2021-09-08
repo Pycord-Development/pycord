@@ -80,7 +80,7 @@ Quick Example
         await ctx.send(f"Hello {name}!")
         
     @bot.user_command(name="Say Hello")
-    async def hi(ctx, user : discord.Member):
+    async def hi(ctx, user: discord.Member):
         await ctx.send(f"{ctx.author.mention} says hello to {user.name}!")
         
     bot.run("token")
