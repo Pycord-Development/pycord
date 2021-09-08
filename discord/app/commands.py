@@ -570,6 +570,8 @@ class SubCommandGroup(ApplicationCommand, Option):
 
 
 class ContextMenuCommand(ApplicationCommand):
+    type: int
+
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
 
@@ -658,7 +660,7 @@ class ContextMenuCommand(ApplicationCommand):
 
 
 class UserCommand(ContextMenuCommand):
-    type = 2
+    type: int = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
         self = super().__new__(cls)
@@ -692,7 +694,7 @@ class UserCommand(ContextMenuCommand):
 
 
 class MessageCommand(ContextMenuCommand):
-    type = 3
+    type: int = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
         self = super().__new__(cls)
