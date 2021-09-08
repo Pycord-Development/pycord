@@ -80,7 +80,7 @@ def wrap_callback(coro):
     return wrapped
 
 
-def hooked_wrapped_callback(command: 'ApplicationCommand', ctx: InteractionContext, coro):
+def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, coro):
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
@@ -92,7 +92,7 @@ def hooked_wrapped_callback(command: 'ApplicationCommand', ctx: InteractionConte
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
-            await command.call_after_hooks(ctx)
+            await cmd.call_after_hooks(ctx)
         return ret
     return wrapped
 
