@@ -166,6 +166,14 @@ class Interaction:
         """Optional[:class:`Guild`]: The guild the interaction was sent from."""
         return self._state and self._state._get_guild(self.guild_id)
 
+    def is_command(self) -> bool:
+        """:class:`bool`: Indicates whether the interaction is an application command."""
+        return self.type == InteractionType.application_command
+
+    def is_component(self) -> bool:
+        """:class:`bool`: Indicates whether the interaction is a message component."""
+        return self.type == InteractionType.component
+
     @utils.cached_slot_property('_cs_channel')
     def channel(self) -> Optional[InteractionChannel]:
         """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the interaction was sent from.
