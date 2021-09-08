@@ -141,7 +141,7 @@ class ApplicationCommandMixin:
         commands = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
+        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is None]:
             as_dict = command.to_dict()
             if len(registered_commands) > 0:
                 matches = [
@@ -157,7 +157,7 @@ class ApplicationCommandMixin:
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
             update_guild_commands[guild.id] = []
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is not None]:
+        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is not None]:
             as_dict = command.to_dict()
             for guild_id in command.guild_ids:
                 to_update = update_guild_commands[guild_id]
@@ -175,14 +175,14 @@ class ApplicationCommandMixin:
                     raise
             else:
                 for i in cmds:
-                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                    cmd = get(self.pending_application_commands, name=i["name"], description=i["description"], type=i['type'])
                     self.application_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in cmds:
             cmd = get(
-                self.to_register,
+                self.pending_application_commands,
                 name=i["name"],
                 description=i["description"],
                 type=i["type"],
