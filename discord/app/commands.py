@@ -28,7 +28,7 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable, TypeVar
+from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable, TypeVar, Dict
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -42,32 +42,32 @@ from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInv
 if TYPE_CHECKING:
     from .context import InteractionContext
     from ..types.application_command import SlashCommand as SlashCommandPayload
-    from ..types.application_command import SubCommandGroup as SubCommandGroupPayload
+    from ..types.application_command import SlashCommandGroup as SlashCommandGroupPayload
     from ..types.application_command import Option as OptionPayload
     from ..types.application_command import OptionChoice as OptionChoicePayload
     from ..types.application_command import ContextMenuCommand as ContextMenuCommandPayload
 
 __all__ = (
-    "_BaseCommand",
-    "ApplicationCommand",
-    "SlashCommand",
-    "Option",
-    "OptionChoice",
-    "option",
-    "slash_command",
-    "application_command",
-    "user_command",
-    "message_command",
-    "command",
-    "SlashCommandGroup",
-    "ContextMenuCommand",
-    "UserCommand",
-    "MessageCommand",
-    "command",
-    "application_command",
-    "slash_command",
-    "user_command",
-    "message_command",
+    '_BaseCommand',
+    'ApplicationCommand',
+    'SlashCommand',
+    'Option',
+    'OptionChoice',
+    'option',
+    'slash_command',
+    'application_command',
+    'user_command',
+    'message_command',
+    'command',
+    'SlashCommandGroup',
+    'ContextMenuCommand',
+    'UserCommand',
+    'MessageCommand',
+    'command',
+    'application_command',
+    'slash_command',
+    'user_command',
+    'message_command',
 )
 
 A = TypeVar('A')
@@ -111,17 +111,12 @@ def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, 
 class _BaseCommand:
     __slots__ = ()
 
-class ApplicationCommand(_BaseCommand):
-    cog = None
-    
-    def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
-class ApplicationCommand:
+class ApplicationCommand(_BaseCommand):
     type: int
     name: str
     checks: List
-    cog: Any  # TODO: Change after cog implementation
+    cog: Any = None  # TODO: Change after cog implementation
     _before_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     on_error: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]
@@ -334,19 +329,19 @@ class SlashCommand(ApplicationCommand):
 
     def __init__(self, func: Callable[[InteractionContext, ...], Awaitable[...]], *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
+            raise TypeError('Callback must be a coroutine.')
         self.callback: Callable[[InteractionContext, ...], Awaitable[...]] = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.guild_ids: Optional[List[int]] = kwargs.get('guild_ids', None)
 
-        name = kwargs.get("name") or func.__name__
+        name = kwargs.get('name') or func.__name__
         validate_chat_input_name(name)
         self.name: str = name
 
-        description = kwargs.get("description") or (
+        description = kwargs.get('description') or (
             inspect.cleandoc(func.__doc__).splitlines()[0]
             if func.__doc__ is not None
-            else "No description provided"
+            else 'No description provided'
         )
         validate_chat_input_description(description)
         self.description: str = description
@@ -371,7 +366,7 @@ class SlashCommand(ApplicationCommand):
         final_options = []
 
         params = self._get_signature_parameters()
-        if list(params.items())[0][0] == "self":
+        if list(params.items())[0][0] == 'self':
             temp = list(params.items())
             temp.pop(0)
             params = dict(temp)
@@ -395,11 +390,11 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_optional(option):
                 option = Option(
-                    option.__args__[0], "No description provided", required=False
+                    option.__args__[0], 'No description provided', required=False
                 )
 
             if not isinstance(option, Option):
-                option = Option(option, "No description provided")
+                option = Option(option, 'No description provided')
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
 
@@ -416,20 +411,20 @@ class SlashCommand(ApplicationCommand):
         return final_options
 
     def _is_typing_optional(self, annotation) -> bool:
-        return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
+        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> SlashCommandPayload:
         as_dict = {
-            "name": self.name,
-            "description": self.description,
-            "options": [o.to_dict() for o in self.options],
+            'name': self.name,
+            'description': self.description,
+            'options': [o.to_dict() for o in self.options],
         }
         if self.is_subcommand:
-            as_dict["type"] = SlashCommandOptionType.sub_command.value
+            as_dict['type'] = SlashCommandOptionType.sub_command.value
 
         return as_dict
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         return (
             isinstance(other, SlashCommand)
             and other.name == self.name
@@ -439,9 +434,9 @@ class SlashCommand(ApplicationCommand):
     async def _invoke(self, ctx: ApplicationContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
         kwargs = {}
-        for arg in ctx.interaction.data.get("options", []):
-            op = find(lambda x: x.name == arg["name"], self.options)
-            arg = arg["value"]
+        for arg in ctx.interaction.data.get('options', []):
+            op = find(lambda x: x.name == arg['name'], self.options)
+            arg = arg['value']
 
             # Checks if input_type is user, role or channel
             if (
@@ -449,14 +444,14 @@ class SlashCommand(ApplicationCommand):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = "member" if op.input_type.name == "user" else op.input_type.name
+                name = 'member' if op.input_type.name == 'user' else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 try:
-                    arg = await get_or_fetch(ctx.guild, "member", int(arg))
+                    arg = await get_or_fetch(ctx.guild, 'member', int(arg))
                 except NotFound:
-                    arg = await get_or_fetch(ctx.guild, "role", int(arg))
+                    arg = await get_or_fetch(ctx.guild, 'role', int(arg))
 
             kwargs[op.name] = arg
 
@@ -527,25 +522,25 @@ class Option:
         ...
 
     def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
-        self.name: Optional[str] = kwargs.pop("name", None)
-        self.description: str = description or "No description provided"
+        self.name: Optional[str] = kwargs.pop('name', None)
+        self.description: str = description or 'No description provided'
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
         self.input_type: SlashCommandOptionType = input_type
-        self.required: bool = kwargs.pop("required", True)
+        self.required: bool = kwargs.pop('required', True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
+            for o in kwargs.pop('choices', list())
         ]
-        self.default: Optional[Any] = kwargs.pop("default", None)
+        self.default: Optional[Any] = kwargs.pop('default', None)
 
     def to_dict(self) -> OptionPayload:
         return {
-            "name": self.name,
-            "description": self.description,
-            "type": self.input_type.value,
-            "required": self.required,
-            "choices": [c.to_dict() for c in self.choices],
+            'name': self.name,
+            'description': self.description,
+            'type': self.input_type.value,
+            'required': self.required,
+            'choices': [c.to_dict() for c in self.choices],
         }
 
     def __repr__(self) -> str:
@@ -559,7 +554,7 @@ class OptionChoice:
         self.value = value or name
 
     def to_dict(self) -> OptionChoicePayload:
-        return {"name": self.name, "value": self.value}
+        return {'name': self.name, 'value': self.value}
 
 
 def option(name, type, **kwargs):
@@ -570,7 +565,7 @@ def option(name, type, **kwargs):
     return decor
 
 
-class SubCommandGroup(ApplicationCommand, Option):
+class SlashCommandGroup(ApplicationCommand, Option):
     type: int = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -593,24 +588,24 @@ class SubCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
-        self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
+        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = []
         self.guild_ids: Optional[List[int]] = guild_ids
-        self.parent_group: Optional[SubCommandGroup] = parent_group
+        self.parent_group: Optional[SlashCommandGroup] = parent_group
         self.checks: List = []
 
         self._before_invoke = None
         self._after_invoke = None
         self.cog = None
 
-    def to_dict(self) -> SubCommandGroupPayload:
+    def to_dict(self) -> SlashCommandGroupPayload:
         as_dict = {
-            "name": self.name,
-            "description": self.description,
-            "options": [c.to_dict() for c in self.subcommands],
+            'name': self.name,
+            'description': self.description,
+            'options': [c.to_dict() for c in self.subcommands],
         }
 
         if self.parent_group is not None:
-            as_dict["type"] = self.input_type.value
+            as_dict['type'] = self.input_type.value
 
         return as_dict
 
@@ -623,20 +618,21 @@ class SubCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def command_group(self, name: str, description: str) -> SubCommandGroup:
+    def command_group(self, name: str, description: str) -> SlashCommandGroup:
         if self.parent_group is not None:
             # TODO: Improve this error message
-            raise Exception("Subcommands can only be nested once")
+            raise Exception('Subcommands can only be nested once')
 
         sub_command_group = SlashCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        option = ctx.interaction.data["options"][0]
-        command = find(lambda x: x.name == option["name"], self.subcommands)
+        option = ctx.interaction.data['options'][0]
+        command = find(lambda x: x.name == option['name'], self.subcommands)
         ctx.interaction.data = option
         await command.invoke(ctx)
+
 
 class ContextMenuCommand(ApplicationCommand):
     type: int
@@ -660,17 +656,17 @@ class ContextMenuCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
+            raise TypeError('Callback must be a coroutine.')
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.guild_ids: Optional[List[int]] = kwargs.get('guild_ids', None)
 
         # Discord API doesn't support setting descriptions for User commands
         # so it must be empty
-        self.description: str = ""
-        self.name: str = kwargs.pop("name", func.__name__)
+        self.description: str = ''
+        self.name: str = kwargs.pop('name', func.__name__)
         if not isinstance(self.name, str):
-            raise TypeError("Name of a command must be a string.")
+            raise TypeError('Name of a command must be a string.')
 
         self.cog = None
 
@@ -688,7 +684,7 @@ class ContextMenuCommand(ApplicationCommand):
 
     def validate_parameters(self) -> None:
         params = self._get_signature_parameters()
-        if list(params.items())[0][0] == "self":
+        if list(params.items())[0][0] == 'self':
             temp = list(params.items())
             temp.pop(0)
             params = dict(temp)
@@ -706,7 +702,7 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            cmd = "user" if type(self) == UserCommand else "message"
+            cmd = 'user' if type(self) == UserCommand else 'message'
             raise ClientException(
                 f'Callback for {self.name} command is missing "{cmd}" parameter.'
             )
@@ -715,7 +711,7 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
             raise ClientException(
-                f"Callback for {self.name} command has too many parameters."
+                f'Callback for {self.name} command has too many parameters.'
             )
         except StopIteration:
             pass
@@ -724,7 +720,7 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> ContextMenuCommandPayload:
-        return {"name": self.name, "description": self.description, "type": self.type}
+        return {'name': self.name, 'description': self.description, 'type': self.type}
 
 
 class UserCommand(ContextMenuCommand):
@@ -737,22 +733,22 @@ class UserCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        if "members" not in ctx.interaction.data["resolved"]:
-            _data = ctx.interaction.data["resolved"]["users"]
+        if 'members' not in ctx.interaction.data['resolved']:
+            _data = ctx.interaction.data['resolved']['users']
             for i, v in _data.items():
-                v["id"] = int(i)
+                v['id'] = int(i)
                 user = v
             target = User(state=ctx.interaction._state, data=user)
         else:
-            _data = ctx.interaction.data["resolved"]["members"]
+            _data = ctx.interaction.data['resolved']['members']
             for i, v in _data.items():
-                v["id"] = int(i)
+                v['id'] = int(i)
                 member = v
-            _data = ctx.interaction.data["resolved"]["users"]
+            _data = ctx.interaction.data['resolved']['users']
             for i, v in _data.items():
-                v["id"] = int(i)
+                v['id'] = int(i)
                 user = v
-            member["user"] = user
+            member['user'] = user
             target = Member(
                 data=member,
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
@@ -812,14 +808,14 @@ class MessageCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: InteractionContext) -> None:
-        _data = ctx.interaction.data["resolved"]["messages"]
+        _data = ctx.interaction.data['resolved']['messages']
         for i, v in _data.items():
-            v["id"] = int(i)
+            v['id'] = int(i)
             message = v
-        channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
+        channel = ctx.interaction._state.get_channel(int(message['channel_id']))
         if channel is None:
             data = await ctx.interaction._state.http.start_private_message(
-                int(message["author"]["id"])
+                int(message['author']['id'])
             )
             channel = ctx.interaction._state.add_dm_channel(data)
 
@@ -931,7 +927,7 @@ def application_command(cls=SlashCommand, **attrs):
             func = func.callback
         elif not callable(func):
             raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
+                'func needs to be a callable or a subclass of ApplicationCommand.'
             )
 
 
@@ -998,7 +994,7 @@ def application_command(cls=SlashCommand, **attrs):
             func = func.callback
         elif not callable(func):
             raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
+                'func needs to be a callable or a subclass of ApplicationCommand.'
             )
         return cls(func, **attrs)
 
@@ -1021,21 +1017,21 @@ def command(**kwargs) -> Callable[..., ApplicationCommand]:
 # Validation
 def validate_chat_input_name(name: Any) -> None:
     if not isinstance(name, str):
-        raise TypeError("Name of a command must be a string.")
-    if " " in name:
-        raise ValidationError("Name of a chat input command cannot have spaces.")
+        raise TypeError('Name of a command must be a string.')
+    if ' ' in name:
+        raise ValidationError('Name of a chat input command cannot have spaces.')
     if not name.islower():
-        raise ValidationError("Name of a chat input command must be lowercase.")
+        raise ValidationError('Name of a chat input command must be lowercase.')
     if len(name) > 32 or len(name) < 1:
         raise ValidationError(
-            "Name of a chat input command must be less than 32 characters and non empty."
+            'Name of a chat input command must be less than 32 characters and non empty.'
         )
 
 
 def validate_chat_input_description(description: Any) -> None:
     if not isinstance(description, str):
-        raise TypeError("Description of a command must be a string.")
+        raise TypeError('Description of a command must be a string.')
     if len(description) > 100 or len(description) < 1:
         raise ValidationError(
-            "Description of a chat input command must be less than 100 characters and non empty."
+            'Description of a chat input command must be less than 100 characters and non empty.'
         )

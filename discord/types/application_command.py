@@ -21,7 +21,7 @@ class SlashCommand(TypedDict, total=False):
     type: Optional[int]
 
 
-class SubCommandGroup(SlashCommand):
+class SlashCommandGroup(SlashCommand):
     pass
 
 
