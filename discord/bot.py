@@ -189,7 +189,7 @@ class ApplicationCommandMixin:
             )
             self.application_commands[i["id"]] = cmd
 
-    async def handle_interaction(self, interaction: Interaction) -> None:
+    async def process_application_commands(self, interaction: Interaction) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -328,7 +328,7 @@ class ApplicationCommandMixin:
 
         Returns the invocation context from the interaction.
 
-        This is a more low-level counter-part for :meth:`.handle_interaction`
+        This is a more low-level counter-part for :meth:`.process_application_commands`
         to allow users more fine grained control over the processing.
 
         Parameters
@@ -376,7 +376,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         await self.register_commands()
 
     async def on_interaction(self, interaction):
-        await self.handle_interaction(interaction)
+        await self.process_application_commands(interaction)
 
     async def on_application_command_error(self, context: InteractionContext, exception: DiscordException) -> None:
         """|coro|
