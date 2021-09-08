@@ -588,6 +588,7 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
+
 class SlashCommandOptionType(Enum):
     sub_command = 1
     sub_command_group = 2
@@ -623,6 +624,7 @@ class SlashCommandOptionType(Enum):
         
         # TODO: Improve the error message
         raise TypeError('Invalid class used as an input type for an Option')
+
 
 T = TypeVar('T')
 

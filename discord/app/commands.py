@@ -28,7 +28,7 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable
+from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable, TypeVar
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -48,26 +48,30 @@ if TYPE_CHECKING:
     from ..types.application_command import ContextMenuCommand as ContextMenuCommandPayload
 
 __all__ = (
-    "ApplicationCommand",
-    "SlashCommand",
-    "Option",
-    "OptionChoice",
-    "option",
-    "SubCommandGroup",
-    "ContextMenuCommand",
-    "UserCommand",
-    "MessageCommand",
-    "command",
-    "application_command",
-    "slash_command",
-    "user_command",
-    "message_command",
+    'ApplicationCommand',
+    'SlashCommand',
+    'Option',
+    'OptionChoice',
+    'option',
+    'SubCommandGroup',
+    'ContextMenuCommand',
+    'UserCommand',
+    'MessageCommand',
+    'command',
+    'application_command',
+    'slash_command',
+    'user_command',
+    'message_command',
 )
 
+A = TypeVar('A')
+R = TypeVar('R')
 
-def wrap_callback(coro):
+
+def wrap_callback(coro: Callable[[...], Awaitable[R]]):
+
     @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
+    async def wrapped(*args, **kwargs) -> R:
         try:
             ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
@@ -80,9 +84,10 @@ def wrap_callback(coro):
     return wrapped
 
 
-def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, coro):
+def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, coro: Callable[[A], Awaitable[R]]) -> R:
+
     @functools.wraps(coro)
-    async def wrapped(arg):
+    async def wrapped(arg: A) -> R:
         try:
             ret = await coro(arg)
         except ApplicationCommandError:
@@ -106,10 +111,10 @@ class ApplicationCommand:
     _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     on_error: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]
 
-    def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+    def __repr__(self) -> str:
+        return f'<discord.app.commands.{self.__class__.__name__} name={self.name}>'
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__)
 
     async def prepare(self, ctx: InteractionContext) -> None:
@@ -134,7 +139,6 @@ class ApplicationCommand:
         await injected(ctx)
 
     async def can_run(self, ctx: InteractionContext) -> bool:
-
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(f'The global check functions for command {self.name} failed.')
 
@@ -168,7 +172,10 @@ class ApplicationCommand:
         finally:
             ctx.bot.dispatch('application_command_error', ctx, error)
 
-    def _get_signature_parameters(self):
+    async def callback(self, ctx: InteractionContext, *args, **kwargs) -> None:
+        raise NotImplementedError
+
+    def _get_signature_parameters(self) -> OrderedDict:  # TODO: Maybe better specify return type
         return OrderedDict(inspect.signature(self.callback).parameters)
 
     def error(self, coro: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]):  # TODO: Replace any with Cog
@@ -397,7 +404,7 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
-    def _is_typing_optional(self, annotation):
+    def _is_typing_optional(self, annotation) -> bool:
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> SlashCommandPayload:
@@ -486,8 +493,8 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
         }
 
-    def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+    def __repr__(self) -> str:
+        return f'<discord.app.commands.{self.__class__.__name__} name={self.name}>'
 
 
 class OptionChoice:
