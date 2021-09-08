@@ -335,7 +335,7 @@ class Colour:
     
     @classmethod
     def transparent(cls, Type: [CT]) -> CT:
-        """A factory method that returns a :class:`Color` with a value of ``0x2F3136`.
+        """A factory method that returns a :class:`Color` with a value of ``0x2F3136``.
 
         .. versionadded:: 2.0
         """
