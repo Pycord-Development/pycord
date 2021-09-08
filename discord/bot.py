@@ -55,7 +55,7 @@ class ApplicationCommandMixin:
 
     Attributes
     -----------
-    app_commands: :class:`dict`
+    application_commands: :class:`dict`
         A mapping of command id string to :class:`.ApplicationCommand` objects.
     pending_application_commands: :class:`list`
         A list of commands that have been added but not yet registered. This is read-only and is modified via other
@@ -65,7 +65,7 @@ class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._pending_application_commands = []
-        self.app_commands = {}
+        self.application_commands = {}
 
     @property
     def pending_application_commands(self):
@@ -106,7 +106,7 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self.app_commands.pop(command.id)
+        return self.application_commands.pop(command.id)
 
     async def sync_commands(self) -> None:
         """|coro|
@@ -176,7 +176,7 @@ class ApplicationCommandMixin:
             else:
                 for i in cmds:
                     cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
-                    self.app_commands[i["id"]] = cmd
+                    self.application_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
@@ -187,7 +187,7 @@ class ApplicationCommandMixin:
                 description=i["description"],
                 type=i["type"],
             )
-            self.app_commands[i["id"]] = cmd
+            self.application_commands[i["id"]] = cmd
 
     async def handle_interaction(self, interaction: Interaction) -> None:
         """|coro|
@@ -201,7 +201,7 @@ class ApplicationCommandMixin:
         you should invoke this coroutine as well.
 
         This function finds a registered command matching the interaction id from
-        :attr:`.ApplicationCommandMixin.app_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
+        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
         command was found, it replies to the interaction with a default message.
 
         .. versionadded:: 2.0
@@ -215,7 +215,7 @@ class ApplicationCommandMixin:
             return
 
         try:
-            command = self.app_commands[interaction.data["id"]]
+            command = self.application_commands[interaction.data["id"]]
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
