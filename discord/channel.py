@@ -1038,10 +1038,10 @@ class VoiceChannel(VocalGuildChannel):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
-    async def create_party_invite(self, event:str, **kwargs) -> Invite:
+    async def create_activity_invite(self, event:str, **kwargs) -> Invite:
         """|coro|
 
-        A shortcut method that creates an instant party invite.
+        A shortcut method that creates an instant activity invite.
 
         You must have the :attr:`~discord.Permissions.create_instant_invite` permission to
         do this.
