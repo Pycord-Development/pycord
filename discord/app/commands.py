@@ -28,7 +28,7 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, overload
+from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -98,6 +98,8 @@ def hooked_wrapped_callback(command: 'ApplicationCommand', ctx: InteractionConte
 
 
 class ApplicationCommand:
+    _before_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
+    _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
 
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
@@ -190,7 +192,7 @@ class ApplicationCommand:
         """
         return hasattr(self, 'on_error')
 
-    def before_invoke(self, coro):
+    def before_invoke(self, coro: Optional[Callable[[InteractionContext], Awaitable[...]]]):
         """A decorator that registers a coroutine as a pre-invoke hook.
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
@@ -212,7 +214,7 @@ class ApplicationCommand:
         self._before_invoke = coro
         return coro
 
-    def after_invoke(self, coro):
+    def after_invoke(self, coro: Optional[Callable[[InteractionContext], Awaitable[...]]]):
         """A decorator that registers a coroutine as a post-invoke hook.
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
@@ -246,7 +248,7 @@ class ApplicationCommand:
             if instance:
                 await self._before_invoke(instance, ctx)  # type: ignore
             else:
-                await self._before_invoke(ctx)  # type: ignore
+                await self._before_invoke(ctx)
 
         # call the cog local hook if applicable:
         if cog is not None:
@@ -266,7 +268,7 @@ class ApplicationCommand:
             if instance:
                 await self._after_invoke(instance, ctx)  # type: ignore
             else:
-                await self._after_invoke(ctx)  # type: ignore
+                await self._after_invoke(ctx)
 
         # call the cog local hook if applicable:
         if cog is not None:
