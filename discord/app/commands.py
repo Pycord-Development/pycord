@@ -27,6 +27,7 @@ from __future__ import annotations
 import asyncio
 import functools
 import inspect
+from abc import ABC
 from collections import OrderedDict
 from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable, TypeVar, Dict
 
@@ -40,6 +41,7 @@ from ..errors import NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 
 if TYPE_CHECKING:
+    from .. import Cog
     from .context import InteractionContext
     from ..types.application_command import SlashCommand as SlashCommandPayload
     from ..types.application_command import SlashCommandGroup as SlashCommandGroupPayload
@@ -74,7 +76,7 @@ A = TypeVar('A')
 R = TypeVar('R')
 
 
-def wrap_callback(coro: Callable[[...], Awaitable[R]]):
+def wrap_callback(coro: Callable[[...], Awaitable[R]]) -> R:
 
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs) -> R:
@@ -116,7 +118,7 @@ class ApplicationCommand(_BaseCommand):
     type: int
     name: str
     checks: List
-    cog: Any = None  # TODO: Change after cog implementation
+    cog: Optional[Cog] = None
     _before_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     on_error: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]
@@ -188,7 +190,7 @@ class ApplicationCommand(_BaseCommand):
     def _get_signature_parameters(self) -> OrderedDict:  # TODO: Maybe better specify return type
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    def error(self, coro: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]):  # TODO: Replace any with Cog
+    def error(self, coro: Callable[[Optional[Cog], InteractionContext, Exception], Awaitable[...]]):
         """A decorator that registers a coroutine as a local error handler.
 
         A local error handler is an :func:`.on_command_error` event limited to
@@ -306,7 +308,7 @@ class ApplicationCommand(_BaseCommand):
             await hook(ctx)
 
 
-class SlashCommand(ApplicationCommand):
+class SlashCommand(ApplicationCommand, ABC):
     type: int = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -346,7 +348,7 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.is_subcommand: bool = False
-        self.cog = None
+        self.cog: Optional[Cog] = None
 
         params = self._get_signature_parameters()
         self.options: List[Option] = self.parse_options(params)
@@ -595,7 +597,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog: Optional[Cog] = None
 
     def to_dict(self) -> SlashCommandGroupPayload:
         as_dict = {
@@ -668,7 +670,7 @@ class ContextMenuCommand(ApplicationCommand):
         if not isinstance(self.name, str):
             raise TypeError('Name of a command must be a string.')
 
-        self.cog = None
+        self.cog: Optional[Cog] = None
 
         try:
             checks = func.__commands_checks__
@@ -723,7 +725,7 @@ class ContextMenuCommand(ApplicationCommand):
         return {'name': self.name, 'description': self.description, 'type': self.type}
 
 
-class UserCommand(ContextMenuCommand):
+class UserCommand(ContextMenuCommand, ABC):
     type: int = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -798,7 +800,7 @@ class UserCommand(ContextMenuCommand):
             return self.copy()
 
 
-class MessageCommand(ContextMenuCommand):
+class MessageCommand(ContextMenuCommand, ABC):
     type: int = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
@@ -863,6 +865,7 @@ class MessageCommand(ContextMenuCommand):
         else:
             return self.copy()
 
+
 def slash_command(**kwargs) -> SlashCommand:
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -872,6 +875,7 @@ def slash_command(**kwargs) -> SlashCommand:
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
+
 
 def user_command(**kwargs) -> UserCommand:
     """Decorator for user commands that invokes :func:`application_command`.
@@ -883,6 +887,7 @@ def user_command(**kwargs) -> UserCommand:
     """
     return application_command(cls=UserCommand, **kwargs)
 
+
 def message_command(**kwargs) -> MessageCommand:
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -892,6 +897,7 @@ def message_command(**kwargs) -> MessageCommand:
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
+
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -931,7 +937,6 @@ def application_command(cls=SlashCommand, **attrs):
             )
 
 
-
 def slash_command(**kwargs) -> SlashCommand:
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -965,7 +970,7 @@ def message_command(**kwargs) -> MessageCommand:
     return application_command(cls=MessageCommand, **kwargs)
 
 
-def application_command(cls=SlashCommand, **attrs):
+def application_command(cls: R = SlashCommand, **attrs) -> R:
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
