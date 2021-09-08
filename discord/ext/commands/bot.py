@@ -121,6 +121,7 @@ _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
     def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
+        # OVERRIDE 124: remove description param, 127-133, 135-137, 140-144
         super().__init__(**options)
         self.command_prefix = command_prefix
         self.extra_events: Dict[str, List[CoroFunc]] = {}

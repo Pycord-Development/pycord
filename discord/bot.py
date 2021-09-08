@@ -24,6 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
+import collections
+import inspect
 import traceback
 from .app.errors import ApplicationCommandError, CheckFailure  
 
@@ -354,12 +356,29 @@ class ApplicationCommandMixin:
 
 class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO I think
-    def __init__(self, *args, **kwargs):
+    def __init__(self, description=None, *args, **options):
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
-        super().__init__(*args, **kwargs)
-        self.debug_guild = kwargs.pop("debug_guild", None)
-        self.debug_guilds = kwargs.pop("debug_guilds", None)
+        super().__init__(*args, **options)
+        self.extra_events = {}  # TYPE: Dict[str, List[CoroFunc]]
+        self.__cogs = {}  # TYPE: Dict[str, Cog]
+        self.__extensions = {}  # TYPE: Dict[str, types.ModuleType]
+        self._checks = []  # TYPE: List[Check]
+        self._check_once = []
+        self._before_invoke = None
+        self._after_invoke = None
+        self.description = inspect.cleandoc(description) if description else ''
+        self.owner_id = options.get('owner_id')
+        self.owner_ids = options.get('owner_ids', set())
+
+        self.debug_guild = options.pop("debug_guild", None)  # TODO: remove or reimplement
+        self.debug_guilds = options.pop("debug_guilds", None)
+
+        if self.owner_id and self.owner_ids:
+            raise TypeError('Both owner_id and owner_ids are set.')
+
+        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
+            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
 
         if self.debug_guild:
             if self.debug_guilds is None:
