@@ -62,6 +62,7 @@ __all__ = (
     'GuildChannel',
     'Messageable',
     'Connectable',
+    'Mentionable'
 )
 
 T = TypeVar('T', bound=VoiceProtocol)
