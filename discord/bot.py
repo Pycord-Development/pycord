@@ -588,6 +588,20 @@ class Bot(BotBase, Client):
 
     Attributes
     -----------
+    description: :class:`str`
+        The content prefixed into the default help message.
+    owner_id: Optional[:class:`int`]
+        The user ID that owns the bot. If this is not set and is then queried via
+        :meth:`.is_owner` then it is fetched automatically using
+        :meth:`~.Bot.application_info`.
+    owner_ids: Optional[Collection[:class:`int`]]
+        The user IDs that owns the bot. This is similar to :attr:`owner_id`.
+        If this is not set and the application is team based, then it is
+        fetched automatically using :meth:`~.Bot.application_info`.
+        For performance reasons it is recommended to use a :class:`set`
+        for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
+
+        .. versionadded:: 1.3
     debug_guild: Optional[:class:`int`]
         Guild ID of a guild to use for testing commands. Prevents setting global commands
         in favor of guild commands, which update instantly.

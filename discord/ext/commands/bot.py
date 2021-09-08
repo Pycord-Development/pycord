@@ -772,6 +772,7 @@ class Bot(BotBase, discord.Bot):
 
         .. versionadded:: 1.7
     """
+    # OVERRIDE 775: 750-751, 756-765
     pass
 
 class AutoShardedBot(BotBase, discord.AutoShardedBot):
