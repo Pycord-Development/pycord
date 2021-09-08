@@ -98,8 +98,13 @@ def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, 
 
 
 class ApplicationCommand:
+    type: int
+    name: str
+    checks: List
+    cog: Any  # TODO: Change after cog implementation
     _before_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
     _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
+    on_error: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]
 
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
@@ -119,6 +124,9 @@ class ApplicationCommand:
         await self.call_before_hooks(ctx)
         pass
 
+    async def _invoke(self, ctx: InteractionContext) -> None:
+        raise NotImplementedError
+
     async def invoke(self, ctx: InteractionContext) -> None:
         await self.prepare(ctx)
 
@@ -135,7 +143,7 @@ class ApplicationCommand:
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
+        return await async_all(predicate(ctx) for predicate in predicates)
     
     async def dispatch_error(self, ctx: InteractionContext, error: Exception) -> None:
         ctx.command_failed = True
@@ -163,7 +171,7 @@ class ApplicationCommand:
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    def error(self, coro):
+    def error(self, coro: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]):  # TODO: Replace any with Cog
         """A decorator that registers a coroutine as a local error handler.
 
         A local error handler is an :func:`.on_command_error` event limited to
@@ -282,7 +290,7 @@ class ApplicationCommand:
 
 
 class SlashCommand(ApplicationCommand):
-    type = 1
+    type: int = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
         self = super().__new__(cls)
@@ -293,19 +301,19 @@ class SlashCommand(ApplicationCommand):
     @overload
     def __init__(
             self,
-            func: Callable,
+            func: Callable[[InteractionContext, ...], Awaitable[...]],
             *,
             name: Optional[str] = ...,
             description: Optional[str] = ...,
             guild_ids: Optional[List[int]] = ...,
-            checks: Optional[List]  # Specify
+            checks: Optional[List]  # TODO: Specify later
     ) -> None:
         ...
 
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
+    def __init__(self, func: Callable[[InteractionContext, ...], Awaitable[...]], *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
-        self.callback: Callable = func
+        self.callback: Callable[[InteractionContext, ...], Awaitable[...]] = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
@@ -332,7 +340,7 @@ class SlashCommand(ApplicationCommand):
         except AttributeError:
             checks = []
 
-        self.checks = checks + kwargs.get('checks', [])
+        self.checks: List[Any] = checks + kwargs.get('checks', [])  # TODO: Specify Check
 
         self._before_invoke = None
         self._after_invoke = None
@@ -501,7 +509,7 @@ def option(name, type, **kwargs):
 
 
 class SubCommandGroup(ApplicationCommand, Option):
-    type = 1
+    type: int = 1
 
     def __new__(cls, *args, **kwargs) -> SubCommandGroup:
         self = super().__new__(cls)
