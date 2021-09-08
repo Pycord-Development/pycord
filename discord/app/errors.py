@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from ..errors import DiscordException
 
+
 class ApplicationCommandError(DiscordException):
     r"""The base exception type for all application command related errors.
 
@@ -35,12 +36,14 @@ class ApplicationCommandError(DiscordException):
     """
     pass
 
+
 class CheckFailure(ApplicationCommandError):
     """Exception raised when the predicates in :attr:`.Command.checks` have failed.
 
     This inherits from :exc:`ApplicationCommandError`
     """
     pass
+
 
 class ApplicationCommandInvokeError(ApplicationCommandError):
     """Exception raised when the command being invoked raised an exception.

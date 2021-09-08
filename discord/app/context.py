@@ -22,18 +22,19 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TYPE_CHECKING, Optional, Union
-
-if TYPE_CHECKING:
-    import discord
+from typing import TYPE_CHECKING, Optional, Union, Callable
 
 from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse
 from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
 from ..context_managers import Typing
+
+if TYPE_CHECKING:
+    import discord
+    from ..interactions import Interaction, InteractionResponse, InteractionChannel
+    from .. import VoiceProtocol, Webhook
 
 
 class InteractionContext:
@@ -54,9 +55,9 @@ class InteractionContext:
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: "discord.Bot", interaction: Interaction):
-        self.bot = bot
-        self.interaction = interaction
+    def __init__(self, bot: 'discord.Bot', interaction: Interaction):
+        self.bot: 'discord.Bot' = bot
+        self.interaction: Interaction = interaction
         self.command = None
 
     @cached_property
@@ -84,10 +85,10 @@ class InteractionContext:
         return self.interaction.user
 
     @property
-    def voice_client(self):
+    def voice_client(self) -> Optional[VoiceProtocol]:
         return self.guild.voice_client
 
-    def typing(self):
+    def typing(self) -> Typing:
         return Typing(self.channel)
 
     @cached_property
@@ -113,7 +114,7 @@ class InteractionContext:
     def followup(self):
         return self.interaction.followup
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Calls :attr:`~discord.app.InteractionContext.respond`.
         If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
         if not self.response.is_done():

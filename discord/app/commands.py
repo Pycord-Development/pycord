@@ -28,7 +28,7 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, overload
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -36,8 +36,11 @@ from ..user import User
 from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch, async_all
-from ..errors import DiscordException, NotFound, ValidationError, ClientException
+from ..errors import NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+
+if TYPE_CHECKING:
+    from .context import InteractionContext
 
 __all__ = (
     "ApplicationCommand",
@@ -55,6 +58,7 @@ __all__ = (
     "user_command",
     "message_command",
 )
+
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -86,7 +90,9 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
 
+
 class ApplicationCommand:
+
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -266,6 +272,7 @@ class ApplicationCommand:
         if hook is not None:
             await hook(ctx)
 
+
 class SlashCommand(ApplicationCommand):
     type = 1
 
@@ -275,10 +282,22 @@ class SlashCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
+    @overload
+    def __init__(
+            self,
+            func: Callable,
+            *,
+            name: Optional[str] = ...,
+            description: Optional[str] = ...,
+            guild_ids: Optional[List[int]] = ...,
+            checks: Optional[List]  # Specify
+    ) -> None:
+        ...
+
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
-        self.callback = func
+        self.callback: Callable = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
@@ -297,7 +316,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options = self.parse_options(params)
+        self.options: List[Option] = self.parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -309,7 +328,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        
 
     def parse_options(self, params) -> List[Option]:
         params = iter(params.items())
@@ -413,21 +431,37 @@ class SlashCommand(ApplicationCommand):
                 kwargs[o.name] = o.default
         await self.callback(ctx, **kwargs)
 
+
 class Option:
+
+    @overload
     def __init__(
-        self, input_type: SlashCommandOptionType, /, description = None,**kwargs
+            self,
+            input_type: Any,
+            /,
+            description: str,
+            *,
+            name: str = ...,
+            required: bool = ...,
+            choices: List[OptionChoice] = ...,
+            default: Any = ...,
+    ) -> None:
+        ...
+
+    def __init__(
+        self, input_type: Any, /, description: str = None, **kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = description or "No description provided"
+        self.description: str = description or "No description provided"
         if not isinstance(input_type, SlashCommandOptionType):
             input_type = SlashCommandOptionType.from_datatype(input_type)
-        self.input_type = input_type
+        self.input_type: SlashCommandOptionType = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
-        self.default = kwargs.pop("default", None)
+        self.default: Optional[Any] = kwargs.pop("default", None)
 
     def to_dict(self) -> Dict:
         return {
@@ -443,12 +477,14 @@ class Option:
 
 
 class OptionChoice:
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
+
+    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None) -> None:
         self.name = name
         self.value = value or name
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
+
 
 def option(name, type, **kwargs):
     """A decorator that can be used instead of typehinting Option"""
@@ -456,6 +492,7 @@ def option(name, type, **kwargs):
         func.__annotations__[name] = Option(type, **kwargs)
         return func
     return decor
+
 
 class SubCommandGroup(ApplicationCommand, Option):
     type = 1
@@ -481,9 +518,9 @@ class SubCommandGroup(ApplicationCommand, Option):
             description=description,
         )
         self.subcommands: List[Union[SlashCommand, SubCommandGroup]] = []
-        self.guild_ids = guild_ids
-        self.parent_group = parent_group
-        self.checks = []
+        self.guild_ids: Optional[List[int]] = guild_ids
+        self.parent_group: Optional[SubCommandGroup] = parent_group
+        self.checks: List = []
 
         self._before_invoke = None
         self._after_invoke = None
@@ -510,7 +547,7 @@ class SubCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def command_group(self, name, description) -> SubCommandGroup:
+    def command_group(self, name: str, description: str) -> SubCommandGroup:
         if self.parent_group is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
@@ -533,6 +570,17 @@ class ContextMenuCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
+    @overload
+    def __init__(
+            self,
+            func: Callable,
+            *,
+            name: Optional[str] = ...,
+            checks: Optional[List] = ...,
+            guild_ids: Optional[List[int]],
+    ) -> None:
+        ...
+
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
@@ -542,7 +590,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         # Discord API doesn't support setting descriptions for User commands
         # so it must be empty
-        self.description = ""
+        self.description: str = ""
         self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
@@ -646,7 +694,7 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: InteractionContext):
+    async def _invoke(self, ctx: InteractionContext) -> None:
         _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
             v["id"] = int(i)
@@ -661,6 +709,7 @@ class MessageCommand(ContextMenuCommand):
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
 
+
 def slash_command(**kwargs) -> SlashCommand:
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -670,6 +719,7 @@ def slash_command(**kwargs) -> SlashCommand:
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
+
 
 def user_command(**kwargs) -> UserCommand:
     """Decorator for user commands that invokes :func:`application_command`.
@@ -681,6 +731,7 @@ def user_command(**kwargs) -> UserCommand:
     """
     return application_command(cls=UserCommand, **kwargs)
 
+
 def message_command(**kwargs) -> MessageCommand:
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -690,6 +741,7 @@ def message_command(**kwargs) -> MessageCommand:
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
+
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -727,6 +779,7 @@ def application_command(cls=SlashCommand, **attrs):
 
     return decorator
 
+
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
     .. note::
@@ -739,8 +792,9 @@ def command(**kwargs):
     """
     return application_command(**kwargs)
 
+
 # Validation
-def validate_chat_input_name(name: Any):
+def validate_chat_input_name(name: Any) -> None:
     if not isinstance(name, str):
         raise TypeError("Name of a command must be a string.")
     if " " in name:
@@ -753,7 +807,7 @@ def validate_chat_input_name(name: Any):
         )
 
 
-def validate_chat_input_description(description: Any):
+def validate_chat_input_description(description: Any) -> None:
     if not isinstance(description, str):
         raise TypeError("Description of a command must be a string.")
     if len(description) > 100 or len(description) < 1:
