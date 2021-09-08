@@ -34,7 +34,7 @@ from ..enums import SlashCommandOptionType
 from ..member import Member
 from ..user import User
 from ..message import Message
-from .context import InteractionContext
+from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import DiscordException, NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -104,7 +104,7 @@ class ApplicationCommand(_BaseCommand):
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
-    async def prepare(self, ctx: InteractionContext) -> None:
+    async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
 
@@ -116,13 +116,13 @@ class ApplicationCommand(_BaseCommand):
         await self.call_before_hooks(ctx)
         pass
 
-    async def invoke(self, ctx: InteractionContext) -> None:
+    async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
 
         injected = hooked_wrapped_callback(self, ctx, self._invoke)
         await injected(ctx)
 
-    async def can_run(self, ctx: InteractionContext) -> bool:
+    async def can_run(self, ctx: ApplicationContext) -> bool:
 
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(f'The global check functions for command {self.name} failed.')
@@ -134,7 +134,7 @@ class ApplicationCommand(_BaseCommand):
 
         return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
     
-    async def dispatch_error(self, ctx: InteractionContext, error: Exception) -> None:
+    async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
         try:
@@ -233,7 +233,7 @@ class ApplicationCommand(_BaseCommand):
         self._after_invoke = coro
         return coro
 
-    async def call_before_hooks(self, ctx: InteractionContext) -> None:
+    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
         # now that we're done preparing we can call the pre-command hooks
         # first, call the command local hook:
         cog = self.cog
@@ -258,7 +258,7 @@ class ApplicationCommand(_BaseCommand):
         if hook is not None:
             await hook(ctx)
 
-    async def call_after_hooks(self, ctx: InteractionContext) -> None:
+    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
         cog = self.cog
         if self._after_invoke is not None:
             instance = getattr(self._after_invoke, '__self__', cog)
@@ -391,7 +391,7 @@ class SlashCommand(ApplicationCommand):
             and other.description == self.description
         )
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -570,7 +570,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
@@ -661,7 +661,7 @@ class UserCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         if "members" not in ctx.interaction.data["resolved"]:
             _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
@@ -736,7 +736,7 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: InteractionContext):
+    async def _invoke(self, ctx: ApplicationContext):
         _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
             v["id"] = int(i)

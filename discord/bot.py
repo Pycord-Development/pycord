@@ -40,7 +40,7 @@ from .app import (
     MessageCommand,
     UserCommand,
     ApplicationCommand,
-    InteractionContext,
+    ApplicationContext,
     command,
 )
 from .cog import CogMixin
@@ -323,7 +323,7 @@ class ApplicationCommandMixin:
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
-    ) -> InteractionContext:
+    ) -> ApplicationContext:
         r"""|coro|
 
         Returns the invocation context from the interaction.
@@ -337,18 +337,18 @@ class ApplicationCommandMixin:
             The interaction to get the invocation context from.
         cls
             The factory class that will be used to create the context.
-            By default, this is :class:`.InteractionContext`. Should a custom
+            By default, this is :class:`.ApplicationContext`. Should a custom
             class be provided, it must be similar enough to
-            :class:`.InteractionContext`\'s interface.
+            :class:`.ApplicationContext`\'s interface.
 
         Returns
         --------
-        :class:`.InteractionContext`
+        :class:`.ApplicationContext`
             The invocation context. Tye type of this can change via the
             ``cls`` parameter.
         """
         if cls is None:
-            cls = InteractionContext
+            cls = ApplicationContext
         return cls(self, interaction)
 
 
@@ -378,7 +378,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
 
-    async def on_application_command_error(self, context: InteractionContext, exception: DiscordException) -> None:
+    async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -492,7 +492,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.add_check(func, call_once=True)
         return func
 
-    async def can_run(self, ctx: InteractionContext, *, call_once: bool = False) -> bool:
+    async def can_run(self, ctx: ApplicationContext, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
 
         if len(data) == 0:

@@ -36,7 +36,7 @@ from ..utils import cached_property
 from ..context_managers import Typing
 
 
-class InteractionContext:
+class ApplicationContext:
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
@@ -102,7 +102,7 @@ class InteractionContext:
 
     @property
     def send(self):
-        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.InteractionContext.respond`"""
+        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.ApplicationContext.respond`"""
         return self.channel.send if self.response.is_done() else self.respond
 
     @property
@@ -114,8 +114,8 @@ class InteractionContext:
         return self.interaction.followup
 
     async def delete(self):
-        """Calls :attr:`~discord.app.InteractionContext.respond`.
-        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
+        """Calls :attr:`~discord.app.ApplicationContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.ApplicationContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
 
