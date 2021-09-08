@@ -661,7 +661,7 @@ class MessageCommand(ContextMenuCommand):
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
         await self.callback(ctx, target)
 
-def slash_command(**kwargs) -> SlashCommand:
+def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
@@ -671,7 +671,7 @@ def slash_command(**kwargs) -> SlashCommand:
     """
     return application_command(cls=SlashCommand, **kwargs)
 
-def user_command(**kwargs) -> UserCommand:
+def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
@@ -681,7 +681,7 @@ def user_command(**kwargs) -> UserCommand:
     """
     return application_command(cls=UserCommand, **kwargs)
 
-def message_command(**kwargs) -> MessageCommand:
+def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
