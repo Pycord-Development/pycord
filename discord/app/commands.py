@@ -41,6 +41,11 @@ from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInv
 
 if TYPE_CHECKING:
     from .context import InteractionContext
+    from ..types.application_command import SlashCommand as SlashCommandPayload
+    from ..types.application_command import SubCommandGroup as SubCommandGroupPayload
+    from ..types.application_command import Option as OptionPayload
+    from ..types.application_command import OptionChoice as OptionChoicePayload
+    from ..types.application_command import ContextMenuCommand as ContextMenuCommandPayload
 
 __all__ = (
     "ApplicationCommand",
@@ -74,7 +79,8 @@ def wrap_callback(coro):
         return ret
     return wrapped
 
-def hooked_wrapped_callback(command, ctx, coro):
+
+def hooked_wrapped_callback(command: 'ApplicationCommand', ctx: InteractionContext, coro):
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
@@ -384,7 +390,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_optional(self, annotation):
         return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> SlashCommandPayload:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -448,9 +454,7 @@ class Option:
     ) -> None:
         ...
 
-    def __init__(
-        self, input_type: Any, /, description: str = None, **kwargs
-    ) -> None:
+    def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description: str = description or "No description provided"
         if not isinstance(input_type, SlashCommandOptionType):
@@ -463,7 +467,7 @@ class Option:
         ]
         self.default: Optional[Any] = kwargs.pop("default", None)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> OptionPayload:
         return {
             "name": self.name,
             "description": self.description,
@@ -482,7 +486,7 @@ class OptionChoice:
         self.name = name
         self.value = value or name
 
-    def to_dict(self) -> Dict[str, Union[str, int, float]]:
+    def to_dict(self) -> OptionChoicePayload:
         return {"name": self.name, "value": self.value}
 
 
@@ -526,7 +530,7 @@ class SubCommandGroup(ApplicationCommand, Option):
         self._after_invoke = None
         self.cog = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> SubCommandGroupPayload:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -609,7 +613,7 @@ class ContextMenuCommand(ApplicationCommand):
         
         self.validate_parameters()
 
-    def validate_parameters(self):
+    def validate_parameters(self) -> None:
         params = iter(self._get_signature_parameters().items())
         if self.cog is not None:
             # we have 'self' as the first parameter so just advance
@@ -647,7 +651,7 @@ class ContextMenuCommand(ApplicationCommand):
         except StopIteration:
             pass
 
-    def to_dict(self) -> Dict[str, Union[str, int]]:
+    def to_dict(self) -> ContextMenuCommandPayload:
         return {"name": self.name, "description": self.description, "type": self.type}
 
 
@@ -780,8 +784,8 @@ def application_command(cls=SlashCommand, **attrs):
     return decorator
 
 
-def command(**kwargs):
-    """There is an alias for :meth:`application_command`.
+def command(**kwargs) -> Callable[..., ApplicationCommand]:
+    """Alias for :meth:`application_command`.
     .. note::
         This decorator is overriden by :func:`commands.command`.
     .. versionadded:: 2.0
