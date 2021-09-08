@@ -34,7 +34,7 @@ from ..enums import SlashCommandOptionType
 from ..member import Member
 from ..user import User
 from ..message import Message
-from .context import InteractionContext
+from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -48,20 +48,26 @@ if TYPE_CHECKING:
     from ..types.application_command import ContextMenuCommand as ContextMenuCommandPayload
 
 __all__ = (
-    'ApplicationCommand',
-    'SlashCommand',
-    'Option',
-    'OptionChoice',
-    'option',
-    'SubCommandGroup',
-    'ContextMenuCommand',
-    'UserCommand',
-    'MessageCommand',
-    'command',
-    'application_command',
-    'slash_command',
-    'user_command',
-    'message_command',
+    "_BaseCommand",
+    "ApplicationCommand",
+    "SlashCommand",
+    "Option",
+    "OptionChoice",
+    "option",
+    "slash_command",
+    "application_command",
+    "user_command",
+    "message_command",
+    "command",
+    "SlashCommandGroup",
+    "ContextMenuCommand",
+    "UserCommand",
+    "MessageCommand",
+    "command",
+    "application_command",
+    "slash_command",
+    "user_command",
+    "message_command",
 )
 
 A = TypeVar('A')
@@ -102,6 +108,15 @@ def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, 
     return wrapped
 
 
+class _BaseCommand:
+    __slots__ = ()
+
+class ApplicationCommand(_BaseCommand):
+    cog = None
+    
+    def __repr__(self):
+        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+
 class ApplicationCommand:
     type: int
     name: str
@@ -117,7 +132,7 @@ class ApplicationCommand:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__)
 
-    async def prepare(self, ctx: InteractionContext) -> None:
+    async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
 
@@ -149,7 +164,7 @@ class ApplicationCommand:
 
         return await async_all(predicate(ctx) for predicate in predicates)
     
-    async def dispatch_error(self, ctx: InteractionContext, error: Exception) -> None:
+    async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
         try:
@@ -251,7 +266,7 @@ class ApplicationCommand:
         self._after_invoke = coro
         return coro
 
-    async def call_before_hooks(self, ctx: InteractionContext) -> None:
+    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
         # now that we're done preparing we can call the pre-command hooks
         # first, call the command local hook:
         cog = self.cog
@@ -276,7 +291,7 @@ class ApplicationCommand:
         if hook is not None:
             await hook(ctx)
 
-    async def call_after_hooks(self, ctx: InteractionContext) -> None:
+    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
         cog = self.cog
         if self._after_invoke is not None:
             instance = getattr(self._after_invoke, '__self__', cog)
@@ -353,18 +368,14 @@ class SlashCommand(ApplicationCommand):
         self._after_invoke = None
 
     def parse_options(self, params) -> List[Option]:
-        params = iter(params.items())
         final_options = []
 
-        if self.cog is not None:
-            # we have 'self' as the first parameter so just advance
-            # the iterator and resume parsing
-            try:
-                next(params)
-            except StopIteration:
-                raise ClientException(
-                    f'Callback for {self.name} command is missing "self" parameter.'
-                )
+        params = self._get_signature_parameters()
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params.items())
 
         # next we have the 'ctx' as the next parameter
         try:
@@ -425,7 +436,7 @@ class SlashCommand(ApplicationCommand):
             and other.description == self.description
         )
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         # TODO: Parse the args better, apply custom converters etc.
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -452,7 +463,51 @@ class SlashCommand(ApplicationCommand):
         for o in self.options:
             if o.name not in kwargs:
                 kwargs[o.name] = o.default
-        await self.callback(ctx, **kwargs)
+        
+        if self.cog is not None:
+            await self.callback(self.cog, ctx, **kwargs)
+        else:
+            await self.callback(ctx, **kwargs)
+
+    def qualified_name(self):
+        return self.name
+
+    def copy(self):
+        """Creates a copy of this command.
+
+        Returns
+        --------
+        :class:`SlashCommand`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
 
 
 class Option:
@@ -518,7 +573,7 @@ def option(name, type, **kwargs):
 class SubCommandGroup(ApplicationCommand, Option):
     type: int = 1
 
-    def __new__(cls, *args, **kwargs) -> SubCommandGroup:
+    def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -529,7 +584,7 @@ class SubCommandGroup(ApplicationCommand, Option):
         name: str,
         description: str,
         guild_ids: Optional[List[int]] = None,
-        parent_group: Optional[SubCommandGroup] = None,
+        parent_group: Optional[SlashCommandGroup] = None,
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -573,16 +628,15 @@ class SubCommandGroup(ApplicationCommand, Option):
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
 
-        sub_command_group = SubCommandGroup(name, description, parent_group=self)
+        sub_command_group = SlashCommandGroup(name, description, parent_group=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke(ctx)
-
 
 class ContextMenuCommand(ApplicationCommand):
     type: int
@@ -633,16 +687,12 @@ class ContextMenuCommand(ApplicationCommand):
         self.validate_parameters()
 
     def validate_parameters(self) -> None:
-        params = iter(self._get_signature_parameters().items())
-        if self.cog is not None:
-            # we have 'self' as the first parameter so just advance
-            # the iterator and resume parsing
-            try:
-                next(params)
-            except StopIteration:
-                raise ClientException(
-                    f'Callback for {self.name} command is missing "self" parameter.'
-                )
+        params = self._get_signature_parameters()
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params)
 
         # next we have the 'ctx' as the next parameter
         try:
@@ -669,6 +719,9 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
+    
+    def qualified_name(self):
+        return self.name
 
     def to_dict(self) -> ContextMenuCommandPayload:
         return {"name": self.name, "description": self.description, "type": self.type}
@@ -683,7 +736,7 @@ class UserCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         if "members" not in ctx.interaction.data["resolved"]:
             _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
@@ -705,7 +758,48 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        await self.callback(ctx, target)
+        
+        if self.cog is not None:
+            await self.callback(self.cog, ctx, target)
+        else:
+            await self.callback(ctx, target)
+    
+    def copy(self):
+        """Creates a copy of this command.
+
+        Returns
+        --------
+        :class:`UserCommand`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
 
 
 class MessageCommand(ContextMenuCommand):
@@ -730,7 +824,116 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        await self.callback(ctx, target)
+        
+        if self.cog is not None:
+            await self.callback(self.cog, ctx, target)
+        else:
+            await self.callback(ctx, target)
+    
+    def copy(self):
+        """Creates a copy of this command.
+
+        Returns
+        --------
+        :class:`MessageCommand`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
+def slash_command(**kwargs) -> SlashCommand:
+    """Decorator for slash commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`SlashCommand`]
+        A decorator that converts the provided method into a :class:`.SlashCommand`.
+    """
+    return application_command(cls=SlashCommand, **kwargs)
+
+def user_command(**kwargs) -> UserCommand:
+    """Decorator for user commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`UserCommand`]
+        A decorator that converts the provided method into a :class:`.UserCommand`.
+    """
+    return application_command(cls=UserCommand, **kwargs)
+
+def message_command(**kwargs) -> MessageCommand:
+    """Decorator for message commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`MessageCommand`]
+        A decorator that converts the provided method into a :class:`.MessageCommand`.
+    """
+    return application_command(cls=MessageCommand, **kwargs)
+
+def application_command(cls=SlashCommand, **attrs):
+    """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
+    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
+    depends on the ``cls`` parameter.
+
+    By default the ``description`` attribute is received automatically from the
+    docstring of the function and is cleaned up with the use of
+    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
+    into :class:`str` using utf-8 encoding.
+
+    The ``name`` attribute also defaults to the function name unchanged.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    -----------
+    cls: :class:`.ApplicationCommand`
+        The class to construct with. By default this is :class:`.SlashCommand`.
+        You usually do not change this.
+    attrs
+        Keyword arguments to pass into the construction of the class denoted
+        by ``cls``.
+
+    Raises
+    -------
+    TypeError
+        If the function is not a coroutine or is already a command.
+    """
+
+    def decorator(func: Callable) -> cls:
+        if isinstance(func, ApplicationCommand):
+            func = func.callback
+        elif not callable(func):
+            raise TypeError(
+                "func needs to be a callable or a subclass of ApplicationCommand."
+            )
+
 
 
 def slash_command(**kwargs) -> SlashCommand:
@@ -797,7 +1000,6 @@ def application_command(cls=SlashCommand, **attrs):
             raise TypeError(
                 "func needs to be a callable or a subclass of ApplicationCommand."
             )
-
         return cls(func, **attrs)
 
     return decorator
