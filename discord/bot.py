@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
 import traceback
-from discord.app.errors import ApplicationCommandError, CheckFailure  
+from .app.errors import ApplicationCommandError, CheckFailure  
 
 from typing import Callable, Optional
 
@@ -36,16 +36,17 @@ from .shard import AutoShardedClient
 from .utils import get, async_all
 from .app import (
     SlashCommand,
-    SubCommandGroup,
+    SlashCommandGroup,
     MessageCommand,
     UserCommand,
     ApplicationCommand,
     InteractionContext,
-    command
+    command,
 )
+from .cog import CogMixin
+
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
-
 
 
 class ApplicationCommandMixin:
@@ -79,8 +80,8 @@ class ApplicationCommandMixin:
             The command to add.
         """
         
-        if self.debug_guild and command.guild_ids is None:
-            command.guild_ids = [self.debug_guild]
+        if self.debug_guilds and command.guild_ids is None:
+            command.guild_ids = self.debug_guilds
         self.to_register.append(command)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
@@ -309,9 +310,9 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name: str, description: str, guild_ids=None) -> SubCommandGroup:
+    def command_group(self, name: str, description: str, guild_ids=None) -> SlashCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
-        group = SubCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
 
@@ -346,13 +347,21 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
 
-class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
+class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO I think
     def __init__(self, *args, **kwargs):
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
         super().__init__(*args, **kwargs) 
         self.debug_guild = kwargs.pop("debug_guild", None)
+        self.debug_guilds = kwargs.pop("debug_guilds", None)
+
+        if self.debug_guild:
+            if self.debug_guilds is None:
+                self.debug_guilds = [self.debug_guild]
+            else:
+                raise TypeError('Both debug_guild and debug_guilds are set.')
+                         
         self._checks = []
         self._check_once = []
         self._before_invoke = None
@@ -561,7 +570,10 @@ class Bot(BotBase, Client):
         in favor of guild commands, which update instantly.
         .. note::
             The bot will not create any global commands if a debug_guild is passed.
-
+    debug_guilds: Optional[List[:class:`int`]]
+        Guild IDs of guilds to use for testing commands. This is similar to debug_guild. 
+        .. note::
+            You cannot set both debug_guild and debug_guilds.
     """
 
     pass
