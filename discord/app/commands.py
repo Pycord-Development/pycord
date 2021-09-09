@@ -320,7 +320,7 @@ class SlashCommand(ApplicationCommand, ABC):
     @overload
     def __init__(
             self,
-            func: Callable[[ApplicationContext, ...], Awaitable[...]],
+            func: Callable[[Optional[Any], ApplicationContext, ...], Awaitable[...]],
             *,
             name: Optional[str] = ...,
             description: Optional[str] = ...,
@@ -329,10 +329,15 @@ class SlashCommand(ApplicationCommand, ABC):
     ) -> None:
         ...
 
-    def __init__(self, func: Callable[[ApplicationContext, ...], Awaitable[...]], *args, **kwargs) -> None:
+    def __init__(
+            self,
+            func: Callable[[Optional[Any], ApplicationContext, ...], Awaitable[...]],
+            *args,
+            **kwargs
+    ) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError('Callback must be a coroutine.')
-        self.callback: Callable[[ApplicationContext, ...], Awaitable[...]] = func
+        self.callback: Callable[[Optional[Any], ApplicationContext, ...], Awaitable[...]] = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get('guild_ids', None)
 
@@ -518,7 +523,7 @@ class Option:
             *,
             name: str = ...,
             required: bool = ...,
-            choices: List[OptionChoice] = ...,
+            choices: List[Union[OptionChoice, str]] = ...,
             default: Any = ...,
     ) -> None:
         ...
@@ -613,10 +618,10 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
     def command(self, **kwargs) -> SlashCommand:
         def wrap(func) -> SlashCommand:
-            command = SlashCommand(func, **kwargs)
+            cmd = SlashCommand(func, **kwargs)
             command.is_subcommand = True
-            self.subcommands.append(command)
-            return command
+            self.subcommands.append(cmd)
+            return cmd
 
         return wrap
 
@@ -636,7 +641,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         await command.invoke(ctx)
 
 
-class ContextMenuCommand(ApplicationCommand):
+class ContextMenuCommand(ApplicationCommand, ABC):
     type: int
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -648,7 +653,7 @@ class ContextMenuCommand(ApplicationCommand):
     @overload
     def __init__(
             self,
-            func: Callable,
+            func: Callable[[Optional[Any], ApplicationContext, ...], Awaitable[...]],
             *,
             name: Optional[str] = ...,
             checks: Optional[List] = ...,
@@ -656,7 +661,12 @@ class ContextMenuCommand(ApplicationCommand):
     ) -> None:
         ...
 
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
+    def __init__(
+            self,
+            func: Callable[[Optional[Any], ApplicationContext, ...], Awaitable[...]],
+            *args,
+            **kwargs
+    ) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError('Callback must be a coroutine.')
         self.callback = func
