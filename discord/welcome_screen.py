@@ -140,6 +140,21 @@ class WelcomeScreen:
     def guild(self) -> Guild:
         """:class:`Guild`: The guild this welcome screen belongs to."""
         return self._guild
+    
+    
+    @overload
+    async def edit(
+        self,
+        *,
+        description: Optional[str] = ...,
+        welcome_channels: Optional[List[WelcomeChannel]] = ...,
+        enabled: Optional[bool] = ...,
+    ) -> None:
+        ...
+
+    @overload
+    async def edit(self) -> None:
+        ...
 
     async def edit(self, **options):
         """|coro|
@@ -184,11 +199,6 @@ class WelcomeScreen:
         NotFound
             This welcome screen does not exist.
         
-        Returns
-        --------
-        
-        :class:`WelcomeScreen`
-            The updated welcome screen.
         """
         
         welcome_channels = options.get('welcome_channels', [])
@@ -196,7 +206,7 @@ class WelcomeScreen:
        
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeScreenChannel.')
+                raise TypeError('welcome_channels parameter must be a list of WelcomeScreenChannel.')
                 
             welcome_channels_data.append(channel.to_dict())
             

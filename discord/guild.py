@@ -2969,6 +2969,22 @@ class Guild(Hashable):
         """
         data = await self._state.http.get_welcome_screen(self.id)
         return WelcomeScreen(data=data, guild=self)
+
+
+    @overload
+    async def edit_welcome_screen(
+        self,
+        *,
+        description: Optional[str] = ...,
+        welcome_channels: Optional[List[WelcomeChannel]] = ...,
+        enabled: Optional[bool] = ...,
+    ) -> WelcomeScreen:
+        ...
+
+    @overload
+    async def edit_welcome_screen(self) -> None:
+        ...        
+    
     
     async def edit_welcome_screen(self, **options):
         """|coro|
@@ -3012,7 +3028,7 @@ class Guild(Hashable):
        
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeScreenChannel.')
+                raise TypeError('welcome_channels parameter must be a list of WelcomeScreenChannel.')
                 
             welcome_channels_data.append(channel.to_dict())
             
