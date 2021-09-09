@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Union
 from .utils import _get_as_snowflake, get
+from .partial_emoji import _EmojiTag
 
 if TYPE_CHECKING:
     from .types.welcome_screen import (
@@ -73,7 +74,7 @@ class WelcomeScreenChannel:
             'emoji_name': None,
         }
 
-        if isinstance(self.emoji, (PartialEmoji, Emoji)):
+        if isinstance(self.emoji, _EmojiTag):
             # custom guild emoji
             dict_['emoji_id'] = self.emoji.id  # type: ignore
             dict_['emoji_name'] = self.emoji.name  # type: ignore
@@ -140,3 +141,62 @@ class WelcomeScreen:
         """:class:`Guild`: The guild this welcome screen belongs to."""
         return self._guild
 
+    async def edit(self, **options):
+        """|coro|
+        
+        Edits the welcome screen.
+        
+        You must have the :attr:`~Permissions.manage_guild` permission in the
+        guild to do this.
+        
+        Usage: ::
+            rules_channel = guild.get_channel(12345678)
+            announcements_channel = guild.get_channel(87654321)
+            custom_emoji = utils.get(guild.emojis, name='loudspeaker')
+            await welcome_screen.edit(
+                description='This is a very cool community server!',
+                welcome_channels=[
+                    WelcomeChannel(channel=rules_channel, description='Read the rules!', emoji='👨‍🏫'),
+                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!', emoji=custom_emoji),
+                ]
+            )
+        
+        .. note::
+            Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above.
+            
+        Parameters
+        ------------
+        
+        description: Optional[:class:`str`]
+            The new description of welcome screen.
+        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
+            The welcome channels. The order of the channels would be same as the passed list order.
+        enabled: Optional[:class:`bool`]
+            Whether the welcome screen should be displayed.
+        
+        Raises
+        -------
+        
+        HTTPException
+            Editing the welcome screen failed somehow.
+        Forbidden
+            You don't have permissions to edit the welcome screen.
+        NotFound
+            This welcome screen does not exist.
+        
+        """
+        
+        welcome_channels = options.get('welcome_channels', [])
+        welcome_channels_data = []
+       
+        for channel in welcome_channels:
+            if not isinstance(channel, WelcomeScreenChannel):
+                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeChannel.')
+                
+            welcome_channels_data.append(channel.to_dict())
+            
+        options['welcome_channels'] = welcome_channels_data
+
+        if options:
+            new = await self._guild._state.http.edit_welcome_screen(self._guild.id, options)
+            self._update(new)
