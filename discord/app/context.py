@@ -38,7 +38,7 @@ from ..user import User
 from ..utils import cached_property
 
 
-class InteractionContext(discord.abc.Messageable):
+class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
@@ -112,8 +112,8 @@ class InteractionContext(discord.abc.Messageable):
         return self.interaction.followup
 
     async def delete(self):
-        """Calls :attr:`~discord.app.InteractionContext.respond`.
-        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
+        """Calls :attr:`~discord.app.ApplicationContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.ApplicationContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
 

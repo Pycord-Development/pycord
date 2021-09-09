@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
 import traceback
-from discord.app.errors import ApplicationCommandError, CheckFailure  
+from .app.errors import ApplicationCommandError, CheckFailure  
 
 from typing import Callable, Optional
 
@@ -36,16 +36,17 @@ from .shard import AutoShardedClient
 from .utils import get, async_all
 from .app import (
     SlashCommand,
-    SubCommandGroup,
+    SlashCommandGroup,
     MessageCommand,
     UserCommand,
     ApplicationCommand,
-    InteractionContext,
-    command
+    ApplicationContext,
+    command,
 )
+from .cog import CogMixin
+
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
-
 
 
 class ApplicationCommandMixin:
@@ -54,16 +55,21 @@ class ApplicationCommandMixin:
 
     Attributes
     -----------
-    app_commands: :class:`dict`
+    application_commands: :class:`dict`
         A mapping of command id string to :class:`.ApplicationCommand` objects.
-    to_register: :class:`list`
-        A list of commands that have been added but not yet registered.
+    pending_application_commands: :class:`list`
+        A list of commands that have been added but not yet registered. This is read-only and is modified via other
+        methods.
     """
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.to_register = []
-        self.app_commands = {}
+        self._pending_application_commands = []
+        self.application_commands = {}
+
+    @property
+    def pending_application_commands(self):
+        return self._pending_application_commands
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
@@ -78,10 +84,10 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-        
-        if self.debug_guild and command.guild_ids is None:
-            command.guild_ids = [self.debug_guild]
-        self.to_register.append(command)
+
+        if self.debug_guilds and command.guild_ids is None:
+            command.guild_ids = self.debug_guilds
+        self._pending_application_commands.append(command)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
@@ -100,7 +106,7 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self.app_commands.pop(command.id)
+        return self.application_commands.pop(command.id)
 
     async def sync_commands(self) -> None:
         """|coro|
@@ -135,7 +141,7 @@ class ApplicationCommandMixin:
         commands = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
+        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is None]:
             as_dict = command.to_dict()
             if len(registered_commands) > 0:
                 matches = [
@@ -151,7 +157,7 @@ class ApplicationCommandMixin:
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
             update_guild_commands[guild.id] = []
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is not None]:
+        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is not None]:
             as_dict = command.to_dict()
             for guild_id in command.guild_ids:
                 to_update = update_guild_commands[guild_id]
@@ -169,21 +175,21 @@ class ApplicationCommandMixin:
                     raise
             else:
                 for i in cmds:
-                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
-                    self.app_commands[i["id"]] = cmd
+                    cmd = get(self.pending_application_commands, name=i["name"], description=i["description"], type=i['type'])
+                    self.application_commands[i["id"]] = cmd
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in cmds:
             cmd = get(
-                self.to_register,
+                self.pending_application_commands,
                 name=i["name"],
                 description=i["description"],
                 type=i["type"],
             )
-            self.app_commands[i["id"]] = cmd
+            self.application_commands[i["id"]] = cmd
 
-    async def handle_interaction(self, interaction: Interaction) -> None:
+    async def process_application_commands(self, interaction: Interaction) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -195,7 +201,7 @@ class ApplicationCommandMixin:
         you should invoke this coroutine as well.
 
         This function finds a registered command matching the interaction id from
-        :attr:`.ApplicationCommandMixin.app_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
+        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
         command was found, it replies to the interaction with a default message.
 
         .. versionadded:: 2.0
@@ -205,8 +211,11 @@ class ApplicationCommandMixin:
         interaction: :class:`discord.Interaction`
             The interaction to process
         """
+        if not interaction.is_command():
+            return
+
         try:
-            command = self.app_commands[interaction.data["id"]]
+            command = self.application_commands[interaction.data["id"]]
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
@@ -306,20 +315,20 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name: str, description: str, guild_ids=None) -> SubCommandGroup:
+    def command_group(self, name: str, description: str, guild_ids=None) -> SlashCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
-        group = SubCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
-    ) -> InteractionContext:
+    ) -> ApplicationContext:
         r"""|coro|
 
         Returns the invocation context from the interaction.
 
-        This is a more low-level counter-part for :meth:`.handle_interaction`
+        This is a more low-level counter-part for :meth:`.process_application_commands`
         to allow users more fine grained control over the processing.
 
         Parameters
@@ -328,28 +337,36 @@ class ApplicationCommandMixin:
             The interaction to get the invocation context from.
         cls
             The factory class that will be used to create the context.
-            By default, this is :class:`.InteractionContext`. Should a custom
+            By default, this is :class:`.ApplicationContext`. Should a custom
             class be provided, it must be similar enough to
-            :class:`.InteractionContext`\'s interface.
+            :class:`.ApplicationContext`\'s interface.
 
         Returns
         --------
-        :class:`.InteractionContext`
+        :class:`.ApplicationContext`
             The invocation context. Tye type of this can change via the
             ``cls`` parameter.
         """
         if cls is None:
-            cls = InteractionContext
+            cls = ApplicationContext
         return cls(self, interaction)
 
 
-class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
+class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO I think
     def __init__(self, *args, **kwargs):
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
-        super().__init__(*args, **kwargs) 
+        super().__init__(*args, **kwargs)
         self.debug_guild = kwargs.pop("debug_guild", None)
+        self.debug_guilds = kwargs.pop("debug_guilds", None)
+
+        if self.debug_guild:
+            if self.debug_guilds is None:
+                self.debug_guilds = [self.debug_guild]
+            else:
+                raise TypeError('Both debug_guild and debug_guilds are set.')
+
         self._checks = []
         self._check_once = []
         self._before_invoke = None
@@ -359,10 +376,9 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
         await self.register_commands()
 
     async def on_interaction(self, interaction):
-        await self.handle_interaction(interaction)
+        await self.process_application_commands(interaction)
 
-
-    async def on_application_command_error(self, context: InteractionContext, exception: DiscordException) -> None:
+    async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -476,7 +492,7 @@ class BotBase(ApplicationCommandMixin):  # To Insert: CogMixin
         self.add_check(func, call_once=True)
         return func
 
-    async def can_run(self, ctx: InteractionContext, *, call_once: bool = False) -> bool:
+    async def can_run(self, ctx: ApplicationContext, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
 
         if len(data) == 0:
@@ -554,11 +570,14 @@ class Bot(BotBase, Client):
     Attributes
     -----------
     debug_guild: Optional[:class:`int`]
-        Guild ID of a guild to use for testing commands. Prevents setting global commands 
+        Guild ID of a guild to use for testing commands. Prevents setting global commands
         in favor of guild commands, which update instantly.
         .. note::
             The bot will not create any global commands if a debug_guild is passed.
-
+    debug_guilds: Optional[List[:class:`int`]]
+        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
+        .. note::
+            You cannot set both debug_guild and debug_guilds.
     """
 
     pass
