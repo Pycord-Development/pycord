@@ -6,6 +6,7 @@ from discord.interactions import Interaction
 from discord.utils import MISSING
 from discord.ui.button import button
 from discord.app import InteractionContext
+from discord.ext.commands import Context
 
 
 class Paginate(discord.ui.View):
@@ -22,7 +23,7 @@ class Paginate(discord.ui.View):
 
     """
 
-    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled = True):
+    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled = True, author_check = True):
         super().__init__()
         self.pages = pages
         self.current_page = 1
@@ -30,13 +31,21 @@ class Paginate(discord.ui.View):
         self.show_disabled = show_disabled
         self.forbutton = self.children[1]
         self.prevbutton= self.children[0]
+        self.usercheck = author_check
+        self.user = None
         if not self.show_disabled:
             self.remove_item(self.children[0])
             if self.page_count == 1:
                 self.remove_item(self.children[1])
 
+    async def interaction_check(self, interaction):
+        if self.usercheck:
+            return self.user == interaction.user
+        return True
+
     @discord.ui.button(label = "<", style = discord.ButtonStyle.green, disabled=True)
     async def previous(self, button: discord.ui.Button, interaction = discord.Interaction):
+
         self.current_page -= 1
 
         if self.current_page == 1:
@@ -56,6 +65,7 @@ class Paginate(discord.ui.View):
 
     @discord.ui.button(label = '>', style=discord.ButtonStyle.green)
     async def forward(self, button: discord.ui.Button, interaction = discord.Interaction): 
+
         self.current_page += 1
 
         if self.current_page == self.page_count:
@@ -95,7 +105,12 @@ class Paginate(discord.ui.View):
 
         if not isinstance(messageable, (abc.Messageable, InteractionContext)):
             raise TypeError("messageable is not a messageable object")
+
         page = self.pages[0]
+
+        if isinstance(messageable, (InteractionContext, Context)):
+            self.user = messageable.author
+
         if isinstance(messageable, discord.app.context.InteractionContext):
             message = await messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING , view = self, ephemeral = ephemeral)
         else:
