@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, List, Union, overload
 from .utils import _get_as_snowflake, get
 from .partial_emoji import _EmojiTag
 
@@ -184,6 +184,11 @@ class WelcomeScreen:
         NotFound
             This welcome screen does not exist.
         
+        Returns
+        --------
+        
+        :class:`WelcomeScreen`
+            The updated welcome screen.
         """
         
         welcome_channels = options.get('welcome_channels', [])
@@ -200,3 +205,5 @@ class WelcomeScreen:
         if options:
             new = await self._guild._state.http.edit_welcome_screen(self._guild.id, options)
             self._update(new)
+        
+        return self

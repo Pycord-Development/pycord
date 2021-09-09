@@ -3000,6 +3000,11 @@ class Guild(Hashable):
         NotFound
             This welcome screen does not exist.
         
+        Returns
+        --------
+        
+        :class:`WelcomeScreen`
+            The edited welcome screen.
         """
         
         welcome_channels = options.get('welcome_channels', [])
