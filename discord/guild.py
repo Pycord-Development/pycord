@@ -76,7 +76,7 @@ from .stage_instance import StageInstance
 from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
 from .file import File
-from .welcome_screen import WelcomeScreen
+from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 
 
 __all__ = (
@@ -2969,4 +2969,51 @@ class Guild(Hashable):
         """
         data = await self._state.http.get_welcome_screen(self.id)
         return WelcomeScreen(data=data, guild=self)
+    
+    async def edit_welcome_screen(self, **options):
+        """|coro|
+        
+        A shorthand for :attr:`WelcomeScreen.edit` without fetching the welcome screen.
+        
+        You must have the :attr:`~Permissions.manage_guild` permission in the
+        guild to do this.
+        
+        The guild must have ``COMMUNITY`` in :attr:`Guild.features`
+        
+        Parameters
+        ------------
+        
+        description: Optional[:class:`str`]
+            The new description of welcome screen.
+        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
+            The welcome channels. The order of the channels would be same as the passed list order.
+        enabled: Optional[:class:`bool`]
+            Whether the welcome screen should be displayed.
+        
+        Raises
+        -------
+        
+        HTTPException
+            Editing the welcome screen failed somehow.
+        Forbidden
+            You don't have permissions to edit the welcome screen.
+        NotFound
+            This welcome screen does not exist.
+        
+        """
+        
+        welcome_channels = options.get('welcome_channels', [])
+        welcome_channels_data = []
+       
+        for channel in welcome_channels:
+            if not isinstance(channel, WelcomeScreenChannel):
+                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeScreenChannel.')
+                
+            welcome_channels_data.append(channel.to_dict())
+            
+        options['welcome_channels'] = welcome_channels_data
+
+        if options:
+            new = await self._state.http.edit_welcome_screen(self.id, options)
+            return WelcomeScreen(data=new, guild=self)
         
