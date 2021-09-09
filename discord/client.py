@@ -460,6 +460,8 @@ class Client:
 
         Raises
         ------
+        TypeError
+            The token was in invalid type.
         :exc:`.LoginFailure`
             The wrong credentials are passed.
         :exc:`.HTTPException`
@@ -467,6 +469,8 @@ class Client:
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
         """
+        if not isinstance(token, str):
+            raise TypeError(f"token must be of type str, not {token.__class__.__name__}")
 
         _log.info('logging in using static token')
 

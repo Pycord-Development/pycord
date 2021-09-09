@@ -1490,6 +1490,22 @@ class HTTPClient:
     ) -> Response[None]:
         r = Route('DELETE', '/channels/{channel_id}/permissions/{target}', channel_id=channel_id, target=target)
         return self.request(r, reason=reason)
+    
+    # Welcome Screen
+    
+    def get_welcome_screen(self, guild_id: Snowflake) -> Response[welcome_screen.WelcomeScreen]:
+        return self.request(Route('GET', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id))
+
+    def edit_welcome_screen(self, guild_id: Snowflake, payload: Any) -> Response[welcome_screen.WelcomeScreen]:
+        keys = (
+            'description',
+            'welcome_channels',
+            'enabled',
+        )
+        payload = {
+            key: val for key, val in payload.items() if key in keys
+        }
+        return self.request(Route('PATCH', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id), json=payload)
 
     # Voice management
 

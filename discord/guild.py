@@ -76,6 +76,7 @@ from .stage_instance import StageInstance
 from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
 from .file import File
+from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 
 
 __all__ = (
@@ -2942,3 +2943,101 @@ class Guild(Hashable):
         ws = self._state._get_websocket(self.id)
         channel_id = channel.id if channel else None
         await ws.voice_state(self.id, channel_id, self_mute, self_deaf)
+
+    async def welcome_screen(self):
+        """|coro|
+        
+        Returns the :class:`WelcomeScreen` of the guild.
+       
+        The guild must have ``COMMUNITY`` in :attr:`~Guild.features`.
+       
+        You must have the :attr:`~Permissions.manage_guild` permission in order to get this.
+        
+        .. versionadded:: 2.0
+
+        Raises
+        -------
+        Forbidden
+            You do not have the proper permissions to get this.
+        HTTPException
+            Retrieving the welcome screen failed somehow.
+        NotFound
+            The guild doesn't has a welcome screen or community feature is disabled.
+        
+        
+        Returns
+        --------
+        :class:`WelcomeScreen`
+            The welcome screen of guild.
+        """
+        data = await self._state.http.get_welcome_screen(self.id)
+        return WelcomeScreen(data=data, guild=self)
+
+
+    @overload
+    async def edit_welcome_screen(
+        self,
+        *,
+        description: Optional[str] = ...,
+        welcome_channels: Optional[List[WelcomeChannel]] = ...,
+        enabled: Optional[bool] = ...,
+    ) -> WelcomeScreen:
+        ...
+
+    @overload
+    async def edit_welcome_screen(self) -> None:
+        ...        
+    
+    
+    async def edit_welcome_screen(self, **options):
+        """|coro|
+        
+        A shorthand for :attr:`WelcomeScreen.edit` without fetching the welcome screen.
+        
+        You must have the :attr:`~Permissions.manage_guild` permission in the
+        guild to do this.
+        
+        The guild must have ``COMMUNITY`` in :attr:`Guild.features`
+        
+        Parameters
+        ------------
+        
+        description: Optional[:class:`str`]
+            The new description of welcome screen.
+        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
+            The welcome channels. The order of the channels would be same as the passed list order.
+        enabled: Optional[:class:`bool`]
+            Whether the welcome screen should be displayed.
+        
+        Raises
+        -------
+        
+        HTTPException
+            Editing the welcome screen failed somehow.
+        Forbidden
+            You don't have permissions to edit the welcome screen.
+        NotFound
+            This welcome screen does not exist.
+        
+        Returns
+        --------
+        
+        :class:`WelcomeScreen`
+            The edited welcome screen.
+        """
+        
+        welcome_channels = options.get('welcome_channels', [])
+        welcome_channels_data = []
+       
+        for channel in welcome_channels:
+            if not isinstance(channel, WelcomeScreenChannel):
+                raise TypeError('welcome_channels parameter must be a list of WelcomeScreenChannel.')
+                
+            welcome_channels_data.append(channel.to_dict())
+            
+        options['welcome_channels'] = welcome_channels_data
+
+        if options:
+            new = await self._state.http.edit_welcome_screen(self.id, options)
+            return WelcomeScreen(data=new, guild=self)
+        
