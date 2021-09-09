@@ -42,7 +42,7 @@ from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInv
 
 if TYPE_CHECKING:
     from .. import Cog
-    from .context import InteractionContext
+    from .context import ApplicationContext
     from ..types.application_command import SlashCommand as SlashCommandPayload
     from ..types.application_command import SlashCommandGroup as SlashCommandGroupPayload
     from ..types.application_command import Option as OptionPayload
@@ -92,7 +92,7 @@ def wrap_callback(coro: Callable[[...], Awaitable[R]]) -> R:
     return wrapped
 
 
-def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: InteractionContext, coro: Callable[[A], Awaitable[R]]) -> R:
+def hooked_wrapped_callback(cmd: 'ApplicationCommand', ctx: ApplicationContext, coro: Callable[[A], Awaitable[R]]) -> R:
 
     @functools.wraps(coro)
     async def wrapped(arg: A) -> R:
@@ -119,9 +119,9 @@ class ApplicationCommand(_BaseCommand):
     name: str
     checks: List
     cog: Optional[Cog] = None
-    _before_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
-    _after_invoke: Optional[Callable[[InteractionContext], Awaitable[...]]]
-    on_error: Callable[[Optional[Any], InteractionContext, Exception], Awaitable[...]]
+    _before_invoke: Optional[Callable[[ApplicationContext], Awaitable[...]]]
+    _after_invoke: Optional[Callable[[ApplicationContext], Awaitable[...]]]
+    on_error: Callable[[Optional[Any], ApplicationContext, Exception], Awaitable[...]]
 
     def __repr__(self) -> str:
         return f'<discord.app.commands.{self.__class__.__name__} name={self.name}>'
@@ -141,16 +141,16 @@ class ApplicationCommand(_BaseCommand):
         await self.call_before_hooks(ctx)
         pass
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         raise NotImplementedError
 
-    async def invoke(self, ctx: InteractionContext) -> None:
+    async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
 
         injected = hooked_wrapped_callback(self, ctx, self._invoke)
         await injected(ctx)
 
-    async def can_run(self, ctx: InteractionContext) -> bool:
+    async def can_run(self, ctx: ApplicationContext) -> bool:
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(f'The global check functions for command {self.name} failed.')
 
@@ -184,13 +184,13 @@ class ApplicationCommand(_BaseCommand):
         finally:
             ctx.bot.dispatch('application_command_error', ctx, error)
 
-    async def callback(self, ctx: InteractionContext, *args, **kwargs) -> None:
+    async def callback(self, ctx: ApplicationContext, *args, **kwargs) -> None:
         raise NotImplementedError
 
     def _get_signature_parameters(self) -> OrderedDict:  # TODO: Maybe better specify return type
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    def error(self, coro: Callable[[Optional[Cog], InteractionContext, Exception], Awaitable[...]]):
+    def error(self, coro: Callable[[Optional[Cog], ApplicationContext, Exception], Awaitable[...]]):
         """A decorator that registers a coroutine as a local error handler.
 
         A local error handler is an :func:`.on_command_error` event limited to
@@ -219,7 +219,7 @@ class ApplicationCommand(_BaseCommand):
         """
         return hasattr(self, 'on_error')
 
-    def before_invoke(self, coro: Optional[Callable[[InteractionContext], Awaitable[...]]]):
+    def before_invoke(self, coro: Optional[Callable[[ApplicationContext], Awaitable[...]]]):
         """A decorator that registers a coroutine as a pre-invoke hook.
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
@@ -241,7 +241,7 @@ class ApplicationCommand(_BaseCommand):
         self._before_invoke = coro
         return coro
 
-    def after_invoke(self, coro: Optional[Callable[[InteractionContext], Awaitable[...]]]):
+    def after_invoke(self, coro: Optional[Callable[[ApplicationContext], Awaitable[...]]]):
         """A decorator that registers a coroutine as a post-invoke hook.
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
@@ -320,7 +320,7 @@ class SlashCommand(ApplicationCommand, ABC):
     @overload
     def __init__(
             self,
-            func: Callable[[InteractionContext, ...], Awaitable[...]],
+            func: Callable[[ApplicationContext, ...], Awaitable[...]],
             *,
             name: Optional[str] = ...,
             description: Optional[str] = ...,
@@ -329,10 +329,10 @@ class SlashCommand(ApplicationCommand, ABC):
     ) -> None:
         ...
 
-    def __init__(self, func: Callable[[InteractionContext, ...], Awaitable[...]], *args, **kwargs) -> None:
+    def __init__(self, func: Callable[[ApplicationContext, ...], Awaitable[...]], *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError('Callback must be a coroutine.')
-        self.callback: Callable[[InteractionContext, ...], Awaitable[...]] = func
+        self.callback: Callable[[ApplicationContext, ...], Awaitable[...]] = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get('guild_ids', None)
 
@@ -809,7 +809,7 @@ class MessageCommand(ContextMenuCommand, ABC):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: InteractionContext) -> None:
+    async def _invoke(self, ctx: ApplicationContext) -> None:
         _data = ctx.interaction.data['resolved']['messages']
         for i, v in _data.items():
             v['id'] = int(i)

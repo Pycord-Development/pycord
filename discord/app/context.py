@@ -115,8 +115,8 @@ class ApplicationContext:
         return self.interaction.followup
 
     async def delete(self) -> None:
-        """Calls :attr:`~discord.app.InteractionContext.respond`.
-        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
+        """Calls :attr:`~discord.app.ApplicationContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.ApplicationContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
 
