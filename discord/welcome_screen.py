@@ -191,7 +191,7 @@ class WelcomeScreen:
        
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeChannel.')
+                raise InvalidArgument('welcome_channels parameter must be a list of WelcomeScreenChannel.')
                 
             welcome_channels_data.append(channel.to_dict())
             
