@@ -325,5 +325,13 @@ class Colour:
         """
         return cls(0xFEE75C)
 
+    @classmethod
+    def nitro_pink(cls: Type[CT]) -> CT:
+        """A factory method that returns a :class:`Colour` with a value of ``0xf47fff``.
+
+        .. versionadded:: 2.0
+        """
+        return cls(0xf47fff)
+
 
 Color = Colour

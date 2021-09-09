@@ -402,7 +402,7 @@ class View:
                 item = _component_to_item(component)
                 if not item.is_dispatchable():
                     continue
-                children.append(component)
+                children.append(item)
             else:
                 older.refresh_component(component)
                 children.append(older)

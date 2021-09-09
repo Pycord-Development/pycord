@@ -45,7 +45,7 @@ import datetime
 
 import discord.abc
 from .permissions import PermissionOverwrite, Permissions
-from .enums import ChannelType, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
+from .enums import ChannelType, InviteTarget, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
 from .mixins import Hashable
 from .object import Object
 from . import utils
@@ -55,6 +55,7 @@ from .errors import ClientException, InvalidArgument
 from .stage_instance import StageInstance
 from .threads import Thread
 from .iterators import ArchivedThreadIterator
+from .invite import Invite
 
 __all__ = (
     'TextChannel',
@@ -1037,6 +1038,64 @@ class VoiceChannel(VocalGuildChannel):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
+    async def create_activity_invite(self, event:str, **kwargs) -> Invite:
+        """|coro|
+
+        A shortcut method that creates an instant activity invite.
+
+        You must have the :attr:`~discord.Permissions.create_instant_invite` permission to
+        do this.
+
+        Parameters
+        ------------
+        event: :class:`str`
+            The event to create an invite for. 
+        max_age: :class:`int`
+            How long the invite should last in seconds. If it's 0 then the invite
+            doesn't expire. Defaults to ``0``.
+        max_uses: :class:`int`
+            How many uses the invite could be used for. If it's 0 then there
+            are unlimited uses. Defaults to ``0``.
+        temporary: :class:`bool`
+            Denotes that the invite grants temporary membership
+            (i.e. they get kicked after they disconnect). Defaults to ``False``.
+        unique: :class:`bool`
+            Indicates if a unique invite URL should be created. Defaults to True.
+            If this is set to ``False`` then it will return a previously created
+            invite.
+        reason: Optional[:class:`str`]
+            The reason for creating this invite. Shows up on the audit log.
+
+
+        Raises
+        -------
+        InvalidArgument
+            If the event is not a valid event.
+        ~discord.HTTPException
+            Invite creation failed.
+
+        Returns
+        --------
+        :class:`~discord.Invite`
+            The invite that was created.
+        """
+
+        application_ids = {
+            'youtube' : 755600276941176913,
+            'poker'   : 755827207812677713,
+            'betrayal': 773336526917861400,
+            'fishing' : 814288819477020702,
+            'chess'   : 832012774040141894,
+        }
+        event = application_ids.get(event)
+        if event is None:
+            raise InvalidArgument('Invalid event.')
+
+        return await self.create_invite(
+            target_type=InviteTarget.embedded_application,
+            target_application_id=event,
+            **kwargs
+        )
 
 class StageChannel(VocalGuildChannel):
     """Represents a Discord guild stage channel.
