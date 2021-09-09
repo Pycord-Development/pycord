@@ -61,6 +61,9 @@ class WelcomeScreenChannel:
         self.channel = channel
         self.description = description
         self.emoji = emoji
+     
+    def __repr__(self):
+        return f'WelcomeScreenChannel(channel={self.channel} description={self.description})'
 
     def to_dict(self) -> WelcomeScreenChannelPayload:
         dict_: WelcomeScreenChannelPayload = {
@@ -86,9 +89,9 @@ class WelcomeScreenChannel:
     def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeChannel:
         channel_id = _get_as_snowflake(data, 'channel_id')
         channel = guild.get_channel(channel_id)
-        description = data['description']
+        description = data.get('description')
         _emoji_id = _get_as_snowflake(data, 'emoji_id')
-        _emoji_name = data['emoji_name']
+        _emoji_name = data.get('emoji_name')
 
         if _emoji_id:
             # custom guild emoji
@@ -114,15 +117,17 @@ class WelcomeScreen:
     welcome_channels: List[:class:`WelcomeScreenChannel`]
         A list of channels displayed on welcome screen.
     """
-    __slots__ = ('description', 'welcome_channels')
-
+    
     def __init__(self, data: WelcomeScreenPayload, guild: Guild):
         self._guild = guild
         self._update(data)
     
+    def __repr__(self):
+        return f'<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}'
+    
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get('description')
-        self.welcome_channels: List[WelcomeScreenChannel] = [WelcomeScreenChannel._from_dict(channel) for channel in data.get('welcome_channels', [])]
+        self.welcome_channels: List[WelcomeScreenChannel] = [WelcomeScreenChannel._from_dict(channel, self._guild) for channel in data.get('welcome_channels', [])]
     
 
     @property
