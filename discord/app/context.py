@@ -24,8 +24,11 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TYPE_CHECKING, Optional, Union
 
+import discord.abc
+
 if TYPE_CHECKING:
     import discord
+    from discord.state import ConnectionState
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -33,10 +36,9 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
-from ..context_managers import Typing
 
 
-class InteractionContext:
+class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
@@ -58,6 +60,10 @@ class InteractionContext:
         self.bot = bot
         self.interaction = interaction
         self.command = None
+        self._state: ConnectionState = self.interaction._state
+
+    async def _get_channel(self) -> discord.abc.Messageable:
+        return self.channel
 
     @cached_property
     def channel(self):
@@ -87,9 +93,6 @@ class InteractionContext:
     def voice_client(self):
         return self.guild.voice_client
 
-    def typing(self):
-        return Typing(self.channel)
-
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
@@ -98,12 +101,7 @@ class InteractionContext:
 
     @property
     def respond(self):
-        return self.interaction.response.send_message
-
-    @property
-    def send(self):
-        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.InteractionContext.respond`"""
-        return self.channel.send if self.response.is_done() else self.respond
+        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
 
     @property
     def defer(self):
@@ -114,8 +112,8 @@ class InteractionContext:
         return self.interaction.followup
 
     async def delete(self):
-        """Calls :attr:`~discord.app.InteractionContext.respond`.
-        If the response is done, then calls :attr:`~discord.app.InteractionContext.respond` first."""
+        """Calls :attr:`~discord.app.ApplicationContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.ApplicationContext.respond` first."""
         if not self.response.is_done():
             await self.defer()
 

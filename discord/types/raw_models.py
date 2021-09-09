@@ -85,3 +85,10 @@ class _IntegrationDeleteEventOptional(TypedDict, total=False):
 class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
     id: Snowflake
     guild_id: Snowflake
+
+class ThreadDeleteEvent(TypedDict, total=False):
+    thread_id: Snowflake
+    thread_type: int
+    guild_id: Snowflake
+    parent_id: Snowflake
+

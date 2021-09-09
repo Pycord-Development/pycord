@@ -2,24 +2,28 @@ import discord
 
 bot = discord.Bot()
 
-# If you use commands.Bot, @bot.slash_command should be used for
-# slash commands. You can use @bot.slash_command with discord.Bot aswell
+
+# Note: If you want you can use commands.Bot instead of discord.Bot
+# Use discord.Bot if you don't want prefixed message commands
+
+# With discord.Bot you can use @bot.command as an alias 
+# of @bot.slash_command but this is overriden by commands.Bot
 
 
-@bot.command(guild_ids=[...])  # create a slash command for the supplied guilds
+@bot.slash_command(guild_ids=[...])  # create a slash command for the supplied guilds
 async def hello(ctx):
     """Say hello to the bot"""  # the command description can be supplied as the docstring
     await ctx.send(f"Hello {ctx.author}!")
 
 
-@bot.command(
+@bot.slash_command(
     name="hi"
 )  # Not passing in guild_ids creates a global slash command (might take an hour to register)
 async def global_command(ctx, num: int):  # Takes one integer parameter
     await ctx.send(f"This is a global command, {num}!")
 
 
-@bot.command(guild_ids=[...])
+@bot.slash_command(guild_ids=[...])
 async def joined(
     ctx, member: discord.Member = None
 ):  # Passing a default value makes the argument optional
