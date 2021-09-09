@@ -61,7 +61,7 @@ import sys
 import types
 import warnings
 
-from .errors import InvalidArgument, NotFound
+from .errors import InvalidArgument, HTTPException
 
 try:
     import orjson
@@ -454,7 +454,7 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None):
     if getter is None:
         try:
             getter = await getattr(obj, f'fetch_{attr}')(id)
-        except NotFound:
+        except HTTPException:
             return default
     return getter
 
