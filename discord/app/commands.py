@@ -405,13 +405,13 @@ class SlashCommand(ApplicationCommand):
                 <= SlashCommandOptionType.role.value
             ):
                 name = "member" if op.input_type.name == "user" else op.input_type.name
-                arg = await get_or_fetch(ctx.guild, name, int(arg))
+                arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
-                try:
-                    arg = await get_or_fetch(ctx.guild, "member", int(arg))
-                except NotFound:
-                    arg = await get_or_fetch(ctx.guild, "role", int(arg))
+                arg_id = int(arg)
+                arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                if arg is None:
+                    arg = ctx.guild.get_role(arg_id) or arg_id
 
             kwargs[op.name] = arg
 
