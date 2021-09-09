@@ -501,9 +501,11 @@ class OptionChoice:
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
 
-def option(name, type, **kwargs):
+def option(name, type=None, **kwargs):
     """A decorator that can be used instead of typehinting Option"""
     def decor(func):
+        nonlocal type
+        type = type or func.__annotations__.get(name, str)
         func.__annotations__[name] = Option(type, **kwargs)
         return func
     return decor
