@@ -110,3 +110,4 @@ Links
 - `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
 - `Discord Developers <https://discord.gg/discord-developers>`_
 - `Discord API <https://discord.gg/discord-api>`_
+- `Discord Developer Portal https://discord.com/developers/applications`_
