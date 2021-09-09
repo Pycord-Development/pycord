@@ -61,7 +61,7 @@ from .components import *
 from .threads import *
 from .bot import *
 from .app import *
-
+from .cog import Cog
 
 class VersionInfo(NamedTuple):
     major: int

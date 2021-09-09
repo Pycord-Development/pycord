@@ -22,64 +22,87 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
     import discord
 
-from ..interactions import Interaction
+from ..guild import Guild
+from ..interactions import Interaction, InteractionResponse
+from ..member import Member
+from ..message import Message
+from ..user import User
 from ..utils import cached_property
+from ..context_managers import Typing
 
 
-class InteractionContext:
+class ApplicationContext:
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
     commands as the first parameter.
 
     .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    bot: :class:`.Bot`
+        The bot that the command belongs to.
+    interaction: :class:`.Interaction`
+        The interaction object that invoked the command.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
     """
 
     def __init__(self, bot: "discord.Bot", interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+        self.command = None
 
     @cached_property
     def channel(self):
         return self.interaction.channel
 
     @cached_property
-    def channel_id(self):
+    def channel_id(self) -> Optional[int]:
         return self.interaction.channel_id
 
     @cached_property
-    def guild(self):
+    def guild(self) -> Optional[Guild]:
         return self.interaction.guild
 
     @cached_property
-    def guild_id(self):
+    def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
 
     @cached_property
-    def message(self):
+    def message(self) -> Optional[Message]:
         return self.interaction.message
 
     @cached_property
-    def user(self):
+    def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
+    @property
+    def voice_client(self):
+        return self.guild.voice_client
+
+    def typing(self):
+        return Typing(self.channel)
+
     @cached_property
-    def response(self):
+    def response(self) -> InteractionResponse:
         return self.interaction.response
 
     author = user
 
     @property
     def respond(self):
-        return self.interaction.response.send_message
+        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
 
     @property
     def send(self):
+        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.ApplicationContext.respond`"""
         return self.channel.send if self.response.is_done() else self.respond
 
     @property
@@ -89,3 +112,15 @@ class InteractionContext:
     @property
     def followup(self):
         return self.interaction.followup
+
+    async def delete(self):
+        """Calls :attr:`~discord.app.ApplicationContext.respond`.
+        If the response is done, then calls :attr:`~discord.app.ApplicationContext.respond` first."""
+        if not self.response.is_done():
+            await self.defer()
+
+        return await self.interaction.delete_original_message()
+
+    @property
+    def edit(self):
+        return self.interaction.edit_original_message
