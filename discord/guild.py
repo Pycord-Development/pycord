@@ -2961,6 +2961,9 @@ class Guild(Hashable):
             You do not have the proper permissions to get this.
         HTTPException
             Retrieving the welcome screen failed somehow.
+        NotFound
+            The guild doesn't has a welcome screen or community feature is disabled.
+        
         
         Returns
         --------
