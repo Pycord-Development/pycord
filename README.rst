@@ -97,7 +97,7 @@ Normal Commands Example
 
     @bot.command()
     async def ping(ctx):
-        await ctx.send("pong")
+        await ctx.send(f'Pong! In {round(bot.latency * 1000)}ms')
 
     bot.run("token")
 
