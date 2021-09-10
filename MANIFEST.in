@@ -1,4 +1,5 @@
 include README.rst
+include README.ja.rst
 include LICENSE
 include requirements.txt
 include discord/bin/*.dll
