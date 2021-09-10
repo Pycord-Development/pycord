@@ -24,12 +24,17 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TYPE_CHECKING, Optional, Union, Callable
 
+import discord.abc
+
+if TYPE_CHECKING:
+    import discord
+    from discord.state import ConnectionState
+
 from ..guild import Guild
 from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
-from ..context_managers import Typing
 
 if TYPE_CHECKING:
     import discord
@@ -37,7 +42,7 @@ if TYPE_CHECKING:
     from .. import VoiceProtocol, Webhook
 
 
-class ApplicationContext:
+class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord interaction context.
 
     This class is not created manually and is instead passed to application
@@ -59,6 +64,10 @@ class ApplicationContext:
         self.bot: 'discord.Bot' = bot
         self.interaction: Interaction = interaction
         self.command = None
+        self._state: ConnectionState = self.interaction._state
+
+    async def _get_channel(self) -> discord.abc.Messageable:
+        return self.channel
 
     @cached_property
     def channel(self) -> Optional[InteractionChannel]:
@@ -88,9 +97,6 @@ class ApplicationContext:
     def voice_client(self) -> Optional[VoiceProtocol]:
         return self.guild.voice_client
 
-    def typing(self) -> Typing:
-        return Typing(self.channel)
-
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
@@ -100,11 +106,6 @@ class ApplicationContext:
     @property
     def respond(self):
         return self.followup.send if self.response.is_done() else self.interaction.response.send_message
-
-    @property
-    def send(self):
-        """Behaves like :attr:`~discord.abc.Messagable.send` if the response is done, else behaves like :attr:`~discord.app.ApplicationContext.respond`"""
-        return self.channel.send if self.response.is_done() else self.respond
 
     @property
     def defer(self):

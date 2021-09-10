@@ -62,6 +62,7 @@ __all__ = (
     'GuildChannel',
     'Messageable',
     'Connectable',
+    'Mentionable'
 )
 
 T = TypeVar('T', bound=VoiceProtocol)
@@ -1141,6 +1142,7 @@ class Messageable:
     - :class:`~discord.Member`
     - :class:`~discord.ext.commands.Context`
     - :class:`~discord.Thread`
+    - :class:`~discord.ApplicationContext`
     """
 
     __slots__ = ()

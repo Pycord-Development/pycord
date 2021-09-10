@@ -289,7 +289,9 @@ class InteractionResponded(ClientException):
 
 class ExtensionError(DiscordException):
     """Base exception for extension related errors.
+    
     This inherits from :exc:`~discord.DiscordException`.
+
     Attributes
     ------------
     name: :class:`str`
@@ -304,6 +306,7 @@ class ExtensionError(DiscordException):
 
 class ExtensionAlreadyLoaded(ExtensionError):
     """An exception raised when an extension has already been loaded.
+
     This inherits from :exc:`ExtensionError`
     """
     def __init__(self, name: str) -> None:
@@ -311,6 +314,7 @@ class ExtensionAlreadyLoaded(ExtensionError):
 
 class ExtensionNotLoaded(ExtensionError):
     """An exception raised when an extension was not loaded.
+
     This inherits from :exc:`ExtensionError`
     """
     def __init__(self, name: str) -> None:
@@ -318,6 +322,7 @@ class ExtensionNotLoaded(ExtensionError):
 
 class NoEntryPointError(ExtensionError):
     """An exception raised when an extension does not have a ``setup`` entry point function.
+
     This inherits from :exc:`ExtensionError`
     """
     def __init__(self, name: str) -> None:
@@ -325,7 +330,9 @@ class NoEntryPointError(ExtensionError):
 
 class ExtensionFailed(ExtensionError):
     """An exception raised when an extension failed to load during execution of the module or ``setup`` entry point.
+
     This inherits from :exc:`ExtensionError`
+
     Attributes
     -----------
     name: :class:`str`
@@ -341,14 +348,17 @@ class ExtensionFailed(ExtensionError):
 
 class ExtensionNotFound(ExtensionError):
     """An exception raised when an extension is not found.
+
     This inherits from :exc:`ExtensionError`
+
     .. versionchanged:: 1.3
         Made the ``original`` attribute always None.
+
     Attributes
     -----------
     name: :class:`str`
         The extension that had the error.
     """
     def __init__(self, name: str) -> None:
-        msg = f'Extension {name!r} could not be loaded.'
+        msg = f'Extension {name!r} could not be found.'
         super().__init__(msg, name=name)

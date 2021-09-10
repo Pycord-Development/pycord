@@ -451,14 +451,14 @@ class SlashCommand(ApplicationCommand, ABC):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = 'member' if op.input_type.name == 'user' else op.input_type.name
-                arg = await get_or_fetch(ctx.guild, name, int(arg))
+                name = "member" if op.input_type.name == "user" else op.input_type.name
+                arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
-                try:
-                    arg = await get_or_fetch(ctx.guild, 'member', int(arg))
-                except NotFound:
-                    arg = await get_or_fetch(ctx.guild, 'role', int(arg))
+                arg_id = int(arg)
+                arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                if arg is None:
+                    arg = ctx.guild.get_role(arg_id) or arg_id
 
             kwargs[op.name] = arg
 
@@ -564,9 +564,11 @@ class OptionChoice:
         return {'name': self.name, 'value': self.value}
 
 
-def option(name, type, **kwargs):
+def option(name, type=None, **kwargs):
     """A decorator that can be used instead of typehinting Option"""
     def decor(func):
+        nonlocal type
+        type = type or func.__annotations__.get(name, str)
         func.__annotations__[name] = Option(type, **kwargs)
         return func
     return decor
