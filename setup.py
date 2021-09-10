@@ -55,7 +55,7 @@ packages = [
     'discord.ext.tasks',
 ]
 
-setup(name='pycord',
+setup(name='py-cord',
       author='Pycord Development',
       url='https://github.com/Pycord-Development/pycord',
       project_urls={
