@@ -80,6 +80,9 @@ class SlashCommand(ApplicationCommand):
 
         params = OrderedDict(inspect.signature(self.callback).parameters)
         self.options = self.parse_options(params)
+    
+    def __call__(self, ctx, *args, **kwargs):
+        return self.callback(ctx, *args, **kwargs)
 
     def parse_options(self, params: OrderedDict) -> List[Option]:
         final_options = []
@@ -286,6 +289,9 @@ class UserCommand(ApplicationCommand):
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
         return {"name": self.name, "description": self.description, "type": self.type}
+    
+    def __call__(self, ctx, member):
+        return self.callback(ctx, member)
 
     async def invoke(self, ctx: InteractionContext) -> None:
         if "members" not in ctx.interaction.data["resolved"]:
@@ -335,6 +341,9 @@ class MessageCommand(ApplicationCommand):
 
     def to_dict(self):
         return {"name": self.name, "description": self.description, "type": self.type}
+    
+    def __call__(self, ctx, message):
+        return self.callback(ctx, message)
 
     async def invoke(self, ctx: InteractionContext):
         _data = ctx.interaction.data["resolved"]["messages"]
