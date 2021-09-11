@@ -1496,7 +1496,7 @@ class HTTPClient:
     def get_welcome_screen(self, guild_id: Snowflake) -> Response[welcome_screen.WelcomeScreen]:
         return self.request(Route('GET', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id))
 
-    def edit_welcome_screen(self, guild_id: Snowflake, payload: Any) -> Response[welcome_screen.WelcomeScreen]:
+    def edit_welcome_screen(self, guild_id: Snowflake, payload: Any, *, reason: Optional[str] = None) -> Response[welcome_screen.WelcomeScreen]:
         keys = (
             'description',
             'welcome_channels',
@@ -1505,7 +1505,7 @@ class HTTPClient:
         payload = {
             key: val for key, val in payload.items() if key in keys
         }
-        return self.request(Route('PATCH', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id), json=payload)
+        return self.request(Route('PATCH', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id), json=payload, reason=reason)
 
     # Voice management
 
