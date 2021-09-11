@@ -104,6 +104,16 @@ class ApplicationCommand(_BaseCommand):
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
+    async def __call__(self, ctx, *args, **kwargs):
+        """|coro|
+        Calls the command's callback.
+
+        This method bypasses all checks that a command has and does not
+        convert the arguments beforehand, so take care to pass the correct
+        arguments in.
+        """
+        return await self.callback(ctx, *args, **kwargs)
+
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
