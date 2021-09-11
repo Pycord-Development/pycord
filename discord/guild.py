@@ -3008,7 +3008,9 @@ class Guild(Hashable):
             The welcome channels. The order of the channels would be same as the passed list order.
         enabled: Optional[:class:`bool`]
             Whether the welcome screen should be displayed.
-        
+        reason: Optional[:class:`str`]
+            The reason that shows up on audit log.
+
         Raises
         -------
         
