@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from asyncio.tasks import ensure_future
 from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
 import asyncio
 
@@ -552,8 +553,10 @@ class InteractionResponse:
 
         self._responded = True
         if delete_after != None:
-            await asyncio.sleep(delete_after)
-            await self._parent.delete_original_message()
+            async def delete():
+                await asyncio.sleep(delete_after)
+                await self._parent.delete_original_message()
+            asyncio.ensure_future(delete(), loop=self._parent._state.loop)
 
 
     async def edit_message(
