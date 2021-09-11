@@ -110,4 +110,4 @@ examplesディレクトリに更に多くのサンプルがあります。
 - `ドキュメント <https://pycord.readthedocs.io/en/latest/index.html>`_
 - `公式Discordサーバー <https://discord.gg/dK2qkEJ37N>`_
 - `Discord API <https://discord.gg/discord-api>`_
-- `Discord 開発者ポータル https://discord.com/developers/applications`_
+- `Discord 開発者ポータル <https://discord.com/developers/applications>`_
