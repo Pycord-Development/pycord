@@ -3038,6 +3038,6 @@ class Guild(Hashable):
         options['welcome_channels'] = welcome_channels_data
 
         if options:
-            new = await self._state.http.edit_welcome_screen(self.id, options)
+            new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
         
