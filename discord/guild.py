@@ -3008,7 +3008,9 @@ class Guild(Hashable):
             The welcome channels. The order of the channels would be same as the passed list order.
         enabled: Optional[:class:`bool`]
             Whether the welcome screen should be displayed.
-        
+        reason: Optional[:class:`str`]
+            The reason that shows up on audit log.
+
         Raises
         -------
         
@@ -3038,6 +3040,6 @@ class Guild(Hashable):
         options['welcome_channels'] = welcome_channels_data
 
         if options:
-            new = await self._state.http.edit_welcome_screen(self.id, options)
+            new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
         
