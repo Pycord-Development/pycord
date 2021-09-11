@@ -551,7 +551,7 @@ class InteractionResponse:
             self._parent._state.store_view(view)
 
         self._responded = True
-        if delete_after != None:
+        if delete_after is not None:
             await asyncio.sleep(delete_after)
             await self._parent.delete_original_message()
 
