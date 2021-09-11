@@ -384,6 +384,7 @@ class InteractionResponse:
         An interaction can only be responded to once.
         """
         return self._responded
+        
 
     async def defer(self, *, ephemeral: bool = False) -> None:
         """|coro|
@@ -460,7 +461,8 @@ class InteractionResponse:
         view: View = MISSING,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None
+        allowed_mentions: AllowedMentions = None,
+        delete_after: float = None
     ) -> None:
         """|coro|
 
@@ -487,6 +489,9 @@ class InteractionResponse:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
             
         Raises
         -------
@@ -546,6 +551,10 @@ class InteractionResponse:
             self._parent._state.store_view(view)
 
         self._responded = True
+        if delete_after != None:
+            await asyncio.sleep(delete_after)
+            await self._parent.delete_original_message()
+
 
     async def edit_message(
         self,
