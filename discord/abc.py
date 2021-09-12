@@ -1549,7 +1549,7 @@ class Messageable:
             else:
                 permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
         except KeyError:
-            raise InvalidArgument('The object is of an invalid type.')
+            raise TypeError('The object is of an invalid type.')
 
         return getattr(channel.permissions_for(channel.guild.me), permission)
 
