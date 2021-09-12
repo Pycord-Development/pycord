@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
 import traceback
-from .app.errors import ApplicationCommandError, CheckFailure  
+from .app.errors import CheckFailure  
 
-from typing import Callable, Optional
+from typing import Optional
 
 import sys
 
@@ -43,7 +43,6 @@ from .app import (
     ApplicationContext,
     command,
 )
-from .cog import CogMixin
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
@@ -84,8 +83,8 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-
-        if self.debug_guilds and command.guild_ids is None:
+        debug_guild = getattr(self, 'debug_guilds', None)
+        if debug_guild and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
 
@@ -352,7 +351,7 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
 
-class BotBase(ApplicationCommandMixin, CogMixin):
+class BotBase(ApplicationCommandMixin):
     # TODO I think
     def __init__(self, *args, **kwargs):
         # super(Client, self).__init__(*args, **kwargs)

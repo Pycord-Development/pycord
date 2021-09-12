@@ -61,7 +61,7 @@ import sys
 import types
 import warnings
 
-from .errors import InvalidArgument, HTTPException
+from .errors import InvalidArgument
 
 try:
     import orjson
@@ -448,14 +448,11 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None):
+async def get_or_fetch(obj, attr: str, id: int):
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
-        try:
-            getter = await getattr(obj, f'fetch_{attr}')(id)
-        except HTTPException:
-            return default
+        getter = await getattr(obj, f'fetch_{attr}')(id)
     return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
