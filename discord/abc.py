@@ -1564,7 +1564,7 @@ class Messageable:
                     if obj.guild_id == channel.guild.id:
                         continue
 
-            except KeyError:
+            except (KeyError, AttributeError):
                 raise TypeError(f'The object {obj} is of an invalid type.')
 
             if not getattr(channel.permissions_for(channel.guild.me), permission):
