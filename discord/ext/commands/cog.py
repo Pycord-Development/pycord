@@ -479,6 +479,9 @@ class Cog(metaclass=CogMeta):
             for _, method_name in self.__cog_listeners__:
                 bot.remove_listener(getattr(self, method_name))
 
+            for application in self.__cog_applications__:
+                bot.remove_application_command(application)
+
             if cls.bot_check is not Cog.bot_check:
                 bot.remove_check(self.bot_check)
 
