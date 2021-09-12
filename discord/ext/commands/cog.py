@@ -117,6 +117,7 @@ class CogMeta(type):
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
     __cog_commands__: List[Command]
+    __cog_applications__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
@@ -130,6 +131,7 @@ class CogMeta(type):
         attrs['__cog_description__'] = description
 
         commands = {}
+        applications = {}
         listeners = {}
         no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
 
@@ -144,6 +146,12 @@ class CogMeta(type):
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
                     value = value.__func__
+                if isinstance(value, ApplicationCommand):
+                    if is_static_method:
+                        raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
+                    if elem.startswith(('cog_', 'bot_')):
+                        raise TypeError(no_bot_cog.format(base, elem))
+                    applications[elem] = value
                 if isinstance(value, _BaseCommand):
                     if is_static_method:
                         raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
@@ -161,6 +169,7 @@ class CogMeta(type):
                         listeners[elem] = value
 
         new_cls.__cog_commands__ = list(commands.values()) # this will be copied in Cog.__new__
+        new_cls.__cog_applications__ = list(applications.values()) # this will be copied in Cog.__new__
 
         listeners_as_list = []
         for listener in listeners.values():
@@ -196,6 +205,7 @@ class Cog(metaclass=CogMeta):
     __cog_name__: ClassVar[str]
     __cog_settings__: ClassVar[Dict[str, Any]]
     __cog_commands__: ClassVar[List[Command]]
+    __cog_applications__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
@@ -208,6 +218,7 @@ class Cog(metaclass=CogMeta):
         # Either update the command with the cog provided defaults or copy it.
         # r.e type ignore, type-checker complains about overriding a ClassVar
         self.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in cls.__cog_commands__)  # type: ignore
+        self.__cog_applications__ = tuple(c._update_copy(cmd_attrs) for c in cls.__cog_applications__)  # type: ignore
 
         lookup = {
             cmd.qualified_name: cmd
@@ -225,6 +236,11 @@ class Cog(metaclass=CogMeta):
                 # Update our parent's reference to our self
                 parent.remove_command(command.name)  # type: ignore
                 parent.add_command(command)  # type: ignore
+
+        # Inject the cog/self into the application.
+        # Workaround since it would broke apart if it's not injected.
+        for application in self.__cog_applications__:
+            application._inject_cog(self)
 
         return self
 
@@ -256,12 +272,12 @@ class Cog(metaclass=CogMeta):
     def description(self, description: str) -> None:
         self.__cog_description__ = description
 
-    def walk_commands(self) -> Generator[Command, None, None]:
+    def walk_commands(self) -> Generator[Union[Command, Application], None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        Union[:class:`.Command`, :class:`.Group`, :class:`.Application`]
             A command/application or group from the cog.
         """
         from .core import GroupMixin
@@ -270,6 +286,8 @@ class Cog(metaclass=CogMeta):
                 yield command
                 if isinstance(command, GroupMixin):
                     yield from command.walk_commands()
+        for application in self.__cog_applications__:
+            yield application
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.
@@ -442,6 +460,8 @@ class Cog(metaclass=CogMeta):
                         if to_undo.parent is None:
                             bot.remove_command(to_undo.name)
                     raise e
+        for application in self.__cog_applications__:
+            bot.add_application_command(application)
 
         # check if we're overriding the default
         if cls.bot_check is not Cog.bot_check:
