@@ -1530,9 +1530,8 @@ class Messageable:
         data = await state.http.pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
     
-    def can_send(self, obj=None) -> bool:
-        """Returns a :class:`bool` indicating whether you have the permissions to send the object."""
-
+    def can_send(self, *objects) -> bool:
+        """Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."""
         mapping = {
             'Message': 'send_messages',
             'Embed': 'embed_links',
@@ -1546,15 +1545,22 @@ class Messageable:
         else:
             return True # Permissions don't exist for User DMs
 
-        try:
-            if obj is None:
-                permission = mapping['Message']
-            else:
-                permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
-        except KeyError:
-            raise TypeError('The object is of an invalid type.')
+        
+        objects = (None, ) + objects # Makes sure we check for send_messages first
 
-        return getattr(channel.permissions_for(channel.guild.me), permission)
+        for obj in objects:
+            try:
+                if obj is None:
+                    permission = mapping['Message']
+                else:
+                    permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
+            except KeyError:
+                raise TypeError('The object is of an invalid type.')
+
+            if not getattr(channel.permissions_for(channel.guild.me), permission):
+                return False
+
+        return True 
 
     def history(
         self,
