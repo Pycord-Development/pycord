@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
 from ..errors import DiscordException
 
 __all__ = (
-    "ApplicationCommandError",
-    "CheckFailure",
-    "ApplicationCommandInvokeError",
+    'ApplicationCommandError',
+    'ApplicationCheckFailure',
+    'ApplicationCommandInvokeError',
 )
 
 class ApplicationCommandError(DiscordException):
@@ -41,7 +41,7 @@ class ApplicationCommandError(DiscordException):
     """
     pass
 
-class CheckFailure(ApplicationCommandError):
+class ApplicationCheckFailure(ApplicationCommandError):
     """Exception raised when the predicates in :attr:`.Command.checks` have failed.
 
     This inherits from :exc:`ApplicationCommandError`

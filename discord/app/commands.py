@@ -28,8 +28,20 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import (TYPE_CHECKING, Any, Callable, ClassVar, Dict, List,
-                    Optional, Protocol, Type, TypeVar, Union, overload)
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Protocol,
+    Type,
+    TypeVar,
+    Union,
+    overload
+)
 
 from ..enums import SlashCommandOptionType
 from ..errors import ClientException, ValidationError
@@ -39,8 +51,7 @@ from ..user import User
 from ..utils import MISSING, async_all, find, get_or_fetch
 from ..ext.commands._types import _BaseCommand
 from .context import ApplicationContext
-from .errors import (ApplicationCommandError, ApplicationCommandInvokeError,
-                     CheckFailure)
+from .errors import ApplicationCommandError, ApplicationCommandInvokeError, ApplicationCheckFailure
 
 if TYPE_CHECKING:
     from ..ext.commands import Cog
@@ -157,7 +168,7 @@ class ApplicationCommand(_BaseCommand):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(f'The check functions for the command {self.name} failed')
+            raise ApplicationCheckFailure(f'The check functions for the command {self.name} failed')
 
         # TODO: Add cooldown
 
@@ -177,7 +188,7 @@ class ApplicationCommand(_BaseCommand):
     async def can_run(self, ctx: ApplicationContext) -> bool:
 
         if not await ctx.bot.can_run(ctx):
-            raise CheckFailure(f'The global check functions for command {self.name} failed.')
+            raise ApplicationCheckFailure(f'The global check functions for command {self.name} failed.')
 
         predicates = self.checks
         if not predicates:
