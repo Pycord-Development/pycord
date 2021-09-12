@@ -26,7 +26,7 @@ from __future__ import annotations # will probably need in future for type hinti
 import asyncio
 import traceback
 
-from typing import Optional
+from typing import Dict, List, Optional
 
 import sys
 
@@ -63,8 +63,8 @@ class ApplicationCommandMixin:
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._pending_application_commands = []
-        self.application_commands = {}
+        self._pending_application_commands: List[ApplicationCommand] = []
+        self.application_commands: Dict[str, ApplicationCommand] = {}
 
     @property
     def pending_application_commands(self):
@@ -186,6 +186,7 @@ class ApplicationCommandMixin:
                 description=i["description"],
                 type=i["type"],
             )
+            cmd._set_id(i["id"])
             self.application_commands[i["id"]] = cmd
 
     async def process_application_commands(self, interaction: Interaction) -> None:

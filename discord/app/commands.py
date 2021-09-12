@@ -150,7 +150,7 @@ class ApplicationCommand(_BaseApplication):
     def _inject_cog(self, cog: CogT):
         self.cog = cog
 
-    def _inject_id(self, id: int):
+    def _set_id(self, id: str):
         self._id = id
 
     @property
