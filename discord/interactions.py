@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from asyncio.tasks import ensure_future
 from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
 import asyncio
 
