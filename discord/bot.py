@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations # will probably need in future for type hinting
 import asyncio
 import traceback
-from .app.errors import CheckFailure  
 
 from typing import Optional
 
@@ -43,6 +42,7 @@ from .app import (
     ApplicationContext,
     command,
 )
+from .app.errors import ApplicationCheckFailure
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
@@ -225,7 +225,7 @@ class ApplicationCommandMixin:
                 if await self.can_run(ctx, call_once=True):
                     await ctx.command.invoke(ctx)
                 else:
-                    raise CheckFailure('The global check once functions failed.')
+                    raise ApplicationCheckFailure('The global check once functions failed.')
             except DiscordException as exc:
                 await ctx.command.dispatch_error(ctx, exc)
             else:
