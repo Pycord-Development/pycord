@@ -1529,6 +1529,29 @@ class Messageable:
         state = self._state
         data = await state.http.pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
+    
+    async def can_send(self, obj=None) -> bool:
+        """|coro|
+        
+        Returns a :class:`bool` indicating whether you the permissions to send the object.
+        """
+
+        mapping = {
+            'Message': 'send_messages',
+            'Embed': 'embed_links',
+            'File': 'attach_files'
+        }
+        channel = await self._get_channel()
+
+        try:
+            if obj is None:
+                permission = mapping['Message']
+            else:
+                permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
+        except KeyError:
+            raise InvalidArgument('The object is of an invalid type.')
+
+        return getattr(channel.permissions_for(channel.guild.me), permission)
 
     def history(
         self,
