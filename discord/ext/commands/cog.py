@@ -235,19 +235,21 @@ class Cog(metaclass=CogMeta):
 
         return self
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self) -> List[Union[Command, ApplicationCommand]]:
         r"""
         Returns
         --------
-        List[:class:`.Command`]
-            A :class:`list` of :class:`.Command`\s that are
-            defined inside this cog.
+        List[Union[:class:`.Command`, :class:`.ApplicationCommand`]]
+            A :class:`list` of :class:`.Command` and :class:`.ApplicationCommand`
+            that are defined inside this cog.
 
             .. note::
 
                 This does not include subcommands.
         """
-        return [c for c in self.__cog_commands__ if c.parent is None]
+        available_commands = [c for c in self.__cog_commands__ if c.parent is None]
+        available_commands.extend(self.__cog_applications__)
+        return available_commands
 
     @property
     def qualified_name(self) -> str:
