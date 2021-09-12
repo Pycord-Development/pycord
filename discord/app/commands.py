@@ -158,6 +158,24 @@ class ApplicationCommand(_BaseApplication):
         """:class:`Optional[str]`: The application ID."""
         return getattr(self, '_id', None)
 
+    async def __call__(self, ctx: ApplicationContext, *args: Any, **kwargs: Any):
+        """|coro|
+        Calls the command's callback.
+
+        This method bypasses all checks that a command has and does not
+        convert the arguments beforehand, so take care to pass the correct
+        arguments in.
+
+        Parameters
+        ----------
+        ctx: :class:`~pycord.app.context.ApplicationContext`
+            The context of the command.
+        """
+        if self.cog is not None:
+            return await self.callback(self.cog, ctx, *args, **kwargs)
+        else:
+            return await self.callback(ctx, *args, **kwargs)
+
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
