@@ -29,7 +29,7 @@ import discord.utils
 from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Union
 
 from ._types import _BaseCommand
-from ...app import ApplicationCommand, MessageCommand, SlashCommand, UserCommand
+from ...app import ApplicationCommand
 
 if TYPE_CHECKING:
     from .bot import BotBase
@@ -45,15 +45,6 @@ CogT = TypeVar('CogT', bound='Cog')
 FuncT = TypeVar('FuncT', bound=Callable[..., Any])
 
 MISSING: Any = discord.utils.MISSING
-Application = TypeVar(
-    'Application',
-    bound=Union[
-        ApplicationCommand,
-        SlashCommand,
-        MessageCommand,
-        UserCommand
-    ]
-)
 
 class CogMeta(type):
     """A metaclass for defining a cog.
@@ -272,13 +263,13 @@ class Cog(metaclass=CogMeta):
     def description(self, description: str) -> None:
         self.__cog_description__ = description
 
-    def walk_commands(self) -> Generator[Union[Command, Application], None, None]:
+    def walk_commands(self) -> Generator[Command, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`, :class:`.Application`]
-            A command/application or group from the cog.
+        Union[:class:`.Command`, :class:`.Group`]
+            A command or group from the cog.
         """
         from .core import GroupMixin
         for command in self.__cog_commands__:
@@ -286,8 +277,6 @@ class Cog(metaclass=CogMeta):
                 yield command
                 if isinstance(command, GroupMixin):
                     yield from command.walk_commands()
-        for application in self.__cog_applications__:
-            yield application
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.
