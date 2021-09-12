@@ -1535,7 +1535,9 @@ class Messageable:
         mapping = {
             'Message': 'send_messages',
             'Embed': 'embed_links',
-            'File': 'attach_files'
+            'File': 'attach_files',
+            'Emoji': 'use_external_emojis',
+            'GuildSticker': 'use_external_stickers',
         }
         # Can't use channel = await self._get_channel() since its async
         if hasattr(self, 'permissions_for'):
@@ -1554,8 +1556,16 @@ class Messageable:
                     permission = mapping['Message']
                 else:
                     permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
+                
+                if type(obj).__name__ == 'Emoji':
+                    if obj._to_partial().is_unicode_emoji or obj.guild_id == channel.guild.id:
+                        continue
+                elif type(obj).__name__ == 'GuildSticker':
+                    if obj.guild_id == channel.guild.id:
+                        continue
+
             except KeyError:
-                raise TypeError('The object is of an invalid type.')
+                raise TypeError(f'The object {obj} is of an invalid type.')
 
             if not getattr(channel.permissions_for(channel.guild.me), permission):
                 return False
