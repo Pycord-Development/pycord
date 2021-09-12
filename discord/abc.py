@@ -1533,7 +1533,7 @@ class Messageable:
     async def can_send(self, obj=None) -> bool:
         """|coro|
         
-        Returns a :class:`bool` indicating whether you the permissions to send the object.
+        Returns a :class:`bool` indicating whether you have the permissions to send the object.
         """
 
         mapping = {
