@@ -28,16 +28,25 @@ import asyncio
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import (TYPE_CHECKING, Any, Callable, ClassVar, Dict, List,
+                    Optional, Protocol, Type, TypeVar, Union, overload)
 
 from ..enums import SlashCommandOptionType
+from ..errors import ClientException, ValidationError
 from ..member import Member
-from ..user import User
 from ..message import Message
+from ..user import User
+from ..utils import MISSING, async_all, find, get_or_fetch
+from ..ext.commands._types import _BaseCommand
 from .context import ApplicationContext
-from ..utils import find, get_or_fetch, async_all
-from ..errors import DiscordException, NotFound, ValidationError, ClientException
-from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from .errors import (ApplicationCommandError, ApplicationCommandInvokeError,
+                     CheckFailure)
+
+if TYPE_CHECKING:
+    from ..ext.commands import Cog
+
+
+CogT = TypeVar('CogT', bound='Cog')
 
 __all__ = (
     "_BaseCommand",
@@ -46,21 +55,24 @@ __all__ = (
     "Option",
     "OptionChoice",
     "option",
-    "slash_command",
-    "application_command",
-    "user_command",
-    "message_command",
-    "command",
     "SlashCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
-    "command",
     "application_command",
     "slash_command",
     "user_command",
     "message_command",
+    "command",
 )
+
+PredicateCallback = Callable[[ApplicationContext], Optional[bool]]
+
+class ApplicationCallback(Protocol):
+    """A callback that can be used by an :class:`ApplicationCommand`."""
+
+    def __call__(self, ctx: ApplicationContext, *args: Any, **kwargs: Dict[str, Any]) -> Any:
+        ...
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -78,9 +90,9 @@ def wrap_callback(coro):
 
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
-    async def wrapped(arg):
+    async def wrapped(*args, **kwargs):
         try:
-            ret = await coro(arg)
+            ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
             raise
         except asyncio.CancelledError:
@@ -92,27 +104,53 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
 
-class _BaseCommand:
-    __slots__ = ()
+# Validation
+def validate_chat_input_name(name: Any):
+    if not isinstance(name, str):
+        raise TypeError("Name of a command must be a string.")
+    if " " in name:
+        raise ValidationError("Name of a chat input command cannot have spaces.")
+    if not name.islower():
+        raise ValidationError("Name of a chat input command must be lowercase.")
+    if len(name) > 32 or len(name) < 1:
+        raise ValidationError(
+            "Name of a chat input command must be less than 32 characters and non empty."
+        )
+
+
+def validate_chat_input_description(description: Any):
+    if not isinstance(description, str):
+        raise TypeError("Description of a command must be a string.")
+    if len(description) > 100 or len(description) < 1:
+        raise ValidationError(
+            "Description of a chat input command must be less than 100 characters and non empty."
+        )
 
 class ApplicationCommand(_BaseCommand):
-    cog = None
-    
+    cog: CogT = None
+    name: str
+    args: List[Any]
+    kwargs: Dict[str, Any]
+    _before_invoke: ClassVar[PredicateCallback]
+    _after_invoke: ClassVar[PredicateCallback]
+    checks: ClassVar[List[PredicateCallback]]
+    __original_kwargs__: ClassVar[Dict[Any, Any]]
+    callback: ClassVar[ApplicationCallback]
+
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
-    async def __call__(self, ctx, *args, **kwargs):
-        """|coro|
-        Calls the command's callback.
-
-        This method bypasses all checks that a command has and does not
-        convert the arguments beforehand, so take care to pass the correct
-        arguments in.
+    @property
+    def qualified_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified application name.
         """
-        return await self.callback(ctx, *args, **kwargs)
+        return self.name
+
+    def _inject_cog(self, cog: CogT):
+        self.cog = cog
 
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
@@ -123,14 +161,18 @@ class ApplicationCommand(_BaseCommand):
 
         # TODO: Add cooldown
 
+        await self._parse_arguments(ctx)
         await self.call_before_hooks(ctx)
-        pass
+
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        """Base _parse_arguments function to be called, please implement in child Class"""
+        raise NotImplementedError
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
 
-        injected = hooked_wrapped_callback(self, ctx, self._invoke)
-        await injected(ctx)
+        injected = hooked_wrapped_callback(self, ctx, self.callback)
+        await injected(*self.args, **self.kwargs)
 
     async def can_run(self, ctx: ApplicationContext) -> bool:
 
@@ -143,7 +185,7 @@ class ApplicationCommand(_BaseCommand):
             return True
 
         return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
-    
+
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
@@ -287,6 +329,43 @@ class ApplicationCommand(_BaseCommand):
         if hook is not None:
             await hook(ctx)
 
+    def copy(self):
+        """Creates a copy of this command.
+
+        Returns
+        --------
+        :class:`MessageCommand`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other: "ApplicationCommand"):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        #if self._buckets.valid and not other._buckets.valid:
+        #    other._buckets = self._buckets.copy()
+        #if self._max_concurrency != other._max_concurrency:
+        #    # _max_concurrency won't be None at this point
+        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
 class SlashCommand(ApplicationCommand):
     type = 1
 
@@ -330,7 +409,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        
 
     def parse_options(self, params) -> List[Option]:
         final_options = []
@@ -401,78 +479,33 @@ class SlashCommand(ApplicationCommand):
             and other.description == self.description
         )
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better, apply custom converters etc.
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        args = [ctx] if self.cog is None else [self.cog, ctx]
         kwargs = {}
+
         for arg in ctx.interaction.data.get("options", []):
-            op = find(lambda x: x.name == arg["name"], self.options)
+            op = find(lambda o: o.name == arg["name"], self.options)
             arg = arg["value"]
 
-            # Checks if input_type is user, role or channel
             if (
                 SlashCommandOptionType.user.value
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = "member" if op.input_type.name == "user" else op.input_type.name
+                name = "member" if op.input_type == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
-
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
-
             kwargs[op.name] = arg
 
-        for o in self.options:
-            if o.name not in kwargs:
-                kwargs[o.name] = o.default
-        
-        if self.cog is not None:
-            await self.callback(self.cog, ctx, **kwargs)
-        else:
-            await self.callback(ctx, **kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
     def qualified_name(self):
         return self.name
-
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`SlashCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
 class Option:
     def __init__(
@@ -502,7 +535,6 @@ class Option:
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
 
-
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
@@ -510,6 +542,18 @@ class OptionChoice:
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
+
+@overload
+def option(
+    name: str,
+    type: Union[SlashCommandOptionType, Type[Union[str, int, float]]],
+    *,
+    description: str = None,
+    required: bool = True,
+    choices: List[Union[OptionChoice, str]] = [],
+    default: Optional[Any] = None,
+) -> Option:
+    ...
 
 def option(name, type=None, **kwargs):
     """A decorator that can be used instead of typehinting Option"""
@@ -673,7 +717,9 @@ class UserCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        args = [ctx] if self.cog is None else [self.cog, ctx]
+
         if "members" not in ctx.interaction.data["resolved"]:
             _data = ctx.interaction.data["resolved"]["users"]
             for i, v in _data.items():
@@ -695,49 +741,8 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        
-        if self.cog is not None:
-            await self.callback(self.cog, ctx, target)
-        else:
-            await self.callback(ctx, target)
-    
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`UserCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
+        args.append(target)
+        self.args = args
 
 class MessageCommand(ContextMenuCommand):
     type = 3
@@ -748,7 +753,9 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: ApplicationContext):
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        args = [ctx] if self.cog is None else [self.cog, ctx]
+
         _data = ctx.interaction.data["resolved"]["messages"]
         for i, v in _data.items():
             v["id"] = int(i)
@@ -761,146 +768,19 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        
-        if self.cog is not None:
-            await self.callback(self.cog, ctx, target)
-        else:
-            await self.callback(ctx, target)
-    
-    def copy(self):
-        """Creates a copy of this command.
 
-        Returns
-        --------
-        :class:`MessageCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
+        args.append(target)
+        self.args = args
 
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
-def slash_command(**kwargs) -> SlashCommand:
-    """Decorator for slash commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`SlashCommand`]
-        A decorator that converts the provided method into a :class:`.SlashCommand`.
-    """
-    return application_command(cls=SlashCommand, **kwargs)
-
-def user_command(**kwargs) -> UserCommand:
-    """Decorator for user commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`UserCommand`]
-        A decorator that converts the provided method into a :class:`.UserCommand`.
-    """
-    return application_command(cls=UserCommand, **kwargs)
-
-def message_command(**kwargs) -> MessageCommand:
-    """Decorator for message commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`MessageCommand`]
-        A decorator that converts the provided method into a :class:`.MessageCommand`.
-    """
-    return application_command(cls=MessageCommand, **kwargs)
-
-def application_command(cls=SlashCommand, **attrs):
-    """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
-    depends on the ``cls`` parameter.
-
-    By default the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-
-    The ``name`` attribute also defaults to the function name unchanged.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    cls: :class:`.ApplicationCommand`
-        The class to construct with. By default this is :class:`.SlashCommand`.
-        You usually do not change this.
-    attrs
-        Keyword arguments to pass into the construction of the class denoted
-        by ``cls``.
-
-    Raises
-    -------
-    TypeError
-        If the function is not a coroutine or is already a command.
-    """
-
-    def decorator(func: Callable) -> cls:
-        if isinstance(func, ApplicationCommand):
-            func = func.callback
-        elif not callable(func):
-            raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
-            )
-
-
-def slash_command(**kwargs):
-    """Decorator for slash commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`SlashCommand`]
-        A decorator that converts the provided method into a :class:`.SlashCommand`.
-    """
-    return application_command(cls=SlashCommand, **kwargs)
-
-def user_command(**kwargs):
-    """Decorator for user commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`UserCommand`]
-        A decorator that converts the provided method into a :class:`.UserCommand`.
-    """
-    return application_command(cls=UserCommand, **kwargs)
-
-def message_command(**kwargs):
-    """Decorator for message commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`MessageCommand`]
-        A decorator that converts the provided method into a :class:`.MessageCommand`.
-    """
-    return application_command(cls=MessageCommand, **kwargs)
+@overload
+def application_command(
+    cls: Type[Union[SlashCommand, UserCommand, MessageCommand]] = SlashCommand,
+    *,
+    name: Optional[str] = MISSING,
+    guild_ids: Optional[List[int]] = MISSING,
+    checks: Optional[List[PredicateCallback]] = MISSING,
+) -> SlashCommand:
+    ...
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -937,36 +817,82 @@ def application_command(cls=SlashCommand, **attrs):
 
     return decorator
 
+
+@overload
+def slash_command(
+    *,
+    name: Optional[str] = MISSING,
+    description: Optional[str] = MISSING,
+    guild_ids: Optional[List[int]] = MISSING,
+    checks: Optional[List[PredicateCallback]] = MISSING,
+) -> SlashCommand:
+    ...
+
+def slash_command(**kwargs) -> SlashCommand:
+    """Decorator for slash commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`SlashCommand`]
+        A decorator that converts the provided method into a :class:`.SlashCommand`.
+    """
+    return application_command(cls=SlashCommand, **kwargs)
+
+@overload
+def user_command(
+    *,
+    name: Optional[str] = MISSING,
+    guild_ids: Optional[List[int]] = MISSING,
+    checks: Optional[List[PredicateCallback]] = MISSING,
+) -> UserCommand:
+    ...
+
+def user_command(**kwargs) -> UserCommand:
+    """Decorator for user commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`UserCommand`]
+        A decorator that converts the provided method into a :class:`.UserCommand`.
+    """
+    return application_command(cls=UserCommand, **kwargs)
+
+@overload
+def message_command(
+    name: Optional[str] = MISSING,
+    guild_ids: Optional[List[int]] = MISSING,
+    checks: Optional[List[PredicateCallback]] = MISSING,
+) -> MessageCommand:
+    ...
+
+def message_command(**kwargs) -> MessageCommand:
+    """Decorator for message commands that invokes :func:`application_command`.
+    .. versionadded:: 2.0
+    Returns
+    --------
+    Callable[..., :class:`MessageCommand`]
+        A decorator that converts the provided method into a :class:`.MessageCommand`.
+    """
+    return application_command(cls=MessageCommand, **kwargs)
+
+@overload
+def command(
+    *,
+    name: Optional[str] = MISSING,
+    description: Optional[str] = MISSING,
+    guild_ids: Optional[List[int]] = MISSING,
+    checks: Optional[List[PredicateCallback]] = MISSING,
+) -> SlashCommand:
+    ...
+
 def command(**kwargs):
-    """There is an alias for :meth:`application_command`.
+    """This is an alias for :meth:`slash_command`.
     .. note::
         This decorator is overriden by :func:`commands.command`.
     .. versionadded:: 2.0
     Returns
     --------
-    Callable[..., :class:`ApplicationCommand`]
-        A decorator that converts the provided method into an :class:`.ApplicationCommand`.
+    Callable[..., :class:`SlashCommand`]
+        A decorator that converts the provided method into an :class:`.SlashCommand`.
     """
     return application_command(**kwargs)
-
-# Validation
-def validate_chat_input_name(name: Any):
-    if not isinstance(name, str):
-        raise TypeError("Name of a command must be a string.")
-    if " " in name:
-        raise ValidationError("Name of a chat input command cannot have spaces.")
-    if not name.islower():
-        raise ValidationError("Name of a chat input command must be lowercase.")
-    if len(name) > 32 or len(name) < 1:
-        raise ValidationError(
-            "Name of a chat input command must be less than 32 characters and non empty."
-        )
-
-
-def validate_chat_input_description(description: Any):
-    if not isinstance(description, str):
-        raise TypeError("Description of a command must be a string.")
-    if len(description) > 100 or len(description) < 1:
-        raise ValidationError(
-            "Description of a chat input command must be less than 100 characters and non empty."
-        )
