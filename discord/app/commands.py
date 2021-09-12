@@ -125,6 +125,7 @@ def validate_chat_input_description(description: Any):
         )
 
 class ApplicationCommand(_BaseApplication):
+    _id: ClassVar[str]
     cog: CogT = None
     name: str
     args: List[Any]
@@ -143,12 +144,19 @@ class ApplicationCommand(_BaseApplication):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified application name.
-        """
+        """:class:`str`: Retrieves the fully qualified application name."""
         return self.name
 
     def _inject_cog(self, cog: CogT):
         self.cog = cog
+
+    def _inject_id(self, id: int):
+        self._id = id
+
+    @property
+    def id(self) -> Optional[str]:
+        """:class:`Optional[str]`: The application ID."""
+        return getattr(self, '_id', None)
 
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
