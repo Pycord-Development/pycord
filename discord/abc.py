@@ -1530,18 +1530,21 @@ class Messageable:
         data = await state.http.pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
     
-    async def can_send(self, obj=None) -> bool:
-        """|coro|
-        
-        Returns a :class:`bool` indicating whether you have the permissions to send the object.
-        """
+    def can_send(self, obj=None) -> bool:
+        """Returns a :class:`bool` indicating whether you have the permissions to send the object."""
 
         mapping = {
             'Message': 'send_messages',
             'Embed': 'embed_links',
             'File': 'attach_files'
         }
-        channel = await self._get_channel()
+        # Can't use channel = await self._get_channel() since its async
+        if hasattr(self, 'permissions_for'):
+            channel = self
+        elif hasattr(self, 'channel'):
+            channel = self.channel
+        else:
+            return True # Permissions don't exist for User DMs
 
         try:
             if obj is None:
