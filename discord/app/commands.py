@@ -29,7 +29,6 @@ import functools
 import inspect
 from collections import OrderedDict
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     ClassVar,
@@ -38,7 +37,6 @@ from typing import (
     Optional,
     Protocol,
     Type,
-    TypeVar,
     Union,
     overload
 )
@@ -49,18 +47,15 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import MISSING, async_all, find, get_or_fetch
-from ..ext.commands._types import _BaseCommand
+from ._types import ApplicationCallback, CogT, PredicateCallback, _BaseApplication
 from .context import ApplicationContext
-from .errors import ApplicationCommandError, ApplicationCommandInvokeError, ApplicationCheckFailure
-
-if TYPE_CHECKING:
-    from ..ext.commands import Cog
-
-
-CogT = TypeVar('CogT', bound='Cog')
+from .errors import (
+    ApplicationCheckFailure,
+    ApplicationCommandError,
+    ApplicationCommandInvokeError
+)
 
 __all__ = (
-    '_BaseCommand',
     'ApplicationCommand',
     'SlashCommand',
     'Option',
@@ -76,14 +71,6 @@ __all__ = (
     'message_command',
     'command',
 )
-
-PredicateCallback = Callable[[ApplicationContext], Optional[bool]]
-
-class ApplicationCallback(Protocol):
-    """A callback that can be used by an :class:`ApplicationCommand`."""
-
-    def __call__(self, ctx: ApplicationContext, *args: Any, **kwargs: Dict[str, Any]) -> Any:
-        ...
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -137,7 +124,7 @@ def validate_chat_input_description(description: Any):
             "Description of a chat input command must be less than 100 characters and non empty."
         )
 
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand(_BaseApplication):
     cog: CogT = None
     name: str
     args: List[Any]
@@ -195,7 +182,7 @@ class ApplicationCommand(_BaseCommand):
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
+        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore
 
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
@@ -675,7 +662,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
-        
+
         self.validate_parameters()
 
     def validate_parameters(self):
@@ -711,7 +698,7 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
-    
+
     def qualified_name(self):
         return self.name
 
