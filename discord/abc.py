@@ -1542,7 +1542,7 @@ class Messageable:
         # Can't use channel = await self._get_channel() since its async
         if hasattr(self, 'permissions_for'):
             channel = self
-        elif hasattr(self, 'channel'):
+        elif not type(self.channel).__name__ in ('DMChannel', 'GroupChannel')
             channel = self.channel
         else:
             return True # Permissions don't exist for User DMs
