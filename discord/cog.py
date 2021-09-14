@@ -29,14 +29,14 @@ import sys
 import discord.utils
 import types
 from . import errors
-from .app import SlashCommand, UserCommand, MessageCommand, ApplicationCommand#, _BaseCommand
+from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand#, _BaseCommand
 
 from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Union
 
-from .app.commands import _BaseCommand
+from .commands.commands import _BaseCommand
 
 if TYPE_CHECKING:
-    from .app import InteractionContext, ApplicationCommand
+    from .commands import InteractionContext, ApplicationCommand
 
 __all__ = (
     'CogMeta',
