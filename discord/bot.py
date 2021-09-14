@@ -27,7 +27,7 @@ import asyncio
 import collections
 import inspect
 import traceback
-from .app.errors import ApplicationCommandError, CheckFailure  
+from .commands.errors import ApplicationCommandError, CheckFailure
 
 from typing import Callable, Optional
 
@@ -36,7 +36,7 @@ import sys
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get, async_all
-from .app import (
+from .commands import (
     SlashCommand,
     SlashCommandGroup,
     MessageCommand,
