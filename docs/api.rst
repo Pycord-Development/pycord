@@ -3,7 +3,7 @@
 API Reference
 ===============
 
-The following section outlines the API of discord.py.
+The following section outlines the API of Pycord.
 
 .. note::
 
@@ -11,7 +11,7 @@ The following section outlines the API of discord.py.
     in an output independent way.  If the logging module is not configured,
     these logs will not be output anywhere.  See :ref:`logging_setup` for
     more information on how to set up and use the logging module with
-    discord.py.
+    Pycord.
 
 Version Related Info
 ---------------------
@@ -54,6 +54,47 @@ AutoShardedClient
 .. attributetable:: AutoShardedClient
 
 .. autoclass:: AutoShardedClient
+    :members:
+
+Bots
+-----
+
+Bot
+~~~~
+.. attributetable:: Bot
+
+.. autoclass:: Bot
+    :members:
+    :inherited-members:
+    :exclude-members: command, event, message_command, slash_command, user_command
+
+    .. automethod:: Bot.command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.event()
+        :decorator:
+
+    .. automethod:: Bot.message_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.slash_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.user_command(**kwargs)
+        :decorator:
+
+AutoShardedBot
+~~~~~~~~~~~~~~~
+.. attributetable:: AutoShardedBot
+
+.. autoclass:: AutoShardedBot
+    :members:
+
+Application Commands
+---------------------
+.. attributetable:: ApplicationCommandMixin
+
+.. autoclass:: ApplicationCommandMixin
     :members:
 
 Application Info
@@ -718,7 +759,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_thread_delete(thread)
 
-    Called whenever a thread is deleted.
+    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache 
+    then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
+
 
     Note that you can get the guild from :attr:`Thread.guild`.
 
@@ -728,6 +771,14 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     :param thread: The thread that got deleted.
     :type thread: :class:`Thread`
+
+.. function:: on_raw_thread_delete(payload)
+    
+    Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called
+    regardless of the state of the internal cache.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawThreadDeleteEvent`
 
 .. function:: on_thread_member_join(member)
               on_thread_member_remove(member)
@@ -3249,7 +3300,7 @@ AuditLogDiff
 Webhook Support
 ------------------
 
-discord.py offers support for creating, editing, and executing webhooks through the :class:`Webhook` class.
+Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class.
 
 Webhook
 ~~~~~~~~~
@@ -3780,6 +3831,22 @@ Template
 
 .. autoclass:: Template()
     :members:
+        
+WelcomeScreen
+~~~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreen
+
+.. autoclass:: WelcomeScreen()
+    :members:
+
+WelcomeScreenChannel
+~~~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreenChannel
+
+.. autoclass:: WelcomeScreenChannel()
+    :members:
 
 WidgetChannel
 ~~~~~~~~~~~~~~~
@@ -3900,6 +3967,14 @@ RawIntegrationDeleteEvent
 .. attributetable:: RawIntegrationDeleteEvent
 
 .. autoclass:: RawIntegrationDeleteEvent()
+    :members:
+
+RawThreadDeleteEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawThreadDeleteEvent
+
+.. autoclass:: RawThreadDeleteEvent()
     :members:
 
 PartialWebhookGuild

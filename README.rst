@@ -1,14 +1,14 @@
 pycord
 ==========
 
-.. image:: https://discord.com/api/guilds/681882711945641997/embed.png
+.. image:: https://img.shields.io/discord/881207955029110855?color=5865f2&label=Discord&logo=discord
    :target: https://discord.gg/dK2qkEJ37N
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
-   :target: https://pypi.python.org/pypi/py-cord.py
+   :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
-   :target: https://pypi.python.org/pypi/py-cord.py
+   :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
 
 A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
@@ -50,7 +50,7 @@ To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/Pycord-Development/pycord.py
+    $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
 
@@ -70,38 +70,36 @@ Quick Example
 
 .. code:: py
 
-    import pycord
+    import discord
 
-    class MyClient(pycord.Client):
-        async def on_ready(self):
-            print('Logged on as', self.user)
+    bot = discord.Bot()
+    
+    @bot.slash_command()
+    async def hello(ctx, name: str = None):
+        name = name or ctx.author.name
+        await ctx.send(f"Hello {name}!")
+        
+    @bot.user_command(name="Say Hello")
+    async def hi(ctx, user):
+        await ctx.send(f"{ctx.author.mention} says hello to {user.name}!")
+        
+    bot.run("token")
 
-        async def on_message(self, message):
-            # don't respond to ourselves
-            if message.author == self.user:
-                return
-
-            if message.content == 'ping':
-                await message.channel.send('pong')
-
-    client = MyClient()
-    client.run('token')
-
-Bot Example
+Normal Commands Example
 ~~~~~~~~~~~~~
 
 .. code:: py
 
-    import pycord
-    from pycord.ext import commands
+    import discord
+    from discord.ext import commands
 
-    bot = pycord.Bot(command_prefix='>')
+    bot = commands.Bot(command_prefix=">")
 
     @bot.command()
     async def ping(ctx):
-        await ctx.send('pong')
+        await ctx.send("pong")
 
-    bot.run('token')
+    bot.run("token")
 
 You can find more examples in the examples directory.
 
@@ -110,4 +108,5 @@ Links
 
 - `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
 - `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
+- `Discord Developers <https://discord.gg/discord-developers>`_
 - `Discord API <https://discord.gg/discord-api>`_

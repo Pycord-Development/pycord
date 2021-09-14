@@ -1,4 +1,4 @@
-## Contributing to discord.py
+## Contributing to Pycord
 
 First off, thanks for taking the time to contribute. It makes the library substantially better. :+1:
 
@@ -8,9 +8,9 @@ The following is a set of guidelines for contributing to the repository. These a
 
 Generally speaking questions are better suited in our resources below.
 
-- The official support server: https://discord.gg/r3sSKJJ
+- The official support server: https://discord.gg/UCXwPR7Pew
 - The Discord API server under #python_discord-py: https://discord.gg/discord-api
-- [The FAQ in the documentation](https://discordpy.readthedocs.io/en/latest/faq.html)
+- [The FAQ in the documentation](https://pycord.readthedocs.io/en/latest/faq.html)
 - [StackOverflow's `discord.py` tag](https://stackoverflow.com/questions/tagged/discord.py)
 
 Please try your best not to ask questions in our issue tracker. Most of them don't belong there unless they provide value to a larger audience.
@@ -33,6 +33,10 @@ If the bug report is missing this information then it'll take us longer to fix t
 ## Submitting a Pull Request
 
 Submitting a pull request is fairly simple, just make sure it focuses on a single aspect and doesn't manage to have scope creep and it's probably good to go. It would be incredibly lovely if the style is consistent to that found in the project. This project follows PEP-8 guidelines (mostly) with a column limit of 125.
+
+### Licensing
+
+By submitting a pull request, you agree that; 1) You hold the copyright on all submitted code inside said pull request; 2) You agree to transfer all rights to the owner of this repository, and; 3) If you are found to be in fault with any of the above, we shall not be held responsible in any way after the pull request has been merged.
 
 ### Git Commit Guidelines
 
