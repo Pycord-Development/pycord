@@ -29,7 +29,7 @@ import inspect
 import traceback
 from .commands.errors import ApplicationCommandError, CheckFailure
 
-from typing import Callable, Optional
+from typing import Callable, List, Optional, Union
 
 import sys
 
@@ -49,6 +49,7 @@ from .cog import CogMixin
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
+from .ext.commands import Command
 
 
 class ApplicationCommandMixin:
@@ -72,6 +73,13 @@ class ApplicationCommandMixin:
     @property
     def pending_application_commands(self):
         return self._pending_application_commands
+
+    @property
+    def commands(self) -> List[Union[ApplicationCommand, Command]]:
+        commands = list(self.application_commands.values())
+        if self._supports_prefixed_commands:
+            commands += self.prefixed_commands
+        return commands
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
@@ -355,6 +363,7 @@ class ApplicationCommandMixin:
 
 
 class BotBase(ApplicationCommandMixin, CogMixin):
+    _supports_prefixed_commands = False
     # TODO I think
     def __init__(self, description=None, *args, **options):
         # super(Client, self).__init__(*args, **kwargs)

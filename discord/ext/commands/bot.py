@@ -120,6 +120,7 @@ class _DefaultRepr:
 _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
+    _supports_prefixed_commands = True
     def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
