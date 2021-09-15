@@ -622,8 +622,7 @@ class SlashCommandOptionType(Enum):
             return cls.mentionable
         
         # TODO: Improve the error message
-        raise Exception('Invalid class used as an input type for an Option')
-
+        raise TypeError('Invalid class used as an input type for an Option')
 
 T = TypeVar('T')
 
