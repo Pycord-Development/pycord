@@ -151,7 +151,7 @@ class FFmpegAudio(AudioSource):
 
         self._process: subprocess.Popen = self._spawn_process(args, **kwargs)
         self._stdout: IO[bytes] = self._process.stdout  # type: ignore
-        self._stdin: Optional[IO[Bytes]] = None
+        self._stdin: Optional[IO[bytes]] = None
         self._pipe_thread: Optional[threading.Thread] = None
 
         if piping:
