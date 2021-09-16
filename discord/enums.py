@@ -588,7 +588,7 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
-class SlashCommandOptionType(Enum):
+class OptionType(Enum):
     sub_command = 1
     sub_command_group = 2
     string = 3
