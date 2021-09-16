@@ -1,6 +1,7 @@
 # About
 ## What Happened to Discord.py?
-Rapptz, also known as Danny, the maintainer and core developer of discord.py will no longer be updating it. Here's his full explanation: https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1 <br>
+Rapptz, also known as Danny, the maintainer and core developer of discord.py will no longer be updating it. Here's his [Full explanation](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1)              
+</br>
 [Here](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1#FAQ) is a FAQ written by him.
 
 ## What is Pycord?

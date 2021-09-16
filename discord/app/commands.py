@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+from discord.types.channel import TextChannel, VoiceChannel
 import functools
 import inspect
 from abc import ABC
 from collections import OrderedDict
 from typing import Any, Callable, List, Optional, Union, TYPE_CHECKING, overload, Awaitable, TypeVar, Dict
 
-from ..enums import SlashCommandOptionType
+from ..enums import OptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -128,6 +129,16 @@ class ApplicationCommand(_BaseCommand):
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__)
+
+    async def __call__(self, ctx, *args, **kwargs):
+        """|coro|
+        Calls the command's callback.
+
+        This method bypasses all checks that a command has and does not
+        convert the arguments beforehand, so take care to pass the correct
+        arguments in.
+        """
+        return await self.callback(ctx, *args, **kwargs)
 
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
@@ -395,10 +406,15 @@ class SlashCommand(ApplicationCommand, ABC):
             if option == inspect.Parameter.empty:
                 option = str
 
-            if self._is_typing_optional(option):
-                option = Option(
-                    option.__args__[0], 'No description provided', required=False
-                )
+            if self._is_typing_union(option):
+                if self._is_typing_optional(option):
+                    option = Option(
+                        option.__args__[0], "No description provided", required=False
+                    )
+                else:
+                    option = Option(
+                        option.__args__, "No description provided"
+                    )                    
 
             if not isinstance(option, Option):
                 option = Option(option, 'No description provided')
@@ -417,8 +433,11 @@ class SlashCommand(ApplicationCommand, ABC):
 
         return final_options
 
-    def _is_typing_optional(self, annotation) -> bool:
-        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
+    def _is_typing_union(self, annotation):
+        return getattr(annotation, "__origin__", None) is Union # type: ignore
+
+    def _is_typing_optional(self, annotation):
+        return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> SlashCommandPayload:
         as_dict = {
@@ -447,14 +466,14 @@ class SlashCommand(ApplicationCommand, ABC):
 
             # Checks if input_type is user, role or channel
             if (
-                SlashCommandOptionType.user.value
+                OptionType.user.value
                 <= op.input_type.value
-                <= SlashCommandOptionType.role.value
+                <= OptionType.role.value
             ):
                 name = "member" if op.input_type.name == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
-            elif op.input_type == SlashCommandOptionType.mentionable:
+            elif op.input_type == OptionType.mentionable:
                 arg_id = int(arg)
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
@@ -511,6 +530,12 @@ class SlashCommand(ApplicationCommand, ABC):
         else:
             return self.copy()
 
+channel_type_map = {
+    'TextChannel': ChannelType.text,
+    'VoiceChannel': ChannelType.voice, 
+    'StageChannel': ChannelType.stage_voice, 
+    'CategoryChannel': ChannelType.category
+}
 
 class Option:
 
@@ -531,9 +556,18 @@ class Option:
     def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop('name', None)
         self.description: str = description or 'No description provided'
-        if not isinstance(input_type, SlashCommandOptionType):
-            input_type = SlashCommandOptionType.from_datatype(input_type)
-        self.input_type: SlashCommandOptionType = input_type
+        self.channel_types = []
+        if not isinstance(input_type, OptionType):
+            self.input_type = OptionType.from_datatype(input_type)
+            if self.input_type == OptionType.channel:
+                input_type = (input_type,) if not isinstance(input_type, tuple) else input_type
+                for i in input_type:
+                    if i.__name__ == 'GuildChannel':
+                        continue
+                    channel_type = channel_type_map[i.__name__].value
+                    self.channel_types.append(channel_type)
+        else: 
+            self.input_type = input_type
         self.required: bool = kwargs.pop('required', True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
@@ -549,6 +583,11 @@ class Option:
             'required': self.required,
             'choices': [c.to_dict() for c in self.choices],
         }
+        if self.channel_types:
+            as_dict["channel_types"] = self.channel_types
+            
+        return as_dict
+
 
     def __repr__(self) -> str:
         return f'<discord.app.commands.{self.__class__.__name__} name={self.name}>'
@@ -593,7 +632,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         validate_chat_input_name(name)
         validate_chat_input_description(description)
         super().__init__(
-            SlashCommandOptionType.sub_command_group,
+            OptionType.sub_command_group,
             name=name,
             description=description,
         )

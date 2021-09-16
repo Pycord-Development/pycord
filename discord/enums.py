@@ -588,8 +588,8 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
-
-class SlashCommandOptionType(Enum):
+    
+class OptionType(Enum):
     sub_command = 1
     sub_command_group = 2
     string = 3
@@ -604,6 +604,15 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
+        if isinstance(datatype, tuple): # typing.Union has been used
+            datatypes = [cls.from_datatype(op) for op in datatype]
+            if all([x == cls.channel for x in datatypes]):
+                return cls.channel
+            elif set(datatypes) <= {cls.role, cls.user}:
+                return cls.mentionable
+            else:
+                raise TypeError('Invalid usage of typing.Union')
+
         if issubclass(datatype, str):
             return cls.string
         if issubclass(datatype, bool):
@@ -615,15 +624,19 @@ class SlashCommandOptionType(Enum):
 
         if datatype.__name__ == "Member":
             return cls.user
-        if datatype.__name__ == "GuildChannel":
+        if datatype.__name__ in [
+            "GuildChannel", "TextChannel", 
+            "VoiceChannel", "StageChannel",
+            "CategoryChannel"
+        ]:
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
-        
+                
         # TODO: Improve the error message
-        raise TypeError('Invalid class used as an input type for an Option')
+        raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
 
 
 T = TypeVar('T')
