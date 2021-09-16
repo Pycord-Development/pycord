@@ -497,15 +497,17 @@ class Option:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
 
-        self.channel_types = []
+        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, OptionType):
             self.input_type = OptionType.from_datatype(input_type)
             if self.input_type == OptionType.channel:
-                input_type = (input_type,) if not isinstance(input_type, tuple) else input_type
+                if not isinstance(input_type, tuple):
+                    input_type = (input_type,)
                 for i in input_type:
                     if i.__name__ == 'GuildChannel':
                         continue
-                    channel_type = channel_type_map[i.__name__].value
+
+                    channel_type = channel_type_map[i.__name__]
                     self.channel_types.append(channel_type)
         else: 
             self.input_type = input_type
@@ -526,7 +528,7 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
         }
         if self.channel_types:
-            as_dict["channel_types"] = self.channel_types
+            as_dict["channel_types"] = [t.value for t in self.channel_types]
             
         return as_dict
 

@@ -611,7 +611,7 @@ class OptionType(Enum):
                 return cls.mentionable
             else:
                 raise TypeError('Invalid usage of typing.Union')
-
+        
         if issubclass(datatype, str):
             return cls.string
         if issubclass(datatype, bool):
