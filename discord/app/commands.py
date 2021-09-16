@@ -31,7 +31,7 @@ import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import SlashCommandOptionType, ChannelType
+from ..enums import OptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -399,7 +399,7 @@ class SlashCommand(ApplicationCommand):
             "options": [o.to_dict() for o in self.options],
         }
         if self.is_subcommand:
-            as_dict["type"] = SlashCommandOptionType.sub_command.value
+            as_dict["type"] = OptionType.sub_command.value
 
         return as_dict
 
@@ -419,14 +419,14 @@ class SlashCommand(ApplicationCommand):
 
             # Checks if input_type is user, role or channel
             if (
-                SlashCommandOptionType.user.value
+                OptionType.user.value
                 <= op.input_type.value
-                <= SlashCommandOptionType.role.value
+                <= OptionType.role.value
             ):
                 name = "member" if op.input_type.name == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
-            elif op.input_type == SlashCommandOptionType.mentionable:
+            elif op.input_type == OptionType.mentionable:
                 arg_id = int(arg)
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
@@ -498,9 +498,9 @@ class Option:
         self.description = description or "No description provided"
 
         self.channel_types = []
-        if not isinstance(input_type, SlashCommandOptionType):
-            self.input_type = SlashCommandOptionType.from_datatype(input_type)
-            if self.input_type == SlashCommandOptionType.channel:
+        if not isinstance(input_type, OptionType):
+            self.input_type = OptionType.from_datatype(input_type)
+            if self.input_type == OptionType.channel:
                 input_type = (input_type,) if not isinstance(input_type, tuple) else input_type
                 for i in input_type:
                     if i.__name__ == 'GuildChannel':
@@ -572,7 +572,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         validate_chat_input_name(name)
         validate_chat_input_description(description)
         super().__init__(
-            SlashCommandOptionType.sub_command_group,
+            OptionType.sub_command_group,
             name=name,
             description=description,
         )
