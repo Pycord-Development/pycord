@@ -510,6 +510,7 @@ class Option:
         else: 
             self.input_type = input_type
 
+        print(self.input_type)
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)

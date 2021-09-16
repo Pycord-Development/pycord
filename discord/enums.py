@@ -603,12 +603,12 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
-
+        print(datatype)
         if isinstance(datatype, tuple): # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
                 return cls.channel
-            elif set(datatypes) <= {cls.role, cls.channel}:
+            elif set(datatypes) <= {cls.role, cls.user}:
                 return cls.mentionable
             else:
                 raise TypeError('Invalid usage of typing.Union')
