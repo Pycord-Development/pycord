@@ -603,7 +603,6 @@ class OptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
-        print(datatype)
         if isinstance(datatype, tuple): # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
