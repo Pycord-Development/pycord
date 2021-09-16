@@ -509,7 +509,7 @@ class Option:
                     self.channel_types.append(channel_type)
         else: 
             self.input_type = input_type
-        print(self.channel_types)
+
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
