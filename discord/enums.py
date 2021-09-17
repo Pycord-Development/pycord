@@ -634,7 +634,7 @@ class OptionType(Enum):
             return cls.role
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
-                
+
         # TODO: Improve the error message
         raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
 
