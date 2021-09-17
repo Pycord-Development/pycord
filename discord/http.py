@@ -1547,6 +1547,46 @@ class HTTPClient:
 
     def delete_stage_instance(self, channel_id: Snowflake, *, reason: Optional[str] = None) -> Response[None]:
         return self.request(Route('DELETE', '/stage-instances/{channel_id}', channel_id=channel_id), reason=reason)
+    
+    # Guild scheduled events management
+    # TODO:
+    # 1. Typehint responses
+
+
+    def get_guild_events(self, guild_id: Snowflake) -> Response[None]:
+        return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id))
+    
+    def create_guild_events(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
+        valid_keys = (
+            'channel_id',
+            'name',
+            'privacy_level',
+            'scheduled_start_time',
+            'description',
+            'entity_type'
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(Route('POST', 'guilds/{guild_id}/events', guild_id=guild_id), json=payload)
+
+    def get_guild_event(self, event_id: Snowflake) -> Response[None]:
+        return self.request(Route('GET', '/guild-events/{event_id}', event_id=event_id))
+
+    def delete_guild_event(self, event_id: Snowflake) -> Response[None]:
+        return self.request(Route('DELETE', '/guild-events/{event_id}', event_id=event_id))
+
+    def edit_guild_event(self, event_id: Snowflake, **payload: Any) -> Response[None]:
+        valid_keys = (
+            'channel_id',
+            'name',
+            'privacy_level',
+            'scheduled_start_time',
+            'description',
+            'entity_type'
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(Route('PATCH', '/guild-events/{event_id}', event_id=event_id), json=payload)
 
     # Application commands (global)
 
