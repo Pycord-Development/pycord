@@ -18,14 +18,14 @@ Key Features
 
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
-- Optimised in both speed and memory.
+- Optimised for both speed and memory usage.
 
 Installing
 ----------
 
 **Python 3.8 or higher is required**
 
-To install the library without full voice support, you can just run the following command:
+To install the library without full voice support, simply run the following command:
 
 .. code:: sh
 
@@ -46,7 +46,7 @@ Otherwise to get voice support you should run the following command:
     py -3 -m pip install -U py-cord[voice]
 
 
-To install the development version, do the following:
+To install the latest development version, do the following:
 
 .. code:: sh
 
@@ -60,7 +60,7 @@ Optional Packages
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
 
-Please note that on Linux installing voice you must install the following packages via your favourite package manager (e.g. ``apt``, ``dnf``, etc) before running the above commands:
+Please note that while installing voice support on Linux, you must install the following packages via your preffered package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
 * python-dev (e.g. ``python3.6-dev`` for Python 3.6)
@@ -103,10 +103,12 @@ Normal Commands Example
 
 You can find more examples in the examples directory.
 
+Note: Make sure you do not reveal your bot token to anyone, they could take control of it.
+
 Links
 ------
 
-- `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
-- `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
-- `Discord Developers <https://discord.gg/discord-developers>`_
-- `Discord API <https://discord.gg/discord-api>`_
+- `Pycord Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
+- `Pycord Discord Support Server <https://discord.gg/pycord>`_
+- `Discord Developers Support Server <https://discord.gg/discord-developers>`_
+- `Discord API Support Server <https://discord.gg/discord-api>`_
