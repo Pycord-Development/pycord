@@ -113,3 +113,5 @@ Links
 - `Pycord Discord Support Server <https://discord.gg/pycord>`_
 - `Discord Developers Support Server <https://discord.gg/discord-developers>`_
 - `Discord API Support Server <https://discord.gg/discord-api>`_
+
+If the Pycord support server invite isn't working, `click here <https://discord.gg/WNS9dKgWza>`_.
