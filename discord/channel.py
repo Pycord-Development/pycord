@@ -1043,7 +1043,7 @@ class VoiceChannel(VocalGuildChannel):
 
         A shortcut method that creates an instant activity invite.
 
-        You must have the :attr:`~discord.Permissions.create_instant_invite` permission to
+        You must have the :attr:`~discord.Permissions.start_embedded_activities` permission to
         do this.
 
         Parameters
