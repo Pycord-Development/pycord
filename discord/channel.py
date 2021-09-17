@@ -1069,7 +1069,7 @@ class VoiceChannel(VocalGuildChannel):
 
         Raises
         -------
-        InvalidArgument
+        TypeError
             If the activity is not a valid activity or application id.
         ~discord.HTTPException
             Invite creation failed.
