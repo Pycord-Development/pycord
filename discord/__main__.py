@@ -40,7 +40,7 @@ def show_version():
     if version_info.releaselevel != 'final':
         pkg = pkg_resources.get_distribution('py-cord')
         if pkg:
-            entries.append(f'    - pycord pkg_resources: v{pkg.version}')
+            entries.append(f'    - py-cord pkg_resources: v{pkg.version}')
 
     entries.append(f'- aiohttp v{aiohttp.__version__}')
     uname = platform.uname()
