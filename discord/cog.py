@@ -239,15 +239,24 @@ class Cog(metaclass=CogMeta):
         r"""
         Returns
         --------
-        List[:class:`.Command`]
-            A :class:`list` of :class:`.Command`\s that are
+        List[:class:`.ApplicationCommand`]
+            A :class:`list` of :class:`.ApplicationCommand`\s that are
             defined inside this cog.
 
             .. note::
 
                 This does not include subcommands.
         """
-        return [c for c in (c for c in self.__cog_commands__ if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))) if c.parent is None] + [c for c in self.__cog_commands__ if isinstance(c, (SlashCommand, MessageCommand, UserCommand))]
+        return [
+            c for c in (
+                c for c in self.__cog_commands__
+                if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))
+            ) if c.parent is None
+        ] + 
+        [
+            c for c in self.__cog_commands__
+            if isinstance(c, (SlashCommand, MessageCommand, UserCommand))
+        ]
 
     @property
     def qualified_name(self) -> str:
