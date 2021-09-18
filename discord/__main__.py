@@ -38,7 +38,7 @@ def show_version():
     version_info = discord.version_info
     entries.append('- pycord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(version_info))
     if version_info.releaselevel != 'final':
-        pkg = pkg_resources.get_distribution('pycord')
+        pkg = pkg_resources.get_distribution('py-cord')
         if pkg:
             entries.append(f'    - pycord pkg_resources: v{pkg.version}')
 
