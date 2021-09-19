@@ -55,6 +55,7 @@ __all__ = (
     'InteractionType',
     'InteractionResponseType',
     'NSFWLevel',
+    'EmbeddedActivity',
 )
 
 
@@ -624,6 +625,12 @@ class SlashCommandOptionType(Enum):
         # TODO: Improve the error message
         raise Exception('Invalid class used as an input type for an Option')
 
+class EmbeddedActivity(Enum):
+    youtube  = 755600276941176913
+    poker    = 755827207812677713
+    betrayal = 773336526917861400
+    fishing  = 814288819477020702
+    chess    = 832012774040141894
 
 T = TypeVar('T')
 

@@ -313,10 +313,11 @@ class Asset(AssetMixin):
             if self._animated:
                 if format not in VALID_ASSET_FORMATS:
                     raise InvalidArgument(f'format must be one of {VALID_ASSET_FORMATS}')
-            else:
+                url = url.with_path(f'{path}.{format}')
+            elif static_format is MISSING:
                 if format not in VALID_STATIC_FORMATS:
                     raise InvalidArgument(f'format must be one of {VALID_STATIC_FORMATS}')
-            url = url.with_path(f'{path}.{format}')
+                url = url.with_path(f'{path}.{format}')
 
         if static_format is not MISSING and not self._animated:
             if static_format not in VALID_STATIC_FORMATS:

@@ -45,7 +45,7 @@ import datetime
 
 import discord.abc
 from .permissions import PermissionOverwrite, Permissions
-from .enums import ChannelType, InviteTarget, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
+from .enums import ChannelType, EmbeddedActivity, InviteTarget, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
 from .mixins import Hashable
 from .object import Object
 from . import utils
@@ -1038,18 +1038,18 @@ class VoiceChannel(VocalGuildChannel):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
-    async def create_activity_invite(self, event:str, **kwargs) -> Invite:
+    async def create_activity_invite(self, activity: Union[EmbeddedActivity, int] , **kwargs) -> Invite:
         """|coro|
 
         A shortcut method that creates an instant activity invite.
 
-        You must have the :attr:`~discord.Permissions.create_instant_invite` permission to
+        You must have the :attr:`~discord.Permissions.start_embedded_activities` permission to
         do this.
 
         Parameters
         ------------
-        event: :class:`str`
-            The event to create an invite for. 
+        activity: Union[:class:`discord.EmbeddedActivity`, :class:`int`]
+            The activity to create an invite for which can be an application id as well. 
         max_age: :class:`int`
             How long the invite should last in seconds. If it's 0 then the invite
             doesn't expire. Defaults to ``0``.
@@ -1069,8 +1069,8 @@ class VoiceChannel(VocalGuildChannel):
 
         Raises
         -------
-        InvalidArgument
-            If the event is not a valid event.
+        TypeError
+            If the activity is not a valid activity or application id.
         ~discord.HTTPException
             Invite creation failed.
 
@@ -1080,20 +1080,15 @@ class VoiceChannel(VocalGuildChannel):
             The invite that was created.
         """
 
-        application_ids = {
-            'youtube' : 755600276941176913,
-            'poker'   : 755827207812677713,
-            'betrayal': 773336526917861400,
-            'fishing' : 814288819477020702,
-            'chess'   : 832012774040141894,
-        }
-        event = application_ids.get(event)
-        if event is None:
-            raise InvalidArgument('Invalid event.')
+        if isinstance(activity, EmbeddedActivity):
+            activity = activity.value
+
+        if not isinstance(activity, int):
+            raise TypeError('Invalid type provided for the activity.')
 
         return await self.create_invite(
             target_type=InviteTarget.embedded_application,
-            target_application_id=event,
+            target_application_id=activity,
             **kwargs
         )
 
