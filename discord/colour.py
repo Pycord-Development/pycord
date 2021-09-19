@@ -334,8 +334,10 @@ class Colour:
         return cls(0xf47fff)
     
     @classmethod
-    def transparent(cls, Type: [CT]) -> CT:
+    def darkmode_invis(cls, Type: [CT]) -> CT:
         """A factory method that returns a :class:`Color` with a value of ``0x2F3136``.
+
+        Note -> Works only with Discord Dark Mode embeds.
 
         .. versionadded:: 2.0
         """
