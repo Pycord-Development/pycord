@@ -1552,11 +1552,10 @@ class HTTPClient:
     # TODO:
     # 1. Typehint responses
 
-
     def get_guild_events(self, guild_id: Snowflake) -> Response[None]:
         return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id))
     
-    def create_guild_events(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
+    def create_guild_event(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
         valid_keys = (
             'channel_id',
             'name',
