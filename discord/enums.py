@@ -576,7 +576,6 @@ class ButtonStyle(Enum):
     def __int__(self):
         return self.value
 
-
 class StagePrivacyLevel(Enum):
     public = 1
     closed = 2
@@ -588,6 +587,7 @@ class NSFWLevel(Enum, comparable=True):
     explicit = 1
     safe = 2
     age_restricted = 3
+
 
 class SlashCommandOptionType(Enum):
     sub_command = 1
@@ -625,12 +625,28 @@ class SlashCommandOptionType(Enum):
         # TODO: Improve the error message
         raise Exception('Invalid class used as an input type for an Option')
 
+
 class EmbeddedActivity(Enum):
     youtube  = 755600276941176913
     poker    = 755827207812677713
     betrayal = 773336526917861400
     fishing  = 814288819477020702
     chess    = 832012774040141894
+
+
+class GuildEventStatus(Enum):
+    scheduled = 1
+    active = 2
+    completed = 3
+    canceled = 4
+
+
+class GuildEventEntityType(Enum):
+    none = 0
+    stage_instance = 1
+    voice = 2
+    location = 3
+
 
 T = TypeVar('T')
 
