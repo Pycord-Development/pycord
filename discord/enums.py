@@ -576,6 +576,7 @@ class ButtonStyle(Enum):
     def __int__(self):
         return self.value
 
+
 class StagePrivacyLevel(Enum):
     public = 1
     closed = 2
