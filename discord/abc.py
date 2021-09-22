@@ -1531,7 +1531,18 @@ class Messageable:
         return [state.create_message(channel=channel, data=m) for m in data]
     
     def can_send(self, *objects) -> bool:
-        """Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."""
+        """Returns a :class:`bool` indicating whether you have the permissions to send the object(s).
+
+        Raises
+        ------
+        TypeError
+            An invalid type has been passed.
+
+        Returns
+        --------
+        :class:`bool`
+            Indicates whether you have the permissions to send the object(s).
+        """
         mapping = {
             'Message': 'send_messages',
             'Embed': 'embed_links',
