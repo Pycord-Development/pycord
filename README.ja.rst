@@ -11,7 +11,7 @@ pycord
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPIのサポートしているPythonのバージョン
 
-discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最新の使いやすい機能豊富な非同期対応APIラッパーです。
+PyCodeはdiscord.pyのフォークです。 PyCordはPythonで記述されたDiscord用の最新で使いやすく、豊富な機能を提供する非同期対応のAPIラッパーです。
 
 主な特徴
 -------------
@@ -25,7 +25,7 @@ discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最�
 
 **Python 3.8 以降のバージョンが必須です**
 
-完全な音声サポートなしでライブラリをインストールする場合は次のコマンドを実行してください:
+完全な音声サポートなしでライブラリをインストールする場合は次のコマンドを実行して下さい:
 
 .. code:: sh
 
@@ -35,7 +35,7 @@ discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最�
     # Windows
     py -3 -m pip install -U py-cord
 
-音声サポートが必要なら、次のコマンドを実行しましょう:
+音声サポートが必要な場合は次のコマンドを実行して下さい:
 
 .. code:: sh
 
@@ -46,7 +46,7 @@ discord.pyのフォーク。 PyCordはPythonで記述されたDiscord用の最�
     py -3 -m pip install -U py-cord[voice]
 
 
-開発版をインストールしたいのならば、次の手順に従ってください:
+開発版をインストールする場合は次の手順に従ってください:
 .. code:: sh
 
     $ git clone https://github.com/Pycord-Development/pycord
@@ -64,7 +64,7 @@ Linuxで音声サポートを導入するには、前述のコマンドを実行
 * libffi-dev (システムによっては ``libffi-devel``)
 * python-dev (例えばPython 3.6用の ``python3.6-dev``)
 
-簡単な例
+簡単な使用例1
 --------------
 
 .. code:: py
@@ -86,7 +86,7 @@ Linuxで音声サポートを導入するには、前述のコマンドを実行
     client = MyClient()
     client.run('token')
 
-Botの例
+使用例2(Bot)
 ~~~~~~~~~~~~~
 
 .. code:: py
