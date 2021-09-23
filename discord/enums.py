@@ -639,7 +639,7 @@ class GuildEventStatus(Enum):
     scheduled = 1
     active = 2
     completed = 3
-    canceled = 4
+    cancelled = 4
 
 
 class GuildEventEntityType(Enum):
