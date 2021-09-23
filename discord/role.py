@@ -30,6 +30,7 @@ from .errors import InvalidArgument
 from .colour import Colour
 from .mixins import Hashable
 from .utils import snowflake_time, _get_as_snowflake, MISSING
+from .asset import Asset
 
 __all__ = (
     'RoleTags',
@@ -177,6 +178,7 @@ class Role(Hashable):
         'name',
         '_permissions',
         '_colour',
+        '_icon',
         'position',
         'managed',
         'mentionable',
@@ -243,6 +245,7 @@ class Role(Hashable):
         self.managed: bool = data.get('managed', False)
         self.mentionable: bool = data.get('mentionable', False)
         self.tags: Optional[RoleTags]
+        self._icon: Optional[Asset] = data.get('icon')
 
         try:
             self.tags = RoleTags(data['tags'])
@@ -317,6 +320,22 @@ class Role(Hashable):
         role_id = self.id
         return [member for member in all_members if member._roles.has(role_id)]
 
+    @property
+    def icon(self) -> Optional[Asset]:
+        """Optional[:class:`Asset`]: Returns the icon of the role. If role has no icon, then ``None`` will be returned.
+        
+        .. versionadded:: 2.5
+        """
+        if self._icon is None:
+            return None
+        
+        return Asset._from_icon(
+                self._state,
+                self.id,
+                self.icon,
+                'role',
+            )
+    
     async def _move(self, position: int, reason: Optional[str]) -> None:
         if position <= 0:
             raise InvalidArgument("Cannot move role to position 0 or below")
