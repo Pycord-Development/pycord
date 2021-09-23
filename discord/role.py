@@ -325,7 +325,7 @@ class Role(Hashable):
     def icon(self) -> Optional[Asset]:
         """Optional[:class:`Asset`]: Returns the icon of the role. If role has no icon, then ``None`` will be returned.
         
-        .. versionadded:: 2.5
+        .. versionadded:: 2.0
         """
         if self._icon is None:
             return None
