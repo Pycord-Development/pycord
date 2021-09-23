@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, TypeVar, Union, overload, TYPE_CHECKING
 
+from . import utils
 from .permissions import Permissions
 from .errors import InvalidArgument
 from .colour import Colour
@@ -368,6 +369,7 @@ class Role(Hashable):
         color: Union[Colour, int] = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
+        icon: Optional[bytes] = MISSING,
         position: int = MISSING,
         reason: Optional[str] = MISSING,
     ) -> Optional[Role]:
@@ -398,6 +400,9 @@ class Role(Hashable):
             Indicates if the role should be shown separately in the member list.
         mentionable: :class:`bool`
             Indicates if the role should be mentionable by others.
+        icon: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the icon of the role. Only PNG/JPEG is supported.
+            Could be ``None`` to denote removal of the icon. Role's guild must has ``ROLE_SUBSCRIPTIONS_ENABLED`` in :attr:`Guild.features` 
         position: :class:`int`
             The new role's position. This must be below your top role's
             position or it will fail.
@@ -443,6 +448,12 @@ class Role(Hashable):
 
         if mentionable is not MISSING:
             payload['mentionable'] = mentionable
+        
+        if icon is not MISSING:
+            if icon is None:
+                payload['icon'] = icon
+            else:
+                payload['icon'] = utils._bytes_to_base64_data(icon)
 
         data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
