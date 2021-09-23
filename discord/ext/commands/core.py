@@ -280,6 +280,12 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
 
         .. versionadded:: 2.0
+
+    cooldown: Optional[:class:`Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+
+        .. versionadded:: 2.0
     """
     __original_kwargs__: Dict[str, Any]
 
@@ -828,6 +834,10 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if self._max_concurrency is not None:
                 await self._max_concurrency.release(ctx)  # type: ignore
             raise
+
+    @property
+    def cooldown(self) -> Optional[Cooldown]:
+        return self._buckets._cooldown
 
     def is_on_cooldown(self, ctx: Context) -> bool:
         """Checks whether the command is currently on cooldown.
