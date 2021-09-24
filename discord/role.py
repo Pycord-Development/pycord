@@ -402,7 +402,7 @@ class Role(Hashable):
             Indicates if the role should be mentionable by others.
         icon: Optional[:class:`bytes`]
             A :term:`py:bytes-like object` representing the icon of the role. Only PNG/JPEG is supported.
-            Could be ``None`` to denote removal of the icon. Role's guild must has ``ROLE_SUBSCRIPTIONS_ENABLED`` in :attr:`Guild.features` 
+            Could be ``None`` to denote removal of the icon. 
         position: :class:`int`
             The new role's position. This must be below your top role's
             position or it will fail.
