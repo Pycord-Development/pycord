@@ -333,7 +333,7 @@ class Role(Hashable):
         return Asset._from_icon(
                 self._state,
                 self.id,
-                self.icon,
+                self._icon,
                 'role',
             )
     
