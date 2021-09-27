@@ -252,8 +252,7 @@ class Cog(metaclass=CogMeta):
                 c for c in self.__cog_commands__
                 if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))
             ) if c.parent is None
-        ] + 
-        [
+        ] + [
             c for c in self.__cog_commands__
             if isinstance(c, (SlashCommand, MessageCommand, UserCommand))
         ]
