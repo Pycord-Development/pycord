@@ -29,7 +29,7 @@ from ...cog import Cog
 
 from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
 
-from ...app import _BaseCommand, ApplicationCommand
+from ...commands import _BaseCommand, ApplicationCommand
 
 if TYPE_CHECKING:
     from .bot import BotBase
