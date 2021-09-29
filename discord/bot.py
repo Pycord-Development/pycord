@@ -22,14 +22,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations # will probably need in future for type hinting
+from __future__ import annotations
+
 import asyncio
 import collections
 import inspect
 import traceback
-from .commands.errors import ApplicationCommandError, CheckFailure
+from .commands.errors import CheckFailure
 
-from typing import Callable, List, Optional, Union
+from typing import List, Optional, Union
 
 import sys
 
@@ -49,7 +50,6 @@ from .cog import CogMixin
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
-from .ext.commands import Command
 
 
 class ApplicationCommandMixin:
@@ -75,7 +75,7 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
-    def commands(self) -> List[Union[ApplicationCommand, Command]]:
+    def commands(self) -> List[Union[ApplicationCommand, ...]]:
         commands = list(self.application_commands.values())
         if self._supports_prefixed_commands:
             commands += self.prefixed_commands
