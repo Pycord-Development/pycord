@@ -29,9 +29,9 @@ import sys
 import discord.utils
 import types
 from . import errors
-from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand#, _BaseCommand
+from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand
 
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Union
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
 
 from .commands.commands import _BaseCommand
 
