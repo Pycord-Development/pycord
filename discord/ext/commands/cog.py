@@ -23,17 +23,14 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import inspect
 import discord
 from ...cog import Cog
 
-from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
+from typing import Any, Callable, Generator, TYPE_CHECKING, TypeVar, Type
 
-from ...commands import _BaseCommand, ApplicationCommand
+from ...commands import ApplicationCommand
 
 if TYPE_CHECKING:
-    from .bot import BotBase
-    from .context import Context
     from .core import Command
 
 __all__ = ('Cog',)
