@@ -1,5 +1,5 @@
 import discord
-from discord.app import Option
+from discord.commands import Option
 
 bot = discord.Bot()
 
