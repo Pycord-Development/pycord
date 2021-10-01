@@ -26,12 +26,12 @@ from __future__ import annotations
 
 import io
 import os
-from typing import Any, Literal, Optional, TYPE_CHECKING, Tuple, Union
-from .errors import DiscordException
-from .errors import InvalidArgument
-from . import utils
+from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple, Union
 
 import yarl
+
+from . import utils
+from .errors import DiscordException, InvalidArgument
 
 __all__ = (
     'Asset',

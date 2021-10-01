@@ -29,19 +29,20 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union, overload
+from typing import (TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple,
+                    Type, TypeVar, Union, overload)
 
 import discord.abc
 
 from . import utils
+from .activity import ActivityTypes, create_activity
 from .asset import Asset
-from .utils import MISSING
-from .user import BaseUser, User, _UserTag
-from .activity import create_activity, ActivityTypes
-from .permissions import Permissions
-from .enums import Status, try_enum
 from .colour import Colour
+from .enums import Status, try_enum
 from .object import Object
+from .permissions import Permissions
+from .user import BaseUser, User, _UserTag
+from .utils import MISSING
 
 __all__ = (
     'VoiceState',
@@ -49,21 +50,19 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    from .abc import Snowflake
     from .asset import Asset
-    from .channel import DMChannel, VoiceChannel, StageChannel
+    from .channel import DMChannel, StageChannel, VoiceChannel
     from .flags import PublicUserFlags
     from .guild import Guild
-    from .types.activity import PartialPresenceUpdate
-    from .types.member import (
-        MemberWithUser as MemberWithUserPayload,
-        Member as MemberPayload,
-        UserWithMember as UserWithMemberPayload,
-    )
-    from .types.user import User as UserPayload
-    from .abc import Snowflake
-    from .state import ConnectionState
     from .message import Message
     from .role import Role
+    from .state import ConnectionState
+    from .types.activity import PartialPresenceUpdate
+    from .types.member import Member as MemberPayload
+    from .types.member import MemberWithUser as MemberWithUserPayload
+    from .types.member import UserWithMember as UserWithMemberPayload
+    from .types.user import User as UserPayload
     from .types.voice import VoiceState as VoiceStatePayload
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]

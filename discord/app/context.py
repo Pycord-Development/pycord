@@ -33,7 +33,7 @@ from ..utils import cached_property
 
 class InteractionContext:
     """Represents a Discord interaction context.
- 
+
     This class is not created manually and is instead passed to application
     commands as the first parameter.
 
@@ -89,4 +89,3 @@ class InteractionContext:
     @property
     def followup(self):
         return self.interaction.followup
-

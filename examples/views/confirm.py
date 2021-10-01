@@ -1,6 +1,5 @@
-from discord.ext import commands
-
 import discord
+from discord.ext import commands
 
 
 class Bot(commands.Bot):
@@ -31,7 +30,9 @@ class Confirm(discord.ui.View):
 
     # This one is similar to the confirmation button except sets the inner value to `False`
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.grey)
-    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def cancel(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
         await interaction.response.send_message("Cancelling", ephemeral=True)
         self.value = False
         self.stop()

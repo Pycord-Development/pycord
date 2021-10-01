@@ -22,25 +22,19 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations  # will probably need in future for type hinting
-
-from typing import Callable, Optional
+from __future__ import \
+    annotations  # will probably need in future for type hinting
 
 import sys
+from typing import Callable, Optional
 
+from .app import (ApplicationCommand, InteractionContext, MessageCommand,
+                  SlashCommand, SubCommandGroup, UserCommand)
 from .client import Client
-from .shard import AutoShardedClient
-from .utils import get
-from .app import (
-    SlashCommand,
-    SubCommandGroup,
-    MessageCommand,
-    UserCommand,
-    ApplicationCommand,
-    InteractionContext,
-)
 from .errors import Forbidden
 from .interactions import Interaction
+from .shard import AutoShardedClient
+from .utils import get
 
 
 def command(cls=SlashCommand, **attrs):
@@ -117,7 +111,9 @@ class ApplicationCommandMixin:
         """
         self.to_register.append(command)
 
-    def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
+    def remove_application_command(
+        self, command: ApplicationCommand
+    ) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -169,7 +165,9 @@ class ApplicationCommandMixin:
         commands = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is None]:
+        for command in [
+            cmd for cmd in self.to_register if cmd.guild_ids is None
+        ]:
             as_dict = command.to_dict()
             if len(registered_commands) > 0:
                 matches = [
@@ -185,7 +183,9 @@ class ApplicationCommandMixin:
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
             update_guild_commands[guild.id] = []
-        for command in [cmd for cmd in self.to_register if cmd.guild_ids is not None]:
+        for command in [
+            cmd for cmd in self.to_register if cmd.guild_ids is not None
+        ]:
             as_dict = command.to_dict()
             for guild_id in command.guild_ids:
                 to_update = update_guild_commands[guild_id]
@@ -193,20 +193,31 @@ class ApplicationCommandMixin:
 
         for guild_id in update_guild_commands:
             try:
-                cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
-                                                                  update_guild_commands[guild_id])
+                cmds = await self.http.bulk_upsert_guild_commands(
+                    self.user.id, guild_id, update_guild_commands[guild_id]
+                )
             except Forbidden:
                 if not update_guild_commands[guild_id]:
                     continue
                 else:
-                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+                    print(
+                        f"Failed to add command to guild {guild_id}",
+                        file=sys.stderr,
+                    )
                     raise
             else:
                 for i in cmds:
-                    cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
+                    cmd = get(
+                        self.to_register,
+                        name=i["name"],
+                        description=i["description"],
+                        type=i["type"],
+                    )
                     self.app_commands[i["id"]] = cmd
 
-        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+        cmds = await self.http.bulk_upsert_global_commands(
+            self.user.id, commands
+        )
 
         for i in cmds:
             cmd = get(
@@ -330,7 +341,9 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name: str, description: str, guild_ids=None) -> SubCommandGroup:
+    def command_group(
+        self, name: str, description: str, guild_ids=None
+    ) -> SubCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
         group = SubCommandGroup(name, description, guild_ids)
         self.add_application_command(group)

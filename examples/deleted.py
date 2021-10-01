@@ -12,7 +12,9 @@ class MyClient(discord.Client):
             await msg.delete()
 
             # this also works
-            await message.channel.send("Goodbye in 3 seconds...", delete_after=3.0)
+            await message.channel.send(
+                "Goodbye in 3 seconds...", delete_after=3.0
+            )
 
     async def on_message_delete(self, message):
         msg = f"{message.author} has deleted the message: {message.content}"

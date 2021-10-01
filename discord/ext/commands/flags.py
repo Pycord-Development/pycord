@@ -24,44 +24,24 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from .errors import (
-    BadFlagArgument,
-    CommandError,
-    MissingFlagArgument,
-    TooManyFlags,
-    MissingRequiredFlag,
-)
-
-from discord.utils import resolve_annotation
-from .view import StringView
-from .converter import run_converters
-
-from discord.utils import maybe_coroutine, MISSING
-from dataclasses import dataclass, field
-from typing import (
-    Dict,
-    Iterator,
-    Literal,
-    Optional,
-    Pattern,
-    Set,
-    TYPE_CHECKING,
-    Tuple,
-    List,
-    Any,
-    Type,
-    TypeVar,
-    Union,
-)
-
 import inspect
-import sys
 import re
+import sys
+from dataclasses import dataclass, field
+from typing import (TYPE_CHECKING, Any, Dict, Iterator, List, Literal,
+                    Optional, Pattern, Set, Tuple, Type, TypeVar, Union)
+
+from discord.utils import MISSING, maybe_coroutine, resolve_annotation
+
+from .converter import run_converters
+from .errors import (BadFlagArgument, CommandError, MissingFlagArgument,
+                     MissingRequiredFlag, TooManyFlags)
+from .view import StringView
 
 __all__ = (
-    'Flag',
-    'flag',
-    'FlagConverter',
+    "Flag",
+    "flag",
+    "FlagConverter",
 )
 
 
@@ -143,25 +123,35 @@ def flag(
         Whether multiple given values overrides the previous value. The default
         value depends on the annotation given.
     """
-    return Flag(name=name, aliases=aliases, default=default, max_args=max_args, override=override)
+    return Flag(
+        name=name,
+        aliases=aliases,
+        default=default,
+        max_args=max_args,
+        override=override,
+    )
 
 
 def validate_flag_name(name: str, forbidden: Set[str]):
     if not name:
-        raise ValueError('flag names should not be empty')
+        raise ValueError("flag names should not be empty")
 
     for ch in name:
         if ch.isspace():
-            raise ValueError(f'flag name {name!r} cannot have spaces')
-        if ch == '\\':
-            raise ValueError(f'flag name {name!r} cannot have backslashes')
+            raise ValueError(f"flag name {name!r} cannot have spaces")
+        if ch == "\\":
+            raise ValueError(f"flag name {name!r} cannot have backslashes")
         if ch in forbidden:
-            raise ValueError(f'flag name {name!r} cannot have any of {forbidden!r} within them')
+            raise ValueError(
+                f"flag name {name!r} cannot have any of {forbidden!r} within them"
+            )
 
 
-def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[str, Any]) -> Dict[str, Flag]:
-    annotations = namespace.get('__annotations__', {})
-    case_insensitive = namespace['__commands_flag_case_insensitive__']
+def get_flags(
+    namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[str, Any]
+) -> Dict[str, Flag]:
+    annotations = namespace.get("__annotations__", {})
+    case_insensitive = namespace["__commands_flag_case_insensitive__"]
     flags: Dict[str, Flag] = {}
     cache: Dict[str, Any] = {}
     names: Set[str] = set()
@@ -176,9 +166,15 @@ def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[s
         if flag.name is MISSING:
             flag.name = name
 
-        annotation = flag.annotation = resolve_annotation(flag.annotation, globals, locals, cache)
+        annotation = flag.annotation = resolve_annotation(
+            flag.annotation, globals, locals, cache
+        )
 
-        if flag.default is MISSING and hasattr(annotation, '__commands_is_flag__') and annotation._can_be_constructible():
+        if (
+            flag.default is MISSING
+            and hasattr(annotation, "__commands_is_flag__")
+            and annotation._can_be_constructible()
+        ):
             flag.default = annotation._construct_default
 
         if flag.aliases is MISSING:
@@ -203,7 +199,10 @@ def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[s
                 # typing.Union
                 if flag.max_args is MISSING:
                     flag.max_args = 1
-                if annotation.__args__[-1] is type(None) and flag.default is MISSING:
+                if (
+                    annotation.__args__[-1] is type(None)
+                    and flag.default is MISSING
+                ):
                     # typing.Optional
                     flag.default = None
             elif origin is tuple:
@@ -229,7 +228,9 @@ def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[s
                 if flag.max_args is MISSING:
                     flag.max_args = 1
             else:
-                raise TypeError(f'Unsupported typing annotation {annotation!r} for {flag.name!r} flag')
+                raise TypeError(
+                    f"Unsupported typing annotation {annotation!r} for {flag.name!r} flag"
+                )
 
         if flag.override is MISSING:
             flag.override = False
@@ -237,7 +238,9 @@ def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[s
         # Validate flag names are unique
         name = flag.name.casefold() if case_insensitive else flag.name
         if name in names:
-            raise TypeError(f'{flag.name!r} flag conflicts with previous flag or alias.')
+            raise TypeError(
+                f"{flag.name!r} flag conflicts with previous flag or alias."
+            )
         else:
             names.add(name)
 
@@ -245,7 +248,9 @@ def get_flags(namespace: Dict[str, Any], globals: Dict[str, Any], locals: Dict[s
             # Validate alias is unique
             alias = alias.casefold() if case_insensitive else alias
             if alias in names:
-                raise TypeError(f'{flag.name!r} flag alias {alias!r} conflicts with previous flag or alias.')
+                raise TypeError(
+                    f"{flag.name!r} flag alias {alias!r} conflicts with previous flag or alias."
+                )
             else:
                 names.add(alias)
 
@@ -274,10 +279,10 @@ class FlagsMeta(type):
         delimiter: str = MISSING,
         prefix: str = MISSING,
     ):
-        attrs['__commands_is_flag__'] = True
+        attrs["__commands_is_flag__"] = True
 
         try:
-            global_ns = sys.modules[attrs['__module__']].__dict__
+            global_ns = sys.modules[attrs["__module__"]].__dict__
         except KeyError:
             global_ns = {}
 
@@ -296,30 +301,40 @@ class FlagsMeta(type):
         flags: Dict[str, Flag] = {}
         aliases: Dict[str, str] = {}
         for base in reversed(bases):
-            if base.__dict__.get('__commands_is_flag__', False):
-                flags.update(base.__dict__['__commands_flags__'])
-                aliases.update(base.__dict__['__commands_flag_aliases__'])
+            if base.__dict__.get("__commands_is_flag__", False):
+                flags.update(base.__dict__["__commands_flags__"])
+                aliases.update(base.__dict__["__commands_flag_aliases__"])
                 if case_insensitive is MISSING:
-                    attrs['__commands_flag_case_insensitive__'] = base.__dict__['__commands_flag_case_insensitive__']
+                    attrs[
+                        "__commands_flag_case_insensitive__"
+                    ] = base.__dict__["__commands_flag_case_insensitive__"]
                 if delimiter is MISSING:
-                    attrs['__commands_flag_delimiter__'] = base.__dict__['__commands_flag_delimiter__']
+                    attrs["__commands_flag_delimiter__"] = base.__dict__[
+                        "__commands_flag_delimiter__"
+                    ]
                 if prefix is MISSING:
-                    attrs['__commands_flag_prefix__'] = base.__dict__['__commands_flag_prefix__']
+                    attrs["__commands_flag_prefix__"] = base.__dict__[
+                        "__commands_flag_prefix__"
+                    ]
 
         if case_insensitive is not MISSING:
-            attrs['__commands_flag_case_insensitive__'] = case_insensitive
+            attrs["__commands_flag_case_insensitive__"] = case_insensitive
         if delimiter is not MISSING:
-            attrs['__commands_flag_delimiter__'] = delimiter
+            attrs["__commands_flag_delimiter__"] = delimiter
         if prefix is not MISSING:
-            attrs['__commands_flag_prefix__'] = prefix
+            attrs["__commands_flag_prefix__"] = prefix
 
-        case_insensitive = attrs.setdefault('__commands_flag_case_insensitive__', False)
-        delimiter = attrs.setdefault('__commands_flag_delimiter__', ':')
-        prefix = attrs.setdefault('__commands_flag_prefix__', '')
+        case_insensitive = attrs.setdefault(
+            "__commands_flag_case_insensitive__", False
+        )
+        delimiter = attrs.setdefault("__commands_flag_delimiter__", ":")
+        prefix = attrs.setdefault("__commands_flag_prefix__", "")
 
         for flag_name, flag in get_flags(attrs, global_ns, local_ns).items():
             flags[flag_name] = flag
-            aliases.update({alias_name: flag_name for alias_name in flag.aliases})
+            aliases.update(
+                {alias_name: flag_name for alias_name in flag.aliases}
+            )
 
         forbidden = set(delimiter).union(prefix)
         for flag_name in flags:
@@ -330,23 +345,31 @@ class FlagsMeta(type):
         regex_flags = 0
         if case_insensitive:
             flags = {key.casefold(): value for key, value in flags.items()}
-            aliases = {key.casefold(): value.casefold() for key, value in aliases.items()}
+            aliases = {
+                key.casefold(): value.casefold()
+                for key, value in aliases.items()
+            }
             regex_flags = re.IGNORECASE
 
         keys = list(re.escape(k) for k in flags)
         keys.extend(re.escape(a) for a in aliases)
         keys = sorted(keys, key=lambda t: len(t), reverse=True)
 
-        joined = '|'.join(keys)
-        pattern = re.compile(f'(({re.escape(prefix)})(?P<flag>{joined}){re.escape(delimiter)})', regex_flags)
-        attrs['__commands_flag_regex__'] = pattern
-        attrs['__commands_flags__'] = flags
-        attrs['__commands_flag_aliases__'] = aliases
+        joined = "|".join(keys)
+        pattern = re.compile(
+            f"(({re.escape(prefix)})(?P<flag>{joined}){re.escape(delimiter)})",
+            regex_flags,
+        )
+        attrs["__commands_flag_regex__"] = pattern
+        attrs["__commands_flags__"] = flags
+        attrs["__commands_flag_aliases__"] = aliases
 
         return type.__new__(cls, name, bases, attrs)
 
 
-async def tuple_convert_all(ctx: Context, argument: str, flag: Flag, converter: Any) -> Tuple[Any, ...]:
+async def tuple_convert_all(
+    ctx: Context, argument: str, flag: Flag, converter: Any
+) -> Tuple[Any, ...]:
     view = StringView(argument)
     results = []
     param: inspect.Parameter = ctx.current_parameter  # type: ignore
@@ -371,7 +394,9 @@ async def tuple_convert_all(ctx: Context, argument: str, flag: Flag, converter: 
     return tuple(results)
 
 
-async def tuple_convert_flag(ctx: Context, argument: str, flag: Flag, converters: Any) -> Tuple[Any, ...]:
+async def tuple_convert_flag(
+    ctx: Context, argument: str, flag: Flag, converters: Any
+) -> Tuple[Any, ...]:
     view = StringView(argument)
     results = []
     param: inspect.Parameter = ctx.current_parameter  # type: ignore
@@ -399,7 +424,9 @@ async def tuple_convert_flag(ctx: Context, argument: str, flag: Flag, converters
     return tuple(results)
 
 
-async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -> Any:
+async def convert_flag(
+    ctx, argument: str, flag: Flag, annotation: Any = None
+) -> Any:
     param: inspect.Parameter = ctx.current_parameter  # type: ignore
     annotation = annotation or flag.annotation
     try:
@@ -409,9 +436,13 @@ async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -
     else:
         if origin is tuple:
             if annotation.__args__[-1] is Ellipsis:
-                return await tuple_convert_all(ctx, argument, flag, annotation.__args__[0])
+                return await tuple_convert_all(
+                    ctx, argument, flag, annotation.__args__[0]
+                )
             else:
-                return await tuple_convert_flag(ctx, argument, flag, annotation.__args__)
+                return await tuple_convert_flag(
+                    ctx, argument, flag, annotation.__args__
+                )
         elif origin is list:
             # typing.List[x]
             annotation = annotation.__args__[0]
@@ -422,7 +453,9 @@ async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -
             return await run_converters(ctx, annotation, argument, param)
         elif origin is dict:
             # typing.Dict[K, V] -> typing.Tuple[K, V]
-            return await tuple_convert_flag(ctx, argument, flag, annotation.__args__)
+            return await tuple_convert_flag(
+                ctx, argument, flag, annotation.__args__
+            )
 
     try:
         return await run_converters(ctx, annotation, argument, param)
@@ -432,7 +465,7 @@ async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -
         raise BadFlagArgument(flag) from e
 
 
-F = TypeVar('F', bound='FlagConverter')
+F = TypeVar("F", bound="FlagConverter")
 
 
 class FlagConverter(metaclass=FlagsMeta):
@@ -474,7 +507,9 @@ class FlagConverter(metaclass=FlagsMeta):
 
     @classmethod
     def _can_be_constructible(cls) -> bool:
-        return all(not flag.required for flag in cls.__commands_flags__.values())
+        return all(
+            not flag.required for flag in cls.__commands_flags__.values()
+        )
 
     def __iter__(self) -> Iterator[Tuple[str, Any]]:
         for flag in self.__class__.__commands_flags__.values():
@@ -493,8 +528,13 @@ class FlagConverter(metaclass=FlagsMeta):
         return self
 
     def __repr__(self) -> str:
-        pairs = ' '.join([f'{flag.attribute}={getattr(self, flag.attribute)!r}' for flag in self.get_flags().values()])
-        return f'<{self.__class__.__name__} {pairs}>'
+        pairs = " ".join(
+            [
+                f"{flag.attribute}={getattr(self, flag.attribute)!r}"
+                for flag in self.get_flags().values()
+            ]
+        )
+        return f"<{self.__class__.__name__} {pairs}>"
 
     @classmethod
     def parse_flags(cls, argument: str) -> Dict[str, List[str]]:
@@ -507,7 +547,7 @@ class FlagConverter(metaclass=FlagsMeta):
         case_insensitive = cls.__commands_flag_case_insensitive__
         for match in cls.__commands_flag_regex__.finditer(argument):
             begin, end = match.span(0)
-            key = match.group('flag')
+            key = match.group("flag")
             if case_insensitive:
                 key = key.casefold()
 

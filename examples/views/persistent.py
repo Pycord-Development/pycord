@@ -1,5 +1,5 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
 
 
 # Define a simple View that persists between bot restarts
@@ -19,20 +19,34 @@ class PersistentView(discord.ui.View):
         style=discord.ButtonStyle.green,
         custom_id="persistent_view:green",
     )
-    async def green(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("This is green.", ephemeral=True)
+    async def green(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        await interaction.response.send_message(
+            "This is green.", ephemeral=True
+        )
 
     @discord.ui.button(
-        label="Red", style=discord.ButtonStyle.red, custom_id="persistent_view:red"
+        label="Red",
+        style=discord.ButtonStyle.red,
+        custom_id="persistent_view:red",
     )
-    async def red(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def red(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
         await interaction.response.send_message("This is red.", ephemeral=True)
 
     @discord.ui.button(
-        label="Grey", style=discord.ButtonStyle.grey, custom_id="persistent_view:grey"
+        label="Grey",
+        style=discord.ButtonStyle.grey,
+        custom_id="persistent_view:grey",
     )
-    async def grey(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("This is grey.", ephemeral=True)
+    async def grey(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        await interaction.response.send_message(
+            "This is grey.", ephemeral=True
+        )
 
 
 class PersistentViewBot(commands.Bot):

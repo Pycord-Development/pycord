@@ -24,19 +24,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Optional, TYPE_CHECKING
-from .utils import parse_time, _get_as_snowflake, _bytes_to_base64_data, MISSING
+from typing import TYPE_CHECKING, Any, Optional
+
 from .enums import VoiceRegion
 from .guild import Guild
+from .utils import (MISSING, _bytes_to_base64_data, _get_as_snowflake,
+                    parse_time)
 
-__all__ = (
-    'Template',
-)
+__all__ = ("Template",)
 
 if TYPE_CHECKING:
     import datetime
-    from .types.template import Template as TemplatePayload
+
     from .state import ConnectionState
+    from .types.template import Template as TemplatePayload
     from .user import User
 
 
@@ -44,7 +45,9 @@ class _FriendlyHttpAttributeErrorHelper:
     __slots__ = ()
 
     def __getattr__(self, attr):
-        raise AttributeError('PartialTemplateState does not support http methods.')
+        raise AttributeError(
+            "PartialTemplateState does not support http methods."
+        )
 
 
 class _PartialTemplateState:
@@ -84,7 +87,9 @@ class _PartialTemplateState:
         return []
 
     def __getattr__(self, attr):
-        raise AttributeError(f'PartialTemplateState does not support {attr!r}.')
+        raise AttributeError(
+            f"PartialTemplateState does not support {attr!r}."
+        )
 
 
 class Template:
@@ -118,55 +123,67 @@ class Template:
     """
 
     __slots__ = (
-        'code',
-        'uses',
-        'name',
-        'description',
-        'creator',
-        'created_at',
-        'updated_at',
-        'source_guild',
-        'is_dirty',
-        '_state',
+        "code",
+        "uses",
+        "name",
+        "description",
+        "creator",
+        "created_at",
+        "updated_at",
+        "source_guild",
+        "is_dirty",
+        "_state",
     )
 
-    def __init__(self, *, state: ConnectionState, data: TemplatePayload) -> None:
+    def __init__(
+        self, *, state: ConnectionState, data: TemplatePayload
+    ) -> None:
         self._state = state
         self._store(data)
 
     def _store(self, data: TemplatePayload) -> None:
-        self.code: str = data['code']
-        self.uses: int = data['usage_count']
-        self.name: str = data['name']
-        self.description: Optional[str] = data['description']
-        creator_data = data.get('creator')
-        self.creator: Optional[User] = None if creator_data is None else self._state.create_user(creator_data)
+        self.code: str = data["code"]
+        self.uses: int = data["usage_count"]
+        self.name: str = data["name"]
+        self.description: Optional[str] = data["description"]
+        creator_data = data.get("creator")
+        self.creator: Optional[User] = (
+            None
+            if creator_data is None
+            else self._state.create_user(creator_data)
+        )
 
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get('created_at'))
-        self.updated_at: Optional[datetime.datetime] = parse_time(data.get('updated_at'))
+        self.created_at: Optional[datetime.datetime] = parse_time(
+            data.get("created_at")
+        )
+        self.updated_at: Optional[datetime.datetime] = parse_time(
+            data.get("updated_at")
+        )
 
-        guild_id = int(data['source_guild_id'])
+        guild_id = int(data["source_guild_id"])
         guild: Optional[Guild] = self._state._get_guild(guild_id)
 
         self.source_guild: Guild
         if guild is None:
-            source_serialised = data['serialized_source_guild']
-            source_serialised['id'] = guild_id
+            source_serialised = data["serialized_source_guild"]
+            source_serialised["id"] = guild_id
             state = _PartialTemplateState(state=self._state)
             # Guild expects a ConnectionState, we're passing a _PartialTemplateState
             self.source_guild = Guild(data=source_serialised, state=state)  # type: ignore
         else:
             self.source_guild = guild
 
-        self.is_dirty: Optional[bool] = data.get('is_dirty', None)
+        self.is_dirty: Optional[bool] = data.get("is_dirty", None)
 
     def __repr__(self) -> str:
         return (
-            f'<Template code={self.code!r} uses={self.uses} name={self.name!r}'
-            f' creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>'
+            f"<Template code={self.code!r} uses={self.uses} name={self.name!r}"
+            f" creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>"
         )
 
-    async def create_guild(self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None) -> Guild:
+    async def create_guild(
+        self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None
+    ) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild` using the template.
@@ -203,7 +220,9 @@ class Template:
         region = region or VoiceRegion.us_west
         region_value = region.value
 
-        data = await self._state.http.create_from_template(self.code, name, region_value, icon)
+        data = await self._state.http.create_from_template(
+            self.code, name, region_value, icon
+        )
         return Guild(data=data, state=self._state)
 
     async def sync(self) -> Template:
@@ -234,7 +253,9 @@ class Template:
             The newly edited template.
         """
 
-        data = await self._state.http.sync_template(self.source_guild.id, self.code)
+        data = await self._state.http.sync_template(
+            self.source_guild.id, self.code
+        )
         return Template(state=self._state, data=data)
 
     async def edit(
@@ -279,11 +300,13 @@ class Template:
         payload = {}
 
         if name is not MISSING:
-            payload['name'] = name
+            payload["name"] = name
         if description is not MISSING:
-            payload['description'] = description
+            payload["description"] = description
 
-        data = await self._state.http.edit_template(self.source_guild.id, self.code, payload)
+        data = await self._state.http.edit_template(
+            self.source_guild.id, self.code, payload
+        )
         return Template(state=self._state, data=data)
 
     async def delete(self) -> None:
@@ -310,7 +333,7 @@ class Template:
     @property
     def url(self) -> str:
         """:class:`str`: The template url.
-        
+
         .. versionadded:: 2.0
         """
-        return f'https://discord.new/{self.code}'
+        return f"https://discord.new/{self.code}"

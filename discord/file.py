@@ -23,14 +23,12 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING, Union
 
-import os
 import io
+import os
+from typing import TYPE_CHECKING, Optional, Union
 
-__all__ = (
-    'File',
-)
+__all__ = ("File",)
 
 
 class File:
@@ -64,7 +62,14 @@ class File:
         Whether the attachment is a spoiler.
     """
 
-    __slots__ = ('fp', 'filename', 'spoiler', '_original_pos', '_owner', '_closer')
+    __slots__ = (
+        "fp",
+        "filename",
+        "spoiler",
+        "_original_pos",
+        "_owner",
+        "_closer",
+    )
 
     if TYPE_CHECKING:
         fp: io.BufferedIOBase
@@ -80,12 +85,14 @@ class File:
     ):
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
-                raise ValueError(f'File buffer {fp!r} must be seekable and readable')
+                raise ValueError(
+                    f"File buffer {fp!r} must be seekable and readable"
+                )
             self.fp = fp
             self._original_pos = fp.tell()
             self._owner = False
         else:
-            self.fp = open(fp, 'rb')
+            self.fp = open(fp, "rb")
             self._original_pos = 0
             self._owner = True
 
@@ -100,14 +107,20 @@ class File:
             if isinstance(fp, str):
                 _, self.filename = os.path.split(fp)
             else:
-                self.filename = getattr(fp, 'name', None)
+                self.filename = getattr(fp, "name", None)
         else:
             self.filename = filename
 
-        if spoiler and self.filename is not None and not self.filename.startswith('SPOILER_'):
-            self.filename = 'SPOILER_' + self.filename
+        if (
+            spoiler
+            and self.filename is not None
+            and not self.filename.startswith("SPOILER_")
+        ):
+            self.filename = "SPOILER_" + self.filename
 
-        self.spoiler = spoiler or (self.filename is not None and self.filename.startswith('SPOILER_'))
+        self.spoiler = spoiler or (
+            self.filename is not None and self.filename.startswith("SPOILER_")
+        )
 
     def reset(self, *, seek: Union[int, bool] = True) -> None:
         # The `seek` parameter is needed because

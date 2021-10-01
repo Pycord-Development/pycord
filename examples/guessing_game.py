@@ -1,6 +1,7 @@
-import discord
-import random
 import asyncio
+import random
+
+import discord
 
 
 class MyClient(discord.Client):
@@ -22,7 +23,9 @@ class MyClient(discord.Client):
             answer = random.randint(1, 10)
 
             try:
-                guess = await self.wait_for("message", check=is_correct, timeout=5.0)
+                guess = await self.wait_for(
+                    "message", check=is_correct, timeout=5.0
+                )
             except asyncio.TimeoutError:
                 return await message.channel.send(
                     f"Sorry, you took too long it was {answer}."

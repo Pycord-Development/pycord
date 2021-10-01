@@ -1,8 +1,8 @@
 import asyncio
 
-import discord
 import youtube_dl
 
+import discord
 from discord.ext import commands
 
 # Suppress noise about console usage from errors
@@ -49,7 +49,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data["entries"][0]
 
         filename = data["url"] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+        return cls(
+            discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data
+        )
 
 
 class Music(commands.Cog):
@@ -83,7 +85,8 @@ class Music(commands.Cog):
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
             ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
+                player,
+                after=lambda e: print(f"Player error: {e}") if e else None,
             )
 
         await ctx.send(f"Now playing: {player.title}")
@@ -93,9 +96,12 @@ class Music(commands.Cog):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            player = await YTDLSource.from_url(
+                url, loop=self.bot.loop, stream=True
+            )
             ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
+                player,
+                after=lambda e: print(f"Player error: {e}") if e else None,
             )
 
         await ctx.send(f"Now playing: {player.title}")
@@ -125,7 +131,9 @@ class Music(commands.Cog):
                 await ctx.author.voice.channel.connect()
             else:
                 await ctx.send("You are not connected to a voice channel.")
-                raise commands.CommandError("Author not connected to a voice channel.")
+                raise commands.CommandError(
+                    "Author not connected to a voice channel."
+                )
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
 

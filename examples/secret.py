@@ -101,7 +101,10 @@ async def emoji(
     # the key parameter here is `roles`, which controls
     # what roles are able to use the emoji.
     await ctx.guild.create_custom_emoji(
-        name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business."
+        name=emoji.name,
+        image=emoji_bytes,
+        roles=roles,
+        reason="Very secret business.",
     )
 
 

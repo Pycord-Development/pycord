@@ -24,36 +24,24 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import copy
 import asyncio
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    TYPE_CHECKING,
-    Protocol,
-    Sequence,
-    Tuple,
-    TypeVar,
-    Union,
-    overload,
-    runtime_checkable,
-)
+import copy
+from typing import (TYPE_CHECKING, Any, Callable, Dict, List, Optional,
+                    Protocol, Sequence, Tuple, TypeVar, Union, overload,
+                    runtime_checkable)
 
-from .iterators import HistoryIterator
+from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
-from .errors import InvalidArgument, ClientException
+from .errors import ClientException, InvalidArgument
+from .file import File
+from .invite import Invite
+from .iterators import HistoryIterator
 from .mentions import AllowedMentions
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
-from .invite import Invite
-from .file import File
-from .voice_client import VoiceClient, VoiceProtocol
 from .sticker import GuildSticker, StickerItem
-from . import utils
+from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
     'Snowflake',
@@ -69,25 +57,24 @@ T = TypeVar('T', bound=VoiceProtocol)
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from .client import Client
-    from .user import ClientUser
     from .asset import Asset
-    from .state import ConnectionState
+    from .channel import (CategoryChannel, DMChannel, GroupChannel,
+                          PartialMessageable, TextChannel)
+    from .client import Client
+    from .embeds import Embed
+    from .enums import InviteTarget
     from .guild import Guild
     from .member import Member
-    from .channel import CategoryChannel
-    from .embeds import Embed
     from .message import Message, MessageReference, PartialMessage
-    from .channel import TextChannel, DMChannel, GroupChannel, PartialMessageable
+    from .state import ConnectionState
     from .threads import Thread
-    from .enums import InviteTarget
+    from .types.channel import Channel as ChannelPayload
+    from .types.channel import GuildChannel as GuildChannelPayload
+    from .types.channel import OverwriteType
+    from .types.channel import \
+        PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
-    from .types.channel import (
-        PermissionOverwrite as PermissionOverwritePayload,
-        Channel as ChannelPayload,
-        GuildChannel as GuildChannelPayload,
-        OverwriteType,
-    )
+    from .user import ClientUser
 
     PartialMessageableChannel = Union[TextChannel, Thread, DMChannel, PartialMessageable]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]

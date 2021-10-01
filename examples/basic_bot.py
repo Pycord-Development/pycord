@@ -1,8 +1,9 @@
 # This example requires the 'members' privileged intents
 
+import random
+
 import discord
 from discord.ext import commands
-import random
 
 description = """An example bot to showcase the discord.ext.commands extension
 module.
@@ -12,7 +13,9 @@ There are a number of utility commands being showcased here."""
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix="?", description=description, intents=intents)
+bot = commands.Bot(
+    command_prefix="?", description=description, intents=intents
+)
 
 
 @bot.event

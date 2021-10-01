@@ -1,6 +1,8 @@
 from typing import List
-from discord.ext import commands
+
 import discord
+from discord.ext import commands
+
 
 # Defines a custom button that contains the logic of the game.
 # The ['TicTacToe'] bit is for type hinting purposes to tell your IDE or linter
@@ -11,7 +13,9 @@ class TicTacToeButton(discord.ui.Button["TicTacToe"]):
         # The row parameter tells the View which row to place the button under.
         # A View can only contain up to 5 rows -- each row can only have 5 buttons.
         # Since a Tic Tac Toe grid is 3x3 that means we have 3 rows and 3 columns.
-        super().__init__(style=discord.ButtonStyle.secondary, label="\u200b", row=y)
+        super().__init__(
+            style=discord.ButtonStyle.secondary, label="\u200b", row=y
+        )
         self.x = x
         self.y = y
 
@@ -92,7 +96,9 @@ class TicTacToe(discord.ui.View):
 
         # Check vertical
         for line in range(3):
-            value = self.board[0][line] + self.board[1][line] + self.board[2][line]
+            value = (
+                self.board[0][line] + self.board[1][line] + self.board[2][line]
+            )
             if value == 3:
                 return self.O
             elif value == -3:

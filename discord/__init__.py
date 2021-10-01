@@ -9,59 +9,59 @@ A basic wrapper for the Discord API.
 
 """
 
-__title__ = 'discord'
-__author__ = 'Rapptz'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2015-present Rapptz'
-__version__ = '2.0.0a'
+__title__ = "discord"
+__author__ = "Rapptz"
+__license__ = "MIT"
+__copyright__ = "Copyright 2015-present Rapptz"
+__version__ = "2.0.0a"
 
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+__path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
 import logging
-from typing import NamedTuple, Literal
+from typing import Literal, NamedTuple
 
-from .client import *
-from .appinfo import *
-from .user import *
-from .emoji import *
-from .partial_emoji import *
+from . import abc, opus, ui, utils
 from .activity import *
-from .channel import *
-from .guild import *
-from .flags import *
-from .member import *
-from .message import *
-from .asset import *
-from .errors import *
-from .permissions import *
-from .role import *
-from .file import *
-from .colour import *
-from .integrations import *
-from .invite import *
-from .template import *
-from .widget import *
-from .object import *
-from .reaction import *
-from . import utils, opus, abc, ui
-from .enums import *
-from .embeds import *
-from .mentions import *
-from .shard import *
-from .player import *
-from .webhook import *
-from .voice_client import *
-from .audit_logs import *
-from .raw_models import *
-from .team import *
-from .sticker import *
-from .stage_instance import *
-from .interactions import *
-from .components import *
-from .threads import *
-from .bot import *
 from .app import *
+from .appinfo import *
+from .asset import *
+from .audit_logs import *
+from .bot import *
+from .channel import *
+from .client import *
+from .colour import *
+from .components import *
+from .embeds import *
+from .emoji import *
+from .enums import *
+from .errors import *
+from .file import *
+from .flags import *
+from .guild import *
+from .integrations import *
+from .interactions import *
+from .invite import *
+from .member import *
+from .mentions import *
+from .message import *
+from .object import *
+from .partial_emoji import *
+from .permissions import *
+from .player import *
+from .raw_models import *
+from .reaction import *
+from .role import *
+from .shard import *
+from .stage_instance import *
+from .sticker import *
+from .team import *
+from .template import *
+from .threads import *
+from .user import *
+from .voice_client import *
+from .webhook import *
 from .welcome_screen import *
+from .widget import *
 
 
 class VersionInfo(NamedTuple):
@@ -72,6 +72,8 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel='alpha', serial=0)
+version_info: VersionInfo = VersionInfo(
+    major=2, minor=0, micro=0, releaselevel="alpha", serial=0
+)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

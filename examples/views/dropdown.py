@@ -3,6 +3,7 @@ import typing
 import discord
 from discord.ext import commands
 
+
 # Defines a custom Select containing colour options
 # that the user can choose. The callback function
 # of this class is called when the user changes their choice
@@ -12,13 +13,19 @@ class Dropdown(discord.ui.Select):
         # Set the options that will be presented inside the dropdown
         options = [
             discord.SelectOption(
-                label="Red", description="Your favourite colour is red", emoji="🟥"
+                label="Red",
+                description="Your favourite colour is red",
+                emoji="🟥",
             ),
             discord.SelectOption(
-                label="Green", description="Your favourite colour is green", emoji="🟩"
+                label="Green",
+                description="Your favourite colour is green",
+                emoji="🟩",
             ),
             discord.SelectOption(
-                label="Blue", description="Your favourite colour is blue", emoji="🟦"
+                label="Blue",
+                description="Your favourite colour is blue",
+                emoji="🟦",
             ),
         ]
 

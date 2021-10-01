@@ -26,58 +26,35 @@ from __future__ import annotations
 
 import copy
 import unicodedata
-from typing import (
-    Any,
-    ClassVar,
-    Dict,
-    List,
-    NamedTuple,
-    Sequence,
-    Set,
-    Literal,
-    Optional,
-    TYPE_CHECKING,
-    Tuple,
-    Union,
-    overload,
-)
+from typing import (TYPE_CHECKING, Any, ClassVar, Dict, List, Literal,
+                    NamedTuple, Optional, Sequence, Set, Tuple, Union,
+                    overload)
 
-from . import utils, abc
-from .role import Role
-from .member import Member, VoiceState
-from .emoji import Emoji
-from .errors import InvalidData
-from .permissions import PermissionOverwrite
-from .colour import Colour
-from .errors import InvalidArgument, ClientException
-from .channel import *
-from .channel import _guild_channel_factory
-from .channel import _threaded_guild_channel_factory
-from .enums import (
-    AuditLogAction,
-    VideoQualityMode,
-    VoiceRegion,
-    ChannelType,
-    try_enum,
-    VerificationLevel,
-    ContentFilter,
-    NotificationLevel,
-    NSFWLevel,
-)
-from .mixins import Hashable
-from .user import User
-from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator
-from .widget import Widget
+from . import abc, utils
 from .asset import Asset
+from .channel import *
+from .channel import _guild_channel_factory, _threaded_guild_channel_factory
+from .colour import Colour
+from .emoji import Emoji
+from .enums import (AuditLogAction, ChannelType, ContentFilter,
+                    NotificationLevel, NSFWLevel, VerificationLevel,
+                    VideoQualityMode, VoiceRegion, try_enum)
+from .errors import ClientException, InvalidArgument, InvalidData
+from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
+from .invite import Invite
+from .iterators import AuditLogIterator, MemberIterator
+from .member import Member, VoiceState
+from .mixins import Hashable
+from .permissions import PermissionOverwrite
+from .role import Role
 from .stage_instance import StageInstance
-from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
-from .file import File
+from .threads import Thread, ThreadMember
+from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
-
+from .widget import Widget
 
 __all__ = (
     'Guild',
@@ -86,20 +63,21 @@ __all__ = (
 MISSING = utils.MISSING
 
 if TYPE_CHECKING:
-    from .abc import Snowflake, SnowflakeTime
-    from .types.guild import Ban as BanPayload, Guild as GuildPayload, MFALevel, GuildFeature
-    from .types.threads import (
-        Thread as ThreadPayload,
-    )
-    from .types.voice import GuildVoiceState
-    from .permissions import Permissions
-    from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel
-    from .template import Template
-    from .webhook import Webhook
-    from .state import ConnectionState
-    from .voice_client import VoiceProtocol
-
     import datetime
+
+    from .abc import Snowflake, SnowflakeTime
+    from .channel import (CategoryChannel, StageChannel, StoreChannel,
+                          TextChannel, VoiceChannel)
+    from .permissions import Permissions
+    from .state import ConnectionState
+    from .template import Template
+    from .types.guild import Ban as BanPayload
+    from .types.guild import Guild as GuildPayload
+    from .types.guild import GuildFeature, MFALevel
+    from .types.threads import Thread as ThreadPayload
+    from .types.voice import GuildVoiceState
+    from .voice_client import VoiceProtocol
+    from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
     GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel]

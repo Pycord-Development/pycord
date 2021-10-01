@@ -24,22 +24,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, SupportsInt, Union
+
 from . import utils
 from .mixins import Hashable
 
-from typing import (
-    SupportsInt,
-    TYPE_CHECKING,
-    Union,
-)
-
 if TYPE_CHECKING:
     import datetime
+
     SupportsIntCast = Union[SupportsInt, str, bytes, bytearray]
 
-__all__ = (
-    'Object',
-)
+__all__ = ("Object",)
+
 
 class Object(Hashable):
     """Represents a generic Discord object.
@@ -79,12 +75,14 @@ class Object(Hashable):
         try:
             id = int(id)
         except ValueError:
-            raise TypeError(f'id parameter must be convertable to int not {id.__class__!r}') from None
+            raise TypeError(
+                f"id parameter must be convertable to int not {id.__class__!r}"
+            ) from None
         else:
             self.id = id
 
     def __repr__(self) -> str:
-        return f'<Object id={self.id!r}>'
+        return f"<Object id={self.id!r}>"
 
     @property
     def created_at(self) -> datetime.datetime:
