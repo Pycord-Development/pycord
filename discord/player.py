@@ -612,7 +612,8 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
 
     def read(self) -> bytes:
         ret = self.original.read()
-        return audioop.mul(ret, 2, min(self._volume, 2.0))
+        return audioop.mul(ret, 2, min(self._volume, 30.0))
+        # anything above 30.0 does not get any louder
 
 class AudioPlayer(threading.Thread):
     DELAY: float = OpusEncoder.FRAME_LENGTH / 1000.0
