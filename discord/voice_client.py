@@ -21,6 +21,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+
+
+Some documentation to refer to:
+
+- Our main web socket (mWS) sends opcode 4 with a guild ID and channel ID.
+- The mWS receives VOICE_STATE_UPDATE and VOICE_SERVER_UPDATE.
+- We pull the session_id from VOICE_STATE_UPDATE.
+- We pull the token, endpoint and server_id from VOICE_SERVER_UPDATE.
+- Then we initiate the voice web socket (vWS) pointing to the endpoint.
+- We send opcode 0 with the user_id, server_id, session_id and token using the vWS.
+- The vWS sends back opcode 2 with an ssrc, port, modes(array) and hearbeat_interval.
+- We send a UDP discovery packet to endpoint:port and receive our IP and our port in LE.
+- Then we send our IP and port via vWS with opcode 1.
+- When that's all done, we receive opcode 4 from the vWS.
+- Finally we can transmit data to endpoint:port.
 """
 
 from __future__ import annotations
