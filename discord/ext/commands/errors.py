@@ -458,7 +458,7 @@ class GuildStickerNotFound(BadArgument):
         super().__init__(f'Sticker "{argument}" not found.')
 
 class BadBoolArgument(BadArgument):
-    """Exception raised when a boolean argument was not convertable.
+    """Exception raised when a boolean argument was not convertible.
 
     This inherits from :exc:`BadArgument`
 

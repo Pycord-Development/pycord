@@ -318,7 +318,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overriden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`commands.Bot`.
 
         .. versionadded:: 2.0
 
