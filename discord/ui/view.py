@@ -125,6 +125,8 @@ class View:
 
     Parameters
     -----------
+    *items: :class:`Item`
+        The initial items attached to this view.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
@@ -153,7 +155,7 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *, timeout: Optional[float] = 180.0):
+    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
         self.timeout = timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
@@ -164,6 +166,9 @@ class View:
             self.children.append(item)
 
         self.__weights = _ViewWeights(self.children)
+        for item in items:
+            self.add_item(item)
+
         loop = asyncio.get_running_loop()
         self.id: str = os.urandom(16).hex()
         self.__cancel_callback: Optional[Callable[[View], None]] = None
