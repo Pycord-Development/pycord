@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-
+from typing import Union
 
 
 description = """An example to showcase how to extract info about users"""
