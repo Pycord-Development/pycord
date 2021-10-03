@@ -1,14 +1,11 @@
 import discord
-from discord.ext import commands
-from typing import Union
+from discord.app import Option
 
 
 description = """An example to showcase how to extract info about users"""
 
-intents = discord.Intents.default()
-intents.members = True
-
-bot = commands.Bot(command_prefix="?", description=description, intents=intents)
+bot = discord.Bot(commands_prefix="x", description="e",
+                  intents=discord.Intents.all())
 
 
 @bot.event
@@ -17,37 +14,20 @@ async def on_ready():
     print("------")
 
 
-@bot.command()
-async def info(ctx, *, user: Union[discord.Member, discord.User] = None):
-    """Shows info about a user."""
-
+@bot.slash_command(name="a", description="a")
+async def perms(ctx, user: discord.Member):
     user = user or ctx.author
     e = discord.Embed()
-    roles = [role.name.replace('@', '@\u200b') for role in getattr(user, 'roles', [])]
-    e.set_author(name=str(user))
-
-
-
+    e.set_author(name=user.name)
     e.add_field(name='ID', value=user.id, inline=False)
-    e.add_field(name='Joined', value=round_time(user.joined_at), inline=False)
-    e.add_field(name='Created', value=round_time(user.created_at), inline=False)
-
-    voice = getattr(user, 'voice', None)
-    if voice is not None:
-        vc = voice.channel
-        other_people = len(vc.members) - 1
-        voice = f'{vc.name} with {other_people} others' if other_people else f'{vc.name} by themselves'
-        e.add_field(name='Voice', value=voice, inline=False)
-
-    if roles:
-        e.add_field(name='Roles', value=', '.join(roles) if len(roles) < 10 else f'{len(roles)} roles', inline=False)
-
+    e.add_field(name='Joined', value=user.joined_at.strftime(
+        "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
+    e.add_field(name='Created', value=user.created_at.strftime(
+        "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
     colour = user.colour
     if colour.value:
-        e.colour = colour
 
-    if user.avatar:
-        e.set_thumbnail(url=user.display_avatar.url)
+        e.colour = colour
 
     if isinstance(user, discord.User):
         e.set_footer(text='This member is not in this server.')
