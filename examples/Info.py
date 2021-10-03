@@ -1,5 +1,5 @@
 import discord
-from discord.app import Option
+from discord.ext import commands
 
 
 description = """An example to showcase how to extract info about users"""
@@ -14,7 +14,8 @@ async def on_ready():
     print("------")
 
 
-@bot.slash_command(name="a", description="a")
+
+@bot.command()
 async def perms(ctx, user: discord.Member):
     user = user or ctx.author
     e = discord.Embed()
@@ -28,9 +29,6 @@ async def perms(ctx, user: discord.Member):
     if colour.value:
 
         e.colour = colour
-
-    if isinstance(user, discord.User):
-        e.set_footer(text='This member is not in this server.')
 
     await ctx.send(embed=e)
 
