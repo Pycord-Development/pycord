@@ -18,40 +18,40 @@ async def on_ready():
 
 
 @bot.command()
-    async def info(ctx, *, user: Union[discord.Member, discord.User] = None):
-        """Shows info about a user."""
+async def info(ctx, *, user: Union[discord.Member, discord.User] = None):
+    """Shows info about a user."""
 
-        user = user or ctx.author
-        e = discord.Embed()
-        roles = [role.name.replace('@', '@\u200b') for role in getattr(user, 'roles', [])]
-        e.set_author(name=str(user))
+    user = user or ctx.author
+    e = discord.Embed()
+    roles = [role.name.replace('@', '@\u200b') for role in getattr(user, 'roles', [])]
+    e.set_author(name=str(user))
 
-        
 
-        e.add_field(name='ID', value=user.id, inline=False)
-        e.add_field(name='Joined', value=round_time(user.joined_at), inline=False)
-        e.add_field(name='Created', value=round_time(user.created_at), inline=False)
 
-        voice = getattr(user, 'voice', None)
-        if voice is not None:
-            vc = voice.channel
-            other_people = len(vc.members) - 1
-            voice = f'{vc.name} with {other_people} others' if other_people else f'{vc.name} by themselves'
-            e.add_field(name='Voice', value=voice, inline=False)
+    e.add_field(name='ID', value=user.id, inline=False)
+    e.add_field(name='Joined', value=round_time(user.joined_at), inline=False)
+    e.add_field(name='Created', value=round_time(user.created_at), inline=False)
 
-        if roles:
-            e.add_field(name='Roles', value=', '.join(roles) if len(roles) < 10 else f'{len(roles)} roles', inline=False)
+    voice = getattr(user, 'voice', None)
+    if voice is not None:
+        vc = voice.channel
+        other_people = len(vc.members) - 1
+        voice = f'{vc.name} with {other_people} others' if other_people else f'{vc.name} by themselves'
+        e.add_field(name='Voice', value=voice, inline=False)
 
-        colour = user.colour
-        if colour.value:
-            e.colour = colour
+    if roles:
+        e.add_field(name='Roles', value=', '.join(roles) if len(roles) < 10 else f'{len(roles)} roles', inline=False)
 
-        if user.avatar:
-            e.set_thumbnail(url=user.avatar_url)
+    colour = user.colour
+    if colour.value:
+        e.colour = colour
 
-        if isinstance(user, discord.User):
-            e.set_footer(text='This member is not in this server.')
+    if user.avatar:
+        e.set_thumbnail(url=user.display_avatar.url)
 
-        await ctx.send(embed=e)
+    if isinstance(user, discord.User):
+        e.set_footer(text='This member is not in this server.')
+
+    await ctx.send(embed=e)
 
 bot.run("token")
