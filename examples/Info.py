@@ -17,7 +17,7 @@ async def on_ready():
     print("------")
 
 
- @bot.command()
+@bot.command()
     async def info(ctx, *, user: Union[discord.Member, discord.User] = None):
         """Shows info about a user."""
 
