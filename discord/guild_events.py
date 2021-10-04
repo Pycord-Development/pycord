@@ -32,7 +32,9 @@ from typing import (
     TYPE_CHECKING,
     Optional,
     NamedTuple,
-    List
+    List,
+    Dict,
+    Any
 )
 from .enums import (
     StagePrivacyLevel,
@@ -40,9 +42,11 @@ from .enums import (
     GuildEventEntityType,
     try_enum
 )
+from .utils import MISSING
 
 if TYPE_CHECKING:
     from .state import ConnectionState
+    from .types.guild import Guild
 
 class GuildEventEntityMetadata(NamedTuple):
     speaker_ids: Optional[List[int]]
@@ -50,9 +54,11 @@ class GuildEventEntityMetadata(NamedTuple):
 
 class GuildEvent:
     def __init__(self, *, data, state: ConnectionState):
+        self._state = state
+        
         self.id: int = data.get('id')
-        self.guild_id: int = data.get('guild_id')
-        self.channel_id: int = data.get('channel_id')
+        self.guild: Guild = self._state._get_guild(data.get('guild_id'))
+        self.channel_id: int = data.get('channel_id', None)
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
         self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
@@ -76,3 +82,73 @@ class GuildEvent:
     @property
     def interested(self):
         return self.user_count
+    
+    async def edit(
+        self,
+        *,
+        name: Optional[str] = MISSING,
+        description: Optional[str] = MISSING,
+        channel_id: int = MISSING,
+        privacy_level: StagePrivacyLevel = MISSING,
+        start_time: datetime.datetime = MISSING,
+        # entity_type
+    ) -> Optional[GuildEvent]:
+        """|coro|
+        
+        Edits the Guild Event's data
+        
+        All parameters are optional
+        
+        Will return a new :class:`.GuildEvent` object if applicable.
+        
+        Parameters
+        ----------
+        name: Optional[:class:`str`]
+            The new name of the event.
+        description: Optional[:class:`str`]
+            The new description of the event.
+        channel_id: :class:`int`
+            The id of the new channel the event will be taking place.
+        privacy_level: :class:`.StagePrivacyLevel`
+            The new privacy level of this event (if it's happening in a stage channel).
+        start_time: :class:`datetime.datetime`
+            The new starting time for the event.
+
+        Raises
+        ------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
+        Returns
+        -------
+        Optional[:class:`.GuildEvent`]
+            The newly updated guild event object. This is only returned when certain
+            fields are updated.
+        """
+        # TODO:
+        # for `channel_id` it may become optional because
+        # there's a custom location parameter so it might
+        # not be giving us an ID in the first place
+        
+        payload: Dict[str, Any] = {}
+
+        if name is not MISSING:
+            payload["name"] = name
+        
+        if description is not MISSING:
+            payload["description"] = description
+        
+        if privacy_level is not MISSING:
+            payload["privacy_level"] = privacy_level.value
+        
+        if channel_id is not MISSING:
+            payload["channel_id"] = channel_id
+
+        if start_time is not MISSING:
+            payload["scheduled_start_time"] = start_time.isoformat()
+        
+        if payload:
+            data = await self._state.http.edit_guild_event(self.id, **payload)
+            return GuildEvent(data=data, state=self._state)
