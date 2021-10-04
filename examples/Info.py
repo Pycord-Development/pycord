@@ -2,10 +2,15 @@ import discord
 from discord.ext import commands
 
 
-description = """An example to showcase how to extract info about users"""
+# An example to showcase how to extract info about users
 
-bot = discord.Bot(commands_prefix="x", description="e",
-                  intents=discord.Intents.all())
+intents = discord.Intents(
+            members=True,
+            messages=True,
+            )
+
+bot = commands.Bot(command_prefix=".", description="e",
+                  intents=intents)
 
 
 @bot.event
@@ -16,7 +21,7 @@ async def on_ready():
 
 
 @bot.command()
-async def perms(ctx, user: discord.Member):
+async def userinfo(ctx, user: discord.Member):
     user = user or ctx.author
     e = discord.Embed()
     e.set_author(name=user.name)
