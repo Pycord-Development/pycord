@@ -1395,7 +1395,7 @@ class HTTPClient:
             'with_counts': int(with_counts),
             'with_expiration': int(with_expiration)
         }
-        if guild_scheduled_event_id != None: # I implemented it like this because the paramater might not exist yet on the api
+        if guild_scheduled_event_id != None: # I implemented it like this because the parameter might not exist yet on the api
             params['guild_scheduled_event_id'] = guild_scheduled_event_id
         return self.request(Route('GET', '/invites/{invite_id}', invite_id=invite_id), params=params)
 
