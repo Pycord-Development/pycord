@@ -23,13 +23,13 @@ async def on_ready():
 @bot.command()
 async def userinfo(ctx, user: discord.Member):
     user = user or ctx.author
-    e = discord.Embed()
+    e = discord.Embed(colour=user.color)
     e.set_author(name=user.name)
     e.add_field(name='ID', value=user.id, inline=False)
     e.add_field(name='Joined', value=user.joined_at.strftime(
         "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
     e.add_field(name='Created', value=user.created_at.strftime(
         "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
-    await ctx.send(embed=e, colour=user.colour)
+    await ctx.send(embed=e)
 
 bot.run("token")
