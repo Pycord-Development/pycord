@@ -9,7 +9,7 @@ intents = discord.Intents(
             messages=True,
             )
 
-bot = commands.Bot(command_prefix=".", description="e",
+bot = commands.Bot(command_prefix=".", description="User info example",
                   intents=intents)
 
 
