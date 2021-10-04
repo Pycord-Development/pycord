@@ -23,7 +23,7 @@ async def on_ready():
 @bot.command()
 async def userinfo(ctx, user: discord.Member):
     user = user or ctx.author
-    e = discord.Embed(colour=user.color)
+    e = discord.Embed(colour=user.colour)
     e.set_author(name=user.name)
     e.add_field(name='ID', value=user.id, inline=False)
     e.add_field(name='Joined', value=user.joined_at.strftime(
