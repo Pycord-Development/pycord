@@ -25,11 +25,6 @@ async def perms(ctx, user: discord.Member):
         "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
     e.add_field(name='Created', value=user.created_at.strftime(
         "%A, %B %d %Y @ %H:%M:%S %p"), inline=False)
-    colour = user.colour
-    if colour.value:
-
-        e.colour = colour
-
-    await ctx.send(embed=e)
+    await ctx.send(embed=e, colour=user.colour)
 
 bot.run("token")
