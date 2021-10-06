@@ -7,11 +7,8 @@ class MyClient(discord.Client):
         print("------")
 
     async def on_message(self, message):
-        # we do not want the bot to reply to itself
-        if message.author.id == self.user.id:
-            return
-
-        if message.content.startswith("!hello"):
+        # ensures that the bot does not reply to itself
+        if message.author.id != self.user.id and message.content.startswith("!hello"):
             await message.reply("Hello!", mention_author=True)
 
 
