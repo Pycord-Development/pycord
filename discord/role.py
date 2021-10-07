@@ -172,9 +172,6 @@ class Role(Hashable):
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
         The role tags associated with this role.
-    icon: Optional[:class:`bytes`]
-        A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
-        Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
