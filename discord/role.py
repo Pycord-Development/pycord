@@ -369,7 +369,7 @@ class Role(Hashable):
         position: int = MISSING,
         reason: Optional[str] = MISSING,
         icon: Optional[bytes] = MISSING,
-        unicode_emoji: Optional[str] = MISSING
+        unicode_emoji: str = MISSING
     ) -> Optional[Role]:
         """|coro|
 
