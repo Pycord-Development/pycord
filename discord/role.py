@@ -30,7 +30,7 @@ from .permissions import Permissions
 from .errors import InvalidArgument
 from .colour import Colour
 from .mixins import Hashable
-from .utils import snowflake_time, _get_as_snowflake, MISSING
+from .utils import snowflake_time, _get_as_snowflake, MISSING, _bytes_to_base64_data
 from .asset import Asset
 
 __all__ = (
@@ -445,11 +445,11 @@ class Role(Hashable):
         if mentionable is not MISSING:
             payload['mentionable'] = mentionable
 
-        if icon is not MISSING:
-            payload['icon'] = icon
-
         if unicode_emoji is not MISSING:
             payload['unicode_emoji'] = unicode_emoji
+
+        if icon is not MISSING:
+            payload['icon'] = _bytes_to_base64_data(icon)
 
         data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
