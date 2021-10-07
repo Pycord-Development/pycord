@@ -401,9 +401,12 @@ class Role(Hashable):
         reason: Optional[:class:`str`]
             The reason for editing this role. Shows up on the audit log.
         icon: Optional[:class:`bytes`]
-            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported. 
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
+            Could be ``None`` to denote removal of the icon.
         unicode_emoji: Optional[:class:`str`]
             The role's unicode emoji.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
         Raises
         -------
