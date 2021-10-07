@@ -185,6 +185,7 @@ class Role(Hashable):
         'hoist',
         'guild',
         'tags',
+        'unicode_emoji',
         '_icon',
         '_state',
     )
@@ -246,6 +247,7 @@ class Role(Hashable):
         self.managed: bool = data.get('managed', False)
         self.mentionable: bool = data.get('mentionable', False)
         self._icon: Optional[str] = data.get('icon')
+        self.unicode_emoji: Optional[str] = data.get('unicode_emoji')
         self.tags: Optional[RoleTags]
 
         try:
@@ -363,6 +365,8 @@ class Role(Hashable):
         mentionable: bool = MISSING,
         position: int = MISSING,
         reason: Optional[str] = MISSING,
+        icon: Optional[bytes] = MISSING,
+        unicode_emoji: Optional[str] = MISSING
     ) -> Optional[Role]:
         """|coro|
 
@@ -396,6 +400,10 @@ class Role(Hashable):
             position or it will fail.
         reason: Optional[:class:`str`]
             The reason for editing this role. Shows up on the audit log.
+        icon: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported. 
+        unicode_emoji: Optional[:class:`str`]
+            The role's unicode emoji.
 
         Raises
         -------
@@ -436,6 +444,12 @@ class Role(Hashable):
 
         if mentionable is not MISSING:
             payload['mentionable'] = mentionable
+
+        if icon is not MISSING:
+            payload['icon'] = icon
+
+        if unicode_emoji is not MISSING:
+            payload['unicode_emoji'] = unicode_emoji
 
         data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
