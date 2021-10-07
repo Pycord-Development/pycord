@@ -38,6 +38,7 @@ from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import DiscordException, NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from ..ext.commands import Converter
 
 __all__ = (
     "_BaseCommand",
@@ -392,7 +393,7 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better, apply custom converters etc.
+        # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
@@ -412,6 +413,9 @@ class SlashCommand(ApplicationCommand):
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
+
+            elif op.input_type == SlashCommandOptionType.string and isinstance(op._converter, Converter):
+                arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
 
@@ -470,8 +474,12 @@ class Option:
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
+        self._converter = None
         if not isinstance(input_type, SlashCommandOptionType):
-            input_type = SlashCommandOptionType.from_datatype(input_type)
+            _type = SlashCommandOptionType.from_datatype(input_type)
+            if _type.value = SlashCommandOptionType.custom.value:
+                self._converter = input_type() # Initializes the converter
+                input_type = SlashCommandOptionType.string
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
