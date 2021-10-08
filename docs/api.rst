@@ -415,7 +415,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
     called regardless if the user can be found in the bot's cache or not.
 
-    If the typing event is occuring in a guild,
+    If the typing event is occurring in a guild,
     the member that started typing can be accessed via :attr:`RawTypingEvent.member`
 
     This requires :attr:`Intents.typing` to be enabled.
