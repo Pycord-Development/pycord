@@ -38,7 +38,6 @@ from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import DiscordException, NotFound, ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from ..ext.commands import Converter
 
 __all__ = (
     "_BaseCommand",
@@ -414,7 +413,7 @@ class SlashCommand(ApplicationCommand):
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
 
-            elif op.input_type == SlashCommandOptionType.string and isinstance(op._converter, Converter):
+            elif op.input_type == SlashCommandOptionType.string and hasattr(op._converter, "convert"):
                 arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
@@ -477,7 +476,7 @@ class Option:
         self._converter = None
         if not isinstance(input_type, SlashCommandOptionType):
             _type = SlashCommandOptionType.from_datatype(input_type)
-            if _type.value = SlashCommandOptionType.custom.value:
+            if _type = SlashCommandOptionType.custom:
                 self._converter = input_type() # Initializes the converter
                 input_type = SlashCommandOptionType.string
         self.input_type = input_type
