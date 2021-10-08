@@ -408,7 +408,7 @@ class Role(Hashable):
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
             Could be ``None`` to denote removal of the icon.
         unicode_emoji: Optional[:class:`str`]
-            The role's unicode emoji.
+            The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
         Raises
@@ -451,14 +451,15 @@ class Role(Hashable):
         if mentionable is not MISSING:
             payload['mentionable'] = mentionable
 
-        if unicode_emoji is not MISSING:
-            payload['unicode_emoji'] = unicode_emoji
-
         if icon is not MISSING:
             if icon is None:
                 payload['icon'] = None
             else:
                 payload['icon'] = _bytes_to_base64_data(icon)
+        
+        if unicode_emoji is not MISSING:
+            payload['unicode_emoji'] = unicode_emoji
+            payload['icon'] = None
 
         data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
