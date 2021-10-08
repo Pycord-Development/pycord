@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -55,6 +56,7 @@ __all__ = (
     'InteractionType',
     'InteractionResponseType',
     'NSFWLevel',
+    'EmbeddedActivity',
 )
 
 
@@ -624,6 +626,12 @@ class SlashCommandOptionType(Enum):
         # TODO: Improve the error message
         raise Exception('Invalid class used as an input type for an Option')
 
+class EmbeddedActivity(Enum):
+    youtube  = 755600276941176913
+    poker    = 755827207812677713
+    betrayal = 773336526917861400
+    fishing  = 814288819477020702
+    chess    = 832012774040141894
 
 T = TypeVar('T')
 
