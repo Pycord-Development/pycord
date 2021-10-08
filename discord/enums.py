@@ -26,8 +26,6 @@ import types
 from collections import namedtuple
 from typing import Any, ClassVar, Dict, List, Optional, TYPE_CHECKING, Type, TypeVar
 
-from .ext.commands import Converter
-
 __all__ = (
     'Enum',
     'ChannelType',
@@ -614,7 +612,7 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        if issubclass(datatype, Converter):
+        if hasattr(datatype, "convert"):
             return cls.custom
 
         if datatype.__name__ == "Member":
