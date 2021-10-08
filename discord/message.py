@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -502,7 +503,11 @@ class Message(Hashable):
         .. describe:: hash(x)
 
             Returns the message's hash.
-
+            
+        .. describe:: len(x)
+        
+            Returns the length of the message's content.
+            
     Attributes
     -----------
     tts: :class:`bool`
@@ -711,6 +716,9 @@ class Message(Hashable):
         return (
             f'<{name} id={self.id} channel={self.channel!r} type={self.type!r} author={self.author!r} flags={self.flags!r}>'
         )
+
+    def __len__(self):
+        return len(self.content)
 
     def _try_patch(self, data, key, transform=None) -> None:
         try:

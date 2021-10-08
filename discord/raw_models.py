@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -27,6 +28,8 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Optional, Set, List
 
+from .enums import ChannelType, try_enum
+
 if TYPE_CHECKING:
     from .types.raw_models import (
         MessageDeleteEvent,
@@ -36,11 +39,14 @@ if TYPE_CHECKING:
         ReactionClearEvent,
         ReactionClearEmojiEvent,
         IntegrationDeleteEvent,
+        ThreadDeleteEvent,
         TypingEvent
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .member import Member
+    from .threads import Thread
+
 
 
 __all__ = (
@@ -51,6 +57,7 @@ __all__ = (
     'RawReactionClearEvent',
     'RawReactionClearEmojiEvent',
     'RawIntegrationDeleteEvent',
+    'RawThreadDeleteEvent',
     'RawTypingEvent',
 )
 
@@ -279,8 +286,35 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: Optional[int] = int(data['application_id'])
         except KeyError:
             self.application_id: Optional[int] = None
+              
+class RawThreadDeleteEvent(_RawReprMixin):
+    """Represents the payload for :func:`on_raw_thread_delete` event.
 
+    .. versionadded:: 2.0
+    
+    Attributes
+    ----------
 
+    thread_id: :class:`int`
+        The ID of the thread that was deleted.
+    thread_type: :class:`discord.ChannelType`
+        The channel type of the deleted thread.
+    guild_id: :class:`int`
+        The ID of the guild the deleted thread belonged to.
+    parent_id: :class:`int`
+        The ID of the channel the thread belonged to.
+    thread: Optional[:class:`discord.Thread`]
+        The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
+    """
+    __slots__ = ('thread_id', 'thread_type', 'guild_id', 'parent_id', 'thread')
+
+    def __init__(self, data: ThreadDeleteEvent) -> None:
+        self.thread_id: int = int(data['id'])
+        self.thread_type: ChannelType = try_enum(ChannelType, int(data['type']))
+        self.guild_id: int = int(data['guild_id'])
+        self.parent_id: int = int(data['parent_id'])
+        self.thread: Optional[Thread] = None
+          
 class RawTypingEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_typing` event.
 
@@ -312,3 +346,4 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: Optional[int] = int(data['guild_id'])
         except KeyError:
             self.guild_id: Optional[int] = None
+ 

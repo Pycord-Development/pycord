@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -460,6 +461,8 @@ class Client:
 
         Raises
         ------
+        TypeError
+            The token was in invalid type.
         :exc:`.LoginFailure`
             The wrong credentials are passed.
         :exc:`.HTTPException`
@@ -467,6 +470,8 @@ class Client:
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
         """
+        if not isinstance(token, str):
+            raise TypeError(f"token must be of type str, not {token.__class__.__name__}")
 
         _log.info('logging in using static token')
 

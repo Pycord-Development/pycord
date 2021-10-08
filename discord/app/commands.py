@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -68,7 +69,7 @@ class SlashCommand(ApplicationCommand):
         self.name: str = name
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__)
+            inspect.cleandoc(func.__doc__).splitlines()[0]
             if func.__doc__ is not None
             else "No description provided"
         )
@@ -169,7 +170,7 @@ class SlashCommand(ApplicationCommand):
 
 class Option:
     def __init__(
-        self, input_type: SlashCommandOptionType, /, description: str, **kwargs
+        self, input_type, /, description: str, **kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description

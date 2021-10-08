@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -86,13 +87,22 @@ class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
     id: Snowflake
     guild_id: Snowflake
 
+      
+class ThreadDeleteEvent(TypedDict, total=False):
+    thread_id: Snowflake
+    thread_type: int
+    guild_id: Snowflake
+    parent_id: Snowflake
 
+      
 class _TypingEventOptional(TypedDict, total=False):
     guild_id: Snowflake
     member: Member
 
-
+      
 class TypingEvent(_TypingEventOptional):
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int
+
+

@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -660,13 +661,13 @@ class BotBase(GroupMixin):
             spec.loader.exec_module(lib)  # type: ignore
         except Exception as e:
             del sys.modules[key]
-            raise errors.ExtensionFailed(key, e) from e
+            raise discord.ExtensionFailed(key, e) from e
 
         try:
             setup = getattr(lib, 'setup')
         except AttributeError:
             del sys.modules[key]
-            raise errors.NoEntryPointError(key)
+            raise discord.NoEntryPointError(key)
 
         try:
             setup(self)
@@ -674,7 +675,7 @@ class BotBase(GroupMixin):
             del sys.modules[key]
             self._remove_module_references(lib.__name__)
             self._call_module_finalizers(lib, key)
-            raise errors.ExtensionFailed(key, e) from e
+            raise discord.ExtensionFailed(key, e) from e
         else:
             self.__extensions[key] = lib
 
@@ -682,7 +683,7 @@ class BotBase(GroupMixin):
         try:
             return importlib.util.resolve_name(name, package)
         except ImportError:
-            raise errors.ExtensionNotFound(name)
+            raise discord.ExtensionNotFound(name)
 
     def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Loads an extension.
@@ -723,11 +724,11 @@ class BotBase(GroupMixin):
 
         name = self._resolve_name(name, package)
         if name in self.__extensions:
-            raise errors.ExtensionAlreadyLoaded(name)
+            raise discord.ExtensionAlreadyLoaded(name)
 
         spec = importlib.util.find_spec(name)
         if spec is None:
-            raise errors.ExtensionNotFound(name)
+            raise discord.ExtensionNotFound(name)
 
         self._load_from_module_spec(spec, name)
 
@@ -767,7 +768,7 @@ class BotBase(GroupMixin):
         name = self._resolve_name(name, package)
         lib = self.__extensions.get(name)
         if lib is None:
-            raise errors.ExtensionNotLoaded(name)
+            raise discord.ExtensionNotLoaded(name)
 
         self._remove_module_references(lib.__name__)
         self._call_module_finalizers(lib, name)
@@ -810,7 +811,7 @@ class BotBase(GroupMixin):
         name = self._resolve_name(name, package)
         lib = self.__extensions.get(name)
         if lib is None:
-            raise errors.ExtensionNotLoaded(name)
+            raise discord.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
         modules = {

@@ -19,6 +19,7 @@ Key Features
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
 - Optimised in both speed and memory.
+- Supports Slash Commands, Context Menus and Message Components.
 
 Installing
 ----------
@@ -72,22 +73,20 @@ Quick Example
 
     import discord
 
-    class MyClient(discord.Client):
-        async def on_ready(self):
-            print("Logged on as", self.user)
+    bot = discord.Bot()
+    
+    @bot.slash_command()
+    async def hello(ctx, name: str = None):
+        name = name or ctx.author.name
+        await ctx.respond(f"Hello {name}!")
+        
+    @bot.user_command(name="Say Hello")
+    async def hi(ctx, user):
+        await ctx.respond(f"{ctx.author.mention} says hello to {user.name}!")
+        
+    bot.run("token")
 
-        async def on_message(self, message):
-            # don't respond to ourselves
-            if message.author == self.user:
-                return
-
-            if message.content == "ping":
-                await message.channel.send("pong")
-
-    client = MyClient()
-    client.run("token")
-
-Bot Example
+Normal Commands Example
 ~~~~~~~~~~~~~
 
 .. code:: py
@@ -110,4 +109,5 @@ Links
 
 - `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
 - `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
+- `Discord Developers <https://discord.gg/discord-developers>`_
 - `Discord API <https://discord.gg/discord-api>`_

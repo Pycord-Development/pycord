@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,7 +27,6 @@ from __future__ import annotations  # will probably need in future for type hint
 
 from typing import Callable, Optional
 
-import traceback
 import sys
 
 from .client import Client
@@ -192,21 +192,20 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        raised_error = None
-        raised_guilds = []
         for guild_id in update_guild_commands:
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
                                                                   update_guild_commands[guild_id])
+            except Forbidden:
+                if not update_guild_commands[guild_id]:
+                    continue
+                else:
+                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+                    raise
+            else:
                 for i in cmds:
                     cmd = get(self.to_register, name=i["name"], description=i["description"], type=i['type'])
                     self.app_commands[i["id"]] = cmd
-            except Forbidden:
-                raised_error = raised_error or traceback.format_exc()
-                raised_guilds.append(guild_id)
-        if raised_error:
-            print(f'Ignoring exception running bulk_upsert_guild_commands on guilds {raised_guilds}', file=sys.stderr)
-            print(raised_error, file=sys.stderr)
 
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
@@ -249,7 +248,7 @@ class ApplicationCommandMixin:
             context = await self.get_application_context(interaction)
             await command.invoke(context)
 
-    def slash_command(self, **kwargs) -> SlashCommand:
+    def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
@@ -264,7 +263,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=SlashCommand, **kwargs)
 
-    def user_command(self, **kwargs) -> UserCommand:
+    def user_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
@@ -279,7 +278,7 @@ class ApplicationCommandMixin:
         """
         return self.application_command(cls=UserCommand, **kwargs)
 
-    def message_command(self, **kwargs) -> MessageCommand:
+    def message_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
@@ -320,7 +319,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overriden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`commands.Bot`.
 
         .. versionadded:: 2.0
 

@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -247,7 +248,7 @@ class ConnectionState:
 
         # Since this is undesirable, a mapping is now used instead with stored
         # references now using a regular dictionary with eviction being done
-        # using __del__. Testing this for memory leaks led to no discernable leaks,
+        # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: Dict[int, User] = {}
         self._emojis: Dict[int, Emoji] = {}
@@ -850,12 +851,18 @@ class ConnectionState:
     def parse_thread_delete(self, data) -> None:
         guild_id = int(data['guild_id'])
         guild = self._get_guild(guild_id)
+
         if guild is None:
             _log.debug('THREAD_DELETE referencing an unknown guild ID: %s. Discarding', guild_id)
             return
 
-        thread_id = int(data['id'])
-        thread = guild.get_thread(thread_id)
+        raw = RawThreadDeleteEvent(data)
+        thread = guild.get_thread(raw.thread_id)
+        raw.thread = thread
+
+        self.dispatch('raw_thread_delete', raw)
+
+
         if thread is not None:
             guild._remove_thread(thread)  # type: ignore
             self.dispatch('thread_delete', thread)
