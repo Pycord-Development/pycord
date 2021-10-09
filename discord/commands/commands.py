@@ -475,9 +475,10 @@ class Option:
         self.description = description or "No description provided"
         self._converter = None
         if not isinstance(input_type, SlashCommandOptionType):
-            _type = SlashCommandOptionType.from_datatype(input_type)
+            to_assign = input_type() if isinstance(input_type, type) else input_type
+            _type = SlashCommandOptionType.from_datatype(to_assign.__class__)
             if _type == SlashCommandOptionType.custom:
-                self._converter = input_type() if isinstance(input_type, type) else input_type
+                self._converter = to_assign
                 input_type = SlashCommandOptionType.string
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
