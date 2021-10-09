@@ -477,7 +477,8 @@ class Option:
         if not isinstance(input_type, SlashCommandOptionType):
             _type = SlashCommandOptionType.from_datatype(input_type)
             if _type == SlashCommandOptionType.custom:
-                self._converter = input_type() # Initializes the converter
+                if not isinstance(input_type, input_type.__class__):
+                    self._converter = input_type()
                 input_type = SlashCommandOptionType.string
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
