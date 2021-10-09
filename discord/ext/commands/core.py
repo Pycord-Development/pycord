@@ -44,6 +44,7 @@ import asyncio
 import functools
 import inspect
 import datetime
+import types
 
 import discord
 
@@ -1019,7 +1020,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         return ''
 
     def _is_typing_optional(self, annotation: Union[T, Optional[T]]) -> TypeGuard[Optional[T]]:
-        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
+        return getattr(annotation, '__origin__', None) in (Union, getattr(types, "UnionType", Union)) and type(None) in annotation.__args__  # type: ignore
 
     @property
     def signature(self) -> str:
