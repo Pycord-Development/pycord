@@ -31,6 +31,9 @@ if TYPE_CHECKING:
 from ..interactions import Interaction
 from ..utils import cached_property
 
+__all__ = (
+    "InteractionContext",
+)
 
 class InteractionContext:
     """Represents a Discord interaction context.
