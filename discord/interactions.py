@@ -494,6 +494,10 @@ class InteractionResponse:
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: :class:`List[File]`
+            A list of files to upload. Must be a maximum of 10.
             
         Raises
         -------
