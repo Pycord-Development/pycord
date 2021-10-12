@@ -359,6 +359,7 @@ class AsyncWebhookAdapter:
         if data is not None:
             payload['data'] = data
         form = [{'name': 'payload_json', 'value': utils._to_json(payload)}]
+        files = files or []
         if len(files) == 1:
             file = files[0]
             form.append(
