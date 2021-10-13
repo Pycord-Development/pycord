@@ -2669,9 +2669,13 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Youtube Together.
 
-    .. attribute:: youtube_advance
+    .. attribute:: watch_together
 
         Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+        
+    .. attribute:: watch_together_dev
+
+        Development version of `watch_together`.
 
     .. attribute:: poker
 
