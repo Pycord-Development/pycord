@@ -413,7 +413,7 @@ class SlashCommand(ApplicationCommand):
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
 
-            elif op.input_type == SlashCommandOptionType.string and hasattr(op._converter, "convert"):
+            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
                 arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
