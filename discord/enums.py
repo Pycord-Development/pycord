@@ -627,11 +627,17 @@ class SlashCommandOptionType(Enum):
         raise Exception('Invalid class used as an input type for an Option')
 
 class EmbeddedActivity(Enum):
-    youtube  = 755600276941176913
+    youtube  = 755600276941176913  # YouTube Together
+    youtube2 = 880218394199220334  # Watch Together (Mods can limit playlist access from the members)
     poker    = 755827207812677713
     betrayal = 773336526917861400
     fishing  = 814288819477020702
-    chess    = 832012774040141894
+    chess    = 832012774040141894  # CG 2 DEV
+    chess2   = 832012774040141894  # Chess in the Park
+    letter_tile = 879863686565621790
+    word_snack = 879863976006127627
+    doodle_crew = 878067389634314250
+
 
 T = TypeVar('T')
 
