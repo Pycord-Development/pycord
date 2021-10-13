@@ -635,7 +635,8 @@ class EmbeddedActivity(Enum):
     letter_tile = 879863686565621790
     word_snack = 879863976006127627
     doodle_crew = 878067389634314250
-    youtube_advance = 880218394199220334
+    watch_together = 880218394199220334
+    watch_together_dev = 880218832743055411
 
 
 T = TypeVar('T')
