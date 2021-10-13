@@ -84,7 +84,7 @@ class Paginate(discord.ui.View):
         page = self.pages[self.current_page-1]
         await interaction.response.edit_message(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING, view = self)
 
-    async def send(self, messageable: Union[abc.Messageable, InteractionContext], ephemeral: bool = False):
+    async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
         
         Parameters
@@ -103,7 +103,7 @@ class Paginate(discord.ui.View):
             The message that was sent.
         """
 
-        if not isinstance(messageable, (abc.Messageable, InteractionContext)):
+        if not isinstance(messageable, abc.Messageable):
             raise TypeError("messageable is not a messageable object")
 
         page = self.pages[0]
