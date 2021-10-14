@@ -632,6 +632,12 @@ class EmbeddedActivity(Enum):
     betrayal = 773336526917861400
     fishing  = 814288819477020702
     chess    = 832012774040141894
+    letter_tile = 879863686565621790
+    word_snack = 879863976006127627
+    doodle_crew = 878067389634314250
+    watch_together = 880218394199220334
+    watch_together_dev = 880218832743055411
+
 
 T = TypeVar('T')
 

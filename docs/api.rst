@@ -2659,6 +2659,52 @@ of :class:`enum.Enum`.
 
         The guild may contain NSFW content.
 
+.. class:: EmbeddedActivity
+
+    Respresents an embedded activity application.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: youtube
+
+        Represents the embedded application Youtube Together.
+
+    .. attribute:: watch_together
+
+        Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+        
+    .. attribute:: watch_together_dev
+
+        Development version of `watch_together`.
+
+    .. attribute:: poker
+
+        Represents the embedded application Poker Night.
+
+    .. attribute:: betrayal
+
+        Represents the embedded application Betrayal.io
+
+    .. attribute:: fishing
+
+        Represents the embedded application Fishington.io
+
+    .. attribute:: chess
+        Represents the embedded application Chess in the Park.
+
+    .. attribute:: letter_tile
+
+        Represents the embedded application Letter Tile.
+
+    .. attribute:: word_snack
+
+        Represents the embedded application Word Snacks.
+
+    .. attribute:: doodle_crew
+
+        Represents the embedded application Doodle Crew.
+
+
 Async Iterator
 ----------------
 
