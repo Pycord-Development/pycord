@@ -514,7 +514,7 @@ class ViewStore:
 
     def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
         self.__verify_integrity()
-        message_id: Optional[int] = interaction.message and interaction.message.id
+        message_id: Optional[int] = interaction.message.id
         key = (component_type, message_id, custom_id)
         # Fallback to None message_id searches in case a persistent view
         # was added without an associated message_id
