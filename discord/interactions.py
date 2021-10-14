@@ -31,9 +31,9 @@ import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
-from .errors import InteractionResponded, HTTPException, ClientException
+from .errors import InteractionResponded, HTTPException, ClientException, InvalidArgument
 from .channel import PartialMessageable, ChannelType
-
+from .file import File
 from .user import User
 from .member import Member
 from .message import Message, Attachment
@@ -55,7 +55,6 @@ if TYPE_CHECKING:
     )
     from .guild import Guild
     from .state import ConnectionState
-    from .file import File
     from .mentions import AllowedMentions
     from aiohttp import ClientSession
     from .embeds import Embed
@@ -463,6 +462,8 @@ class InteractionResponse:
         tts: bool = False,
         ephemeral: bool = False,
         allowed_mentions: AllowedMentions = None,
+        file: File = None,
+        files: List[File] = None,
         delete_after: float = None
     ) -> None:
         """|coro|
@@ -493,6 +494,10 @@ class InteractionResponse:
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: :class:`List[File]`
+            A list of files to upload. Must be a maximum of 10.
             
         Raises
         -------
@@ -535,15 +540,36 @@ class InteractionResponse:
         if allowed_mentions:
             payload['allowed_mentions'] = allowed_mentions.to_dict()
 
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+
         parent = self._parent
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.channel_message.value,
-            data=payload,
-        )
+        try:
+            await adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.channel_message.value,
+                data=payload,
+                files=files
+            )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view is not MISSING:
             if ephemeral and view.timeout is None:
