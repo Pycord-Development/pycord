@@ -2419,21 +2419,21 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
-    .. attribute:: sheduled_event_create
+    .. attribute:: scheduled_event_create
 
-        A sheduled event was created.
-
-        .. versionadded:: 2.0
-        
-    .. attribute:: sheduled_event_update
-
-        A sheduled event was updated.
+        A scheduled event was created.
 
         .. versionadded:: 2.0
         
-    .. attribute:: sheduled_event_delete
+    .. attribute:: scheduled_event_update
 
-        A sheduled event was deleted.
+        A scheduled event was updated.
+
+        .. versionadded:: 2.0
+        
+    .. attribute:: scheduled_event_delete
+
+        A scheduled event was deleted.
 
         .. versionadded:: 2.0
 
