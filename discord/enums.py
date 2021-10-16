@@ -360,9 +360,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
-    sheduled_event_create    = 100
-    sheduled_event_update    = 101
-    sheduled_event_delete    = 102
+    scheduled_event_create    = 100
+    scheduled_event_update    = 101
+    scheduled_event_delete    = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -413,9 +413,9 @@ class AuditLogAction(Enum):
             AuditLogAction.sticker_create:        AuditLogActionCategory.create,
             AuditLogAction.sticker_update:        AuditLogActionCategory.update,
             AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.sheduled_event_create: AuditLogActionCategory.create,
-            AuditLogAction.sheduled_event_update: AuditLogActionCategory.update,
-            AuditLogAction.sheduled_event_delete: AuditLogActionCategory.delete,
+            AuditLogAction.scheduled_event_create: AuditLogActionCategory.create,
+            AuditLogAction.scheduled_event_update: AuditLogActionCategory.update,
+            AuditLogAction.scheduled_event_delete: AuditLogActionCategory.delete,
             AuditLogAction.thread_create:         AuditLogActionCategory.create,
             AuditLogAction.thread_update:         AuditLogActionCategory.update,
             AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
@@ -453,7 +453,7 @@ class AuditLogAction(Enum):
         elif v < 93:
             return 'sticker'
         elif v < 103:
-            return 'sheduled_event'
+            return 'scheduled_event'
         elif v < 113:
             return 'thread'
 
