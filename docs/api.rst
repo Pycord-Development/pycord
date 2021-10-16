@@ -1251,6 +1251,26 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
+    .. attribute:: directory
+
+        A guild directory entry.
+
+        Used in hub guilds.
+
+        In Experiment.
+
+        .. versionadded:: 2.0
+
+    .. attribute:: forum
+
+        User can only write in threads.
+
+        Similar functionality to a forum.
+
+        In Experiment.
+
+        .. versionadded:: 2.0
+
 .. class:: MessageType
 
     Specifies the type of :class:`Message`. This is used to denote if a message
@@ -1371,6 +1391,11 @@ of :class:`enum.Enum`.
         thread's conversation topic.
 
         .. versionadded:: 2.0
+    .. attribute:: context_menu_command
+
+        The system message denoting that an context menu command was executed.
+
+        .. versionadded:: 2.0
 
 .. class:: UserFlags
 
@@ -1472,6 +1497,9 @@ of :class:`enum.Enum`.
     .. attribute:: component
 
         Represents a component based interaction, i.e. using the Discord Bot UI Kit.
+    .. attribute:: auto_complete
+
+        Represents a autocomplete interaction for slash commands.
 
 .. class:: InteractionResponseType
 
@@ -1505,6 +1533,9 @@ of :class:`enum.Enum`.
         Responds to the interaction by editing the message.
 
         See also :meth:`InteractionResponse.edit_message`
+    .. attribute:: auto_complete_result
+
+        Responds to autocomplete requests.
 
 .. class:: ComponentType
 
@@ -1791,6 +1822,9 @@ of :class:`enum.Enum`.
         The member is "invisible". In reality, this is only used in sending
         a presence a la :meth:`Client.change_presence`. When you receive a
         user's presence this will be :attr:`offline` instead.
+    .. attribute:: streaming
+
+        The member is streaming.
 
 
 .. class:: AuditLogAction
@@ -2382,6 +2416,24 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.format_type`
         - :attr:`~AuditLogDiff.description`
         - :attr:`~AuditLogDiff.available`
+
+        .. versionadded:: 2.0
+
+    .. attribute:: sheduled_event_create
+
+        A sheduled event was created.
+
+        .. versionadded:: 2.0
+        
+    .. attribute:: sheduled_event_update
+
+        A sheduled event was updated.
+
+        .. versionadded:: 2.0
+        
+    .. attribute:: sheduled_event_delete
+
+        A sheduled event was deleted.
 
         .. versionadded:: 2.0
 

@@ -185,6 +185,8 @@ class ChannelType(Enum):
     public_thread = 11
     private_thread = 12
     stage_voice = 13
+    directory = 14
+    forum = 15
 
     def __str__(self):
         return self.name
@@ -214,6 +216,7 @@ class MessageType(Enum):
     application_command = 20
     thread_starter_message = 21
     guild_invite_reminder = 22
+    context_menu_command = 23
 
 
 class VoiceRegion(Enum):
@@ -285,6 +288,7 @@ class Status(Enum):
     dnd = 'dnd'
     do_not_disturb = 'dnd'
     invisible = 'invisible'
+    streaming = 'streaming'
 
     def __str__(self):
         return self.value
@@ -356,6 +360,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
+    sheduled_event_create    = 100
+    sheduled_event_update    = 101
+    sheduled_event_delete    = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -406,6 +413,9 @@ class AuditLogAction(Enum):
             AuditLogAction.sticker_create:        AuditLogActionCategory.create,
             AuditLogAction.sticker_update:        AuditLogActionCategory.update,
             AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
+            AuditLogAction.sheduled_event_create: AuditLogActionCategory.create,
+            AuditLogAction.sheduled_event_update: AuditLogActionCategory.update,
+            AuditLogAction.sheduled_event_delete: AuditLogActionCategory.delete,
             AuditLogAction.thread_create:         AuditLogActionCategory.create,
             AuditLogAction.thread_update:         AuditLogActionCategory.update,
             AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
@@ -442,6 +452,8 @@ class AuditLogAction(Enum):
             return 'stage_instance'
         elif v < 93:
             return 'sticker'
+        elif v < 103:
+            return 'sheduled_event'
         elif v < 113:
             return 'thread'
 
@@ -458,12 +470,16 @@ class UserFlags(Enum):
     hypesquad_balance = 256
     early_supporter = 512
     team_user = 1024
+    partner_or_verification_application = 2048
     system = 4096
     has_unread_urgent_messages = 8192
     bug_hunter_level_2 = 16384
+    underage_deleted = 32768
     verified_bot = 65536
     verified_bot_developer = 131072
     discord_certified_moderator = 262144
+    bot_http_interactions = 524288
+    spammer = 1048576
 
 
 class ActivityType(Enum):
@@ -530,6 +546,7 @@ class InteractionType(Enum):
     ping = 1
     application_command = 2
     component = 3
+    auto_complete = 4
 
 
 class InteractionResponseType(Enum):
@@ -540,6 +557,7 @@ class InteractionResponseType(Enum):
     deferred_channel_message = 5  # (with source)
     deferred_message_update = 6  # for components
     message_update = 7  # for components
+    auto_complete_result = 8 # for autocomplete interactions
 
 
 class VideoQualityMode(Enum):
