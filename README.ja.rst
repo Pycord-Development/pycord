@@ -108,5 +108,5 @@ examplesディレクトリに更に多くのサンプルがあります。
 ------
 
 - `ドキュメント <https://pycord.readthedocs.io/en/latest/index.html>`_
-- `公式Discordサーバー <https://discord.gg/dK2qkEJ37N>`_
+- `公式Discordサーバー <https://discord.gg/py-cord>`_
 - `Discord API <https://discord.gg/discord-api>`_
