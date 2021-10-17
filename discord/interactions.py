@@ -61,6 +61,7 @@ if TYPE_CHECKING:
     from .ui.view import View
     from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, PartialMessageable
     from .threads import Thread
+    from .app import OptionChoice
 
     InteractionChannel = Union[
         VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, Thread, PartialMessageable
@@ -677,6 +678,49 @@ class InteractionResponse:
 
         self._responded = True
 
+    async def send_autocomplete_result(
+        self,
+        *,
+        choices: List[OptionChoice],
+    ) -> None:
+        """|coro|
+
+        Responds to this interaction by sending the autocomplete choices.
+
+        Parameters
+        -----------
+        choices: List[:class:`OptionChoice`]
+            A list of choices.  
+
+        Raises
+        -------
+        HTTPException
+            Sending the result failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        parent = self._parent
+
+        if parent.type is not InteractionType.auto_complete:
+            return
+
+        payload = {
+            "choices": [c.to_dict() for c in choices]
+        }
+
+        adapter = async_context.get()
+        await adapter.create_interaction_response(
+            parent.id,
+            parent.token,
+            session=parent._session,
+            type=InteractionResponseType.auto_complete_result.value,
+            data=payload,
+        )
+
+        self._responded = True
 
 class _InteractionMessageState:
     __slots__ = ('_parent', '_interaction')

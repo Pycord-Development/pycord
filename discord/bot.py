@@ -42,7 +42,7 @@ from .app import (
 )
 from .errors import Forbidden
 from .interactions import Interaction
-
+from .enums import InteractionType
 
 def command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -240,13 +240,19 @@ class ApplicationCommandMixin:
         interaction: :class:`discord.Interaction`
             The interaction to process
         """
+        if interaction.type not in (InteractionType.application_command, InteractionType.auto_complete):
+            return
+
         try:
             command = self.app_commands[interaction.data["id"]]
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
-            context = await self.get_application_context(interaction)
-            await command.invoke(context)
+            if interaction.type == InteractionType.application_command:
+                context = await self.get_application_context(interaction)
+                await command.invoke(context)
+            else:
+                await command.invoke_autocomplete_callback(interaction)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to

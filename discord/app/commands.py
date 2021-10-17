@@ -80,7 +80,7 @@ class SlashCommand(ApplicationCommand):
         self.is_subcommand: bool = False
 
         params = OrderedDict(inspect.signature(self.callback).parameters)
-        self.options = self.parse_options(params)
+        self.options: List[Option] = self.parse_options(params)
 
     def parse_options(self, params: OrderedDict) -> List[Option]:
         final_options = []
@@ -167,6 +167,16 @@ class SlashCommand(ApplicationCommand):
                 kwargs[o.name] = o.default
         await self.callback(ctx, **kwargs)
 
+    async def invoke_autocomplete_callback(self, interaction):
+        for op in interaction.data.get("options", []):
+            if op.get("focused", False):
+                option = find(lambda o: o.name == op["name"], self.options)
+                result = await option.autocomplete_callback(interaction, op.get("value", None))
+                choices = [
+                    o if isinstance(o, OptionChoice) else OptionChoice(o)
+                    for o in result
+                ]
+                await interaction.response.send_autocomplete_result(choices = choices)
 
 class Option:
     def __init__(
@@ -183,6 +193,11 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+        self.autocomplete_callback = kwargs.pop("autocomplete", None)
+        if self.autocomplete_callback:
+            if not asyncio.iscoroutinefunction(self.autocomplete_callback):
+                raise TypeError("Autocomplete callback must be a coroutine.")
+
 
     def to_dict(self) -> Dict:
         return {
@@ -191,6 +206,7 @@ class Option:
             "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
+            "autocomplete": bool(self.autocomplete_callback)
         }
 
     def __repr__(self):
