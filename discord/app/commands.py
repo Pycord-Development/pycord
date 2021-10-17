@@ -194,9 +194,11 @@ class Option:
         ]
         self.default = kwargs.pop("default", None)
         self.autocomplete_callback = kwargs.pop("autocomplete", None)
-        if self.autocomplete_callback:
-            if not asyncio.iscoroutinefunction(self.autocomplete_callback):
-                raise TypeError("Autocomplete callback must be a coroutine.")
+        if (
+            self.autocomplete_callback and 
+            not asyncio.iscoroutinefunction(self.autocomplete_callback)
+        ):
+            raise TypeError("Autocomplete callback must be a coroutine.")
 
 
     def to_dict(self) -> Dict:
