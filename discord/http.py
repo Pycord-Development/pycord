@@ -1696,6 +1696,20 @@ class HTTPClient:
         )
         return self.request(r, json=payload)
 
+    def bulk_upsert_command_permissions(
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+        payload: List[interactions.EditApplicationCommand],
+    ) -> Response[List[interactions.ApplicationCommand]]:
+        r = Route(
+            'PUT',
+            '/applications/{application_id}/guilds/{guild_id}/commands/permissions',
+            application_id=application_id,
+            guild_id=guild_id,
+        )
+        return self.request(r, json=payload)
+
     # Interaction responses
 
     def _edit_webhook_helper(
