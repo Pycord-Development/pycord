@@ -392,7 +392,7 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better, apply custom converters etc.
+        # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
@@ -412,6 +412,9 @@ class SlashCommand(ApplicationCommand):
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
+
+            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
+                arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
 
@@ -470,8 +473,13 @@ class Option:
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
+        self._converter = None
         if not isinstance(input_type, SlashCommandOptionType):
-            input_type = SlashCommandOptionType.from_datatype(input_type)
+            to_assign = input_type() if isinstance(input_type, type) else input_type
+            _type = SlashCommandOptionType.from_datatype(to_assign.__class__)
+            if _type == SlashCommandOptionType.custom:
+                self._converter = to_assign
+                input_type = SlashCommandOptionType.string
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
