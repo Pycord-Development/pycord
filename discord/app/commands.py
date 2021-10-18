@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 from collections import OrderedDict
-from typing import Callable, Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, Union, TYPE_CHECKING
 
 from ..enums import SlashCommandOptionType
 from ..member import Member
@@ -37,6 +37,10 @@ from ..message import Message
 from .context import InteractionContext
 from ..utils import find, get_or_fetch
 from ..errors import NotFound
+
+if TYPE_CHECKING: 
+    from ..interactions import Interaction
+
 
 
 class ApplicationCommand:
@@ -167,7 +171,7 @@ class SlashCommand(ApplicationCommand):
                 kwargs[o.name] = o.default
         await self.callback(ctx, **kwargs)
 
-    async def invoke_autocomplete_callback(self, interaction):
+    async def invoke_autocomplete_callback(self, interaction: Interaction):
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
@@ -176,7 +180,7 @@ class SlashCommand(ApplicationCommand):
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ]
-                await interaction.response.send_autocomplete_result(choices = choices)
+                await interaction.response.send_autocomplete_result(choices=choices)
 
 class Option:
     def __init__(

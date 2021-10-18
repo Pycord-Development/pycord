@@ -248,7 +248,7 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
-            if interaction.type == InteractionType.application_command:
+            if interaction.type is InteractionType.application_command:
                 context = await self.get_application_context(interaction)
                 await command.invoke(context)
             else:
