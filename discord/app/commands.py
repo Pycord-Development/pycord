@@ -175,7 +175,7 @@ class SlashCommand(ApplicationCommand):
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                result = await option.autocomplete_callback(interaction, op.get("value", None))
+                result = await option.autocomplete(interaction, op.get("value", None))
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
@@ -197,10 +197,10 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
-        self.autocomplete_callback = kwargs.pop("autocomplete", None)
+        self.autocomplete = kwargs.pop("autocomplete", None)
         if (
-            self.autocomplete_callback and 
-            not asyncio.iscoroutinefunction(self.autocomplete_callback)
+            self.autocomplete and 
+            not asyncio.iscoroutinefunction(self.autocomplete)
         ):
             raise TypeError("Autocomplete callback must be a coroutine.")
 
@@ -212,7 +212,7 @@ class Option:
             "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
-            "autocomplete": bool(self.autocomplete_callback)
+            "autocomplete": bool(self.autocomplete)
         }
 
     def __repr__(self):
@@ -283,6 +283,11 @@ class SubCommandGroup(Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
+    async def invoke_autocomplete_callback(self, interaction: Interaction) -> None:
+        option = interaction.data["options"][0]
+        command = find(lambda x: x.name == option["name"], self.subcommands)
+        interaction.data = option
+        await command.invoke_autocomplete_callback(interaction)
 
 class UserCommand(ApplicationCommand):
     type = 2
