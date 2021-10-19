@@ -175,6 +175,8 @@ class Role(Hashable):
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
+        
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -328,7 +330,10 @@ class Role(Hashable):
 
     @property
     def icon(self) -> Optional[Asset]:
-        """Optional[:class:`Asset`]: Returns the role's icon asset, if available."""
+        """Optional[:class:`Asset`]: Returns the role's icon asset, if available.
+        
+        .. versionadded:: 2.0
+        """
         if self._icon is None:
             return None
         
@@ -384,7 +389,7 @@ class Role(Hashable):
             Can now pass ``int`` to ``colour`` keyword-only parameter.
 
         .. versionchanged:: 2.0
-            Edits are no longer in-place, the newly edited role is returned instead.
+            Edits are no longer in-place, the newly edited role is returned instead. Added ``icon`` and ``unicode_emoji``.
 
         Parameters
         -----------
