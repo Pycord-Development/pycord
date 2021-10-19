@@ -166,6 +166,14 @@ class Interaction:
         """Optional[:class:`Guild`]: The guild the interaction was sent from."""
         return self._state and self._state._get_guild(self.guild_id)
 
+    def is_command(self) -> bool:
+        """:class:`bool`: Indicates whether the interaction is an application command."""
+        return self.type == InteractionType.application_command
+
+    def is_component(self) -> bool:
+        """:class:`bool`: Indicates whether the interaction is a message component."""
+        return self.type == InteractionType.component
+
     @utils.cached_slot_property('_cs_channel')
     def channel(self) -> Optional[InteractionChannel]:
         """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the interaction was sent from.
@@ -537,8 +545,30 @@ class InteractionResponse:
         if view is not MISSING:
             payload['components'] = view.to_components()
 
-        if allowed_mentions:
-            payload['allowed_mentions'] = allowed_mentions.to_dict()
+        state = self._parent._state
+
+        if allowed_mentions is not None:
+            if state.allowed_mentions is not None:
+                payload['allowed_mentions'] = state.allowed_mentions.merge(allowed_mentions).to_dict()
+            else:
+                payload['allowed_mentions'] = allowed_mentions.to_dict()
+        else:
+            payload['allowed_mentions'] = state.allowed_mentions and state.allowed_mentions.to_dict()
+
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
 
         if file is not None and files is not None:
             raise InvalidArgument('cannot pass both file and files parameter to send()')
