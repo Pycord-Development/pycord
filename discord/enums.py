@@ -360,9 +360,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
-    scheduled_event_create    = 100
-    scheduled_event_update    = 101
-    scheduled_event_delete    = 102
+    guild_event_create       = 100
+    guild_event_update       = 101
+    guild_event_delete       = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -453,7 +453,7 @@ class AuditLogAction(Enum):
         elif v < 93:
             return 'sticker'
         elif v < 103:
-            return 'scheduled_event'
+            return 'guild_event'
         elif v < 113:
             return 'thread'
 
