@@ -29,14 +29,14 @@ import sys
 import discord.utils
 import types
 from . import errors
-from .app import SlashCommand, UserCommand, MessageCommand, ApplicationCommand#, _BaseCommand
+from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand
 
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Union
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
 
-from .app.commands import _BaseCommand
+from .commands.commands import _BaseCommand
 
 if TYPE_CHECKING:
-    from .app import InteractionContext, ApplicationCommand
+    from .commands import InteractionContext, ApplicationCommand
 
 __all__ = (
     'CogMeta',
@@ -239,15 +239,23 @@ class Cog(metaclass=CogMeta):
         r"""
         Returns
         --------
-        List[:class:`.Command`]
-            A :class:`list` of :class:`.Command`\s that are
+        List[:class:`.ApplicationCommand`]
+            A :class:`list` of :class:`.ApplicationCommand`\s that are
             defined inside this cog.
 
             .. note::
 
                 This does not include subcommands.
         """
-        return [c for c in self.__cog_commands__ if c.parent is None]
+        return [
+            c for c in (
+                c for c in self.__cog_commands__
+                if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))
+            ) if c.parent is None
+        ] + [
+            c for c in self.__cog_commands__
+            if isinstance(c, (SlashCommand, MessageCommand, UserCommand))
+        ]
 
     @property
     def qualified_name(self) -> str:

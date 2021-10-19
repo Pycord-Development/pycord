@@ -33,7 +33,7 @@ import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import OptionType, ChannelType
+from ..enums import SlashCommandOptionType, SlashCommandChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -338,6 +338,7 @@ class SlashCommand(ApplicationCommand):
     def parse_options(self, params) -> List[Option]:
         final_options = []
 
+        params = self._get_signature_parameters()
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -368,7 +369,7 @@ class SlashCommand(ApplicationCommand):
                 else:
                     option = Option(
                         option.__args__, "No description provided"
-                    )                    
+                    )
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
@@ -403,7 +404,7 @@ class SlashCommand(ApplicationCommand):
             "options": [o.to_dict() for o in self.options],
         }
         if self.is_subcommand:
-            as_dict["type"] = OptionType.sub_command.value
+            as_dict["type"] = SlashCommandOptionType.sub_command.value
 
         return as_dict
 
@@ -415,7 +416,7 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better, apply custom converters etc.
+        # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
@@ -423,18 +424,21 @@ class SlashCommand(ApplicationCommand):
 
             # Checks if input_type is user, role or channel
             if (
-                OptionType.user.value
+                SlashCommandOptionType.user.value
                 <= op.input_type.value
-                <= OptionType.role.value
+                <= SlashCommandOptionType.role.value
             ):
                 name = "member" if op.input_type.name == "user" else op.input_type.name
                 arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
-            elif op.input_type == OptionType.mentionable:
+            elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
                 arg = await get_or_fetch(ctx.guild, "member", arg_id)
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
+
+            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
+                arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
 
@@ -488,10 +492,10 @@ class SlashCommand(ApplicationCommand):
             return self.copy()
 
 channel_type_map = {
-    'TextChannel': ChannelType.text,
-    'VoiceChannel': ChannelType.voice, 
-    'StageChannel': ChannelType.stage_voice, 
-    'CategoryChannel': ChannelType.category
+    'TextChannel': SlashCommandOptionType.text,
+    'VoiceChannel': SlashCommandOptionType.voice,
+    'StageChannel': SlashCommandOptionType.stage_voice,
+    'CategoryChannel': SlashCommandOptionType.category
 }
 
 class Option:
@@ -500,11 +504,15 @@ class Option:
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
-
-        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
-        if not isinstance(input_type, OptionType):
-            self.input_type = OptionType.from_datatype(input_type)
-            if self.input_type == OptionType.channel:
+        self._converter = None
+        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
+        if not isinstance(input_type, SlashCommandOptionType):
+            to_assign = input_type() if isinstance(input_type, type) else input_type
+            _type = SlashCommandOptionType.from_datatype(to_assign.__class__)
+            if _type == SlashCommandOptionType.custom:
+                self._converter = to_assign
+                input_type = SlashCommandOptionType.string
+            elif _type == SlashCommandOptionType.channel:
                 if not isinstance(input_type, tuple):
                     input_type = (input_type,)
                 for i in input_type:
@@ -513,9 +521,7 @@ class Option:
 
                     channel_type = channel_type_map[i.__name__]
                     self.channel_types.append(channel_type)
-        else: 
-            self.input_type = input_type
-
+        self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
@@ -533,7 +539,7 @@ class Option:
         }
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
-            
+
         return as_dict
 
 
@@ -577,7 +583,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         validate_chat_input_name(name)
         validate_chat_input_description(description)
         super().__init__(
-            OptionType.sub_command_group,
+            SlashCommandOptionType.sub_command_group,
             name=name,
             description=description,
         )
