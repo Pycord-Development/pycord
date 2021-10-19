@@ -2,6 +2,7 @@ import discord
 
 bot = discord.Bot()
 
+
 # Note: If you want you can use commands.Bot instead of discord.Bot
 # Use discord.Bot if you don't want prefixed message commands
 
@@ -30,5 +31,5 @@ async def joined(
     await ctx.respond(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
 
 
-# To learn how to add descriptions, choices to options check slash_options.py
+# To learn how to add descriptions and choices to options, check slash_options.py
 bot.run("TOKEN")
