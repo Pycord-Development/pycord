@@ -521,6 +521,8 @@ class Option:
 
                     channel_type = channel_type_map[i.__name__]
                     self.channel_types.append(channel_type)
+            else:
+                input_type = _type
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
