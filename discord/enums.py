@@ -413,9 +413,9 @@ class AuditLogAction(Enum):
             AuditLogAction.sticker_create:        AuditLogActionCategory.create,
             AuditLogAction.sticker_update:        AuditLogActionCategory.update,
             AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.scheduled_event_create: AuditLogActionCategory.create,
-            AuditLogAction.scheduled_event_update: AuditLogActionCategory.update,
-            AuditLogAction.scheduled_event_delete: AuditLogActionCategory.delete,
+            AuditLogAction.guild_event_create:    AuditLogActionCategory.create,
+            AuditLogAction.guild_event_update:    AuditLogActionCategory.update,
+            AuditLogAction.guild_event_delete:    AuditLogActionCategory.delete,
             AuditLogAction.thread_create:         AuditLogActionCategory.create,
             AuditLogAction.thread_update:         AuditLogActionCategory.update,
             AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
@@ -664,11 +664,11 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
-    youtube  = 755600276941176913
-    poker    = 755827207812677713
+    youtube = 755600276941176913
+    poker = 755827207812677713
     betrayal = 773336526917861400
-    fishing  = 814288819477020702
-    chess    = 832012774040141894
+    fishing = 814288819477020702
+    chess = 832012774040141894
     letter_tile = 879863686565621790
     word_snack = 879863976006127627
     doodle_crew = 878067389634314250
