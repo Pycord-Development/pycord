@@ -984,7 +984,7 @@ def application_command(cls=SlashCommand, **attrs):
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
     .. note::
-        This decorator is overriden by :func:`commands.command`.
+        This decorator is overridden by :func:`commands.command`.
     .. versionadded:: 2.0
     Returns
     --------
