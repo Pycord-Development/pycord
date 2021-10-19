@@ -3,6 +3,10 @@ from discord.app import Option
 
 bot = discord.Bot()
 
+# If you use commands.Bot, @bot.slash_command should be used for
+# slash commands. You can use @bot.slash_command with discord.Bot as well
+
+
 @bot.slash_command(guild_ids=[...])
 async def hello(
     ctx,
