@@ -662,6 +662,7 @@ class SlashCommandOptionType(Enum):
         raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
 
 
+
 class EmbeddedActivity(Enum):
     youtube  = 755600276941176913
     poker    = 755827207812677713
@@ -673,6 +674,21 @@ class EmbeddedActivity(Enum):
     doodle_crew = 878067389634314250
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
+
+
+class GuildEventStatus(Enum):
+    scheduled = 1
+    active = 2
+    completed = 3
+    cancelled = 4
+
+
+class GuildEventEntityType(Enum):
+    none = 0
+    stage_instance = 1
+    voice = 2
+    location = 3
+
 
 T = TypeVar('T')
 
