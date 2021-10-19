@@ -7,7 +7,7 @@ bot = discord.Bot()
 # Use discord.Bot if you don't want prefixed message commands
 
 # With discord.Bot you can use @bot.command as an alias 
-# of @bot.slash_command but this is overriden by commands.Bot
+# of @bot.slash_command but this is overridden by commands.Bot
 
 
 @bot.slash_command(guild_ids=[...])  # create a slash command for the supplied guilds

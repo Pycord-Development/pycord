@@ -410,6 +410,19 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param when: When the typing started as an aware datetime in UTC.
     :type when: :class:`datetime.datetime`
 
+.. function:: on_raw_typing(payload)
+
+    Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
+    called regardless if the user can be found in the bot's cache or not.
+
+    If the typing event is occurring in a guild,
+    the member that started typing can be accessed via :attr:`RawTypingEvent.member`
+
+    This requires :attr:`Intents.typing` to be enabled.
+
+    :param payload: The raw typing payload.
+    :type payload: :class:`RawTypingEvent`
+
 .. function:: on_message(message)
 
     Called when a :class:`Message` is created and sent.
@@ -1238,6 +1251,26 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
+    .. attribute:: directory
+
+        A guild directory entry.
+
+        Used in hub guilds.
+
+        In Experiment.
+
+        .. versionadded:: 2.0
+
+    .. attribute:: forum
+
+        User can only write in threads.
+
+        Similar functionality to a forum.
+
+        In Experiment.
+
+        .. versionadded:: 2.0
+
 .. class:: MessageType
 
     Specifies the type of :class:`Message`. This is used to denote if a message
@@ -1358,6 +1391,11 @@ of :class:`enum.Enum`.
         thread's conversation topic.
 
         .. versionadded:: 2.0
+    .. attribute:: context_menu_command
+
+        The system message denoting that an context menu command was executed.
+
+        .. versionadded:: 2.0
 
 .. class:: UserFlags
 
@@ -1459,6 +1497,9 @@ of :class:`enum.Enum`.
     .. attribute:: component
 
         Represents a component based interaction, i.e. using the Discord Bot UI Kit.
+    .. attribute:: auto_complete
+
+        Represents a autocomplete interaction for slash commands.
 
 .. class:: InteractionResponseType
 
@@ -1492,6 +1533,9 @@ of :class:`enum.Enum`.
         Responds to the interaction by editing the message.
 
         See also :meth:`InteractionResponse.edit_message`
+    .. attribute:: auto_complete_result
+
+        Responds to autocomplete requests.
 
 .. class:: ComponentType
 
@@ -1778,6 +1822,9 @@ of :class:`enum.Enum`.
         The member is "invisible". In reality, this is only used in sending
         a presence a la :meth:`Client.change_presence`. When you receive a
         user's presence this will be :attr:`offline` instead.
+    .. attribute:: streaming
+
+        The member is streaming.
 
 
 .. class:: AuditLogAction
@@ -2372,6 +2419,24 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
+    .. attribute:: scheduled_event_create
+
+        A scheduled event was created.
+
+        .. versionadded:: 2.0
+        
+    .. attribute:: scheduled_event_update
+
+        A scheduled event was updated.
+
+        .. versionadded:: 2.0
+        
+    .. attribute:: scheduled_event_delete
+
+        A scheduled event was deleted.
+
+        .. versionadded:: 2.0
+
     .. attribute:: thread_create
 
         A thread was created.
@@ -2645,6 +2710,52 @@ of :class:`enum.Enum`.
     .. attribute:: age_restricted
 
         The guild may contain NSFW content.
+
+.. class:: EmbeddedActivity
+
+    Respresents an embedded activity application.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: youtube
+
+        Represents the embedded application Youtube Together.
+
+    .. attribute:: watch_together
+
+        Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+        
+    .. attribute:: watch_together_dev
+
+        Development version of `watch_together`.
+
+    .. attribute:: poker
+
+        Represents the embedded application Poker Night.
+
+    .. attribute:: betrayal
+
+        Represents the embedded application Betrayal.io
+
+    .. attribute:: fishing
+
+        Represents the embedded application Fishington.io
+
+    .. attribute:: chess
+        Represents the embedded application Chess in the Park.
+
+    .. attribute:: letter_tile
+
+        Represents the embedded application Letter Tile.
+
+    .. attribute:: word_snack
+
+        Represents the embedded application Word Snacks.
+
+    .. attribute:: doodle_crew
+
+        Represents the embedded application Doodle Crew.
+
 
 Async Iterator
 ----------------
@@ -3911,6 +4022,14 @@ GuildSticker
 .. attributetable:: GuildSticker
 
 .. autoclass:: GuildSticker()
+    :members:
+
+RawTypingEvent
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawTypingEvent
+
+.. autoclass:: RawTypingEvent()
     :members:
 
 RawMessageDeleteEvent
