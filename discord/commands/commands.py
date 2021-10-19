@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,12 +26,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import types
+from discord.types.channel import TextChannel, VoiceChannel
 import functools
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import SlashCommandOptionType
+from ..enums import SlashCommandOptionType, SlashCommandChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -103,6 +106,16 @@ class ApplicationCommand(_BaseCommand):
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
+
+    async def __call__(self, ctx, *args, **kwargs):
+        """|coro|
+        Calls the command's callback.
+
+        This method bypasses all checks that a command has and does not
+        convert the arguments beforehand, so take care to pass the correct
+        arguments in.
+        """
+        return await self.callback(ctx, *args, **kwargs)
 
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
@@ -348,10 +361,15 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
-            if self._is_typing_optional(option):
-                option = Option(
-                    option.__args__[0], "No description provided", required=False
-                )
+            if self._is_typing_union(option):
+                if self._is_typing_optional(option):
+                    option = Option(
+                        option.__args__[0], "No description provided", required=False
+                    )
+                else:
+                    option = Option(
+                        option.__args__, "No description provided"
+                    )
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
@@ -370,8 +388,14 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
+    def _is_typing_union(self, annotation):
+        return (
+            getattr(annotation, '__origin__', None) is Union
+            or type(annotation) is getattr(types, "UnionType", Union)
+        ) # type: ignore
+
     def _is_typing_optional(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
+        return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -467,6 +491,13 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
+channel_type_map = {
+    'TextChannel': SlashCommandOptionType.text,
+    'VoiceChannel': SlashCommandOptionType.voice,
+    'StageChannel': SlashCommandOptionType.stage_voice,
+    'CategoryChannel': SlashCommandOptionType.category
+}
+
 class Option:
     def __init__(
         self, input_type: Any, /, description: str = None, **kwargs
@@ -474,12 +505,22 @@ class Option:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self._converter = None
+        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             to_assign = input_type() if isinstance(input_type, type) else input_type
             _type = SlashCommandOptionType.from_datatype(to_assign.__class__)
             if _type == SlashCommandOptionType.custom:
                 self._converter = to_assign
                 input_type = SlashCommandOptionType.string
+            elif _type == SlashCommandOptionType.channel:
+                if not isinstance(input_type, tuple):
+                    input_type = (input_type,)
+                for i in input_type:
+                    if i.__name__ == 'GuildChannel':
+                        continue
+
+                    channel_type = channel_type_map[i.__name__]
+                    self.channel_types.append(channel_type)
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
@@ -489,13 +530,18 @@ class Option:
         self.default = kwargs.pop("default", None)
 
     def to_dict(self) -> Dict:
-        return {
+        as_dict = {
             "name": self.name,
             "description": self.description,
             "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
+        if self.channel_types:
+            as_dict["channel_types"] = [t.value for t in self.channel_types]
+
+        return as_dict
+
 
     def __repr__(self):
         return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"

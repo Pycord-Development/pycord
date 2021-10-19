@@ -36,7 +36,7 @@ with open('README.rst') as f:
 extras_require = {
     'voice': ['PyNaCl>=1.3.0,<1.5'],
     'docs': [
-        'sphinx==4.0.2',
+        'sphinx==4.2.0',
         'sphinxcontrib_trio==1.1.2',
         'sphinxcontrib-websupport',
     ],
@@ -55,7 +55,7 @@ packages = [
     'discord.ext.tasks',
 ]
 
-setup(name='pycord',
+setup(name='py-cord',
       author='Pycord Development',
       url='https://github.com/Pycord-Development/pycord',
       project_urls={

@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -55,6 +56,7 @@ __all__ = (
     'InteractionType',
     'InteractionResponseType',
     'NSFWLevel',
+    'EmbeddedActivity',
 )
 
 
@@ -183,6 +185,8 @@ class ChannelType(Enum):
     public_thread = 11
     private_thread = 12
     stage_voice = 13
+    directory = 14
+    forum = 15
 
     def __str__(self):
         return self.name
@@ -212,6 +216,7 @@ class MessageType(Enum):
     application_command = 20
     thread_starter_message = 21
     guild_invite_reminder = 22
+    context_menu_command = 23
 
 
 class VoiceRegion(Enum):
@@ -283,6 +288,7 @@ class Status(Enum):
     dnd = 'dnd'
     do_not_disturb = 'dnd'
     invisible = 'invisible'
+    streaming = 'streaming'
 
     def __str__(self):
         return self.value
@@ -354,6 +360,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
+    scheduled_event_create    = 100
+    scheduled_event_update    = 101
+    scheduled_event_delete    = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -404,6 +413,9 @@ class AuditLogAction(Enum):
             AuditLogAction.sticker_create:        AuditLogActionCategory.create,
             AuditLogAction.sticker_update:        AuditLogActionCategory.update,
             AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
+            AuditLogAction.scheduled_event_create: AuditLogActionCategory.create,
+            AuditLogAction.scheduled_event_update: AuditLogActionCategory.update,
+            AuditLogAction.scheduled_event_delete: AuditLogActionCategory.delete,
             AuditLogAction.thread_create:         AuditLogActionCategory.create,
             AuditLogAction.thread_update:         AuditLogActionCategory.update,
             AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
@@ -440,6 +452,8 @@ class AuditLogAction(Enum):
             return 'stage_instance'
         elif v < 93:
             return 'sticker'
+        elif v < 103:
+            return 'scheduled_event'
         elif v < 113:
             return 'thread'
 
@@ -456,12 +470,16 @@ class UserFlags(Enum):
     hypesquad_balance = 256
     early_supporter = 512
     team_user = 1024
+    partner_or_verification_application = 2048
     system = 4096
     has_unread_urgent_messages = 8192
     bug_hunter_level_2 = 16384
+    underage_deleted = 32768
     verified_bot = 65536
     verified_bot_developer = 131072
     discord_certified_moderator = 262144
+    bot_http_interactions = 524288
+    spammer = 1048576
 
 
 class ActivityType(Enum):
@@ -528,6 +546,7 @@ class InteractionType(Enum):
     ping = 1
     application_command = 2
     component = 3
+    auto_complete = 4
 
 
 class InteractionResponseType(Enum):
@@ -538,6 +557,7 @@ class InteractionResponseType(Enum):
     deferred_channel_message = 5  # (with source)
     deferred_message_update = 6  # for components
     message_update = 7  # for components
+    auto_complete_result = 8 # for autocomplete interactions
 
 
 class VideoQualityMode(Enum):
@@ -588,7 +608,8 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
-class SlashCommandOptionType(Enum):
+    
+class OptionType(Enum):
     sub_command = 1
     sub_command_group = 2
     string = 3
@@ -603,6 +624,15 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
+        if isinstance(datatype, tuple): # typing.Union has been used
+            datatypes = [cls.from_datatype(op) for op in datatype]
+            if all([x == cls.channel for x in datatypes]):
+                return cls.channel
+            elif set(datatypes) <= {cls.role, cls.user}:
+                return cls.mentionable
+            else:
+                raise TypeError('Invalid usage of typing.Union')
+
         if issubclass(datatype, str):
             return cls.string
         if issubclass(datatype, bool):
@@ -617,16 +647,34 @@ class SlashCommandOptionType(Enum):
 
         if datatype.__name__ == "Member":
             return cls.user
-        if datatype.__name__ == "GuildChannel":
+        if datatype.__name__ in [
+            "GuildChannel", "TextChannel", 
+            "VoiceChannel", "StageChannel",
+            "CategoryChannel"
+        ]:
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
-        
-        # TODO: Improve the error message
-        raise TypeError('Invalid class used as an input type for an Option')
 
+        # TODO: Improve the error message
+        raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
+
+        
+class EmbeddedActivity(Enum):
+    youtube  = 755600276941176913
+    poker    = 755827207812677713
+    betrayal = 773336526917861400
+    fishing  = 814288819477020702
+    chess    = 832012774040141894
+    letter_tile = 879863686565621790
+    word_snack = 879863976006127627
+    doodle_crew = 878067389634314250
+    watch_together = 880218394199220334
+    watch_together_dev = 880218832743055411
+
+    
 T = TypeVar('T')
 
 

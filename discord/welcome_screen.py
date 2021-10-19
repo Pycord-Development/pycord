@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -149,6 +150,7 @@ class WelcomeScreen:
         description: Optional[str] = ...,
         welcome_channels: Optional[List[WelcomeChannel]] = ...,
         enabled: Optional[bool] = ...,
+        reason: Optional[str] = ...,
     ) -> None:
         ...
 
@@ -188,7 +190,9 @@ class WelcomeScreen:
             The welcome channels. The order of the channels would be same as the passed list order.
         enabled: Optional[:class:`bool`]
             Whether the welcome screen should be displayed.
-        
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
         Raises
         -------
         
@@ -213,7 +217,7 @@ class WelcomeScreen:
         options['welcome_channels'] = welcome_channels_data
 
         if options:
-            new = await self._guild._state.http.edit_welcome_screen(self._guild.id, options)
+            new = await self._guild._state.http.edit_welcome_screen(self._guild.id, options, reason=options.get('reason'))
             self._update(new)
         
         return self
