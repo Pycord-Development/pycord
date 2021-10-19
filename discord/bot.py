@@ -355,7 +355,7 @@ class ApplicationCommandMixin:
         Returns
         --------
         :class:`.ApplicationContext`
-            The invocation context. Tye type of this can change via the
+            The invocation context. The type of this can change via the
             ``cls`` parameter.
         """
         if cls is None:
