@@ -33,7 +33,7 @@ import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import SlashCommandOptionType, SlashCommandChannelType
+from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -492,10 +492,10 @@ class SlashCommand(ApplicationCommand):
             return self.copy()
 
 channel_type_map = {
-    'TextChannel': SlashCommandOptionType.text,
-    'VoiceChannel': SlashCommandOptionType.voice,
-    'StageChannel': SlashCommandOptionType.stage_voice,
-    'CategoryChannel': SlashCommandOptionType.category
+    'TextChannel': ChannelType.text,
+    'VoiceChannel': ChannelType.voice,
+    'StageChannel': ChannelType.stage_voice,
+    'CategoryChannel': ChannelType.category
 }
 
 class Option:
@@ -521,6 +521,8 @@ class Option:
 
                     channel_type = channel_type_map[i.__name__]
                     self.channel_types.append(channel_type)
+            else:
+                input_type = _type
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
@@ -984,7 +986,7 @@ def application_command(cls=SlashCommand, **attrs):
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
     .. note::
-        This decorator is overriden by :func:`commands.command`.
+        This decorator is overridden by :func:`commands.command`.
     .. versionadded:: 2.0
     Returns
     --------
