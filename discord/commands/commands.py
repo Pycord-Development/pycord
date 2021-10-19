@@ -33,7 +33,7 @@ import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import SlashCommandOptionType, SlashCommandChannelType
+from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -492,10 +492,10 @@ class SlashCommand(ApplicationCommand):
             return self.copy()
 
 channel_type_map = {
-    'TextChannel': SlashCommandOptionType.text,
-    'VoiceChannel': SlashCommandOptionType.voice,
-    'StageChannel': SlashCommandOptionType.stage_voice,
-    'CategoryChannel': SlashCommandOptionType.category
+    'TextChannel': ChannelType.text,
+    'VoiceChannel': ChannelType.voice,
+    'StageChannel': ChannelType.stage_voice,
+    'CategoryChannel': ChannelType.category
 }
 
 class Option:
