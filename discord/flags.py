@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -295,6 +296,24 @@ class MessageFlags(BaseFlags):
         """
         return 64
 
+    @flag_value
+    def loading(self):
+        """:class:`bool`: Returns ``True`` if the source message an deferred.
+
+        The user sees a 'thinking' state
+
+        .. versionadded:: 2.0
+        """
+        return 128
+
+    @flag_value
+    def failed_to_mention_some_roles_in_thread(self):
+        """:class:`bool`: Returns ``True`` if some roles are failed to mention in a thread.
+
+        .. versionadded:: 2.0
+        """
+        return 256
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
@@ -350,6 +369,16 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.bug_hunter.value
 
     @flag_value
+    def mfa_sms(self):
+        """:class:`bool`: Returns ``True`` if the user has SMS recovery for 2FA enabled"""
+        return UserFlags.mfa_sms.value
+
+    @flag_value
+    def premium_promo_dismissed(self):
+        """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion"""
+        return UserFlags.premium_promo_dismissed.value
+
+    @flag_value
     def hypesquad_bravery(self):
         """:class:`bool`: Returns ``True`` if the user is a HypeSquad Bravery member."""
         return UserFlags.hypesquad_bravery.value
@@ -375,6 +404,11 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.team_user.value
 
     @flag_value
+    def partner_or_verification_application(self):
+        """:class:`bool`: Relates to partner/verification applications."""
+        return UserFlags.partner_or_verification_application.value
+
+    @flag_value
     def system(self):
         """:class:`bool`: Returns ``True`` if the user is a system user (i.e. represents Discord officially)."""
         return UserFlags.system.value
@@ -383,6 +417,11 @@ class PublicUserFlags(BaseFlags):
     def bug_hunter_level_2(self):
         """:class:`bool`: Returns ``True`` if the user is a Bug Hunter Level 2"""
         return UserFlags.bug_hunter_level_2.value
+
+    @flag_value
+    def underage_deleted(self):
+        """:class:`bool`: Returns ``True`` if the user has a pending deletion for being underage in DOB prompt"""
+        return UserFlags.underage_deleted.value
 
     @flag_value
     def verified_bot(self):
@@ -409,6 +448,22 @@ class PublicUserFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return UserFlags.discord_certified_moderator.value
+
+    @flag_value
+    def bot_http_interactions(self):
+        """:class:`bool`: Returns ``True`` if is a bot http interaction.
+
+        .. versionadded:: 2.0
+        """
+        return UserFlags.bot_http_interactions.value
+
+    @flag_value
+    def spammer(self):
+        """:class:`bool`: Returns ``True`` if the user is flagged as spammer.
+
+        .. versionadded:: 2.0
+        """
+        return UserFlags.spammer.value
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
