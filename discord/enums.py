@@ -608,7 +608,7 @@ class NSFWLevel(Enum, comparable=True):
     safe = 2
     age_restricted = 3
 
-    
+
 class OptionType(Enum):
     sub_command = 1
     sub_command_group = 2
@@ -648,7 +648,7 @@ class OptionType(Enum):
         if datatype.__name__ == "Member":
             return cls.user
         if datatype.__name__ in [
-            "GuildChannel", "TextChannel", 
+            "GuildChannel", "TextChannel",
             "VoiceChannel", "StageChannel",
             "CategoryChannel"
         ]:
@@ -661,7 +661,7 @@ class OptionType(Enum):
         # TODO: Improve the error message
         raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
 
-        
+
 class EmbeddedActivity(Enum):
     youtube  = 755600276941176913
     poker    = 755827207812677713
@@ -674,7 +674,6 @@ class EmbeddedActivity(Enum):
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
 
-    
 T = TypeVar('T')
 
 

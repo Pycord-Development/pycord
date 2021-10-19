@@ -570,6 +570,21 @@ class InteractionResponse:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
 
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+
         parent = self._parent
         adapter = async_context.get()
         try:
