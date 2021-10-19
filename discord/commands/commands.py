@@ -507,21 +507,20 @@ class Option:
         self._converter = None
         self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
-            to_assign = input_type() if isinstance(input_type, type) else input_type
-            _type = SlashCommandOptionType.from_datatype(to_assign.__class__)
-            if _type == SlashCommandOptionType.custom:
-                self._converter = to_assign
+            if hasattr(input_type, "convert"):
+                self._converter = input_type
                 input_type = SlashCommandOptionType.string
-            elif _type == SlashCommandOptionType.channel:
-                if not isinstance(input_type, tuple):
-                    input_type = (input_type,)
-                for i in input_type:
-                    if i.__name__ == 'GuildChannel':
-                        continue
-
-                    channel_type = channel_type_map[i.__name__]
-                    self.channel_types.append(channel_type)
             else:
+                _type = SlashCommandOptionType.from_datatype(input_type)
+                if _type == SlashCommandOptionType.channel:
+                    if not isinstance(input_type, tuple):
+                        input_type = (input_type,)
+                    for i in input_type:
+                        if i.__name__ == 'GuildChannel':
+                            continue
+
+                        channel_type = channel_type_map[i.__name__]
+                        self.channel_types.append(channel_type)
                 input_type = _type
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
