@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -145,7 +146,6 @@ class AsyncWebhookAdapter:
                     for p in multipart:
                         form_data.add_field(**p)
                     to_send = form_data
-
                 try:
                     async with session.request(method, url, data=to_send, headers=headers, params=params) as response:
                         _log.debug(
@@ -349,6 +349,8 @@ class AsyncWebhookAdapter:
         session: aiohttp.ClientSession,
         type: int,
         data: Optional[Dict[str, Any]] = None,
+        files: List[File]=None
+
     ) -> Response[None]:
         payload: Dict[str, Any] = {
             'type': type,
@@ -356,6 +358,28 @@ class AsyncWebhookAdapter:
 
         if data is not None:
             payload['data'] = data
+        form = [{'name': 'payload_json', 'value': utils._to_json(payload)}]
+        files = files or []
+        if len(files) == 1:
+            file = files[0]
+            form.append(
+                {
+                    'name': 'file',
+                    'value': file.fp,
+                    'filename': file.filename,
+                    'content_type': 'application/octet-stream',
+                }
+            )
+        else:
+            for index, file in enumerate(files):
+                form.append(
+                    {
+                        'name': f'file{index}',
+                        'value': file.fp,
+                        'filename': file.filename,
+                        'content_type': 'application/octet-stream',
+                    }
+                )
 
         route = Route(
             'POST',
@@ -364,7 +388,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
         )
 
-        return self.request(route, session=session, payload=payload)
+        return self.request(route, session=session, files=files, multipart=form)
 
     def get_original_interaction_response(
         self,

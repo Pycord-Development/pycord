@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -61,7 +62,7 @@ import sys
 import types
 import warnings
 
-from .errors import InvalidArgument
+from .errors import InvalidArgument, HTTPException
 
 try:
     import orjson
@@ -237,10 +238,10 @@ def parse_time(timestamp: Optional[str]) -> Optional[datetime.datetime]:
 
 
 def copy_doc(original: Callable) -> Callable[[T], T]:
-    def decorator(overriden: T) -> T:
-        overriden.__doc__ = original.__doc__
-        overriden.__signature__ = _signature(original)  # type: ignore
-        return overriden
+    def decorator(overridden: T) -> T:
+        overridden.__doc__ = original.__doc__
+        overridden.__signature__ = _signature(original)  # type: ignore
+        return overridden
 
     return decorator
 
@@ -448,11 +449,14 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int):
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None):
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
-        getter = await getattr(obj, f'fetch_{attr}')(id)
+        try:
+            getter = await getattr(obj, f'fetch_{attr}')(id)
+        except HTTPException:
+            return default
     return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
