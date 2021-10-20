@@ -7,7 +7,7 @@ name: "Bypass review"
 
 jobs:
   automerge:
-    runs-on: linux
+    runs-on: ubuntu-latest
     steps:
       - name: Check PR label
         if: github.event.label.name == 'bypass-review'
