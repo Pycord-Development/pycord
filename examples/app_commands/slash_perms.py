@@ -1,7 +1,7 @@
 import discord
 
-# Imports Commands from discord.app (for Slash Permissions)
-from discord.app import commands
+# Imports Commands from discord.commands (for Slash Permissions)
+from discord.commands import commands
 
 bot = discord.Bot()
 

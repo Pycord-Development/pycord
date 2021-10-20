@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,19 +23,22 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations # will probably need in future for type hinting
-import asyncio
-import traceback
-from .app.errors import ApplicationCommandError, CheckFailure  
+from __future__ import annotations
 
-from typing import Callable, Optional
+import asyncio
+import collections
+import inspect
+import traceback
+from .commands.errors import CheckFailure
+
+from typing import List, Optional, Union
 
 import sys
 
 from .client import Client
 from .shard import AutoShardedClient
 from .utils import get, async_all
-from .app import (
+from .commands import (
     SlashCommand,
     SlashCommandGroup,
     MessageCommand,
@@ -70,6 +74,13 @@ class ApplicationCommandMixin:
     @property
     def pending_application_commands(self):
         return self._pending_application_commands
+
+    @property
+    def commands(self) -> List[Union[ApplicationCommand, ...]]:
+        commands = list(self.application_commands.values())
+        if self._supports_prefixed_commands:
+            commands += self.prefixed_commands
+        return commands
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
@@ -377,7 +388,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overriden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`commands.Bot`.
 
         .. versionadded:: 2.0
 
@@ -418,7 +429,7 @@ class ApplicationCommandMixin:
         Returns
         --------
         :class:`.ApplicationContext`
-            The invocation context. Tye type of this can change via the
+            The invocation context. The type of this can change via the
             ``cls`` parameter.
         """
         if cls is None:
@@ -427,13 +438,31 @@ class ApplicationCommandMixin:
 
 
 class BotBase(ApplicationCommandMixin, CogMixin):
+    _supports_prefixed_commands = False
     # TODO I think
-    def __init__(self, *args, **kwargs):
+    def __init__(self, description=None, *args, **options):
         # super(Client, self).__init__(*args, **kwargs)
         # I replaced ^ with v and it worked
-        super().__init__(*args, **kwargs)
-        self.debug_guild = kwargs.pop("debug_guild", None)
-        self.debug_guilds = kwargs.pop("debug_guilds", None)
+        super().__init__(*args, **options)
+        self.extra_events = {}  # TYPE: Dict[str, List[CoroFunc]]
+        self.__cogs = {}  # TYPE: Dict[str, Cog]
+        self.__extensions = {}  # TYPE: Dict[str, types.ModuleType]
+        self._checks = []  # TYPE: List[Check]
+        self._check_once = []
+        self._before_invoke = None
+        self._after_invoke = None
+        self.description = inspect.cleandoc(description) if description else ''
+        self.owner_id = options.get('owner_id')
+        self.owner_ids = options.get('owner_ids', set())
+
+        self.debug_guild = options.pop("debug_guild", None)  # TODO: remove or reimplement
+        self.debug_guilds = options.pop("debug_guilds", None)
+
+        if self.owner_id and self.owner_ids:
+            raise TypeError('Both owner_id and owner_ids are set.')
+
+        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
+            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
 
         if self.debug_guild:
             if self.debug_guilds is None:
@@ -643,6 +672,20 @@ class Bot(BotBase, Client):
 
     Attributes
     -----------
+    description: :class:`str`
+        The content prefixed into the default help message.
+    owner_id: Optional[:class:`int`]
+        The user ID that owns the bot. If this is not set and is then queried via
+        :meth:`.is_owner` then it is fetched automatically using
+        :meth:`~.Bot.application_info`.
+    owner_ids: Optional[Collection[:class:`int`]]
+        The user IDs that owns the bot. This is similar to :attr:`owner_id`.
+        If this is not set and the application is team based, then it is
+        fetched automatically using :meth:`~.Bot.application_info`.
+        For performance reasons it is recommended to use a :class:`set`
+        for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
+
+        .. versionadded:: 1.3
     debug_guild: Optional[:class:`int`]
         Guild ID of a guild to use for testing commands. Prevents setting global commands
         in favor of guild commands, which update instantly.

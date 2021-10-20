@@ -5546,7 +5546,7 @@ msgid "The emoji supplied by the caller that did not match the regex"
 msgstr ""
 
 #: discord.ext.commands.BadBoolArgument:1 of
-msgid "Exception raised when a boolean argument was not convertable."
+msgid "Exception raised when a boolean argument was not convertible."
 msgstr ""
 
 #: discord.ext.commands.BadBoolArgument:9 of

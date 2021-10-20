@@ -3,7 +3,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -30,9 +31,9 @@ import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
-from .errors import InteractionResponded, HTTPException, ClientException
+from .errors import InteractionResponded, HTTPException, ClientException, InvalidArgument
 from .channel import PartialMessageable, ChannelType
-
+from .file import File
 from .user import User
 from .member import Member
 from .message import Message, Attachment
@@ -54,7 +55,6 @@ if TYPE_CHECKING:
     )
     from .guild import Guild
     from .state import ConnectionState
-    from .file import File
     from .mentions import AllowedMentions
     from aiohttp import ClientSession
     from .embeds import Embed
@@ -392,6 +392,7 @@ class InteractionResponse:
         An interaction can only be responded to once.
         """
         return self._responded
+        
 
     async def defer(self, *, ephemeral: bool = False) -> None:
         """|coro|
@@ -468,7 +469,10 @@ class InteractionResponse:
         view: View = MISSING,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None
+        allowed_mentions: AllowedMentions = None,
+        file: File = None,
+        files: List[File] = None,
+        delete_after: float = None
     ) -> None:
         """|coro|
 
@@ -495,6 +499,13 @@ class InteractionResponse:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: :class:`List[File]`
+            A list of files to upload. Must be a maximum of 10.
             
         Raises
         -------
@@ -544,15 +555,51 @@ class InteractionResponse:
         else:
             payload['allowed_mentions'] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+
         parent = self._parent
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.channel_message.value,
-            data=payload,
-        )
+        try:
+            await adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.channel_message.value,
+                data=payload,
+                files=files
+            )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view is not MISSING:
             if ephemeral and view.timeout is None:
@@ -561,6 +608,12 @@ class InteractionResponse:
             self._parent._state.store_view(view)
 
         self._responded = True
+        if delete_after is not None:
+            async def delete():
+                await asyncio.sleep(delete_after)
+                await self._parent.delete_original_message()
+            asyncio.ensure_future(delete(), loop=self._parent._state.loop)
+
 
     async def edit_message(
         self,
