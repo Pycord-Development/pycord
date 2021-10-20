@@ -2,27 +2,26 @@ on:
   pull_request_target:
     types: [labeled]
 jobs:
-    automerge:
-        steps:
-        - name: Check PR label
+  automerge:
+    runs-on: linux
+    steps:
+      - name: Check PR label
         if: github.event.label.name == 'bypass-review'
         uses: "lannonbr/repo-permission-check-action@2.0.0"
         with:
           permission: "write"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run:
-          echo "Label is correct and user has permissions"
-        
-        - name: Merge
+
+      - name: Merge
         if: ${{ success() }}
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ github.event.pull_request.number }}
           method: merge
-          
-        - name: Cancel
+
+      - name: Cancel
         if: ${{ failure() }}
         run:
-          echo "Not merging. Cancelled."
+          echo Not merging. Cancelled.
