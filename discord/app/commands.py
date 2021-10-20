@@ -339,7 +339,7 @@ class SlashCommand(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", None)
+        self.permissions: Optional[List[Permission]] = getattr(func, "__app_cmd_perms__", None)
 
     def parse_options(self, params) -> List[Option]:
         final_options = []
@@ -1093,3 +1093,4 @@ def is_owner():
         return func
 
     return decorator
+    
