@@ -102,7 +102,7 @@ class ApplicationCommand(_BaseCommand):
     cog = None
     
     def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
@@ -546,7 +546,7 @@ class Option:
 
 
     def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 
 class OptionChoice:
