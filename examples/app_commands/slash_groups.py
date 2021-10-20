@@ -18,7 +18,7 @@ async def add(ctx, num1: int, num2: int):
 
 # another way, creating the class manually
 
-from discord.app import SlashCommandGroup
+from discord.commands import SlashCommandGroup
 
 math = SlashCommandGroup("math", "Commands related to mathematics.")
 
