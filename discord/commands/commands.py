@@ -63,6 +63,11 @@ __all__ = (
     "slash_command",
     "user_command",
     "message_command",
+    "has_role",
+    "has_any_role",
+    "is_user",
+    "is_owner",
+    "permission",
 )
 
 def wrap_callback(coro):
@@ -332,6 +337,10 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
+
+        # Permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: Optional[List[Permission]] = getattr(func, "__app_cmd_perms__", None)
         
 
     def parse_options(self, params) -> List[Option]:
@@ -401,6 +410,7 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
+            "default_permission": self.default_permission,
         }
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -666,6 +676,9 @@ class ContextMenuCommand(ApplicationCommand):
         self._after_invoke = None
         
         self.validate_parameters()
+
+        # Context Commands don't have permissions
+        self.permissions = None
 
     def validate_parameters(self):
         params = self._get_signature_parameters()
@@ -946,3 +959,99 @@ def validate_chat_input_description(description: Any):
         raise ValidationError(
             "Description of a chat input command must be less than 100 characters and non empty."
         )
+
+# Slash Command Permissions
+class Permission:
+    def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: int = None):
+        self.id = id
+        self.type = type
+        self.permission = permission
+        self.guild_id = guild_id
+
+    def to_dict(self) -> Dict[int, int, bool]:
+        return {"id": self.id, "type": self.type, "permission": self.permission}
+
+def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
+    def decorator(func: Callable):
+        if not role_id is None:
+            app_cmd_perm = Permission(role_id, 1, permission, guild_id)
+        elif not user_id is None:
+            app_cmd_perm = Permission(user_id, 2, permission, guild_id)
+        else:
+            raise ValueError("role_id or user_id must be specified!")
+
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def has_role(item: Union[int, str], guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission(item, 1, True, guild_id) #{"id": item, "type": 1, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def has_any_role(*items: Union[int, str], guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        for item in items:
+            app_cmd_perm = Permission(item, 1, True, guild_id) #{"id": item, "type": 1, "permission": True}
+
+            # Append
+            func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def is_user(user: int, guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission(user, 2, True, guild_id) #{"id": user, "type": 2, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def is_owner(guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission("owner", 2, True, guild_id) #{"id": "owner", "type": 2, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator

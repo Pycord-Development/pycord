@@ -151,6 +151,9 @@ class ApplicationCommandMixin:
         """
         commands = []
 
+        # Global Command Permissions
+        global_permissions: List = []
+
         registered_commands = await self.http.get_global_commands(self.user.id)
         for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is None]:
             as_dict = command.to_dict()
@@ -165,6 +168,20 @@ class ApplicationCommandMixin:
                     as_dict["id"] = matches[0]["id"]
             commands.append(as_dict)
 
+        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+
+        for i in cmds:
+            cmd = get(
+                self.pending_application_commands,
+                name=i["name"],
+                description=i["description"],
+                type=i["type"],
+            )
+            self.application_commands[i["id"]] = cmd
+
+            # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
+            global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
             update_guild_commands[guild.id] = []
@@ -178,6 +195,9 @@ class ApplicationCommandMixin:
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
                                                                   update_guild_commands[guild_id])
+
+                # Permissions for this Guild
+                guild_permissions: List = []
             except Forbidden:
                 if not update_guild_commands[guild_id]:
                     continue
@@ -186,19 +206,73 @@ class ApplicationCommandMixin:
                     raise
             else:
                 for i in cmds:
-                    cmd = get(self.pending_application_commands, name=i["name"], description=i["description"], type=i['type'])
+                    cmd = get(self.pending_application_commands, name=i["name"], description=i["description"],
+                              type=i['type'])
                     self.application_commands[i["id"]] = cmd
 
-        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+                    # Permissions
+                    permissions = [perm.to_dict() for perm in cmd.permissions if perm.guild_id is None or (
+                                perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids)]
+                    guild_permissions.append({"id": i["id"], "permissions": permissions})
 
-        for i in cmds:
-            cmd = get(
-                self.pending_application_commands,
-                name=i["name"],
-                description=i["description"],
-                type=i["type"],
-            )
-            self.application_commands[i["id"]] = cmd
+                for global_command in global_permissions:
+                    permissions = [perm.to_dict() for perm in global_command['permissions'] if
+                                   perm.guild_id is None or (
+                                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids)]
+                    guild_permissions.append({"id": global_command["id"], "permissions": permissions})
+
+                # Collect & Upsert Permissions for Each Guild
+                # Command Permissions for this Guild
+                guild_cmd_perms: List = []
+
+                # Loop through Commands Permissions available for this Guild
+                for item in guild_permissions:
+                    new_cmd_perm = {"id": item["id"], "permissions": []}
+
+                    # Replace Role / Owner Names with IDs
+                    for permission in item["permissions"]:
+                        if isinstance(permission['id'], str):
+                            # Replace Role Names
+                            if permission['type'] == 1 and isinstance(permission['id'], str):
+                                role = get(self.get_guild(guild_id).roles, name=permission['id'])
+
+                                # If not missing
+                                if not role is None:
+                                    new_cmd_perm["permissions"].append(
+                                        {"id": role.id, "type": 1, "permission": permission['permission']})
+                                else:
+                                    print("No Role ID found in Guild ({guild_id}) for Role ({role})".format(
+                                        guild_id=guild_id, role=permission['id']))
+                            # Add Owner IDs
+                            elif permission['type'] == 2 and permission['id'] == "owner":
+                                app = await self.application_info()  # type: ignore
+                                if app.team:
+                                    for m in app.team.members:
+                                        new_cmd_perm["permissions"].append(
+                                            {"id": m.id, "type": 2, "permission": permission['permission']})
+                                else:
+                                    new_cmd_perm["permissions"].append(
+                                        {"id": app.owner.id, "type": 2, "permission": permission['permission']})
+                        # Add the Rest
+                        else:
+                            new_cmd_perm["permissions"].append(permission)
+
+                    # Make sure we don't have over 10 overwrites
+                    if len(new_cmd_perm['permissions']) > 10:
+                        print(
+                            "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
+                                name=self.application_commands[new_cmd_perm['id']].name, guild_id=guild_id))
+                        new_cmd_perm['permissions'] = new_cmd_perm['permissions'][:10]
+
+                    # Append to guild_cmd_perms
+                    guild_cmd_perms.append(new_cmd_perm)
+
+                # Upsert
+                try:
+                    await self.http.bulk_upsert_command_permissions(self.user.id, guild_id, guild_cmd_perms)
+                except Forbidden:
+                    print(f"Failed to add command permissions to guild {guild_id}", file=sys.stderr)
+                    raise
 
     async def process_application_commands(self, interaction: Interaction) -> None:
         """|coro|
