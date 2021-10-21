@@ -528,6 +528,11 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+        self.min_value: Optional[Union[int, float]] = kwargs.pop("min_value")
+        self.max_value: Optional[Union[int, float]] = kwargs.pop("max_value")
+        
+        if any([self.max_value, self.min_value]) and not self.input_type in {SlashCommandOptionType.integer, SlashCommandOptionType.number}:
+            raise TypeError('min_value and max_value can only be set on options with of type integer or number.')
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -539,6 +544,10 @@ class Option:
         }
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
+        if self.min_value:
+            as_dict["min_value"] = self.min_value
+        if self.max_value:
+            as_dict["max_value"] = self.max_value
 
         return as_dict
 
