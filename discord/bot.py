@@ -644,7 +644,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         try:
             l.remove(func)
-        except guild_dataError:
+        except ValueError:
             pass
 
     def check_once(self, func):
