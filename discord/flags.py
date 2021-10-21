@@ -216,6 +216,13 @@ class SystemChannelFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 4
+    @flag_value
+    def join_notification_replies(self):
+        """:class:`bool`: Returns ``True`` if the system channel is allowing member join sticker replies.
+
+        .. versionadded:: 2.0
+        """
+        return 8
 
 
 @fill_with_flags()
