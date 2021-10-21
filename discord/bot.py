@@ -216,7 +216,7 @@ class ApplicationCommandMixin:
                     guild_permissions.append({"id": i["id"], "permissions": permissions})
 
                 for global_command in global_permissions:
-                    permissions = [perm.to_dict() for perm in global_command['permissions'] if
+                    permissions = [] if global_command['permissions'] is None else [perm.to_dict() for perm in global_command['permissions'] if
                                    perm.guild_id is None or (
                                                perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids)]
                     guild_permissions.append({"id": global_command["id"], "permissions": permissions})
