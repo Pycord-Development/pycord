@@ -678,7 +678,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.validate_parameters()
 
         # Context Commands don't have permissions
-        self.permissions = None
+        self.permissions = []
 
     def validate_parameters(self):
         params = self._get_signature_parameters()
