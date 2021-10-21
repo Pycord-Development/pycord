@@ -2713,7 +2713,7 @@ of :class:`enum.Enum`.
 
 .. class:: EmbeddedActivity
 
-    Respresents an embedded activity application.
+    Represents an embedded activity application.
 
     .. versionadded:: 2.0
 
@@ -2742,6 +2742,7 @@ of :class:`enum.Enum`.
         Represents the embedded application Fishington.io
 
     .. attribute:: chess
+
         Represents the embedded application Chess in the Park.
 
     .. attribute:: letter_tile
@@ -3952,7 +3953,7 @@ WelcomeScreen
     :members:
 
 WelcomeScreenChannel
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: WelcomeScreenChannel
 

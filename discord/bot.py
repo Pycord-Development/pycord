@@ -441,17 +441,22 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         A global check is similar to a :func:`.check` that is applied
         on a per command basis except it is run before any command checks
         have been verified and applies to every command the bot has.
+
         .. note::
+
             This function can either be a regular function or a coroutine.
         Similar to a command :func:`.check`\, this takes a single parameter
         of type :class:`.Context` and can only raise exceptions inherited from
         :exc:`.CommandError`.
+
         Example
         ---------
         .. code-block:: python3
+
             @bot.check
             def check_commands(ctx):
                 return ctx.command.qualified_name in allowed_commands
+
         """
         # T was used instead of Check to ensure the type matches on return
         self.add_check(func)  # type: ignore
@@ -461,6 +466,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         """Adds a global check to the bot.
         This is the non-decorator interface to :meth:`.check`
         and :meth:`.check_once`.
+
         Parameters
         -----------
         func
@@ -468,6 +474,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         call_once: :class:`bool`
             If the function should only be called once per
             :meth:`.invoke` call.
+
         """
 
         if call_once:
@@ -479,6 +486,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         """Removes a global check from the bot.
         This function is idempotent and will not raise an exception
         if the function is not in the global checks.
+
         Parameters
         -----------
         func
@@ -486,6 +494,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         call_once: :class:`bool`
             If the function was added with ``call_once=True`` in
             the :meth:`.Bot.add_check` call or using :meth:`.check_once`.
+
         """
         l = self._check_once if call_once else self._checks
 
@@ -502,21 +511,28 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         or :meth:`.Command.can_run` is called. This type of check
         bypasses that and ensures that it's called only once, even inside
         the default help command.
+
         .. note::
+
             When using this function the :class:`.Context` sent to a group subcommand
             may only parse the parent command and not the subcommands due to it
             being invoked once per :meth:`.Bot.invoke` call.
+
         .. note::
+
             This function can either be a regular function or a coroutine.
         Similar to a command :func:`.check`\, this takes a single parameter
         of type :class:`.Context` and can only raise exceptions inherited from
         :exc:`.CommandError`.
+
         Example
         ---------
         .. code-block:: python3
+
             @bot.check_once
             def whitelist(ctx):
                 return ctx.message.author.id in my_whitelist
+
         """
         self.add_check(func, call_once=True)
         return func
@@ -537,15 +553,19 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         called. This makes it a useful function to set up database
         connections or any type of set up required.
         This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+
         .. note::
+
             The :meth:`~.Bot.before_invoke` and :meth:`~.Bot.after_invoke` hooks are
             only called if all checks and argument parsing procedures pass
             without error. If any check or argument parsing procedures fail
             then the hooks are not called.
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
+
         Raises
         -------
         TypeError
@@ -563,20 +583,25 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
         This post-invoke hook takes a sole parameter, a :class:`.Context`.
+
         .. note::
+
             Similar to :meth:`~.Bot.before_invoke`\, this is not called unless
             checks and argument parsing procedures succeed. This hook is,
             however, **always** called regardless of the internal command
             callback raising an error (i.e. :exc:`.CommandInvokeError`\).
             This makes it ideal for clean-up scenarios.
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
+
         Raises
         -------
         TypeError
             The coroutine passed is not actually a coroutine.
+
         """
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('The post-invoke hook must be a coroutine.')
@@ -616,10 +641,12 @@ class Bot(BotBase, Client):
         Guild ID of a guild to use for testing commands. Prevents setting global commands
         in favor of guild commands, which update instantly.
         .. note::
+
             The bot will not create any global commands if a debug_guild is passed.
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
         .. note::
+
             You cannot set both debug_guild and debug_guilds.
     """
 
