@@ -199,7 +199,7 @@ class ApplicationCommandMixin:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        for guild_id in update_guild_commands:
+        for guild_id, guild_data in update_guild_commands.items():
             try:
                 cmds = await self.http.bulk_upsert_guild_commands(
                     self.user.id, guild_id, update_guild_commands[guild_id]
@@ -208,11 +208,10 @@ class ApplicationCommandMixin:
                 # Permissions for this Guild
                 guild_permissions: List = []
             except Forbidden:
-                if not update_guild_commands[guild_id]:
+                if not guild_data:
                     continue
-                else:
-                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
-                    raise
+                print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+                raise
             else:
                 for i in cmds:
                     cmd = get(
@@ -261,16 +260,14 @@ class ApplicationCommandMixin:
                     for permission in item["permissions"]:
                         if isinstance(permission["id"], str):
                             # Replace Role Names
-                            if permission["type"] == 1 and isinstance(
-                                permission["id"], str
-                            ):
+                            if permission["type"] == 1:
                                 role = get(
                                     self.get_guild(guild_id).roles,
                                     name=permission["id"],
                                 )
 
                                 # If not missing
-                                if not role is None:
+                                if role is not None:
                                     new_cmd_perm["permissions"].append(
                                         {
                                             "id": role.id,
@@ -284,7 +281,7 @@ class ApplicationCommandMixin:
                                             guild_id=guild_id, role=permission["id"]
                                         )
                                     )
-                            # Add Owner IDs
+                            # Add owner IDs
                             elif (
                                 permission["type"] == 2 and permission["id"] == "owner"
                             ):
@@ -306,7 +303,7 @@ class ApplicationCommandMixin:
                                             "permission": permission["permission"],
                                         }
                                     )
-                        # Add the Rest
+                        # Add the rest
                         else:
                             new_cmd_perm["permissions"].append(permission)
 
@@ -647,7 +644,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         try:
             l.remove(func)
-        except ValueError:
+        except guild_dataError:
             pass
 
     def check_once(self, func):
