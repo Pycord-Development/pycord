@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -124,6 +125,8 @@ class View:
 
     Parameters
     -----------
+    *items: :class:`Item`
+        The initial items attached to this view.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
@@ -152,7 +155,7 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *, timeout: Optional[float] = 180.0):
+    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
         self.timeout = timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
@@ -163,6 +166,9 @@ class View:
             self.children.append(item)
 
         self.__weights = _ViewWeights(self.children)
+        for item in items:
+            self.add_item(item)
+
         loop = asyncio.get_running_loop()
         self.id: str = os.urandom(16).hex()
         self.__cancel_callback: Optional[Callable[[View], None]] = None
@@ -402,7 +408,7 @@ class View:
                 item = _component_to_item(component)
                 if not item.is_dispatchable():
                     continue
-                children.append(component)
+                children.append(item)
             else:
                 older.refresh_component(component)
                 children.append(older)

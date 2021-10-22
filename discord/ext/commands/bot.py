@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -120,27 +121,12 @@ class _DefaultRepr:
 _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
-    def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
+    _supports_prefixed_commands = True
+    def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.extra_events: Dict[str, List[CoroFunc]] = {}
-        self.__cogs: Dict[str, Cog] = {}
-        self.__extensions: Dict[str, types.ModuleType] = {}
-        self._checks: List[Check] = []
-        self._check_once = []
-        self._before_invoke = None
-        self._after_invoke = None
         self._help_command = None
-        self.description = inspect.cleandoc(description) if description else ''
-        self.owner_id = options.get('owner_id')
-        self.owner_ids = options.get('owner_ids', set())
         self.strip_after_prefix = options.get('strip_after_prefix', False)
-
-        if self.owner_id and self.owner_ids:
-            raise TypeError('Both owner_id and owner_ids are set.')
-
-        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
-            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
 
         if help_command is _default:
             self.help_command = DefaultHelpCommand()
@@ -508,6 +494,338 @@ class BotBase(GroupMixin):
 
         return decorator
 
+    # cogs
+
+    def add_cog(self, cog: Cog, *, override: bool = False) -> None:
+        """Adds a "cog" to the bot.
+
+        A cog is a class that has its own event listeners and commands.
+
+        .. versionchanged:: 2.0
+
+            :exc:`.ClientException` is raised when a cog with the same name
+            is already loaded.
+
+        Parameters
+        -----------
+        cog: :class:`.Cog`
+            The cog to register to the bot.
+        override: :class:`bool`
+            If a previously loaded cog with the same name should be ejected
+            instead of raising an error.
+
+            .. versionadded:: 2.0
+
+        Raises
+        -------
+        TypeError
+            The cog does not inherit from :class:`.Cog`.
+        CommandError
+            An error happened during loading.
+        .ClientException
+            A cog with the same name is already loaded.
+        """
+
+        if not isinstance(cog, Cog):
+            raise TypeError('cogs must derive from Cog')
+
+        cog_name = cog.__cog_name__
+        existing = self.__cogs.get(cog_name)
+
+        if existing is not None:
+            if not override:
+                raise discord.ClientException(f'Cog named {cog_name!r} already loaded')
+            self.remove_cog(cog_name)
+
+        cog = cog._inject(self)
+        self.__cogs[cog_name] = cog
+
+    def get_cog(self, name: str) -> Optional[Cog]:
+        """Gets the cog instance requested.
+
+        If the cog is not found, ``None`` is returned instead.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the cog you are requesting.
+            This is equivalent to the name passed via keyword
+            argument in class creation or the class name if unspecified.
+
+        Returns
+        --------
+        Optional[:class:`Cog`]
+            The cog that was requested. If not found, returns ``None``.
+        """
+        return self.__cogs.get(name)
+
+    def remove_cog(self, name: str) -> Optional[Cog]:
+        """Removes a cog from the bot and returns it.
+
+        All registered commands and event listeners that the
+        cog has registered will be removed as well.
+
+        If no cog is found then this method has no effect.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the cog to remove.
+
+        Returns
+        -------
+        Optional[:class:`.Cog`]
+             The cog that was removed. ``None`` if not found.
+        """
+
+        cog = self.__cogs.pop(name, None)
+        if cog is None:
+            return
+
+        help_command = self._help_command
+        if help_command and help_command.cog is cog:
+            help_command.cog = None
+        cog._eject(self)
+
+        return cog
+
+    @property
+    def cogs(self) -> Mapping[str, Cog]:
+        """Mapping[:class:`str`, :class:`Cog`]: A read-only mapping of cog name to cog."""
+        return types.MappingProxyType(self.__cogs)
+
+    # extensions
+
+    def _remove_module_references(self, name: str) -> None:
+        # find all references to the module
+        # remove the cogs registered from the module
+        for cogname, cog in self.__cogs.copy().items():
+            if _is_submodule(name, cog.__module__):
+                self.remove_cog(cogname)
+
+        # remove all the commands from the module
+        for cmd in self.all_commands.copy().values():
+            if cmd.module is not None and _is_submodule(name, cmd.module):
+                if isinstance(cmd, GroupMixin):
+                    cmd.recursively_remove_all_commands()
+                self.remove_command(cmd.name)
+
+        # remove all the listeners from the module
+        for event_list in self.extra_events.copy().values():
+            remove = []
+            for index, event in enumerate(event_list):
+                if event.__module__ is not None and _is_submodule(name, event.__module__):
+                    remove.append(index)
+
+            for index in reversed(remove):
+                del event_list[index]
+
+    def _call_module_finalizers(self, lib: types.ModuleType, key: str) -> None:
+        try:
+            func = getattr(lib, 'teardown')
+        except AttributeError:
+            pass
+        else:
+            try:
+                func(self)
+            except Exception:
+                pass
+        finally:
+            self.__extensions.pop(key, None)
+            sys.modules.pop(key, None)
+            name = lib.__name__
+            for module in list(sys.modules.keys()):
+                if _is_submodule(name, module):
+                    del sys.modules[module]
+
+    def _load_from_module_spec(self, spec: importlib.machinery.ModuleSpec, key: str) -> None:
+        # precondition: key not in self.__extensions
+        lib = importlib.util.module_from_spec(spec)
+        sys.modules[key] = lib
+        try:
+            spec.loader.exec_module(lib)  # type: ignore
+        except Exception as e:
+            del sys.modules[key]
+            raise discord.ExtensionFailed(key, e) from e
+
+        try:
+            setup = getattr(lib, 'setup')
+        except AttributeError:
+            del sys.modules[key]
+            raise discord.NoEntryPointError(key)
+
+        try:
+            setup(self)
+        except Exception as e:
+            del sys.modules[key]
+            self._remove_module_references(lib.__name__)
+            self._call_module_finalizers(lib, key)
+            raise discord.ExtensionFailed(key, e) from e
+        else:
+            self.__extensions[key] = lib
+
+    def _resolve_name(self, name: str, package: Optional[str]) -> str:
+        try:
+            return importlib.util.resolve_name(name, package)
+        except ImportError:
+            raise discord.ExtensionNotFound(name)
+
+    def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
+        """Loads an extension.
+
+        An extension is a python module that contains commands, cogs, or
+        listeners.
+
+        An extension must have a global function, ``setup`` defined as
+        the entry point on what to do when the extension is loaded. This entry
+        point must have a single argument, the ``bot``.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The extension name to load. It must be dot separated like
+            regular Python imports if accessing a sub-module. e.g.
+            ``foo.test`` if you want to import ``foo/test.py``.
+        package: Optional[:class:`str`]
+            The package name to resolve relative imports with.
+            This is required when loading an extension using a relative path, e.g ``.foo.test``.
+            Defaults to ``None``.
+
+            .. versionadded:: 1.7
+
+        Raises
+        --------
+        ExtensionNotFound
+            The extension could not be imported.
+            This is also raised if the name of the extension could not
+            be resolved using the provided ``package`` parameter.
+        ExtensionAlreadyLoaded
+            The extension is already loaded.
+        NoEntryPointError
+            The extension does not have a setup function.
+        ExtensionFailed
+            The extension or its setup function had an execution error.
+        """
+
+        name = self._resolve_name(name, package)
+        if name in self.__extensions:
+            raise discord.ExtensionAlreadyLoaded(name)
+
+        spec = importlib.util.find_spec(name)
+        if spec is None:
+            raise discord.ExtensionNotFound(name)
+
+        self._load_from_module_spec(spec, name)
+
+    def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+        """Unloads an extension.
+
+        When the extension is unloaded, all commands, listeners, and cogs are
+        removed from the bot and the module is un-imported.
+
+        The extension can provide an optional global function, ``teardown``,
+        to do miscellaneous clean-up if necessary. This function takes a single
+        parameter, the ``bot``, similar to ``setup`` from
+        :meth:`~.Bot.load_extension`.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The extension name to unload. It must be dot separated like
+            regular Python imports if accessing a sub-module. e.g.
+            ``foo.test`` if you want to import ``foo/test.py``.
+        package: Optional[:class:`str`]
+            The package name to resolve relative imports with.
+            This is required when unloading an extension using a relative path, e.g ``.foo.test``.
+            Defaults to ``None``.
+
+            .. versionadded:: 1.7
+
+        Raises
+        -------
+        ExtensionNotFound
+            The name of the extension could not
+            be resolved using the provided ``package`` parameter.
+        ExtensionNotLoaded
+            The extension was not loaded.
+        """
+
+        name = self._resolve_name(name, package)
+        lib = self.__extensions.get(name)
+        if lib is None:
+            raise discord.ExtensionNotLoaded(name)
+
+        self._remove_module_references(lib.__name__)
+        self._call_module_finalizers(lib, name)
+
+    def reload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+        """Atomically reloads an extension.
+
+        This replaces the extension with the same extension, only refreshed. This is
+        equivalent to a :meth:`unload_extension` followed by a :meth:`load_extension`
+        except done in an atomic way. That is, if an operation fails mid-reload then
+        the bot will roll-back to the prior working state.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The extension name to reload. It must be dot separated like
+            regular Python imports if accessing a sub-module. e.g.
+            ``foo.test`` if you want to import ``foo/test.py``.
+        package: Optional[:class:`str`]
+            The package name to resolve relative imports with.
+            This is required when reloading an extension using a relative path, e.g ``.foo.test``.
+            Defaults to ``None``.
+
+            .. versionadded:: 1.7
+
+        Raises
+        -------
+        ExtensionNotLoaded
+            The extension was not loaded.
+        ExtensionNotFound
+            The extension could not be imported.
+            This is also raised if the name of the extension could not
+            be resolved using the provided ``package`` parameter.
+        NoEntryPointError
+            The extension does not have a setup function.
+        ExtensionFailed
+            The extension setup function had an execution error.
+        """
+
+        name = self._resolve_name(name, package)
+        lib = self.__extensions.get(name)
+        if lib is None:
+            raise discord.ExtensionNotLoaded(name)
+
+        # get the previous module states from sys modules
+        modules = {
+            name: module
+            for name, module in sys.modules.items()
+            if _is_submodule(lib.__name__, name)
+        }
+
+        try:
+            # Unload and then load the module...
+            self._remove_module_references(lib.__name__)
+            self._call_module_finalizers(lib, name)
+            self.load_extension(name)
+        except Exception:
+            # if the load failed, the remnants should have been
+            # cleaned from the load_extension function call
+            # so let's load it from our old compiled library.
+            lib.setup(self)  # type: ignore
+            self.__extensions[name] = lib
+
+            # revert sys.modules back to normal and raise back to caller
+            sys.modules.update(modules)
+            raise
+
+    @property
+    def extensions(self) -> Mapping[str, types.ModuleType]:
+        """Mapping[:class:`str`, :class:`py:types.ModuleType`]: A read-only mapping of extension name to extension."""
+        return types.MappingProxyType(self.__extensions)
+
     # help command stuff
 
     @property
@@ -701,6 +1019,23 @@ class BotBase(GroupMixin):
     async def on_message(self, message):
         await self.process_commands(message)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Bot(BotBase, discord.Bot):
     """Represents a discord bot.
 
@@ -746,24 +1081,10 @@ class Bot(BotBase, discord.Bot):
         Whether the commands should be case insensitive. Defaults to ``False``. This
         attribute does not carry over to groups. You must set it to every group if
         you require group commands to be case insensitive as well.
-    description: :class:`str`
-        The content prefixed into the default help message.
     help_command: Optional[:class:`.HelpCommand`]
         The help command implementation to use. This can be dynamically
         set at runtime. To remove the help command pass ``None``. For more
         information on implementing a help command, see :ref:`ext_commands_help_command`.
-    owner_id: Optional[:class:`int`]
-        The user ID that owns the bot. If this is not set and is then queried via
-        :meth:`.is_owner` then it is fetched automatically using
-        :meth:`~.Bot.application_info`.
-    owner_ids: Optional[Collection[:class:`int`]]
-        The user IDs that owns the bot. This is similar to :attr:`owner_id`.
-        If this is not set and the application is team based, then it is
-        fetched automatically using :meth:`~.Bot.application_info`.
-        For performance reasons it is recommended to use a :class:`set`
-        for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
-
-        .. versionadded:: 1.3
     strip_after_prefix: :class:`bool`
         Whether to strip whitespace characters after encountering the command
         prefix. This allows for ``!   hello`` and ``!hello`` to both work if

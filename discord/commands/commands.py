@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,12 +26,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import types
+from discord.types.channel import TextChannel, VoiceChannel
 import functools
 import inspect
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..enums import SlashCommandOptionType
+from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
@@ -60,6 +63,11 @@ __all__ = (
     "slash_command",
     "user_command",
     "message_command",
+    "has_role",
+    "has_any_role",
+    "is_user",
+    "is_owner",
+    "permission",
 )
 
 def wrap_callback(coro):
@@ -99,10 +107,20 @@ class ApplicationCommand(_BaseCommand):
     cog = None
     
     def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
+
+    async def __call__(self, ctx, *args, **kwargs):
+        """|coro|
+        Calls the command's callback.
+
+        This method bypasses all checks that a command has and does not
+        convert the arguments beforehand, so take care to pass the correct
+        arguments in.
+        """
+        return await self.callback(ctx, *args, **kwargs)
 
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
@@ -114,7 +132,6 @@ class ApplicationCommand(_BaseCommand):
         # TODO: Add cooldown
 
         await self.call_before_hooks(ctx)
-        pass
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -320,6 +337,10 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
+
+        # Permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
         
 
     def parse_options(self, params) -> List[Option]:
@@ -348,10 +369,15 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
-            if self._is_typing_optional(option):
-                option = Option(
-                    option.__args__[0], "No description provided", required=False
-                )
+            if self._is_typing_union(option):
+                if self._is_typing_optional(option):
+                    option = Option(
+                        option.__args__[0], "No description provided", required=False
+                    )
+                else:
+                    option = Option(
+                        option.__args__, "No description provided"
+                    )
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
@@ -370,14 +396,21 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
+    def _is_typing_union(self, annotation):
+        return (
+            getattr(annotation, '__origin__', None) is Union
+            or type(annotation) is getattr(types, "UnionType", Union)
+        ) # type: ignore
+
     def _is_typing_optional(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union and type(None) in annotation.__args__  # type: ignore
+        return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
+            "default_permission": self.default_permission,
         }
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -392,7 +425,7 @@ class SlashCommand(ApplicationCommand):
         )
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better, apply custom converters etc.
+        # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
@@ -405,13 +438,16 @@ class SlashCommand(ApplicationCommand):
                 <= SlashCommandOptionType.role.value
             ):
                 name = "member" if op.input_type.name == "user" else op.input_type.name
-                arg = await get_or_fetch(ctx.guild, name, int(arg))
+                arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
-                try:
-                    arg = await get_or_fetch(ctx.guild, "member", int(arg))
-                except NotFound:
-                    arg = await get_or_fetch(ctx.guild, "role", int(arg))
+                arg_id = int(arg)
+                arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                if arg is None:
+                    arg = ctx.guild.get_role(arg_id) or arg_id
+
+            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
+                arg = await op._converter.convert(ctx, arg)
 
             kwargs[op.name] = arg
 
@@ -464,14 +500,37 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
+channel_type_map = {
+    'TextChannel': ChannelType.text,
+    'VoiceChannel': ChannelType.voice,
+    'StageChannel': ChannelType.stage_voice,
+    'CategoryChannel': ChannelType.category
+}
+
 class Option:
     def __init__(
-        self, input_type: Any, /, description = None,**kwargs
+        self, input_type: Any, /, description: str = None, **kwargs
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
+        self._converter = None
+        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
-            input_type = SlashCommandOptionType.from_datatype(input_type)
+            if hasattr(input_type, "convert"):
+                self._converter = input_type
+                input_type = SlashCommandOptionType.string
+            else:
+                _type = SlashCommandOptionType.from_datatype(input_type)
+                if _type == SlashCommandOptionType.channel:
+                    if not isinstance(input_type, tuple):
+                        input_type = (input_type,)
+                    for i in input_type:
+                        if i.__name__ == 'GuildChannel':
+                            continue
+
+                        channel_type = channel_type_map[i.__name__]
+                        self.channel_types.append(channel_type)
+                input_type = _type
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True)
         self.choices: List[OptionChoice] = [
@@ -481,16 +540,21 @@ class Option:
         self.default = kwargs.pop("default", None)
 
     def to_dict(self) -> Dict:
-        return {
+        as_dict = {
             "name": self.name,
             "description": self.description,
             "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
         }
+        if self.channel_types:
+            as_dict["channel_types"] = [t.value for t in self.channel_types]
+
+        return as_dict
+
 
     def __repr__(self):
-        return f"<discord.app.commands.{self.__class__.__name__} name={self.name}>"
+        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 
 class OptionChoice:
@@ -612,6 +676,9 @@ class ContextMenuCommand(ApplicationCommand):
         self._after_invoke = None
         
         self.validate_parameters()
+
+        # Context Commands don't have permissions
+        self.permissions = []
 
     def validate_parameters(self):
         params = self._get_signature_parameters()
@@ -794,74 +861,6 @@ class MessageCommand(ContextMenuCommand):
         else:
             return self.copy()
 
-def slash_command(**kwargs) -> SlashCommand:
-    """Decorator for slash commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`SlashCommand`]
-        A decorator that converts the provided method into a :class:`.SlashCommand`.
-    """
-    return application_command(cls=SlashCommand, **kwargs)
-
-def user_command(**kwargs) -> UserCommand:
-    """Decorator for user commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`UserCommand`]
-        A decorator that converts the provided method into a :class:`.UserCommand`.
-    """
-    return application_command(cls=UserCommand, **kwargs)
-
-def message_command(**kwargs) -> MessageCommand:
-    """Decorator for message commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`MessageCommand`]
-        A decorator that converts the provided method into a :class:`.MessageCommand`.
-    """
-    return application_command(cls=MessageCommand, **kwargs)
-
-def application_command(cls=SlashCommand, **attrs):
-    """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
-    depends on the ``cls`` parameter.
-
-    By default the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-
-    The ``name`` attribute also defaults to the function name unchanged.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    cls: :class:`.ApplicationCommand`
-        The class to construct with. By default this is :class:`.SlashCommand`.
-        You usually do not change this.
-    attrs
-        Keyword arguments to pass into the construction of the class denoted
-        by ``cls``.
-
-    Raises
-    -------
-    TypeError
-        If the function is not a coroutine or is already a command.
-    """
-
-    def decorator(func: Callable) -> cls:
-        if isinstance(func, ApplicationCommand):
-            func = func.callback
-        elif not callable(func):
-            raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
-            )
-
-
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -930,7 +929,7 @@ def application_command(cls=SlashCommand, **attrs):
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
     .. note::
-        This decorator is overriden by :func:`commands.command`.
+        This decorator is overridden by :func:`commands.command`.
     .. versionadded:: 2.0
     Returns
     --------
@@ -960,3 +959,99 @@ def validate_chat_input_description(description: Any):
         raise ValidationError(
             "Description of a chat input command must be less than 100 characters and non empty."
         )
+
+# Slash Command Permissions
+class Permission:
+    def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: int = None):
+        self.id = id
+        self.type = type
+        self.permission = permission
+        self.guild_id = guild_id
+
+    def to_dict(self) -> Dict[int, int, bool]:
+        return {"id": self.id, "type": self.type, "permission": self.permission}
+
+def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
+    def decorator(func: Callable):
+        if not role_id is None:
+            app_cmd_perm = Permission(role_id, 1, permission, guild_id)
+        elif not user_id is None:
+            app_cmd_perm = Permission(user_id, 2, permission, guild_id)
+        else:
+            raise ValueError("role_id or user_id must be specified!")
+
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def has_role(item: Union[int, str], guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission(item, 1, True, guild_id) #{"id": item, "type": 1, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def has_any_role(*items: Union[int, str], guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        for item in items:
+            app_cmd_perm = Permission(item, 1, True, guild_id) #{"id": item, "type": 1, "permission": True}
+
+            # Append
+            func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def is_user(user: int, guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission(user, 2, True, guild_id) #{"id": user, "type": 2, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
+
+def is_owner(guild_id: int = None):
+    def decorator(func: Callable):
+        # Create __app_cmd_perms__
+        if not hasattr(func, '__app_cmd_perms__'):
+            func.__app_cmd_perms__ = []
+
+        # Permissions (Will Convert ID later in register_commands if needed)
+        app_cmd_perm = Permission("owner", 2, True, guild_id) #{"id": "owner", "type": 2, "permission": True}
+
+        # Append
+        func.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator

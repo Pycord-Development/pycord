@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -23,17 +24,14 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import inspect
 import discord
 from ...cog import Cog
 
-from typing import Any, Callable, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
+from typing import Any, Callable, Generator, TYPE_CHECKING, TypeVar, Type
 
-from ...app import _BaseCommand, ApplicationCommand
+from ...commands import ApplicationCommand
 
 if TYPE_CHECKING:
-    from .bot import BotBase
-    from .context import Context
     from .core import Command
 
 __all__ = ('Cog',)

@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -180,7 +181,7 @@ class HTTPClient:
         self.proxy_auth: Optional[aiohttp.BasicAuth] = proxy_auth
         self.use_clock: bool = not unsync_clock
 
-        user_agent = 'DiscordBot (https://github.com/Rapptz/discord.py {0}) Python/{1[0]}.{1[1]} aiohttp/{2}'
+        user_agent = 'DiscordBot (https://github.com/Pycord-Development/pycord {0}) Python/{1[0]}.{1[1]} aiohttp/{2}'
         self.user_agent: str = user_agent.format(__version__, sys.version_info, aiohttp.__version__)
 
     def recreate(self) -> None:
@@ -1415,7 +1416,7 @@ class HTTPClient:
         self, guild_id: Snowflake, role_id: Snowflake, *, reason: Optional[str] = None, **fields: Any
     ) -> Response[role.Role]:
         r = Route('PATCH', '/guilds/{guild_id}/roles/{role_id}', guild_id=guild_id, role_id=role_id)
-        valid_keys = ('name', 'permissions', 'color', 'hoist', 'mentionable')
+        valid_keys = ('name', 'permissions', 'color', 'hoist', 'mentionable', 'icon', 'unicode_emoji')
         payload = {k: v for k, v in fields.items() if k in valid_keys}
         return self.request(r, json=payload, reason=reason)
 
@@ -1490,6 +1491,22 @@ class HTTPClient:
     ) -> Response[None]:
         r = Route('DELETE', '/channels/{channel_id}/permissions/{target}', channel_id=channel_id, target=target)
         return self.request(r, reason=reason)
+    
+    # Welcome Screen
+    
+    def get_welcome_screen(self, guild_id: Snowflake) -> Response[welcome_screen.WelcomeScreen]:
+        return self.request(Route('GET', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id))
+
+    def edit_welcome_screen(self, guild_id: Snowflake, payload: Any, *, reason: Optional[str] = None) -> Response[welcome_screen.WelcomeScreen]:
+        keys = (
+            'description',
+            'welcome_channels',
+            'enabled',
+        )
+        payload = {
+            key: val for key, val in payload.items() if key in keys
+        }
+        return self.request(Route('PATCH', '/guilds/{guild_id}/welcome-screen', guild_id=guild_id), json=payload, reason=reason)
 
     # Voice management
 
@@ -1675,6 +1692,20 @@ class HTTPClient:
         r = Route(
             'PUT',
             '/applications/{application_id}/guilds/{guild_id}/commands',
+            application_id=application_id,
+            guild_id=guild_id,
+        )
+        return self.request(r, json=payload)
+
+    def bulk_upsert_command_permissions(
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+        payload: List[interactions.EditApplicationCommand],
+    ) -> Response[List[interactions.ApplicationCommand]]:
+        r = Route(
+            'PUT',
+            '/applications/{application_id}/guilds/{guild_id}/commands/permissions',
             application_id=application_id,
             guild_id=guild_id,
         )

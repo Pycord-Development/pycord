@@ -11072,7 +11072,7 @@ msgid ":class:`.Member` -- The member with the member data parsed."
 msgstr ":class:`.Guild` -- データを解析したGuild。"
 
 #: discord.Guild.fetch_member:3 of
-msgid "Retreives a :class:`Member` from a guild ID, and a member ID."
+msgid "Retrieves a :class:`Member` from a guild ID, and a member ID."
 msgstr ""
 
 #: discord.Guild.fetch_member:7 of

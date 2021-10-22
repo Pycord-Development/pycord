@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -44,6 +45,7 @@ import asyncio
 import functools
 import inspect
 import datetime
+import types
 
 import discord
 
@@ -51,7 +53,7 @@ from .errors import *
 from ...errors import *
 from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
 from .converter import run_converters, get_converter, Greedy
-from ...app import _BaseCommand, slash_command, user_command, message_command
+from ...commands import _BaseCommand, slash_command, user_command, message_command
 from .cog import Cog
 from .context import Context
 
@@ -278,6 +280,12 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         .. note::
             This object may be copied by the library.
 
+
+        .. versionadded:: 2.0
+
+    cooldown: Optional[:class:`Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
 
         .. versionadded:: 2.0
     """
@@ -829,6 +837,10 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 await self._max_concurrency.release(ctx)  # type: ignore
             raise
 
+    @property
+    def cooldown(self) -> Optional[Cooldown]:
+        return self._buckets._cooldown
+
     def is_on_cooldown(self, ctx: Context) -> bool:
         """Checks whether the command is currently on cooldown.
 
@@ -1019,8 +1031,11 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         return ''
 
     def _is_typing_optional(self, annotation: Union[T, Optional[T]]) -> TypeGuard[Optional[T]]:
-        return getattr(annotation, '__origin__', None) is Union and type(None) in annotation.__args__  # type: ignore
-
+        return (
+            (getattr(annotation, '__origin__', None) is Union
+            or type(annotation) is getattr(types, "UnionType", Union))
+            and type(None) in annotation.__args__  # type: ignore
+        )
     @property
     def signature(self) -> str:
         """:class:`str`: Returns a POSIX-like signature useful for help command output."""
@@ -1708,7 +1723,7 @@ def check(predicate: Check) -> Callable[[T], T]:
     """
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
-        if isinstance(func, Command):
+        if isinstance(func, _BaseCommand):
             func.checks.append(predicate)
         else:
             if not hasattr(func, '__commands_checks__'):
