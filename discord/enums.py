@@ -620,7 +620,7 @@ class SlashCommandOptionType(Enum):
     role = 8
     mentionable = 9
     number = 10
-    custom = 11
+    attachment = 11
 
     @classmethod
     def from_datatype(cls, datatype):
