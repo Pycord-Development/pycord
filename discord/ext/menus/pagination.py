@@ -5,7 +5,7 @@ from discord import abc
 from discord.interactions import Interaction
 from discord.utils import MISSING
 from discord.ui.button import button
-from discord.app import InteractionContext
+from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
 
@@ -44,7 +44,7 @@ class Paginate(discord.ui.View):
         return True
 
     @discord.ui.button(label = "<", style = discord.ButtonStyle.green, disabled=True)
-    async def previous(self, button: discord.ui.Button, interaction = discord.Interaction):
+    async def previous(self, button: discord.ui.Button, interaction: discord.Interaction):
 
         self.current_page -= 1
 
@@ -64,7 +64,7 @@ class Paginate(discord.ui.View):
         await interaction.response.edit_message(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING , view = self)
 
     @discord.ui.button(label = '>', style=discord.ButtonStyle.green)
-    async def forward(self, button: discord.ui.Button, interaction = discord.Interaction): 
+    async def forward(self, button: discord.ui.Button, interaction: discord.Interaction): 
 
         self.current_page += 1
 
@@ -108,11 +108,11 @@ class Paginate(discord.ui.View):
 
         page = self.pages[0]
 
-        if isinstance(messageable, (InteractionContext, Context)):
+        if isinstance(messageable, (ApplicationContext, Context)):
             self.user = messageable.author
 
-        if isinstance(messageable, discord.app.context.InteractionContext):
-            message = await messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING , view = self, ephemeral = ephemeral)
+        if isinstance(messageable, ApplicationContext):
+            message = await messageable.respond(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else MISSING , view = self, ephemeral = ephemeral)
         else:
             message = await messageable.send(content = page if isinstance(page, str) else None, embed = page if isinstance(page, discord.Embed) else None, view = self)
         return message
