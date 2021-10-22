@@ -528,11 +528,21 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
-        self.min_value: Optional[Union[int, float]] = kwargs.pop("min_value", None)
-        self.max_value: Optional[Union[int, float]] = kwargs.pop("max_value", None)
+        if self.input_type == SlashCommandOptionType.integer:
+            minmax_types = (int,)
+        elif self.input_type == SlashCommandOptionType.number:
+            minmax_types = (int, float)
+        else:
+            minmax_types = (None,)
+        minmax_types = Optional[Union[minmax_types]]
+
+        self.min_value: minmax_types = kwargs.pop("min_value", None)
+        self.max_value: minmax_types = kwargs.pop("max_value", None)
         
-        if any([self.max_value, self.min_value]) and not self.input_type in {SlashCommandOptionType.integer, SlashCommandOptionType.number}:
-            raise TypeError('min_value and max_value can only be set on options with of type integer or number.')
+        if not isinstance(self.min_value, minmax_types.__args__) or self.min_value is None:
+            raise TypeError(f"Expected {minmax_types} for min_value, got \"{type(self.min_value).__name__}\"")
+        if not isinstance(self.max_value, minmax_types.__args__) or self.max_value is None:
+            raise TypeError(f"Expected {minmax_types} for max_value, got \"{type(self.max_value).__name__}\"")
 
     def to_dict(self) -> Dict:
         as_dict = {
