@@ -7,7 +7,14 @@ with open('requirements.txt') as f:
 
 version = ''
 with open('discord/__init__.py') as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+
+    search = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE)
+
+    if search is not None:
+        version = search.group(1)
+
+    else:
+        raise RuntimeError("Could not grab version string")
 
 if not version:
     raise RuntimeError('version is not set')
