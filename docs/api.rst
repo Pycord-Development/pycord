@@ -109,6 +109,14 @@ SlashCommand
 .. autoclass:: SlashCommand
     :members:
 
+SlashCommandGroup
+~~~~~~~~
+
+.. attributetable:: SlashCommandGroup
+
+.. autoclass:: SlashCommandGroup
+    :members:
+
 UserCommand
 ~~~~~~~~
 
