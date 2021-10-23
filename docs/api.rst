@@ -117,6 +117,22 @@ SlashCommandGroup
 .. autoclass:: SlashCommandGroup
     :members:
 
+Option
+~~~~~~~~
+
+.. attributetable:: Option
+
+.. autoclass:: Option
+    :members:
+
+OptionChoice
+~~~~~~~~
+
+.. attributetable:: OptionChoice
+
+.. autoclass:: OptionChoice
+    :members:
+
 UserCommand
 ~~~~~~~~
 
