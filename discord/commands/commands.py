@@ -341,7 +341,9 @@ class SlashCommand(ApplicationCommand):
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
         self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
-        
+        if self.permissions and self.default_permission:
+            self.default_permission = False
+
 
     def parse_options(self, params) -> List[Option]:
         final_options = []
