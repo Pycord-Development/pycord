@@ -62,12 +62,7 @@ __all__ = (
     "application_command",
     "slash_command",
     "user_command",
-    "message_command",
-    "has_role",
-    "has_any_role",
-    "is_user",
-    "is_owner",
-    "permission",
+    "message_command"
 )
 
 def wrap_callback(coro):
