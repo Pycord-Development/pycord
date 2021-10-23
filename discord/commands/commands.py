@@ -612,6 +612,33 @@ def option(name, type=None, **kwargs):
     return decor
 
 class SlashCommandGroup(ApplicationCommand, Option):
+    r"""A class that implements the protocol for a slash command group.
+
+    These can be created manually, but they should be created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    description: Optional[:class:`str`]
+        The description for the command.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    parent_group: Optional[:class:`SlashCommandGroup`]
+        The parent group of this group.
+    subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
+        The list of all subcommands under this group.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -680,6 +707,29 @@ class SlashCommandGroup(ApplicationCommand, Option):
         await command.invoke(ctx)
 
 class ContextMenuCommand(ApplicationCommand):
+    r"""A class that implements the protocol for context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
 
@@ -693,7 +743,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
-        # Discord API doesn't support setting descriptions for User commands
+        # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
         self.description = ""
         self.name: str = kwargs.pop("name", func.__name__)
