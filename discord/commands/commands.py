@@ -295,6 +295,37 @@ class ApplicationCommand(_BaseCommand):
             await hook(ctx)
 
 class SlashCommand(ApplicationCommand):
+    r"""A class that implements the protocol for a slash command.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    description: Optional[:class:`str`]
+        The description for the command.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    options: List[:class:`Option`]
+        The parameters for this command.
+    default_permission: :class:`bool`
+        Whether the command is enabled by default when it is added to a guild.
+    permissions: List[:class:`Permission`]
+        The permissions for this command.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.Context`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -348,7 +379,6 @@ class SlashCommand(ApplicationCommand):
     def parse_options(self, params) -> List[Option]:
         final_options = []
 
-        params = self._get_signature_parameters()
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
