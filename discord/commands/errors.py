@@ -27,7 +27,7 @@ from ..errors import DiscordException
 __all__ = (
     "ApplicationCommandError",
     "CheckFailure",
-    "ApplicationCommandInvokeError"
+    "ApplicationCommandInvokeError",
 )
 
 class ApplicationCommandError(DiscordException):
