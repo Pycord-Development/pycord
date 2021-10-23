@@ -316,9 +316,14 @@ class SlashCommand(ApplicationCommand):
         Whether the command is enabled by default when it is added to a guild.
     permissions: List[:class:`Permission`]
         The permissions for this command.
+
+        .. note::
+
+            If this is not empty then default_permissions will be set to False.    
+
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.Context`], :class:`bool`]]
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
@@ -356,7 +361,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options = self.parse_options(params)
+        self.options = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -376,7 +381,7 @@ class SlashCommand(ApplicationCommand):
             self.default_permission = False
 
 
-    def parse_options(self, params) -> List[Option]:
+    def _parse_options(self, params) -> List[Option]:
         final_options = []
 
         if list(params.items())[0][0] == "self":
