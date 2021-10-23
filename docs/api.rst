@@ -92,9 +92,37 @@ AutoShardedBot
 
 Application Commands
 ---------------------
-.. attributetable:: ApplicationCommandMixin
 
-.. autoclass:: ApplicationCommandMixin
+ApplicationCommand
+~~~~~~~~
+
+.. attributetable:: ApplicationCommand
+
+.. autoclass:: ApplicationCommand
+    :members:
+
+SlashCommand
+~~~~~~~~
+
+.. attributetable:: SlashCommand
+
+.. autoclass:: SlashCommand
+    :members:
+
+UserCommand
+~~~~~~~~
+
+.. attributetable:: UserCommand
+
+.. autoclass:: UserCommand
+    :members:
+
+MessageCommand
+~~~~~~~~
+
+.. attributetable:: MessageCommand
+
+.. autoclass:: MessageCommand
     :members:
 
 Application Info
