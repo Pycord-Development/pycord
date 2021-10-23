@@ -641,10 +641,6 @@ class SlashCommandOptionType(Enum):
             return cls.integer
         if issubclass(datatype, float):
             return cls.number
-
-        if hasattr(datatype, "convert"):
-            return cls.custom
-
         if datatype.__name__ == "Member":
             return cls.user
         if datatype.__name__ in [
