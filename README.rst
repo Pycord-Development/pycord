@@ -1,7 +1,7 @@
 pycord
 ==========
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=5865f2&label=Discord&logo=discord
+.. image:: https://discord.com/api/guilds/881207955029110855/embed.png
    :target: https://discord.gg/dK2qkEJ37N
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
@@ -10,6 +10,9 @@ pycord
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue
+   :target: https://pypi.python.org/pypi/py-cord
+   :alt: PyPI downloads
 
 A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
@@ -19,6 +22,7 @@ Key Features
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
 - Optimised in both speed and memory.
+- Supports Slash Commands, Context Menus and Message Components.
 
 Installing
 ----------
@@ -77,11 +81,11 @@ Quick Example
     @bot.slash_command()
     async def hello(ctx, name: str = None):
         name = name or ctx.author.name
-        await ctx.send(f"Hello {name}!")
+        await ctx.respond(f"Hello {name}!")
         
     @bot.user_command(name="Say Hello")
     async def hi(ctx, user):
-        await ctx.send(f"{ctx.author.mention} says hello to {user.name}!")
+        await ctx.respond(f"{ctx.author.mention} says hello to {user.name}!")
         
     bot.run("token")
 

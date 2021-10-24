@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -324,6 +325,14 @@ class Colour:
         .. versionadded:: 2.0
         """
         return cls(0xFEE75C)
+
+    @classmethod
+    def nitro_pink(cls: Type[CT]) -> CT:
+        """A factory method that returns a :class:`Colour` with a value of ``0xf47fff``.
+
+        .. versionadded:: 2.0
+        """
+        return cls(0xf47fff)
 
 
 Color = Colour

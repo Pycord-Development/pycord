@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -45,7 +46,7 @@ import datetime
 
 import discord.abc
 from .permissions import PermissionOverwrite, Permissions
-from .enums import ChannelType, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
+from .enums import ChannelType, EmbeddedActivity, InviteTarget, StagePrivacyLevel, try_enum, VoiceRegion, VideoQualityMode
 from .mixins import Hashable
 from .object import Object
 from . import utils
@@ -55,6 +56,7 @@ from .errors import ClientException, InvalidArgument
 from .stage_instance import StageInstance
 from .threads import Thread
 from .iterators import ArchivedThreadIterator
+from .invite import Invite
 
 __all__ = (
     'TextChannel',
@@ -1037,6 +1039,59 @@ class VoiceChannel(VocalGuildChannel):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
+    async def create_activity_invite(self, activity: Union[EmbeddedActivity, int] , **kwargs) -> Invite:
+        """|coro|
+
+        A shortcut method that creates an instant activity invite.
+
+        You must have the :attr:`~discord.Permissions.start_embedded_activities` permission to
+        do this.
+
+        Parameters
+        ------------
+        activity: Union[:class:`discord.EmbeddedActivity`, :class:`int`]
+            The activity to create an invite for which can be an application id as well. 
+        max_age: :class:`int`
+            How long the invite should last in seconds. If it's 0 then the invite
+            doesn't expire. Defaults to ``0``.
+        max_uses: :class:`int`
+            How many uses the invite could be used for. If it's 0 then there
+            are unlimited uses. Defaults to ``0``.
+        temporary: :class:`bool`
+            Denotes that the invite grants temporary membership
+            (i.e. they get kicked after they disconnect). Defaults to ``False``.
+        unique: :class:`bool`
+            Indicates if a unique invite URL should be created. Defaults to True.
+            If this is set to ``False`` then it will return a previously created
+            invite.
+        reason: Optional[:class:`str`]
+            The reason for creating this invite. Shows up on the audit log.
+
+
+        Raises
+        -------
+        TypeError
+            If the activity is not a valid activity or application id.
+        ~discord.HTTPException
+            Invite creation failed.
+
+        Returns
+        --------
+        :class:`~discord.Invite`
+            The invite that was created.
+        """
+
+        if isinstance(activity, EmbeddedActivity):
+            activity = activity.value
+
+        if not isinstance(activity, int):
+            raise TypeError('Invalid type provided for the activity.')
+
+        return await self.create_invite(
+            target_type=InviteTarget.embedded_application,
+            target_application_id=activity,
+            **kwargs
+        )
 
 class StageChannel(VocalGuildChannel):
     """Represents a Discord guild stage channel.

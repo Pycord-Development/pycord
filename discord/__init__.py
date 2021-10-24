@@ -4,15 +4,15 @@ Discord API Wrapper
 
 A basic wrapper for the Discord API.
 
-:copyright: (c) 2015-present Rapptz
+:copyright: (c) 2015-2021 Rapptz & (c) 2021-present Pycord Development
 :license: MIT, see LICENSE for more details.
 
 """
 
 __title__ = 'discord'
-__author__ = 'Rapptz'
+__author__ = 'Pycord Development'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2015-present Rapptz'
+__copyright__ = 'Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development'
 __version__ = '2.0.0a'
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
@@ -60,7 +60,9 @@ from .interactions import *
 from .components import *
 from .threads import *
 from .bot import *
-from .app import *
+from .commands import *
+from .cog import Cog
+from .welcome_screen import *
 
 
 class VersionInfo(NamedTuple):

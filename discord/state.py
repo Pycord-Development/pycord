@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -247,7 +248,7 @@ class ConnectionState:
 
         # Since this is undesirable, a mapping is now used instead with stored
         # references now using a regular dictionary with eviction being done
-        # using __del__. Testing this for memory leaks led to no discernable leaks,
+        # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: Dict[int, User] = {}
         self._emojis: Dict[int, Emoji] = {}
@@ -850,12 +851,18 @@ class ConnectionState:
     def parse_thread_delete(self, data) -> None:
         guild_id = int(data['guild_id'])
         guild = self._get_guild(guild_id)
+
         if guild is None:
             _log.debug('THREAD_DELETE referencing an unknown guild ID: %s. Discarding', guild_id)
             return
 
-        thread_id = int(data['id'])
-        thread = guild.get_thread(thread_id)
+        raw = RawThreadDeleteEvent(data)
+        thread = guild.get_thread(raw.thread_id)
+        raw.thread = thread
+
+        self.dispatch('raw_thread_delete', raw)
+
+
         if thread is not None:
             guild._remove_thread(thread)  # type: ignore
             self.dispatch('thread_delete', thread)
@@ -1330,28 +1337,37 @@ class ConnectionState:
             asyncio.create_task(logging_coroutine(coro, info='Voice Protocol voice server update handler'))
 
     def parse_typing_start(self, data) -> None:
+        raw = RawTypingEvent(data)
+
+        member_data = data.get('member')
+        if member_data:
+            guild = self._get_guild(raw.guild_id)
+            if guild is not None:
+                raw.member = Member(data=member_data, guild=guild, state=self)
+            else:
+                raw.member = None
+        else:
+            raw.member = None
+        self.dispatch('raw_typing', raw)
+
         channel, guild = self._get_guild_channel(data)
         if channel is not None:
-            member = None
-            user_id = utils._get_as_snowflake(data, 'user_id')
-            if isinstance(channel, DMChannel):
-                member = channel.recipient
+            user = raw.member or self._get_typing_user(channel, raw.user_id)
 
-            elif isinstance(channel, (Thread, TextChannel)) and guild is not None:
-                # user_id won't be None
-                member = guild.get_member(user_id)  # type: ignore
+            if user is not None:
+                self.dispatch('typing', channel, user, raw.when)
 
-                if member is None:
-                    member_data = data.get('member')
-                    if member_data:
-                        member = Member(data=member_data, state=self, guild=guild)
+    def _get_typing_user(self, channel: Optional[MessageableChannel], user_id: int) -> Optional[Union[User, Member]]:
+        if isinstance(channel, DMChannel):
+            return channel.recipient or self.get_user(user_id)
 
-            elif isinstance(channel, GroupChannel):
-                member = utils.find(lambda x: x.id == user_id, channel.recipients)
+        elif isinstance(channel, (Thread, TextChannel)) and channel.guild is not None:
+            return channel.guild.get_member(user_id)  # type: ignore
 
-            if member is not None:
-                timestamp = datetime.datetime.fromtimestamp(data.get('timestamp'), tz=datetime.timezone.utc)
-                self.dispatch('typing', channel, member, timestamp)
+        elif isinstance(channel, GroupChannel):
+            return utils.find(lambda x: x.id == user_id, channel.recipients)
+
+        return self.get_user(user_id)
 
     def _get_reaction_user(self, channel: MessageableChannel, user_id: int) -> Optional[Union[User, Member]]:
         if isinstance(channel, TextChannel):

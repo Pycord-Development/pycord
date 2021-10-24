@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -313,10 +314,11 @@ class Asset(AssetMixin):
             if self._animated:
                 if format not in VALID_ASSET_FORMATS:
                     raise InvalidArgument(f'format must be one of {VALID_ASSET_FORMATS}')
-            else:
+                url = url.with_path(f'{path}.{format}')
+            elif static_format is MISSING:
                 if format not in VALID_STATIC_FORMATS:
                     raise InvalidArgument(f'format must be one of {VALID_STATIC_FORMATS}')
-            url = url.with_path(f'{path}.{format}')
+                url = url.with_path(f'{path}.{format}')
 
         if static_format is not MISSING and not self._animated:
             if static_format not in VALID_STATIC_FORMATS:

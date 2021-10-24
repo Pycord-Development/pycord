@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -120,27 +121,12 @@ class _DefaultRepr:
 _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
-    def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
+    _supports_prefixed_commands = True
+    def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.extra_events: Dict[str, List[CoroFunc]] = {}
-        self.__cogs: Dict[str, Cog] = {}
-        self.__extensions: Dict[str, types.ModuleType] = {}
-        self._checks: List[Check] = []
-        self._check_once = []
-        self._before_invoke = None
-        self._after_invoke = None
         self._help_command = None
-        self.description = inspect.cleandoc(description) if description else ''
-        self.owner_id = options.get('owner_id')
-        self.owner_ids = options.get('owner_ids', set())
         self.strip_after_prefix = options.get('strip_after_prefix', False)
-
-        if self.owner_id and self.owner_ids:
-            raise TypeError('Both owner_id and owner_ids are set.')
-
-        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
-            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
 
         if help_command is _default:
             self.help_command = DefaultHelpCommand()
@@ -660,13 +646,13 @@ class BotBase(GroupMixin):
             spec.loader.exec_module(lib)  # type: ignore
         except Exception as e:
             del sys.modules[key]
-            raise errors.ExtensionFailed(key, e) from e
+            raise discord.ExtensionFailed(key, e) from e
 
         try:
             setup = getattr(lib, 'setup')
         except AttributeError:
             del sys.modules[key]
-            raise errors.NoEntryPointError(key)
+            raise discord.NoEntryPointError(key)
 
         try:
             setup(self)
@@ -674,7 +660,7 @@ class BotBase(GroupMixin):
             del sys.modules[key]
             self._remove_module_references(lib.__name__)
             self._call_module_finalizers(lib, key)
-            raise errors.ExtensionFailed(key, e) from e
+            raise discord.ExtensionFailed(key, e) from e
         else:
             self.__extensions[key] = lib
 
@@ -682,7 +668,7 @@ class BotBase(GroupMixin):
         try:
             return importlib.util.resolve_name(name, package)
         except ImportError:
-            raise errors.ExtensionNotFound(name)
+            raise discord.ExtensionNotFound(name)
 
     def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Loads an extension.
@@ -723,11 +709,11 @@ class BotBase(GroupMixin):
 
         name = self._resolve_name(name, package)
         if name in self.__extensions:
-            raise errors.ExtensionAlreadyLoaded(name)
+            raise discord.ExtensionAlreadyLoaded(name)
 
         spec = importlib.util.find_spec(name)
         if spec is None:
-            raise errors.ExtensionNotFound(name)
+            raise discord.ExtensionNotFound(name)
 
         self._load_from_module_spec(spec, name)
 
@@ -767,7 +753,7 @@ class BotBase(GroupMixin):
         name = self._resolve_name(name, package)
         lib = self.__extensions.get(name)
         if lib is None:
-            raise errors.ExtensionNotLoaded(name)
+            raise discord.ExtensionNotLoaded(name)
 
         self._remove_module_references(lib.__name__)
         self._call_module_finalizers(lib, name)
@@ -810,7 +796,7 @@ class BotBase(GroupMixin):
         name = self._resolve_name(name, package)
         lib = self.__extensions.get(name)
         if lib is None:
-            raise errors.ExtensionNotLoaded(name)
+            raise discord.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
         modules = {
@@ -1033,6 +1019,23 @@ class BotBase(GroupMixin):
     async def on_message(self, message):
         await self.process_commands(message)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Bot(BotBase, discord.Bot):
     """Represents a discord bot.
 
@@ -1078,24 +1081,10 @@ class Bot(BotBase, discord.Bot):
         Whether the commands should be case insensitive. Defaults to ``False``. This
         attribute does not carry over to groups. You must set it to every group if
         you require group commands to be case insensitive as well.
-    description: :class:`str`
-        The content prefixed into the default help message.
     help_command: Optional[:class:`.HelpCommand`]
         The help command implementation to use. This can be dynamically
         set at runtime. To remove the help command pass ``None``. For more
         information on implementing a help command, see :ref:`ext_commands_help_command`.
-    owner_id: Optional[:class:`int`]
-        The user ID that owns the bot. If this is not set and is then queried via
-        :meth:`.is_owner` then it is fetched automatically using
-        :meth:`~.Bot.application_info`.
-    owner_ids: Optional[Collection[:class:`int`]]
-        The user IDs that owns the bot. This is similar to :attr:`owner_id`.
-        If this is not set and the application is team based, then it is
-        fetched automatically using :meth:`~.Bot.application_info`.
-        For performance reasons it is recommended to use a :class:`set`
-        for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
-
-        .. versionadded:: 1.3
     strip_after_prefix: :class:`bool`
         Whether to strip whitespace characters after encountering the command
         prefix. This allows for ``!   hello`` and ``!hello`` to both work if
