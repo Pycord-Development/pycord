@@ -125,6 +125,14 @@ Option
 .. autoclass:: Option
     :members:
 
+SlashCommandOptionType
+~~~~~~~~
+
+.. attributetable:: SlashCommandOptionType
+
+.. autoclass:: SlashCommandOptionType
+    :members:
+
 OptionChoice
 ~~~~~~~~
 
