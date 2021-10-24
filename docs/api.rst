@@ -149,6 +149,14 @@ MessageCommand
 .. autoclass:: MessageCommand
     :members:
 
+ApplicationContext
+~~~~~~~~
+
+.. attributetable:: ApplicationContext
+
+.. autoclass:: ApplicationContext
+    :members:
+
 Application Info
 ------------------
 
