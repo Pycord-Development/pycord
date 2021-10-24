@@ -415,7 +415,7 @@ class InteractionResponse:
             raise discord.InteractionResponded(self._parent)
 
         defer_type: int = 0
-        data = None
+        data: Optional[Dict[str, Any]] = None
         parent = self._parent
         if parent.type is discord.InteractionType.component:
             if ephemeral:
