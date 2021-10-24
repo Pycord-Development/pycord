@@ -39,7 +39,7 @@ from ..user import User
 from ..utils import cached_property
 
 __all__ = (
-    "ApplicationContext"
+    "ApplicationContext",
 )
 
 class ApplicationContext(discord.abc.Messageable):

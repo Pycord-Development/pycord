@@ -62,7 +62,7 @@ __all__ = (
     "application_command",
     "slash_command",
     "user_command",
-    "message_command"
+    "message_command",
 )
 
 def wrap_callback(coro):
