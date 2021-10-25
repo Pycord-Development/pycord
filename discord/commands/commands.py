@@ -581,15 +581,15 @@ class Option:
             minmax_types = (int, float)
         else:
             minmax_types = (None,)
-        minmax_types = Optional[Union[minmax_types]]
+        minmax_typehint = Optional[Union[minmax_types]]
 
-        self.min_value: minmax_types = kwargs.pop("min_value", None)
-        self.max_value: minmax_types = kwargs.pop("max_value", None)
+        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
+        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
         
-        if not isinstance(self.min_value, minmax_types.__args__) or self.min_value is None:
-            raise TypeError(f"Expected {minmax_types} for min_value, got \"{type(self.min_value).__name__}\"")
-        if not isinstance(self.max_value, minmax_types.__args__) or self.max_value is None:
-            raise TypeError(f"Expected {minmax_types} for max_value, got \"{type(self.max_value).__name__}\"")
+        if not isinstance(self.min_value, minmax_typehint) or self.min_value is None:
+            raise TypeError(f"Expected {minmax_type} for min_value, got \"{type(self.min_value).__name__}\"")
+        if not isinstance(self.max_value, minmax_typehint) or self.max_value is None:
+            raise TypeError(f"Expected {minmax_type} for max_value, got \"{type(self.max_value).__name__}\"")
 
     def to_dict(self) -> Dict:
         as_dict = {
