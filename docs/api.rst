@@ -94,7 +94,7 @@ Application Commands
 ---------------------
 
 ApplicationCommand
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: ApplicationCommand
 
@@ -102,7 +102,7 @@ ApplicationCommand
     :members:
 
 SlashCommand
-~~~~~~~~
+~~~~~~~~~~~~~
 
 .. attributetable:: SlashCommand
 
@@ -110,7 +110,7 @@ SlashCommand
     :members:
 
 SlashCommandGroup
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: SlashCommandGroup
 
@@ -118,7 +118,7 @@ SlashCommandGroup
     :members:
 
 Option
-~~~~~~~~
+~~~~~~~
 
 .. attributetable:: Option
 
@@ -126,7 +126,7 @@ Option
     :members:
 
 OptionChoice
-~~~~~~~~
+~~~~~~~~~~~~~
 
 .. attributetable:: OptionChoice
 
@@ -134,7 +134,7 @@ OptionChoice
     :members:
 
 UserCommand
-~~~~~~~~
+~~~~~~~~~~~~
 
 .. attributetable:: UserCommand
 
@@ -142,7 +142,7 @@ UserCommand
     :members:
 
 MessageCommand
-~~~~~~~~
+~~~~~~~~~~~~~~~
 
 .. attributetable:: MessageCommand
 
@@ -150,7 +150,7 @@ MessageCommand
     :members:
 
 ApplicationContext
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: ApplicationContext
 
