@@ -580,7 +580,7 @@ class Option:
         elif self.input_type == SlashCommandOptionType.number:
             minmax_types = (int, float)
         else:
-            minmax_types = (None,)
+            minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]]
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
