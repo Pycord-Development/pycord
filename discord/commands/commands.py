@@ -575,6 +575,21 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+        if self.input_type == SlashCommandOptionType.integer:
+            minmax_types = (int,)
+        elif self.input_type == SlashCommandOptionType.number:
+            minmax_types = (int, float)
+        else:
+            minmax_types = (None,)
+        minmax_types = Optional[Union[minmax_types]]
+
+        self.min_value: minmax_types = kwargs.pop("min_value", None)
+        self.max_value: minmax_types = kwargs.pop("max_value", None)
+        
+        if not isinstance(self.min_value, minmax_types.__args__) or self.min_value is None:
+            raise TypeError(f"Expected {minmax_types} for min_value, got \"{type(self.min_value).__name__}\"")
+        if not isinstance(self.max_value, minmax_types.__args__) or self.max_value is None:
+            raise TypeError(f"Expected {minmax_types} for max_value, got \"{type(self.max_value).__name__}\"")
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -586,6 +601,10 @@ class Option:
         }
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
+        if self.min_value is not None:
+            as_dict["min_value"] = self.min_value
+        if self.max_value is not None:
+            as_dict["max_value"] = self.max_value
 
         return as_dict
 
