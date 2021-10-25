@@ -58,11 +58,6 @@ __all__ = (
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
-    "command",
-    "application_command",
-    "slash_command",
-    "user_command",
-    "message_command",
 )
 
 def wrap_callback(coro):
