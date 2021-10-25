@@ -24,6 +24,12 @@ DEALINGS IN THE SOFTWARE.
 
 from ..errors import DiscordException
 
+__all__ = (
+    "ApplicationCommandError",
+    "CheckFailure",
+    "ApplicationCommandInvokeError",
+)
+
 class ApplicationCommandError(DiscordException):
     r"""The base exception type for all application command related errors.
 
