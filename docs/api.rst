@@ -66,7 +66,7 @@ Bot
 .. autoclass:: Bot
     :members:
     :inherited-members:
-    :exclude-members: command, event, message_command, slash_command, user_command
+    :exclude-members: command, event, message_command, slash_command, user_command, listen
 
     .. automethod:: Bot.command(**kwargs)
         :decorator:
@@ -81,6 +81,9 @@ Bot
         :decorator:
 
     .. automethod:: Bot.user_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.listen(name=None)
         :decorator:
 
 AutoShardedBot
