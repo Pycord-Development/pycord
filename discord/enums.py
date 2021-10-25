@@ -672,6 +672,7 @@ class EmbeddedActivity(Enum):
     watch_together_dev = 880218832743055411
     word_snack = 879863976006127627
     youtube  = 755600276941176913
+    # More games soon
 
 T = TypeVar('T')
 
