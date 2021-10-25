@@ -1098,7 +1098,7 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def group_dm_create(self):
-        """:class:`bool`: Returns ``True`` if the application can create group dms.
+        """:class:`bool`: Returns ``True`` if the application can create group DMs.
         """
         return 1 << 5
 
