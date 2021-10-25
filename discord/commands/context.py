@@ -83,6 +83,10 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.guild_id
 
     @cached_property
+    def me(self) -> Union[Member, User]:
+        return self.guild.me if self.guild is not None else self.bot.user
+
+    @cached_property
     def message(self) -> Optional[Message]:
         return self.interaction.message
 
