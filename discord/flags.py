@@ -1091,6 +1091,24 @@ class ApplicationFlags(BaseFlags):
     """
 
     @flag_value
+    def managed_emoji(self):
+        """:class:`bool`: Returns ``True`` if the application is a managed emoji.
+        """
+        return 1 << 2
+
+    @flag_value
+    def group_dm_create(self):
+        """:class:`bool`: Returns ``True`` if the application can create group dms.
+        """
+        return 1 << 5
+
+    @flag_value
+    def rpc_has_connected(self):
+        """:class:`bool`: Returns ``True`` if the application has connected to RPC.
+        """
+        return 1 << 11
+
+    @flag_value
     def gateway_presence(self):
         """:class:`bool`: Returns ``True`` if the application is verified and is allowed to
         receive presence information over the gateway.
@@ -1129,3 +1147,16 @@ class ApplicationFlags(BaseFlags):
     def embedded(self):
         """:class:`bool`: Returns ``True`` if the application is embedded within the Discord client."""
         return 1 << 17
+
+    @flag_value
+    def gateway_message_content(self):
+        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds.
+        """
+        return 1 << 18
+
+    @flag_value
+    def gateway_message_content_limited(self):
+        """:class:`bool`: Returns ``True`` if the application is currently pending verification
+        and has hit the guild limit.
+        """
+        return 1 << 19
