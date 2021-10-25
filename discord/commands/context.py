@@ -40,7 +40,7 @@ from ..utils import cached_property
 
 
 class ApplicationContext(discord.abc.Messageable):
-    """Represents a Discord interaction context.
+    """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
     commands as the first parameter.
