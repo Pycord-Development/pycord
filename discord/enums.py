@@ -620,7 +620,7 @@ class SlashCommandOptionType(Enum):
     role = 8
     mentionable = 9
     number = 10
-    custom = 11
+    attachment = 11
 
     @classmethod
     def from_datatype(cls, datatype):
@@ -641,9 +641,6 @@ class SlashCommandOptionType(Enum):
             return cls.integer
         if issubclass(datatype, float):
             return cls.number
-
-        if hasattr(datatype, "convert"):
-            return cls.custom
 
         if datatype.__name__ == "Member":
             return cls.user
