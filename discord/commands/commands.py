@@ -672,6 +672,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent_group: Optional[SlashCommandGroup] = None,
+        **kwargs
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -688,6 +689,12 @@ class SlashCommandGroup(ApplicationCommand, Option):
         self._before_invoke = None
         self._after_invoke = None
         self.cog = None
+
+        # Permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = kwargs.get("permissions", [])
+        if self.permissions and self.default_permission:
+            self.default_permission = False
 
     def to_dict(self) -> Dict:
         as_dict = {
