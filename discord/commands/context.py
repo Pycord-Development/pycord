@@ -38,6 +38,9 @@ from ..message import Message
 from ..user import User
 from ..utils import cached_property
 
+__all__ = (
+    "ApplicationContext",
+)
 
 class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord interaction context.
