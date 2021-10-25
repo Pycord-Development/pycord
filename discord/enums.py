@@ -663,16 +663,18 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
-    youtube  = 755600276941176913
-    poker    = 755827207812677713
     betrayal = 773336526917861400
-    fishing  = 814288819477020702
-    chess    = 832012774040141894
-    letter_tile = 879863686565621790
-    word_snack = 879863976006127627
+    chess    = 832012586023256104
+    chess_dev = 832012774040141894
     doodle_crew = 878067389634314250
+    fishing  = 814288819477020702
+    letter_tile = 879863686565621790
+    poker    = 755827207812677713
+    spell_cast = 852509694341283871
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
+    word_snack = 879863976006127627
+    youtube  = 755600276941176913
 
 T = TypeVar('T')
 
