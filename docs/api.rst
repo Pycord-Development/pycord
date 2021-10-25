@@ -2717,9 +2717,37 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.0
 
-    .. attribute:: youtube
+    .. attribute:: betrayal
 
-        Represents the embedded application Youtube Together.
+        Represents the embedded application Betrayal.io
+
+    .. attribute:: chess
+
+        Represents the embedded application Chess in the Park.
+
+    .. attribute:: chess_dev
+
+        Development version of `chess`.
+
+    .. attribute:: doodle_crew
+
+        Represents the embedded application Doodle Crew.
+
+    .. attribute:: fishing
+
+        Represents the embedded application Fishington.io
+
+    .. attribute:: letter_tile
+
+        Represents the embedded application Letter Tile.
+
+    .. attribute:: poker
+
+        Represents the embedded application Poker Night.
+
+    .. attribute:: spell_cast
+
+        Represents the embedded application Spell Cast.
 
     .. attribute:: watch_together
 
@@ -2729,33 +2757,13 @@ of :class:`enum.Enum`.
 
         Development version of `watch_together`.
 
-    .. attribute:: poker
-
-        Represents the embedded application Poker Night.
-
-    .. attribute:: betrayal
-
-        Represents the embedded application Betrayal.io
-
-    .. attribute:: fishing
-
-        Represents the embedded application Fishington.io
-
-    .. attribute:: chess
-
-        Represents the embedded application Chess in the Park.
-
-    .. attribute:: letter_tile
-
-        Represents the embedded application Letter Tile.
-
     .. attribute:: word_snack
 
         Represents the embedded application Word Snacks.
 
-    .. attribute:: doodle_crew
+    .. attribute:: youtube
 
-        Represents the embedded application Doodle Crew.
+        Represents the embedded application Youtube Together.
 
 
 Async Iterator
