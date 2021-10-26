@@ -38,9 +38,12 @@ from ..message import Message
 from ..user import User
 from ..utils import cached_property
 
+__all__ = (
+    "ApplicationContext",
+)
 
 class ApplicationContext(discord.abc.Messageable):
-    """Represents a Discord interaction context.
+    """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
     commands as the first parameter.
@@ -81,6 +84,10 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
+
+    @cached_property
+    def me(self) -> Union[Member, User]:
+        return self.guild.me if self.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Optional[Message]:

@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import types
-from discord.types.channel import TextChannel, VoiceChannel
 import functools
 import inspect
 from collections import OrderedDict
@@ -39,8 +38,9 @@ from ..user import User
 from ..message import Message
 from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
-from ..errors import DiscordException, NotFound, ValidationError, ClientException
+from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from .permissions import Permission, has_role, has_any_role, is_user, is_owner, permission
 
 __all__ = (
     "_BaseCommand",
@@ -58,11 +58,11 @@ __all__ = (
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
-    "command",
-    "application_command",
-    "slash_command",
-    "user_command",
-    "message_command",
+    "has_role",
+    "has_any_role",
+    "is_user",
+    "is_owner",
+    "permission",
 )
 
 def wrap_callback(coro):
@@ -127,7 +127,6 @@ class ApplicationCommand(_BaseCommand):
         # TODO: Add cooldown
 
         await self.call_before_hooks(ctx)
-        pass
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -291,6 +290,42 @@ class ApplicationCommand(_BaseCommand):
             await hook(ctx)
 
 class SlashCommand(ApplicationCommand):
+    r"""A class that implements the protocol for a slash command.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    description: Optional[:class:`str`]
+        The description for the command.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    options: List[:class:`Option`]
+        The parameters for this command.
+    default_permission: :class:`bool`
+        Whether the command is enabled by default when it is added to a guild.
+    permissions: List[:class:`Permission`]
+        The permissions for this command.
+
+        .. note::
+
+            If this is not empty then default_permissions will be set to False.    
+
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -321,7 +356,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options = self.parse_options(params)
+        self.options = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -333,12 +368,17 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        
 
-    def parse_options(self, params) -> List[Option]:
+        # Permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
+        if self.permissions and self.default_permission:
+            self.default_permission = False
+
+
+    def _parse_options(self, params) -> List[Option]:
         final_options = []
 
-        params = self._get_signature_parameters()
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -402,6 +442,7 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
+            "default_permission": self.default_permission,
         }
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -529,6 +570,21 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+        if self.input_type == SlashCommandOptionType.integer:
+            minmax_types = (int,)
+        elif self.input_type == SlashCommandOptionType.number:
+            minmax_types = (int, float)
+        else:
+            minmax_types = (type(None),)
+        minmax_typehint = Optional[Union[minmax_types]]
+
+        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
+        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
+        
+        if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
+            raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
+        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
+            raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -540,6 +596,10 @@ class Option:
         }
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
+        if self.min_value is not None:
+            as_dict["min_value"] = self.min_value
+        if self.max_value is not None:
+            as_dict["max_value"] = self.max_value
 
         return as_dict
 
@@ -566,6 +626,33 @@ def option(name, type=None, **kwargs):
     return decor
 
 class SlashCommandGroup(ApplicationCommand, Option):
+    r"""A class that implements the protocol for a slash command group.
+
+    These can be created manually, but they should be created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    description: Optional[:class:`str`]
+        The description for the command.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    parent_group: Optional[:class:`SlashCommandGroup`]
+        The parent group of this group.
+    subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
+        The list of all subcommands under this group.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -580,6 +667,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent_group: Optional[SlashCommandGroup] = None,
+        **kwargs
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -596,6 +684,12 @@ class SlashCommandGroup(ApplicationCommand, Option):
         self._before_invoke = None
         self._after_invoke = None
         self.cog = None
+
+        # Permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = kwargs.get("permissions", [])
+        if self.permissions and self.default_permission:
+            self.default_permission = False
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -634,6 +728,29 @@ class SlashCommandGroup(ApplicationCommand, Option):
         await command.invoke(ctx)
 
 class ContextMenuCommand(ApplicationCommand):
+    r"""A class that implements the protocol for context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
 
@@ -647,7 +764,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
-        # Discord API doesn't support setting descriptions for User commands
+        # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
         self.description = ""
         self.name: str = kwargs.pop("name", func.__name__)
@@ -667,6 +784,9 @@ class ContextMenuCommand(ApplicationCommand):
         self._after_invoke = None
         
         self.validate_parameters()
+
+        # Context Commands don't have permissions
+        self.permissions = []
 
     def validate_parameters(self):
         params = self._get_signature_parameters()
@@ -848,74 +968,6 @@ class MessageCommand(ContextMenuCommand):
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
-
-def slash_command(**kwargs) -> SlashCommand:
-    """Decorator for slash commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`SlashCommand`]
-        A decorator that converts the provided method into a :class:`.SlashCommand`.
-    """
-    return application_command(cls=SlashCommand, **kwargs)
-
-def user_command(**kwargs) -> UserCommand:
-    """Decorator for user commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`UserCommand`]
-        A decorator that converts the provided method into a :class:`.UserCommand`.
-    """
-    return application_command(cls=UserCommand, **kwargs)
-
-def message_command(**kwargs) -> MessageCommand:
-    """Decorator for message commands that invokes :func:`application_command`.
-    .. versionadded:: 2.0
-    Returns
-    --------
-    Callable[..., :class:`MessageCommand`]
-        A decorator that converts the provided method into a :class:`.MessageCommand`.
-    """
-    return application_command(cls=MessageCommand, **kwargs)
-
-def application_command(cls=SlashCommand, **attrs):
-    """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
-    depends on the ``cls`` parameter.
-
-    By default the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-
-    The ``name`` attribute also defaults to the function name unchanged.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    cls: :class:`.ApplicationCommand`
-        The class to construct with. By default this is :class:`.SlashCommand`.
-        You usually do not change this.
-    attrs
-        Keyword arguments to pass into the construction of the class denoted
-        by ``cls``.
-
-    Raises
-    -------
-    TypeError
-        If the function is not a coroutine or is already a command.
-    """
-
-    def decorator(func: Callable) -> cls:
-        if isinstance(func, ApplicationCommand):
-            func = func.callback
-        elif not callable(func):
-            raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
-            )
-
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
