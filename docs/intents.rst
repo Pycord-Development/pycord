@@ -118,7 +118,7 @@ Message Content Intent
 - Whether you use any reaction related events, such as :func:`on_reaction_add`, :func:`on_reaction_remove`, and :func:`on_reaction_clear`
 
 .. note::
-    This only applies to :attr:`Intents.guild_messages`, not :attr:`Intents.dm_messages`. The bot can still receive messages in DMs and when mentioned.
+    This only applies to :attr:`Intents.guild_messages`, not :attr:`Intents.dm_messages`. The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages.
 
 .. _intents_member_cache:
 
