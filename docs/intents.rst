@@ -109,7 +109,7 @@ Member Intent
 
 .. _need_message_intent:
 
-Message Intent
+Message Content Intent
 ++++++++++++++++
 
 - Whether you have a message based command system using ext.commands
