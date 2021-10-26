@@ -459,7 +459,7 @@ class PublicUserFlags(BaseFlags):
 
     @flag_value
     def bot_http_interactions(self):
-        """:class:`bool`: Returns ``True`` if is a bot http interaction.
+        """:class:`bool`: Returns ``True`` if the bot has set an interactions endpoint url.
 
         .. versionadded:: 2.0
         """
@@ -467,7 +467,7 @@ class PublicUserFlags(BaseFlags):
 
     @flag_value
     def spammer(self):
-        """:class:`bool`: Returns ``True`` if the user is flagged as spammer.
+        """:class:`bool`: Returns ``True`` if the user is disabled for being a spammer.
 
         .. versionadded:: 2.0
         """
