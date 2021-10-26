@@ -595,6 +595,15 @@ class Option:
 
 
 class OptionChoice:
+    r"""Represents an option choice.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the option choice.
+    value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
+        The value of the option choice. If ``None`` is passed, this will be set to the name of the option choice.
+    """
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
         self.value = value or name
