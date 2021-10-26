@@ -769,7 +769,7 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
 
-        Since this includes :attr:`guild_messages`, this intent is privileged. For more information go to the :ref:`message intent documentation <need_message_intent>`.
+        Since this includes :attr:`guild_messages`, this intent is privileged. For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
 
         .. note::
 
