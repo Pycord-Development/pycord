@@ -40,7 +40,7 @@ from .context import ApplicationContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .permissions import Permission, has_role, has_any_role, is_user, is_owner, permission
+from .permissions import Permission
 
 __all__ = (
     "_BaseCommand",
@@ -58,11 +58,6 @@ __all__ = (
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
-    "has_role",
-    "has_any_role",
-    "is_user",
-    "is_owner",
-    "permission",
 )
 
 def wrap_callback(coro):
