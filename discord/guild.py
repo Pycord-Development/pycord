@@ -239,6 +239,10 @@ class Guild(Hashable):
         The number goes from 0 to 3 inclusive.
     premium_subscription_count: :class:`int`
         The number of "boosts" this guild currently has.
+    premium_progress_bar_enabled: :class:`bool`
+        Indicates if the guild has premium progress bar enabled.
+        
+        .. versionadded:: 2.0
     preferred_locale: Optional[:class:`str`]
         The preferred locale for the guild. Used when filtering Server Discovery
         results to a specific language.
@@ -269,6 +273,7 @@ class Guild(Hashable):
         'max_video_channel_users',
         'premium_tier',
         'premium_subscription_count',
+        'premium_progress_bar_enabled',
         'preferred_locale',
         'nsfw_level',
         '_members',
@@ -449,6 +454,7 @@ class Guild(Hashable):
         self.max_video_channel_users: Optional[int] = guild.get('max_video_channel_users')
         self.premium_tier: int = guild.get('premium_tier', 0)
         self.premium_subscription_count: int = guild.get('premium_subscription_count') or 0
+        self.premium_progress_bar_enabled: bool = guild.get('premium_progress_bar_enabled') or False
         self._system_channel_flags: int = guild.get('system_channel_flags', 0)
         self.preferred_locale: Optional[str] = guild.get('preferred_locale')
         self._discovery_splash: Optional[str] = guild.get('discovery_splash')
