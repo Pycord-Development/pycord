@@ -803,7 +803,7 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
 
-        For more information go to the :ref:`message intent documentation <need_message_intent>`.
+        For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
 
         .. note::
 
