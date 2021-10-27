@@ -274,7 +274,13 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
     ) -> Response[MessagePayload]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'GET',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -282,7 +288,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session)
+        return self.request(route, session, params=params)
 
     def edit_webhook_message(
         self,
@@ -291,10 +297,16 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
         files: Optional[List[File]] = None,
     ) -> Response[Message]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'PATCH',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -302,7 +314,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session, payload=payload, multipart=multipart, files=files)
+        return self.request(route, session, params=params, payload=payload, multipart=multipart, files=files)
 
     def delete_webhook_message(
         self,
@@ -311,7 +323,13 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
     ) -> Response[None]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'DELETE',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -319,7 +337,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session)
+        return self.request(route, session, params=params)
 
     def fetch_webhook(
         self,
@@ -1429,7 +1447,12 @@ class Webhook(BaseWebhook):
 
         return msg
 
-    async def fetch_message(self, id: int, /) -> WebhookMessage:
+    async def fetch_message(
+        self,
+        id: int,
+        *,
+        thread_id: Optional[int] = None
+    ) -> WebhookMessage:
         """|coro|
 
         Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook.
@@ -1440,6 +1463,8 @@ class Webhook(BaseWebhook):
         ------------
         id: :class:`int`
             The message ID to look for.
+        thread_id: Optional[:class:`int`]
+            The ID of the thread where the message is.
 
         Raises
         --------
@@ -1467,6 +1492,7 @@ class Webhook(BaseWebhook):
             self.token,
             id,
             session=self.session,
+            thread_id=thread_id,
         )
         return self._create_message(data)
 
@@ -1481,6 +1507,7 @@ class Webhook(BaseWebhook):
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        thread: Optional[Snowflake] = MISSING
     ) -> WebhookMessage:
         """|coro|
 
@@ -1522,7 +1549,9 @@ class Webhook(BaseWebhook):
             the view is removed. The webhook must have state attached, similar to
             :meth:`send`.
 
-            .. versionadded:: 2.0
+            .. versionadded:: 2.
+        thread: Optional[:class:`~discord.abc.Snowflake`]
+            The thread where the message is.
 
         Raises
         -------
@@ -1564,12 +1593,18 @@ class Webhook(BaseWebhook):
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
+
+        thread_id: Optional[int] = None
+        if thread_id is not MISSING:
+            thread_id = thread.id
+
         adapter = async_context.get()
         data = await adapter.edit_webhook_message(
             self.id,
             self.token,
             message_id,
             session=self.session,
+            thread_id=thread_id,
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
@@ -1580,7 +1615,12 @@ class Webhook(BaseWebhook):
             self._state.store_view(view, message_id)
         return message
 
-    async def delete_message(self, message_id: int, /) -> None:
+    async def delete_message(
+        self,
+        message_id: int,
+        *,
+        thread_id: Optional[int] = None
+    ) -> None:
         """|coro|
 
         Deletes a message owned by this webhook.
@@ -1594,6 +1634,8 @@ class Webhook(BaseWebhook):
         ------------
         message_id: :class:`int`
             The message ID to delete.
+        thread_id: Optional[:class:`int`]
+            The ID of the thread where the message is.
 
         Raises
         -------
@@ -1611,4 +1653,5 @@ class Webhook(BaseWebhook):
             self.token,
             message_id,
             session=self.session,
+            thread_id=thread_id,
         )
