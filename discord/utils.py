@@ -449,14 +449,17 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None):
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None, raise_exc: bool = False):
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
         try:
             getter = await getattr(obj, f'fetch_{attr}')(id)
         except HTTPException:
-            return default
+            if raise_exc:
+                raise
+            else:
+                return default
     return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
