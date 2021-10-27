@@ -569,18 +569,16 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         This only fires if you do not specify any listeners for command error.
         """
-        # TODO
-        # if self.extra_events.get('on_application_command_error', None):
-        #     return
+        if self.extra_events.get('on_application_command_error', None):
+            return
 
         command = context.command
         if command and command.has_error_handler():
             return
 
-        # TODO
-        # cog = context.cog
-        # if cog and cog.has_error_handler():
-        #     return
+        cog = context.cog
+        if cog and cog.has_error_handler():
+            return
 
         print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
         traceback.print_exception(
