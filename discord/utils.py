@@ -449,7 +449,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None, raise_exc: bool = False):
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
