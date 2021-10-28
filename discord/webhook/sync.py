@@ -953,7 +953,7 @@ class SyncWebhook(BaseWebhook):
         id: :class:`int`
             The message ID to look for.
         thread_id: Optional[:class:`int`]
-            The ID of the thread where the message is.
+            The ID of the thread that contains the message.
 
         Raises
         --------
@@ -1024,7 +1024,7 @@ class SyncWebhook(BaseWebhook):
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
         thread: Optional[:class:`~discord.abc.Snowflake`]
-            The thread where the message is.
+            The thread that contains the message.
 
         Raises
         -------
@@ -1077,7 +1077,7 @@ class SyncWebhook(BaseWebhook):
         *,
         thread_id: Optional[int] = None
     ) -> None:
-        """Deletes a message owned by this  webhook.
+        """Deletes a message owned by this webhook.
 
         This is a lower level interface to :meth:`WebhookMessage.delete` in case
         you only have an ID.
@@ -1089,7 +1089,7 @@ class SyncWebhook(BaseWebhook):
         message_id: :class:`int`
             The message ID to delete.
         thread_id: Optional[:class:`int`]
-            The ID of the thread where the message is.
+            The ID of the thread that contains the message.
 
         Raises
         -------

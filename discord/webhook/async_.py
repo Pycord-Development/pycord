@@ -1464,7 +1464,7 @@ class Webhook(BaseWebhook):
         id: :class:`int`
             The message ID to look for.
         thread_id: Optional[:class:`int`]
-            The ID of the thread where the message is.
+            The ID of the thread that contains the message.
 
         Raises
         --------
@@ -1551,7 +1551,7 @@ class Webhook(BaseWebhook):
 
             .. versionadded:: 2.
         thread: Optional[:class:`~discord.abc.Snowflake`]
-            The thread where the message is.
+            The thread that contains the message.
 
         Raises
         -------
@@ -1635,7 +1635,7 @@ class Webhook(BaseWebhook):
         message_id: :class:`int`
             The message ID to delete.
         thread_id: Optional[:class:`int`]
-            The ID of the thread where the message is.
+            The ID of the thread that contains the message.
 
         Raises
         -------
