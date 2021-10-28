@@ -1549,7 +1549,7 @@ class Webhook(BaseWebhook):
             the view is removed. The webhook must have state attached, similar to
             :meth:`send`.
 
-            .. versionadded:: 2.
+            .. versionadded:: 2.0
         thread: Optional[:class:`~discord.abc.Snowflake`]
             The thread that contains the message.
 
