@@ -456,10 +456,10 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
         try:
             getter = await getattr(obj, f'fetch_{attr}')(id)
         except HTTPException:
-            if raise_exc:
-                raise
-            else:
+            if default is not MISSING:
                 return default
+            else:
+                raise
     return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
