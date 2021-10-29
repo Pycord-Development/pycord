@@ -59,6 +59,7 @@ from .cog import CogMixin
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
+from .enums import InteractionType
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
@@ -86,7 +87,7 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
-    def commands(self) -> List[Union[ApplicationCommand, ...]]:
+    def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = list(self.application_commands.values())
         if self._supports_prefixed_commands:
             commands += self.prefixed_commands
@@ -364,7 +365,10 @@ class ApplicationCommandMixin:
         interaction: :class:`discord.Interaction`
             The interaction to process
         """
-        if not interaction.is_command():
+        if interaction.type not in (
+            InteractionType.application_command, 
+            InteractionType.auto_complete
+        ):
             return
 
         try:
@@ -372,6 +376,9 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
+            if interaction.type is InteractionType.auto_complete:
+                return await command.invoke_autocomplete_callback(interaction)
+            
             ctx = await self.get_application_context(interaction)
             ctx.command = command
             self.dispatch("application_command", ctx)
