@@ -186,6 +186,10 @@ class ApplicationCommandMixin:
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in cmds:
+            # Discord seems to now return None instead of an empty string...
+            if i["description"] is None:
+                i['description'] = ""
+
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
@@ -225,6 +229,10 @@ class ApplicationCommandMixin:
                 raise
             else:
                 for i in cmds:
+                    # Discord seems to now return None instead of an empty string...
+                    if i["description"] is None:
+                        i['description'] = ""
+
                     cmd = get(
                         self.pending_application_commands,
                         name=i["name"],
