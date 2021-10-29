@@ -30,7 +30,7 @@ import types
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
 
 from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
@@ -59,6 +59,9 @@ __all__ = (
     "UserCommand",
     "MessageCommand",
 )
+
+if TYPE_CHECKING: 
+    from ..interactions import Interaction
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -351,7 +354,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options = self._parse_options(params)
+        self.options: List[Option] = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -487,6 +490,17 @@ class SlashCommand(ApplicationCommand):
         else:
             await self.callback(ctx, **kwargs)
 
+    async def invoke_autocomplete_callback(self, interaction: Interaction):
+        for op in interaction.data.get("options", []):
+            if op.get("focused", False):
+                option = find(lambda o: o.name == op["name"], self.options)
+                result = await option.autocomplete(interaction, op.get("value", None))
+                choices = [
+                    o if isinstance(o, OptionChoice) else OptionChoice(o)
+                    for o in result
+                ]
+                await interaction.response.send_autocomplete_result(choices=choices)
+
     def qualified_name(self):
         return self.name
 
@@ -581,6 +595,13 @@ class Option:
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
             raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
 
+        self.autocomplete = kwargs.pop("autocomplete", None)
+        if (
+            self.autocomplete and 
+            not asyncio.iscoroutinefunction(self.autocomplete)
+        ):
+            raise TypeError("Autocomplete callback must be a coroutine.")
+
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
@@ -588,6 +609,7 @@ class Option:
             "type": self.input_type.value,
             "required": self.required,
             "choices": [c.to_dict() for c in self.choices],
+            "autocomplete": bool(self.autocomplete)
         }
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
@@ -721,6 +743,13 @@ class SlashCommandGroup(ApplicationCommand, Option):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke(ctx)
+
+    async def invoke_autocomplete_callback(self, interaction: Interaction) -> None:
+        option = interaction.data["options"][0]
+        command = find(lambda x: x.name == option["name"], self.subcommands)
+        interaction.data = option
+        await command.invoke_autocomplete_callback(interaction)
+
 
 class ContextMenuCommand(ApplicationCommand):
     r"""A class that implements the protocol for context menu commands.
