@@ -152,3 +152,17 @@ class GuildEvent:
         if payload:
             data = await self._state.http.edit_guild_event(self.id, **payload)
             return GuildEvent(data=data, state=self._state)
+
+    async def delete(self) -> None:
+        """|coro|
+        
+        Deletes the guild event.
+
+        Raises
+        ------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+        """
+        await self._state.http.delete_guild_event(self.id)
