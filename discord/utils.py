@@ -1042,7 +1042,7 @@ def basic_autocomplete(values: Union[Iterable[str],
 
     Parameters
     -----------
-    values: Union[Iterable[:class:`str`], Callable[[:class:`Interaction`], Union[Iterable[:class:`str`], Coroutine[Iterable[str]]]], Coroutine[Iterable[str]]]
+    values: Union[Iterable[:class:`str`], Callable[[:class:`Interaction`], Union[Iterable[:class:`str`], Coroutine[Iterable[:class:`str`]]]], Coroutine[Iterable[:class:`str`]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`Interaction`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
