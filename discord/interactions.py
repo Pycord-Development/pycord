@@ -716,6 +716,7 @@ class InteractionResponse:
     ) -> None:
         """|coro|
         Responds to this interaction by sending the autocomplete choices.
+
         Parameters
         -----------
         choices: List[:class:`OptionChoice`]
