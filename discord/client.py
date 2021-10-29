@@ -1313,6 +1313,14 @@ class Client:
         guild = self.get_guild(int(data['guild_id']))
         return StageInstance(guild=guild, state=self._connection, data=data)  # type: ignore
 
+    # Guild Event management
+
+    async def fetch_guild_event(self, event_id, /):
+        pass
+
+    async def delete_guild_event(self, event_id, /):
+        pass
+
     # Invite management
 
     async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True) -> Invite:
