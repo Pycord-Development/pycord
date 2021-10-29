@@ -604,6 +604,15 @@ class Option:
 
 
 class OptionChoice:
+    r"""Represents an option choice.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the option choice.
+    value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
+        The value of the option choice. If ``None`` is passed, this will be set to the name of the option choice.
+    """
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
         self.value = value or name
@@ -825,6 +834,29 @@ class ContextMenuCommand(ApplicationCommand):
 
 
 class UserCommand(ContextMenuCommand):
+    r"""A class that implements the protocol for user context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -900,6 +932,29 @@ class UserCommand(ContextMenuCommand):
 
 
 class MessageCommand(ContextMenuCommand):
+    r"""A class that implements the protocol for message context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
