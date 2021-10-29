@@ -1031,23 +1031,34 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
     return f'<t:{int(dt.timestamp())}:{style}>'
 
 
-def basic_autocomplete(*values: str) -> Callable[[Interaction, str], Coroutine[List[str]]]:
+def basic_autocomplete(values: Union[Iterable[str],
+                                     Callable[[Interaction], Union[Iterable[str], Coroutine[Iterable[str]]]],
+                                     Coroutine[Iterable[str]]]) -> Callable[[Interaction, str], Coroutine[List[str]]]:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
-    will return any options that start with the value from the user, case insensitive.
+    will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
+    it will be called with the interaction.
 
     .. versionadded:: 2.0
 
     Parameters
     -----------
-    values: `str`
-        Possible values for the option.
+    values: Union[Iterable[:class:`str`], Callable[[:class:`Interaction`], Union[Iterable[:class:`str`], Coroutine[Iterable[str]]]], Coroutine[Iterable[str]]]
+        Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
+        single argument of :class:`Interaction`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
     Callable[[:class:`Interaction`, :class:`str`], Coroutine[List[:class:`str`]]]
         A wrapped callback for the autocomplete.
     """
-    async def autocomplete_callback(interaction: Interaction, value: str) -> List[str]:
-        return [x for x in values if x.lower().startswith(value.lower())]
+    async def autocomplete_callback(interaction: Interaction,
+                                    value: str) -> List[str]:
+        _values = values  # since we reassign later, python considers it local if we don't do this
+
+        if callable(_values):
+            _values = _values(interaction)
+        if asyncio.iscoroutine(_values):
+            _values = await _values
+        return [x for x in _values if x.lower().startswith(value.lower())]
 
     return autocomplete_callback
