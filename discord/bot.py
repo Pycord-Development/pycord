@@ -45,7 +45,7 @@ import sys
 
 from .client import Client
 from .shard import AutoShardedClient
-from .utils import MISSING, get, async_all
+from .utils import MISSING, get, find, async_all
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -186,14 +186,10 @@ class ApplicationCommandMixin:
         cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in cmds:
-            # Discord seems to now return None instead of an empty string...
-            if i["description"] is None:
-                i['description'] = ""
-
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
-                description=i["description"],
+                guild_ids=None,
                 type=i["type"],
             )
             self.application_commands[i["id"]] = cmd
@@ -229,16 +225,7 @@ class ApplicationCommandMixin:
                 raise
             else:
                 for i in cmds:
-                    # Discord seems to now return None instead of an empty string...
-                    if i["description"] is None:
-                        i['description'] = ""
-
-                    cmd = get(
-                        self.pending_application_commands,
-                        name=i["name"],
-                        description=i["description"],
-                        type=i["type"],
-                    )
+                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     self.application_commands[i["id"]] = cmd
 
                     # Permissions
