@@ -720,6 +720,7 @@ class InteractionResponse:
         -----------
         choices: List[:class:`OptionChoice`]
             A list of choices.  
+
         Raises
         -------
         HTTPException
