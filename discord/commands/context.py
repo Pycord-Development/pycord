@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Union
 
@@ -30,6 +31,9 @@ import discord.abc
 if TYPE_CHECKING:
     import discord
     from discord.state import ConnectionState
+
+    from .commands import ApplicationCommand
+    from ..cog import Cog
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -63,7 +67,7 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: "discord.Bot", interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
-        self.command = None
+        self.command: ApplicationCommand = None  # type: ignore
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
@@ -130,3 +134,11 @@ class ApplicationContext(discord.abc.Messageable):
     @property
     def edit(self):
         return self.interaction.edit_original_message
+
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
+        if self.command is None:
+            return None
+       
+        return self.command.cog
