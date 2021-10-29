@@ -1038,6 +1038,23 @@ def basic_autocomplete(values: Union[Iterable[str],
     will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
     it will be called with the interaction.
 
+    This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
+
+    Example
+    --------
+
+    .. code-block:: python3
+
+        Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue")))
+
+        # or
+
+        async def autocomplete(interaction):
+            return ("foo", "bar", "baz", interaction.user.name)
+
+        Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
+
+
     .. versionadded:: 2.0
 
     Parameters
