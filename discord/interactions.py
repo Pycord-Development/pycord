@@ -475,7 +475,7 @@ class InteractionResponse:
         file: File = None,
         files: List[File] = None,
         delete_after: float = None
-    ) -> None:
+    ) -> Interaction:
         """|coro|
 
         Responds to this interaction by sending a message.
@@ -600,7 +600,7 @@ class InteractionResponse:
                 await asyncio.sleep(delete_after)
                 await self._parent.delete_original_message()
             asyncio.ensure_future(delete(), loop=self._parent._state.loop)
-
+        return self._parent
 
     async def edit_message(
         self,
