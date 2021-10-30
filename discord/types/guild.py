@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -65,6 +66,7 @@ class _GuildOptional(TypedDict, total=False):
     max_presences: Optional[int]
     max_members: int
     premium_subscription_count: int
+    premium_progress_bar_enabled: bool
     max_video_channel_users: int
 
 
@@ -75,22 +77,34 @@ VerificationLevel = Literal[0, 1, 2, 3, 4]
 NSFWLevel = Literal[0, 1, 2, 3]
 PremiumTier = Literal[0, 1, 2, 3]
 GuildFeature = Literal[
+    'ANIMATED_BANNER',
     'ANIMATED_ICON',
     'BANNER',
     'COMMERCE',
     'COMMUNITY',
     'DISCOVERABLE',
     'FEATURABLE',
+    'HAS_DIRECTORY_ENTRY',
+    'HUB',
     'INVITE_SPLASH',
+    'LINKED_TO_HUB',
+    'MEMBER_PROFILES',
     'MEMBER_VERIFICATION_GATE_ENABLED',
     'MONETIZATION_ENABLED',
     'MORE_EMOJI',
     'MORE_STICKERS',
     'NEWS',
+    'NEW_THREAD_PERMISSIONS',
     'PARTNERED',
+    'PREMIUM_TIER_3_OVERRIDE',
     'PREVIEW_ENABLED',
     'PRIVATE_THREADS',
+    'ROLE_ICONS',
+    'ROLE_SUBSCRIPTIONS_ENABLED',
     'SEVEN_DAY_THREAD_ARCHIVE',
+    'TEXT_IN_VOICE_ENABLED',
+    'THREAD_DEFAULT_AUTO_ARCHIVE_DURATION',
+    'THREADS_ENABLED_TESTING',
     'THREE_DAY_THREAD_ARCHIVE',
     'TICKETED_EVENTS_ENABLED',
     'VANITY_URL',
