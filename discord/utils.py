@@ -1076,6 +1076,6 @@ def basic_autocomplete(values: Union[Iterable[str],
             _values = _values(interaction)
         if asyncio.iscoroutine(_values):
             _values = await _values
-        return [x for x in _values if x.lower().startswith(value.lower())]
+        return ([x for x in _values if x.lower().startswith(value.lower())])[:25]
 
     return autocomplete_callback
