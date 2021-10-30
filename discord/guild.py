@@ -240,6 +240,10 @@ class Guild(Hashable):
         The number goes from 0 to 3 inclusive.
     premium_subscription_count: :class:`int`
         The number of "boosts" this guild currently has.
+    premium_progress_bar_enabled: :class:`bool`
+        Indicates if the guild has premium progress bar enabled.
+        
+        .. versionadded:: 2.0
     preferred_locale: Optional[:class:`str`]
         The preferred locale for the guild. Used when filtering Server Discovery
         results to a specific language.
@@ -270,6 +274,7 @@ class Guild(Hashable):
         'max_video_channel_users',
         'premium_tier',
         'premium_subscription_count',
+        'premium_progress_bar_enabled',
         'preferred_locale',
         'nsfw_level',
         '_members',
@@ -450,6 +455,7 @@ class Guild(Hashable):
         self.max_video_channel_users: Optional[int] = guild.get('max_video_channel_users')
         self.premium_tier: int = guild.get('premium_tier', 0)
         self.premium_subscription_count: int = guild.get('premium_subscription_count') or 0
+        self.premium_progress_bar_enabled: bool = guild.get('premium_progress_bar_enabled') or False
         self._system_channel_flags: int = guild.get('system_channel_flags', 0)
         self.preferred_locale: Optional[str] = guild.get('preferred_locale')
         self._discovery_splash: Optional[str] = guild.get('discovery_splash')
@@ -1371,6 +1377,7 @@ class Guild(Hashable):
         preferred_locale: str = MISSING,
         rules_channel: Optional[TextChannel] = MISSING,
         public_updates_channel: Optional[TextChannel] = MISSING,
+        premium_progress_bar_enabled: bool = MISSING,
     ) -> Guild:
         r"""|coro|
 
@@ -1448,6 +1455,8 @@ class Guild(Hashable):
             The new channel that is used for public updates from Discord. This is only available to
             guilds that contain ``PUBLIC`` in :attr:`Guild.features`. Could be ``None`` for no
             public updates channel.
+        premium_progress_bar_enabled: :class:`bool`
+            Whether the guild should have premium progress bar enabled. 
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1578,6 +1587,9 @@ class Guild(Hashable):
                     )
 
             fields['features'] = features
+        
+        if premium_progress_bar_enabled is not MISSING:
+            fields['premium_progress_bar_enabled'] = premium_progress_bar_enabled
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
         return Guild(data=data, state=self._state)
