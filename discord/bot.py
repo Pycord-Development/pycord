@@ -445,6 +445,7 @@ class ApplicationCommandMixin:
         """There is an alias for :meth:`application_command`.
 
         .. note::
+        
             This decorator is overridden by :class:`discord.ext.commands.Bot`.
 
         .. versionadded:: 2.0
