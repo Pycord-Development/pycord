@@ -66,6 +66,7 @@ class _GuildOptional(TypedDict, total=False):
     max_presences: Optional[int]
     max_members: int
     premium_subscription_count: int
+    premium_progress_bar_enabled: bool
     max_video_channel_users: int
 
 
