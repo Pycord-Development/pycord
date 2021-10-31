@@ -491,15 +491,24 @@ class SlashCommand(ApplicationCommand):
             await self.callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, interaction: Interaction):
+        values = { i.name: i.default for i in self.options }
+        
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                result = await option.autocomplete(interaction, op.get("value", None))
+                values.update({
+                    i["name"]:i["value"] 
+                    for i in interaction.data["options"]
+                })
+                # This will only pass args depending on the argcount
+                arg_count = option.autocomplete.__code__.co_argcount
+                args = [interaction, op.get("value", None), values][:arg_count] 
+                result = await option.autocomplete(*args)
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ]
-                await interaction.response.send_autocomplete_result(choices=choices)
+                return await interaction.response.send_autocomplete_result(choices=choices)
 
     def qualified_name(self):
         return self.name
