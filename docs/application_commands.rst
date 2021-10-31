@@ -13,6 +13,7 @@ directly with your application that feels deeply integrated into Discord.
 Application commands can be used with either :class:`.Bot` or :class:`.ext.commands.Bot`.
 
 .. code-block:: python3
+
     import discord
     bot = discord.Bot()
 
@@ -29,66 +30,4 @@ Application commands can be used with either :class:`.Bot` or :class:`.ext.comma
     async def foo(ctx, arg):
         await ctx.respond(arg)
 
-ApplicationCommand
-~~~~~~~~~~~~~~~~~~~
 
-.. attributetable:: ApplicationCommand
-
-.. autoclass:: ApplicationCommand
-    :members:
-
-SlashCommand
-~~~~~~~~~~~~~
-
-.. attributetable:: SlashCommand
-
-.. autoclass:: SlashCommand
-    :members:
-
-SlashCommandGroup
-~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: SlashCommandGroup
-
-.. autoclass:: SlashCommandGroup
-    :members:
-
-Option
-~~~~~~~
-
-.. attributetable:: Option
-
-.. autoclass:: Option
-    :members:
-
-OptionChoice
-~~~~~~~~~~~~~
-
-.. attributetable:: OptionChoice
-
-.. autoclass:: OptionChoice
-    :members:
-
-UserCommand
-~~~~~~~~~~~~
-
-.. attributetable:: UserCommand
-
-.. autoclass:: UserCommand
-    :members:
-
-MessageCommand
-~~~~~~~~~~~~~~~
-
-.. attributetable:: MessageCommand
-
-.. autoclass:: MessageCommand
-    :members:
-
-ApplicationContext
-~~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: ApplicationContext
-
-.. autoclass:: ApplicationContext
-    :members:
