@@ -165,6 +165,8 @@ class AutocompleteContext:
         The names and values of all the options.
     """
 
+    __slots__ = ("interaction", "command", "focused", "value", "options")
+    
     def __init__(self, interaction: Interaction, *, command: ApplicationCommand, focused: Option, value: str, options: dict) -> None:
         self.interaction = interaction
         self.command = command
