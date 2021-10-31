@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     import discord
     from discord.state import ConnectionState
 
-    from .commands import ApplicationCommand
+    from .commands import ApplicationCommand, Option
     from ..cog import Cog
 
 from ..guild import Guild
@@ -142,3 +142,32 @@ class ApplicationContext(discord.abc.Messageable):
             return None
        
         return self.command.cog
+
+
+class AutocompleteContext:
+    """Represents a Discord autocomplete context.
+
+    This class is not created manually and is instead passed to an Option's autocomplete callback.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    interaction: :class:`.Interaction`
+        The interaction object that invoked the autocomplete.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
+    focused: :class:`.Option`
+        The option the user is currently typing.
+    value: :class:`.str`
+        The content of the focused option.
+    options :class:`.dict`
+        The names and values of all the options.
+    """
+
+    def __init__(self, interaction: Interaction, *, command: ApplicationCommand, focused: Option, value: str, options: dict) -> None:
+        self.interaction = interaction
+        self.command = command
+        self.focused = focused
+        self.value = value
+        self.options = options

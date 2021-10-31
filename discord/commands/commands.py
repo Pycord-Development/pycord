@@ -36,7 +36,7 @@ from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
-from .context import ApplicationContext
+from .context import ApplicationContext, AutocompleteContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -500,10 +500,8 @@ class SlashCommand(ApplicationCommand):
                     i["name"]:i["value"] 
                     for i in interaction.data["options"]
                 })
-                # This will only pass args depending on the argcount
-                arg_count = option.autocomplete.__code__.co_argcount
-                args = [interaction, op.get("value", None), values][:arg_count] 
-                result = await option.autocomplete(*args)
+                ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
+                result = await option.autocomplete(ctx)
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
