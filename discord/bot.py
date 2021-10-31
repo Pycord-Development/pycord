@@ -45,7 +45,7 @@ import sys
 
 from .client import Client
 from .shard import AutoShardedClient
-from .utils import MISSING, get, async_all
+from .utils import MISSING, get, find, async_all
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -189,7 +189,7 @@ class ApplicationCommandMixin:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
-                description=i["description"],
+                guild_ids=None,
                 type=i["type"],
             )
             self.application_commands[i["id"]] = cmd
@@ -225,12 +225,7 @@ class ApplicationCommandMixin:
                 raise
             else:
                 for i in cmds:
-                    cmd = get(
-                        self.pending_application_commands,
-                        name=i["name"],
-                        description=i["description"],
-                        type=i["type"],
-                    )
+                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     self.application_commands[i["id"]] = cmd
 
                     # Permissions
@@ -463,7 +458,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overridden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`discord.ext.commands.Bot`.
 
         .. versionadded:: 2.0
 

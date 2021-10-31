@@ -475,7 +475,7 @@ class InteractionResponse:
         file: File = None,
         files: List[File] = None,
         delete_after: float = None
-    ) -> None:
+    ) -> Interaction:
         """|coro|
 
         Responds to this interaction by sending a message.
@@ -572,21 +572,6 @@ class InteractionResponse:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
 
-        if file is not None and files is not None:
-            raise InvalidArgument('cannot pass both file and files parameter to send()')
-        
-        if file is not None:
-            if not isinstance(file, File):
-                raise InvalidArgument('file parameter must be File')
-            else:
-                files = [file]
-
-        if files is not None:
-            if len(files) > 10:
-                raise InvalidArgument('files parameter must be a list of up to 10 elements')
-            elif not all(isinstance(file, File) for file in files):
-                raise InvalidArgument('files parameter must be a list of File')
-
         parent = self._parent
         adapter = async_context.get()
         try:
@@ -615,7 +600,7 @@ class InteractionResponse:
                 await asyncio.sleep(delete_after)
                 await self._parent.delete_original_message()
             asyncio.ensure_future(delete(), loop=self._parent._state.loop)
-
+        return self._parent
 
     async def edit_message(
         self,
