@@ -162,7 +162,7 @@ class AutocompleteContext:
     value: :class:`.str`
         The content of the focused option.
     options :class:`.dict`
-        The names and values of all the options.
+        A name to value mapping of the options that the user has selected before this option.
     """
 
     __slots__ = ("interaction", "command", "focused", "value", "options")
