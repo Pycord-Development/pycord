@@ -412,24 +412,24 @@ class InteractionResponse:
             This interaction has already been responded to before.
         """
         if self._responded:
-            raise discord.InteractionResponded(self._parent)
+            raise InteractionResponded(self._parent)
 
         defer_type: int = 0
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
-        if parent.type is discord.InteractionType.component:
+        if parent.type is InteractionType.component:
             if ephemeral:
                 data = {'flags': 64}
-                defer_type = discord.InteractionResponseType.deferred_channel_message.value
+                defer_type = InteractionResponseType.deferred_channel_message.value
             else:
-                defer_type = discord.InteractionResponseType.deferred_message_update.value
-        elif parent.type is discord.InteractionType.application_command:
-            defer_type = discord.InteractionResponseType.deferred_channel_message.value
+                defer_type = InteractionResponseType.deferred_message_update.value
+        elif parent.type is InteractionResponseType.application_command:
+            defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
                 data = {'flags': 64}
 
         if defer_type:
-            adapter = discord.webhook.async_.async_context.get()
+            adapter = async_context.get()
             await adapter.create_interaction_response(
                 parent.id, parent.token, session=parent._session, type=defer_type, data=data
             )
