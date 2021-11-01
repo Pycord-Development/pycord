@@ -812,6 +812,7 @@ class SyncWebhook(BaseWebhook):
         embed: Embed = MISSING,
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
+        thread: Snowflake = MISSING,
         wait: Literal[True],
     ) -> SyncWebhookMessage:
         ...
@@ -829,6 +830,7 @@ class SyncWebhook(BaseWebhook):
         embed: Embed = MISSING,
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
+        thread: Snowflake = MISSING,
         wait: Literal[False] = ...,
     ) -> None:
         ...
