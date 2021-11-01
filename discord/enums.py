@@ -667,22 +667,39 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
+    awkword = 879863881349087252
     betrayal = 773336526917861400
-    chess    = 832012586023256104
-    chess_dev = 832012774040141894
+    cg2_qa = 832012815819604009
+    cg2_staging = 832012730599735326
+    cg3_dev = 832012682520428625
+    cg3_prod = 832013003968348200
+    cg3_qa = 832012894068801636
+    cg3_staging = 832012938398400562
+    cg4_dev = 832013108234289153
+    cg4_prod = 832025144389533716
+    cg4_qa = 832025114077298718
+    cg4_staging = 832025061657280566
+    chess_in_the_park_dev = 832012586023256104
+    chess_in_the_park = 832012774040141894
+    decoders_dev = 891001866073296967
     doodle_crew = 878067389634314250
-    fishing  = 814288819477020702
+    doodle_crew_dev = 878067427668275241
+    fishington = 814288819477020702
     letter_tile = 879863686565621790
-    poker    = 755827207812677713
+    pn_staging = 763116274876022855
+    poker_night = 755827207812677713
+    poker_qa = 801133024841957428
+    putts = 832012854282158180
+    sketchy_artist = 879864070101172255
+    sketchy_artist_dev = 879864104980979792
     spell_cast = 852509694341283871
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
-    word_snack = 879863976006127627
-    youtube  = 755600276941176913
-    # More games soon
+    word_snacks = 879863976006127627
+    word_snacks_dev = 879864010126786570
+    youtube_together = 755600276941176913 
 
 T = TypeVar('T')
-
 
 def create_unknown_value(cls: Type[T], val: Any) -> T:
     value_cls = cls._enum_value_cls_  # type: ignore

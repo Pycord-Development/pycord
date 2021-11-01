@@ -2733,19 +2733,19 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Betrayal.io
 
-    .. attribute:: chess
+    .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
 
-    .. attribute:: chess_dev
+    .. attribute:: chess_in_the_park_dev
 
-        Development version of `chess`.
+        Development version of `chess_in_the_park`.
 
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
 
-    .. attribute:: fishing
+    .. attribute:: fishington
 
         Represents the embedded application Fishington.io
 
@@ -2753,7 +2753,7 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Letter Tile.
 
-    .. attribute:: poker
+    .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
 
@@ -2763,7 +2763,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: watch_together
 
-        Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+        Same as `youtube_together` with remote feature which allows guild admins to limit the playlist access.
         
     .. attribute:: watch_together_dev
 
@@ -2773,7 +2773,7 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Word Snacks.
 
-    .. attribute:: youtube
+    .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
 
