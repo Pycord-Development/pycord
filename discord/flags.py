@@ -427,6 +427,11 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.bug_hunter_level_2.value
 
     @flag_value
+    def has_unread_urgent_messages(self):
+        """:class:`bool`: Returns ``True`` if the user has a unread urgent messages."""
+        return UserFlags.has_unread_urgent_messages.value
+
+    @flag_value
     def underage_deleted(self):
         """:class:`bool`: Returns ``True`` if the user has a pending deletion for being underage in DOB prompt"""
         return UserFlags.underage_deleted.value

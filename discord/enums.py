@@ -596,6 +596,13 @@ class ButtonStyle(Enum):
         return self.value
 
 
+class ApplicationType(Enum):
+    game = 1
+    music = 2
+    ticketed_events = 3
+    guild_role_subscriptions = 4
+
+
 class StagePrivacyLevel(Enum):
     public = 1
     closed = 2

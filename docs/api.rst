@@ -1437,6 +1437,9 @@ of :class:`enum.Enum`.
     .. attribute:: team_user
 
         The user is a Team User.
+    .. attribute:: partner_or_verification_application
+
+        Relates to partner/verification applications.
     .. attribute:: system
 
         The user is a system user (i.e. represents Discord officially).
@@ -1455,6 +1458,12 @@ of :class:`enum.Enum`.
     .. attribute:: discord_certified_moderator
 
         The user is a Discord Certified Moderator.
+    .. attribute:: bot_http_interactions
+
+        The bot has set an interactions endpoint url.
+    .. attribute:: spammer
+
+        The user is disabled for being a spammer.
 
 .. class:: ActivityType
 
