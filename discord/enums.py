@@ -649,7 +649,7 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        if datatype.__name__ == "Member":
+        if datatype.__name__ in ["Member", "User"]:
             return cls.user
         if datatype.__name__ in [
             "GuildChannel", "TextChannel",
