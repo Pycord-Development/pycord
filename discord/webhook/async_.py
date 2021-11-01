@@ -1595,7 +1595,7 @@ class Webhook(BaseWebhook):
         )
 
         thread_id: Optional[int] = None
-        if thread_id is not MISSING:
+        if thread is not MISSING:
             thread_id = thread.id
 
         adapter = async_context.get()
