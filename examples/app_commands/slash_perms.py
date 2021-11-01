@@ -1,7 +1,7 @@
 import discord
 
-# Imports Commands from discord.commands (for Slash Permissions)
-from discord.commands import commands
+# Imports permissions from discord.commands
+from discord.commands import permissions
 
 bot = discord.Bot()
 
@@ -16,57 +16,57 @@ bot = discord.Bot()
 # You can add up to 10 permissions per Command for a guild.
 # You can either use the following decorators:
 # --------------------------------------------
-# @commands.permission(role_id/user_id, permission)
-# @commands.has_role("ROLE_NAME") <-- can use either a name or id
-# @commands.has_any_role("ROLE_NAME", "ROLE_NAME_2") <-- can use either a name or id
-# @commands.is_user(USER_ID) <-- id only
-# @commands.is_owner()
+# @permissions.permission(role_id/user_id, permission)
+# @permissions.has_role("ROLE_NAME") <-- can use either a name or id
+# @permissions.has_any_role("ROLE_NAME", "ROLE_NAME_2") <-- can use either a name or id
+# @permissions.is_user(USER_ID) <-- id only
+# @permissions.is_owner()
 # Note: you can supply "guild_id" to limit it to 1 guild.
-# Ex: @commands.has_role("Admin", guild_id=GUILD_ID)
+# Ex: @permissions.has_role("Admin", guild_id=GUILD_ID)
 # --------------------------------------------
 # or supply permissions directly in @bot.slash_command
 # @bot.slash_command(default_permission=False,
-#                   permissions=[commands.Permission(id=ID, type=TYPE, permission=True, guild_id=GUILD_ID)])
+#                   permissions=[permissions.Permission(id=ID, type=TYPE, permission=True, guild_id=GUILD_ID)])
 
 # Note: Please replace token, GUILD_ID, USER_ID and ROLE_NAME.
 
 # Guild Slash Command Example with User Permissions
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
-@commands.is_user(USER_ID)
+@permissions.is_user(USER_ID)
 async def user(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Owner Permissions
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
-@commands.is_owner()
+@permissions.is_owner()
 async def owner(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Role Permissions
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
-@commands.has_role("ROLE_NAME")
+@permissions.has_role("ROLE_NAME")
 async def role(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Any Specified Role Permissions
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
-@commands.has_any_role("ROLE_NAME", "ROLE_NAME2")
+@permissions.has_any_role("ROLE_NAME", "ROLE_NAME2")
 async def multirole(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Permission Decorator
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
-@commands.permission(user_id=USER_ID, permission=True)
+@permissions.permission(user_id=USER_ID, permission=True)
 async def permission_decorator(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Permissions Kwarg
-@bot.slash_command(guild_ids=[GUILD_ID], default_permission=False, permissions=[commands.Permission(id=USER_ID, type=2, permission=True)])
+@bot.slash_command(guild_ids=[GUILD_ID], default_permission=False, permissions=[permissions.Permission(id=USER_ID, type=2, permission=True)])
 async def permission_kwarg(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")

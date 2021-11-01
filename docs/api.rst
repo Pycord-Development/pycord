@@ -66,7 +66,7 @@ Bot
 .. autoclass:: Bot
     :members:
     :inherited-members:
-    :exclude-members: command, event, message_command, slash_command, user_command
+    :exclude-members: command, event, message_command, slash_command, user_command, listen
 
     .. automethod:: Bot.command(**kwargs)
         :decorator:
@@ -81,6 +81,9 @@ Bot
         :decorator:
 
     .. automethod:: Bot.user_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.listen(name=None)
         :decorator:
 
 AutoShardedBot
@@ -1434,6 +1437,9 @@ of :class:`enum.Enum`.
     .. attribute:: team_user
 
         The user is a Team User.
+    .. attribute:: partner_or_verification_application
+
+        Relates to partner/verification applications.
     .. attribute:: system
 
         The user is a system user (i.e. represents Discord officially).
@@ -1452,6 +1458,12 @@ of :class:`enum.Enum`.
     .. attribute:: discord_certified_moderator
 
         The user is a Discord Certified Moderator.
+    .. attribute:: bot_http_interactions
+
+        The bot has set an interactions endpoint url.
+    .. attribute:: spammer
+
+        The user is disabled for being a spammer.
 
 .. class:: ActivityType
 
@@ -2717,9 +2729,37 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.0
 
-    .. attribute:: youtube
+    .. attribute:: betrayal
 
-        Represents the embedded application Youtube Together.
+        Represents the embedded application Betrayal.io
+
+    .. attribute:: chess
+
+        Represents the embedded application Chess in the Park.
+
+    .. attribute:: chess_dev
+
+        Development version of `chess`.
+
+    .. attribute:: doodle_crew
+
+        Represents the embedded application Doodle Crew.
+
+    .. attribute:: fishing
+
+        Represents the embedded application Fishington.io
+
+    .. attribute:: letter_tile
+
+        Represents the embedded application Letter Tile.
+
+    .. attribute:: poker
+
+        Represents the embedded application Poker Night.
+
+    .. attribute:: spell_cast
+
+        Represents the embedded application Spell Cast.
 
     .. attribute:: watch_together
 
@@ -2729,33 +2769,13 @@ of :class:`enum.Enum`.
 
         Development version of `watch_together`.
 
-    .. attribute:: poker
-
-        Represents the embedded application Poker Night.
-
-    .. attribute:: betrayal
-
-        Represents the embedded application Betrayal.io
-
-    .. attribute:: fishing
-
-        Represents the embedded application Fishington.io
-
-    .. attribute:: chess
-
-        Represents the embedded application Chess in the Park.
-
-    .. attribute:: letter_tile
-
-        Represents the embedded application Letter Tile.
-
     .. attribute:: word_snack
 
         Represents the embedded application Word Snacks.
 
-    .. attribute:: doodle_crew
+    .. attribute:: youtube
 
-        Represents the embedded application Doodle Crew.
+        Represents the embedded application Youtube Together.
 
 
 Async Iterator

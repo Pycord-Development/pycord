@@ -596,6 +596,13 @@ class ButtonStyle(Enum):
         return self.value
 
 
+class ApplicationType(Enum):
+    game = 1
+    music = 2
+    ticketed_events = 3
+    guild_role_subscriptions = 4
+
+
 class StagePrivacyLevel(Enum):
     public = 1
     closed = 2
@@ -620,7 +627,7 @@ class SlashCommandOptionType(Enum):
     role = 8
     mentionable = 9
     number = 10
-    custom = 11
+    attachment = 11
 
     @classmethod
     def from_datatype(cls, datatype):
@@ -642,9 +649,6 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        if hasattr(datatype, "convert"):
-            return cls.custom
-
         if datatype.__name__ == "Member":
             return cls.user
         if datatype.__name__ in [
@@ -663,16 +667,18 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
-    youtube  = 755600276941176913
-    poker    = 755827207812677713
     betrayal = 773336526917861400
-    fishing  = 814288819477020702
-    chess    = 832012774040141894
-    letter_tile = 879863686565621790
-    word_snack = 879863976006127627
+    chess    = 832012586023256104
+    chess_dev = 832012774040141894
     doodle_crew = 878067389634314250
+    fishing  = 814288819477020702
+    letter_tile = 879863686565621790
+    poker    = 755827207812677713
+    spell_cast = 852509694341283871
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
+    word_snack = 879863976006127627
+    youtube  = 755600276941176913
 
 T = TypeVar('T')
 

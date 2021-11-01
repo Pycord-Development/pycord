@@ -31,13 +31,21 @@ import inspect
 import traceback
 from .commands.errors import CheckFailure
 
-from typing import List, Optional, Union
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+)
 
 import sys
 
 from .client import Client
 from .shard import AutoShardedClient
-from .utils import get, async_all
+from .utils import MISSING, get, find, async_all
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -51,7 +59,10 @@ from .cog import CogMixin
 
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
+from .enums import InteractionType
 
+CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
+CFT = TypeVar('CFT', bound=CoroFunc)
 
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
@@ -76,7 +87,7 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
-    def commands(self) -> List[Union[ApplicationCommand, ...]]:
+    def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = list(self.application_commands.values())
         if self._supports_prefixed_commands:
             commands += self.prefixed_commands
@@ -100,7 +111,9 @@ class ApplicationCommandMixin:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
 
-    def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
+    def remove_application_command(
+        self, command: ApplicationCommand
+    ) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -155,7 +168,9 @@ class ApplicationCommandMixin:
         global_permissions: List = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is None]:
+        for command in [
+            cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
+        ]:
             as_dict = command.to_dict()
             if len(registered_commands) > 0:
                 matches = [
@@ -174,7 +189,7 @@ class ApplicationCommandMixin:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
-                description=i["description"],
+                guild_ids=None,
                 type=i["type"],
             )
             self.application_commands[i["id"]] = cmd
@@ -185,41 +200,59 @@ class ApplicationCommandMixin:
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
             update_guild_commands[guild.id] = []
-        for command in [cmd for cmd in self.pending_application_commands if cmd.guild_ids is not None]:
+        for command in [
+            cmd
+            for cmd in self.pending_application_commands
+            if cmd.guild_ids is not None
+        ]:
             as_dict = command.to_dict()
             for guild_id in command.guild_ids:
                 to_update = update_guild_commands[guild_id]
                 update_guild_commands[guild_id] = to_update + [as_dict]
 
-        for guild_id in update_guild_commands:
+        for guild_id, guild_data in update_guild_commands.items():
             try:
-                cmds = await self.http.bulk_upsert_guild_commands(self.user.id, guild_id,
-                                                                  update_guild_commands[guild_id])
+                cmds = await self.http.bulk_upsert_guild_commands(
+                    self.user.id, guild_id, update_guild_commands[guild_id]
+                )
 
                 # Permissions for this Guild
                 guild_permissions: List = []
             except Forbidden:
-                if not update_guild_commands[guild_id]:
+                if not guild_data:
                     continue
-                else:
-                    print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
-                    raise
+                print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+                raise
             else:
                 for i in cmds:
-                    cmd = get(self.pending_application_commands, name=i["name"], description=i["description"],
-                              type=i['type'])
+                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     self.application_commands[i["id"]] = cmd
 
                     # Permissions
-                    permissions = [perm.to_dict() for perm in cmd.permissions if perm.guild_id is None or (
-                                perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids)]
-                    guild_permissions.append({"id": i["id"], "permissions": permissions})
+                    permissions = [
+                        perm.to_dict()
+                        for perm in cmd.permissions
+                        if perm.guild_id is None
+                        or (
+                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                        )
+                    ]
+                    guild_permissions.append(
+                        {"id": i["id"], "permissions": permissions}
+                    )
 
                 for global_command in global_permissions:
-                    permissions = [perm.to_dict() for perm in global_command['permissions'] if
-                                   perm.guild_id is None or (
-                                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids)]
-                    guild_permissions.append({"id": global_command["id"], "permissions": permissions})
+                    permissions = [
+                        perm.to_dict()
+                        for perm in global_command["permissions"]
+                        if perm.guild_id is None
+                        or (
+                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                        )
+                    ]
+                    guild_permissions.append(
+                        {"id": global_command["id"], "permissions": permissions}
+                    )
 
                 # Collect & Upsert Permissions for Each Guild
                 # Command Permissions for this Guild
@@ -231,47 +264,78 @@ class ApplicationCommandMixin:
 
                     # Replace Role / Owner Names with IDs
                     for permission in item["permissions"]:
-                        if isinstance(permission['id'], str):
+                        if isinstance(permission["id"], str):
                             # Replace Role Names
-                            if permission['type'] == 1 and isinstance(permission['id'], str):
-                                role = get(self.get_guild(guild_id).roles, name=permission['id'])
+                            if permission["type"] == 1:
+                                role = get(
+                                    self.get_guild(guild_id).roles,
+                                    name=permission["id"],
+                                )
 
                                 # If not missing
-                                if not role is None:
+                                if role is not None:
                                     new_cmd_perm["permissions"].append(
-                                        {"id": role.id, "type": 1, "permission": permission['permission']})
+                                        {
+                                            "id": role.id,
+                                            "type": 1,
+                                            "permission": permission["permission"],
+                                        }
+                                    )
                                 else:
-                                    print("No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                        guild_id=guild_id, role=permission['id']))
-                            # Add Owner IDs
-                            elif permission['type'] == 2 and permission['id'] == "owner":
+                                    print(
+                                        "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
+                                            guild_id=guild_id, role=permission["id"]
+                                        )
+                                    )
+                            # Add owner IDs
+                            elif (
+                                permission["type"] == 2 and permission["id"] == "owner"
+                            ):
                                 app = await self.application_info()  # type: ignore
                                 if app.team:
                                     for m in app.team.members:
                                         new_cmd_perm["permissions"].append(
-                                            {"id": m.id, "type": 2, "permission": permission['permission']})
+                                            {
+                                                "id": m.id,
+                                                "type": 2,
+                                                "permission": permission["permission"],
+                                            }
+                                        )
                                 else:
                                     new_cmd_perm["permissions"].append(
-                                        {"id": app.owner.id, "type": 2, "permission": permission['permission']})
-                        # Add the Rest
+                                        {
+                                            "id": app.owner.id,
+                                            "type": 2,
+                                            "permission": permission["permission"],
+                                        }
+                                    )
+                        # Add the rest
                         else:
                             new_cmd_perm["permissions"].append(permission)
 
                     # Make sure we don't have over 10 overwrites
-                    if len(new_cmd_perm['permissions']) > 10:
+                    if len(new_cmd_perm["permissions"]) > 10:
                         print(
                             "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self.application_commands[new_cmd_perm['id']].name, guild_id=guild_id))
-                        new_cmd_perm['permissions'] = new_cmd_perm['permissions'][:10]
+                                name=self.application_commands[new_cmd_perm["id"]].name,
+                                guild_id=guild_id,
+                            )
+                        )
+                        new_cmd_perm["permissions"] = new_cmd_perm["permissions"][:10]
 
                     # Append to guild_cmd_perms
                     guild_cmd_perms.append(new_cmd_perm)
 
                 # Upsert
                 try:
-                    await self.http.bulk_upsert_command_permissions(self.user.id, guild_id, guild_cmd_perms)
+                    await self.http.bulk_upsert_command_permissions(
+                        self.user.id, guild_id, guild_cmd_perms
+                    )
                 except Forbidden:
-                    print(f"Failed to add command permissions to guild {guild_id}", file=sys.stderr)
+                    print(
+                        f"Failed to add command permissions to guild {guild_id}",
+                        file=sys.stderr,
+                    )
                     raise
 
     async def process_application_commands(self, interaction: Interaction) -> None:
@@ -296,7 +360,10 @@ class ApplicationCommandMixin:
         interaction: :class:`discord.Interaction`
             The interaction to process
         """
-        if not interaction.is_command():
+        if interaction.type not in (
+            InteractionType.application_command, 
+            InteractionType.auto_complete
+        ):
             return
 
         try:
@@ -304,18 +371,21 @@ class ApplicationCommandMixin:
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
+            if interaction.type is InteractionType.auto_complete:
+                return await command.invoke_autocomplete_callback(interaction)
+            
             ctx = await self.get_application_context(interaction)
             ctx.command = command
-            self.dispatch('application_command', ctx)
+            self.dispatch("application_command", ctx)
             try:
                 if await self.can_run(ctx, call_once=True):
                     await ctx.command.invoke(ctx)
                 else:
-                    raise CheckFailure('The global check once functions failed.')
+                    raise CheckFailure("The global check once functions failed.")
             except DiscordException as exc:
                 await ctx.command.dispatch_error(ctx, exc)
             else:
-                self.dispatch('application_command_completion', ctx)
+                self.dispatch("application_command_completion", ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -388,7 +458,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overridden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`discord.ext.commands.Bot`.
 
         .. versionadded:: 2.0
 
@@ -400,7 +470,9 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(self, name: str, description: str, guild_ids=None) -> SlashCommandGroup:
+    def command_group(
+        self, name: str, description: str, guild_ids=None
+    ) -> SlashCommandGroup:
         # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
         group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
@@ -451,24 +523,30 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._check_once = []
         self._before_invoke = None
         self._after_invoke = None
-        self.description = inspect.cleandoc(description) if description else ''
-        self.owner_id = options.get('owner_id')
-        self.owner_ids = options.get('owner_ids', set())
+        self.description = inspect.cleandoc(description) if description else ""
+        self.owner_id = options.get("owner_id")
+        self.owner_ids = options.get("owner_ids", set())
 
-        self.debug_guild = options.pop("debug_guild", None)  # TODO: remove or reimplement
+        self.debug_guild = options.pop(
+            "debug_guild", None
+        )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
 
         if self.owner_id and self.owner_ids:
-            raise TypeError('Both owner_id and owner_ids are set.')
+            raise TypeError("Both owner_id and owner_ids are set.")
 
-        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
-            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
+        if self.owner_ids and not isinstance(
+            self.owner_ids, collections.abc.Collection
+        ):
+            raise TypeError(
+                f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
+            )
 
         if self.debug_guild:
             if self.debug_guilds is None:
                 self.debug_guilds = [self.debug_guild]
             else:
-                raise TypeError('Both debug_guild and debug_guilds are set.')
+                raise TypeError("Both debug_guild and debug_guilds are set.")
 
         self._checks = []
         self._check_once = []
@@ -481,7 +559,9 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
 
-    async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
+    async def on_application_command_error(
+        self, context: ApplicationContext, exception: DiscordException
+    ) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -491,21 +571,21 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         This only fires if you do not specify any listeners for command error.
         """
-        # TODO
-        # if self.extra_events.get('on_application_command_error', None):
-        #     return
+        if self.extra_events.get('on_application_command_error', None):
+            return
 
         command = context.command
         if command and command.has_error_handler():
             return
 
-        # TODO
-        # cog = context.cog
-        # if cog and cog.has_error_handler():
-        #     return
+        cog = context.cog
+        if cog and cog.has_error_handler():
+            return
 
-        print(f'Ignoring exception in command {context.command}:', file=sys.stderr)
-        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
+        print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
+        traceback.print_exception(
+            type(exception), exception, exception.__traceback__, file=sys.stderr
+        )
 
     # global check registration
     # TODO: Remove these from commands.Bot
@@ -611,7 +691,9 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.add_check(func, call_once=True)
         return func
 
-    async def can_run(self, ctx: ApplicationContext, *, call_once: bool = False) -> bool:
+    async def can_run(
+        self, ctx: ApplicationContext, *, call_once: bool = False
+    ) -> bool:
         data = self._check_once if call_once else self._checks
 
         if len(data) == 0:
@@ -620,6 +702,101 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         # type-checker doesn't distinguish between functions and methods
         return await async_all(f(ctx) for f in data)  # type: ignore
 
+    # listener registration
+
+    def add_listener(self, func: CoroFunc, name: str = MISSING) -> None:
+        """The non decorator alternative to :meth:`.listen`.
+
+        Parameters
+        -----------
+        func: :ref:`coroutine <coroutine>`
+            The function to call.
+        name: :class:`str`
+            The name of the event to listen for. Defaults to ``func.__name__``.
+
+        Example
+        --------
+
+        .. code-block:: python3
+
+            async def on_ready(): pass
+            async def my_message(message): pass
+
+            bot.add_listener(on_ready)
+            bot.add_listener(my_message, 'on_message')
+        """
+        name = func.__name__ if name is MISSING else name
+
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError('Listeners must be coroutines')
+
+        if name in self.extra_events:
+            self.extra_events[name].append(func)
+        else:
+            self.extra_events[name] = [func]
+
+    def remove_listener(self, func: CoroFunc, name: str = MISSING) -> None:
+        """Removes a listener from the pool of listeners.
+
+        Parameters
+        -----------
+        func
+            The function that was used as a listener to remove.
+        name: :class:`str`
+            The name of the event we want to remove. Defaults to
+            ``func.__name__``.
+        """
+
+        name = func.__name__ if name is MISSING else name
+
+        if name in self.extra_events:
+            try:
+                self.extra_events[name].remove(func)
+            except ValueError:
+                pass
+
+    def listen(self, name: str = MISSING) -> Callable[[CFT], CFT]:
+        """A decorator that registers another function as an external
+        event listener. Basically this allows you to listen to multiple
+        events from different places e.g. such as :func:`.on_ready`
+
+        The functions being listened to must be a :ref:`coroutine <coroutine>`.
+
+        Example
+        --------
+
+        .. code-block:: python3
+
+            @bot.listen()
+            async def on_message(message):
+                print('one')
+
+            # in some other file...
+
+            @bot.listen('on_message')
+            async def my_message(message):
+                print('two')
+
+        Would print one and two in an unspecified order.
+
+        Raises
+        -------
+        TypeError
+            The function being listened to is not a coroutine.
+        """
+
+        def decorator(func: CFT) -> CFT:
+            self.add_listener(func, name)
+            return func
+
+        return decorator
+
+    def dispatch(self, event_name: str, *args: Any, **kwargs: Any) -> None:
+        # super() will resolve to Client
+        super().dispatch(event_name, *args, **kwargs)  # type: ignore
+        ev = 'on_' + event_name
+        for event in self.extra_events.get(ev, []):
+            self._schedule_event(event, ev, *args, **kwargs)  # type: ignore
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.
@@ -646,7 +823,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             The coroutine passed is not actually a coroutine.
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The pre-invoke hook must be a coroutine.')
+            raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
         return coro
@@ -678,10 +855,11 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The post-invoke hook must be a coroutine.')
+            raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
         return coro
+
 
 class Bot(BotBase, Client):
     """Represents a discord bot.
