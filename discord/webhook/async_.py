@@ -37,6 +37,7 @@ from contextvars import ContextVar
 import aiohttp
 
 from .. import utils
+from ..object import Object
 from ..errors import InvalidArgument, HTTPException, Forbidden, NotFound, DiscordServerError
 from ..message import Message
 from ..enums import try_enum, WebhookType
@@ -45,6 +46,7 @@ from ..asset import Asset
 from ..http import Route
 from ..mixins import Hashable
 from ..channel import PartialMessageable
+from ..threads import Thread
 
 __all__ = (
     'Webhook',
@@ -274,7 +276,13 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
     ) -> Response[MessagePayload]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'GET',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -282,7 +290,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session)
+        return self.request(route, session, params=params)
 
     def edit_webhook_message(
         self,
@@ -291,10 +299,16 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
         files: Optional[List[File]] = None,
     ) -> Response[Message]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'PATCH',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -302,7 +316,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session, payload=payload, multipart=multipart, files=files)
+        return self.request(route, session, params=params, payload=payload, multipart=multipart, files=files)
 
     def delete_webhook_message(
         self,
@@ -311,7 +325,13 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        thread_id: Optional[int] = None,
     ) -> Response[None]:
+        params = {}
+
+        if thread_id:
+            params['thread_id'] = thread_id
+
         route = Route(
             'DELETE',
             '/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}',
@@ -319,7 +339,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session)
+        return self.request(route, session, params=params)
 
     def fetch_webhook(
         self,
@@ -726,6 +746,12 @@ class WebhookMessage(Message):
         :class:`WebhookMessage`
             The newly edited message.
         """
+        thread = MISSING
+        if hasattr(self, '_thread_id'):
+            thread = Object(self._thread_id)
+        elif isinstance(self.channel, Thread):
+            thread = Object(self.channel.id)
+
         return await self._state._webhook.edit_message(
             self.id,
             content=content,
@@ -735,6 +761,7 @@ class WebhookMessage(Message):
             files=files,
             view=view,
             allowed_mentions=allowed_mentions,
+            thread=thread
         )
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
@@ -757,19 +784,24 @@ class WebhookMessage(Message):
         HTTPException
             Deleting the message failed.
         """
+        thread_id: Optional[int] = None
+        if hasattr(self, '_thread_id'):
+            thread_id = self._thread_id
+        elif isinstance(self.channel, Thread):
+            thread_id = self.channel.id
 
         if delay is not None:
 
             async def inner_call(delay: float = delay):
                 await asyncio.sleep(delay)
                 try:
-                    await self._state._webhook.delete_message(self.id)
+                    await self._state._webhook.delete_message(self.id, thread_id=thread_id)
                 except HTTPException:
                     pass
 
             asyncio.create_task(inner_call())
         else:
-            await self._state._webhook.delete_message(self.id)
+            await self._state._webhook.delete_message(self.id, thread_id=thread_id)
 
 
 class BaseWebhook(Hashable):
@@ -1429,7 +1461,12 @@ class Webhook(BaseWebhook):
 
         return msg
 
-    async def fetch_message(self, id: int, /) -> WebhookMessage:
+    async def fetch_message(
+        self,
+        id: int,
+        *,
+        thread_id: Optional[int] = None
+    ) -> WebhookMessage:
         """|coro|
 
         Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook.
@@ -1440,6 +1477,8 @@ class Webhook(BaseWebhook):
         ------------
         id: :class:`int`
             The message ID to look for.
+        thread_id: Optional[:class:`int`]
+            The ID of the thread that contains the message.
 
         Raises
         --------
@@ -1467,8 +1506,13 @@ class Webhook(BaseWebhook):
             self.token,
             id,
             session=self.session,
+            thread_id=thread_id,
         )
-        return self._create_message(data)
+        msg = self._create_message(data)
+        if isinstance(msg.channel, PartialMessageable):
+            msg._thread_id = thread_id
+        
+        return msg
 
     async def edit_message(
         self,
@@ -1481,6 +1525,7 @@ class Webhook(BaseWebhook):
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        thread: Optional[Snowflake] = MISSING
     ) -> WebhookMessage:
         """|coro|
 
@@ -1523,6 +1568,8 @@ class Webhook(BaseWebhook):
             :meth:`send`.
 
             .. versionadded:: 2.0
+        thread: Optional[:class:`~discord.abc.Snowflake`]
+            The thread that contains the message.
 
         Raises
         -------
@@ -1564,12 +1611,18 @@ class Webhook(BaseWebhook):
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
+
+        thread_id: Optional[int] = None
+        if thread is not MISSING:
+            thread_id = thread.id
+
         adapter = async_context.get()
         data = await adapter.edit_webhook_message(
             self.id,
             self.token,
             message_id,
             session=self.session,
+            thread_id=thread_id,
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
@@ -1580,7 +1633,12 @@ class Webhook(BaseWebhook):
             self._state.store_view(view, message_id)
         return message
 
-    async def delete_message(self, message_id: int, /) -> None:
+    async def delete_message(
+        self,
+        message_id: int,
+        *,
+        thread_id: Optional[int] = None
+    ) -> None:
         """|coro|
 
         Deletes a message owned by this webhook.
@@ -1594,6 +1652,8 @@ class Webhook(BaseWebhook):
         ------------
         message_id: :class:`int`
             The message ID to delete.
+        thread_id: Optional[:class:`int`]
+            The ID of the thread that contains the message.
 
         Raises
         -------
@@ -1611,4 +1671,5 @@ class Webhook(BaseWebhook):
             self.token,
             message_id,
             session=self.session,
+            thread_id=thread_id,
         )
