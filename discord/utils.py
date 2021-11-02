@@ -1037,7 +1037,7 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
 
 def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
     """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
-    If No dt is not passed, it makes one from the current time using utcnow.
+    If dt is not passed, it makes one from the current time using utcnow.
 
     Parameters
     -----------
