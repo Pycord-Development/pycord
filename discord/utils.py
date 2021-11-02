@@ -31,6 +31,7 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
+    Coroutine,
     Dict,
     ForwardRef,
     Generic,
@@ -73,18 +74,19 @@ else:
 
 
 __all__ = (
-    'oauth_url',
-    'snowflake_time',
-    'time_snowflake',
-    'find',
-    'get',
-    'sleep_until',
-    'utcnow',
-    'remove_markdown',
-    'escape_markdown',
-    'escape_mentions',
-    'as_chunks',
-    'format_dt',
+    "oauth_url",
+    "snowflake_time",
+    "time_snowflake",
+    "find",
+    "get",
+    "sleep_until",
+    "utcnow",
+    "remove_markdown",
+    "escape_markdown",
+    "escape_mentions",
+    "as_chunks",
+    "format_dt",
+    "generate_snowflake",
 )
 
 DISCORD_EPOCH = 1420070400000
@@ -128,6 +130,7 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .invite import Invite
     from .template import Template
+    from .interactions import Interaction
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
@@ -449,14 +452,17 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = None):
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
         try:
             getter = await getattr(obj, f'fetch_{attr}')(id)
         except HTTPException:
-            return default
+            if default is not MISSING:
+                return default
+            else:
+                raise
     return getter
 
 def _unique(iterable: Iterable[T]) -> List[T]:
@@ -1027,3 +1033,73 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
     if style is None:
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
+
+
+def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
+    """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
+    If dt is not passed, it makes one from the current time using utcnow.
+
+    Parameters
+    -----------
+    dt: :class:`datetime.datetime`
+        A datetime object to convert to a snowflake.
+        If naive, the timezone is assumed to be local time.
+
+    Returns
+    --------
+    :class:`int`
+        The snowflake representing the time given.
+    """
+
+    dt = dt or utcnow()
+    return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3fffff
+
+
+def basic_autocomplete(values: Union[Iterable[str],
+                                     Callable[[Interaction], Union[Iterable[str], Coroutine[Iterable[str]]]],
+                                     Coroutine[Iterable[str]]]) -> Callable[[Interaction, str], Coroutine[List[str]]]:
+    """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
+    will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
+    it will be called with the interaction.
+
+    This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
+
+    Example
+    --------
+
+    .. code-block:: python3
+
+        Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue")))
+
+        # or
+
+        async def autocomplete(interaction):
+            return ("foo", "bar", "baz", interaction.user.name)
+
+        Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
+
+
+    .. versionadded:: 2.0
+
+    Parameters
+    -----------
+    values: Union[Iterable[:class:`str`], Callable[[:class:`Interaction`], Union[Iterable[:class:`str`], Coroutine[Iterable[:class:`str`]]]], Coroutine[Iterable[:class:`str`]]]
+        Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
+        single argument of :class:`Interaction`, or a coroutine. Must resolve to an iterable of :class:`str`.
+
+    Returns
+    --------
+    Callable[[:class:`Interaction`, :class:`str`], Coroutine[List[:class:`str`]]]
+        A wrapped callback for the autocomplete.
+    """
+    async def autocomplete_callback(interaction: Interaction,
+                                    value: str) -> List[str]:
+        _values = values  # since we reassign later, python considers it local if we don't do this
+
+        if callable(_values):
+            _values = _values(interaction)
+        if asyncio.iscoroutine(_values):
+            _values = await _values
+        return ([x for x in _values if x.lower().startswith(value.lower())])[:25]
+
+    return autocomplete_callback

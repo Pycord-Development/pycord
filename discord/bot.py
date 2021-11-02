@@ -458,7 +458,7 @@ class ApplicationCommandMixin:
 
         .. note::
 
-            This decorator is overridden by :class:`commands.Bot`.
+            This decorator is overridden by :class:`discord.ext.commands.Bot`.
 
         .. versionadded:: 2.0
 
