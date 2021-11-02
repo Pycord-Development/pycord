@@ -74,18 +74,19 @@ else:
 
 
 __all__ = (
-    'oauth_url',
-    'snowflake_time',
-    'time_snowflake',
-    'find',
-    'get',
-    'sleep_until',
-    'utcnow',
-    'remove_markdown',
-    'escape_markdown',
-    'escape_mentions',
-    'as_chunks',
-    'format_dt',
+    "oauth_url",
+    "snowflake_time",
+    "time_snowflake",
+    "find",
+    "get",
+    "sleep_until",
+    "utcnow",
+    "remove_markdown",
+    "escape_markdown",
+    "escape_mentions",
+    "as_chunks",
+    "format_dt",
+    "generate_snowflake",
 )
 
 DISCORD_EPOCH = 1420070400000
@@ -1032,6 +1033,26 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
     if style is None:
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
+
+
+def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
+    """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
+    If No dt is not passed, it makes one from the current time using utcnow.
+
+    Parameters
+    -----------
+    dt: :class:`datetime.datetime`
+        A datetime object to convert to a snowflake.
+        If naive, the timezone is assumed to be local time.
+
+    Returns
+    --------
+    :class:`int`
+        The snowflake representing the time given.
+    """
+
+    dt = dt or utcnow()
+    return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3fffff
 
 
 def basic_autocomplete(values: Union[Iterable[str],
