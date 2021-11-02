@@ -344,7 +344,8 @@ class Colour:
         """
         themes_cls = {
             "dark": 0x2F3136,
-            "light": 0xf2f3f5
+            "light": 0xf2f3f5,
+            "amoled": 0x000000
         }
         
         if theme not in themes_cls:
