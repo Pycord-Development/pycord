@@ -349,7 +349,7 @@ class Colour:
         }
         
         if theme not in themes_cls:
-            raise TypeError("Theme must be one of \"dark\" and \"light\".")
+            raise TypeError("Theme must be \"dark\",  \"light\", or \"amoled\".")
         
         return cls(themes_cls[theme])
 
