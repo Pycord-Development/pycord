@@ -2739,7 +2739,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: chess_in_the_park_dev
 
-        Development version of `chess_in_the_park`.
+        Development version of :attr:`~EmbeddedActivity.chess_in_the_park`.
 
     .. attribute:: doodle_crew
 
