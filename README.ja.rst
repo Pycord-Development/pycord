@@ -1,7 +1,7 @@
 pycord
 ==========
 
-.. image:: https://discord.com/api/guilds/681882711945641997/embed.png
+.. image:: https://discord.com/api/guilds/881207955029110855/embed.png
    :target: https://pycord.dev/discord
    :alt: Discordサーバーの招待
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
@@ -10,6 +10,9 @@ pycord
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPIのサポートしているPythonのバージョン
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue
+   :target: https://pypi.python.org/pypi/py-cord
+   :alt: PyPIダウンロード
 
 discord.pyのフォークです。PyCordはPythonで書かれたDiscordのモダンで使いやすく、豊富な機能を持ち、非同期に対応したAPIラッパーです。
 
