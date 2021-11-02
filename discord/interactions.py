@@ -406,7 +406,7 @@ class InteractionResponse:
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            If ``True`` for interactions of type :attr:`InteractionType.component`, this will send an ephemeral 'bot is thinking' message in the channel.
+            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
 
         Raises
         -------
