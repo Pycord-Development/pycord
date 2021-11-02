@@ -2763,7 +2763,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: watch_together
 
-        Same as `youtube_together` with remote feature which allows guild admins to limit the playlist access.
+        Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
         
     .. attribute:: watch_together_dev
 
