@@ -421,6 +421,7 @@ class SlashCommand(ApplicationCommand):
 
             if option.name is None:
                 option.name = p_name
+            option._parameter_name = p_name
 
             final_options.append(option)
 
@@ -479,11 +480,11 @@ class SlashCommand(ApplicationCommand):
             elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
                 arg = await op._converter.convert(ctx, arg)
 
-            kwargs[op.name] = arg
+            kwargs[op._parameter_name] = arg
 
         for o in self.options:
-            if o.name not in kwargs:
-                kwargs[o.name] = o.default
+            if o._parameter_name not in kwargs:
+                kwargs[o._parameter_name] = o.default
         
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
