@@ -5,7 +5,7 @@ We're really happy to accept contributions. However we also ask that you follow 
 When opening a PR, please make sure your branch targets the latest release branch, in this case it would be `master`. Also make sure your branch is even with the target branch, to avoid unnecessary surprises.
 
 # Versioning
-We follow [SemVer](https://semver.org/) versioning when it comes to pushing stable releases. Ideally, this means you should only be creating PRs for `patch` and `minor` changes. If you wish to introduce a `major` (breaking) change, please discuss it beforehand so we can determine how to integrate it into our next major version. If this involves removing a public facing property/method, mark it with the `Obsolete` attribute instead on the latest release branch.
+We follow [SemVer](https://semver.org/) versioning when it comes to pushing stable releases. Ideally, this means you should only be creating PRs for `patch` and `minor` changes. If you wish to introduce a `major` (breaking) change, please discuss it beforehand so we can determine how to integrate it into our next major version. If this involves removing a public facing property/method, mark it with obsolete instead on the latest release branch.
 
 # Proper titles
 When opening issues, make sure the title reflects the purpose of the issue or the pull request. Prefer past tense, and
