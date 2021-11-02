@@ -74,19 +74,19 @@ else:
 
 
 __all__ = (
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "sleep_until",
-    "utcnow",
-    "remove_markdown",
-    "escape_markdown",
-    "escape_mentions",
-    "as_chunks",
-    "format_dt",
-    "generate_snowflake",
+    'oauth_url',
+    'snowflake_time',
+    'time_snowflake',
+    'find',
+    'get',
+    'sleep_until',
+    'utcnow',
+    'remove_markdown',
+    'escape_markdown',
+    'escape_mentions',
+    'as_chunks',
+    'format_dt',
+    'generate_snowflake',
 )
 
 DISCORD_EPOCH = 1420070400000
