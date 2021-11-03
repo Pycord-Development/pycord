@@ -551,7 +551,7 @@ class Intents(BaseFlags):
     @classmethod
     def default(cls: Type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
-        except :attr:`presences`, :attr:`members` and :attr:`guild_messages`.
+        except :attr:`presences` and :attr:`members`.
         """
         self = cls.all()
         self.presences = False
