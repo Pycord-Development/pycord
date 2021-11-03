@@ -814,7 +814,7 @@ class Intents(BaseFlags):
 
             Currently, this requires opting in explicitly via the developer portal as well.
             Bots in over 100 guilds will need to apply to Discord for verification.
-            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more informations.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return 1 << 9
 
