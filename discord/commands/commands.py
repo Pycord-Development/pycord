@@ -100,7 +100,7 @@ class ApplicationCommand(_BaseCommand):
     cog = None
     
     def __repr__(self):
-        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
+        return f"<discord.commands.{self.__class__.__name__} name={self.name} id={self.id}>"
 
     def __eq__(self, other):
         return isinstance(other, self.__class__)
