@@ -551,11 +551,12 @@ class Intents(BaseFlags):
     @classmethod
     def default(cls: Type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
-        except :attr:`presences`, :attr:`members`, and :attr:`guild_messages`.
+        except :attr:`presences`, :attr:`members`, :attr:`messages`, and :attr:`guild_messages`.
         """
         self = cls.all()
         self.presences = False
         self.members = False
+        self.messages = False
         self.guild_messages = False
         return self
 
@@ -778,8 +779,9 @@ class Intents(BaseFlags):
 
         .. note::
 
-            Currently, this requires opting in explicitly via the developer portal as well.
+            Currently requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
             Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return (1 << 9) | (1 << 12)
 
