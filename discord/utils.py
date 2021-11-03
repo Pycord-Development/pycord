@@ -85,6 +85,7 @@ __all__ = (
     'escape_mentions',
     'as_chunks',
     'format_dt',
+    'basic_autocomplete'
 )
 
 DISCORD_EPOCH = 1420070400000
@@ -128,6 +129,7 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .invite import Invite
     from .template import Template
+    from .commands.context import AutocompleteContext
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
@@ -1027,3 +1029,16 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
     if style is None:
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
+
+def basic_autocomplete(*values):
+    """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
+    will return any options that start with the value from the user, case insensitive.
+    .. versionadded:: 2.0
+    Parameters
+    -----------
+    values: `str`
+        Possible values for the option."""
+    async def autocomplete_callback(ctx: AutocompleteContext):
+        return [x for x in values if x.lower().startswith(ctx.value.lower())]
+
+    return autocomplete_callback
