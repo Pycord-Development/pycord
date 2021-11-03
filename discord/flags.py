@@ -812,7 +812,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            Currently it requires opting in explicitly via the developer portal to receive the message content.
+            Currently requires opting in explicitly via the developer portal to receive the actual content of the messages.
             Bots in over 100 guilds will need to apply to Discord for verification.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
