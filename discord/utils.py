@@ -74,18 +74,19 @@ else:
 
 
 __all__ = (
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "sleep_until",
-    "utcnow",
-    "remove_markdown",
-    "escape_markdown",
-    "escape_mentions",
-    "as_chunks",
-    "format_dt",
+    'oauth_url',
+    'snowflake_time',
+    'time_snowflake',
+    'find',
+    'get',
+    'sleep_until',
+    'utcnow',
+    'remove_markdown',
+    'escape_markdown',
+    'escape_mentions',
+    'as_chunks',
+    'format_dt',
+    'basic_autocomplete',
     "generate_snowflake",
 )
 
@@ -130,6 +131,7 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .invite import Invite
     from .template import Template
+    from .commands.context import AutocompleteContext
     from .interactions import Interaction
 
     class _RequestLike(Protocol):
@@ -1034,7 +1036,7 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
 
-
+    
 def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
     """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
     If dt is not passed, it makes one from the current time using utcnow.
@@ -1092,14 +1094,13 @@ def basic_autocomplete(values: Union[Iterable[str],
     Callable[[:class:`Interaction`, :class:`str`], Coroutine[List[:class:`str`]]]
         A wrapped callback for the autocomplete.
     """
-    async def autocomplete_callback(interaction: Interaction,
-                                    value: str) -> List[str]:
+    async def autocomplete_callback(ctx: AutocompleteContext) -> List[str]:
         _values = values  # since we reassign later, python considers it local if we don't do this
 
         if callable(_values):
             _values = _values(interaction)
         if asyncio.iscoroutine(_values):
             _values = await _values
-        return ([x for x in _values if x.lower().startswith(value.lower())])[:25]
+        return ([x for x in _values if x.lower().startswith(ctx.value.lower())])[:25]
 
     return autocomplete_callback

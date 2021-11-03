@@ -36,7 +36,7 @@ from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
-from .context import ApplicationContext
+from .context import ApplicationContext, AutocompleteContext
 from ..utils import find, get_or_fetch, async_all
 from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -492,15 +492,22 @@ class SlashCommand(ApplicationCommand):
             await self.callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, interaction: Interaction):
+        values = { i.name: i.default for i in self.options }
+        
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                result = await option.autocomplete(interaction, op.get("value", None))
+                values.update({
+                    i["name"]:i["value"] 
+                    for i in interaction.data["options"]
+                })
+                ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
+                result = await option.autocomplete(ctx)
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ]
-                await interaction.response.send_autocomplete_result(choices=choices)
+                return await interaction.response.send_autocomplete_result(choices=choices)
 
     def qualified_name(self):
         return self.name
