@@ -556,7 +556,6 @@ class Intents(BaseFlags):
         self = cls.all()
         self.presences = False
         self.members = False
-        self.guild_messages = False
         return self
 
     @flag_value
@@ -774,8 +773,6 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
 
-        Since this includes :attr:`guild_messages`, this intent is privileged. For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
-
         .. note::
 
             Currently requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
@@ -808,6 +805,13 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (only for guilds)
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
+
+        Without the :attr:`ApplicationFlags.gateway_message_content` intent enabled, the following fields are either an empty string or empty array:
+
+        - :attr:`Message.content`
+        - :attr:`Message.embeds`
+        - :attr:`Message.attachments`
+        - :attr:`Message.components`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
 
