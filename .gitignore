@@ -3,6 +3,7 @@
 *.log
 *.egg-info
 *.pem
+.env
 venv
 .venv
 docs/_build

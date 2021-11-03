@@ -1,10 +1,14 @@
 import asyncio
+import logging
 import os
+import random
 import shutil
+import string
 from typing import Any, Dict, Optional, Union, Tuple
 from unittest import IsolatedAsyncioTestCase, TestResult
 
 import aiohttp
+import magic
 import ssl
 from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client_exceptions import ServerDisconnectedError
@@ -12,6 +16,10 @@ from discord.http import HTTPClient, Route
 from persistqueue import SQLiteQueue
 from proxy.http.parser import HttpParser
 from proxy import Proxy
+
+RANDOM_ID_CHARS = string.ascii_letters + string.digits
+
+logging.getLogger('proxy').setLevel(logging.WARNING)
 
 if os.name == 'nt':  # SSL on windows breaks without this
     policy = asyncio.WindowsSelectorEventLoopPolicy()
@@ -24,11 +32,25 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         """Called to set up environment before testing"""
         super().setUp()
         self.proxy_url = "http://localhost:8899"
-        self.ssl = ssl.create_default_context(cafile='ca-cert.pem')
+        self.ssl = ssl.create_default_context(
+            cafile=os.getenv('PYCORD_CERT_PATH'))
         self.request_queue = SQLiteQueue('testing.q')
-        self.token = os.environ.get('PYCORD_BOT_TOKEN')
+        self.token = os.getenv('PYCORD_BOT_TOKEN')
         self.http_client = HTTPClient(proxy=self.proxy_url)
+        self.request_ids = set()
         await self.http_client.static_login(self.token)
+
+    def _generate_request_id(self) -> str:
+        new_id = ''.join(random.sample(RANDOM_ID_CHARS, 4))
+        # Ensure that a random ID doesnt clash
+        if new_id in self.request_ids:
+            return self._generate_request_id()
+        else:
+            self.request_ids.add(new_id)
+            return new_id
+
+    def _tracking_header(self) -> Dict[str, str]:
+        return {'X-PyCord-Testing-ReqId': self._generate_request_id()}
 
     async def asyncTearDown(self) -> None:
         """Called to take down environment after testing"""
@@ -42,11 +64,11 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         with Proxy([
                 '--num-workers', '1',
                 '--plugins', 'middlewareplugin.PyCordTestMiddleware',
-                '--ca-key-file', 'ca-key.pem',
-                '--ca-cert-file', 'ca-cert.pem',
-                '--ca-signing-key-file', 'ca-signing-key.pem',
+                '--ca-key-file', 'pycord-key.pem',
+                '--ca-cert-file', 'pycord-cert.pem',
+                '--ca-signing-key-file', 'pycord-signkey.pem',
                 '--port', '8899']
-                ):
+        ):
             super().run(result)
 
     async def proxied_route_request(self,
@@ -89,7 +111,8 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
                               method: str,
                               url: str,
                               allow_through_proxy: bool = False,
-                              headers: Dict[str, str] = {}
+                              headers: Dict[str, str] = {},
+                              body: Union[str, bytes, Dict[str, Any]] = ''
                               ) -> Tuple[HttpParser, Optional[ClientResponse]]:
         """Send a request through the proxy to view request data
 
@@ -108,22 +131,37 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             Should the request continue to the destination? (defaults to False)
         headers : Optional[dict]
             The headers to be sent with the request, defaults to an empty dict
+        body : Union[str, bytes, Dict[str, Any]]
+            The body of the request, can either be
+            a string, json data, or raw bytes
         Returns
         -------
         Tuple[HttpParser, Optional[Union[Dict[str, Any], str]]]
             A tuple containing the request, and the response if it was
             allowed through, otherwise None
         """
-
         try:
-            async with aiohttp.ClientSession() as cs:
+            with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
+                content_type = m.id_buffer(body)
+            async with aiohttp.ClientSession(headers={
+                'Connection': 'close',
+                'Content-Type': content_type,
+                'X-Allow-Through': str(int(allow_through_proxy))
+            } | self._tracking_header() | headers) as cs:
+                if type(body) is dict:
+                    json = body
+                    data = None
+                else:
+                    json = None
+                    data = body
+
                 async with cs.request(
                         method,
                         url,
                         proxy=self.proxy_url,
-                        ssl=self.ssl, headers={
-                            'X-Allow-Through': str(int(allow_through_proxy))
-                            } | headers) as r:
+                        data=data,
+                        json=json,
+                        ssl=self.ssl) as r:
                     resp = r
         except ServerDisconnectedError:  # Raised when the proxy blocks request
             resp = None
@@ -137,6 +175,10 @@ class TestPyCordTestingFixtures(PyCordBaseTestCase):
     async def test_proxy_sends(self) -> None:
         _, resp = await self.proxied_request(
             'GET',
-            'https://discord.com',
+            'https://httpbin.org/get',
             allow_through_proxy=True)
         self.assertEqual(resp.status, 200)
+
+    async def test_proxy_blocks(self) -> None:
+        _, resp = await self.proxied_request('GET', 'https://httpbin.org/get', allow_through_proxy=False)
+        self.assertIsNone(resp)

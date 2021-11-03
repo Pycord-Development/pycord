@@ -57,10 +57,11 @@ from .utils import MISSING
 
 _log = logging.getLogger(__name__)
 
-TEST_MODE = bool(int(os.getenv('PYCORD_TEST_MODE')))
+TEST_MODE = bool(int(os.getenv('PYCORD_TEST_MODE', 0)))
 if TEST_MODE:
     import ssl
     ssl_cert = os.getenv('PYCORD_CERT_PATH')
+    assert os.path.exists(ssl_cert)
     ssl_context_override = ssl.create_default_context(cafile=ssl_cert)
 else:
     ssl_context_override = None
