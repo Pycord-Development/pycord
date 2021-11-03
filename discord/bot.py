@@ -70,8 +70,8 @@ class ApplicationCommandMixin:
 
     Attributes
     -----------
-    application_commands: :class:`dict`
-        A mapping of command id string to :class:`.ApplicationCommand` objects.
+    application_commands: :class:`list`
+        A list of :class:`.ApplicationCommand` objects.
     pending_application_commands: :class:`list`
         A list of commands that have been added but not yet registered. This is read-only and is modified via other
         methods.
@@ -80,7 +80,7 @@ class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._pending_application_commands = []
-        self.application_commands = {}
+        self.application_commands = []
 
     @property
     def pending_application_commands(self):
@@ -88,7 +88,7 @@ class ApplicationCommandMixin:
 
     @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
-        commands = list(self.application_commands.values())
+        commands = self.application_commands
         if self._supports_prefixed_commands:
             commands += self.prefixed_commands
         return commands
@@ -130,7 +130,7 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self.application_commands.pop(command.id)
+        return self.application_commands.pop(command)
 
     async def sync_commands(self) -> None:
         """|coro|
@@ -192,8 +192,8 @@ class ApplicationCommandMixin:
                 guild_ids=None,
                 type=i["type"],
             )
-            self.application_commands[i["id"]] = cmd
-            cmd.id = i["id"]
+            cmd.id = int(i["id"])
+            self.application_commands.append(cmd)
 
             # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
             global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
@@ -227,8 +227,8 @@ class ApplicationCommandMixin:
             else:
                 for i in cmds:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
-                    self.application_commands[i["id"]] = cmd
-                    cmd.id = i["id"]
+                    cmd.id = int(i["id"])
+                    self.application_commands.append(cmd)
 
                     # Permissions
                     permissions = [
@@ -319,7 +319,7 @@ class ApplicationCommandMixin:
                     if len(new_cmd_perm["permissions"]) > 10:
                         print(
                             "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self.application_commands[new_cmd_perm["id"]].name,
+                                name=get(self.application_commands, id=int(new_cmd_perm["id"])).name,
                                 guild_id=guild_id,
                             )
                         )
@@ -369,7 +369,7 @@ class ApplicationCommandMixin:
             return
 
         try:
-            command = self.application_commands[interaction.data["id"]]
+            command = get(self.application_commands, id=int(interaction.data["id"]))
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
