@@ -44,6 +44,7 @@ from ..utils import cached_property
 
 __all__ = (
     "ApplicationContext",
+    "AutocompleteContext"
 )
 
 class ApplicationContext(discord.abc.Messageable):
