@@ -16,3 +16,6 @@ docs/crowdin.py
 *.jpg
 *.flac
 *.mo
+.idea/
+.vs/slnx.sqlite
+env/

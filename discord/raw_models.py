@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import datetime
 from typing import TYPE_CHECKING, Optional, Set, List
 
 from .enums import ChannelType, try_enum
@@ -39,6 +40,7 @@ if TYPE_CHECKING:
         ReactionClearEmojiEvent,
         IntegrationDeleteEvent,
         ThreadDeleteEvent,
+        TypingEvent
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
@@ -56,6 +58,7 @@ __all__ = (
     'RawReactionClearEmojiEvent',
     'RawIntegrationDeleteEvent',
     'RawThreadDeleteEvent',
+    'RawTypingEvent',
 )
 
 
@@ -283,7 +286,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: Optional[int] = int(data['application_id'])
         except KeyError:
             self.application_id: Optional[int] = None
-
+              
 class RawThreadDeleteEvent(_RawReprMixin):
     """Represents the payload for :func:`on_raw_thread_delete` event.
 
@@ -311,5 +314,36 @@ class RawThreadDeleteEvent(_RawReprMixin):
         self.guild_id: int = int(data['guild_id'])
         self.parent_id: int = int(data['parent_id'])
         self.thread: Optional[Thread] = None
+          
+class RawTypingEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_typing` event.
 
-   
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    channel_id: :class:`int`
+        The channel ID where the typing originated from.
+    user_id: :class:`int`
+        The ID of the user that started typing.
+    when: :class:`datetime.datetime`
+        When the typing started as an aware datetime in UTC.
+    guild_id: Optional[:class:`int`]
+        The guild ID where the typing originated from, if applicable.
+    member: Optional[:class:`Member`]
+        The member who started typing. Only available if the member started typing in a guild.
+    """
+
+    __slots__ = ("channel_id", "user_id", "when", "guild_id", "member")
+
+    def __init__(self, data: TypingEvent) -> None:
+        self.channel_id: int = int(data['channel_id'])
+        self.user_id: int = int(data['user_id'])
+        self.when: datetime.datetime = datetime.datetime.fromtimestamp(data.get('timestamp'), tz=datetime.timezone.utc)
+        self.member: Optional[Member] = None
+        
+        try:
+            self.guild_id: Optional[int] = int(data['guild_id'])
+        except KeyError:
+            self.guild_id: Optional[int] = None
+ 

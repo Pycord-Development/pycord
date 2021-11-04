@@ -121,41 +121,17 @@ class _DefaultRepr:
 _default = _DefaultRepr()
 
 class BotBase(GroupMixin):
-    def __init__(self, command_prefix=when_mentioned, help_command=_default, description=None, **options):
+    _supports_prefixed_commands = True
+    def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.extra_events: Dict[str, List[CoroFunc]] = {}
-        self.__cogs: Dict[str, Cog] = {}
-        self.__extensions: Dict[str, types.ModuleType] = {}
-        self._checks: List[Check] = []
-        self._check_once = []
-        self._before_invoke = None
-        self._after_invoke = None
         self._help_command = None
-        self.description = inspect.cleandoc(description) if description else ''
-        self.owner_id = options.get('owner_id')
-        self.owner_ids = options.get('owner_ids', set())
         self.strip_after_prefix = options.get('strip_after_prefix', False)
-
-        if self.owner_id and self.owner_ids:
-            raise TypeError('Both owner_id and owner_ids are set.')
-
-        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
-            raise TypeError(f'owner_ids must be a collection not {self.owner_ids.__class__!r}')
 
         if help_command is _default:
             self.help_command = DefaultHelpCommand()
         else:
             self.help_command = help_command
-
-    # internal helpers
-
-    def dispatch(self, event_name: str, *args: Any, **kwargs: Any) -> None:
-        # super() will resolve to Client
-        super().dispatch(event_name, *args, **kwargs)  # type: ignore
-        ev = 'on_' + event_name
-        for event in self.extra_events.get(ev, []):
-            self._schedule_event(event, ev, *args, **kwargs)  # type: ignore
 
     @discord.utils.copy_doc(discord.Client.close)
     async def close(self) -> None:
@@ -419,95 +395,6 @@ class BotBase(GroupMixin):
         self._after_invoke = coro
         return coro
 
-    # listener registration
-
-    def add_listener(self, func: CoroFunc, name: str = MISSING) -> None:
-        """The non decorator alternative to :meth:`.listen`.
-
-        Parameters
-        -----------
-        func: :ref:`coroutine <coroutine>`
-            The function to call.
-        name: :class:`str`
-            The name of the event to listen for. Defaults to ``func.__name__``.
-
-        Example
-        --------
-
-        .. code-block:: python3
-
-            async def on_ready(): pass
-            async def my_message(message): pass
-
-            bot.add_listener(on_ready)
-            bot.add_listener(my_message, 'on_message')
-
-        """
-        name = func.__name__ if name is MISSING else name
-
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Listeners must be coroutines')
-
-        if name in self.extra_events:
-            self.extra_events[name].append(func)
-        else:
-            self.extra_events[name] = [func]
-
-    def remove_listener(self, func: CoroFunc, name: str = MISSING) -> None:
-        """Removes a listener from the pool of listeners.
-
-        Parameters
-        -----------
-        func
-            The function that was used as a listener to remove.
-        name: :class:`str`
-            The name of the event we want to remove. Defaults to
-            ``func.__name__``.
-        """
-
-        name = func.__name__ if name is MISSING else name
-
-        if name in self.extra_events:
-            try:
-                self.extra_events[name].remove(func)
-            except ValueError:
-                pass
-
-    def listen(self, name: str = MISSING) -> Callable[[CFT], CFT]:
-        """A decorator that registers another function as an external
-        event listener. Basically this allows you to listen to multiple
-        events from different places e.g. such as :func:`.on_ready`
-
-        The functions being listened to must be a :ref:`coroutine <coroutine>`.
-
-        Example
-        --------
-
-        .. code-block:: python3
-
-            @bot.listen()
-            async def on_message(message):
-                print('one')
-
-            # in some other file...
-
-            @bot.listen('on_message')
-            async def my_message(message):
-                print('two')
-
-        Would print one and two in an unspecified order.
-
-        Raises
-        -------
-        TypeError
-            The function being listened to is not a coroutine.
-        """
-
-        def decorator(func: CFT) -> CFT:
-            self.add_listener(func, name)
-            return func
-
-        return decorator
 
     # cogs
 
@@ -1034,6 +921,23 @@ class BotBase(GroupMixin):
     async def on_message(self, message):
         await self.process_commands(message)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Bot(BotBase, discord.Bot):
     """Represents a discord bot.
 
@@ -1079,24 +983,10 @@ class Bot(BotBase, discord.Bot):
         Whether the commands should be case insensitive. Defaults to ``False``. This
         attribute does not carry over to groups. You must set it to every group if
         you require group commands to be case insensitive as well.
-    description: :class:`str`
-        The content prefixed into the default help message.
     help_command: Optional[:class:`.HelpCommand`]
         The help command implementation to use. This can be dynamically
         set at runtime. To remove the help command pass ``None``. For more
         information on implementing a help command, see :ref:`ext_commands_help_command`.
-    owner_id: Optional[:class:`int`]
-        The user ID that owns the bot. If this is not set and is then queried via
-        :meth:`.is_owner` then it is fetched automatically using
-        :meth:`~.Bot.application_info`.
-    owner_ids: Optional[Collection[:class:`int`]]
-        The user IDs that owns the bot. This is similar to :attr:`owner_id`.
-        If this is not set and the application is team based, then it is
-        fetched automatically using :meth:`~.Bot.application_info`.
-        For performance reasons it is recommended to use a :class:`set`
-        for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
-
-        .. versionadded:: 1.3
     strip_after_prefix: :class:`bool`
         Whether to strip whitespace characters after encountering the command
         prefix. This allows for ``!   hello`` and ``!hello`` to both work if

@@ -1337,28 +1337,37 @@ class ConnectionState:
             asyncio.create_task(logging_coroutine(coro, info='Voice Protocol voice server update handler'))
 
     def parse_typing_start(self, data) -> None:
+        raw = RawTypingEvent(data)
+
+        member_data = data.get('member')
+        if member_data:
+            guild = self._get_guild(raw.guild_id)
+            if guild is not None:
+                raw.member = Member(data=member_data, guild=guild, state=self)
+            else:
+                raw.member = None
+        else:
+            raw.member = None
+        self.dispatch('raw_typing', raw)
+
         channel, guild = self._get_guild_channel(data)
         if channel is not None:
-            member = None
-            user_id = utils._get_as_snowflake(data, 'user_id')
-            if isinstance(channel, DMChannel):
-                member = channel.recipient
+            user = raw.member or self._get_typing_user(channel, raw.user_id)
 
-            elif isinstance(channel, (Thread, TextChannel)) and guild is not None:
-                # user_id won't be None
-                member = guild.get_member(user_id)  # type: ignore
+            if user is not None:
+                self.dispatch('typing', channel, user, raw.when)
 
-                if member is None:
-                    member_data = data.get('member')
-                    if member_data:
-                        member = Member(data=member_data, state=self, guild=guild)
+    def _get_typing_user(self, channel: Optional[MessageableChannel], user_id: int) -> Optional[Union[User, Member]]:
+        if isinstance(channel, DMChannel):
+            return channel.recipient or self.get_user(user_id)
 
-            elif isinstance(channel, GroupChannel):
-                member = utils.find(lambda x: x.id == user_id, channel.recipients)
+        elif isinstance(channel, (Thread, TextChannel)) and channel.guild is not None:
+            return channel.guild.get_member(user_id)  # type: ignore
 
-            if member is not None:
-                timestamp = datetime.datetime.fromtimestamp(data.get('timestamp'), tz=datetime.timezone.utc)
-                self.dispatch('typing', channel, member, timestamp)
+        elif isinstance(channel, GroupChannel):
+            return utils.find(lambda x: x.id == user_id, channel.recipients)
+
+        return self.get_user(user_id)
 
     def _get_reaction_user(self, channel: MessageableChannel, user_id: int) -> Optional[Union[User, Member]]:
         if isinstance(channel, TextChannel):

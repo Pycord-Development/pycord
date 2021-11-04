@@ -217,6 +217,14 @@ class SystemChannelFlags(BaseFlags):
         """
         return 4
 
+    @flag_value
+    def join_notification_replies(self):
+        """:class:`bool`: Returns ``True`` if the system channel is allowing member join sticker replies.
+
+        .. versionadded:: 2.0
+        """
+        return 8
+
 
 @fill_with_flags()
 class MessageFlags(BaseFlags):
@@ -296,6 +304,24 @@ class MessageFlags(BaseFlags):
         """
         return 64
 
+    @flag_value
+    def loading(self):
+        """:class:`bool`: Returns ``True`` if the source message an deferred.
+
+        The user sees a 'thinking' state
+
+        .. versionadded:: 2.0
+        """
+        return 128
+
+    @flag_value
+    def failed_to_mention_some_roles_in_thread(self):
+        """:class:`bool`: Returns ``True`` if some roles are failed to mention in a thread.
+
+        .. versionadded:: 2.0
+        """
+        return 256
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
@@ -351,6 +377,16 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.bug_hunter.value
 
     @flag_value
+    def mfa_sms(self):
+        """:class:`bool`: Returns ``True`` if the user has SMS recovery for 2FA enabled"""
+        return UserFlags.mfa_sms.value
+
+    @flag_value
+    def premium_promo_dismissed(self):
+        """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion"""
+        return UserFlags.premium_promo_dismissed.value
+
+    @flag_value
     def hypesquad_bravery(self):
         """:class:`bool`: Returns ``True`` if the user is a HypeSquad Bravery member."""
         return UserFlags.hypesquad_bravery.value
@@ -376,6 +412,11 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.team_user.value
 
     @flag_value
+    def partner_or_verification_application(self):
+        """:class:`bool`: Relates to partner/verification applications."""
+        return UserFlags.partner_or_verification_application.value
+
+    @flag_value
     def system(self):
         """:class:`bool`: Returns ``True`` if the user is a system user (i.e. represents Discord officially)."""
         return UserFlags.system.value
@@ -384,6 +425,16 @@ class PublicUserFlags(BaseFlags):
     def bug_hunter_level_2(self):
         """:class:`bool`: Returns ``True`` if the user is a Bug Hunter Level 2"""
         return UserFlags.bug_hunter_level_2.value
+
+    @flag_value
+    def has_unread_urgent_messages(self):
+        """:class:`bool`: Returns ``True`` if the user has a unread urgent messages."""
+        return UserFlags.has_unread_urgent_messages.value
+
+    @flag_value
+    def underage_deleted(self):
+        """:class:`bool`: Returns ``True`` if the user has a pending deletion for being underage in DOB prompt"""
+        return UserFlags.underage_deleted.value
 
     @flag_value
     def verified_bot(self):
@@ -410,6 +461,22 @@ class PublicUserFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return UserFlags.discord_certified_moderator.value
+
+    @flag_value
+    def bot_http_interactions(self):
+        """:class:`bool`: Returns ``True`` if the bot has set an interactions endpoint url.
+
+        .. versionadded:: 2.0
+        """
+        return UserFlags.bot_http_interactions.value
+
+    @flag_value
+    def spammer(self):
+        """:class:`bool`: Returns ``True`` if the user is disabled for being a spammer.
+
+        .. versionadded:: 2.0
+        """
+        return UserFlags.spammer.value
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
@@ -484,11 +551,12 @@ class Intents(BaseFlags):
     @classmethod
     def default(cls: Type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
-        except :attr:`presences` and :attr:`members`.
+        except :attr:`presences`, :attr:`members`, and :attr:`guild_messages`.
         """
         self = cls.all()
         self.presences = False
         self.members = False
+        self.guild_messages = False
         return self
 
     @flag_value
@@ -705,6 +773,13 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (both guilds and DMs)
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
+
+        Since this includes :attr:`guild_messages`, this intent is privileged. For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
+
+        .. note::
+
+            Currently, this requires opting in explicitly via the developer portal as well.
+            Bots in over 100 guilds will need to apply to Discord for verification.
         """
         return (1 << 9) | (1 << 12)
 
@@ -732,6 +807,13 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (only for guilds)
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
+
+        For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
+
+        .. note::
+
+            Currently, this requires opting in explicitly via the developer portal as well.
+            Bots in over 100 guilds will need to apply to Discord for verification.
         """
         return 1 << 9
 
@@ -1029,6 +1111,24 @@ class ApplicationFlags(BaseFlags):
     """
 
     @flag_value
+    def managed_emoji(self):
+        """:class:`bool`: Returns ``True`` if the application is a managed emoji.
+        """
+        return 1 << 2
+
+    @flag_value
+    def group_dm_create(self):
+        """:class:`bool`: Returns ``True`` if the application can create group DMs.
+        """
+        return 1 << 5
+
+    @flag_value
+    def rpc_has_connected(self):
+        """:class:`bool`: Returns ``True`` if the application has connected to RPC.
+        """
+        return 1 << 11
+
+    @flag_value
     def gateway_presence(self):
         """:class:`bool`: Returns ``True`` if the application is verified and is allowed to
         receive presence information over the gateway.
@@ -1067,3 +1167,16 @@ class ApplicationFlags(BaseFlags):
     def embedded(self):
         """:class:`bool`: Returns ``True`` if the application is embedded within the Discord client."""
         return 1 << 17
+
+    @flag_value
+    def gateway_message_content(self):
+        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds.
+        """
+        return 1 << 18
+
+    @flag_value
+    def gateway_message_content_limited(self):
+        """:class:`bool`: Returns ``True`` if the application is currently pending verification
+        and has hit the guild limit.
+        """
+        return 1 << 19

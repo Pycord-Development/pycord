@@ -150,11 +150,13 @@ class Attachment(Hashable):
         minutes or not valid at all.
     content_type: Optional[:class:`str`]
         The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_
+    ephemeral: :class:`bool`
+        Whether the attachment is ephemeral or not.
 
         .. versionadded:: 1.7
     """
 
-    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type')
+    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral')
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
         self.id: int = int(data['id'])
@@ -166,6 +168,7 @@ class Attachment(Hashable):
         self.proxy_url: str = data.get('proxy_url')
         self._http = state.http
         self.content_type: Optional[str] = data.get('content_type')
+        self.ephemeral: bool = data.get('ephemeral', False)
 
     def is_spoiler(self) -> bool:
         """:class:`bool`: Whether this attachment contains a spoiler."""
@@ -503,11 +506,7 @@ class Message(Hashable):
         .. describe:: hash(x)
 
             Returns the message's hash.
-            
-        .. describe:: len(x)
-        
-            Returns the length of the message's content.
-            
+
     Attributes
     -----------
     tts: :class:`bool`
@@ -716,9 +715,6 @@ class Message(Hashable):
         return (
             f'<{name} id={self.id} channel={self.channel!r} type={self.type!r} author={self.author!r} flags={self.flags!r}>'
         )
-
-    def __len__(self):
-        return len(self.content)
 
     def _try_patch(self, data, key, transform=None) -> None:
         try:

@@ -1087,6 +1087,7 @@ class HTTPClient:
             'rules_channel_id',
             'public_updates_channel_id',
             'preferred_locale',
+            'premium_progress_bar_enabled',
         )
 
         payload = {k: v for k, v in fields.items() if k in valid_keys}
@@ -1426,7 +1427,7 @@ class HTTPClient:
         self, guild_id: Snowflake, role_id: Snowflake, *, reason: Optional[str] = None, **fields: Any
     ) -> Response[role.Role]:
         r = Route('PATCH', '/guilds/{guild_id}/roles/{role_id}', guild_id=guild_id, role_id=role_id)
-        valid_keys = ('name', 'permissions', 'color', 'hoist', 'mentionable')
+        valid_keys = ('name', 'permissions', 'color', 'hoist', 'mentionable', 'icon', 'unicode_emoji')
         payload = {k: v for k, v in fields.items() if k in valid_keys}
         return self.request(r, json=payload, reason=reason)
 
@@ -1702,6 +1703,20 @@ class HTTPClient:
         r = Route(
             'PUT',
             '/applications/{application_id}/guilds/{guild_id}/commands',
+            application_id=application_id,
+            guild_id=guild_id,
+        )
+        return self.request(r, json=payload)
+
+    def bulk_upsert_command_permissions(
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+        payload: List[interactions.EditApplicationCommand],
+    ) -> Response[List[interactions.ApplicationCommand]]:
+        r = Route(
+            'PUT',
+            '/applications/{application_id}/guilds/{guild_id}/commands/permissions',
             application_id=application_id,
             guild_id=guild_id,
         )
