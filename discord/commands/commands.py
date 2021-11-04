@@ -60,7 +60,7 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING: 
+if TYPE_CHECKING:
     from ..interactions import Interaction
 
 def wrap_callback(coro):
@@ -98,7 +98,7 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand):
     cog = None
-    
+
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -142,8 +142,8 @@ class ApplicationCommand(_BaseCommand):
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
-    
+        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore
+
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
@@ -345,7 +345,7 @@ class SlashCommand(ApplicationCommand):
 
         .. note::
 
-            If this is not empty then default_permissions will be set to False.    
+            If this is not empty then default_permissions will be set to False.
 
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
@@ -504,8 +504,11 @@ class SlashCommand(ApplicationCommand):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = "member" if op.input_type.name == "user" else op.input_type.name
-                arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
+                if ctx.guild is None and op.input_type.name == "user":
+                    arg = User(state=ctx.interaction._state, data=int(arg))
+                else:
+                    name = "member" if op.input_type.name == "user" else op.input_type.name
+                    arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
@@ -521,7 +524,7 @@ class SlashCommand(ApplicationCommand):
         for o in self.options:
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
         else:
@@ -529,12 +532,12 @@ class SlashCommand(ApplicationCommand):
 
     async def invoke_autocomplete_callback(self, interaction: Interaction):
         values = { i.name: i.default for i in self.options }
-        
+
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
-                    i["name"]:i["value"] 
+                    i["name"]:i["value"]
                     for i in interaction.data["options"]
                 })
                 ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
@@ -631,7 +634,7 @@ class Option:
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-        
+
         if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
             raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
@@ -639,7 +642,7 @@ class Option:
 
         self.autocomplete = kwargs.pop("autocomplete", None)
         if (
-            self.autocomplete and 
+            self.autocomplete and
             not asyncio.iscoroutinefunction(self.autocomplete)
         ):
             raise TypeError("Autocomplete callback must be a coroutine.")
@@ -848,7 +851,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
-        
+
         self.validate_parameters()
 
         # Context Menu commands don't have permissions
@@ -890,7 +893,7 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
-    
+
     def qualified_name(self):
         return self.name
 
@@ -929,12 +932,12 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-    
+
     def copy(self):
         """Creates a copy of this command.
 
@@ -995,12 +998,12 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-    
+
     def copy(self):
         """Creates a copy of this command.
 
