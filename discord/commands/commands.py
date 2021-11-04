@@ -287,6 +287,36 @@ class ApplicationCommand(_BaseCommand):
         if hook is not None:
             await hook(ctx)
 
+    @property
+    def full_parent_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified parent command name.
+
+        This the base command name required to execute it. For example,
+        in ``/one two three`` the parent name would be ``one two``.
+        """
+        entries = []
+        command = self
+        while command.parent is not None and hasattr(command.parent, "name"):
+            command = command.parent
+            entries.append(command.name)
+
+        return ' '.join(reversed(entries))
+
+    def qualified_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified command name.
+
+        This is the full parent name with the command name as well.
+        For example, in ``/one two three`` the qualified name would be
+        ``one two three``.
+        """
+
+        parent = self.full_parent_name
+
+        if parent:
+            return parent + ' ' + self.name
+        else:
+            return self.name
+
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
 
@@ -305,6 +335,9 @@ class SlashCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     options: List[:class:`Option`]
         The parameters for this command.
+    parent: Optional[:class:`SlashCommandGroup`]
+        The parent group that this command belongs to. ``None`` if there
+        isn't one.
     default_permission: :class:`bool`
         Whether the command is enabled by default when it is added to a guild.
     permissions: List[:class:`Permission`]
@@ -342,6 +375,7 @@ class SlashCommand(ApplicationCommand):
         name = kwargs.get("name") or func.__name__
         validate_chat_input_name(name)
         self.name: str = name
+        self.id = None
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0]
@@ -350,7 +384,9 @@ class SlashCommand(ApplicationCommand):
         )
         validate_chat_input_description(description)
         self.description: str = description
-        self.is_subcommand: bool = False
+        self.parent = kwargs.get('parent')
+        self.is_subcommand: bool = self.parent is not None
+
         self.cog = None
 
         params = self._get_signature_parameters()
@@ -509,8 +545,6 @@ class SlashCommand(ApplicationCommand):
                 ]
                 return await interaction.response.send_autocomplete_result(choices=choices)
 
-    def qualified_name(self):
-        return self.name
 
     def copy(self):
         """Creates a copy of this command.
@@ -593,7 +627,7 @@ class Option:
             minmax_types = (int, float)
         else:
             minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]
+        minmax_typehint = Optional[Union[minmax_types]] # type: ignore
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
@@ -664,8 +698,9 @@ class SlashCommandGroup(ApplicationCommand, Option):
         The description for the command.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    parent_group: Optional[:class:`SlashCommandGroup`]
-        The parent group of this group.
+    parent: Optional[:class:`SlashCommandGroup`]
+        The parent group that this group belongs to. ``None`` if there
+        isn't one.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
     cog: Optional[:class:`Cog`]
@@ -691,7 +726,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         name: str,
         description: str,
         guild_ids: Optional[List[int]] = None,
-        parent_group: Optional[SlashCommandGroup] = None,
+        parent: Optional[SlashCommandGroup] = None,
         **kwargs
     ) -> None:
         validate_chat_input_name(name)
@@ -703,7 +738,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         )
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = []
         self.guild_ids = guild_ids
-        self.parent_group = parent_group
+        self.parent = parent
         self.checks = []
 
         self._before_invoke = None
@@ -723,26 +758,25 @@ class SlashCommandGroup(ApplicationCommand, Option):
             "options": [c.to_dict() for c in self.subcommands],
         }
 
-        if self.parent_group is not None:
+        if self.parent is not None:
             as_dict["type"] = self.input_type.value
 
         return as_dict
 
     def command(self, **kwargs) -> SlashCommand:
         def wrap(func) -> SlashCommand:
-            command = SlashCommand(func, **kwargs)
-            command.is_subcommand = True
+            command = SlashCommand(func, parent=self, **kwargs)
             self.subcommands.append(command)
             return command
 
         return wrap
 
     def command_group(self, name, description) -> SlashCommandGroup:
-        if self.parent_group is not None:
+        if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
 
-        sub_command_group = SlashCommandGroup(name, description, parent_group=self)
+        sub_command_group = SlashCommandGroup(name, description, parent=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
@@ -817,8 +851,11 @@ class ContextMenuCommand(ApplicationCommand):
         
         self.validate_parameters()
 
-        # Context Commands don't have permissions
+        # Context Menu commands don't have permissions
         self.permissions = []
+
+        # Context Menu commands can't have parents
+        self.parent = None
 
     def validate_parameters(self):
         params = self._get_signature_parameters()
