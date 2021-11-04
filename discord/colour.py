@@ -342,6 +342,11 @@ class Colour:
         ``0x000000`` (amoled).
         
         .. versionadded:: 2.0
+        
+        Parameters
+        -----------
+        theme: :class:`str`
+            The theme color to apply, must be one of "dark", "light", or "amoled".
         """
         themes_cls = {
             "dark": 0x2F3136,
@@ -350,7 +355,7 @@ class Colour:
         }
         
         if theme not in themes_cls:
-            raise TypeError("Theme must be \"dark\",  \"light\", or \"amoled\".")
+            raise TypeError("Theme must be \"dark\", \"light\", or \"amoled\".")
         
         return cls(themes_cls[theme])
 
