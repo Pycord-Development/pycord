@@ -189,9 +189,9 @@ Cog
 CogMeta
 ~~~~~~~~
 
-.. attributetable:: discord.ext.commands.CogMeta
+.. attributetable:: discord.cog.CogMeta
 
-.. autoclass:: discord.ext.commands.CogMeta
+.. autoclass:: discord.cog.CogMeta
     :members:
 
 .. _ext_commands_help_command:
@@ -589,22 +589,22 @@ Exceptions
 .. autoexception:: discord.ext.commands.MissingRequiredFlag
     :members:
 
-.. autoexception:: discord.ext.commands.ExtensionError
+.. autoexception:: discord.ExtensionError
     :members:
 
-.. autoexception:: discord.ext.commands.ExtensionAlreadyLoaded
+.. autoexception:: discord.ExtensionAlreadyLoaded
     :members:
 
-.. autoexception:: discord.ext.commands.ExtensionNotLoaded
+.. autoexception:: discord.ExtensionNotLoaded
     :members:
 
-.. autoexception:: discord.ext.commands.NoEntryPointError
+.. autoexception:: discord.NoEntryPointError
     :members:
 
-.. autoexception:: discord.ext.commands.ExtensionFailed
+.. autoexception:: discord.ExtensionFailed
     :members:
 
-.. autoexception:: discord.ext.commands.ExtensionNotFound
+.. autoexception:: discord.ExtensionNotFound
     :members:
 
 .. autoexception:: discord.ext.commands.CommandRegistrationError
