@@ -505,7 +505,9 @@ class SlashCommand(ApplicationCommand):
                 <= SlashCommandOptionType.role.value
             ):
                 if ctx.guild is None and op.input_type.name == "user":
-                    arg = User(state=ctx.interaction._state, data=int(arg))
+                    _data = ctx.interaction.data["resolved"]["users"][arg]
+                    _data["id"] = int(arg)
+                    arg = User(state=ctx.interaction._state, data=_data)
                 else:
                     name = "member" if op.input_type.name == "user" else op.input_type.name
                     arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
