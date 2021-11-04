@@ -106,7 +106,6 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
@@ -131,6 +130,27 @@ class ApplicationCommandMixin:
             ``None`` is returned instead.
         """
         return self.application_commands.pop(command.id)
+
+    def get_command(self, id: str, /) -> Optional[ApplicationCommand]:
+        """Get a :class:`.ApplicationCommand` from the internal list
+        of commands.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        id: :class:`str`
+            The id of the command to get.
+
+        Returns
+        --------
+        Optional[:class:`ApplicationCommand`]
+            The command that was requested. If not found, returns ``None``.
+        """
+
+        return self.application_commands.get(id)
+
+    get_application_command = get_command
 
     async def sync_commands(self) -> None:
         """|coro|
