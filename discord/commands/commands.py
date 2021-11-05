@@ -538,7 +538,11 @@ class SlashCommand(ApplicationCommand):
                     for i in interaction.data["options"]
                 })
                 ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
-                result = await option.autocomplete(ctx)
+                if asyncio.iscoroutinefunction(option.autocomplete):
+                    result = await option.autocomplete(ctx)
+                else:
+                    result = option.autocomplete(ctx)
+                    
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
@@ -638,11 +642,6 @@ class Option:
             raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
 
         self.autocomplete = kwargs.pop("autocomplete", None)
-        if (
-            self.autocomplete and 
-            not asyncio.iscoroutinefunction(self.autocomplete)
-        ):
-            raise TypeError("Autocomplete callback must be a coroutine.")
 
     def to_dict(self) -> Dict:
         as_dict = {
