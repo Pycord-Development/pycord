@@ -64,6 +64,12 @@ from .enums import InteractionType
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
 
+__all__ = (
+    'ApplicationCommandMixin',
+    'Bot',
+    'AutoShardedBot',
+)
+
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
     application command compatibility.
