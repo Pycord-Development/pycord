@@ -542,11 +542,11 @@ class SlashCommand(ApplicationCommand):
                     result = await option.autocomplete(ctx)
                 else:
                     result = option.autocomplete(ctx)
-                    
+
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
-                ]
+                ][:25]
                 return await interaction.response.send_autocomplete_result(choices=choices)
 
 
