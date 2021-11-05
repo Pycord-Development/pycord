@@ -647,12 +647,7 @@ class Option:
             raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
 
         self.autocomplete = kwargs.pop("autocomplete", None)
-        if (
-            self.autocomplete and
-            not asyncio.iscoroutinefunction(self.autocomplete)
-        ):
-            raise TypeError("Autocomplete callback must be a coroutine.")
-            
+
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
