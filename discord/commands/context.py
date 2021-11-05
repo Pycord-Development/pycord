@@ -30,6 +30,7 @@ import discord.abc
 
 if TYPE_CHECKING:
     import discord
+    from discord import Bot
     from discord.state import ConnectionState
 
     from .commands import ApplicationCommand, Option
@@ -65,7 +66,7 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: "discord.Bot", interaction: Interaction):
+    def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
@@ -174,3 +175,11 @@ class AutocompleteContext:
         self.focused = focused
         self.value = value
         self.options = options
+
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
+        if self.command is None:
+            return None
+       
+        return self.command.cog

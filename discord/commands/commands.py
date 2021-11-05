@@ -543,11 +543,15 @@ class SlashCommand(ApplicationCommand):
                     for i in interaction.data["options"]
                 })
                 ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
-                result = await option.autocomplete(ctx)
+                if asyncio.iscoroutinefunction(option.autocomplete):
+                    result = await option.autocomplete(ctx)
+                else:
+                    result = option.autocomplete(ctx)
+
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
-                ]
+                ][:25]
                 return await interaction.response.send_autocomplete_result(choices=choices)
 
 
@@ -648,7 +652,7 @@ class Option:
             not asyncio.iscoroutinefunction(self.autocomplete)
         ):
             raise TypeError("Autocomplete callback must be a coroutine.")
-
+            
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
