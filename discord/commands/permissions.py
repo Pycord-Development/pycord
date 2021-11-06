@@ -49,7 +49,7 @@ class Permission:
     type: :class:`int`
         An integer representing the type of the permission.
     permission: :class:`bool`
-        A boolean representing the permission's value ie. whether the 
+        A boolean representing the permission's value ie. wether the 
         condition should be true or false.
     guild_id: :class:`int`
         The integer representing the id of the guild that the permission 
