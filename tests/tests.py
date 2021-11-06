@@ -200,7 +200,7 @@ class TestPyCordTestingFixtures(PyCordBaseTestCase):
             'GET',
             'https://httpbin.org/get',
             allow_through_proxy=True)
-        # Ignores the NoneType checking error, as it is guarenteed to not be None
+        # Ignores the NoneType checking error, as it is guaranteed to not be None
         self.assertEqual(resp.status, 200)  # type: ignore
 
     async def test_proxy_blocks(self) -> None:
