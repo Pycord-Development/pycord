@@ -45,12 +45,11 @@ class Permission:
     -----------
     id: Union[:class:`int`, :class:`str`]
         A string or integer that represents the or helps get
-        the id of the user / role that the permission is tied to.
+        the id of the user or role that the permission is tied to.
     type: :class:`int`
         An integer representing the type of the permission.
     permission: :class:`bool`
-        A boolean representing the permission's value ie. wether the 
-        condition should be true or false.
+        A boolean representing the permission's value.
     guild_id: :class:`int`
         The integer representing the id of the guild that the permission 
         may be tied to.
