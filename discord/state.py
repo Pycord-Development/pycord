@@ -147,14 +147,14 @@ class ConnectionState:
         _parsers: Dict[str, Callable[[Dict[str, Any]], None]]
 
     def __init__(
-        self,
-        *,
-        dispatch: Callable,
-        handlers: Dict[str, Callable],
-        hooks: Dict[str, Callable],
-        http: HTTPClient,
-        loop: asyncio.AbstractEventLoop,
-        **options: Any,
+            self,
+            *,
+            dispatch: Callable,
+            handlers: Dict[str, Callable],
+            hooks: Dict[str, Callable],
+            http: HTTPClient,
+            loop: asyncio.AbstractEventLoop,
+            **options: Any
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = loop
         self.http: HTTPClient = http
