@@ -450,7 +450,7 @@ class SlashCommand(ApplicationCommand):
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
 
-            option.default = option.default or p_obj.default
+            option.default = option.default if option.default is not None else p_obj.default
 
             if option.default == inspect.Parameter.empty:
                 option.default = None
@@ -932,9 +932,9 @@ class UserCommand(ContextMenuCommand):
         
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:
+        else:   
             await self.callback(ctx, target)
-    
+
     def copy(self):
         """Creates a copy of this command.
 
