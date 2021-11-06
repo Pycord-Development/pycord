@@ -30,9 +30,10 @@ import discord.abc
 
 if TYPE_CHECKING:
     import discord
+    from discord import Bot
     from discord.state import ConnectionState
 
-    from .commands import ApplicationCommand
+    from .commands import ApplicationCommand, Option
     from ..cog import Cog
 
 from ..guild import Guild
@@ -44,6 +45,7 @@ from ..utils import cached_property
 
 __all__ = (
     "ApplicationContext",
+    "AutocompleteContext"
 )
 
 class ApplicationContext(discord.abc.Messageable):
@@ -64,7 +66,7 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: "discord.Bot", interaction: Interaction):
+    def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
@@ -137,7 +139,46 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        if self.command is None:
+            return None
+       
+        return self.command.cog
+
+
+class AutocompleteContext:
+    """Represents context for a slash command's option autocomplete.
+
+    This class is not created manually and is instead passed to an Option's autocomplete callback.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    interaction: :class:`.Interaction`
+        The interaction object that invoked the autocomplete.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
+    focused: :class:`.Option`
+        The option the user is currently typing.
+    value: :class:`.str`
+        The content of the focused option.
+    options :class:`.dict`
+        A name to value mapping of the options that the user has selected before this option.
+    """
+
+    __slots__ = ("interaction", "command", "focused", "value", "options")
+    
+    def __init__(self, interaction: Interaction, *, command: ApplicationCommand, focused: Option, value: str, options: dict) -> None:
+        self.interaction = interaction
+        self.command = command
+        self.focused = focused
+        self.value = value
+        self.options = options
+
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
        

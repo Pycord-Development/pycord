@@ -772,6 +772,12 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (both guilds and DMs)
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
+
+        .. note::
+
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
+            Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return (1 << 9) | (1 << 12)
 
@@ -799,6 +805,21 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (only for guilds)
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
+
+        Without the :attr:`ApplicationFlags.gateway_message_content` intent enabled, the following fields are either an empty string or empty array:
+
+        - :attr:`Message.content`
+        - :attr:`Message.embeds`
+        - :attr:`Message.attachments`
+        - :attr:`Message.components`
+
+        For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
+
+        .. note::
+
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the messages.
+            Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return 1 << 9
 
