@@ -625,10 +625,11 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+
         if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int,)
+            minmax_types = (int, type(None))
         elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float)
+            minmax_types = (int, float, type(None))
         else:
             minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]] # type: ignore
