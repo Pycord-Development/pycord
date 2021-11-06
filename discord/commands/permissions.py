@@ -35,6 +35,26 @@ __all__ = (
 )
 
 class Permission:
+    """The classed used in the application command decorators
+    to hash permission data into a dict to be sent to the 
+    discord API later on.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    id: Union[:class:`int`, :class:`str`]
+        A string or integer that represents the or helps get
+        the id of the user / role that the permission is tied to.
+    type: :class:`int`
+        An integer representing the type of the permission.
+    permission: :class:`bool`
+        A boolean representing the permission's value ie. whether the 
+        condition should be true or false.
+    guild_id: :class:`int`
+        The integer representing the id of the guild that the permission 
+        may be tied to.
+    """
     def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: int = None):
         self.id = id
         self.type = type
