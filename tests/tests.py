@@ -14,8 +14,9 @@ from aiohttp.client_reqrep import ClientResponse
 from aiohttp.client_exceptions import ServerDisconnectedError
 from discord.http import HTTPClient, Route
 from persistqueue import SQLiteQueue
-from proxy.http.parser import HttpParser
 from proxy import Proxy
+
+from parsing import CombinedHttpRequest
 
 RANDOM_ID_CHARS = string.ascii_letters + string.digits
 
@@ -35,14 +36,22 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         self.ssl = ssl.create_default_context(
             cafile=os.getenv('PYCORD_CERT_PATH'))
         self.request_queue = SQLiteQueue('testing.q')
-        self.token = os.getenv('PYCORD_BOT_TOKEN')
+        # Setting default value allows pycord to raise LoginFailure
+        self.token = os.getenv('PYCORD_BOT_TOKEN', '')
         self.http_client = HTTPClient(proxy=self.proxy_url)
         self.request_ids = set()
         await self.http_client.static_login(self.token)
 
     def _generate_request_id(self) -> str:
+        """Generates a unique request ID
+
+        Returns
+        -------
+        str
+            A four digit unique request ID
+        """
         new_id = ''.join(random.sample(RANDOM_ID_CHARS, 4))
-        # Ensure that a random ID doesnt clash
+        # Ensure that a random ID does not clash
         if new_id in self.request_ids:
             return self._generate_request_id()
         else:
@@ -50,6 +59,13 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             return new_id
 
     def _tracking_header(self) -> Dict[str, str]:
+        """Generate a header used to track request
+
+        Returns
+        -------
+        Dict[str, str]
+            A dictionary intended to be merged with all other headers
+        """
         return {'X-PyCord-Testing-ReqId': self._generate_request_id()}
 
     async def asyncTearDown(self) -> None:
@@ -74,7 +90,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
     async def proxied_route_request(self,
                                     route: Route,
                                     allow_through_proxy: bool = False,
-                                    ) -> Tuple[HttpParser, Optional[Union[Dict[str, Any], str]]]:
+                                    ) -> Tuple[CombinedHttpRequest, Optional[Union[Dict[str, Any], str]]]:
         """Send a request through the proxy to view request data
 
         This function will make a request to a URL through the testing proxy
@@ -84,11 +100,11 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 
         Parameters
         ----------
-        route : Route
+        route: Route
             The API endpoint to make the request to
-        allow_through_proxy : bool
+        allow_through_proxy: bool
             Should the request continue to the destination? (defaults to False)
-        headers : Optional[dict]
+        headers: Optional[dict]
             The headers to be sent with the request, defaults to an empty dict
         Returns
         -------
@@ -100,12 +116,15 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         try:
             resp = await self.http_client.request(route, ssl=self.ssl, headers={
                 'X-Allow-Through': str(int(allow_through_proxy))
-            })
+            } | self._tracking_header())
         except ServerDisconnectedError:  # Raised when the proxy blocks request
             resp = None
         finally:
-            req = self.request_queue.get()
-            return(req, resp)
+            # Queue module has weird typing that creates errors
+            req: CombinedHttpRequest = self.request_queue.get()  # type: ignore
+            # Ignore unreachable code warning, as resp is always not None
+            # provided the try block is executed or ServerDisconnectedError is raised
+            return (req, resp)  # type: ignore
 
     async def proxied_request(self,
                               method: str,
@@ -113,7 +132,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
                               allow_through_proxy: bool = False,
                               headers: Dict[str, str] = {},
                               body: Union[str, bytes, Dict[str, Any]] = ''
-                              ) -> Tuple[HttpParser, Optional[ClientResponse]]:
+                              ) -> Tuple[CombinedHttpRequest, Optional[ClientResponse]]:
         """Send a request through the proxy to view request data
 
         This function will make a request to a URL through the testing proxy
@@ -123,15 +142,15 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 
         Parameters
         ----------
-        method : str
-            The request method (GET, POST, etc)
-        url : str
+        method: str
+            The request method(GET, POST, etc)
+        url: str
             The URL to request
-        allow_through_proxy : bool
+        allow_through_proxy: bool
             Should the request continue to the destination? (defaults to False)
-        headers : Optional[dict]
+        headers: Optional[dict]
             The headers to be sent with the request, defaults to an empty dict
-        body : Union[str, bytes, Dict[str, Any]]
+        body: Union[str, bytes, Dict[str, Any]]
             The body of the request, can either be
             a string, json data, or raw bytes
         Returns
@@ -166,19 +185,25 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         except ServerDisconnectedError:  # Raised when the proxy blocks request
             resp = None
         finally:
-            req = self.request_queue.get()
-            return (req, resp)
+            # Queue module has weird typing that creates errors
+            req: CombinedHttpRequest = self.request_queue.get()  # type: ignore
+            # Ignore unreachable code warning, as resp is always not None
+            # provided the try block is executed or ServerDisconnectedError is raised
+            return (req, resp)  # type: ignore
 
 
 class TestPyCordTestingFixtures(PyCordBaseTestCase):
 
     async def test_proxy_sends(self) -> None:
+        """Tests if the proxy will allow requests through"""
         _, resp = await self.proxied_request(
             'GET',
             'https://httpbin.org/get',
             allow_through_proxy=True)
-        self.assertEqual(resp.status, 200)
+        # Ignores the NoneType checking error, as it is guarenteed to not be None
+        self.assertEqual(resp.status, 200)  # type: ignore
 
     async def test_proxy_blocks(self) -> None:
+        """Tests if the proxy blocks requests"""
         _, resp = await self.proxied_request('GET', 'https://httpbin.org/get', allow_through_proxy=False)
         self.assertIsNone(resp)
