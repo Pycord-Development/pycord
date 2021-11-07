@@ -27,27 +27,27 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-import re
 import io
+import re
 from os import PathLike
-from typing import Dict, TYPE_CHECKING, Union, List, Optional, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type
+from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type
 
 from . import utils
-from .reaction import Reaction
-from .emoji import Emoji
-from .partial_emoji import PartialEmoji
-from .enums import MessageType, ChannelType, try_enum
-from .errors import InvalidArgument, HTTPException
 from .components import _component_factory
 from .embeds import Embed
-from .member import Member
-from .flags import MessageFlags
+from .emoji import Emoji
+from .enums import MessageType, ChannelType, try_enum
+from .errors import InvalidArgument, HTTPException
 from .file import File
-from .utils import escape_mentions, MISSING
+from .flags import MessageFlags
 from .guild import Guild
+from .member import Member
 from .mixins import Hashable
+from .partial_emoji import PartialEmoji
+from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
+from .utils import escape_mentions, MISSING
 
 if TYPE_CHECKING:
     from .types.message import (
