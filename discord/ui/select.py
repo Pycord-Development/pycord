@@ -45,6 +45,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    # https://github.com/PyCQA/pylint/issues/3525
+    # pylint: disable=cyclic-import
+
     from .view import View
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import (
