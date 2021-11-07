@@ -51,8 +51,8 @@ class Permission:
     permission: :class:`bool`
         A boolean representing the permission's value.
     guild_id: :class:`int`
-        The integer representing the id of the guild that the permission 
-        may be tied to.
+        The integer which represents the id of the guild that the
+        permission may be tied to.
     """
     def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: int = None):
         self.id = id
@@ -64,6 +64,27 @@ class Permission:
         return {"id": self.id, "type": self.type, "permission": self.permission}
 
 def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
+    """The method used to specify application command permissions 
+    for specific users or roles using their id.
+
+    This method is meant to be used as a decorator.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    role_id: :class:`int`
+        An integer which represents the id of the role that the
+        permission may be tied to.
+    user_id: :class:`int`
+        An integer which represents the id of the user that the
+        permission may be tied to.
+    permission: :class:`bool`
+        A boolean representing the permission's value.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
     def decorator(func: Callable):
         if not role_id is None:
             app_cmd_perm = Permission(role_id, 1, permission, guild_id)
