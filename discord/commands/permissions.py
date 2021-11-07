@@ -105,6 +105,21 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
     return decorator
 
 def has_role(item: Union[int, str], guild_id: int = None):
+    """The method used to specify application command role restrictions.
+    
+    This method is meant to be used as a decorator.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    item: Union[:class:`int`, :class:`str`]
+        An integer or string that represent the id or name of the role 
+        that the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
