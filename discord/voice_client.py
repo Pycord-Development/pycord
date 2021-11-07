@@ -41,16 +41,16 @@ Some documentation to refer to:
 from __future__ import annotations
 
 import asyncio
-import socket
 import logging
+import socket
 import struct
 import threading
 from typing import Any, Callable, List, Optional, TYPE_CHECKING, Tuple
 
 from . import opus, utils
 from .backoff import ExponentialBackoff
-from .gateway import *
 from .errors import ClientException, ConnectionClosed
+from .gateway import *
 from .player import AudioPlayer, AudioSource
 from .utils import MISSING
 
