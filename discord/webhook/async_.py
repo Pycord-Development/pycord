@@ -1381,6 +1381,7 @@ class Webhook(BaseWebhook):
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+
         Raises
         --------
         HTTPException
