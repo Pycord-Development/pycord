@@ -199,6 +199,19 @@ def is_user(user: int, guild_id: int = None):
     return decorator
 
 def is_owner(guild_id: int = None):
+    """The method used to limit application commands exclusively
+    to the owner of the bot.
+    
+    This method is meant to be used as a decorator.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
