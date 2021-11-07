@@ -27,6 +27,9 @@ from __future__ import annotations
 from typing import Dict, List, Optional, TYPE_CHECKING, Any, Tuple, Union
 
 if TYPE_CHECKING:
+    # https://github.com/PyCQA/pylint/issues/3525
+    # pylint: disable=cyclic-import
+
     from aiohttp import ClientResponse, ClientWebSocketResponse
 
     try:
