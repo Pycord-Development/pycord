@@ -29,6 +29,9 @@ from typing import TYPE_CHECKING, Optional, Union
 import discord.abc
 
 if TYPE_CHECKING:
+    # https://github.com/PyCQA/pylint/issues/3525
+    # pylint: disable=cyclic-import
+
     import discord
     from discord import Bot
     from discord.state import ConnectionState
