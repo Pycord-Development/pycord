@@ -136,6 +136,22 @@ def has_role(item: Union[int, str], guild_id: int = None):
     return decorator
 
 def has_any_role(*items: Union[int, str], guild_id: int = None):
+    """The method used to specify multiple application command role restrictions,
+    The application command runs if the invoker has **any** of the specified roles.
+    
+    This method is meant to be used as a decorator.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    *items: Union[:class:`int`, :class:`str`]
+        The integers or strings that represent the ids or names of the roles
+        that the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
@@ -153,6 +169,20 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
     return decorator
 
 def is_user(user: int, guild_id: int = None):
+    """The method used to specify application command user restrictions.
+    
+    This method is meant to be used as a decorator.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    user: :class:`int`
+        An integer that represent the id the user the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
