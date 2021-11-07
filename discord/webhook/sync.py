@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 # a bit easier to write. It's an unfortunate design. Originally, these types were
 # merged and an adapter was used to differentiate between the async and sync versions.
 # However, this proved to be difficult to provide typings for, so here we are.
+# pylint: disable=duplicate-code
 
 from __future__ import annotations
 

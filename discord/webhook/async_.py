@@ -48,6 +48,8 @@ from ..mixins import Hashable
 from ..channel import PartialMessageable
 from ..threads import Thread
 
+# See sync.py # pylint: disable=duplicate-code
+
 __all__ = (
     'Webhook',
     'WebhookMessage',
