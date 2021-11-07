@@ -1273,8 +1273,8 @@ class Message(Hashable):
             payload['embeds'] = [e.to_dict() for e in embeds]
 
         if suppress is not MISSING:
-            flags = MessageFlags._from_value(self.flags.value)
-            flags.suppress_embeds = suppress
+            flags = MessageFlags._from_value(self.flags.value)  # pylint: disable=protected-access
+            flags.suppress_embeds = suppress  # pylint: disable=assigning-non-slot
             payload['flags'] = flags.value
 
         if allowed_mentions is MISSING:
@@ -1796,7 +1796,7 @@ class PartialMessage(Hashable):
         except KeyError:
             pass
         else:
-            flags = MessageFlags._from_value(0)
+            flags = MessageFlags._from_value(0)  # pylint: disable=protected-access
             flags.suppress_embeds = suppress
             fields['flags'] = flags.value
 
