@@ -998,7 +998,7 @@ class Message(Hashable):
         )
 
     @utils.cached_slot_property('_cs_system_content')
-    def system_content(self):
+    def system_content(self) -> str:
         r""":class:`str`: A property that returns the content that is rendered
         regardless of the :attr:`Message.type`.
 
@@ -1007,29 +1007,31 @@ class Message(Hashable):
         returns an English message denoting the contents of the system message.
         """
 
+        return_msg = ''  # So that pylint doesn't complain about this being used before it's set
+
         if self.type is MessageType.default:
-            return self.content
+            return_msg = self.content
 
         if self.type is MessageType.recipient_add:
             if self.channel.type is ChannelType.group:
-                return f'{self.author.name} added {self.mentions[0].name} to the group.'
+                return_msg = f'{self.author.name} added {self.mentions[0].name} to the group.'
             else:
-                return f'{self.author.name} added {self.mentions[0].name} to the thread.'
+                return_msg = f'{self.author.name} added {self.mentions[0].name} to the thread.'
 
         if self.type is MessageType.recipient_remove:
             if self.channel.type is ChannelType.group:
-                return f'{self.author.name} removed {self.mentions[0].name} from the group.'
+                return_msg = f'{self.author.name} removed {self.mentions[0].name} from the group.'
             else:
-                return f'{self.author.name} removed {self.mentions[0].name} from the thread.'
+                return_msg = f'{self.author.name} removed {self.mentions[0].name} from the thread.'
 
         if self.type is MessageType.channel_name_change:
-            return f'{self.author.name} changed the channel name: **{self.content}**'
+            return_msg = f'{self.author.name} changed the channel name: **{self.content}**'
 
         if self.type is MessageType.channel_icon_change:
-            return f'{self.author.name} changed the channel icon.'
+            return_msg = f'{self.author.name} changed the channel icon.'
 
         if self.type is MessageType.pins_add:
-            return f'{self.author.name} pinned a message to this channel.'
+            return_msg = f'{self.author.name} pinned a message to this channel.'
 
         if self.type is MessageType.new_member:
             formats = [
@@ -1049,66 +1051,71 @@ class Message(Hashable):
             ]
 
             created_at_ms = int(self.created_at.timestamp() * 1000)
-            return formats[created_at_ms % len(formats)].format(self.author.name)
+            return_msg = formats[created_at_ms % len(formats)].format(self.author.name)
 
         if self.type is MessageType.premium_guild_subscription:
             if not self.content:
-                return f'{self.author.name} just boosted the server!'
+                return_msg = f'{self.author.name} just boosted the server!'
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times!'
+                return_msg = f'{self.author.name} just boosted the server **{self.content}** times!'
 
         if self.type is MessageType.premium_guild_tier_1:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**'
+                return_msg = f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**'
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 1!**'
+                return_msg = f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 1!**'
 
         if self.type is MessageType.premium_guild_tier_2:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**'
+                return_msg = f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**'
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 2!**'
+                return_msg = f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 2!**'
 
         if self.type is MessageType.premium_guild_tier_3:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**'
+                return_msg = f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**'
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 3!**'
+                return_msg = f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 3!**'
 
         if self.type is MessageType.channel_follow_add:
-            return f'{self.author.name} has added {self.content} to this channel'
+            return_msg = f'{self.author.name} has added {self.content} to this channel'
 
         if self.type is MessageType.guild_stream:
             # the author will be a Member
-            return f'{self.author.name} is live! Now streaming {self.author.activity.name}'  # type: ignore
+            return_msg = f'{self.author.name} is live! Now streaming {self.author.activity.name}'  # type: ignore
 
         if self.type is MessageType.guild_discovery_disqualified:
-            return 'This server has been removed from Server Discovery because it no longer passes all the requirements. Check Server Settings for more details.'
+            return_msg = 'This server has been removed from Server Discovery because it no longer passes all the ' \
+                         'requirements. Check Server Settings for more details.'
 
         if self.type is MessageType.guild_discovery_requalified:
-            return 'This server is eligible for Server Discovery again and has been automatically relisted!'
+            return_msg = 'This server is eligible for Server Discovery again and has been automatically relisted!'
 
         if self.type is MessageType.guild_discovery_grace_period_initial_warning:
-            return 'This server has failed Discovery activity requirements for 1 week. If this server fails for 4 weeks in a row, it will be automatically removed from Discovery.'
+            return_msg = 'This server has failed Discovery activity requirements for 1 week. If this server fails ' \
+                         'for 4 weeks in a row, it will be automatically removed from Discovery.'
 
         if self.type is MessageType.guild_discovery_grace_period_final_warning:
-            return 'This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails for 1 more week, it will be removed from Discovery.'
+            return_msg = 'This server has failed Discovery activity requirements for 3 weeks in a row. If this ' \
+                         'server fails for 1 more week, it will be removed from Discovery.'
 
         if self.type is MessageType.thread_created:
-            return f'{self.author.name} started a thread: **{self.content}**. See all **threads**.'
+            return_msg = f'{self.author.name} started a thread: **{self.content}**. See all **threads**.'
 
         if self.type is MessageType.reply:
-            return self.content
+            return_msg = self.content
 
         if self.type is MessageType.thread_starter_message:
             if self.reference is None or self.reference.resolved is None:
-                return 'Sorry, we couldn\'t load the first message in this thread'
+                return_msg = 'Sorry, we couldn\'t load the first message in this thread'
 
             # the resolved message for the reference will be a Message
-            return self.reference.resolved.content  # type: ignore
+            return_msg = self.reference.resolved.content  # type: ignore # pylint: disable=no-member
 
         if self.type is MessageType.guild_invite_reminder:
-            return 'Wondering who to invite?\nStart by inviting anyone who can help you build the server!'
+            return_msg = 'Wondering who to invite?\nStart by inviting anyone who can help you build the server!'
+
+        return return_msg
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
         """|coro|
