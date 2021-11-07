@@ -35,16 +35,16 @@ __all__ = (
 )
 
 class Permission:
-    """The classed used in the application command decorators
-    to hash permission data into a dict using the :meth:`to_dict`
-    method to be sent to the discord API later on.
+    """The class used in the application command decorators
+    to hash permission data into a dictionary using the
+    :meth:`to_dict` method to be sent to the discord API later on.
 
     .. versionadded:: 2.0
 
     Attributes
     -----------
     id: Union[:class:`int`, :class:`str`]
-        A string or integer that represents the or helps get
+        A string or integer that represents or helps get
         the id of the user or role that the permission is tied to.
     type: :class:`int`
         An integer representing the type of the permission.
@@ -178,7 +178,7 @@ def is_user(user: int, guild_id: int = None):
     Attributes
     -----------
     user: :class:`int`
-        An integer that represent the id the user the permission is tied to.
+        An integer that represent the id of the user that the permission is tied to.
     guild_id: :class:`int`
         The integer which represents the id of the guild that the
         permission may be tied to.
