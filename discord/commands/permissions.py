@@ -41,7 +41,7 @@ class Permission:
 
     .. versionadded:: 2.0
 
-    Parameters
+    Attributes
     -----------
     id: Union[:class:`int`, :class:`str`]
         A string or integer that represents or helps get
