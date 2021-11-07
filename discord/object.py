@@ -76,9 +76,9 @@ class Object(Hashable):
         The ID of the object.
     """
 
-    def __init__(self, id: SupportsIntCast):
+    def __init__(self, id: SupportsIntCast):  # pylint: disable=redefined-builtin
         try:
-            id = int(id)
+            id = int(id)  # pylint: disable=redefined-builtin
         except ValueError:
             raise TypeError(f'id parameter must be convertible to int not {id.__class__!r}') from None
         else:
