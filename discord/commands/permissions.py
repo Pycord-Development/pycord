@@ -41,7 +41,7 @@ class Permission:
 
     .. versionadded:: 2.0
 
-    Attributes
+    Parameters
     -----------
     id: Union[:class:`int`, :class:`str`]
         A string or integer that represents or helps get
@@ -71,7 +71,7 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
 
     .. versionadded:: 2.0
 
-    Attributes
+    Parameters
     -----------
     role_id: :class:`int`
         An integer which represents the id of the role that the
@@ -111,7 +111,7 @@ def has_role(item: Union[int, str], guild_id: int = None):
     
     .. versionadded:: 2.0
     
-    Attributes
+    Parameters
     -----------
     item: Union[:class:`int`, :class:`str`]
         An integer or string that represent the id or name of the role 
@@ -143,7 +143,7 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
     
     .. versionadded:: 2.0
     
-    Attributes
+    Parameters
     -----------
     *items: Union[:class:`int`, :class:`str`]
         The integers or strings that represent the ids or names of the roles
@@ -175,7 +175,7 @@ def is_user(user: int, guild_id: int = None):
     
     .. versionadded:: 2.0
     
-    Attributes
+    Parameters
     -----------
     user: :class:`int`
         An integer that represent the id of the user that the permission is tied to.
@@ -206,7 +206,7 @@ def is_owner(guild_id: int = None):
     
     .. versionadded:: 2.0
     
-    Attributes
+    Parameters
     -----------
     guild_id: :class:`int`
         The integer which represents the id of the guild that the
