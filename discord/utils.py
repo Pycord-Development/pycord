@@ -66,7 +66,7 @@ import warnings
 from .errors import InvalidArgument, HTTPException
 
 try:
-    import orjson
+    import orjson  # pylint: disable=import-error
 except ModuleNotFoundError:
     HAS_ORJSON = False
 else:
@@ -322,7 +322,7 @@ def oauth_url(
     return url
 
 
-def snowflake_time(id: int) -> datetime.datetime:
+def snowflake_time(id: int) -> datetime.datetime:  # pylint: disable=redefined-builtin
     """
     Parameters
     -----------
@@ -626,7 +626,10 @@ class SnowflakeList(array.array):
 
     if TYPE_CHECKING:
 
-        def __init__(self, data: Iterable[int], *, is_sorted: bool = False):
+        def __init__(self,
+                     data: Iterable[int],  # pylint: disable=unused-argument
+                     *,
+                     is_sorted: bool = False):  # pylint: disable=super-init-not-called,unused-argument
             ...
 
     def __new__(cls, data: Iterable[int], *, is_sorted: bool = False):
@@ -916,8 +919,8 @@ def normalise_optional_params(parameters: Iterable[Any]) -> Tuple[Any, ...]:
 
 def evaluate_annotation(
     tp: Any,
-    globals: Dict[str, Any],
-    locals: Dict[str, Any],
+    globals: Dict[str, Any],  # pylint: disable=redefined-builtin
+    locals: Dict[str, Any],  # pylint: disable=redefined-builtin
     cache: Dict[str, Any],
     *,
     implicit_str: bool = True,
@@ -939,7 +942,7 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, '__origin__'):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
+            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore  # pylint: disable=no-member
                 converted = Union[args]  # type: ignore
                 return evaluate_annotation(converted, globals, locals, cache)
 
@@ -983,7 +986,7 @@ def resolve_annotation(
     if isinstance(annotation, str):
         annotation = ForwardRef(annotation)
 
-    locals = globalns if localns is None else localns
+    locals = globalns if localns is None else localns  # pytype: disable=redefined-builtin
     if cache is None:
         cache = {}
     return evaluate_annotation(annotation, globalns, locals, cache)
@@ -1058,8 +1061,9 @@ def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
 
 
 def basic_autocomplete(values: Union[Iterable[str],
-                                     Callable[[Interaction], Union[Iterable[str], Coroutine[Iterable[str]]]],
-                                     Coroutine[Iterable[str]]]) -> Callable[[Interaction, str], Coroutine[List[str]]]:
+                                     Callable[[AutocompleteContext], Union[Iterable[str], Coroutine[Iterable[str]]]],
+                                     Coroutine[Iterable[str]]]) -> Callable[[AutocompleteContext, str],
+                                                                            Coroutine[List[str]]]:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
     it will be called with the interaction.
@@ -1075,7 +1079,7 @@ def basic_autocomplete(values: Union[Iterable[str],
 
         # or
 
-        async def autocomplete(interaction):
+        async def autocomplete(ctx):
             return ("foo", "bar", "baz", interaction.user.name)
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
@@ -1098,7 +1102,7 @@ def basic_autocomplete(values: Union[Iterable[str],
         _values = values  # since we reassign later, python considers it local if we don't do this
 
         if callable(_values):
-            _values = _values(interaction)
+            _values = _values(ctx)
         if asyncio.iscoroutine(_values):
             _values = await _values
         return ([x for x in _values if x.lower().startswith(ctx.value.lower())])[:25]
