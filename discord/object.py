@@ -25,14 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from . import utils
-from .mixins import Hashable
-
 from typing import (
     SupportsInt,
     TYPE_CHECKING,
     Union,
 )
+
+from . import utils
+from .mixins import Hashable
 
 if TYPE_CHECKING:
     import datetime
