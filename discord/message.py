@@ -1159,42 +1159,42 @@ class Message(Hashable):
 
     @overload
     async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
-        embed: Optional[Embed] = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
+            self,
+            *,
+            content: Optional[str] = ...,
+            embed: Optional[Embed] = ...,
+            attachments: List[Attachment] = ...,
+            suppress: bool = ...,
+            delete_after: Optional[float] = ...,
+            allowed_mentions: Optional[AllowedMentions] = ...,
+            view: Optional[View] = ...,
     ) -> Message:
         ...
 
     @overload
     async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
-        embeds: List[Embed] = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
+            self,
+            *,
+            content: Optional[str] = ...,
+            embeds: List[Embed] = ...,
+            attachments: List[Attachment] = ...,
+            suppress: bool = ...,
+            delete_after: Optional[float] = ...,
+            allowed_mentions: Optional[AllowedMentions] = ...,
+            view: Optional[View] = ...,
     ) -> Message:
         ...
 
     async def edit(
-        self,
-        content: Optional[str] = MISSING,
-        embed: Optional[Embed] = MISSING,
-        embeds: List[Embed] = MISSING,
-        attachments: List[Attachment] = MISSING,
-        suppress: bool = MISSING,
-        delete_after: Optional[float] = None,
-        allowed_mentions: Optional[AllowedMentions] = MISSING,
-        view: Optional[View] = MISSING,
+            self,
+            content: Optional[str] = MISSING,
+            embed: Optional[Embed] = MISSING,
+            embeds: List[Embed] = MISSING,
+            attachments: List[Attachment] = MISSING,
+            suppress: bool = MISSING,
+            delete_after: Optional[float] = None,
+            allowed_mentions: Optional[AllowedMentions] = MISSING,
+            view: Optional[View] = MISSING,
     ) -> Message:
         """|coro|
 
