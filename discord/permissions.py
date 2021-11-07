@@ -578,10 +578,10 @@ def _augment_from_permissions(cls):
 
         # god bless Python
         def getter(self, x=key):
-            return self._values.get(x)
+            return self._values.get(x)  # pylint: disable=protected-access
 
         def setter(self, value, x=key):
-            self._set(x, value)
+            self._set(x, value)  # pylint: disable=protected-access
 
         prop = property(getter, setter)
         setattr(cls, name, prop)
