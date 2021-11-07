@@ -930,7 +930,7 @@ def evaluate_annotation(
     if implicit_str and isinstance(tp, str):
         if tp in cache:
             return cache[tp]
-        evaluated = eval(tp, globals, locals)
+        evaluated = eval(tp, globals, locals)  # pylint: disable=eval-used
         cache[tp] = evaluated
         return evaluate_annotation(evaluated, globals, locals, cache)
 
