@@ -173,7 +173,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             return f'<a:{self.name}:{self.id}>'
         return f'<:{self.name}:{self.id}>'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<{self.__class__.__name__} animated={self.animated} name={self.name!r} id={self.id}>'
 
     def __eq__(self, other: Any) -> bool:

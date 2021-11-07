@@ -65,11 +65,15 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
     name: str
     description: str
     required: bool
+    autocomplete: bool
+    channel_types: Optional[List[int]]
+    min_value: Optional[int]
+    max_value: Optional[int]
 
 
 class ApplicationCommandOptionChoice(TypedDict):
     name: str
-    value: Union[str, int]
+    value: Union[str, int, float]
 
 
 ApplicationCommandPermissionType = Literal[1, 2]
@@ -221,9 +225,6 @@ class MessageInteraction(TypedDict):
     type: InteractionType
     name: str
     user: User
-
-
-
 
 
 class _EditApplicationCommandOptional(TypedDict, total=False):

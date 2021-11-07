@@ -63,7 +63,7 @@ class flag_value:
     def __set__(self, instance: BF, value: bool) -> None:
         instance._set_flag(self.flag, value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<flag_value flag={self.flag!r}>'
 
 

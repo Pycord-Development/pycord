@@ -580,7 +580,7 @@ class PartialWebhookChannel(Hashable):
         self.id = int(data['id'])
         self.name = data['name']
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<PartialWebhookChannel name={self.name!r} id={self.id}>'
 
 
@@ -607,7 +607,7 @@ class PartialWebhookGuild(Hashable):
         self.name = data['name']
         self._icon = data['icon']
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<PartialWebhookGuild name={self.name!r} id={self.id}>'
 
     @property
@@ -985,7 +985,7 @@ class Webhook(BaseWebhook):
         super().__init__(data, token, state)
         self.session = session
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Webhook id={self.id!r}>'
 
     @property
