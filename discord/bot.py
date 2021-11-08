@@ -38,7 +38,7 @@ from typing import (
     List,
     Optional,
     TypeVar,
-    Union,
+    Union, Type,
 )
 
 import sys
@@ -346,7 +346,11 @@ class ApplicationCommandMixin:
                     )
                     raise
 
-    async def process_application_commands(self, interaction: Interaction) -> None:
+    async def process_application_commands(
+            self,
+            interaction: Interaction,
+            application_context_cls: Optional[Type[ApplicationContext]] = None
+    ) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -367,6 +371,7 @@ class ApplicationCommandMixin:
         -----------
         interaction: :class:`discord.Interaction`
             The interaction to process
+        application_context_cls:
         """
         if interaction.type not in (
             InteractionType.application_command, 
@@ -382,7 +387,7 @@ class ApplicationCommandMixin:
             if interaction.type is InteractionType.auto_complete:
                 return await command.invoke_autocomplete_callback(interaction)
             
-            ctx = await self.get_application_context(interaction)
+            ctx = await self.get_application_context(interaction, cls=application_context_cls)
             ctx.command = command
             self.dispatch("application_command", ctx)
             try:

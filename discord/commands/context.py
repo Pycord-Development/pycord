@@ -24,23 +24,23 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic
 
 import discord.abc
 
 if TYPE_CHECKING:
     import discord
-    from discord import Bot
+    from discord import Bot, AutoShardedBot, VoiceProtocol
     from discord.state import ConnectionState
-
+    from ..user import User
     from .commands import ApplicationCommand, Option
     from ..cog import Cog
 
 from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse
+from ..interactions import Interaction, InteractionResponse, InteractionChannel
 from ..member import Member
 from ..message import Message
-from ..user import User
+
 from ..utils import cached_property
 
 __all__ = (
@@ -48,7 +48,11 @@ __all__ = (
     "AutocompleteContext"
 )
 
-class ApplicationContext(discord.abc.Messageable):
+BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+CogT = TypeVar("CogT", bound="Cog")
+
+
+class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
@@ -66,17 +70,17 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: Bot, interaction: Interaction):
-        self.bot = bot
-        self.interaction = interaction
+    def __init__(self, bot: BotT, interaction: Interaction):
+        self.bot: BotT = bot
+        self.interaction: Interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
         self._state: ConnectionState = self.interaction._state
 
-    async def _get_channel(self) -> discord.abc.Messageable:
+    async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.channel
 
     @cached_property
-    def channel(self):
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
@@ -104,14 +108,14 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.user
 
     @property
-    def voice_client(self):
+    def voice_client(self) -> Optional[VoiceProtocol]:
         return self.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
 
-    author = user
+    author: Union[Member, User] = user
 
     @property
     def respond(self):
@@ -177,7 +181,7 @@ class AutocompleteContext:
         self.options = options
 
     @property
-    def cog(self) -> Optional[Cog]:
+    def cog(self) -> Optional[CogT]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
         if self.command is None:
             return None

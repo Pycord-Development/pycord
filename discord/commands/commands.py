@@ -30,7 +30,8 @@ import types
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, Awaitable, overload
+from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, Awaitable, overload, TypeVar, ParamSpec, \
+    Generic, Type, Concatenate
 
 from .. import Cog, Interaction
 from ..enums import SlashCommandOptionType, ChannelType
@@ -48,6 +49,13 @@ if TYPE_CHECKING:
         ApplicationCommand as ApplicationCommandData,
         ApplicationCommandOption,
         ApplicationCommandOptionChoice
+    )
+
+    from ._types import (
+        Coro,
+        CoroFunc,
+        Hook,
+        Error
     )
 
 __all__ = (
@@ -69,9 +77,22 @@ __all__ = (
 )
 
 
-def wrap_callback(coro):  # TODO: Typehint Coro and Return Type    Something with type vars
+T = TypeVar('T')
+CogT = TypeVar("CogT", bound="Cog")
+ApplicationCommandT = TypeVar("ApplicationCommandT", bound="ApplicationCommand")
+ApplicationContextT = TypeVar("ApplicationContextT", bound="ApplicationContext")
+HookT = TypeVar("HookT", bound="Hook")
+ErrorT = TypeVar('ErrorT', bound='Error')
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
+
+
+def wrap_callback(coro):  # TODO: Maybe typehint
     @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):  # TODO: Same here
+    async def wrapped(*args, **kwargs):
         try:
             ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
@@ -85,9 +106,10 @@ def wrap_callback(coro):  # TODO: Typehint Coro and Return Type    Something wit
     return wrapped
 
 
-def hooked_wrapped_callback(command: ApplicationCommand, ctx: ApplicationContext, coro):  # TODO: Typehint coro & return type
+def hooked_wrapped_callback(command: ApplicationCommandT, ctx: ApplicationContextT, coro):  # TODO: Maybe Typehint coro & return type
+
     @functools.wraps(coro)
-    async def wrapped(arg): # TODO: Same here
+    async def wrapped(arg):
         try:
             ret = await coro(arg)
         except ApplicationCommandError:
@@ -108,11 +130,12 @@ class _BaseCommand:
 
 
 #finished
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
+    __original_kwargs__: Dict[str, Any]
     cog: Optional[Cog] = None
     name: str
     description: str
-    callback: Callable[[ApplicationContext, ...], Awaitable[None]]
+    callback: HookT
     checks: List[Callable[[ApplicationContext], Awaitable[bool]]]
     on_error: Callable[[ApplicationContext, Exception], Awaitable[None]]
     _before_invoke: Optional[Callable[[ApplicationContext], Awaitable[None]]]
@@ -126,7 +149,7 @@ class ApplicationCommand(_BaseCommand):
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__)
 
-    async def __call__(self, ctx: ApplicationContext, *args, **kwargs) -> None:
+    async def __call__(self, ctx: ApplicationContext, *args: P.args, **kwargs: P.kwargs) -> T:
         """|coro|
         Calls the command's callback.
 
@@ -191,10 +214,7 @@ class ApplicationCommand(_BaseCommand):
     def _get_signature_parameters(self) -> OrderedDict:  # TODO: Maybe define Dict better
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    def error(
-            self,
-            coro: Callable[[ApplicationContext, Exception], Awaitable[None]]
-    ) -> Callable[[ApplicationContext, Exception], Awaitable[None]]:
+    def error(self, coro: ErrorT) -> ErrorT:
         """A decorator that registers a coroutine as a local error handler.
 
         A local error handler is an :func:`.on_command_error` event limited to
@@ -223,10 +243,7 @@ class ApplicationCommand(_BaseCommand):
         """
         return hasattr(self, 'on_error')
 
-    def before_invoke(
-            self,
-            coro: Callable[[ApplicationContext], Awaitable[None]]
-    ) -> Callable[[ApplicationContext], Awaitable[None]]:
+    def before_invoke(self, coro: HookT) -> HookT:
         """A decorator that registers a coroutine as a pre-invoke hook.
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
@@ -248,10 +265,7 @@ class ApplicationCommand(_BaseCommand):
         self._before_invoke = coro
         return coro
 
-    def after_invoke(
-            self,
-            coro: Callable[[ApplicationContext], Awaitable[None]]
-    ) -> Callable[[ApplicationContext], Awaitable[None]]:
+    def after_invoke(self, coro: HookT) -> HookT:
         """A decorator that registers a coroutine as a post-invoke hook.
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
@@ -347,6 +361,7 @@ class ApplicationCommand(_BaseCommand):
         else:
             return self.name
 
+
 #finished
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
@@ -390,7 +405,7 @@ class SlashCommand(ApplicationCommand):
     """
     type: int = 1
 
-    def __new__(cls, *args, **kwargs) -> SlashCommand:
+    def __new__(cls: Type[ApplicationCommandT], *args: Any, **kwargs: Any) -> ApplicationCommandT:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -399,7 +414,10 @@ class SlashCommand(ApplicationCommand):
     @overload
     def __init__(
             self,
-            func: Callable[[ApplicationContext, ...], Awaitable[None]],
+            func: Union[
+                Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]],
+                Callable[Concatenate[ApplicationContextT, P], Coro[T]]
+            ],
             *,
             name: Optional[str] = None,
             description: Optional[str] = None,
@@ -411,10 +429,14 @@ class SlashCommand(ApplicationCommand):
     ) -> None:
         ...
 
-    def __init__(self, func: Callable[[ApplicationContext, ...], Awaitable[None]], *args, **kwargs) -> None:
+    def __init__(
+            self,
+            func: Callable[[ApplicationContext, ...], Awaitable[None]],
+            **kwargs: Any
+    ) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
-        self.callback: Callable[[ApplicationContext, ...], Awaitable[None]] = func
+        self.callback = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
 
