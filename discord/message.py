@@ -1326,13 +1326,7 @@ class Message(Hashable):
                     self.channel.id,
                     self.id,
                     files=[file],
-                    attachments=attachments,
-                    suppress=suppress,
-                    allowed_mentions=allowed_mentions,
-                    content=content,
-                    embed=embed,
-                    embeds=embeds,
-                    components=components,
+                    **payload,
                 )
             finally:
                 file.close()
@@ -1348,13 +1342,7 @@ class Message(Hashable):
                     self.channel.id,
                     self.id,
                     files=files,
-                    attachments=attachments,
-                    suppress=suppress,
-                    content=content,
-                    embed=embed,
-                    embeds=embeds,
-                    allowed_mentions=allowed_mentions,
-                    components=components,
+                    **payload,
                 )
             finally:
                 for f in files:
