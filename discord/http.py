@@ -87,6 +87,7 @@ if TYPE_CHECKING:
         sticker,
     )
     from .types.snowflake import Snowflake, SnowflakeList
+    from .types.message import Attachment
 
     from types import TracebackType
 
@@ -546,6 +547,88 @@ class HTTPClient:
             allowed_mentions=allowed_mentions,
             message_reference=message_reference,
             stickers=stickers,
+            components=components,
+        )
+    
+    def edit_multipart_helper(
+        self,
+        route: Route,
+        *,
+        files: Sequence[File],
+        attachments: List[Attachment] = None,
+        suppress: bool = False,
+        content: Optional[str] = None,
+        embed: Optional[embed.Embed] = None,
+        embeds: Optional[Iterable[Optional[embed.Embed]]] = None,
+        allowed_mentions: Optional[message.AllowedMentions] = None,
+        components: Optional[List[components.Component]] = None,
+    ) -> Response[message.Message]:
+        form = []
+
+        payload: Dict[str, Any] = {}
+        if attachments:
+            payload['attachments'] = attachments
+        if suppress:
+            payload['suppress'] = suppress
+        if content:
+            payload['content'] = content
+        if embed:
+            payload['embeds'] = [embed]
+        if embeds:
+            payload['embeds'] = embeds
+        if allowed_mentions:
+            payload['allowed_mentions'] = allowed_mentions
+        if components:
+            payload['components'] = components
+
+        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
+        if len(files) == 1:
+            file = files[0]
+            form.append(
+                {
+                    'name': 'file',
+                    'value': file.fp,
+                    'filename': file.filename,
+                    'content_type': 'application/octet-stream',
+                }
+            )
+        else:
+            for index, file in enumerate(files):
+                form.append(
+                    {
+                        'name': f'file{index}',
+                        'value': file.fp,
+                        'filename': file.filename,
+                        'content_type': 'application/octet-stream',
+                    }
+                )
+
+        return self.request(route, form=form, files=files)
+    
+    def edit_files(
+        self,
+        channel_id: Snowflake,
+        message_id: Snowflake,
+        *,
+        files: Sequence[File],
+        attachments: List[Attachment] = None,
+        suppress: bool = False,
+        content: Optional[str] = None,
+        embed: Optional[embed.Embed] = None,
+        embeds: Optional[List[embed.Embed]] = None,
+        allowed_mentions: Optional[message.AllowedMentions] = None,
+        components: Optional[List[components.Component]] = None,
+    ) -> Response[message.Message]:
+        r = Route('PATCH', f'/channels/{channel_id}/messages/{message_id}', channel_id=channel_id, message_id=message_id)
+        return self.edit_multipart_helper(
+            r,
+            files=files,
+            attachments=attachments,
+            suppress=suppress,
+            content=content,
+            embed=embed,
+            embeds=embeds,
+            allowed_mentions=allowed_mentions,
             components=components,
         )
 
