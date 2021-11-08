@@ -1314,10 +1314,10 @@ class Message(Hashable):
             else:
                 payload['components'] = []
                 
-        if file is not None and files is not None:
-            raise InvalidArgument('cannot pass both file and files parameter to send()')
+        if file is not MISSING and files is not MISSING:
+            raise InvalidArgument('cannot pass both file and files parameter to edit()')
 
-        if file is not None:
+        if file is not MISSING:
             if not isinstance(file, File):
                 raise InvalidArgument('file parameter must be File')
 
@@ -1337,7 +1337,7 @@ class Message(Hashable):
             finally:
                 file.close()
 
-        elif files is not None:
+        elif files is not MISSING:
             if len(files) > 10:
                 raise InvalidArgument('files parameter must be a list of up to 10 elements')
             elif not all(isinstance(file, File) for file in files):
