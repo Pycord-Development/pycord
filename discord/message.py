@@ -1156,6 +1156,22 @@ class Message(Hashable):
         *,
         content: Optional[str] = ...,
         embed: Optional[Embed] = ...,
+        file: Optional[File] = ...,
+        attachments: List[Attachment] = ...,
+        suppress: bool = ...,
+        delete_after: Optional[float] = ...,
+        allowed_mentions: Optional[AllowedMentions] = ...,
+        view: Optional[View] = ...,
+    ) -> Message:
+        ...
+        
+    @overload
+    async def edit(
+        self,
+        *,
+        content: Optional[str] = ...,
+        embed: Optional[Embed] = ...,
+        files: Optional[List[File]] = ...,
         attachments: List[Attachment] = ...,
         suppress: bool = ...,
         delete_after: Optional[float] = ...,
@@ -1170,6 +1186,7 @@ class Message(Hashable):
         *,
         content: Optional[str] = ...,
         embeds: List[Embed] = ...,
+        file: File = ...,
         attachments: List[Attachment] = ...,
         suppress: bool = ...,
         delete_after: Optional[float] = ...,
