@@ -159,7 +159,7 @@ html_experimental_html5_writer = True
 html_theme = 'basic'
 
 html_context = {
-  'discord_invite': 'https://discord.gg/rdXkRJG7pS',
+  'discord_invite': 'https://pycord.dev/discord',
   'discord_extensions': [
     ('discord.ext.commands', 'ext/commands'),
     ('discord.ext.tasks', 'ext/tasks'),
@@ -167,7 +167,7 @@ html_context = {
 }
 
 resource_links = {
-  'discord': 'https://discord.gg/rdXkRJG7pS',
+  'discord': 'https://pycord.dev/discord',
   'issues': 'https://github.com/Pycord-Development/pycord/issues',
   'discussions': 'https://github.com/Pycord-Development/pycord/discussions',
   'examples': f'https://github.com/Pycord-Development/pycord/tree/{branch}/examples',
@@ -357,5 +357,5 @@ texinfo_documents = [
 def setup(app):
   if app.config.language == 'ja':
     app.config.intersphinx_mapping['py'] = ('https://docs.python.org/ja/3', None)
-    app.config.html_context['discord_invite'] = 'https://discord.gg/rdXkRJG7pS'
-    app.config.resource_links['discord'] = 'https://discord.gg/rdXkRJG7pS'
+    app.config.html_context['discord_invite'] = 'https://pycord.dev/discord'
+    app.config.resource_links['discord'] = 'https://pycord.dev/discord'
