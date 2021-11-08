@@ -554,7 +554,6 @@ class HTTPClient:
         self,
         route: Route,
         files: Sequence[File],
-        *,
         **payload,
     ) -> Response[message.Message]:
         form = []
@@ -588,7 +587,6 @@ class HTTPClient:
         channel_id: Snowflake,
         message_id: Snowflake,
         files: Sequence[File],
-        *,
         **fields,
     ) -> Response[message.Message]:
         r = Route('PATCH', f'/channels/{channel_id}/messages/{message_id}', channel_id=channel_id, message_id=message_id)
