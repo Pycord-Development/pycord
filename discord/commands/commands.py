@@ -30,7 +30,7 @@ import types
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, Type
 
 from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
@@ -527,17 +527,24 @@ class SlashCommand(ApplicationCommand):
         else:
             await self.callback(ctx, **kwargs)
 
-    async def invoke_autocomplete_callback(self, interaction: Interaction):
-        values = { i.name: i.default for i in self.options }
+    async def invoke_autocomplete_callback(
+            self,
+            interaction: Interaction,
+            cls: Optional[Type[AutocompleteContext]] = None
+    ):
+        if cls is None:
+            cls = AutocompleteContext
+
+        values = {i.name: i.default for i in self.options}
         
         for op in interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
-                    i["name"]:i["value"] 
+                    i["name"]: i["value"]
                     for i in interaction.data["options"]
                 })
-                ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
+                ctx = cls(interaction, command=self, focused=option, value=op.get("value"), options=values)
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await option.autocomplete(ctx)
                 else:

@@ -29,6 +29,8 @@ import asyncio
 import collections
 import inspect
 import traceback
+
+from . import AutocompleteContext
 from .commands.errors import CheckFailure
 
 from typing import (
@@ -39,6 +41,7 @@ from typing import (
     Optional,
     TypeVar,
     Union,
+    Type,
 )
 
 import sys
@@ -346,7 +349,12 @@ class ApplicationCommandMixin:
                     )
                     raise
 
-    async def process_application_commands(self, interaction: Interaction) -> None:
+    async def process_application_commands(
+            self,
+            interaction: Interaction,
+            application_context_cls: Optional[Type[ApplicationContext]] = None,
+            autocomplete_context_cls: Optional[Type[AutocompleteContext]] = None,
+    ) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -367,6 +375,16 @@ class ApplicationCommandMixin:
         -----------
         interaction: :class:`discord.Interaction`
             The interaction to process
+        application_context_cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.ApplicationContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.ApplicationContext`\'s interface.
+        autocomplete_context_cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.AutocompleteContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.AutocompleteContext`\'s interface.
         """
         if interaction.type not in (
             InteractionType.application_command, 
@@ -380,9 +398,9 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             if interaction.type is InteractionType.auto_complete:
-                return await command.invoke_autocomplete_callback(interaction)
+                return await command.invoke_autocomplete_callback(interaction, autocomplete_context_cls)
             
-            ctx = await self.get_application_context(interaction)
+            ctx = await self.get_application_context(interaction, application_context_cls)
             ctx.command = command
             self.dispatch("application_command", ctx)
             try:
@@ -487,7 +505,9 @@ class ApplicationCommandMixin:
         return group
 
     async def get_application_context(
-        self, interaction: Interaction, cls=None
+        self,
+        interaction: Interaction,
+        cls: Optional[Type[ApplicationContext]] = None
     ) -> ApplicationContext:
         r"""|coro|
 
