@@ -1323,7 +1323,7 @@ class Message(Hashable):
 
             try:
                 data = await self._state.http.edit_files(
-                    channel.id,
+                    self.channel.id,
                     self.id,
                     files=[file],
                     attachments=attachments,
@@ -1345,7 +1345,7 @@ class Message(Hashable):
 
             try:
                 data = await self._state.http.edit_files(
-                    channel.id,
+                    self.channel.id,
                     self.id,
                     files=files,
                     attachments=attachments,
