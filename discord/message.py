@@ -1322,7 +1322,7 @@ class Message(Hashable):
                 raise InvalidArgument('file parameter must be File')
 
             try:
-                data = await state.http.edit_files(
+                data = await self._state.http.edit_files(
                     channel.id,
                     self.id,
                     files=[file],
@@ -1344,7 +1344,7 @@ class Message(Hashable):
                 raise InvalidArgument('files parameter must be a list of File')
 
             try:
-                data = await state.http.edit_files(
+                data = await self._state.http.edit_files(
                     channel.id,
                     self.id,
                     files=files,
