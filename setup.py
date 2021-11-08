@@ -93,5 +93,6 @@ setup(name='py-cord',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
         'Typing :: Typed',
-      ]
+      ],
+      test_suite='tests',
 )
