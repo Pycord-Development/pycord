@@ -1,0 +1,12 @@
+[MESSAGES CONTROL]
+
+disable=protected-access
+
+enable=bad-indentation,line-too-long
+
+
+[FORMAT]
+
+indent-string='    '
+
+max-line-length=120
