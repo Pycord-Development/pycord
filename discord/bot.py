@@ -65,6 +65,12 @@ from .enums import InteractionType
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
 
+__all__ = (
+    'ApplicationCommandMixin',
+    'Bot',
+    'AutoShardedBot',
+)
+
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
     application command compatibility.
@@ -233,7 +239,8 @@ class ApplicationCommandMixin:
                 guild_ids=None,
                 type=i["type"],
             )
-            self._application_commands[i["id"]] = cmd
+            cmd.id = i["id"]
+            self.application_commands[cmd.id] = cmd
 
             # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
             global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
@@ -267,7 +274,8 @@ class ApplicationCommandMixin:
             else:
                 for i in cmds:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
-                    self._application_commands[i["id"]] = cmd
+                    cmd.id = i["id"]
+                    self.application_commands[cmd.id] = cmd
 
                     # Permissions
                     permissions = [

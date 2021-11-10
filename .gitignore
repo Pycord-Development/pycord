@@ -15,3 +15,5 @@ docs/crowdin.py
 *.flac
 *.mo
 .idea/
+.vs/slnx.sqlite
+env/

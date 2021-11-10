@@ -37,6 +37,7 @@ from contextvars import ContextVar
 import aiohttp
 
 from .. import utils
+from ..object import Object
 from ..errors import InvalidArgument, HTTPException, Forbidden, NotFound, DiscordServerError
 from ..message import Message
 from ..enums import try_enum, WebhookType
@@ -45,6 +46,7 @@ from ..asset import Asset
 from ..http import Route
 from ..mixins import Hashable
 from ..channel import PartialMessageable
+from ..threads import Thread
 
 __all__ = (
     'Webhook',
@@ -744,6 +746,12 @@ class WebhookMessage(Message):
         :class:`WebhookMessage`
             The newly edited message.
         """
+        thread = MISSING
+        if hasattr(self, '_thread_id'):
+            thread = Object(self._thread_id)
+        elif isinstance(self.channel, Thread):
+            thread = Object(self.channel.id)
+
         return await self._state._webhook.edit_message(
             self.id,
             content=content,
@@ -753,6 +761,7 @@ class WebhookMessage(Message):
             files=files,
             view=view,
             allowed_mentions=allowed_mentions,
+            thread=thread
         )
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
@@ -775,19 +784,24 @@ class WebhookMessage(Message):
         HTTPException
             Deleting the message failed.
         """
+        thread_id: Optional[int] = None
+        if hasattr(self, '_thread_id'):
+            thread_id = self._thread_id
+        elif isinstance(self.channel, Thread):
+            thread_id = self.channel.id
 
         if delay is not None:
 
             async def inner_call(delay: float = delay):
                 await asyncio.sleep(delay)
                 try:
-                    await self._state._webhook.delete_message(self.id)
+                    await self._state._webhook.delete_message(self.id, thread_id=thread_id)
                 except HTTPException:
                     pass
 
             asyncio.create_task(inner_call())
         else:
-            await self._state._webhook.delete_message(self.id)
+            await self._state._webhook.delete_message(self.id, thread_id=thread_id)
 
 
 class BaseWebhook(Hashable):
@@ -1298,6 +1312,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         wait: bool = False,
+        delete_after: float = None,
     ) -> Optional[WebhookMessage]:
         """|coro|
 
@@ -1363,6 +1378,9 @@ class Webhook(BaseWebhook):
             The thread to send this webhook to.
 
             .. versionadded:: 2.0
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
 
         Raises
         --------
@@ -1445,6 +1463,12 @@ class Webhook(BaseWebhook):
             message_id = None if msg is None else msg.id
             self._state.store_view(view, message_id)
 
+        if delete_after is not None:
+            async def delete():
+                await asyncio.sleep(delete_after)
+                await msg.delete()
+            asyncio.ensure_future(delete(), loop=self._state.loop)
+
         return msg
 
     async def fetch_message(
@@ -1494,7 +1518,11 @@ class Webhook(BaseWebhook):
             session=self.session,
             thread_id=thread_id,
         )
-        return self._create_message(data)
+        msg = self._create_message(data)
+        if isinstance(msg.channel, PartialMessageable):
+            msg._thread_id = thread_id
+        
+        return msg
 
     async def edit_message(
         self,
@@ -1595,7 +1623,7 @@ class Webhook(BaseWebhook):
         )
 
         thread_id: Optional[int] = None
-        if thread_id is not MISSING:
+        if thread is not MISSING:
             thread_id = thread.id
 
         adapter = async_context.get()

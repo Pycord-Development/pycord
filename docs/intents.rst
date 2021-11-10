@@ -11,7 +11,7 @@ In version 1.5 comes the introduction of :class:`Intents`. This is a radical cha
 
 These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument.
 
-If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members` and :attr:`Intents.presences`.
+If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.guild_messages`.
 
 What intents are needed?
 --------------------------
@@ -34,7 +34,7 @@ For example, if you want a bot that functions without spammy events like presenc
     # from discord.ext import commands
     # bot = commands.Bot(command_prefix='!', intents=intents)
 
-Note that this doesn't enable :attr:`Intents.members` since it's a privileged intent.
+Note that this doesn't enable :attr:`Intents.members` or :attr:`Intents.guild_messages` since they are privileged intents.
 
 Another example showing a bot that only deals with messages and guild information:
 
@@ -76,7 +76,7 @@ A privileged intent is one that requires you to go to the developer portal and m
 
 .. warning::
 
-    Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_. If your bot is already verified and you would like to enable a privileged intent you must go through `Discord support <https://dis.gd/contact>`_ and talk to them about it.
+    Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_.
 
 .. note::
 
@@ -106,6 +106,19 @@ Member Intent
 - Whether you want to track user updates such as usernames, avatars, discriminators, etc.
 - Whether you want to request the guild member list through :meth:`Guild.chunk` or :meth:`Guild.fetch_members`.
 - Whether you want high accuracy member cache under :attr:`Guild.members`.
+
+.. _need_message_content_intent:
+
+Message Content Intent
+++++++++++++++++
+
+- Whether you have a message based command system using ext.commands
+- Whether you use the :func:`on_message` event for anything, such as auto-moderation.
+- Whether you track message edits or deletions using :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`.
+- Whether you use any reaction related events, such as :func:`on_reaction_add`, :func:`on_reaction_remove`, and :func:`on_reaction_clear`
+
+.. note::
+    This only applies to :attr:`Intents.guild_messages`, not :attr:`Intents.dm_messages`. The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages.
 
 .. _intents_member_cache:
 
