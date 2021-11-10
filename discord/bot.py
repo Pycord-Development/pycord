@@ -37,6 +37,7 @@ from typing import (
     Coroutine,
     List,
     Optional,
+    Type,
     TypeVar,
     Union,
 )
@@ -131,7 +132,12 @@ class ApplicationCommandMixin:
         """
         return self.application_commands.pop(command.id)
 
-    def get_command(self, id: str, /) -> Optional[ApplicationCommand]:
+    def get_command(
+        self,
+        name: str,
+        guild_ids: Optional[List[int]] = None,
+        type: Type[ApplicationCommand] = SlashCommand,
+    ) -> Optional[ApplicationCommand]:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -139,16 +145,27 @@ class ApplicationCommandMixin:
 
         Parameters
         -----------
-        id: :class:`str`
-            The id of the command to get.
+        name: :class:`str`
+            The name of the command to get.
+        guild_ids: List[:class:`int`]
+            The guild ids associated to the command to get.
+        type: Type[:class:`.ApplicationCommand`]
+            The type of the command to get. Defaults to :class:`.SlashCommand`.
 
         Returns
         --------
-        Optional[:class:`ApplicationCommand`]
+        Optional[:class:`.ApplicationCommand`]
             The command that was requested. If not found, returns ``None``.
         """
 
-        return self.application_commands.get(id)
+        for command in self.application_commands.values():
+            if (
+                command.name == name
+                and isinstance(command, type)
+            ):
+                if guild_ids is not None and command.guild_ids != guild_ids:
+                    return
+                return command
 
     get_application_command = get_command
 
