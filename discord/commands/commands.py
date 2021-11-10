@@ -514,7 +514,7 @@ class SlashCommand(ApplicationCommand):
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
 
-            option.default = option.default or p_obj.default
+            option.default = option.default if option.default is not None else p_obj.default
 
             if option.default == inspect.Parameter.empty:
                 option.default = None
@@ -711,9 +711,9 @@ class Option:
         ]
         self.default: Any = kwargs.pop("default", None)
         if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int,)
+            minmax_types = (int, type(None))
         elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float)
+            minmax_types = (int, float, type(None))
         else:
             minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
@@ -1035,7 +1035,7 @@ class UserCommand(ContextMenuCommand):
 
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:
+        else:   
             await self.callback(ctx, target)
 
     def copy(self: ApplicationCommandT) -> ApplicationCommandT:
