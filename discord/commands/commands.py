@@ -46,8 +46,8 @@ from .permissions import Permission
 
 if TYPE_CHECKING:
     from ..types.interactions import (
-        ApplicationCommand as ApplicationCommandData,
-        ApplicationCommandOption,
+        CreateApplicationCommand,
+        ApplicationCommandOption as ApplicationCommandOptionData,
         ApplicationCommandOptionChoice
     )
 
@@ -75,7 +75,6 @@ __all__ = (
     "UserCommand",
     "MessageCommand",
 )
-
 
 T = TypeVar('T')
 CogT = TypeVar("CogT", bound="Cog")
@@ -129,7 +128,7 @@ class _BaseCommand:
     __slots__ = ()
 
 
-#finished
+# finished
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     __original_kwargs__: Dict[str, Any]
     cog: Optional[Cog] = None
@@ -362,7 +361,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             return self.name
 
 
-#finished
+# finished
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
 
@@ -477,7 +476,7 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def _parse_options(self, params: Dict) -> List[Option]: # TODO: Better typehint dict
+    def _parse_options(self, params: Dict) -> List[Option]:  # TODO: Better typehint dict
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -537,7 +536,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_optional(self, annotation) -> bool:  # TODO: Typehint annotation
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
-    def to_dict(self) -> ApplicationCommandData:  # TODO: Need to be improved?
+    def to_dict(self) -> CreateApplicationCommand:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -660,7 +659,8 @@ channel_type_map = {
     'CategoryChannel': ChannelType.category
 }
 
-#finished
+
+# finished
 class Option:
 
     @overload
@@ -729,7 +729,7 @@ class Option:
         self.autocomplete: Callable[[AutocompleteContext], Awaitable[List[Union[OptionChoice, str]]]] \
             = kwargs.pop("autocomplete", None)
 
-    def to_dict(self) -> ApplicationCommandOption:
+    def to_dict(self) -> ApplicationCommandOptionData:
         as_dict = {
             "type": self.input_type.value,
             "name": self.name,
@@ -751,7 +751,7 @@ class Option:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 
-#finihsed
+# finihsed
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name: str = name
@@ -761,7 +761,7 @@ class OptionChoice:
         return {"name": self.name, "value": self.value}
 
 
-def option(name: str, option_type=None, **kwargs): # TODO: Typehint everything
+def option(name: str, option_type=None, **kwargs):  # TODO: Typehint everything
     """A decorator that can be used instead of type hinting Option"""
 
     def decor(func):
@@ -853,7 +853,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> CreateApplicationCommand:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -994,17 +994,17 @@ class ContextMenuCommand(ApplicationCommand):
         except StopIteration:
             pass
 
-    def qualified_name(self):
+    def qualified_name(self) -> str:
         return self.name
 
-    def to_dict(self) -> Dict[str, Union[str, int]]:
+    def to_dict(self) -> CreateApplicationCommand:
         return {"name": self.name, "description": self.description, "type": self.type}
 
 
 class UserCommand(ContextMenuCommand):
-    type = 2
+    type: int = 2
 
-    def __new__(cls, *args, **kwargs) -> UserCommand:
+    def __new__(cls: Type[ApplicationCommandT], *args: Any, **kwargs: Any) -> ApplicationCommandT:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -1038,7 +1038,7 @@ class UserCommand(ContextMenuCommand):
         else:
             await self.callback(ctx, target)
 
-    def copy(self):
+    def copy(self: ApplicationCommandT) -> ApplicationCommandT:
         """Creates a copy of this command.
 
         Returns
@@ -1049,7 +1049,7 @@ class UserCommand(ContextMenuCommand):
         ret = self.__class__(self.callback, **self.__original_kwargs__)
         return self._ensure_assignment_on_copy(ret)
 
-    def _ensure_assignment_on_copy(self, other):
+    def _ensure_assignment_on_copy(self, other: ApplicationCommandT) -> ApplicationCommandT:
         other._before_invoke = self._before_invoke
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
@@ -1066,7 +1066,7 @@ class UserCommand(ContextMenuCommand):
             pass
         return other
 
-    def _update_copy(self, kwargs: Dict[str, Any]):
+    def _update_copy(self: ApplicationCommandT, kwargs: Dict[str, Any]) -> ApplicationCommandT:
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
@@ -1079,7 +1079,7 @@ class UserCommand(ContextMenuCommand):
 class MessageCommand(ContextMenuCommand):
     type: int = 3
 
-    def __new__(cls, *args, **kwargs) -> MessageCommand:
+    def __new__(cls: Type[ApplicationCommandT], *args: Any, **kwargs: Any) -> ApplicationCommandT:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -1104,7 +1104,7 @@ class MessageCommand(ContextMenuCommand):
         else:
             await self.callback(ctx, target)
 
-    def copy(self) -> MessageCommand:
+    def copy(self: ApplicationCommandT) -> ApplicationCommandT:
         """Creates a copy of this command.
 
         Returns
@@ -1115,7 +1115,7 @@ class MessageCommand(ContextMenuCommand):
         ret = self.__class__(self.callback, **self.__original_kwargs__)
         return self._ensure_assignment_on_copy(ret)
 
-    def _ensure_assignment_on_copy(self, other: MessageCommand) -> MessageCommand:
+    def _ensure_assignment_on_copy(self, other: ApplicationCommandT) -> ApplicationCommandT:
         other._before_invoke = self._before_invoke
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
@@ -1132,7 +1132,7 @@ class MessageCommand(ContextMenuCommand):
             pass
         return other
 
-    def _update_copy(self, kwargs: Dict[str, Any]):
+    def _update_copy(self: ApplicationCommandT, kwargs: Dict[str, Any]) -> ApplicationCommandT:
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
@@ -1142,7 +1142,41 @@ class MessageCommand(ContextMenuCommand):
             return self.copy()
 
 
-def slash_command(**kwargs):
+@overload
+def slash_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommand[CogT, P, T]]:
+    ...
+
+
+@overload
+def slash_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommandT]:
+    ...
+
+
+def slash_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], Union[ApplicationCommand[CogT, P, T], ApplicationCommandT]]:
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
@@ -1153,7 +1187,41 @@ def slash_command(**kwargs):
     return application_command(cls=SlashCommand, **kwargs)
 
 
-def user_command(**kwargs):
+@overload
+def user_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommand[CogT, P, T]]:
+    ...
+
+
+@overload
+def user_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommandT]:
+    ...
+
+
+def user_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], Union[ApplicationCommand[CogT, P, T], ApplicationCommandT]]:
     """Decorator for user commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
@@ -1164,7 +1232,41 @@ def user_command(**kwargs):
     return application_command(cls=UserCommand, **kwargs)
 
 
-def message_command(**kwargs):
+@overload
+def message_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommand[CogT, P, T]]:
+    ...
+
+
+@overload
+def message_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommandT]:
+    ...
+
+
+def message_command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], Union[ApplicationCommand[CogT, P, T], ApplicationCommandT]]:
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
     Returns
@@ -1175,7 +1277,44 @@ def message_command(**kwargs):
     return application_command(cls=MessageCommand, **kwargs)
 
 
-def application_command(cls=SlashCommand, **attrs):
+@overload
+def application_command(
+        cls: Type[ApplicationCommand] = SlashCommand,
+        **attrs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], ApplicationCommand[CogT, P, T]]:
+    ...
+
+
+@overload
+def application_command(
+        cls: Type[ApplicationCommand] = SlashCommand,
+        **attrs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], ApplicationCommandT]:
+    ...
+
+
+def application_command(
+        cls: Type[ApplicationCommand] = SlashCommand,
+        **attrs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+        ]
+    ], Union[ApplicationCommand[CogT, P, T], ApplicationCommandT]]:
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
@@ -1199,7 +1338,12 @@ def application_command(cls=SlashCommand, **attrs):
         If the function is not a coroutine or is already a command.
     """
 
-    def decorator(func: Callable) -> cls:
+    def decorator(
+            func: Union[
+                Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+                Callable[Concatenate[CogT, ApplicationContextT, P], Coro[Any]]
+            ]
+    ) -> ApplicationCommandT:
         if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
@@ -1211,7 +1355,41 @@ def application_command(cls=SlashCommand, **attrs):
     return decorator
 
 
-def command(**kwargs):  # TODO: typehint
+@overload
+def command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommand[CogT, P, T]]:
+    ...
+
+
+@overload
+def command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], ApplicationCommandT]:
+    ...
+
+
+def command(
+        **kwargs: Any
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[ApplicationContextT, P], Coro[Any]],
+            Callable[Concatenate[CogT, ApplicationContextT, P], Coro[T]]
+        ]
+    ], Union[ApplicationCommand[CogT, P, T], ApplicationCommandT]]:
     """There is an alias for :meth:`application_command`.
     .. note::
         This decorator is overridden by :func:`commands.command`.
