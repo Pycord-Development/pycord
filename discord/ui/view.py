@@ -79,7 +79,7 @@ class _ViewWeights:
         'weights',
     )
 
-    def __init__(self, children: List[Item]):
+    def __init__(self, children: List[Item]) -> None:
         self.weights: List[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -155,7 +155,7 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
+    def __init__(self, *items: Item, timeout: Optional[float] = 180.0) -> None:
         self.timeout = timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
@@ -366,6 +366,8 @@ class View:
             if not interaction.response._responded:
                 await interaction.response.defer()
         except Exception as e:
+            # TODO(ultrabear) <bearodark@gmail.com> How to define this return type as what on_error returns?
+            # (as on_error can be reimplemented it seems)
             return await self.on_error(e, item, interaction)
 
     def _start_listening_from_store(self, store: ViewStore) -> None:
@@ -378,20 +380,20 @@ class View:
             self.__timeout_expiry = time.monotonic() + self.timeout
             self.__timeout_task = loop.create_task(self.__timeout_task_impl())
 
-    def _dispatch_timeout(self):
+    def _dispatch_timeout(self) -> None:
         if self.__stopped.done():
             return
 
         self.__stopped.set_result(True)
         asyncio.create_task(self.on_timeout(), name=f'discord-ui-view-timeout-{self.id}')
 
-    def _dispatch_item(self, item: Item, interaction: Interaction):
+    def _dispatch_item(self, item: Item, interaction: Interaction) -> None:
         if self.__stopped.done():
             return
 
         asyncio.create_task(self._scheduled_task(item, interaction), name=f'discord-ui-view-dispatch-{self.id}')
 
-    def refresh(self, components: List[Component]):
+    def refresh(self, components: List[Component]) -> None:
         # This is pretty hacky at the moment
         # fmt: off
         old_state: Dict[Tuple[int, str], Item] = {
@@ -464,7 +466,7 @@ class View:
 
 
 class ViewStore:
-    def __init__(self, state: ConnectionState):
+    def __init__(self, state: ConnectionState) -> None:
         # (component_type, message_id, custom_id): (View, Item)
         self._views: Dict[Tuple[int, Optional[int], str], Tuple[View, Item]] = {}
         # message_id: View
@@ -482,7 +484,7 @@ class ViewStore:
         # fmt: on
         return list(views.values())
 
-    def __verify_integrity(self):
+    def __verify_integrity(self) -> None:
         to_remove: List[Tuple[int, Optional[int], str]] = []
         for (k, (view, _)) in self._views.items():
             if view.is_finished():
@@ -491,7 +493,7 @@ class ViewStore:
         for k in to_remove:
             del self._views[k]
 
-    def add_view(self, view: View, message_id: Optional[int] = None):
+    def add_view(self, view: View, message_id: Optional[int] = None) -> None:
         self.__verify_integrity()
 
         view._start_listening_from_store(self)
@@ -502,7 +504,7 @@ class ViewStore:
         if message_id is not None:
             self._synced_message_views[message_id] = view
 
-    def remove_view(self, view: View):
+    def remove_view(self, view: View) -> None:
         for item in view.children:
             if item.is_dispatchable():
                 self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
@@ -512,7 +514,7 @@ class ViewStore:
                 del self._synced_message_views[key]
                 break
 
-    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
+    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction) -> None:
         self.__verify_integrity()
         message_id: Optional[int] = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
@@ -526,13 +528,13 @@ class ViewStore:
         item.refresh_state(interaction)
         view._dispatch_item(item, interaction)
 
-    def is_message_tracked(self, message_id: int):
+    def is_message_tracked(self, message_id: int) -> bool:
         return message_id in self._synced_message_views
 
     def remove_message_tracking(self, message_id: int) -> Optional[View]:
         return self._synced_message_views.pop(message_id, None)
 
-    def update_from_message(self, message_id: int, components: List[ComponentPayload]):
+    def update_from_message(self, message_id: int, components: List[ComponentPayload]) -> None:
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         view.refresh([_component_factory(d) for d in components])

@@ -56,7 +56,7 @@ class Item(Generic[V]):
 
     __item_repr_attributes__: Tuple[str, ...] = ('row',)
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._view: Optional[V] = None
         self._row: Optional[int] = None
         self._rendered_row: Optional[int] = None
@@ -100,7 +100,7 @@ class Item(Generic[V]):
         return self._row
 
     @row.setter
-    def row(self, value: Optional[int]):
+    def row(self, value: Optional[int]) -> None:
         if value is None:
             self._row = None
         elif 5 > value >= 0:
@@ -117,7 +117,7 @@ class Item(Generic[V]):
         """Optional[:class:`View`]: The underlying view for this item."""
         return self._view
 
-    async def callback(self, interaction: Interaction):
+    async def callback(self, interaction: Interaction) -> None:
         """|coro|
 
         The callback associated with this UI item.
