@@ -210,7 +210,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         finally:
             ctx.bot.dispatch('application_command_error', ctx, error)
 
-    def _get_signature_parameters(self) -> OrderedDict:  # TODO: Maybe define Dict better
+    def _get_signature_parameters(self) -> OrderedDict[str, inspect.Parameter]:
         return OrderedDict(inspect.signature(self.callback).parameters)
 
     def error(self, coro: ErrorT) -> ErrorT:
@@ -361,7 +361,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             return self.name
 
 
-# finished
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
 
@@ -476,7 +475,7 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def _parse_options(self, params: Dict) -> List[Option]:  # TODO: Better typehint dict
+    def _parse_options(self, params: OrderedDict[str, inspect.Parameter]) -> List[Option]:
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -527,13 +526,13 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
-    def _is_typing_union(self, annotation) -> bool:  # TODO: Typehint annotation
+    def _is_typing_union(self, annotation: Any) -> bool:  # TODO: Typehint annotation
         return (
                 getattr(annotation, '__origin__', None) is Union
                 or type(annotation) is getattr(types, "UnionType", Union)
         )  # type: ignore
 
-    def _is_typing_optional(self, annotation) -> bool:  # TODO: Typehint annotation
+    def _is_typing_optional(self, annotation: Any) -> bool:  # TODO: Typehint annotation
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
     def to_dict(self) -> CreateApplicationCommand:
@@ -660,7 +659,6 @@ channel_type_map = {
 }
 
 
-# finished
 class Option:
 
     @overload
@@ -751,7 +749,6 @@ class Option:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 
-# finihsed
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name: str = name
@@ -761,7 +758,7 @@ class OptionChoice:
         return {"name": self.name, "value": self.value}
 
 
-def option(name: str, option_type=None, **kwargs):  # TODO: Typehint everything
+def option(name: str, option_type=None, **kwargs: Any):  # TODO: Typehint everything
     """A decorator that can be used instead of type hinting Option"""
 
     def decor(func):
@@ -773,6 +770,7 @@ def option(name: str, option_type=None, **kwargs):  # TODO: Typehint everything
     return decor
 
 
+# finished
 class SlashCommandGroup(ApplicationCommand, Option):
     r"""A class that implements the protocol for a slash command group.
 
@@ -804,7 +802,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
     """
     type: int = 1
 
-    def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
+    def __new__(cls: ApplicationCommandT, *args: Any, **kwargs: Any) -> SlashCommandGroup:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -895,6 +893,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         await command.invoke_autocomplete_callback(interaction)
 
 
+# finished
 class ContextMenuCommand(ApplicationCommand):
     r"""A class that implements the protocol for context menu commands.
 
@@ -926,7 +925,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
+    def __init__(self, func: Callable, *args: Any, **kwargs: Any) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
@@ -960,7 +959,7 @@ class ContextMenuCommand(ApplicationCommand):
         # Context Menu commands can't have parents
         self.parent = None
 
-    def validate_parameters(self):
+    def validate_parameters(self) -> None:
         params = self._get_signature_parameters()
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
@@ -1001,6 +1000,7 @@ class ContextMenuCommand(ApplicationCommand):
         return {"name": self.name, "description": self.description, "type": self.type}
 
 
+# finished
 class UserCommand(ContextMenuCommand):
     type: int = 2
 
@@ -1076,6 +1076,7 @@ class UserCommand(ContextMenuCommand):
             return self.copy()
 
 
+# finished
 class MessageCommand(ContextMenuCommand):
     type: int = 3
 
