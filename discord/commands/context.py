@@ -24,32 +24,42 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic
+from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, ParamSpec, List, Any, Dict
 
-import discord.abc
+import discord.utils
 
 if TYPE_CHECKING:
-    import discord
-    from discord import Bot, AutoShardedBot, VoiceProtocol
-    from discord.state import ConnectionState
-    from ..user import User
-    from .commands import ApplicationCommand, Option
     from ..cog import Cog
+    from ..commands.commands import ApplicationCommand, Option
+    from ..embeds import Embed
+    from ..file import File
+    from ..guild import Guild
+    from ..interactions import Interaction, InteractionChannel, InteractionResponse, InteractionMessage
+    from ..member import Member
+    from ..mentions import AllowedMentions
+    from ..message import Message
+    from ..state import ConnectionState
+    from ..user import User
+    from ..ui import View
+    from ..voice_client import VoiceProtocol
+    from ..webhook import Webhook
 
-from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse, InteractionChannel
-from ..member import Member
-from ..message import Message
-
-from ..utils import cached_property
 
 __all__ = (
     "ApplicationContext",
     "AutocompleteContext"
 )
 
+MISSING: Any = discord.utils.MISSING
+
+T = TypeVar("T")
 BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
 CogT = TypeVar("CogT", bound="Cog")
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
 
 
 class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
@@ -70,7 +80,7 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: BotT, interaction: Interaction):
+    def __init__(self, bot: BotT, interaction: Interaction) -> None:
         self.bot: BotT = bot
         self.interaction: Interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
@@ -79,57 +89,65 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.channel
 
-    @cached_property
+    @discord.utils.cached_property
     def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
-    @cached_property
+    @discord.utils.cached_property
     def channel_id(self) -> Optional[int]:
         return self.interaction.channel_id
 
-    @cached_property
+    @discord.utils.cached_property
     def guild(self) -> Optional[Guild]:
         return self.interaction.guild
 
-    @cached_property
+    @discord.utils.cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
 
-    @cached_property
+    @discord.utils.cached_property
     def me(self) -> Union[Member, User]:
         return self.guild.me if self.guild is not None else self.bot.user
 
-    @cached_property
+    @discord.utils.cached_property
     def message(self) -> Optional[Message]:
         return self.interaction.message
 
-    @cached_property
+    @discord.utils.cached_property
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
+
+    author: Optional[Union[Member, User]] = user
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
         return self.guild.voice_client
 
-    @cached_property
+    @discord.utils.cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
 
-    author: Union[Member, User] = user
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        if self.command is None:
+            return None
+
+        return self.command.cog
 
     @property
     def respond(self):
         return self.followup.send if self.response.is_done() else self.interaction.response.send_message
 
-    @property
-    def defer(self):
-        return self.interaction.response.defer
+    @discord.utils.copy_doc(InteractionResponse.defer)
+    async def defer(self, *, ephemeral: bool = False) -> None:
+        return await self.interaction.response.defer(ephemeral=ephemeral)
 
     @property
-    def followup(self):
+    def followup(self) -> Webhook:
         return self.interaction.followup
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Calls :attr:`~discord.commands.ApplicationContext.respond`.
         If the response is done, then calls :attr:`~discord.commands.ApplicationContext.respond` first."""
         if not self.response.is_done():
@@ -137,17 +155,26 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
 
         return await self.interaction.delete_original_message()
 
-    @property
-    def edit(self):
-        return self.interaction.edit_original_message
-
-    @property
-    def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        if self.command is None:
-            return None
-       
-        return self.command.cog
+    async def edit(
+            self,
+            *,
+            content: Optional[str] = MISSING,
+            embeds: List[Embed] = MISSING,
+            embed: Optional[Embed] = MISSING,
+            file: File = MISSING,
+            files: List[File] = MISSING,
+            view: Optional[View] = MISSING,
+            allowed_mentions: Optional[AllowedMentions] = None,
+    ) -> InteractionMessage:
+        return await self.interaction.edit_original_message(
+            content=content,
+            embeds=embeds,
+            embed=embed,
+            file=file,
+            files=files,
+            view=view,
+            allowed_mentions=allowed_mentions,
+        )
 
 
 class AutocompleteContext:
@@ -173,12 +200,20 @@ class AutocompleteContext:
 
     __slots__ = ("interaction", "command", "focused", "value", "options")
     
-    def __init__(self, interaction: Interaction, *, command: ApplicationCommand, focused: Option, value: str, options: dict) -> None:
-        self.interaction = interaction
-        self.command = command
-        self.focused = focused
-        self.value = value
-        self.options = options
+    def __init__(
+            self,
+            interaction: Interaction,
+            *,
+            command: ApplicationCommand,
+            focused: Option,
+            value: str,
+            options: Dict[str, Any],
+    ) -> None:
+        self.interaction: Interaction = interaction
+        self.command: ApplicationCommand = command
+        self.focused: Option = focused
+        self.value: str = value
+        self.options: Dict[str, Any] = options
 
     @property
     def cog(self) -> Optional[CogT]:
