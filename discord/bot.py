@@ -38,7 +38,8 @@ from typing import (
     List,
     Optional,
     TypeVar,
-    Union, Type,
+    Union,
+    Type,
 )
 
 import sys
