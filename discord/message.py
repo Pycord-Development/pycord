@@ -1267,8 +1267,9 @@ class Message(Hashable):
             Tried to suppress a message without permissions or
             edited a message's content or embed that isn't yours.
         ~discord.InvalidArgument
-            You specified both ``embed`` and ``embeds`` or
-            specified both ``file`` and ``files``.
+            You specified both ``embed`` and ``embeds``,
+            specified both ``file`` and ``files``, or either``file`` 
+            or ``files`` were of the wrong type.
         """
 
         payload: Dict[str, Any] = {}
