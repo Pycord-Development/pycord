@@ -142,7 +142,18 @@ class ApplicationCommandMixin:
         """
         return self._application_commands.pop(command.id)
 
-    def get_command(
+    @property
+    def get_command(self):
+        """Shortcut for :meth:`.get_application_command`.
+        
+        .. note::
+            Overridden in :class:`ext.commands.Bot`.
+        
+        .. versionadded:: 2.0
+        """
+        # TODO: Do something like we did in self.commands for this
+        return self.get_application_command
+    def get_application_command(
         self,
         name: str,
         guild_ids: Optional[List[int]] = None,
