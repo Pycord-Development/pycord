@@ -382,8 +382,7 @@ class ApplicationCommandMixin:
         autocomplete_context_cls
             The factory class that will be used to create the context.
             By default, this is :class:`.AutocompleteContext`. Should a custom
-            class be provided, it must be similar enough to
-            :class:`.AutocompleteContext`\'s interface.
+            class be provided, it must be a subclass of :class:`.AutocompleteContext`.
         """
         if interaction.type not in (
             InteractionType.application_command, 
