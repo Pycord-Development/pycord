@@ -33,16 +33,14 @@ from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING, Awaitable, overload, TypeVar, ParamSpec, \
     Generic, Type, Concatenate
 
-from .. import Cog, Interaction
 from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
 from ..user import User
 from ..message import Message
-from .context import ApplicationContext, AutocompleteContext
-from ..utils import find, get_or_fetch, async_all
+from .context import AutocompleteContext
+from ..utils import find, async_all, get_or_fetch
 from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .permissions import Permission
 
 if TYPE_CHECKING:
     from ..types.interactions import (
@@ -50,13 +48,16 @@ if TYPE_CHECKING:
         ApplicationCommandOption as ApplicationCommandOptionData,
         ApplicationCommandOptionChoice
     )
-
     from ._types import (
         Coro,
         CoroFunc,
         Hook,
         Error
     )
+    from .context import ApplicationContext
+    from ..cog import Cog
+    from .permissions import Permission
+    from ..interactions import Interaction
 
 __all__ = (
     "_BaseCommand",
@@ -90,6 +91,7 @@ else:
 
 
 def wrap_callback(coro):  # TODO: Maybe typehint
+
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
         try:
@@ -802,7 +804,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
     """
     type: int = 1
 
-    def __new__(cls: ApplicationCommandT, *args: Any, **kwargs: Any) -> SlashCommandGroup:
+    def __new__(cls: ApplicationCommandT, *args: Any, **kwargs: Any) -> ApplicationCommandT:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
@@ -919,7 +921,7 @@ class ContextMenuCommand(ApplicationCommand):
         event.
     """
 
-    def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
+    def __new__(cls: ApplicationCommandT, *args: Any, **kwargs: Any) -> ApplicationCommandT:
         self = super().__new__(cls)
 
         self.__original_kwargs__ = kwargs.copy()
