@@ -62,6 +62,7 @@ class Permission:
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def __init__(self, perm_id: Snowflake, perm_type: int, permission: bool = True, guild_id: Optional[int] = None):
         self.id: Snowflake = perm_id
         self.type: ApplicationCommandPermissionType = perm_type
@@ -70,6 +71,7 @@ class Permission:
 
     def to_dict(self) -> ApplicationCommandPermissions:
         return {"id": self.id, "type": self.type, "permission": self.permission}
+
 
 def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
     """The method used to specify application command permissions 
@@ -93,11 +95,12 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def decorator(func: Callable):
         if role_id is not None:
-            app_cmd_perm = Permission(role_id, 1, perm, guild_id)
-        elif not user_id is None:
-            app_cmd_perm = Permission(user_id, 2, perm, guild_id)
+            app_cmd_perm = Permission(role_id, 1, permission, guild_id)
+        elif user_id is not None:
+            app_cmd_perm = Permission(user_id, 2, permission, guild_id)
         else:
             raise ValueError("role_id or user_id must be specified!")
 
@@ -129,6 +132,7 @@ def has_role(item: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
@@ -162,6 +166,7 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
@@ -194,6 +199,7 @@ def is_user(user: int, guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
@@ -224,6 +230,7 @@ def is_owner(guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+
     def decorator(func: Callable):
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
