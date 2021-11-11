@@ -153,6 +153,7 @@ class ApplicationCommandMixin:
         """
         # TODO: Do something like we did in self.commands for this
         return self.get_application_command
+
     def get_application_command(
         self,
         name: str,
@@ -187,8 +188,6 @@ class ApplicationCommandMixin:
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
                 return command
-
-    get_application_command = get_command
 
     async def sync_commands(self) -> None:
         """|coro|
