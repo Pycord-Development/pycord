@@ -429,7 +429,7 @@ class InteractionResponse:
                 defer_type = InteractionResponseType.deferred_channel_message.value
             else:
                 defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type is InteractionResponseType.application_command:
+        elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
                 data = {'flags': 64}
