@@ -270,7 +270,7 @@ class Member(discord.abc.Messageable, _UserTag):
         '_user',
         '_state',
         '_avatar',
-        'communication_disabled_until'
+        'communication_disabled_until',
     )
 
     if TYPE_CHECKING:
