@@ -24,11 +24,13 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, TypeVar, Union
 
 import discord.abc
 
 if TYPE_CHECKING:
+    from typing_extensions import ParamSpec
+
     import discord
     from discord.state import ConnectionState
 
@@ -45,6 +47,13 @@ from ..utils import cached_property
 __all__ = (
     "ApplicationContext",
 )
+
+T = TypeVar('T')
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
 
 class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord application command interaction context.
@@ -69,6 +78,39 @@ class ApplicationContext(discord.abc.Messageable):
         self.interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
         self._state: ConnectionState = self.interaction._state
+
+    async def invoke(self, command: ApplicationCommand, /, *args: P.args, **kwargs: P.kwargs) -> T:
+        r"""|coro|
+
+        Calls a command with the arguments given.
+
+        This is useful if you want to just call the callback that a
+        :class:`.ApplicationCommand` holds internally.
+
+        .. note::
+
+            This does not handle converters, checks, cooldowns, pre-invoke,
+            or after-invoke hooks in any matter. It calls the internal callback
+            directly as-if it was a regular function.
+
+            You must take care in passing the proper arguments when
+            using this function.
+
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command that is going to be called.
+        \*args
+            The arguments to use.
+        \*\*kwargs
+            The keyword arguments to use.
+
+        Raises
+        -------
+        TypeError
+            The command argument to invoke is missing.
+        """
+        return await command(self, *args, **kwargs)
 
     async def _get_channel(self) -> discord.abc.Messageable:
         return self.channel
