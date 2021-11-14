@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 import types
 import functools
 import inspect
@@ -38,9 +39,10 @@ from ..user import User
 from ..message import Message
 from .context import ApplicationContext, AutocompleteContext
 from ..utils import find, get_or_fetch, async_all
-from ..errors import ValidationError, ClientException
+from ..errors import ValidationError, ClientException, CommandOnCooldown
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .permissions import Permission
+from .._cooldowns import CooldownMapping, BucketType
 
 __all__ = (
     "_BaseCommand",
@@ -98,6 +100,20 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand):
     cog = None
+
+    def __init__(self, func, *args, **kwargs):
+        try:
+            cooldown = func.__commands_cooldown__
+        except AttributeError:
+            cooldown = kwargs.get("cooldown")
+
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+        self._buckets: CooldownMapping = buckets
     
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -115,14 +131,24 @@ class ApplicationCommand(_BaseCommand):
         """
         return await self.callback(ctx, *args, **kwargs)
 
+    def _prepare_cooldowns(self, ctx: ApplicationContext):
+        if self._buckets.valid:
+            # dt = ctx.message.edited_at or ctx.message.created_at
+            # current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
+            current = datetime.datetime.now().timestamp()
+            bucket = self._buckets.get_bucket(ctx, current)
+            if bucket is not None:
+                retry_after = bucket.update_rate_limit(current)
+                if retry_after:
+                    raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
+        self._prepare_cooldowns(ctx)
 
         if not await self.can_run(ctx):
             raise CheckFailure(f'The check functions for the command {self.name} failed')
-
-        # TODO: Add cooldown
 
         await self.call_before_hooks(ctx)
 
@@ -368,6 +394,7 @@ class SlashCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
+        super(SlashCommand, self).__init__(func, *args, **kwargs)
         self.callback = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
@@ -566,8 +593,9 @@ class SlashCommand(ApplicationCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
+        if self._buckets.valid and not other._buckets.valid:
+            other._buckets = self._buckets.copy()
+
         #if self._max_concurrency != other._max_concurrency:
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
@@ -826,6 +854,7 @@ class ContextMenuCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
+        super(ContextMenuCommand, self).__init__(func, *args, **kwargs)
         self.callback = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
