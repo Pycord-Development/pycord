@@ -31,7 +31,7 @@ Installing
 
 To install the library without full voice support, you can just run the following command:
 
-.. code:: sh
+.. code:: py
 
     # Linux/macOS
     python3 -m pip install -U py-cord
@@ -41,7 +41,7 @@ To install the library without full voice support, you can just run the followin
 
 Otherwise to get voice support you should run the following command:
 
-.. code:: sh
+.. code:: py
 
     # Linux/macOS
     python3 -m pip install -U "py-cord[voice]"
@@ -52,7 +52,7 @@ Otherwise to get voice support you should run the following command:
 
 To install the development version, do the following:
 
-.. code:: sh
+.. code:: py
 
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
