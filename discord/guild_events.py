@@ -39,7 +39,7 @@ from typing import (
 from .enums import (
     StagePrivacyLevel,
     GuildEventStatus,
-    GuildEventEntityType,
+    GuildEventLocationType,
     try_enum
 )
 from .utils import MISSING
@@ -52,13 +52,22 @@ class GuildEventEntityMetadata(NamedTuple):
     speaker_ids: Optional[List[int]]
     location: Optional[str]
 
+class Location:
+    def __init__(self, *, state: ConnectionState, location, type: GuildEventLocationType):
+        self._state = state
+        self.type = type
+        if self.type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
+            self.location = self._state._get_channel(int(location))
+        else:
+            self.location = location
+
 class GuildEvent:
     def __init__(self, *, data, state: ConnectionState):
         self._state = state
         
         self.id: int = data.get('id')
-        self.guild: Guild = self._state._get_guild(data.get('guild_id'))
-        self.channel_id: int = data.get('channel_id', None)
+        self.guild: Guild = self._state._get_guild(int(data.get('guild_id')))
+        #self.channel_id: int = data.get('channel_id', None)
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
         self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
@@ -70,14 +79,22 @@ class GuildEvent:
         self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level'))
         self.status: GuildEventStatus = try_enum(GuildEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
+        self.creator_id = data.get('creator_id', None)
+        self.creator = data.get('creator', None) # TODO: Convert
+
+        entity_metadata = data.get('entity_metadata')
+        entity_type = try_enum(GuildEventLocationType, data.get('entity_type'))
+        channel_id = data.get('channel_id', None)
+        if channel_id != None:
+            self.location = Location(state=state, location=channel_id, type=entity_type)
+        else:
+            self.location = Location(state=state, location=entity_metadata.location, type=entity_type)
+        if entity_metadata.speaker_ids != None:
+            self.speaker_ids = entity_metadata.speaker_ids
+
 
         # TODO: find out what the following means/does
-        self.entity_type: GuildEventEntityType = try_enum(GuildEventEntityType, data.get('entity_tyoe'))
         self.entity_id: int = data.get('entity_id')
-        entity_metadata = data.get('entity_metadata')
-        self.entity_metadata: GuildEventEntityMetadata = GuildEventEntityMetadata(speaker_ids=entity_metadata.get('speaker_ids', None), location=entity_metadata.get('location', None))
-        self.sku_ids = data.get('sku_ids')
-        self.skus = data.get('skus')
 
     @property
     def interested(self):
@@ -152,3 +169,17 @@ class GuildEvent:
         if payload:
             data = await self._state.http.edit_guild_event(self.id, **payload)
             return GuildEvent(data=data, state=self._state)
+
+    async def delete(self) -> None:
+        """|coro|
+        
+        Deletes the guild event.
+
+        Raises
+        ------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+        """
+        await self._state.http.delete_guild_event(self.id)
