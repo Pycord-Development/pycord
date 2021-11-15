@@ -385,7 +385,6 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.parent = kwargs.get('parent')
-        self.is_subcommand: bool = self.parent is not None
 
         self.cog = None
 
@@ -471,6 +470,10 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    @property
+    def is_subcommand(self) -> bool:
+        return self.parent is not None
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -719,8 +722,15 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
         self = super().__new__(cls)
-
         self.__original_kwargs__ = kwargs.copy()
+
+        self.__initial_commands__ = []
+        for i, c in cls.__dict__.items():
+            if isinstance(c, (SlashCommand, SlashCommandGroup)):
+                print(c.parent)
+                c.parent = self
+                self.__initial_commands__.append(c)
+
         return self
 
     def __init__(
@@ -738,7 +748,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
-        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = []
+        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
         self.checks = []
