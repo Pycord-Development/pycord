@@ -27,14 +27,14 @@ from __future__ import annotations
 
 from typing import Optional, Any, TYPE_CHECKING, List, Callable, Type, Tuple, Union
 
-from discord.errors import ClientException, CommandError, CommandOnCooldown, MaxConcurrencyReached
+from discord.errors import ClientException
+from ...commands.errors import CommandError, CommandOnCooldown, MaxConcurrencyReached
 
 if TYPE_CHECKING:
     from inspect import Parameter
 
     from .converter import Converter
     from .context import Context
-    from .cooldowns import Cooldown, BucketType
     from .flags import Flag
     from discord.abc import GuildChannel
     from discord.threads import Thread

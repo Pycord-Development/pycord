@@ -32,11 +32,11 @@ import time
 import asyncio
 from collections import deque
 
-from .abc import PrivateChannel
+from ..abc import PrivateChannel
 from .errors import MaxConcurrencyReached
 
 if TYPE_CHECKING:
-    from .message import Message
+    from ..message import Message
 
 __all__ = (
     'BucketType',

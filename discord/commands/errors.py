@@ -23,11 +23,15 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from ..errors import DiscordException
+from typing import TYPE_CHECKING, Optional, Any
 
 __all__ = (
     "ApplicationCommandError",
     "CheckFailure",
     "ApplicationCommandInvokeError",
+    "CommandError",
+    "CommandOnCooldown",
+    "MaxConcurrencyReached",
 )
 
 class ApplicationCommandError(DiscordException):
@@ -40,6 +44,70 @@ class ApplicationCommandError(DiscordException):
     from :class:`.Bot`\, :func:`.on_command_error`.
     """
     pass
+
+
+
+class CommandError(DiscordException):
+    r"""The base exception type for all command related errors.
+
+    This inherits from :exc:`discord.DiscordException`.
+
+    This exception and exceptions inherited from it are handled
+    in a special way as they are caught and passed into a special event
+    from :class:`.Bot`\, :func:`.on_command_error`.
+    """
+    def __init__(self, message: Optional[str] = None, *args: Any) -> None:
+        if message is not None:
+            # clean-up @everyone and @here mentions
+            m = message.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
+            super().__init__(m, *args)
+        else:
+            super().__init__(*args)
+
+class CommandOnCooldown(CommandError):
+    """Exception raised when the command being invoked is on cooldown.
+
+    This inherits from :exc:`CommandError`
+
+    Attributes
+    -----------
+    cooldown: :class:`.Cooldown`
+        A class with attributes ``rate`` and ``per`` similar to the
+        :func:`.cooldown` decorator.
+    type: :class:`BucketType`
+        The type associated with the cooldown.
+    retry_after: :class:`float`
+        The amount of seconds to wait before you can retry again.
+    """
+    def __init__(self, cooldown, retry_after: float, type) -> None:
+        self.cooldown = cooldown
+        self.retry_after: float = retry_after
+        self.type = type
+        super().__init__(f'You are on cooldown. Try again in {retry_after:.2f}s')
+
+
+class MaxConcurrencyReached(CommandError):
+    """Exception raised when the command being invoked has reached its maximum concurrency.
+
+    This inherits from :exc:`CommandError`.
+
+    Attributes
+    ------------
+    number: :class:`int`
+        The maximum number of concurrent invokers allowed.
+    per: :class:`.BucketType`
+        The bucket type passed to the :func:`.max_concurrency` decorator.
+    """
+
+    def __init__(self, number: int, per) -> None:
+        self.number: int = number
+        self.per = per
+        name = per.name
+        suffix = 'per %s' % name if per.name != 'default' else 'globally'
+        plural = '%s times %s' if number > 1 else '%s time %s'
+        fmt = plural % (number, suffix)
+        super().__init__(f'Too many people are using this command. It can only be used {fmt} concurrently.')
+
 
 class CheckFailure(ApplicationCommandError):
     """Exception raised when the predicates in :attr:`.Command.checks` have failed.

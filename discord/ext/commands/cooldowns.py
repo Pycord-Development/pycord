@@ -1,1 +1,1 @@
-from ..._cooldowns import *
+from ...commands.cooldowns import *

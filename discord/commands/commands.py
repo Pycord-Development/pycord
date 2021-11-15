@@ -39,10 +39,10 @@ from ..user import User
 from ..message import Message
 from .context import ApplicationContext, AutocompleteContext
 from ..utils import find, get_or_fetch, async_all
-from ..errors import ValidationError, ClientException, CommandOnCooldown
-from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from ..errors import ValidationError, ClientException
+from .errors import CommandOnCooldown, ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .permissions import Permission
-from .._cooldowns import CooldownMapping, BucketType
+from .cooldowns import CooldownMapping, BucketType
 
 __all__ = (
     "_BaseCommand",
