@@ -527,17 +527,19 @@ class SlashCommand(ApplicationCommand):
         else:
             await self.callback(ctx, **kwargs)
 
-    async def invoke_autocomplete_callback(self, interaction: Interaction):
+    async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = { i.name: i.default for i in self.options }
         
-        for op in interaction.data.get("options", []):
+        for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
                     i["name"]:i["value"] 
-                    for i in interaction.data["options"]
+                    for i in ctx.interaction.data["options"]
                 })
-                ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
+                ctx.focused = option
+                ctx.value = op.get("value")
+                ctx.options = values
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await option.autocomplete(ctx)
                 else:
@@ -547,7 +549,7 @@ class SlashCommand(ApplicationCommand):
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ][:25]
-                return await interaction.response.send_autocomplete_result(choices=choices)
+                return await ctx.interaction.response.send_autocomplete_result(choices=choices)
 
 
     def copy(self):
@@ -786,11 +788,11 @@ class SlashCommandGroup(ApplicationCommand, Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
-    async def invoke_autocomplete_callback(self, interaction: Interaction) -> None:
-        option = interaction.data["options"][0]
+    async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:
+        option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
-        interaction.data = option
-        await command.invoke_autocomplete_callback(interaction)
+        ctx.interaction.data = option
+        await command.invoke_autocomplete_callback(ctx)
 
 
 class ContextMenuCommand(ApplicationCommand):

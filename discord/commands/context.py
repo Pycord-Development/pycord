@@ -155,6 +155,8 @@ class AutocompleteContext:
 
     Attributes
     -----------
+    bot: :class:`.Bot`
+        The bot that the command belongs to.    
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
     command: :class:`.ApplicationCommand`
@@ -167,14 +169,16 @@ class AutocompleteContext:
         A name to value mapping of the options that the user has selected before this option.
     """
 
-    __slots__ = ("interaction", "command", "focused", "value", "options")
+    __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
     
-    def __init__(self, interaction: Interaction, *, command: ApplicationCommand, focused: Option, value: str, options: dict) -> None:
+    def __init__(self, bot: Bot, interaction: Interaction) -> None:
+        self.bot = bot
         self.interaction = interaction
-        self.command = command
-        self.focused = focused
-        self.value = value
-        self.options = options
+
+        # self.command = command
+        # self.focused = focused
+        # self.value = value
+        # self.options = options
 
     @property
     def cog(self) -> Optional[Cog]:
