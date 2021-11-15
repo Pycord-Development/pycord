@@ -680,14 +680,14 @@ class GuildEventStatus(Enum):
     scheduled = 1
     active = 2
     completed = 3
-    cancelled = 4
+    canceled = 4
 
 
-class GuildEventEntityType(Enum):
+class GuildEventLocationType(Enum):
     none = 0
     stage_instance = 1
     voice = 2
-    location = 3
+    external = 3
 
 
 T = TypeVar('T')

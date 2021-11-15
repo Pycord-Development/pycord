@@ -1555,9 +1555,16 @@ class HTTPClient:
     # TODO:
     # 1. Typehint responses
 
-    def get_guild_events(self, guild_id: Snowflake) -> Response[None]:
-        return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id))
-    
+    def get_guild_events(self, guild_id: Snowflake, with_user_count: bool = False) -> Response[None]:
+        params = {
+            'with_user_count': with_user_count
+        }
+
+        return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id), params=params)
+
+    def get_guild_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
+
     def create_guild_event(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
         valid_keys = (
             'channel_id',
@@ -1569,15 +1576,12 @@ class HTTPClient:
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
-        return self.request(Route('POST', 'guilds/{guild_id}/events', guild_id=guild_id), json=payload)
+        return self.request(Route('POST', 'guilds/{guild_id}/scheduled-events/', guild_id=guild_id), json=payload)
 
-    def get_guild_event(self, event_id: Snowflake) -> Response[None]:
-        return self.request(Route('GET', '/guild-events/{event_id}', event_id=event_id))
+    def delete_guild_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
+        return self.request(Route('DELETE', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
 
-    def delete_guild_event(self, event_id: Snowflake) -> Response[None]:
-        return self.request(Route('DELETE', '/guild-events/{event_id}', event_id=event_id))
-
-    def edit_guild_event(self, event_id: Snowflake, **payload: Any) -> Response[None]:
+    def edit_guild_event(self, guild_id: Snowflake, event_id: Snowflake, **payload: Any) -> Response[None]:
         valid_keys = (
             'channel_id',
             'name',
@@ -1588,7 +1592,15 @@ class HTTPClient:
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
-        return self.request(Route('PATCH', '/guild-events/{event_id}', event_id=event_id), json=payload)
+        return self.request(Route('PATCH', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), json=payload)
+
+    def get_guild_event_users(self, guild_id: Snowflake, event_id: Snowflake, limit: int, with_member: bool = False) -> Response[None]:
+        params = {
+            "limit": int(limit),
+            "with_member": with_member
+        }
+        
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}/users', guild_id=guild_id, event_id=event_id), params=params)
 
     # Application commands (global)
 

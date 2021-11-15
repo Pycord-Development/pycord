@@ -62,6 +62,7 @@ from .ui.view import View
 from .stage_instance import StageInstance
 from .threads import Thread
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
+from .guild_events import GuildEvent
 
 if TYPE_CHECKING:
     from .abc import SnowflakeTime, PrivateChannel, GuildChannel, Snowflake
@@ -1312,14 +1313,6 @@ class Client:
         data = await self.http.get_stage_instance(channel_id)
         guild = self.get_guild(int(data['guild_id']))
         return StageInstance(guild=guild, state=self._connection, data=data)  # type: ignore
-
-    # Guild Event management
-
-    async def fetch_guild_event(self, event_id, /):
-        pass
-
-    async def delete_guild_event(self, event_id, /):
-        pass
 
     # Invite management
 
