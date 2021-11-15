@@ -1723,7 +1723,7 @@ def check(predicate: Check) -> Callable[[T], T]:
     """
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
-        if isinstance(func, Command):
+        if isinstance(func, _BaseCommand):
             func.checks.append(predicate)
         else:
             if not hasattr(func, '__commands_checks__'):

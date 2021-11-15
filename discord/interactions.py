@@ -61,10 +61,12 @@ if TYPE_CHECKING:
     from .ui.view import View
     from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, PartialMessageable
     from .threads import Thread
+    from .commands import OptionChoice
 
     InteractionChannel = Union[
         VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, Thread, PartialMessageable
     ]
+
 
 MISSING: Any = utils.MISSING
 
@@ -406,7 +408,7 @@ class InteractionResponse:
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            This only applies for interactions of type :attr:`InteractionType.application_command`.
+            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
 
         Raises
         -------
@@ -422,7 +424,11 @@ class InteractionResponse:
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
         if parent.type is InteractionType.component:
-            defer_type = InteractionResponseType.deferred_message_update.value
+            if ephemeral:
+                data = {'flags': 64}
+                defer_type = InteractionResponseType.deferred_channel_message.value
+            else:
+                defer_type = InteractionResponseType.deferred_message_update.value
         elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
@@ -473,7 +479,7 @@ class InteractionResponse:
         file: File = None,
         files: List[File] = None,
         delete_after: float = None
-    ) -> None:
+    ) -> Interaction:
         """|coro|
 
         Responds to this interaction by sending a message.
@@ -570,21 +576,6 @@ class InteractionResponse:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
 
-        if file is not None and files is not None:
-            raise InvalidArgument('cannot pass both file and files parameter to send()')
-        
-        if file is not None:
-            if not isinstance(file, File):
-                raise InvalidArgument('file parameter must be File')
-            else:
-                files = [file]
-
-        if files is not None:
-            if len(files) > 10:
-                raise InvalidArgument('files parameter must be a list of up to 10 elements')
-            elif not all(isinstance(file, File) for file in files):
-                raise InvalidArgument('files parameter must be a list of File')
-
         parent = self._parent
         adapter = async_context.get()
         try:
@@ -613,7 +604,7 @@ class InteractionResponse:
                 await asyncio.sleep(delete_after)
                 await self._parent.delete_original_message()
             asyncio.ensure_future(delete(), loop=self._parent._state.loop)
-
+        return self._parent
 
     async def edit_message(
         self,
@@ -707,7 +698,49 @@ class InteractionResponse:
 
         self._responded = True
 
+    async def send_autocomplete_result(
+        self,
+        *,
+        choices: List[OptionChoice],
+    ) -> None:
+        """|coro|
+        Responds to this interaction by sending the autocomplete choices.
 
+        Parameters
+        -----------
+        choices: List[:class:`OptionChoice`]
+            A list of choices.  
+
+        Raises
+        -------
+        HTTPException
+            Sending the result failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        parent = self._parent
+
+        if parent.type is not InteractionType.auto_complete:
+            return
+
+        payload = {
+            "choices": [c.to_dict() for c in choices]
+        }
+
+        adapter = async_context.get()
+        await adapter.create_interaction_response(
+            parent.id,
+            parent.token,
+            session=parent._session,
+            type=InteractionResponseType.auto_complete_result.value,
+            data=payload,
+        )
+
+        self._responded = True
+        
 class _InteractionMessageState:
     __slots__ = ('_parent', '_interaction')
 

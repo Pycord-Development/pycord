@@ -66,7 +66,7 @@ Bot
 .. autoclass:: Bot
     :members:
     :inherited-members:
-    :exclude-members: command, event, message_command, slash_command, user_command
+    :exclude-members: command, event, message_command, slash_command, user_command, listen
 
     .. automethod:: Bot.command(**kwargs)
         :decorator:
@@ -81,6 +81,9 @@ Bot
         :decorator:
 
     .. automethod:: Bot.user_command(**kwargs)
+        :decorator:
+
+    .. automethod:: Bot.listen(name=None)
         :decorator:
 
 AutoShardedBot
@@ -1189,6 +1192,10 @@ Utility Functions
 
 .. autofunction:: discord.utils.as_chunks
 
+.. autofunction:: discord.utils.time_snowflake
+
+.. autofunction:: discord.utils.generate_snowflake
+
 .. _discord-api-enums:
 
 Enumerations
@@ -1434,6 +1441,9 @@ of :class:`enum.Enum`.
     .. attribute:: team_user
 
         The user is a Team User.
+    .. attribute:: partner_or_verification_application
+
+        Relates to partner/verification applications.
     .. attribute:: system
 
         The user is a system user (i.e. represents Discord officially).
@@ -1452,6 +1462,12 @@ of :class:`enum.Enum`.
     .. attribute:: discord_certified_moderator
 
         The user is a Discord Certified Moderator.
+    .. attribute:: bot_http_interactions
+
+        The bot has set an interactions endpoint url.
+    .. attribute:: spammer
+
+        The user is disabled for being a spammer.
 
 .. class:: ActivityType
 
@@ -2713,49 +2729,127 @@ of :class:`enum.Enum`.
 
 .. class:: EmbeddedActivity
 
-    Respresents an embedded activity application.
+    Represents an embedded activity application.
 
     .. versionadded:: 2.0
 
-    .. attribute:: youtube
-
-        Represents the embedded application Youtube Together.
-
-    .. attribute:: watch_together
-
-        Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+    .. attribute:: awkword
         
-    .. attribute:: watch_together_dev
-
-        Development version of `watch_together`.
-
-    .. attribute:: poker
-
-        Represents the embedded application Poker Night.
+        Represents the embedded application Awkword.
 
     .. attribute:: betrayal
 
         Represents the embedded application Betrayal.io
+    
+    .. attribute:: cg2_qa
+        
+        Represents the embedded application CG2 QA.
+    
+    .. attribute:: cg2_staging
+        
+        Represents the embedded application CG2 Staging.
 
-    .. attribute:: fishing
+    .. attribute:: cg3_prod
 
-        Represents the embedded application Fishington.io
+        Represents the embedded application CG3 Prod.
+    
+    .. attribute:: cg3_qa
+        
+        Represents the embedded application CG3 QA.
+    
+    .. attribute:: cg3_staging
+        
+        Represents the embedded application CG3 Staging.
+    
+    .. attribute:: cg3_dev
 
-    .. attribute:: chess
+        Represents the embedded application CG3 Development.
+    
+    .. attribute:: cg4_prod
+    
+        Represents the embedded application CG4 Prod.
+
+    .. attribute:: cg4_qa
+        
+        Represents the embedded application CG4 QA.
+    
+    .. attribute:: cg4_staging
+        
+        Represents the embedded application CG4 Staging.
+    
+    .. attribute:: cg4_dev
+
+        Represents the embedded application CG4 Development.
+
+    .. attribute:: chess_in_the_park
+
         Represents the embedded application Chess in the Park.
 
-    .. attribute:: letter_tile
+    .. attribute:: chess_in_the_park_dev
 
-        Represents the embedded application Letter Tile.
-
-    .. attribute:: word_snack
-
-        Represents the embedded application Word Snacks.
+        Development version of :attr:`~EmbeddedActivity.chess_in_the_park`.
 
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
 
+    .. attribute:: fishington
+
+        Represents the embedded application Fishington.io
+
+    .. attribute:: letter_tile
+
+        Represents the embedded application Letter Tile.
+    
+    .. attribute:: pn_stagging
+
+        Represents the embedded application Poker Night Staging.
+
+    .. attribute:: poker_night
+
+        Represents the embedded application Poker Night.
+     
+    .. attribute:: poker_night
+
+        Represents the embedded application Poker QA.
+    
+    .. attribute:: putts
+        
+        Represents the embedded application Putts.
+
+    .. attribute:: sketchy_artist 
+        
+        Represents the embedded application Sketchy Artist.
+    
+    .. attribute:: sketchy_artist_dev
+        
+        Represents the embedded application Sketchy Artist development version.
+    
+    .. attribute:: spell_cast
+
+        Represents the embedded application Spell Cast.
+
+    .. attribute:: watch_together
+
+        Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
+        
+    .. attribute:: watch_together_dev
+
+        Development version of :attr:`.watch_together`.
+
+    .. attribute:: word_snacks
+        
+        Represents the embedded application word snacks.
+    
+    .. attribute:: word_snacks_dev
+        
+        Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
+        
+    .. attribute:: youtube_together
+
+        Represents the embedded application Youtube Together.
+    
+    
 
 Async Iterator
 ----------------
@@ -3952,7 +4046,7 @@ WelcomeScreen
     :members:
 
 WelcomeScreenChannel
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: WelcomeScreenChannel
 

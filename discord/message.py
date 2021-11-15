@@ -1156,6 +1156,22 @@ class Message(Hashable):
         *,
         content: Optional[str] = ...,
         embed: Optional[Embed] = ...,
+        file: Optional[File] = ...,
+        attachments: List[Attachment] = ...,
+        suppress: bool = ...,
+        delete_after: Optional[float] = ...,
+        allowed_mentions: Optional[AllowedMentions] = ...,
+        view: Optional[View] = ...,
+    ) -> Message:
+        ...
+        
+    @overload
+    async def edit(
+        self,
+        *,
+        content: Optional[str] = ...,
+        embed: Optional[Embed] = ...,
+        files: Optional[List[File]] = ...,
         attachments: List[Attachment] = ...,
         suppress: bool = ...,
         delete_after: Optional[float] = ...,
@@ -1170,6 +1186,7 @@ class Message(Hashable):
         *,
         content: Optional[str] = ...,
         embeds: List[Embed] = ...,
+        file: File = ...,
         attachments: List[Attachment] = ...,
         suppress: bool = ...,
         delete_after: Optional[float] = ...,
@@ -1183,6 +1200,8 @@ class Message(Hashable):
         content: Optional[str] = MISSING,
         embed: Optional[Embed] = MISSING,
         embeds: List[Embed] = MISSING,
+        file: Sequence[File] = MISSING,
+        files: List[Sequence[File]] = MISSING,
         attachments: List[Attachment] = MISSING,
         suppress: bool = MISSING,
         delete_after: Optional[float] = None,
@@ -1211,6 +1230,10 @@ class Message(Hashable):
             To remove all embeds ``[]`` should be passed.
 
             .. versionadded:: 2.0
+        file: Sequence[:class:`File`]
+            A new file to add to the message.
+        files: List[Sequence[:class:`File`]]
+            New files to add to the message.
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
@@ -1244,7 +1267,9 @@ class Message(Hashable):
             Tried to suppress a message without permissions or
             edited a message's content or embed that isn't yours.
         ~discord.InvalidArgument
-            You specified both ``embed`` and ``embeds``
+            You specified both ``embed`` and ``embeds``,
+            specified both ``file`` and ``files``, or either``file`` 
+            or ``files`` were of the wrong type.
         """
 
         payload: Dict[str, Any] = {}
@@ -1289,8 +1314,42 @@ class Message(Hashable):
                 payload['components'] = view.to_components()
             else:
                 payload['components'] = []
+                
+        if file is not MISSING and files is not MISSING:
+            raise InvalidArgument('cannot pass both file and files parameter to edit()')
 
-        data = await self._state.http.edit_message(self.channel.id, self.id, **payload)
+        if file is not MISSING:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+
+            try:
+                data = await self._state.http.edit_files(
+                    self.channel.id,
+                    self.id,
+                    files=[file],
+                    **payload,
+                )
+            finally:
+                file.close()
+
+        elif files is not MISSING:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+
+            try:
+                data = await self._state.http.edit_files(
+                    self.channel.id,
+                    self.id,
+                    files=files,
+                    **payload,
+                )
+            finally:
+                for f in files:
+                    f.close()
+        else:
+            data = await self._state.http.edit_message(self.channel.id, self.id, **payload)
         message = Message(state=self._state, channel=self.channel, data=data)
 
         if view and not view.is_finished():

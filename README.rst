@@ -1,8 +1,8 @@
 pycord
 ==========
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=5865f2&label=Discord&logo=discord
-   :target: https://discord.gg/dK2qkEJ37N
+.. image:: https://discord.com/api/guilds/881207955029110855/embed.png
+   :target: https://pycord.dev/discord
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
@@ -10,6 +10,9 @@ pycord
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue
+   :target: https://pypi.python.org/pypi/py-cord
+   :alt: PyPI downloads
 
 A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
@@ -18,7 +21,7 @@ Key Features
 
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
-- Optimised in both speed and memory.
+- Optimised for both speed and memory usage.
 - Supports Slash Commands, Context Menus and Message Components.
 
 Installing
@@ -61,7 +64,7 @@ Optional Packages
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
 
-Please note that on Linux installing voice you must install the following packages via your favourite package manager (e.g. ``apt``, ``dnf``, etc) before running the above commands:
+Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
 * python-dev (e.g. ``python3.6-dev`` for Python 3.6)
@@ -104,10 +107,12 @@ Normal Commands Example
 
 You can find more examples in the examples directory.
 
+Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
+
 Links
 ------
 
-- `Documentation <https://pycord.readthedocs.io/en/latest/index.html>`_
-- `Official Discord Server <https://discord.gg/dK2qkEJ37N>`_
+- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
+- `Official Discord Server <https://pycord.dev/discord>`_
 - `Discord Developers <https://discord.gg/discord-developers>`_
 - `Discord API <https://discord.gg/discord-api>`_
