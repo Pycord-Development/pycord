@@ -36,7 +36,7 @@ from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Opti
 from .commands.commands import _BaseCommand
 
 if TYPE_CHECKING:
-    from .commands import InteractionContext, ApplicationCommand
+    from .commands import ApplicationContext, ApplicationCommand
 
 __all__ = (
     'CogMeta',
@@ -358,7 +358,7 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    def bot_check_once(self, ctx: InteractionContext) -> bool:
+    def bot_check_once(self, ctx: ApplicationContext) -> bool:
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 
@@ -368,7 +368,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    def bot_check(self, ctx: InteractionContext) -> bool:
+    def bot_check(self, ctx: ApplicationContext) -> bool:
         """A special method that registers as a :meth:`.Bot.check`
         check.
 
@@ -378,7 +378,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    def cog_check(self, ctx: InteractionContext) -> bool:
+    def cog_check(self, ctx: ApplicationContext) -> bool:
         """A special method that registers as a :func:`~discord.ext.commands.check`
         for every command and subcommand in this cog.
 
@@ -388,7 +388,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    async def cog_command_error(self, ctx: InteractionContext, error: Exception) -> None:
+    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -407,7 +407,7 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    async def cog_before_invoke(self, ctx: InteractionContext) -> None:
+    async def cog_before_invoke(self, ctx: ApplicationContext) -> None:
         """A special method that acts as a cog local pre-invoke hook.
 
         This is similar to :meth:`.Command.before_invoke`.
@@ -422,7 +422,7 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    async def cog_after_invoke(self, ctx: InteractionContext) -> None:
+    async def cog_after_invoke(self, ctx: ApplicationContext) -> None:
         """A special method that acts as a cog local post-invoke hook.
 
         This is similar to :meth:`.Command.after_invoke`.
@@ -591,10 +591,12 @@ class CogMixin:
         cog = self.__cogs.pop(name, None)
         if cog is None:
             return
+        
+        if hasattr(self, "_help_command"):
+            help_command = self._help_command
+            if help_command and help_command.cog is cog:
+                help_command.cog = None
 
-        help_command = self._help_command
-        if help_command and help_command.cog is cog:
-            help_command.cog = None
         cog._eject(self)
 
         return cog
