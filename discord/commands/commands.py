@@ -727,7 +727,6 @@ class SlashCommandGroup(ApplicationCommand, Option):
         self.__initial_commands__ = []
         for i, c in cls.__dict__.items():
             if isinstance(c, (SlashCommand, SlashCommandGroup)):
-                print(c.parent)
                 c.parent = self
                 self.__initial_commands__.append(c)
 
