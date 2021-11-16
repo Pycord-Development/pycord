@@ -42,6 +42,7 @@ from .enums import (
     GuildEventLocationType,
     try_enum
 )
+from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
 
 if TYPE_CHECKING:
@@ -55,11 +56,20 @@ class GuildEventEntityMetadata(NamedTuple):
 class Location:
     def __init__(self, *, state: ConnectionState, location, type: GuildEventLocationType):
         self._state = state
-        self.type = type
-        if self.type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
+        if type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
             self.location = self._state._get_channel(int(location))
         else:
             self.location = location
+    
+    @property
+    def type(self):
+        if isinstance(self.location, StageChannel):
+            return GuildEventLocationType.stage_instance
+        elif isinstance(self.location, VoiceChannel):
+            return GuildEventLocationType.voice
+        else:
+            return GuildEventLocationType.external
+
 
 class GuildEvent:
     def __init__(self, *, data, state: ConnectionState):
@@ -105,10 +115,10 @@ class GuildEvent:
         *,
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
-        channel_id: int = MISSING,
+        location: Location = MISSING,
+        speaker_ids: List[int] = MISSING,
         privacy_level: StagePrivacyLevel = MISSING,
         start_time: datetime.datetime = MISSING,
-        # entity_type
     ) -> Optional[GuildEvent]:
         """|coro|
         
@@ -148,25 +158,32 @@ class GuildEvent:
         # for `channel_id` it may become optional because
         # there's a custom location parameter so it might
         # not be giving us an ID in the first place
-        
+
         payload: Dict[str, Any] = {}
 
         if name is not MISSING:
             payload["name"] = name
-        
+
         if description is not MISSING:
             payload["description"] = description
-        
+
         if privacy_level is not MISSING:
             payload["privacy_level"] = privacy_level.value
-        
-        if channel_id is not MISSING:
-            payload["channel_id"] = channel_id
+
+        if speaker_ids is MISSING:
+            speaker_ids = []
+
+        if location is not MISSING:
+            if location.type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
+                payload["channel_id"] = location.location.id
+                payload["entity_metadata"] = {"speaker_ids":speaker_ids, "location":str(location.location.id)}
+            else:
+                payload["entity_metadata"] = {"speaker_ids":speaker_ids, "location":str(location.location)}
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
-        
-        if payload:
+
+        if payload != {}:
             data = await self._state.http.edit_guild_event(self.id, **payload)
             return GuildEvent(data=data, state=self._state)
 
