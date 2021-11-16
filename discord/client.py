@@ -1219,6 +1219,8 @@ class Client:
             Whether to include count information in the guild. This fills the
             :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
             fields.
+            
+            .. versionadded:: 2.0
 
 
         Raises
