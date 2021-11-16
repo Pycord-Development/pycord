@@ -542,14 +542,14 @@ class SlashCommand(ApplicationCommand):
                 ctx.options = values
 
                 if len(inspect.signature(option.autocomplete).parameters) == 2:
-                    result = option.autocomplete(getattr(option.autocomplete, "__self__", ctx.cog), ctx)
+                    instance = getattr(option.autocomplete, "__self__", ctx.cog)
+                    result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
                     
-
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
