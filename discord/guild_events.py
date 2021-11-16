@@ -53,7 +53,7 @@ class GuildEventEntityMetadata(NamedTuple):
     speaker_ids: Optional[List[int]]
     location: Optional[str]
 
-class Location:
+class GuildEventLocation:
     def __init__(self, *, state: ConnectionState, location, type: GuildEventLocationType):
         self._state = state
         if type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
@@ -72,6 +72,7 @@ class Location:
 
 
 class GuildEvent:
+    # TODO: remove speaker_ids
     def __init__(self, *, data, state: ConnectionState):
         self._state = state
         
@@ -96,12 +97,11 @@ class GuildEvent:
         entity_type = try_enum(GuildEventLocationType, data.get('entity_type'))
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = Location(state=state, location=channel_id, type=entity_type)
+            self.location = GuildEventLocation(state=state, location=channel_id, type=entity_type)
         else:
-            self.location = Location(state=state, location=entity_metadata.location, type=entity_type)
+            self.location = GuildEventLocation(state=state, location=entity_metadata.location, type=entity_type)
         if entity_metadata.speaker_ids != None:
             self.speaker_ids = entity_metadata.speaker_ids
-
 
         # TODO: find out what the following means/does
         self.entity_id: int = data.get('entity_id')
@@ -115,7 +115,7 @@ class GuildEvent:
         *,
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
-        location: Location = MISSING,
+        location: GuildEventLocation = MISSING,
         speaker_ids: List[int] = MISSING,
         privacy_level: StagePrivacyLevel = MISSING,
         start_time: datetime.datetime = MISSING,
