@@ -265,6 +265,7 @@ class Guild(Hashable):
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
         This is ``None`` unless the guild is obtained using :meth:`Client.fetch_guild`
         with ``with_counts=True``.
+
         .. versionadded:: 2.0
     """
 
