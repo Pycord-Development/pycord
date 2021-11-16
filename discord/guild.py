@@ -257,6 +257,7 @@ class Guild(Hashable):
     approximate_member_count: Optional[:class:`int`]
         The approximate number of members in the guild. This is ``None`` unless the guild is obtained
         using :meth:`Client.fetch_guild` with ``with_counts=True``.
+
         .. versionadded:: 2.0
         
     approximate_presence_count: Optional[:class:`int`]
