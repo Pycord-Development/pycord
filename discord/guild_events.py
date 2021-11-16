@@ -1,3 +1,4 @@
+add cover foto
 """
 The MIT License (MIT)
 
