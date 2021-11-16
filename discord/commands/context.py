@@ -103,6 +103,10 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
+    @cached_property
+    def author(self) -> Optional[Union[Member, User]]:
+        return self.user
+
     @property
     def voice_client(self):
         return self.guild.voice_client
@@ -110,8 +114,6 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
-
-    author = user
 
     @property
     def respond(self):
