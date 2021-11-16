@@ -1221,7 +1221,6 @@ class Client:
             fields.
 
             .. versionadded:: 2.0
-
         Raises
         ------
         :exc:`.Forbidden`
