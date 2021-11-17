@@ -537,6 +537,7 @@ class SlashCommand(ApplicationCommand):
                     i["name"]:i["value"] 
                     for i in ctx.interaction.data["options"]
                 })
+                ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
                 ctx.options = values
