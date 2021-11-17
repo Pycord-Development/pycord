@@ -532,13 +532,46 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(
-        self, name: str, description: str, guild_ids=None
+    def create_group(
+        self, name: str, description: str, guild_ids: Optional[List[int]] = None
     ) -> SlashCommandGroup:
-        # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
+        """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
+        command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Returns
+        --------
+        SlashCommandGroup
+            The slash command group that was created.
+        """
         group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
+    def group(
+        self,
+        name: str,
+        description: str, 
+        guild_ids: Optional[List[int]] = None,
+    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
+        and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Returns
+        --------
+        Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
+            The slash command group that was created.
+        """
+        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+            group = cls(name, description, guild_ids=guild_ids)
+            self.add_application_command(group)
+            return group
+        return inner
+
+    slash_group = group
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
