@@ -37,6 +37,7 @@ from typing import (
     Coroutine,
     List,
     Optional,
+    Type,
     TypeVar,
     Union,
 )
@@ -53,6 +54,7 @@ from .commands import (
     UserCommand,
     ApplicationCommand,
     ApplicationContext,
+    AutocompleteContext,
     command,
 )
 from .cog import CogMixin
@@ -86,7 +88,7 @@ class ApplicationCommandMixin:
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._pending_application_commands = []
-        self.application_commands = {}
+        self._application_commands = {}
 
     @property
     def pending_application_commands(self):
@@ -94,10 +96,14 @@ class ApplicationCommandMixin:
 
     @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
-        commands = list(self.application_commands.values())
+        commands = self.application_commands
         if self._supports_prefixed_commands:
             commands += self.prefixed_commands
         return commands
+
+    @property
+    def application_commands(self) -> List[ApplicationCommand]:
+        return list(self._application_commands.values())
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
@@ -112,7 +118,6 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
@@ -136,7 +141,54 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self.application_commands.pop(command.id)
+        return self._application_commands.pop(command.id)
+
+    @property
+    def get_command(self):
+        """Shortcut for :meth:`.get_application_command`.
+        
+        .. note::
+            Overridden in :class:`ext.commands.Bot`.
+        
+        .. versionadded:: 2.0
+        """
+        # TODO: Do something like we did in self.commands for this
+        return self.get_application_command
+
+    def get_application_command(
+        self,
+        name: str,
+        guild_ids: Optional[List[int]] = None,
+        type: Type[ApplicationCommand] = SlashCommand,
+    ) -> Optional[ApplicationCommand]:
+        """Get a :class:`.ApplicationCommand` from the internal list
+        of commands.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the command to get.
+        guild_ids: List[:class:`int`]
+            The guild ids associated to the command to get.
+        type: Type[:class:`.ApplicationCommand`]
+            The type of the command to get. Defaults to :class:`.SlashCommand`.
+
+        Returns
+        --------
+        Optional[:class:`.ApplicationCommand`]
+            The command that was requested. If not found, returns ``None``.
+        """
+
+        for command in self._application_commands.values():
+            if (
+                command.name == name
+                and isinstance(command, type)
+            ):
+                if guild_ids is not None and command.guild_ids != guild_ids:
+                    return
+                return command
 
     async def sync_commands(self) -> None:
         """|coro|
@@ -199,7 +251,7 @@ class ApplicationCommandMixin:
                 type=i["type"],
             )
             cmd.id = i["id"]
-            self.application_commands[cmd.id] = cmd
+            self._application_commands[cmd.id] = cmd
 
             # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
             global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
@@ -234,7 +286,7 @@ class ApplicationCommandMixin:
                 for i in cmds:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     cmd.id = i["id"]
-                    self.application_commands[cmd.id] = cmd
+                    self._application_commands[cmd.id] = cmd
 
                     # Permissions
                     permissions = [
@@ -325,7 +377,7 @@ class ApplicationCommandMixin:
                     if len(new_cmd_perm["permissions"]) > 10:
                         print(
                             "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self.application_commands[new_cmd_perm["id"]].name,
+                                name=self._application_commands[new_cmd_perm["id"]].name,
                                 guild_id=guild_id,
                             )
                         )
@@ -375,12 +427,14 @@ class ApplicationCommandMixin:
             return
 
         try:
-            command = self.application_commands[interaction.data["id"]]
+            command = self._application_commands[interaction.data["id"]]
         except KeyError:
             self.dispatch("unknown_command", interaction)
         else:
             if interaction.type is InteractionType.auto_complete:
-                return await command.invoke_autocomplete_callback(interaction)
+                ctx = await self.get_autocomplete_context(interaction)
+                ctx.command = command
+                return await command.invoke_autocomplete_callback(ctx)
             
             ctx = await self.get_application_context(interaction)
             ctx.command = command
@@ -515,6 +569,37 @@ class ApplicationCommandMixin:
         if cls is None:
             cls = ApplicationContext
         return cls(self, interaction)
+
+    async def get_autocomplete_context(
+        self, interaction: Interaction, cls=None
+    ) -> AutocompleteContext:
+        r"""|coro|
+
+        Returns the autocomplete context from the interaction.
+
+        This is a more low-level counter-part for :meth:`.process_application_commands`
+        to allow users more fine grained control over the processing.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction to get the invocation context from.
+        cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.AutocompleteContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.AutocompleteContext`\'s interface.
+
+        Returns
+        --------
+        :class:`.AutocompleteContext`
+            The autocomplete context. The type of this can change via the
+            ``cls`` parameter.
+        """
+        if cls is None:
+            cls = AutocompleteContext
+        return cls(self, interaction)
+
 
 
 class BotBase(ApplicationCommandMixin, CogMixin):

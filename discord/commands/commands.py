@@ -450,7 +450,7 @@ class SlashCommand(ApplicationCommand):
                 if p_obj.default != inspect.Parameter.empty:
                     option.required = False
 
-            option.default = option.default or p_obj.default
+            option.default = option.default if option.default is not None else p_obj.default
 
             if option.default == inspect.Parameter.empty:
                 option.default = None
@@ -532,7 +532,7 @@ class SlashCommand(ApplicationCommand):
         else:
             await self.callback(ctx, **kwargs)
 
-    async def invoke_autocomplete_callback(self, interaction: Interaction):
+    async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = { i.name: i.default for i in self.options }
 
         for op in interaction.data.get("options", []):
@@ -542,17 +542,25 @@ class SlashCommand(ApplicationCommand):
                     i["name"]:i["value"]
                     for i in interaction.data["options"]
                 })
-                ctx = AutocompleteContext(interaction, command=self, focused=option, value=op.get("value"), options=values)
-                if asyncio.iscoroutinefunction(option.autocomplete):
-                    result = await option.autocomplete(ctx)
+                ctx.command = self
+                ctx.focused = option
+                ctx.value = op.get("value")
+                ctx.options = values
+
+                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                    instance = getattr(option.autocomplete, "__self__", ctx.cog)
+                    result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
+                if asyncio.iscoroutinefunction(option.autocomplete):
+                    result = await result
+                    
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ][:25]
-                return await interaction.response.send_autocomplete_result(choices=choices)
+                return await ctx.interaction.response.send_autocomplete_result(choices=choices)
 
 
     def copy(self):
@@ -630,10 +638,11 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
         self.default = kwargs.pop("default", None)
+
         if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int,)
+            minmax_types = (int, type(None))
         elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float)
+            minmax_types = (int, float, type(None))
         else:
             minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]] # type: ignore
@@ -790,11 +799,11 @@ class SlashCommandGroup(ApplicationCommand, Option):
         ctx.interaction.data = option
         await command.invoke(ctx)
 
-    async def invoke_autocomplete_callback(self, interaction: Interaction) -> None:
-        option = interaction.data["options"][0]
+    async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:
+        option = ctx.interaction.data["options"][0]
         command = find(lambda x: x.name == option["name"], self.subcommands)
-        interaction.data = option
-        await command.invoke_autocomplete_callback(interaction)
+        ctx.interaction.data = option
+        await command.invoke_autocomplete_callback(ctx)
 
 
 class ContextMenuCommand(ApplicationCommand):
@@ -936,7 +945,7 @@ class UserCommand(ContextMenuCommand):
 
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:
+        else:   
             await self.callback(ctx, target)
 
     def copy(self):
