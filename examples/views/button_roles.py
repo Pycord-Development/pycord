@@ -40,17 +40,17 @@ class RoleButton(discord.ui.Button):
         role = interaction.guild.get_role(int(self.custom_id))
 
         if role is None:
-            # If the specified error does not exist, return nothing.
+            # If the specified role does not exist, return nothing.
             # Error handling could be done here.
             return
 
         # Add the role and send a response to the uesr ephemerally (hidden to other users).
         if role not in user.roles:
-            # give the user the role if they don't already have it
+            # Give the user the role if they don't already have it.
             await user.add_roles(role)
             await interaction.response.send_message(f"🎉 You have been given the role {role.mention}", ephemeral=True)
         else:
-            # else, take the role from the user
+            # Else, take the role from the user.
             await user.remove_roles(role)
             await interaction.response.send_message(f"❌ The {role.mention} role has been taken from you", ephemeral=True)
 
@@ -100,5 +100,4 @@ class ButtonRoleCog(commands.Cog):
 
 
 def setup(bot):
-    # load the cog
     bot.add_cog(ButtonRoleCog(bot))
