@@ -86,7 +86,6 @@ class ButtonRoleCog(commands.Cog):
         If a view was already created before (with the same custom IDs for buttons)
         it will be loaded and the bot will start watching for button clicks again.
         """
-        
         # We recreate the view as we did in the /post command.
         view = discord.ui.View(timeout=None)
         # Make sure to set the guild ID here to whatever server you want the buttons in!
