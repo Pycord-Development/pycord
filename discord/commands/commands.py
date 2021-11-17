@@ -385,6 +385,7 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.parent = kwargs.get('parent')
+        self.attached_to_group: bool = False
 
         self.cog = None
 
@@ -527,6 +528,8 @@ class SlashCommand(ApplicationCommand):
         
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
+        elif self.parent is not None and self.attached_to_group is True:
+            await self.callback(self.parent, ctx, **kwargs)
         else:
             await self.callback(ctx, **kwargs)
 
@@ -728,6 +731,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         for i, c in cls.__dict__.items():
             if isinstance(c, (SlashCommand, SlashCommandGroup)):
                 c.parent = self
+                c.attached_to_group = True
                 self.__initial_commands__.append(c)
 
         return self
