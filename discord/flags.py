@@ -954,6 +954,19 @@ class Intents(BaseFlags):
         This does not correspond to any attributes or classes in the library in terms of cache.
         """
         return 1 << 14
+    
+    @flag_value
+    def guild_events(self):
+        """:class:`bool`: Whether guild scheduled events related events are enabled.
+
+        This corresponds to the following events:
+
+        Lorem ipsum
+
+        This does not correspond to any attributes or classes in the library in terms of cache.
+        """
+        # TODO: Doc wording and event listing
+        return 1 << 16
 
 
 @fill_with_flags()
