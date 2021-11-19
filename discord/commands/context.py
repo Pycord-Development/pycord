@@ -32,9 +32,10 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     import discord
+    from discord import Bot
     from discord.state import ConnectionState
 
-    from .commands import ApplicationCommand
+    from .commands import ApplicationCommand, Option
     from ..cog import Cog
 
 from ..guild import Guild
@@ -46,6 +47,7 @@ from ..utils import cached_property
 
 __all__ = (
     "ApplicationContext",
+    "AutocompleteContext"
 )
 
 T = TypeVar('T')
@@ -73,7 +75,7 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: "discord.Bot", interaction: Interaction):
+    def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
         self.command: ApplicationCommand = None  # type: ignore
@@ -143,6 +145,10 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
+    @cached_property
+    def author(self) -> Optional[Union[Member, User]]:
+        return self.user
+
     @property
     def voice_client(self):
         return self.guild.voice_client
@@ -150,8 +156,6 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
-
-    author = user
 
     @property
     def respond(self):
@@ -179,7 +183,50 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        if self.command is None:
+            return None
+       
+        return self.command.cog
+
+
+class AutocompleteContext:
+    """Represents context for a slash command's option autocomplete.
+
+    This class is not created manually and is instead passed to an Option's autocomplete callback.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    bot: :class:`.Bot`
+        The bot that the command belongs to.    
+    interaction: :class:`.Interaction`
+        The interaction object that invoked the autocomplete.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
+    focused: :class:`.Option`
+        The option the user is currently typing.
+    value: :class:`.str`
+        The content of the focused option.
+    options :class:`.dict`
+        A name to value mapping of the options that the user has selected before this option.
+    """
+
+    __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
+    
+    def __init__(self, bot: Bot, interaction: Interaction) -> None:
+        self.bot = bot
+        self.interaction = interaction
+
+        # self.command = command
+        # self.focused = focused
+        # self.value = value
+        # self.options = options
+
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
        
