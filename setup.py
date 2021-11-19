@@ -16,7 +16,10 @@ with open("discord/__init__.py") as f:
     else:
         raise RuntimeError("Could not grab version string")
 
-if version.endswith(("a", "b", "rc")):
+if not version:
+    raise RuntimeError('version is not set')
+
+if version.endswith(('a', 'b', 'rc')):
     # append version identifier based on commit count
     try:
         import subprocess
