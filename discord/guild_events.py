@@ -50,7 +50,6 @@ if TYPE_CHECKING:
     from .types.guild import Guild
 
 class GuildEventEntityMetadata(NamedTuple):
-    speaker_ids: Optional[List[int]]
     location: Optional[str]
 
 class GuildEventLocation:
@@ -72,7 +71,6 @@ class GuildEventLocation:
 
 
 class GuildEvent:
-    # TODO: remove speaker_ids
     def __init__(self, *, data, state: ConnectionState):
         self._state = state
         
@@ -87,7 +85,7 @@ class GuildEvent:
         if end_time != None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
-        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level'))
+        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level')) # TODO: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level
         self.status: GuildEventStatus = try_enum(GuildEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
@@ -100,8 +98,6 @@ class GuildEvent:
             self.location = GuildEventLocation(state=state, location=channel_id, type=entity_type)
         else:
             self.location = GuildEventLocation(state=state, location=entity_metadata.location, type=entity_type)
-        if entity_metadata.speaker_ids != None:
-            self.speaker_ids = entity_metadata.speaker_ids
 
         # TODO: find out what the following means/does
         self.entity_id: int = data.get('entity_id')
@@ -116,9 +112,9 @@ class GuildEvent:
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
         location: GuildEventLocation = MISSING,
-        speaker_ids: List[int] = MISSING,
         privacy_level: StagePrivacyLevel = MISSING,
         start_time: datetime.datetime = MISSING,
+        end_time: datetime.datetime = MISSING,
     ) -> Optional[GuildEvent]:
         """|coro|
         
@@ -154,10 +150,6 @@ class GuildEvent:
             The newly updated guild event object. This is only returned when certain
             fields are updated.
         """
-        # TODO:
-        # for `channel_id` it may become optional because
-        # there's a custom location parameter so it might
-        # not be giving us an ID in the first place
 
         payload: Dict[str, Any] = {}
 
@@ -170,18 +162,19 @@ class GuildEvent:
         if privacy_level is not MISSING:
             payload["privacy_level"] = privacy_level.value
 
-        if speaker_ids is MISSING:
-            speaker_ids = []
-
         if location is not MISSING:
             if location.type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
                 payload["channel_id"] = location.location.id
-                payload["entity_metadata"] = {"speaker_ids":speaker_ids, "location":str(location.location.id)}
+                payload["entity_metadata"] = {"location":str(location.location.id)}
             else:
-                payload["entity_metadata"] = {"speaker_ids":speaker_ids, "location":str(location.location)}
+                payload["channel_id"] = None
+                payload["entity_metadata"] = {"location":str(location.location)}
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
+        
+        if end_time is not MISSING:
+            payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
             data = await self._state.http.edit_guild_event(self.id, **payload)
