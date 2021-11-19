@@ -27,11 +27,23 @@ from __future__ import annotations
 import array
 import asyncio
 import collections.abc
+import datetime
+import functools
+import itertools
+import json
+import re
+import sys
+import types
+import unicodedata
+import warnings
+from base64 import b64encode
+from bisect import bisect_left
+from inspect import isawaitable as _isawaitable, signature as _signature
+from operator import attrgetter
 from typing import (
     Any,
     AsyncIterator,
     Callable,
-    Coroutine,
     Dict,
     ForwardRef,
     Generic,
@@ -49,19 +61,8 @@ from typing import (
     Union,
     overload,
     TYPE_CHECKING,
+    Awaitable,
 )
-import unicodedata
-from base64 import b64encode
-from bisect import bisect_left
-import datetime
-import functools
-from inspect import isawaitable as _isawaitable, signature as _signature
-from operator import attrgetter
-import json
-import re
-import sys
-import types
-import warnings
 
 from .errors import InvalidArgument, HTTPException
 
@@ -123,7 +124,6 @@ class _cached_property:
 
 
 if TYPE_CHECKING:
-    from functools import cached_property as cached_property
 
     from typing_extensions import ParamSpec
 
@@ -132,7 +132,7 @@ if TYPE_CHECKING:
     from .invite import Invite
     from .template import Template
     from .commands.context import AutocompleteContext
-    from .interactions import Interaction
+
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
@@ -142,6 +142,7 @@ if TYPE_CHECKING:
 
 else:
     cached_property = _cached_property
+    AutocompleteContext = Any
 
 
 T = TypeVar('T')
@@ -1057,14 +1058,22 @@ def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3fffff
 
 
-def basic_autocomplete(values: Union[Iterable[str],
-                                     Callable[[Interaction], Union[Iterable[str], Coroutine[Iterable[str]]]],
-                                     Coroutine[Iterable[str]]]) -> Callable[[Interaction, str], Coroutine[List[str]]]:
+V = Union[Iterable[str], Iterable[int], Iterable[float]]
+AV = Awaitable[V]
+Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
+AutocompleteFunc = Callable[[AutocompleteContext], AV]
+
+
+def basic_autocomplete(values: Values) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
-    it will be called with the interaction.
+    it will be called with the AutocompleteContext.
 
     This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
+
+    Note
+    -----
+    Autocomplete cannot be used for options that have specified choices.
 
     Example
     --------
@@ -1075,8 +1084,8 @@ def basic_autocomplete(values: Union[Iterable[str],
 
         # or
 
-        async def autocomplete(interaction):
-            return ("foo", "bar", "baz", interaction.user.name)
+        async def autocomplete(ctx):
+            return "foo", "bar", "baz", ctx.interaction.user.name
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
 
@@ -1085,22 +1094,24 @@ def basic_autocomplete(values: Union[Iterable[str],
 
     Parameters
     -----------
-    values: Union[Iterable[:class:`str`], Callable[[:class:`Interaction`], Union[Iterable[:class:`str`], Coroutine[Iterable[:class:`str`]]]], Coroutine[Iterable[:class:`str`]]]
+    values: Union[Iterable[Union[:class:`str`, :class:`int`, :class:`float`]], Callable[[:class:`ApplicationContext`], Union[Iterable[Union[:class:`str`, :class:`int`, :class:`float`]], Awaitable[Iterable[Union[:class:`str`, :class:`int`, :class:`float`]]]]], Awaitable[Iterable[Union[:class:`str`, :class:`int`, :class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
-        single argument of :class:`Interaction`, or a coroutine. Must resolve to an iterable of :class:`str`.
+        single argument of :class:`ApplicationContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
-    Callable[[:class:`Interaction`, :class:`str`], Coroutine[List[:class:`str`]]]
+    Callable[[:class:`AutocompleteContext`], Awaitable[Iterable[Union[:class:`str`, :class:`int`, :class:`float`]]]]
         A wrapped callback for the autocomplete.
     """
-    async def autocomplete_callback(ctx: AutocompleteContext) -> List[str]:
+    async def autocomplete_callback(ctx: AutocompleteContext) -> V:
         _values = values  # since we reassign later, python considers it local if we don't do this
 
         if callable(_values):
-            _values = _values(interaction)
+            _values = _values(ctx)
         if asyncio.iscoroutine(_values):
             _values = await _values
-        return ([x for x in _values if x.lower().startswith(ctx.value.lower())])[:25]
+
+        gen = (val for val in _values if str(val).lower().startswith(str(ctx.value or "").lower()))
+        return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
