@@ -51,6 +51,7 @@ __all__ = (
 )
 
 T = TypeVar('T')
+CogT = TypeVar('CogT', bound="Cog")
 
 if TYPE_CHECKING:
     P = ParamSpec('P')
@@ -81,7 +82,7 @@ class ApplicationContext(discord.abc.Messageable):
         self.command: ApplicationCommand = None  # type: ignore
         self._state: ConnectionState = self.interaction._state
 
-    async def invoke(self, command: ApplicationCommand, /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
