@@ -1455,10 +1455,10 @@ class HTTPClient:
     ) -> Response[invite.Invite]:
         params = {
             'with_counts': int(with_counts),
-            'with_expiration': int(with_expiration)
+            'with_expiration': int(with_expiration),
+            'guild_scheduled_event_id': int(guild_scheduled_event_id),
         }
-        if guild_scheduled_event_id != None: # I implemented it like this because the parameter might not exist yet on the api
-            params['guild_scheduled_event_id'] = guild_scheduled_event_id
+
         return self.request(Route('GET', '/invites/{invite_id}', invite_id=invite_id), params=params)
 
     def invites_from(self, guild_id: Snowflake) -> Response[List[invite.Invite]]:
@@ -1655,10 +1655,12 @@ class HTTPClient:
 
         return self.request(Route('PATCH', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), json=payload)
 
-    def get_guild_event_users(self, guild_id: Snowflake, event_id: Snowflake, limit: int, with_member: bool = False) -> Response[None]:
+    def get_guild_event_users(self, guild_id: Snowflake, event_id: Snowflake, limit: int, with_member: bool = False, before: Snowflake = None, after: Snwofalke = None) -> Response[None]:
         params = {
-            "limit": int(limit),
-            "with_member": with_member
+            'limit': int(limit),
+            'with_member': int(with_member),
+            'before': int(before),
+            'after': int(after),
         }
         
         return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}/users', guild_id=guild_id, event_id=event_id), params=params)
