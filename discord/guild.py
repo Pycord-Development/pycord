@@ -202,12 +202,14 @@ class Guild(Hashable):
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
+        - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels.
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``FEATURABLE``: Guild is able to be featured in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
         - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
+        - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
         - ``MEMBER_PROFILES``: Unknown.
@@ -222,6 +224,7 @@ class Guild(Hashable):
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
         - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
+        - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
         - ``SEVEN_DAY_THREAD_ARCHIVE``: Guild has access to the seven day archive time for threads.
         - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
@@ -248,6 +251,20 @@ class Guild(Hashable):
         results to a specific language.
     nsfw_level: :class:`NSFWLevel`
         The guild's NSFW level.
+
+        .. versionadded:: 2.0
+        
+    approximate_member_count: Optional[:class:`int`]
+        The approximate number of members in the guild. This is ``None`` unless the guild is obtained
+        using :meth:`Client.fetch_guild` with ``with_counts=True``.
+
+        .. versionadded:: 2.0
+        
+    approximate_presence_count: Optional[:class:`int`]
+        The approximate number of members currently active in the guild.
+        This includes idle, dnd, online, and invisible members. Offline members are excluded.
+        This is ``None`` unless the guild is obtained using :meth:`Client.fetch_guild`
+        with ``with_counts=True``.
 
         .. versionadded:: 2.0
     """
@@ -293,6 +310,8 @@ class Guild(Hashable):
         '_public_updates_channel_id',
         '_stage_instances',
         '_threads',
+        "approximate_member_count",
+        "approximate_presence_count",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
@@ -461,6 +480,8 @@ class Guild(Hashable):
         self._rules_channel_id: Optional[int] = utils._get_as_snowflake(guild, 'rules_channel_id')
         self._public_updates_channel_id: Optional[int] = utils._get_as_snowflake(guild, 'public_updates_channel_id')
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get('nsfw_level', 0))
+        self.approximate_presence_count = guild.get('approximate_presence_count')
+        self.approximate_member_count = guild.get('approximate_member_count')
 
         self._stage_instances: Dict[int, StageInstance] = {}
         for s in guild.get('stage_instances', []):

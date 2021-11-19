@@ -40,7 +40,7 @@ with open('README.rst') as f:
 extras_require = {
     'voice': ['PyNaCl>=1.3.0,<1.5'],
     'docs': [
-        'sphinx==4.2.0',
+        'sphinx==4.3.0',
         'sphinxcontrib_trio==1.1.2',
         'sphinxcontrib-websupport',
     ],
@@ -90,5 +90,6 @@ setup(name='py-cord',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
         'Typing :: Typed',
-      ]
+      ],
+      test_suite='tests',
 )
