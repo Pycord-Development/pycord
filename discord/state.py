@@ -1217,17 +1217,19 @@ class ConnectionState:
         complete = data.get('chunk_index', 0) + 1 == data.get('chunk_count')
         self.process_chunk_requests(guild_id, data.get('nonce'), members, complete)
 
+    # TODO: https://cdn.discordapp.com/attachments/881411804734033940/911444852124844052/unknown.png for guild_scheduled_event_delete
+
     def parse_guild_scheduled_event_create(self, data) -> None:
-        invite = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_create', invite)
+        guild_event = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_create', guild_event)
 
     def parse_guild_scheduled_event_update(self, data) -> None:
-        invite = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_update', invite)
+        guild_event = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_update', guild_event)
 
     def parse_guild_scheduled_event_delete(self, data) -> None:
-        invite = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_delete', invite)
+        guild_event = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_delete', guild_event)
 
     def parse_guild_integrations_update(self, data) -> None:
         guild = self._get_guild(int(data['guild_id']))
@@ -1235,6 +1237,13 @@ class ConnectionState:
             self.dispatch('guild_integrations_update', guild)
         else:
             _log.debug('GUILD_INTEGRATIONS_UPDATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+    
+    # TODO: ?
+    # def parse_guild_scheduled_event_user_add(self, data) -> None:
+    #     pass
+    # 
+    # def parse_guild_scheduled_event_user_add(self, data) -> None:
+    #     pass
 
     def parse_integration_create(self, data) -> None:
         guild_id = int(data.pop('guild_id'))
