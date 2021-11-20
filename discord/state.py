@@ -1230,6 +1230,13 @@ class ConnectionState:
     def parse_guild_scheduled_event_delete(self, data) -> None:
         guild_event = GuildEvent(state=self, data=data)
         self.dispatch('guild_event_delete', guild_event)
+    
+    # TODO: Not officially supported/experimental
+    # def parse_guild_scheduled_event_user_add(self, data) -> None:
+    #     pass
+    # 
+    # def parse_guild_scheduled_event_user_add(self, data) -> None:
+    #     pass
 
     def parse_guild_integrations_update(self, data) -> None:
         guild = self._get_guild(int(data['guild_id']))
@@ -1237,13 +1244,6 @@ class ConnectionState:
             self.dispatch('guild_integrations_update', guild)
         else:
             _log.debug('GUILD_INTEGRATIONS_UPDATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
-    
-    # TODO: ?
-    # def parse_guild_scheduled_event_user_add(self, data) -> None:
-    #     pass
-    # 
-    # def parse_guild_scheduled_event_user_add(self, data) -> None:
-    #     pass
 
     def parse_integration_create(self, data) -> None:
         guild_id = int(data.pop('guild_id'))
