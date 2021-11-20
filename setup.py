@@ -46,10 +46,8 @@ extras_require = {
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
     ],
-    "json_speed": [
-        "orjson>=3.5.4",
-    ],
     "speed": [
+        "orjson>=3.5.4",
         "aiodns>=1.1",
         "Brotlipy",
         "cchardet",
