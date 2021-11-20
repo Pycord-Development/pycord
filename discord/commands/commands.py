@@ -535,12 +535,12 @@ class SlashCommand(ApplicationCommand):
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = { i.name: i.default for i in self.options }
 
-        for op in interaction.data.get("options", []):
+        for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
                     i["name"]:i["value"]
-                    for i in interaction.data["options"]
+                    for i in ctx.interaction.data["options"]
                 })
                 ctx.command = self
                 ctx.focused = option
