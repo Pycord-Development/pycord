@@ -59,6 +59,7 @@ from .ui.view import ViewStore, View
 from .stage_instance import StageInstance
 from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
+from .guild_events import GuildEvent
 
 if TYPE_CHECKING:
     from .abc import PrivateChannel
@@ -1215,6 +1216,18 @@ class ConnectionState:
 
         complete = data.get('chunk_index', 0) + 1 == data.get('chunk_count')
         self.process_chunk_requests(guild_id, data.get('nonce'), members, complete)
+
+    def parse_guild_scheduled_event_create(self, data) -> None:
+        invite = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_create', invite)
+
+    def parse_guild_scheduled_event_update(self, data) -> None:
+        invite = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_update', invite)
+
+    def parse_guild_scheduled_event_delete(self, data) -> None:
+        invite = GuildEvent(state=self, data=data)
+        self.dispatch('guild_event_delete', invite)
 
     def parse_guild_integrations_update(self, data) -> None:
         guild = self._get_guild(int(data['guild_id']))

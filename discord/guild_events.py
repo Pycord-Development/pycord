@@ -71,7 +71,7 @@ class GuildEventLocation:
 
 
 class GuildEvent:
-    def __init__(self, *, data, state: ConnectionState):
+    def __init__(self, *, state: ConnectionState, data):
         self._state = state
         
         self.id: int = data.get('id')
@@ -193,3 +193,6 @@ class GuildEvent:
             The operation failed.
         """
         await self._state.http.delete_guild_event(self.id)
+
+    async def users(self):
+        pass # TODO: discord/abc.py#1587
