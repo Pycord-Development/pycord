@@ -9,7 +9,11 @@ class MiscCommands(commands.Cog):
     def __init__(self,client):
         self.client = client
 
-    @slash_command(guild_ids=[...],name="ping",description="check the latency of the bot!")
+    @slash_command(
+        guild_ids=[...],
+        name="ping",
+        description="check the latency of the bot!"
+        )
     async def ping(self,ctx):
         
         return await ctx.respond(f"{round(self.client.latency * 1000)}ms")

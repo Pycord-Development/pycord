@@ -1,92 +1,48 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands.context import Context
-from aiohttp import ClientSession
+
 from discord.commands import slash_command
 
-async def getmeme():
-    """
-    using aiohttp for reddit random endpoint 
-    endpoint - https://www.reddit.com/r/memes/random.json
-    """
-    # for more info https://docs.aiohttp.org/en/stable/
-    client = ClientSession()
-    resp = await client.get("https://www.reddit.com/r/memes/random.json")
-    resp = await resp.json()
-    await client.close()
-
-    return {
-        "title":resp[0]["data"]["children"][0]["data"]["title"],
-        "image":resp[0]["data"]["children"][0]["data"]["url_overridden_by_dest"],
-        "permalink": f'https://www.reddit.com{resp[0]["data"]["children"][0]["data"]["permalink"]}'
-    }
-
-class MemeNavigator(discord.ui.View):
+class ButtonView(discord.ui.View):
     def __init__(self, ctx:Context=None):
         # making None is important if you want the button work after restart!
         super().__init__(timeout=None)
         self.ctx = ctx 
 
-    #custom_id is required and should be unique
-    @discord.ui.button(style=discord.ButtonStyle.blurple,emoji="◀️",custom_id="meme:leftButton")
+    #custom_id is required and should be unique for <commands.Bot.add_view>
+    # attribute emoji can be used to include emojis which can be default str emoji or str(<:emojiName:int(ID)>)
+    @discord.ui.button(style=discord.ButtonStyle.blurple,custom_id="counter:firstButton")
     async def leftButton(self,button,interaction):
-        try:
-            self.ctx.pagenumber -=1
-            resp = self.ctx.memearray[self.ctx.pagenumber]
-            self.ctx.embed.description = f"[{resp['title']}]({resp['permalink']})"
-            self.ctx.embed.set_image(url=resp["image"])
-            await self.ctx.mememsg.edit_original_message(embed=self.ctx.embed)
-        except:
-            self.ctx.pagenumber +=1
-            return
+        await interaction.response.send_message(f"first button was pressed!")
 
-    #custom_id is required and should be unique
-    @discord.ui.button(style=discord.ButtonStyle.blurple,emoji="▶️",custom_id="meme:rightButton")
+    #custom_id is required and should be unique for <commands.Bot.add_view>
+    # attribute emoji can be used to include emojis which can be default str emoji or str(<:emojiName:int(ID)>)
+    @discord.ui.button(style=discord.ButtonStyle.blurple,custom_id="counter:secondButton")
     async def rightButton(self,button,interaction):
-        try:
-            self.ctx.pagenumber +=1
-            resp = self.ctx.memearray[self.ctx.pagenumber]
-            self.ctx.embed.description = f"[{resp['title']}]({resp['permalink']})"
-            self.ctx.embed.set_image(url=resp["image"])
-            await self.ctx.mememsg.edit_original_message(embed=self.ctx.embed)
-            
-        except:
-            resp = await getmeme()
-            self.ctx.embed.description = f"[{resp['title']}]({resp['permalink']})"
-            self.ctx.embed.set_image(url=resp["image"])
-            await self.ctx.mememsg.edit_original_message(embed=self.ctx.embed)
-            self.ctx.memearray.append(resp)
-
+        await interaction.response.send_message(f"second button was pressed!")
+        
     """
-    timeout is used if there is a timeout on the button interaction with is None right now...
+    timeout is used if there is a timeout on the button interaction with is 180 by default
     
     async def on_timeout(self):
             for child in self.children:
                 child.disabled = True
-            await self.ctx.mememsg.edit_original_message(view=None)
+            await interaction.edit_original_message(view=None)
     """
 
-class Meme(commands.Cog):
+class ButtonExample(commands.Cog):
     def __init__(self,client):
         self.client = client
 
-    @slash_command(guild_ids=[...],name="meme",description="meme with slash and buttons!")
-    async def meme(self,ctx):
-        embed = discord.Embed(color=discord.Colour.dark_theme())
-        ctx.embed = embed # assigning embed attr to ctx
-        navigator = MemeNavigator(ctx) # button View
-        resp = await getmeme() # method defined above
-        ctx.memearray = [] # array to store content that can be accessed afterwards with leftButton
-        ctx.memearray.append(resp) 
-        ctx.pagenumber = 0 # pagination
-        embed.description = f"[{resp['title']}]({resp['permalink']})"
-        embed.set_image(url=resp["image"])
-        mememsg = await ctx.respond(embed=embed,view=navigator) 
-        ctx.mememsg = mememsg
+    @slash_command(guild_ids=[...],name="slash_command_name",description="command description!")
+    async def CommandName(self,ctx):
+        navigator = ButtonView(ctx) # button View <discord.ui.View>
+        await ctx.respond("",view=navigator) 
 
-    @meme.error
-    async def meme_error(self, ctx:Context ,error):
+    @CommandName.error
+    async def CommandName_error(self, ctx:Context ,error):
         return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
 
 def setup(client):
-    client.add_cog(Meme(client))
+    client.add_cog(ButtonExample(client))

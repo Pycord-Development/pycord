@@ -5,7 +5,8 @@ with slash commands user permission it's better to check with <ctx.author.guild_
 import discord
 from discord.ext import commands
 import os
-from cogs.button_cog import MemeNavigator
+
+from discord.ui.view import View
 
 #inherits commands.Bot
 class BotClass(commands.Bot):
@@ -17,8 +18,8 @@ class BotClass(commands.Bot):
     async def on_ready(self):
         if not self.persistent_views_added:
             
-            #adding MemeNavigator class to the <commands.Bot.add_view> to make it work after restart
-            self.add_view(MemeNavigator())
+            #you can add <discord.ui.View> classes to the <commands.Bot.add_view> to make it work after restart
+            # self.add_view(<discord.ui.View>)
 
             print(f'Connected as {self.user} with ID {self.user.id}')
             print("------")

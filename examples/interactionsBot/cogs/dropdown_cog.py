@@ -7,7 +7,7 @@ from discord.commands import slash_command
 # that the user can choose. The callback function
 # of this class is called when the user changes their choice
 class Dropdown(discord.ui.Select):
-    def __init__(self,ctx=None):
+    def __init__(self):
 
         # Set the options that will be presented inside the dropdown
         options = [
@@ -31,22 +31,20 @@ class Dropdown(discord.ui.Select):
             max_values=1,
             options=options,
         )
-        self.ctx=ctx
 
     async def callback(self, interaction: discord.Interaction):
         # Use the interaction object to send a response message containing
         # the user's favourite colour or choice. The self object refers to the
         # Select object, and the values attribute gets a list of the user's
         # selected options. We only want the first one.
-        await self.ctx.botMessage.edit(f"Your favourite colour is {self.values[0]}")
-
+        await interaction.response.send_message(f"Your favourite colour is {self.values[0]}")
 
 class DropdownView(discord.ui.View):
-    def __init__(self,ctx=None):
+    def __init__(self):
         super().__init__()
 
         # Adds the dropdown to our view object.
-        self.add_item(Dropdown(ctx))
+        self.add_item(Dropdown())
 
 class ColorTeller(commands.Cog):
     def __init__(self,client):
@@ -54,11 +52,11 @@ class ColorTeller(commands.Cog):
 
     @slash_command(guild_ids=[...],name="color",description="tell me your favourite color!")
     async def whatcolor(self,ctx):
-        await ctx.respond("what is your favrouite color?",view=DropdownView(ctx))
+        await ctx.respond("what is your favrouite color?",view=DropdownView())
 
         # ephemeral makes "Only you can see this" message
         """
-        await ctx.respond("what is your favrouite color?",view=DropdownView(ctx),ephemeral=True)
+        await ctx.respond("what is your favrouite color?",view=DropdownView(),ephemeral=True)
         """
 
     @whatcolor.error
