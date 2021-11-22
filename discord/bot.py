@@ -540,6 +540,16 @@ class ApplicationCommandMixin:
 
         .. versionadded:: 2.0
 
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: :class:`str`
+            The description of the group to create.
+        guild_ids: Optional[List[int]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
         Returns
         --------
         SlashCommandGroup
@@ -559,6 +569,16 @@ class ApplicationCommandMixin:
         and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
 
         .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: :class:`str`
+            The description of the group to create.
+        guild_ids: Optional[List[int]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
 
         Returns
         --------
