@@ -533,7 +533,10 @@ class ApplicationCommandMixin:
         return self.application_command(**kwargs)
 
     def create_group(
-        self, name: str, description: str, guild_ids: Optional[List[int]] = None
+        self,
+        name: str,
+        description: str,
+        guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
