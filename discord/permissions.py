@@ -562,7 +562,10 @@ class Permissions(BaseFlags):
     
     @flag_value
     def manage_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can manage members (timeout)."""
+        """:class:`bool`: Returns ``True`` if a user can manage members (timeout).
+
+        .. versionadded:: 2.0
+        """
         return 1 << 40
 
 PO = TypeVar('PO', bound='PermissionOverwrite')
