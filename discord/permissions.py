@@ -559,6 +559,11 @@ class Permissions(BaseFlags):
         .. versionadded:: 2.0
         """
         return 1 << 39
+    
+    @flag_value
+    def manage_members(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can manage members (timeout)."""
+        return 1 << 40
 
 PO = TypeVar('PO', bound='PermissionOverwrite')
 
@@ -674,6 +679,7 @@ class PermissionOverwrite:
         external_stickers: Optional[bool]
         use_external_stickers: Optional[bool]
         start_embedded_activities: Optional[bool]
+        manage_members: Optional[bool]
 
     def __init__(self, **kwargs: Optional[bool]):
         self._values: Dict[str, Optional[bool]] = {}
