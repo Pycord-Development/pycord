@@ -549,7 +549,7 @@ class ApplicationCommandMixin:
             The name of the group to create.
         description: :class:`str`
             The description of the group to create.
-        guild_ids: Optional[List[int]]
+        guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
 
@@ -579,7 +579,7 @@ class ApplicationCommandMixin:
             The name of the group to create.
         description: :class:`str`
             The description of the group to create.
-        guild_ids: Optional[List[int]]
+        guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
 
