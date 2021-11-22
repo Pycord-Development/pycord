@@ -5,12 +5,13 @@ from aiohttp import ClientSession
 from discord.commands import slash_command
 from discord.commands import Option
 
-class MISC_COMMANDS(commands.Cog):
+class MiscCommands(commands.Cog):
     def __init__(self,client):
         self.client = client
 
     @slash_command(guild_ids=[...],name="ping",description="check the latency of the bot!")
     async def ping(self,ctx):
+        
         return await ctx.respond(f"{round(self.client.latency * 1000)}ms")
         # ephemeral makes "Only you can see this" message
         """
@@ -41,4 +42,4 @@ class MISC_COMMANDS(commands.Cog):
         return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
 
 def setup(client):
-    client.add_cog(MISC_COMMANDS(client))
+    client.add_cog(MiscCommands(client))

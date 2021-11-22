@@ -7,18 +7,21 @@ from discord.commands import slash_command
 async def getmeme():
     """
     using aiohttp for reddit random endpoint 
+    endpoint - https://www.reddit.com/r/memes/random.json
     """
+    # for more info https://docs.aiohttp.org/en/stable/
     client = ClientSession()
     resp = await client.get("https://www.reddit.com/r/memes/random.json")
     resp = await resp.json()
     await client.close()
+
     return {
         "title":resp[0]["data"]["children"][0]["data"]["title"],
         "image":resp[0]["data"]["children"][0]["data"]["url_overridden_by_dest"],
         "permalink": f'https://www.reddit.com{resp[0]["data"]["children"][0]["data"]["permalink"]}'
     }
 
-class memeNavigator(discord.ui.View):
+class MemeNavigator(discord.ui.View):
     def __init__(self, ctx:Context=None):
         # making None is important if you want the button work after restart!
         super().__init__(timeout=None)
@@ -63,22 +66,22 @@ class memeNavigator(discord.ui.View):
             await self.ctx.mememsg.edit_original_message(view=None)
     """
 
-class MEME(commands.Cog):
+class Meme(commands.Cog):
     def __init__(self,client):
         self.client = client
 
     @slash_command(guild_ids=[...],name="meme",description="meme with slash and buttons!")
     async def meme(self,ctx):
         embed = discord.Embed(color=discord.Colour.dark_theme())
-        ctx.embed = embed
-        navigator = memeNavigator(ctx)
-        resp = await getmeme()
-        ctx.memearray = []
-        ctx.memearray.append(resp)
-        ctx.pagenumber = 0
+        ctx.embed = embed # assigning embed attr to ctx
+        navigator = MemeNavigator(ctx) # button View
+        resp = await getmeme() # method defined above
+        ctx.memearray = [] # array to store content that can be accessed afterwards with leftButton
+        ctx.memearray.append(resp) 
+        ctx.pagenumber = 0 # pagination
         embed.description = f"[{resp['title']}]({resp['permalink']})"
         embed.set_image(url=resp["image"])
-        mememsg = await ctx.respond(embed=embed,view=navigator)
+        mememsg = await ctx.respond(embed=embed,view=navigator) 
         ctx.mememsg = mememsg
 
     @meme.error
@@ -86,4 +89,4 @@ class MEME(commands.Cog):
         return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
 
 def setup(client):
-    client.add_cog(MEME(client))
+    client.add_cog(Meme(client))
