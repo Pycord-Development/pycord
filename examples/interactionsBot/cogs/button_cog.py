@@ -35,7 +35,7 @@ class ButtonExample(commands.Cog):
         navigator = ButtonView() # button View <discord.ui.View>
         await ctx.respond("press the button.",view=navigator) 
 
-    # for error handeling
+    # for error handling
     @CommandName.error
     async def CommandName_error(self, ctx:Context ,error):
         return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
