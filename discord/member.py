@@ -675,7 +675,7 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | voice_channel                | :attr:`Permissions.move_members`     |
         +------------------------------+--------------------------------------+
-        | communication_disabled_until | :attr:`Permissions.kick_members`     |
+        | communication_disabled_until | :attr:`Permissions.manage_members`     |
         +------------------------------+--------------------------------------+
 
         All parameters are optional.
@@ -779,7 +779,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Timeouts a member from the guild for the set duration.
 
-        You must have the :attr:`~Permissions.kick_members` permission to
+        You must have the :attr:`~Permissions.manage_members` permission to
         timeout a member.
 
         Parameters
@@ -803,7 +803,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Removes the timeout from a member.
 
-        You must have the :attr:`~Permissions.kick_members` permission to
+        You must have the :attr:`~Permissions.manage_members` permission to
         remove the timeout.
 
         This is equivalent to calling :meth:`~.timeout` and passing ``None`` to :param:`~.timeout.until`.
