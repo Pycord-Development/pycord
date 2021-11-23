@@ -11,7 +11,7 @@ https://github.com/Pycord-Development/pycord/blob/master/examples/views/persiste
 Make sure to load this cog when your bot starts!
 """
 
-# This list will contain role IDs that will be added as buttons splitted by a comma ",".
+# This list will contain role IDs that will be added as buttons split by a comma ",".
 role_ids = []
 
 class RoleButton(discord.ui.Button):
