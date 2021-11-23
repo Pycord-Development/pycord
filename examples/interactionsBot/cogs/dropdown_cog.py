@@ -46,7 +46,7 @@ class DropdownView(discord.ui.View):
         # Adds the dropdown to our view object.
         self.add_item(Dropdown())
 
-class ColorTeller(commands.Cog):
+class DropdownExample(commands.Cog):
     def __init__(self,client):
         self.client = client
 
@@ -64,4 +64,4 @@ class ColorTeller(commands.Cog):
         return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
 
 def setup(client):
-    client.add_cog(ColorTeller(client))
+    client.add_cog(DropdownExample(client))

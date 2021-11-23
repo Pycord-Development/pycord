@@ -3,7 +3,7 @@ from discord.commands.commands import Option, SlashCommandGroup
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
-class Math(commands.Cog):
+class SlashGroupExample(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -39,8 +39,8 @@ class Math(commands.Cog):
             else:
                 await ctx.respond("you dont have the permission to do so!",ephemeral=True)
         
-        # adds the 
+        # adds
         client.add_application_command(moderation)
 
 def setup(client):
-    client.add_cog(Math(client))
+    client.add_cog(SlashGroupExample(client))
