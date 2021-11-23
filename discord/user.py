@@ -390,7 +390,7 @@ class ClientUser(BaseUser):
             payload['username'] = username
 
         if avatar is not MISSING:
-            if "http" in str(avatar):
+            if str(avatar).startswith("http"):
                 async with aiohttp.ClientSession() as s:
                     async with s.get(str(avatar)) as response:
                         avatar = await response.read()
