@@ -2,9 +2,10 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # every 30 minutes
+    - cron: '*/30 * * * *'
   push:
-  workflow_dispatch: # on button click
+  
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -14,7 +15,7 @@ jobs:
     steps:
       - uses: tgymnich/fork-sync@v1.4
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          owner: llvm
+          token: ${{ secrets.SYNC_TOKEN }}
+          owner: pycord
           base: master
           head: master
