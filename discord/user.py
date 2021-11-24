@@ -390,7 +390,7 @@ class ClientUser(BaseUser):
             payload['username'] = username
 
         if avatar is not MISSING:
-            if type(avatar) is not bytes:
+            if not isinstance(avatar, bytes):
                 async with aiohttp.ClientSession() as s:
                     async with s.get(str(avatar)) as response:
                         avatar = await response.read()
