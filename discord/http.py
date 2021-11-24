@@ -1618,7 +1618,7 @@ class HTTPClient:
 
     def get_guild_events(self, guild_id: Snowflake, with_user_count: bool = False) -> Response[None]:
         params = {
-            'with_user_count': with_user_count
+            'with_user_count': int(with_user_count)
         }
 
         return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id), params=params)

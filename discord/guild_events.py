@@ -47,6 +47,11 @@ from .object import Object
 from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
 
+__all__ = (
+    'GuildEvent',
+    'GuildEventLocation',
+)
+
 if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.guild import Guild

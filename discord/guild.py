@@ -78,6 +78,7 @@ from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
 from .file import File
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+from .guild_events import GuildEvent
 
 
 __all__ = (
@@ -2029,6 +2030,14 @@ class Guild(Hashable):
             channel = self.get_channel(int(invite['channel']['id']))
             result.append(Invite(state=self._state, data=invite, guild=self, channel=channel))
 
+        return result
+    
+    async def guild_events(self, with_user_count: bool = False) -> List[GuildEvent]:
+        data = await self._state.http.get_guild_events(self.id, with_user_count=with_user_count)
+        result = []
+        for event in data:
+            result.append(GuildEvent(state=self._state, data=event))
+        
         return result
 
     async def create_template(self, *, name: str, description: str = MISSING) -> Template:
