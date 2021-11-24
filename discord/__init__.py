@@ -63,6 +63,7 @@ from .bot import *
 from .commands import *
 from .cog import Cog
 from .welcome_screen import *
+from .guild_events import GuildEvent, GuildEventLocation
 
 
 class VersionInfo(NamedTuple):
