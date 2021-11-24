@@ -12,7 +12,7 @@ Make sure to load this cog when your bot starts!
 """
 
 # This list will contain role IDs that will be added as buttons split by a comma ",".
-role_ids = []
+role_ids = [...]
 
 class RoleButton(discord.ui.Button):
     def __init__(self, role: discord.Role):
@@ -64,7 +64,7 @@ class ButtonRoleCog(commands.Cog):
         self.bot = bot
 
     # make sure to set the guild ID here to whatever server you want the buttons in
-    @slash_command(guild_ids=[], description="Post the button role message")
+    @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
         """
         Slash command to post a new view with a button for each role
@@ -92,7 +92,7 @@ class ButtonRoleCog(commands.Cog):
         # we recreate the view as we did in the /post command
         view = discord.ui.View(timeout=None)
         # make sure to set the guild ID here to whatever server you want the buttons in (the ID is an int, so it will look like self.bot.get_guild(12345)
-        guild = self.bot.get_guild()
+        guild = self.bot.get_guild(...)
         for role_id in role_ids:
             role = guild.get_role(role_id)
             view.add_item(RoleButton(role))
