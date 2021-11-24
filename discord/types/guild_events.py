@@ -24,9 +24,36 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TypedDict, Optional, Literal, Union
+from datetime import datetime
 
+from .guild import Guild
+from .user import User
 from .snowflake import Snowflake
+from .channel import StageChannel, VoiceChannel
+
+
+GuildEventStatus = Literal[1, 2, 3, 4]
+GuildEventLocationType = Literal[1, 2, 3]
+
+
+class GuildEventLocation(TypedDict):
+    location: Union[StageChannel, VoiceChannel, str]
+    type: GuildEventLocationType
+
 
 class GuildEvent(TypedDict):
-    pass
+    id: Snowflake
+    guild: Guild
+    name: str
+    description: str
+    #image
+    start_time: datetime
+    end_time: datetime
+    status: GuildEventStatus
+    user_count: Optional[int]
+    creator_id: Snowflake
+    creator: User
+    location: GuildEventLocation
+
+    entity_id: Snowflake

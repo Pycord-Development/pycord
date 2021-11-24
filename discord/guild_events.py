@@ -36,12 +36,14 @@ from typing import (
     Dict,
     Any
 )
+
 from .enums import (
     StagePrivacyLevel,
     GuildEventStatus,
     GuildEventLocationType,
     try_enum
 )
+from .object import Object
 from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
 
@@ -69,8 +71,7 @@ class GuildEventLocation:
         else:
             return GuildEventLocationType.external
 
-
-class GuildEvent:
+class GuildEvent(Object):
     def __init__(self, *, state: ConnectionState, data):
         self._state = state
         
@@ -85,7 +86,7 @@ class GuildEvent:
         if end_time != None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
-        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level')) # TODO: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level
+        # self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level')) # TODO: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level
         self.status: GuildEventStatus = try_enum(GuildEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
