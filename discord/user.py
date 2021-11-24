@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Type, TypeVar, TYPE_CHECKING
 
 import discord.abc
-import aiohttp
+
 from .asset import Asset
 from .colour import Colour
 from .enums import DefaultAvatar
@@ -391,9 +391,7 @@ class ClientUser(BaseUser):
 
         if avatar is not MISSING:
             if not isinstance(avatar, bytes):
-                async with aiohttp.ClientSession() as s:
-                    async with s.get(str(avatar)) as response:
-                        avatar = await response.read()
+                avatar = await self._state.http.get_from_cdn(avatar)
             payload['avatar'] = _bytes_to_base64_data(avatar)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
