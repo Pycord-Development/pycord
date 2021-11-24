@@ -17,3 +17,4 @@ docs/crowdin.py
 .idea/
 .vs/slnx.sqlite
 env/
+build/

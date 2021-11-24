@@ -390,7 +390,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = self._parse_options(params)
+        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -537,6 +537,7 @@ class SlashCommand(ApplicationCommand):
                     i["name"]:i["value"] 
                     for i in ctx.interaction.data["options"]
                 })
+                ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
                 ctx.options = values
