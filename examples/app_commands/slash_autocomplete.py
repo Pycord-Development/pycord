@@ -30,5 +30,5 @@ async def get_animals(ctx: discord.AutocompleteContext):
 
 
 @slash_command(name="ac_colors")
-async def autocomplete_basic_example(ctx: discord.ApplicationContext, color: Option(str, "Pick a color!", autocomplete=get_colors), animal: Option(str, "Pick an animal!", autocomplete=get_animals)):
+async def autocomplete_example(ctx: discord.ApplicationContext, color: Option(str, "Pick a color!", autocomplete=get_colors), animal: Option(str, "Pick an animal!", autocomplete=get_animals)):
     await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for the animal.")
