@@ -666,7 +666,6 @@ class SlashCommandOptionType(Enum):
         raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
 
 
-
 class EmbeddedActivity(Enum):
     awkword = 879863881349087252
     betrayal = 773336526917861400

@@ -40,7 +40,7 @@ InviteTargetType = Literal[1, 2]
 class _InviteOptional(TypedDict, total=False):
     guild: InviteGuild
     inviter: PartialUser
-    guild_events: GuildEvent
+    guild_event: GuildEvent
     target_user: PartialUser
     target_type: InviteTargetType
     target_application: PartialAppInfo
