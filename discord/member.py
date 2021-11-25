@@ -675,7 +675,7 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | voice_channel                | :attr:`Permissions.move_members`     |
         +------------------------------+--------------------------------------+
-        | communication_disabled_until | :attr:`Permissions.manage_members`     |
+        | communication_disabled_until | :attr:`Permissions.manage_members`   |
         +------------------------------+--------------------------------------+
 
         All parameters are optional.
