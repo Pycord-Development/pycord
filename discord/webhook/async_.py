@@ -144,7 +144,7 @@ class AsyncWebhookAdapter:
                     file.reset(seek=attempt)
 
                 if multipart:
-                    form_data = aiohttp.FormData()
+                    form_data = aiohttp.FormData(quote_fields=False)
                     for p in multipart:
                         form_data.add_field(**p)
                     to_send = form_data
@@ -378,28 +378,21 @@ class AsyncWebhookAdapter:
 
         if data is not None:
             payload['data'] = data
-        form = [{'name': 'payload_json', 'value': utils._to_json(payload)}]
+        form = [{'name': 'payload_json'}]
+        attachments = []
         files = files or []
-        if len(files) == 1:
-            file = files[0]
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
+        payload['attachments'] = attachments
+        form[0]['value'] = utils._to_json(payload)
 
         route = Route(
             'POST',
