@@ -152,11 +152,13 @@ class Attachment(Hashable):
         The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_
     ephemeral: :class:`bool`
         Whether the attachment is ephemeral or not.
+    description: Optional[:class:`str`]
+        The attachment's description. 
 
         .. versionadded:: 1.7
     """
 
-    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral')
+    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral', 'description')
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
         self.id: int = int(data['id'])
@@ -169,6 +171,7 @@ class Attachment(Hashable):
         self._http = state.http
         self.content_type: Optional[str] = data.get('content_type')
         self.ephemeral: bool = data.get('ephemeral', False)
+        self.description: str = data.get('description')
 
     def is_spoiler(self) -> bool:
         """:class:`bool`: Whether this attachment contains a spoiler."""
@@ -322,6 +325,8 @@ class Attachment(Hashable):
             result['width'] = self.width
         if self.content_type:
             result['content_type'] = self.content_type
+        if self.description:
+            result['description'] = self.description
         return result
 
 
