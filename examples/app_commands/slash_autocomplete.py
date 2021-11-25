@@ -132,7 +132,7 @@ async def autocomplete_example(
     await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for the animal.")
 
 
-@slash_command(name="ac_basic_example", guild_ids=[...])
+@bot.slash_command(name="ac_basic_example")
 async def autocomplete_basic_example(
     ctx: discord.ApplicationContext,
     color: Option(str, "Pick a color from this big list", autocomplete=discord.utils.basic_autocomplete(color_searcher)),  # Demonstrates passing a callback to discord.utils.basic_autocomplete
