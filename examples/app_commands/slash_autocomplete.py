@@ -122,7 +122,7 @@ async def get_animals(ctx: discord.AutocompleteContext):
         return ["rainbowfish"]
 
 
-@slash_command(name="ac_example", guild_ids=[...])
+@bot.slash_command(name="ac_example")
 async def autocomplete_example(
     ctx: discord.ApplicationContext,
     color: Option(str, "Pick a color!", autocomplete=get_colors),
