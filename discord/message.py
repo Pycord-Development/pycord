@@ -155,7 +155,7 @@ class Attachment(Hashable):
     description: Optional[:class:`str`]
         The attachment's description. 
 
-        .. versionadded:: 1.7
+        .. versionadded:: 2.0
     """
 
     __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral', 'description')
