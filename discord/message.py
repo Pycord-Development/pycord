@@ -1324,6 +1324,9 @@ class Message(Hashable):
             raise InvalidArgument('cannot pass both file and files parameter to edit()')
 
         if file is not MISSING:
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
             if not isinstance(file, File):
                 raise InvalidArgument('file parameter must be File')
 
@@ -1342,6 +1345,9 @@ class Message(Hashable):
                 raise InvalidArgument('files parameter must be a list of up to 10 elements')
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
 
             try:
                 data = await self._state.http.edit_files(
