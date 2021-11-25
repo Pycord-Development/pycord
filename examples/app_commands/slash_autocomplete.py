@@ -102,7 +102,7 @@ async def get_colors(ctx: discord.AutocompleteContext):
 
 
 async def get_animals(ctx: discord.AutocompleteContext):
-    """Returns an animal that is (mostly) the color selected for the "color" option."""
+    """Returns a list of animals that are (mostly) the color selected for the "color" option."""
     picked_color = ctx.options["color"]
     if picked_color == "red":
         return ["cardinal", "ladybug"]
