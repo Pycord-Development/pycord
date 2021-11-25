@@ -524,7 +524,7 @@ def handle_message_parameters(
 
     if files:
         attachments = []
-        form.append({'name': 'payload_json'})
+        multipart.append({'name': 'payload_json'})
         for index, file in enumerate(files):
             attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
@@ -536,7 +536,7 @@ def handle_message_parameters(
                 }
             )
         payload['attachments'] = attachments
-        form[0]['value'] = utils._to_json(payload)
+        multipart[0]['value'] = utils._to_json(payload)
         payload = None
 
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
