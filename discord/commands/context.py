@@ -167,14 +167,6 @@ class AutocompleteContext:
         The bot that the command belongs to.    
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
-    command: :class:`.ApplicationCommand`
-        The command that this context belongs to.
-    focused: :class:`.Option`
-        The option the user is currently typing.
-    value: :class:`.str`
-        The content of the focused option.
-    options :class:`.dict`
-        A name to value mapping of the options that the user has selected before this option.
     """
 
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
@@ -183,10 +175,10 @@ class AutocompleteContext:
         self.bot = bot
         self.interaction = interaction
 
-        # self.command = command
-        # self.focused = focused
-        # self.value = value
-        # self.options = options
+        self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
 
     @property
     def cog(self) -> Optional[Cog]:
