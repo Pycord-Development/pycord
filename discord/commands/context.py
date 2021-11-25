@@ -69,7 +69,13 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
