@@ -45,7 +45,7 @@ from ..utils import cached_property
 
 __all__ = (
     "ApplicationContext",
-    "AutocompleteContext"
+    "AutocompleteContext",
 )
 
 class ApplicationContext(discord.abc.Messageable):
@@ -109,10 +109,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def voice_client(self):
-        if self.guild is None:
-            return None
-        
-        return self.guild.voice_client
+        return getattr(self.guild, "voice_client", None)
 
     @cached_property
     def response(self) -> InteractionResponse:
@@ -145,10 +142,7 @@ class ApplicationContext(discord.abc.Messageable):
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        if self.command is None:
-            return None
-       
-        return self.command.cog
+        return getattr(self.command, "cog", None)
 
 
 class AutocompleteContext:
@@ -188,7 +182,4 @@ class AutocompleteContext:
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        if self.command is None:
-            return None
-       
-        return self.command.cog
+        return getattr(self.command, "cog", None)
