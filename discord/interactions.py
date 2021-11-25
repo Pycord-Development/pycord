@@ -632,6 +632,10 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
+        file: :class:`File`
+            The file to upload.
+        files: :class:`List[File]`
+            A list of files to upload. Must be a maximum of 10.
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
@@ -684,14 +688,34 @@ class InteractionResponse:
             else:
                 payload['components'] = view.to_components()
 
+        if file is not None and files is not None:
+            raise InvalidArgument('cannot pass both file and files parameter to edit()')
+        
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument('file parameter must be File')
+            else:
+                files = [file]
+
+        if files is not None:
+            if len(files) > 10:
+                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument('files parameter must be a list of File')
+                
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.message_update.value,
-            data=payload,
-        )
+        try:
+            await adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.message_update.value,
+                data=payload,
+            )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view and not view.is_finished():
             state.store_view(view, message_id)
