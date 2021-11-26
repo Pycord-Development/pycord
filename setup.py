@@ -51,7 +51,7 @@ extras_require = {
         "aiodns>=1.1",
         "Brotlipy",
         "cchardet",
-    ]
+    ],
 }
 
 packages = [
