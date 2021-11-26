@@ -167,6 +167,14 @@ class AutocompleteContext:
         The bot that the command belongs to.    
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
+    command: :class:`.ApplicationCommand`
+        The command that this context belongs to.
+    focused: :class:`.Option`
+        The option the user is currently typing.
+    value: :class:`.str`
+        The content of the focused option.
+    options :class:`.dict`
+        A name to value mapping of the options that the user has selected before this option.
     """
 
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
