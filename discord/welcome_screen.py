@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -43,6 +44,7 @@ __all__ = (
     'WelcomeScreenChannel',
 )
 
+
 class WelcomeScreenChannel:
     """Represents a welcome channel displayed on :class:`WelcomeScreen`
     
@@ -81,11 +83,10 @@ class WelcomeScreenChannel:
         else:
             # unicode emoji or None
             dict_['emoji_name'] = self.emoji
-            dict_['emoji_id'] = None # type: ignore
+            dict_['emoji_id'] = None  # type: ignore
 
         return dict_
 
-    
     @classmethod
     def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeChannel:
         channel_id = _get_as_snowflake(data, 'channel_id')
@@ -102,7 +103,6 @@ class WelcomeScreenChannel:
             emoji = _emoji_name
 
         return cls(channel=channel, description=description, emoji=emoji)  # type: ignore
-
 
 
 class WelcomeScreen:
@@ -129,7 +129,6 @@ class WelcomeScreen:
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get('description')
         self.welcome_channels: List[WelcomeScreenChannel] = [WelcomeScreenChannel._from_dict(channel, self._guild) for channel in data.get('welcome_channels', [])]
-    
 
     @property
     def enabled(self) -> bool:
@@ -140,8 +139,7 @@ class WelcomeScreen:
     def guild(self) -> Guild:
         """:class:`Guild`: The guild this welcome screen belongs to."""
         return self._guild
-    
-    
+
     @overload
     async def edit(
         self,
@@ -165,7 +163,10 @@ class WelcomeScreen:
         You must have the :attr:`~Permissions.manage_guild` permission in the
         guild to do this.
         
-        Usage: ::
+        Example
+        --------
+        .. code-block:: python3
+
             rules_channel = guild.get_channel(12345678)
             announcements_channel = guild.get_channel(87654321)
             custom_emoji = utils.get(guild.emojis, name='loudspeaker')

@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -216,6 +217,14 @@ class SystemChannelFlags(BaseFlags):
         """
         return 4
 
+    @flag_value
+    def join_notification_replies(self):
+        """:class:`bool`: Returns ``True`` if the system channel is allowing member join sticker replies.
+
+        .. versionadded:: 2.0
+        """
+        return 8
+
 
 @fill_with_flags()
 class MessageFlags(BaseFlags):
@@ -295,6 +304,24 @@ class MessageFlags(BaseFlags):
         """
         return 64
 
+    @flag_value
+    def loading(self):
+        """:class:`bool`: Returns ``True`` if the source message an deferred.
+
+        The user sees a 'thinking' state
+
+        .. versionadded:: 2.0
+        """
+        return 128
+
+    @flag_value
+    def failed_to_mention_some_roles_in_thread(self):
+        """:class:`bool`: Returns ``True`` if some roles are failed to mention in a thread.
+
+        .. versionadded:: 2.0
+        """
+        return 256
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
@@ -348,6 +375,11 @@ class PublicUserFlags(BaseFlags):
     def bug_hunter(self):
         """:class:`bool`: Returns ``True`` if the user is a Bug Hunter"""
         return UserFlags.bug_hunter.value
+
+    @flag_value
+    def premium_promo_dismissed(self):
+        """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion"""
+        return UserFlags.premium_promo_dismissed.value
 
     @flag_value
     def hypesquad_bravery(self):
@@ -409,6 +441,14 @@ class PublicUserFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return UserFlags.discord_certified_moderator.value
+
+    @flag_value
+    def bot_http_interactions(self):
+        """:class:`bool`: Returns ``True`` if the bot has set an interactions endpoint url.
+
+        .. versionadded:: 2.0
+        """
+        return UserFlags.bot_http_interactions.value
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
@@ -704,6 +744,12 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (both guilds and DMs)
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
+
+        .. note::
+
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
+            Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return (1 << 9) | (1 << 12)
 
@@ -731,6 +777,21 @@ class Intents(BaseFlags):
         - :func:`on_reaction_add` (only for guilds)
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
+
+        Without the :attr:`ApplicationFlags.gateway_message_content` intent enabled, the following fields are either an empty string or empty array:
+
+        - :attr:`Message.content`
+        - :attr:`Message.embeds`
+        - :attr:`Message.attachments`
+        - :attr:`Message.components`
+
+        For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
+
+        .. note::
+
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the messages.
+            Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return 1 << 9
 
@@ -1028,6 +1089,24 @@ class ApplicationFlags(BaseFlags):
     """
 
     @flag_value
+    def managed_emoji(self):
+        """:class:`bool`: Returns ``True`` if the application is a managed emoji.
+        """
+        return 1 << 2
+
+    @flag_value
+    def group_dm_create(self):
+        """:class:`bool`: Returns ``True`` if the application can create group DMs.
+        """
+        return 1 << 5
+
+    @flag_value
+    def rpc_has_connected(self):
+        """:class:`bool`: Returns ``True`` if the application has connected to RPC.
+        """
+        return 1 << 11
+
+    @flag_value
     def gateway_presence(self):
         """:class:`bool`: Returns ``True`` if the application is verified and is allowed to
         receive presence information over the gateway.
@@ -1066,3 +1145,16 @@ class ApplicationFlags(BaseFlags):
     def embedded(self):
         """:class:`bool`: Returns ``True`` if the application is embedded within the Discord client."""
         return 1 << 17
+
+    @flag_value
+    def gateway_message_content(self):
+        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds.
+        """
+        return 1 << 18
+
+    @flag_value
+    def gateway_message_content_limited(self):
+        """:class:`bool`: Returns ``True`` if the application is currently pending verification
+        and has hit the guild limit.
+        """
+        return 1 << 19

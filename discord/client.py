@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -1195,7 +1196,7 @@ class Client:
         data = await self.http.get_template(code)
         return Template(data=data, state=self._connection) # type: ignore
 
-    async def fetch_guild(self, guild_id: int, /) -> Guild:
+    async def fetch_guild(self, guild_id: int, /, *, with_counts=True) -> Guild:
         """|coro|
 
         Retrieves a :class:`.Guild` from an ID.
@@ -1214,6 +1215,12 @@ class Client:
         guild_id: :class:`int`
             The guild's ID to fetch from.
 
+        with_counts: :class:`bool`
+            Whether to include count information in the guild. This fills the
+            :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+            fields.
+
+            .. versionadded:: 2.0
         Raises
         ------
         :exc:`.Forbidden`
@@ -1226,7 +1233,7 @@ class Client:
         :class:`.Guild`
             The guild from the ID.
         """
-        data = await self.http.get_guild(guild_id)
+        data = await self.http.get_guild(guild_id, with_counts = with_counts)
         return Guild(data=data, state=self._connection)
 
     async def create_guild(

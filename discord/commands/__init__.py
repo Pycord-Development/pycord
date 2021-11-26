@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,3 +25,5 @@ DEALINGS IN THE SOFTWARE.
 
 from .commands import *
 from .context import *
+from .errors import *
+from .permissions import *

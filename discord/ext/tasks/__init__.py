@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -564,11 +565,13 @@ class Loop(Generic[LF]):
 
         if self._current_loop == 0:
             self._time_index += 1
-            return datetime.datetime.combine(datetime.datetime.now(datetime.timezone.utc), next_time)
+            if next_time > datetime.datetime.now(datetime.timezone.utc).timetz():
+                return datetime.datetime.combine(datetime.datetime.now(datetime.timezone.utc), next_time)
+            else:
+                return datetime.datetime.combine(datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=1), next_time)
 
-        next_date = self._last_iteration
-        if self._time_index == 0:
-            # we can assume that the earliest time should be scheduled for "tomorrow"
+        next_date = cast(datetime.datetime, self._last_iteration)
+        if next_time < next_date.timetz():
             next_date += datetime.timedelta(days=1)
 
         self._time_index += 1

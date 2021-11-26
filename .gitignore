@@ -18,3 +18,6 @@ docs/crowdin.py
 .DS_Store
 .python-version
 __pycache__
+.vs/slnx.sqlite
+env/
+build/
