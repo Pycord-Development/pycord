@@ -10,7 +10,7 @@ from discord.ext.commands import Context
 
 
 class Paginate(discord.ui.View):
-    """Creates a paginator for embeds that is navigated with buttons.
+    """Creates a paginator for a message that is navigated with buttons.
     
     Parameters
     ------------
@@ -104,7 +104,7 @@ class Paginate(discord.ui.View):
         """
 
         if not isinstance(messageable, abc.Messageable):
-            raise TypeError("messageable is not a messageable object")
+            raise TypeError("messageable should be a subclass of abc.Messageable")
 
         page = self.pages[0]
 
