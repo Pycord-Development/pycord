@@ -95,9 +95,69 @@ AutoShardedBot
 
 Application Commands
 ---------------------
-.. attributetable:: ApplicationCommandMixin
 
-.. autoclass:: ApplicationCommandMixin
+ApplicationCommand
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationCommand
+
+.. autoclass:: ApplicationCommand
+    :members:
+
+SlashCommand
+~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommand
+
+.. autoclass:: SlashCommand
+    :members:
+
+SlashCommandGroup
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommandGroup
+
+.. autoclass:: SlashCommandGroup
+    :members:
+
+Option
+~~~~~~~
+
+.. attributetable:: Option
+
+.. autoclass:: Option
+    :members:
+
+OptionChoice
+~~~~~~~~~~~~~
+
+.. attributetable:: OptionChoice
+
+.. autoclass:: OptionChoice
+    :members:
+
+UserCommand
+~~~~~~~~~~~~
+
+.. attributetable:: UserCommand
+
+.. autoclass:: UserCommand
+    :members:
+
+MessageCommand
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageCommand
+
+.. autoclass:: MessageCommand
+    :members:
+
+ApplicationContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationContext
+
+.. autoclass:: ApplicationContext
     :members:
 
 Application Info
@@ -1206,6 +1266,43 @@ from being stringly typed in case the strings change in the future.
 
 All enumerations are subclasses of an internal class which mimics the behaviour
 of :class:`enum.Enum`.
+
+.. class:: SlashCommandOptionType
+
+    Specifies the input type of an option.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: sub_command
+
+        A slash subcommand.
+    .. attribute:: sub_command_group
+
+        A slash command group.
+    .. attribute:: string
+
+        A string.
+    .. attribute:: integer
+
+        An integer.
+    .. attribute:: boolean
+
+        A boolean.
+    .. attribute:: user
+
+        A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`
+    .. attribute:: channel
+
+        A channel from the current guild.
+    .. attribute:: role
+
+        A role from the current guild.
+    .. attribute:: mentionable
+
+        A mentionable (user or role).
+    .. attribute:: number
+
+        A floating number.
 
 .. class:: ChannelType
 
