@@ -62,7 +62,7 @@ You can also use the :attr:`.Bot.command` decorator by supplying an application 
     @bot.user_command(...)
 
 Options
--------------------
+-------
 
 Options are arguments passed into slash commands.
 
