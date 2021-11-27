@@ -51,7 +51,7 @@ These have their corresponding decorators.
     async def foobar(ctx, message):
         await ctx.respond(message.id)
 
-You can also use the :attr:`Bot.command` decorator by supplying an application command class.
+You can also use the :attr:`.Bot.command` decorator by supplying an application command class.
 
 .. code-block:: python3
 
@@ -60,3 +60,37 @@ You can also use the :attr:`Bot.command` decorator by supplying an application c
     @bot.command(..., cls=UserCommand)
     # is the same as
     @bot.user_command(...)
+
+Options
+-------------------
+
+Options are arguments passed into slash commands.
+
+These can be defined as normal function arguments:
+
+.. code-block:: python3
+
+    @bot.slash_command()
+    async def say_hello(ctx, name):
+        await ctx.respond(f"Hello {name}!")
+
+Typehints can be used to set option types. All option types are listed under :class:`.SlashCommandOptionType`.
+
+.. code-block:: python3
+
+    @bot.slash_command()
+    async def foo(ctx, number: int, member: discord.Member):
+        # command code
+
+All option fields can be set using :class:`.Option` as the type of the argument.
+
+.. code-block:: python3
+
+    from discord import Option
+
+    @bot.slash_command()
+    async def show_color(
+        ctx,
+        color: Option(str, "Your color choice", choices=["red", "green"], required=False)
+    ):
+        # command code
