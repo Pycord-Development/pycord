@@ -12,9 +12,7 @@ Make sure to load this cog when your bot starts!
 """
 
 # this is the list of role IDs that will be added as buttons.
-role_ids = [
-    ...
-]
+role_ids = [...]
 
 
 class RoleButton(discord.ui.Button):

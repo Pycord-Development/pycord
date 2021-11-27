@@ -390,7 +390,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = self._parse_options(params)
+        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
