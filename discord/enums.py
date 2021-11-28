@@ -57,6 +57,8 @@ __all__ = (
     'InteractionResponseType',
     'NSFWLevel',
     'EmbeddedActivity',
+    'GuildEventStatus',
+    'GuildEventLocationType',
 )
 
 

@@ -82,10 +82,9 @@ class GuildEvent(Object):
         
         self.id: int = data.get('id')
         self.guild: Guild = self._state._get_guild(int(data.get('guild_id')))
-        #self.channel_id: int = data.get('channel_id', None)
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
-        self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
+        #self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
         end_time = data.get('scheduled_end_time', None)
         if end_time != None:
