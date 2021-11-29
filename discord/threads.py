@@ -591,7 +591,7 @@ class Thread(Messageable, Hashable):
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
     
 
-    async def archive(self, locked: bool = False):
+    async def archive(self, locked: bool = MISSING):
         return await self.edit(archived=True, locked=locked)
 
     async def join(self):
