@@ -592,6 +592,21 @@ class Thread(Messageable, Hashable):
     
 
     async def archive(self, locked: bool = MISSING) -> Thread:
+        """|coro|
+
+        Used to archive a thread, this is an alias to using :meth:`Thread.edit` to archive a thread.
+
+        Parameters
+        ------------
+        locked: :class:`bool`
+            When set to True it will lock the thread. This will default to False.
+        
+
+        Returns
+        --------
+        :class:`Thread`
+            The thread that you have just archived.
+        """
         return await self.edit(archived=True, locked=locked)
 
     async def join(self):
