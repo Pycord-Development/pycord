@@ -14,12 +14,15 @@ class SlashOptionExample(commands.Cog):
                  # <discord.commands.Option>
                  member: Option(discord.Member,description="the user you want the avatar of.")
                 ):
-        return await ctx.respond(embed=discord.Embed().set_image(url=str(member.avatar.url)))
+        """
+        ephemeral makes "Only you can see this" message
 
-        # ephemeral makes "Only you can see this" message
+        `await ctx.respond(embed=discord.Embed().set_image(url=str(member.avatar.url)),ephemeral=True)`
+
+        embed docs - https://docs.pycord.dev/en/master/api.html#embed
+        member docs - https://docs.pycord.dev/en/master/api.html#discord.Member
         """
-        await ctx.respond(embed=discord.Embed().set_image(url=str(member.avatar.url)),ephemeral=True)
-        """
+        return await ctx.respond(embed=discord.Embed().set_image(url=str(member.avatar.url)))
 
     @av.error
     async def av_error(self, ctx:Context ,error):

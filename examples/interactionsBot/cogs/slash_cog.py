@@ -14,12 +14,13 @@ class SlashExample(commands.Cog):
         description="check the latency of the bot!"
         )
     async def ping(self,ctx):
+        """
+        ephemeral makes "Only you can see this" message
         
+        `await ctx.respond(f"{round(self.client.latency * 1000)}ms",ephemeral=True)`
+        """
         return await ctx.respond(f"{round(self.client.latency * 1000)}ms")
-        # ephemeral makes "Only you can see this" message
-        """
-        await ctx.respond(f"{round(self.client.latency * 1000)}ms",ephemeral=True)
-        """
+        
 
     @ping.error
     async def ping_error(self, ctx:Context ,error):

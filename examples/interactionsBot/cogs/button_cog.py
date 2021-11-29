@@ -11,20 +11,10 @@ class ButtonView(discord.ui.View):
 
     #custom_id is required and should be unique for <commands.Bot.add_view>
     # attribute emoji can be used to include emojis which can be default str emoji or str(<:emojiName:int(ID)>)
+    # timeout can be used if there is a timeout on the button interaction. Default timeout is set to 180.
     @discord.ui.button(style=discord.ButtonStyle.blurple,custom_id="counter:firstButton")
     async def leftButton(self,button,interaction):
         await interaction.response.edit_message("button was pressed!")
-
-        
-    """
-    timeout is used if there is a timeout on the button interaction with is 180 by default
-    
-    the following example removes the button from the message rather than disabling them.
-    async def on_timeout(self):
-            for child in self.children:
-                child.disabled = True
-            await interaction.edit_original_message(view=None)
-    """
 
 class ButtonExample(commands.Cog):
     def __init__(self,client):

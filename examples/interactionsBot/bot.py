@@ -31,4 +31,11 @@ for filename in os.listdir('./cogs'):
     if filename.endswith(".py"):
         client.load_extension(f'cogs.{filename[:-3]}')
 
+# using SlashCommandGroup
+import cog_group
+cog_group.addition()
+# subtraction method is called last because of <client.add_application_command> inside it.
+# calling subtraction first then addition would most likely not work and wont register addition slash command. 
+cog_group.subtraction(client)
+
 client.run("token")
