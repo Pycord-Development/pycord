@@ -110,7 +110,7 @@ Member Intent
 .. _need_message_content_intent:
 
 Message Content Intent
-++++++++++++++++
+++++++++++++++++++++++++
 
 - Whether you have a message based command system using ext.commands
 - Whether you use the :func:`on_message` event for anything, such as auto-moderation.
