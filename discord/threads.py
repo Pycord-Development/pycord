@@ -592,7 +592,7 @@ class Thread(Messageable, Hashable):
     
 
     async def archive(self, locked: bool = False):
-        return self.edit(archived=True, locked=locked)
+        return await self.edit(archived=True, locked=locked)
 
     async def join(self):
         """|coro|
