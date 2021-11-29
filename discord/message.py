@@ -152,6 +152,9 @@ class Attachment(Hashable):
         The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_
     ephemeral: :class:`bool`
         Whether the attachment is ephemeral or not.
+
+        .. versionadded:: 1.7
+
     description: Optional[:class:`str`]
         The attachment's description. 
 
