@@ -390,7 +390,7 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = self._parse_options(params)
+        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -537,14 +537,20 @@ class SlashCommand(ApplicationCommand):
                     i["name"]:i["value"] 
                     for i in ctx.interaction.data["options"]
                 })
+                ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
                 ctx.options = values
-                if asyncio.iscoroutinefunction(option.autocomplete):
-                    result = await option.autocomplete(ctx)
+
+                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                    instance = getattr(option.autocomplete, "__self__", ctx.cog)
+                    result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
+                if asyncio.iscoroutinefunction(option.autocomplete):
+                    result = await result
+                    
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result

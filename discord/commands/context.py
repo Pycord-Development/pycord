@@ -103,15 +103,20 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
+    @cached_property
+    def author(self) -> Optional[Union[Member, User]]:
+        return self.user
+
     @property
     def voice_client(self):
+        if self.guild is None:
+            return None
+        
         return self.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
-
-    author = user
 
     @property
     def respond(self):
