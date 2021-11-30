@@ -62,7 +62,7 @@ class File:
         If this is not given then it defaults to ``fp.name`` or if ``fp`` is
         a string then the ``filename`` will default to the string given.
     description: Optional[:class`str`]
-        A description of the file, used by Discord to display alt text on images.
+        The description of a file, used by Discord to display alternative text on images.
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
     """

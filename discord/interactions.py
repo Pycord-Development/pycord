@@ -683,7 +683,6 @@ class InteractionResponse:
                 payload['components'] = []
             else:
                 payload['components'] = view.to_components()
-                
         adapter = async_context.get()
         await adapter.create_interaction_response(
             parent.id,
