@@ -353,9 +353,3 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-
-def setup(app):
-  if app.config.language == 'ja':
-    app.config.intersphinx_mapping['py'] = ('https://docs.python.org/ja/3', None)
-    app.config.html_context['discord_invite'] = 'https://pycord.dev/discord'
-    app.config.resource_links['discord'] = 'https://pycord.dev/discord'

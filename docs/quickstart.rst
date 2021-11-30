@@ -5,13 +5,13 @@
 .. currentmodule:: discord
 
 Quickstart
-============
+==========
 
 This page gives a brief introduction to the library. It assumes you have the library installed,
 if you don't check the :ref:`installing` portion.
 
 A Minimal Bot
----------------
+--------------
 
 Let's make a bot that responds to a specific message and walk you through it.
 
@@ -37,7 +37,7 @@ It looks something like this:
 
     client.run('your token here')
 
-Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict
+Let's name this file ``bot.py``. Make sure not to name it ``discord.py`` as that'll conflict
 with the library.
 
 There's a lot going on here, so let's walk you through it step by step.
