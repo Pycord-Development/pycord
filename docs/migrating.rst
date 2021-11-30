@@ -69,5 +69,5 @@ Some Speed results are shown below:
     
     Performance May Differ with Computer/Server specs and location
 
-- The public API should be completely type-hinted
-- Almost all ``edit`` methods now return their updated counterpart rather than doing an in-place edit
+- The public API is completely type-hinted
+- Most ``edit`` methods now return their updated counterpart rather than doing an in-place edit
