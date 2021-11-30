@@ -29,7 +29,7 @@ class RoleButton(discord.ui.Button):
         Parameters
         ----------
         interaction : discord.Interaction
-            The interaction object that was created when the user clicked on the button.
+            The interaction object that was created when a user clicks on a button.
         """
 
         # Figure out who clicked the button.
