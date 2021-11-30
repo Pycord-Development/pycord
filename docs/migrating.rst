@@ -13,7 +13,8 @@ message components and much more.
 Since Pycord is still relatively new, we have attempted to make the migration from discord.py and v1 to pycord and v2 as
 smooth as possible.
 
-- `on_socket_response` Was Removed
+Python Version Change
+-----------------------
 
 In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.10 or higher,
 the library had to remove support for Python versions lower than 3.8, which essentially means that **support for Python
@@ -296,33 +297,70 @@ Major Model Changes
 Below are major model changes that have happened in v2.0
 
 
+Snowflakes are int
+~~~~~~~~~~~~~~~~~~~~
 
 Before v2.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`.
 
-User API
---------
+Quick example: ::
 
-Anything allowing you to Use user Account's have been removed 
+    # before
+    ch = client.get_channel('84319995256905728')
+    if message.author.id == '80528701850124288':
+        ...
 
-The following Classes Were Deleted in addendum
+    # after
+    ch = client.get_channel(84319995256905728)
+    if message.author.id == 80528701850124288:
+        ...
 
-``Profile``, ``Relationship``, ``CallMessage``, ``GroupCall``,
+This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have
+to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally.
 
-``RelationshipType``, ``HypeSquadHouse```, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``,
+Server is now Guild
+~~~~~~~~~~~~~~~~~~~~~
 
-``GroupChannel.add_recipients``, ``remove_recipients``
+The official API documentation calls the "Server" concept a "Guild" instead. In order to be more consistent with the
+API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has
+been changed as well.
 
-``Guild.ack``
+A list of changes is as follows:
 
-``Client.fetch_user_profile``
++-------------------------------+----------------------------------+
+|             Before            |              After               |
++-------------------------------+----------------------------------+
+| ``Message.server``            | :attr:`Message.guild`            |
++-------------------------------+----------------------------------+
+| ``Channel.server``            | :attr:`.GuildChannel.guild`      |
++-------------------------------+----------------------------------+
+| ``Client.servers``            | :attr:`Client.guilds`            |
++-------------------------------+----------------------------------+
+| ``Client.get_server``         | :meth:`Client.get_guild`         |
++-------------------------------+----------------------------------+
+| ``Emoji.server``              | :attr:`Emoji.guild`              |
++-------------------------------+----------------------------------+
+| ``Role.server``               | :attr:`Role.guild`               |
++-------------------------------+----------------------------------+
+| ``Invite.server``             | :attr:`Invite.guild`             |
++-------------------------------+----------------------------------+
+| ``Member.server``             | :attr:`Member.guild`             |
++-------------------------------+----------------------------------+
+| ``Permissions.manage_server`` | :attr:`Permissions.manage_guild` |
++-------------------------------+----------------------------------+
+| ``VoiceClient.server``        | :attr:`VoiceClient.guild`        |
++-------------------------------+----------------------------------+
+| ``Client.create_server``      | :meth:`Client.create_guild`      |
++-------------------------------+----------------------------------+
 
 .. _migrating_2_0_model_state:
 
-``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships```, ``friends``, ``blocked``, ``create_group``, ``edit_settings``
+Models are Stateful
+~~~~~~~~~~~~~~~~~~~~~
 
-Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house arguments``
+As mentioned earlier, a lot of functionality was moved out of :class:`Client` and
+put into their respective :ref:`model <discord_api_models>`.
 
-``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``
+A list of these changes is enumerated below.
 
 +---------------------------------------+------------------------------------------------------------------------------+
 |                 Before                |                                    After                                     |
@@ -442,29 +480,16 @@ Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house a
 | ``Client.wait_until_ready``           | No change                                                                    |
 +---------------------------------------+------------------------------------------------------------------------------+
 
-SpeedUps
---------
-The library has significantly improved in speed since v1.7.x
-Some Speed results are shown below:
+Property Changes
+~~~~~~~~~~~~~~~~~~
 
-+-------------------------------+----------------------------------+----------------------------------+
-|             Testsetup         |          boot up before          |            boot up now           |
-+-------------------------------+----------------------------------+----------------------------------+
-| 735 guilds (with chunking)    | 57s/1.7 GiB RAM                  | 42s/1.4 GiB RAM                  |
-+-------------------------------+----------------------------------+----------------------------------+
-| 27k guilds (with chunking)    | 477s/8 GiB RAM                   | 303s/7.2 GiB                     |
-+-------------------------------+----------------------------------+----------------------------------+
-| 48k guilds (without chunking) | 109s                             | 67s                              |
-+-------------------------------+----------------------------------+----------------------------------+
-| 106k guilds (without chunking)| 3300s                            | 3090s                            |
-+-------------------------------+----------------------------------+----------------------------------+
+In order to be a bit more consistent, certain things that were properties were changed to methods instead.
 
-.. note::
-    
-    Performance May Differ with Computer/Server specs and location
+The following are now methods instead of properties (requires parentheses):
 
-- The public API is completely type-hinted
-- Most ``edit`` methods now return their updated counterpart rather than doing an in-place edit
+- :meth:`Role.is_default`
+- :meth:`Client.is_ready`
+- :meth:`Client.is_closed`
 
 Dict Value Change
 ~~~~~~~~~~~~~~~~~~~~~
