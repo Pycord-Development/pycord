@@ -16,33 +16,8 @@ in specific versions.
 v2.0.0
 ------
 
-This does not Show Changes with discord.py 2.0, for a list go to :doc:`migrating`
-
-Fixes/Removals
-~~~~~~~~~~~~~~
-
-- Pycord doesn't check for duplicate files anymore (:issue:`333`)
-- 
-
-
-New Features
-~~~~~~~~~~~~
-
-- Application Command Support Added :meth:`slash_command` :func:`message_command` & :func:`user_command`
-
-.. note::
-
-    These Classes Are Aliased Versions Of :func:`ApplicationCommand` :func:`UserCommand` & :func:`MessageCommand`
-
-- Application Has it's own Context :class:`ApplicationContext`
-- Autocomplete Has it's own Context :class:`AutocompleteContext`
-
-
-Miscellaneous
-~~~~~~~~~~~~~
-
-- Userbots Were Removed
-- ``on_socket_response`` Was Removed for performance reasons
+The changeset for this version are too big to be listed here, for more information please
+see :ref:`the migrating page <migrating_2_0>`.
 
 
 .. _vp1p7p3:
