@@ -365,7 +365,7 @@ class Asset(AssetMixin):
         Parameters
         ------------
         format: :class:`str`
-            The new format of an asset.
+            The new format of the asset.
 
         Raises
         -------
