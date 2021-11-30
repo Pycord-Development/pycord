@@ -1192,6 +1192,10 @@ Utility Functions
 
 .. autofunction:: discord.utils.as_chunks
 
+.. autofunction:: discord.utils.time_snowflake
+
+.. autofunction:: discord.utils.generate_snowflake
+
 .. _discord-api-enums:
 
 Enumerations
@@ -2729,54 +2733,123 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.0
 
+    .. attribute:: awkword
+        
+        Represents the embedded application Awkword.
+
     .. attribute:: betrayal
 
         Represents the embedded application Betrayal.io
+    
+    .. attribute:: checkers_in_the_park
 
-    .. attribute:: chess
+        Represents the embedded application Checkers in the Park Prod.
+    
+    .. attribute:: checkers_in_the_park_dev
+
+        Represents the embedded application Checkers in the Park Development.
+    
+    .. attribute:: checkers_in_the_park_staging
+        
+        Represents the embedded application Checkers in the Park Staging.
+    
+    .. attribute:: checkers_in_the_park_qa
+        
+        Represents the embedded application Checkers in the Park QA.
+    
+    .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
 
-    .. attribute:: chess_dev
+    .. attribute:: chess_in_the_park_dev
 
-        Development version of `chess`.
+        Represents the embedded application Chess in the Park Development.
 
+    .. attribute:: chest_in_the_park_staging
+        
+        Represents the embedded application Chess in the Park Staging.
+
+    .. attribute:: chest_in_the_park_qa
+        
+        Represents the embedded application Chess in the Park QA.
+    
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
 
-    .. attribute:: fishing
+    .. attribute:: fishington
 
         Represents the embedded application Fishington.io
 
     .. attribute:: letter_tile
 
         Represents the embedded application Letter Tile.
+    
+    .. attribute:: ocho
+    
+        Represents the embedded application Ocho.
 
-    .. attribute:: poker
+    .. attribute:: ocho_dev
+
+        Represents the embedded application Ocho Development.
+
+    .. attribute:: ocho_staging
+        
+        Represents the embedded application Ocho Staging.
+    
+    .. attribute:: ocho_qa
+        
+        Represents the embedded application Ocho QA.
+    
+    .. attribute:: pn_stagging
+
+        Represents the embedded application Poker Night Staging.
+
+    .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
+     
+    .. attribute:: poker_night
 
+        Represents the embedded application Poker QA.
+    
+    .. attribute:: putts
+        
+        Represents the embedded application Putts.
+
+    .. attribute:: sketchy_artist 
+        
+        Represents the embedded application Sketchy Artist.
+    
+    .. attribute:: sketchy_artist_dev
+        
+        Represents the embedded application Sketchy Artist development version.
+    
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
 
     .. attribute:: watch_together
 
-        Same as `youtube` with remote feature which allows guild admins to limit the playlist access.
+        Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
         
     .. attribute:: watch_together_dev
 
-        Development version of `watch_together`.
+        Development version of :attr:`.watch_together`.
 
-    .. attribute:: word_snack
-
-        Represents the embedded application Word Snacks.
-
-    .. attribute:: youtube
+    .. attribute:: word_snacks
+        
+        Represents the embedded application word snacks.
+    
+    .. attribute:: word_snacks_dev
+        
+        Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
+        
+    .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
-
+    
+    
 
 Async Iterator
 ----------------

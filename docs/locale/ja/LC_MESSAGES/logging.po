@@ -20,12 +20,12 @@ msgstr "ログの設定"
 
 #: ../../logging.rst:7
 msgid ""
-"*discord.py* logs errors and debug information via the :mod:`logging` "
+"*pycord* logs errors and debug information via the :mod:`logging` "
 "python module. It is strongly recommended that the logging module is "
 "configured, as no errors or warnings will be output if it is not set up. "
 "Configuration of the ``logging`` module can be as simple as::"
 msgstr ""
-"*discord.py* はPythonの :mod:`logging` "
+"*pycord* はPythonの :mod:`logging` "
 "モジュールを介してエラーやデバッグの情報を記録します。loggingモジュールが設定されていない場合は、エラーや警告が出力されないため、設定するとを強くおすすめします。loggingモジュールの設定は下記手順で簡単に実装が可能です。"
 
 #: ../../logging.rst:16

@@ -559,7 +559,9 @@ class HelpCommand:
         if sort and key is None:
             key = lambda c: c.name
 
-        iterator = commands if self.show_hidden else filter(lambda c: not c.hidden, commands)
+        # Ignore Application Commands cause they dont have hidden/docs
+        prefix_commands = [command for command in commands if not isinstance(command, discord.commands.ApplicationCommand)]
+        iterator = prefix_commands if self.show_hidden else filter(lambda c: not c.hidden, prefix_commands)
 
         if self.verify_checks is False:
             # if we do not need to verify the checks then we can just
