@@ -22,6 +22,6 @@ msgid "``discord.ext.commands`` -- Bot commands framework"
 msgstr "``discord.ext.commands`` -- ボットコマンドのフレームワーク"
 
 #: ../../ext/commands/index.rst:6
-msgid "``discord.py`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``discord.py`` comes with an extension library that handles this for you."
-msgstr "``discord.py`` は、Discordと連携するための低レベルな機能を提供します。ときどき、このライブラリーはBotの作成に用いられています。しかしこの作業を正しくやるのは最初のときは気が重くややこしいものです。何度も繰り返し、拡張可能で柔軟、そしてパワフルなBotコマンドフレームワークを作成しています。この理由より、 ``discord.py`` にはこれを扱う拡張ライブラリがついてきます。"
+msgid "``pycord`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``pycord`` comes with an extension library that handles this for you."
+msgstr "``pycord`` は、Discordと連携するための低レベルな機能を提供します。ときどき、このライブラリーはBotの作成に用いられています。しかしこの作業を正しくやるのは最初のときは気が重くややこしいものです。何度も繰り返し、拡張可能で柔軟、そしてパワフルなBotコマンドフレームワークを作成しています。この理由より、 ``pycord`` にはこれを扱う拡張ライブラリがついてきます。"
 
