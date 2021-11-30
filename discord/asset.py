@@ -365,12 +365,12 @@ class Asset(AssetMixin):
         Parameters
         ------------
         format: :class:`str`
-            The new format of the asset.
+            The new format of an asset.
 
         Raises
         -------
         InvalidArgument
-            The asset had an invalid format.
+            The asset has an invalid format.
 
         Returns
         --------
