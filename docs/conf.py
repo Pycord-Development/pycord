@@ -145,7 +145,6 @@ pygments_style = 'friendly'
 
 # Nitpicky mode options
 nitpick_ignore_files = [
-  "migrating_to_async",
   "migrating",
   "whats_new",
 ]
