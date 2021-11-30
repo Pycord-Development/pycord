@@ -605,7 +605,7 @@ class Thread(Messageable, Hashable):
         Returns
         --------
         :class:`Thread`
-            The thread that you have just archived.
+            The thread that you have archived.
         """
         return await self.edit(archived=True, locked=locked)
 
