@@ -2801,7 +2801,7 @@ of :class:`enum.Enum`.
         
         Represents the embedded application Ocho QA.
     
-    .. attribute:: pn_stagging
+    .. attribute:: poker_night_staging
 
         Represents the embedded application Poker Night Staging.
 
@@ -2809,7 +2809,7 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Poker Night.
      
-    .. attribute:: poker_night
+    .. attribute:: poker_night_qa
 
         Represents the embedded application Poker QA.
     
