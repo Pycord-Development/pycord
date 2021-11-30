@@ -1,328 +1,95 @@
 .. currentmodule:: discord
 
-.. _migrating_2_0:
+.. _migrating_1_0:
 
-Migrating to v2.0
+Migrating to v1.0
 ======================
 
-v2.0 includes many breaking changes and added features.
+v1.0 is one of the biggest breaking changes in the library due to a complete
+redesign.
 
-This update adds new features from the discord API such as application commands (slash, user, and message), as well as
-message components and much more.
+The amount of changes are so massive and long that for all intents and purposes, it is a completely
+new library.
 
-Since Pycord is still relatively new, we have attempted to make the migration from discord.py and v1 to pycord and v2 as
-smooth as possible.
+Part of the redesign involves making things more easy to use and natural. Things are done on the
+:ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work.
 
-- `on_socket_response` Was Removed
+Python Version Change
+-----------------------
 
-In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.10 or higher,
-the library had to remove support for Python versions lower than 3.8, which essentially means that **support for Python
-3.7 is dropped**.
+In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher,
+the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4
+is dropped**.
 
-Migration to Pycord
----------------------
-
-We have tried to make the migration as smooth as possible. The only breaking changes that we have made are improvements,
-not deletions in favor of a new style. We're going to provide as much backwards support as possible, though there will
-be some changes to the API as is to be expected in major releases.
-
-New Package Name
-~~~~~~~~~~~~~~~~~~
-The package name has been changed from ``discord.py`` to ``py-cord``, because our package is a fork of the original
-discord.py package.
-
-Breaking Changes
-------------------
-The following changes are breaking changes, and will cause your code to stop working if you use any of these features.
-
-User Account Support Removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-User account ("userbot") is no longer supported. Thus, many features that were only applicable to them have been
-removed. Please note, this means that detection of Nitro is no longer possible.
-
-**Removed**
-
-The following features have been removed due to being solely related to user account support
-
-- The ``bot`` parameter of :meth:`Client.start`/:meth:`Client.run`
-- The ``afk`` parameter of :meth:`Client.change_presence`
-- All of the following classes and types:
-    - ``Profile``
-    - ``Relationship``
-    - ``CallMessage``
-    - ``GroupCall``
-    - ``RelationshipType``
-    - ``HypeSquadHouse``
-    - ``PremiumType``
-    - ``UserContentFilter``
-    - ``FriendFlags``
-    - ``Theme``
-    - ``RelationshipType``
-- The following methods of :class:`GroupChannel`:
-    - ``add_recipients``
-    - ``remove_recipients``
-    - ``edit``
-- The ``ack`` method of :class:`Guild`
-- The ``call`` and ``ack`` methods of :class:`Message`
-- The ``fetch_user_profile`` method of :class:`Client`
-
-Use of timezone-aware datetime
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Datetime objects are now required to be timezone-aware by the library internals. This means that you will need to
-convert your datetime objects to a timezone-aware datetime object (or make them timezone-aware from the beginning)
-before passing them to the library. Instead of ``datetime.datetime.utcnow``, you should use
-``datetime.datetime.now(datetime.timezone.utc)``. If you are constructing a datetime object yourself, you should pass
-``datetime.timezone.utc`` to the ``tzinfo`` parameter.
-
-.. code-block:: python
-
-   embed = discord.Embed(
-       title = "Pi Day 2021 in UTC",
-       timestamp = datetime(2021, 3, 14, 15, 9, 2, tzinfo=timezone.utc)
-   )
-
-
-Methods of :class:`Client`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- ``request_offline_members``
-    This has been depreciated since v1.5.
-- ``logout``
-    This was an alias for :meth:`Client.close`, which is now the preferred method.
-
-Embed __bool__ method changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``__bool__`` method of :class:`Embed` has been changed (affects ``bool(Embed)``). It will now always return truthy
-values. Previously it only considered text fields.
-
-Duplicate registration of cogs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:meth:`Bot.add_cog` now raises when a cog with the same name is already registered. The ``override`` argument can be
-used to bring back the 1.x behavior.
-
-ExtensionNotFound.original removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``original`` attribute of :class:`ExtensionNotFound` has been removed. This previously returned ``None`` for
-compatibility.
-
-MemberCacheFlags.online removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Due to a Discord limitation, the ``online`` attribute of :class:`MemberCacheFlags` has been removed.
-
-Message.type for replies changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:attr:`Message.type` has been changed for replies. It now returns :attr:`MessageType.reply` instead of
-:attr:`MessageType.default`.
-
-Private channel events removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-``private_channel_create`` and ``private_channel_delete`` events will no longer be dispatched due to Discord
-limitations.
-
-Command clean_params type changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The :attr:`~.ext.commands.Command.clean_params` attribute of :class:`ext.commands.Command` has been changed to return a
-:class:`dict` instead of an ``OrderedDict``.
-
-DMChannel recipient changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases.
-
-User and Member permissions_in
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use :meth:`abc.GuildChannel.permissions_for` instead.
-
-GuildChannel permissions_for changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The :meth:`abc.GuildChannel.permissions_for` method's first argument is now positional only.
-
-Client guild_subscriptions removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``guild_subscriptions`` attribute of :class:`Client` has been removed, as it has been replaced by the
-:ref:`intents <intents_primer>` system.
-
-Webhook changes
-~~~~~~~~~~~~~~~~~
-
-:class:`Webhook` was overhauled.
-
-- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous usage (requests), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`.
-- ``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` have been removed as they are unnecessary.
-- ``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` have been removed. Sessions are now passed directly to these methods.
-
-.. code-block:: python
-
-   webhook = discord.SyncWebhook.from_url(
-       f"https://discord.com/api/webhooks/{id}/{token}"
-   )
-   webhook.send("Hello from pycord 2.0")
-
-
-.. code-block:: python
-
-   async with aiohttp.ClientSession() as session:
-       webhook = discord.Webhook.partial(
-           id,
-           token,
-           session=session
-       )
-       await webhook.send("Hello from pycord 2.0")
-
-
-HelpCommand clean_prefix removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``clean_prefix`` attribute of :class:`HelpCommand` has been removed. This was moved to
-:attr:`ext.commands.Context.clean_prefix`
-
-
-Sticker preview image removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``preview_image`` attribute of :class:`Sticker` has been removed, as Discord no longer provides the data needed for
-this.
-
-
-Asset Changes
-~~~~~~~~~~~~~~~
-Assets have been changed.
-
-- Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now return :class:`Asset`.
-  :attr:`Asset.key` returns the hash from now on.
-- ``Class.x_url`` and ``Class.x_url_as`` (e.g. ``User.avatar_url`` and ``Guild.icon_url_as``) have been removed.
-  :meth:`Asset.replace` or :class:`Asset`.with_x (e.g. :meth:`Asset.with_size`) methods can be used to get specific
-  asset sizes or types.
-- :attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are
-  added to save or read emojis.
-- :meth:`Emoji.url_as` and :meth:`PartialEmoji.url_as` have been removed.
-- The :attr:`~.AuditLogDiff.splash`, :attr:`~.AuditLogDiff.icon`, and :attr:`~.AuditLogDiff.avatar` attributes of
-  :class:`AuditLogDiff` now return :class:`Asset` instead of :class:`str`.
-- :attr:`User.avatar` now returns ``None`` if the avatar is not set and is instead the default avatar;
-  use :attr:`User.display_avatar` for pre-2.0 behavior.
-
-
-.. code-block:: python
-
-   avatar_url = user.display_avatar.url # previously str(avatar_url)
-   avatar_128x128_url = user.display_avatar.with_size(128).url # previously str(avatar_url_as(size=128))
-   avatar_128x128_png_url = user.display_avatar.replace(size=128, static_format="png").url
-   # previously str(avatar_url_as(size=128, static_format="png"))
-   # The code above can also be written as:
-   avatar_128x128_png_url = user.display_avatar.with_size(128).with_static_format("png").url
-
-   avatar_bytes = await user.display_avatar.read() # previously avatar_url.read
-
-   # Emoji and Sticker are special case:
-   emoji_url = emoji.url # previously str(emoji.url)
-   emoji_32x32_url = emoji.with_size(32).url # previously str(emoji.url_as(size=32))
-   emoji_32x32_png_url = emoji.replace(size=32, static_format="png").url
-   # previously str(url_as(size=128, static_format="png"))
-
-   emoji_bytes = await emoji.read() # previously emoji.url.read
-   # Same applies to Sticker and PartialEmoji.
-
-
-
-Color blurple changed
-~~~~~~~~~~~~~~~~~~~~~~~
-The ``Colour.blurple`` method has been changed to :meth:`Colour.og_blurple`, and :meth:`Colour.blurple` now returns
-the new theme color.
-
-``self_bot`` argument
-~~~~~~~~~~~~~~~~~~~~~~~
-The ``self_bot`` argument of :class:`~.ext.commands.Bot` has been removed, since user bots are no longer supported.
-
-VerificationLevel attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``table_flip`` (alias of :attr:`~.VerificationLevel.high`) attribute of :class:`VerificationLevel` has been removed.
-The ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and have been replaced with
-:attr:`~.VerificationLevel.highest`.
-
-
-Arguments of ``oauth_url`` changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``permissions``, ``guild``, ``redirect_uri``, and ``scopes`` arguments of :func:`utils.oauth_url` have been changed
-to be keyword only.
-
-
-StageChannel changes
-~~~~~~~~~~~~~~~~~~~~~~
-Due to the introduction of :class:`StageInstance`, which represents the current session of a :class:`StageChannel`;
-
-- :meth:`StageChannel.edit` can no longer be used to edit :attr:`~.StageChannel.topic`. Use :meth:`StageInstance.edit`
-  instead.
-- :meth:`StageChannel.clone` no longer clones its topic.
-
-
-Message channel attribute changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:attr:`Message.channel` can now return :class:`Thread`.
-
-
-Guild methods changed
-~~~~~~~~~~~~~~~~~~~~~~~
-The :meth:`~.Guild.get_channel`, :meth:`~.Guild.get_role`, :meth:`~.Guild.get_member_named`,
-:meth:`~.Guild.fetch_member`, and :meth:`~.Guild.fetch_emoji` methods' first arguments are now positional only.
-
-
-Guild create_text_channel topic argument
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``topic`` argument of :meth:`Guild.create_text_channel` no longer accepts ``None``.
-
-
-Reaction custom emoji
-~~~~~~~~~~~~~~~~~~~~~~~
-The ``custom_emoji`` attribute of :class:`Reaction` has been replaced with the :meth:`Reaction.is_custom_emoji` method
-for consistency.
-
-
-Reaction users arguments changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Arguments of :meth:`Reaction.users` have been changed to be keyword only.
-
-
-IntegrationAccount id attribute changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:attr:`IntegrationAccount.id` is now a :class:`str` instead of an :class:`int`, due to Discord changes.
-
-
-BadInviteArgument arguments changed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:
-
-
-BEGIN OLD DOCS
-================
 Major Model Changes
 ---------------------
 
-Below are major model changes that have happened in v2.0
+Below are major model changes that have happened in v1.0
 
+Snowflakes are int
+~~~~~~~~~~~~~~~~~~~~
 
+Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`.
 
-Before v2.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`.
+Quick example: ::
 
-User API
---------
+    # before
+    ch = client.get_channel('84319995256905728')
+    if message.author.id == '80528701850124288':
+        ...
 
-Anything allowing you to Use user Account's have been removed 
+    # after
+    ch = client.get_channel(84319995256905728)
+    if message.author.id == 80528701850124288:
+        ...
 
-The following Classes Were Deleted in addendum
+This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have
+to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally.
 
-``Profile``, ``Relationship``, ``CallMessage``, ``GroupCall``,
+Server is now Guild
+~~~~~~~~~~~~~~~~~~~~~
 
-``RelationshipType``, ``HypeSquadHouse```, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``,
+The official API documentation calls the "Server" concept a "Guild" instead. In order to be more consistent with the
+API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has
+been changed as well.
 
-``GroupChannel.add_recipients``, ``remove_recipients``
+A list of changes is as follows:
 
-``Guild.ack``
++-------------------------------+----------------------------------+
+|             Before            |              After               |
++-------------------------------+----------------------------------+
+| ``Message.server``            | :attr:`Message.guild`            |
++-------------------------------+----------------------------------+
+| ``Channel.server``            | :attr:`.GuildChannel.guild`      |
++-------------------------------+----------------------------------+
+| ``Client.servers``            | :attr:`Client.guilds`            |
++-------------------------------+----------------------------------+
+| ``Client.get_server``         | :meth:`Client.get_guild`         |
++-------------------------------+----------------------------------+
+| ``Emoji.server``              | :attr:`Emoji.guild`              |
++-------------------------------+----------------------------------+
+| ``Role.server``               | :attr:`Role.guild`               |
++-------------------------------+----------------------------------+
+| ``Invite.server``             | :attr:`Invite.guild`             |
++-------------------------------+----------------------------------+
+| ``Member.server``             | :attr:`Member.guild`             |
++-------------------------------+----------------------------------+
+| ``Permissions.manage_server`` | :attr:`Permissions.manage_guild` |
++-------------------------------+----------------------------------+
+| ``VoiceClient.server``        | :attr:`VoiceClient.guild`        |
++-------------------------------+----------------------------------+
+| ``Client.create_server``      | :meth:`Client.create_guild`      |
++-------------------------------+----------------------------------+
 
-``Client.fetch_user_profile``
+.. _migrating_1_0_model_state:
 
-.. _migrating_2_0_model_state:
+Models are Stateful
+~~~~~~~~~~~~~~~~~~~~~
 
-``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships```, ``friends``, ``blocked``, ``create_group``, ``edit_settings``
+As mentioned earlier, a lot of functionality was moved out of :class:`Client` and
+put into their respective :ref:`model <discord_api_models>`.
 
-Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house arguments``
-
-``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``
+A list of these changes is enumerated below.
 
 +---------------------------------------+------------------------------------------------------------------------------+
 |                 Before                |                                    After                                     |
@@ -391,13 +158,13 @@ Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house a
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.invites_from``               | :meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`                    |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.join_voice_channel``         | :meth:`VoiceChannel.connect` (see :ref:`migrating_2_0_voice`)                |
+| ``Client.join_voice_channel``         | :meth:`VoiceChannel.connect` (see :ref:`migrating_1_0_voice`)                |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.kick``                       | :meth:`Guild.kick` or :meth:`Member.kick`                                    |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.leave_server``               | :meth:`Guild.leave`                                                          |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.logs_from``                  | :meth:`abc.Messageable.history` (see :ref:`migrating_2_0_async_iter`)        |
+| ``Client.logs_from``                  | :meth:`abc.Messageable.history` (see :ref:`migrating_1_0_async_iter`)        |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.move_channel``               | :meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`                        |
 +---------------------------------------+------------------------------------------------------------------------------+
@@ -419,9 +186,9 @@ Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house a
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.replace_roles``              | :meth:`Member.edit`                                                          |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.send_file``                  | :meth:`abc.Messageable.send` (see :ref:`migrating_2_0_sending_messages`)     |
+| ``Client.send_file``                  | :meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)     |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.send_message``               | :meth:`abc.Messageable.send` (see :ref:`migrating_2_0_sending_messages`)     |
+| ``Client.send_message``               | :meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)     |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.send_typing``                | :meth:`abc.Messageable.trigger_typing` (use :meth:`abc.Messageable.typing`)  |
 +---------------------------------------+------------------------------------------------------------------------------+
@@ -433,43 +200,30 @@ Every ``ClientUser.edit()`` ``password``, ``new_password``, ``email``, ``house a
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.unpin_message``              | :meth:`Message.unpin`                                                        |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.wait_for_message``           | :meth:`Client.wait_for` (see :ref:`migrating_2_0_wait_for`)                  |
+| ``Client.wait_for_message``           | :meth:`Client.wait_for` (see :ref:`migrating_1_0_wait_for`)                  |
 +---------------------------------------+------------------------------------------------------------------------------+
-| ``Client.wait_for_reaction``          | :meth:`Client.wait_for` (see :ref:`migrating_2_0_wait_for`)                  |
+| ``Client.wait_for_reaction``          | :meth:`Client.wait_for` (see :ref:`migrating_1_0_wait_for`)                  |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.wait_until_login``           | Removed                                                                      |
 +---------------------------------------+------------------------------------------------------------------------------+
 | ``Client.wait_until_ready``           | No change                                                                    |
 +---------------------------------------+------------------------------------------------------------------------------+
 
-SpeedUps
---------
-The library has significantly improved in speed since v1.7.x
-Some Speed results are shown below:
+Property Changes
+~~~~~~~~~~~~~~~~~~
 
-+-------------------------------+----------------------------------+----------------------------------+
-|             Testsetup         |          boot up before          |            boot up now           |
-+-------------------------------+----------------------------------+----------------------------------+
-| 735 guilds (with chunking)    | 57s/1.7 GiB RAM                  | 42s/1.4 GiB RAM                  |
-+-------------------------------+----------------------------------+----------------------------------+
-| 27k guilds (with chunking)    | 477s/8 GiB RAM                   | 303s/7.2 GiB                     |
-+-------------------------------+----------------------------------+----------------------------------+
-| 48k guilds (without chunking) | 109s                             | 67s                              |
-+-------------------------------+----------------------------------+----------------------------------+
-| 106k guilds (without chunking)| 3300s                            | 3090s                            |
-+-------------------------------+----------------------------------+----------------------------------+
+In order to be a bit more consistent, certain things that were properties were changed to methods instead.
 
-.. note::
-    
-    Performance May Differ with Computer/Server specs and location
+The following are now methods instead of properties (requires parentheses):
 
-- The public API is completely type-hinted
-- Most ``edit`` methods now return their updated counterpart rather than doing an in-place edit
+- :meth:`Role.is_default`
+- :meth:`Client.is_ready`
+- :meth:`Client.is_closed`
 
 Dict Value Change
 ~~~~~~~~~~~~~~~~~~~~~
 
-Prior to v2.0 some aggregating properties that retrieved models would return "dict view" objects.
+Prior to v1.0 some aggregating properties that retrieved models would return "dict view" objects.
 
 As a consequence, when the dict would change size while you would iterate over it, a RuntimeError would
 be raised and crash the task. To alleviate this, the "dict view" objects were changed into lists.
@@ -477,11 +231,11 @@ be raised and crash the task. To alleviate this, the "dict view" objects were ch
 The following views were changed to a list:
 
 - :attr:`Client.guilds`
-- :attr:`Client.users` (new in v2.0)
-- :attr:`Client.emojis` (new in v2.0)
+- :attr:`Client.users` (new in v1.0)
+- :attr:`Client.emojis` (new in v1.0)
 - :attr:`Guild.channels`
-- :attr:`Guild.text_channels` (new in v2.0)
-- :attr:`Guild.voice_channels` (new in v2.0)
+- :attr:`Guild.text_channels` (new in v1.0)
+- :attr:`Guild.voice_channels` (new in v1.0)
 - :attr:`Guild.emojis`
 - :attr:`Guild.members`
 
@@ -512,7 +266,7 @@ Quick example: ::
 User and Member Type Split
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In v2.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are "flattened"
+In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are "flattened"
 by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional
 change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind.
 
@@ -520,12 +274,12 @@ These memory savings were accomplished by having a global :class:`User` cache, a
 can now easily fetch a :class:`User` by their ID by using the new :meth:`Client.get_user`. You can also get a list
 of all :class:`User` your client can see with :attr:`Client.users`.
 
-.. _migrating_2_0_channel_split:
+.. _migrating_1_0_channel_split:
 
 Channel Type Split
 ~~~~~~~~~~~~~~~~~~~~~
 
-Prior to v2.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private``
+Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private``
 property to help differentiate between them.
 
 In order to save memory the channels have been split into 4 different types:
@@ -554,7 +308,7 @@ Of course, if you're looking for only a specific type you can pass that too, e.g
 
     isinstance(channel, discord.TextChannel)
 
-With this type split also came event changes, which are enumerated in :ref:`migrating_2_0_event_changes`.
+With this type split also came event changes, which are enumerated in :ref:`migrating_1_0_event_changes`.
 
 
 Miscellaneous Model Changes
@@ -658,7 +412,7 @@ They will be enumerated here.
 - :meth:`Colour.from_rgb` to construct a :class:`Colour` from RGB tuple.
 - :meth:`Guild.get_role` to get a role by its ID.
 
-.. _migrating_2_0_sending_messages:
+.. _migrating_1_0_sending_messages:
 
 Sending Messages
 ------------------
@@ -697,14 +451,14 @@ This change was to facilitate multiple file uploads: ::
 
     await channel.send('Your images:', files=my_files)
 
-.. _migrating_2_0_async_iter:
+.. _migrating_1_0_async_iter:
 
 Asynchronous Iterators
 ------------------------
 
-Prior to v2.0, certain functions like ``Client.logs_from`` would return a different type if done in Python 3.4 or 3.5+.
+Prior to v1.0, certain functions like ``Client.logs_from`` would return a different type if done in Python 3.4 or 3.5+.
 
-In v2.0, this change has been reverted and will now return a singular type meeting an abstract concept called
+In v1.0, this change has been reverted and will now return a singular type meeting an abstract concept called
 :class:`AsyncIterator`.
 
 This allows you to iterate over it like normal: ::
@@ -738,7 +492,7 @@ The following return :class:`AsyncIterator`:
 - :meth:`Guild.audit_logs`
 - :meth:`Reaction.users`
 
-.. _migrating_2_0_event_changes:
+.. _migrating_1_0_event_changes:
 
 Event Changes
 --------------
@@ -809,7 +563,7 @@ After: ::
 As part of the change, the event can either receive a :class:`User` or :class:`Member`. To help in the cases that have
 :class:`User`, the :class:`Guild` is provided as the first parameter.
 
-The ``on_channel_`` events have received a type level split (see :ref:`migrating_2_0_channel_split`).
+The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`).
 
 Before:
 
@@ -830,7 +584,7 @@ The ``on_guild_channel_`` events correspond to :class:`abc.GuildChannel` being u
 and :class:`VoiceChannel`) and the ``on_private_channel_`` events correspond to :class:`abc.PrivateChannel` being
 updated (i.e. :class:`DMChannel` and :class:`GroupChannel`).
 
-.. _migrating_2_0_voice:
+.. _migrating_1_0_voice:
 
 Voice Changes
 ---------------
@@ -897,16 +651,16 @@ An added benefit of the redesign is that it will be much more resilient towards 
   - This includes changing voice regions etc.
 
 
-.. _migrating_2_0_wait_for:
+.. _migrating_1_0_wait_for:
 
 Waiting For Events
 --------------------
 
-Prior to v2.0, the machinery for waiting for an event outside of the event itself was done through two different
+Prior to v1.0, the machinery for waiting for an event outside of the event itself was done through two different
 functions, ``Client.wait_for_message`` and ``Client.wait_for_reaction``. One problem with one such approach is that it did
 not allow you to wait for events outside of the ones provided by the library.
 
-In v2.0 the concept of waiting for another event has been generalised to work with any event as :meth:`Client.wait_for`.
+In v1.0 the concept of waiting for another event has been generalised to work with any event as :meth:`Client.wait_for`.
 
 For example, to wait for a message: ::
 
@@ -947,7 +701,7 @@ when reached instead of setting the return to ``None``. For example:
 Upgraded Dependencies
 -----------------------
 
-Following v2.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher.
+Following v1.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher.
 
 Since this is a backwards incompatible change, it is recommended that you see the
 `changes <http://aiohttp.readthedocs.io/en/stable/changes.html#rc1-2017-03-15>`_
@@ -1007,7 +761,7 @@ For users of the command extension, there is also :class:`~ext.commands.AutoShar
 Connection Improvements
 -------------------------
 
-In v2.0, the auto reconnection logic has been powered up significantly.
+In v1.0, the auto reconnection logic has been powered up significantly.
 
 :meth:`Client.connect` has gained a new keyword argument, ``reconnect`` that defaults to ``True`` which controls
 the reconnect logic. When enabled, the client will automatically reconnect in all instances of your internet going
@@ -1016,18 +770,18 @@ offline or Discord going offline with exponential back-off.
 :meth:`Client.run` and :meth:`Client.start` gains this keyword argument as well, but for most cases you will not
 need to specify it unless turning it off.
 
-.. _migrating_2_0_commands:
+.. _migrating_1_0_commands:
 
 Command Extension Changes
 --------------------------
 
-Due to the :ref:`migrating_2_0_model_state` changes, some of the design of the extension module had to
+Due to the :ref:`migrating_1_0_model_state` changes, some of the design of the extension module had to
 undergo some design changes as well.
 
 Context Changes
 ~~~~~~~~~~~~~~~~~
 
-In v2.0, the :class:`.Context` has received a lot of changes with how it's retrieved and used.
+In v1.0, the :class:`.Context` has received a lot of changes with how it's retrieved and used.
 
 The biggest change is that ``pass_context=True`` no longer exists, :class:`.Context` is always passed. Ergo:
 
@@ -1047,7 +801,7 @@ The reason for this is because :class:`~ext.commands.Context` now meets the requ
 makes it have similar functionality to :class:`TextChannel` or :class:`DMChannel`. Using :meth:`~.Context.send`
 will either DM the user in a DM context or send a message in the channel it was in, similar to the old ``bot.say``
 functionality. The old helpers have been removed in favour of the new :class:`abc.Messageable` interface. See
-:ref:`migrating_2_0_removed_helpers` for more information.
+:ref:`migrating_1_0_removed_helpers` for more information.
 
 Since the :class:`~ext.commands.Context` is now passed by default, several shortcuts have been added:
 
@@ -1072,7 +826,7 @@ Since the :class:`~ext.commands.Context` is now passed by default, several short
 Subclassing Context
 ++++++++++++++++++++
 
-In v2.0, there is now the ability to subclass :class:`~ext.commands.Context` and use it instead of the default
+In v1.0, there is now the ability to subclass :class:`~ext.commands.Context` and use it instead of the default
 provided one.
 
 For example, if you want to add some functionality to the context:
@@ -1102,7 +856,7 @@ Now inside your commands you will have access to your custom context:
     async def secret(ctx):
         await ctx.send(ctx.secret)
 
-.. _migrating_2_0_removed_helpers:
+.. _migrating_1_0_removed_helpers:
 
 Removed Helpers
 +++++++++++++++++
@@ -1152,7 +906,7 @@ For :class:`~ext.commands.Group` and :class:`~ext.commands.Bot` the following ch
 Check Changes
 ~~~~~~~~~~~~~~~
 
-Prior to v2.0, :func:`~ext.commands.check`\s could only be synchronous. As of v2.0 checks can now be coroutines.
+Prior to v1.0, :func:`~ext.commands.check`\s could only be synchronous. As of v1.0 checks can now be coroutines.
 
 Along with this change, a couple new checks were added.
 
@@ -1268,7 +1022,7 @@ Cogs are now required to have a base class, :class:`~.commands.Cog` for future p
 * :meth:`.Cog.cog_command_error`
     - This is a special error handler that is called whenever an error happens inside the cog.
 * :meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`
-    - A special method that registers a cog before and after invoke hook. More information can be found in :ref:`migrating_2_0_before_after_hook`.
+    - A special method that registers a cog before and after invoke hook. More information can be found in :ref:`migrating_1_0_before_after_hook`.
 
 Those that were using listeners, such as ``on_message`` inside a cog will now have to explicitly mark them as such using the :meth:`.commands.Cog.listener` decorator.
 
@@ -1308,7 +1062,7 @@ An example cog with every special method registered and a custom name is as foll
             pass
 
 
-.. _migrating_2_0_before_after_hook:
+.. _migrating_1_0_before_after_hook:
 
 Before and After Invocation Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1385,14 +1139,14 @@ The invocation order is as follows:
 Converter Changes
 ~~~~~~~~~~~~~~~~~~~
 
-Prior to v2.0, a converter was a type hint that could be a callable that could be invoked
+Prior to v1.0, a converter was a type hint that could be a callable that could be invoked
 with a singular argument denoting the argument passed by the user as a string.
 
 This system was eventually expanded to support a :class:`~ext.commands.Converter` system to
 allow plugging in the :class:`~ext.commands.Context` and do more complicated conversions such
 as the built-in "discord" converters.
 
-In v2.0 this converter system was revamped to allow instances of :class:`~ext.commands.Converter` derived
+In v1.0 this converter system was revamped to allow instances of :class:`~ext.commands.Converter` derived
 classes to be passed. For consistency, the :meth:`~ext.commands.Converter.convert` method was changed to
 always be a coroutine and will now take the two arguments as parameters.
 
