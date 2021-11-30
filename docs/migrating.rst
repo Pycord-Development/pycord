@@ -71,3 +71,6 @@ Some Speed results are shown below:
 
 - The public API is completely type-hinted
 - Most ``edit`` methods now return their updated counterpart rather than doing an in-place edit
+
+Miscellaneous
+-------------

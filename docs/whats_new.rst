@@ -28,14 +28,21 @@ Fixes/Removals
 New Features
 ~~~~~~~~~~~~
 
-- Application Command Support Added :class:`slash_command` :class:`message_command` & :class:`user_command`
+- Application Command Support Added :meth:`slash_command` :func:`message_command` & :func:`user_command`
 
 .. note::
 
-    These Classes Are Aliased Versions Of :class:`ApplicationCommand` :class:`UserCommand` & :class:`MessageCommand`
+    These Classes Are Aliased Versions Of :func:`ApplicationCommand` :func:`UserCommand` & :func:`MessageCommand`
 
 - Application Has it's own Context :class:`ApplicationContext`
 - Autocomplete Has it's own Context :class:`AutocompleteContext`
+
+
+Miscellaneous
+~~~~~~~~~~~~~
+
+- Userbots Were Removed
+- ``on_socket_response`` Was Removed for performance reasons
 
 
 .. _vp1p7p3:
