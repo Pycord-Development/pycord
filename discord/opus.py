@@ -35,8 +35,12 @@ import math
 import os.path
 import struct
 import sys
+import threading
+import traceback
+import time
 
 from .errors import DiscordException, InvalidArgument
+from .sink import RawData
 
 if TYPE_CHECKING:
     T = TypeVar('T')
@@ -57,6 +61,8 @@ class SignalCtl(TypedDict):
 
 __all__ = (
     'Encoder',
+    'Decoder',
+    'DecodeManager',
     'OpusError',
     'OpusNotLoaded',
 )
@@ -370,36 +376,34 @@ class Decoder(_OpusStruct):
     def __init__(self):
         _OpusStruct.get_opus_version()
 
-        self._state: DecoderStruct = self._create_state()
+        self._state = self._create_state()
 
-    def __del__(self) -> None:
+    def __del__(self):
         if hasattr(self, '_state'):
             _lib.opus_decoder_destroy(self._state)
-            # This is a destructor, so it's okay to assign None
-            self._state = None # type: ignore
+            self._state = None
 
-    def _create_state(self) -> DecoderStruct:
+    def _create_state(self):
         ret = ctypes.c_int()
         return _lib.opus_decoder_create(self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret))
 
     @staticmethod
-    def packet_get_nb_frames(data: bytes) -> int:
+    def packet_get_nb_frames(data):
         """Gets the number of frames in an Opus packet"""
         return _lib.opus_packet_get_nb_frames(data, len(data))
 
     @staticmethod
-    def packet_get_nb_channels(data: bytes) -> int:
+    def packet_get_nb_channels(data):
         """Gets the number of channels in an Opus packet"""
         return _lib.opus_packet_get_nb_channels(data)
 
     @classmethod
-    def packet_get_samples_per_frame(cls, data: bytes) -> int:
+    def packet_get_samples_per_frame(cls, data):
         """Gets the number of samples per frame from an Opus packet"""
         return _lib.opus_packet_get_samples_per_frame(data, cls.SAMPLING_RATE)
 
-    def _set_gain(self, adjustment: int) -> int:
+    def _set_gain(self, adjustment):
         """Configures decoder gain adjustment.
-
         Scales the decoded output by a factor specified in Q8 dB units.
         This has a maximum range of -32768 to 32767 inclusive, and returns
         OPUS_BAD_ARG (-1) otherwise. The default is zero indicating no adjustment.
@@ -409,47 +413,80 @@ class Decoder(_OpusStruct):
         """
         return _lib.opus_decoder_ctl(self._state, CTL_SET_GAIN, adjustment)
 
-    def set_gain(self, dB: float) -> int:
+    def set_gain(self, dB):
         """Sets the decoder gain in dB, from -128 to 128."""
 
         dB_Q8 = max(-32768, min(32767, round(dB * 256))) # dB * 2^n where n is 8 (Q8)
         return self._set_gain(dB_Q8)
 
-    def set_volume(self, mult: float) -> int:
+    def set_volume(self, mult):
         """Sets the output volume as a float percent, i.e. 0.5 for 50%, 1.75 for 175%, etc."""
         return self.set_gain(20 * math.log10(mult)) # amplitude ratio
 
-    def _get_last_packet_duration(self) -> int:
+    def _get_last_packet_duration(self):
         """Gets the duration (in samples) of the last packet successfully decoded or concealed."""
 
         ret = ctypes.c_int32()
         _lib.opus_decoder_ctl(self._state, CTL_LAST_PACKET_DURATION, ctypes.byref(ret))
         return ret.value
 
-    @overload
-    def decode(self, data: bytes, *, fec: bool) -> bytes:
-        ...
-    
-    @overload
-    def decode(self, data: Literal[None], *, fec: Literal[False]) -> bytes:
-        ...
-
-    def decode(self, data: Optional[bytes], *, fec: bool = False) -> bytes:
+    def decode(self, data, *, fec=False):
         if data is None and fec:
-            raise InvalidArgument("Invalid arguments: FEC cannot be used with null data")
+            raise OpusError("Invalid arguments: FEC cannot be used with null data")
 
         if data is None:
             frame_size = self._get_last_packet_duration() or self.SAMPLES_PER_FRAME
             channel_count = self.CHANNELS
         else:
             frames = self.packet_get_nb_frames(data)
-            channel_count = self.packet_get_nb_channels(data)
+            channel_count = self.CHANNELS
             samples_per_frame = self.packet_get_samples_per_frame(data)
             frame_size = frames * samples_per_frame
 
-        pcm = (ctypes.c_int16 * (frame_size * channel_count))()
+        pcm = (ctypes.c_int16 * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16)))()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
         ret = _lib.opus_decode(self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec)
 
         return array.array('h', pcm[:ret * channel_count]).tobytes()
+
+
+class DecodeManager(threading.Thread, _OpusStruct):
+    def __init__(self, client):
+        super().__init__(daemon=True, name='DecodeManager')
+
+        self.client = client
+        self.decode_queue = []
+
+        self.decoder = Decoder()
+
+        self._end_thread = threading.Event()
+
+    def decode(self, opus_frame):
+        if not isinstance(opus_frame, RawData):
+            raise TypeError("opus_frame should be a RawData object.")
+        self.decode_queue.append(opus_frame)
+
+    def run(self):
+        while not self._end_thread.is_set():
+            try:
+                data = self.decode_queue.pop(0)
+            except IndexError:
+                continue
+
+            try:
+                data.decoded_data = self.decoder.decode(data.decrypted_data)
+            except OpusError:
+                print("Error occurred decoding opus frame.")
+                continue
+
+            self.client.recv_decoded_audio(data)
+
+    def stop(self):
+        while self.decoding:
+            time.sleep(0.1)
+        self._end_thread.set()
+
+    @property
+    def decoding(self):
+        return bool(self.decode_queue)
