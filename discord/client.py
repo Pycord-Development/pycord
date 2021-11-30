@@ -1315,7 +1315,7 @@ class Client:
 
     # Invite management
 
-    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, guild_event_id: Snowflake = None) -> Invite:
+    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, scheduled_event_id: Snowflake = None) -> Invite:
         """|coro|
 
         Gets an :class:`.Invite` from a discord.gg URL or ID.
@@ -1354,7 +1354,7 @@ class Client:
         """
 
         invite_id = utils.resolve_invite(url)
-        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=guild_event_id)
+        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=scheduled_event_id)
         return Invite.from_incomplete(state=self._connection, data=data)
 
     async def delete_invite(self, invite: Union[Invite, str]) -> None:

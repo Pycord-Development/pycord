@@ -956,7 +956,7 @@ class Intents(BaseFlags):
         return 1 << 14
     
     @flag_value
-    def guild_events(self):
+    def scheduled_events(self):
         """:class:`bool`: Whether guild scheduled events related events are enabled.
 
         This corresponds to the following events:

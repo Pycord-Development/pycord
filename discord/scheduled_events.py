@@ -39,8 +39,8 @@ from typing import (
 
 from .enums import (
     StagePrivacyLevel,
-    GuildEventStatus,
-    GuildEventLocationType,
+    ScheduledEventStatus,
+    ScheduledEventLocationType,
     try_enum
 )
 from .object import Object
@@ -48,21 +48,21 @@ from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
 
 __all__ = (
-    'GuildEvent',
-    'GuildEventLocation',
+    'ScheduledEvent',
+    'ScheduledEventLocation',
 )
 
 if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.guild import Guild
 
-class GuildEventEntityMetadata(NamedTuple):
+class ScheduledEventEntityMetadata(NamedTuple):
     location: Optional[str]
 
-class GuildEventLocation:
-    def __init__(self, *, state: ConnectionState, location, type: GuildEventLocationType):
+class ScheduledEventLocation:
+    def __init__(self, *, state: ConnectionState, location, type: ScheduledEventLocationType):
         self._state = state
-        if type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
+        if type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
             self.location = self._state._get_channel(int(location))
         else:
             self.location = location
@@ -70,13 +70,13 @@ class GuildEventLocation:
     @property
     def type(self):
         if isinstance(self.location, StageChannel):
-            return GuildEventLocationType.stage_instance
+            return ScheduledEventLocationType.stage_instance
         elif isinstance(self.location, VoiceChannel):
-            return GuildEventLocationType.voice
+            return ScheduledEventLocationType.voice
         else:
-            return GuildEventLocationType.external
+            return ScheduledEventLocationType.external
 
-class GuildEvent(Object):
+class ScheduledEvent(Object):
     def __init__(self, *, state: ConnectionState, data):
         self._state = state
         
@@ -91,18 +91,18 @@ class GuildEvent(Object):
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
         # self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level')) # TODO: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level
-        self.status: GuildEventStatus = try_enum(GuildEventStatus, data.get('status'))
+        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
         self.creator = data.get('creator', None) # TODO: Convert
 
         entity_metadata = data.get('entity_metadata')
-        entity_type = try_enum(GuildEventLocationType, data.get('entity_type'))
+        entity_type = try_enum(ScheduledEventLocationType, data.get('entity_type'))
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = GuildEventLocation(state=state, location=channel_id, type=entity_type)
+            self.location = ScheduledEventLocation(state=state, location=channel_id, type=entity_type)
         else:
-            self.location = GuildEventLocation(state=state, location=entity_metadata.location, type=entity_type)
+            self.location = ScheduledEventLocation(state=state, location=entity_metadata.location, type=entity_type)
 
         # TODO: find out what the following means/does
         self.entity_id: int = data.get('entity_id')
@@ -116,18 +116,18 @@ class GuildEvent(Object):
         *,
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
-        location: GuildEventLocation = MISSING,
+        location: ScheduledEventLocation = MISSING,
         privacy_level: StagePrivacyLevel = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
-    ) -> Optional[GuildEvent]:
+    ) -> Optional[ScheduledEvent]:
         """|coro|
         
-        Edits the Guild Event's data
+        Edits the Scheduled Event's data
         
         All parameters are optional
         
-        Will return a new :class:`.GuildEvent` object if applicable.
+        Will return a new :class:`.ScheduledEvent` object if applicable.
         
         Parameters
         ----------
@@ -151,8 +151,8 @@ class GuildEvent(Object):
 
         Returns
         -------
-        Optional[:class:`.GuildEvent`]
-            The newly updated guild event object. This is only returned when certain
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
             fields are updated.
         """
 
@@ -168,7 +168,7 @@ class GuildEvent(Object):
             payload["privacy_level"] = privacy_level.value
 
         if location is not MISSING:
-            if location.type in (GuildEventLocationType.voice, GuildEventLocationType.stage_instance):
+            if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
                 payload["channel_id"] = location.location.id
                 payload["entity_metadata"] = {"location":str(location.location.id)}
             else:
@@ -182,13 +182,13 @@ class GuildEvent(Object):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_guild_event(self.id, **payload)
-            return GuildEvent(data=data, state=self._state)
+            data = await self._state.http.edit_scheduled_event(self.id, **payload)
+            return ScheduledEvent(data=data, state=self._state)
 
     async def delete(self) -> None:
         """|coro|
         
-        Deletes the guild event.
+        Deletes the scheduled event.
 
         Raises
         ------
@@ -197,7 +197,7 @@ class GuildEvent(Object):
         HTTPException
             The operation failed.
         """
-        await self._state.http.delete_guild_event(self.id)
+        await self._state.http.delete_scheduled_event(self.id)
 
     async def users(self):
         pass # TODO: discord/abc.py#1587

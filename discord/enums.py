@@ -57,8 +57,8 @@ __all__ = (
     'InteractionResponseType',
     'NSFWLevel',
     'EmbeddedActivity',
-    'GuildEventStatus',
-    'GuildEventLocationType',
+    'ScheduledEventStatus',
+    'ScheduledEventLocationType',
 )
 
 
@@ -362,9 +362,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
-    guild_event_create       = 100
-    guild_event_update       = 101
-    guild_event_delete       = 102
+    scheduled_event_create       = 100
+    scheduled_event_update       = 101
+    scheduled_event_delete       = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -415,9 +415,9 @@ class AuditLogAction(Enum):
             AuditLogAction.sticker_create:        AuditLogActionCategory.create,
             AuditLogAction.sticker_update:        AuditLogActionCategory.update,
             AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.guild_event_create:    AuditLogActionCategory.create,
-            AuditLogAction.guild_event_update:    AuditLogActionCategory.update,
-            AuditLogAction.guild_event_delete:    AuditLogActionCategory.delete,
+            AuditLogAction.scheduled_event_create:    AuditLogActionCategory.create,
+            AuditLogAction.scheduled_event_update:    AuditLogActionCategory.update,
+            AuditLogAction.scheduled_event_delete:    AuditLogActionCategory.delete,
             AuditLogAction.thread_create:         AuditLogActionCategory.create,
             AuditLogAction.thread_update:         AuditLogActionCategory.update,
             AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
@@ -455,7 +455,7 @@ class AuditLogAction(Enum):
         elif v < 93:
             return 'sticker'
         elif v < 103:
-            return 'guild_event'
+            return 'scheduled_event'
         elif v < 113:
             return 'thread'
 
@@ -702,14 +702,14 @@ class EmbeddedActivity(Enum):
     youtube_together = 755600276941176913 
 
 
-class GuildEventStatus(Enum):
+class ScheduledEventStatus(Enum):
     scheduled = 1
     active = 2
     completed = 3
     canceled = 4
 
 
-class GuildEventLocationType(Enum):
+class ScheduledEventLocationType(Enum):
     stage_instance = 1
     voice = 2
     external = 3

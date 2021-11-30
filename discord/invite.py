@@ -32,7 +32,7 @@ from .object import Object
 from .mixins import Hashable
 from .enums import ChannelType, VerificationLevel, InviteTarget, try_enum
 from .appinfo import PartialAppInfo
-from .guild_events import GuildEvent
+from .scheduled_events import ScheduledEvent
 
 __all__ = (
     'PartialInviteChannel',
@@ -363,8 +363,8 @@ class Invite(Hashable):
 
         self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
 
-        guild_event = data.get('guild_scheduled_event')
-        self.guild_events: Optional[GuildEvent] = GuildEvent(state=state, data=guild_event) if guild_event else None 
+        scheduled_event = data.get('guild_scheduled_event')
+        self.scheduled_event: Optional[ScheduledEvent] = ScheduledEvent(state=state, data=scheduled_event) if scheduled_event else None 
 
         application = data.get('target_application')
         self.target_application: Optional[PartialAppInfo] = (

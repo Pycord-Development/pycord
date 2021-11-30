@@ -59,7 +59,7 @@ from .ui.view import ViewStore, View
 from .stage_instance import StageInstance
 from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
-from .guild_events import GuildEvent
+from .scheduled_events import ScheduledEvent
 
 if TYPE_CHECKING:
     from .abc import PrivateChannel
@@ -1220,16 +1220,16 @@ class ConnectionState:
     # TODO: https://cdn.discordapp.com/attachments/881411804734033940/911444852124844052/unknown.png for guild_scheduled_event_delete
 
     def parse_guild_scheduled_event_create(self, data) -> None:
-        guild_event = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_create', guild_event)
+        scheduled_event = ScheduledEvent(state=self, data=data)
+        self.dispatch('guild_event_create', scheduled_event)
 
     def parse_guild_scheduled_event_update(self, data) -> None:
-        guild_event = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_update', guild_event)
+        scheduled_event = ScheduledEvent(state=self, data=data)
+        self.dispatch('guild_event_update', scheduled_event)
 
     def parse_guild_scheduled_event_delete(self, data) -> None:
-        guild_event = GuildEvent(state=self, data=data)
-        self.dispatch('guild_event_delete', guild_event)
+        scheduled_event = ScheduledEvent(state=self, data=data)
+        self.dispatch('guild_event_delete', scheduled_event)
     
     # TODO: Not officially supported/experimental
     # def parse_guild_scheduled_event_user_add(self, data) -> None:

@@ -29,7 +29,7 @@ from typing import Literal, Optional, TypedDict, Union
 
 from .snowflake import Snowflake
 from .guild import InviteGuild, _GuildPreviewUnique
-from .guild_events import GuildEvent
+from .scheduled_events import ScheduledEvent
 from .channel import PartialChannel
 from .user import PartialUser
 from .appinfo import PartialAppInfo
@@ -40,7 +40,7 @@ InviteTargetType = Literal[1, 2]
 class _InviteOptional(TypedDict, total=False):
     guild: InviteGuild
     inviter: PartialUser
-    guild_event: GuildEvent
+    scheduled_event: ScheduledEvent
     target_user: PartialUser
     target_type: InviteTargetType
     target_application: PartialAppInfo

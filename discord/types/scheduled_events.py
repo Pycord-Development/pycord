@@ -33,16 +33,16 @@ from .snowflake import Snowflake
 from .channel import StageChannel, VoiceChannel
 
 
-GuildEventStatus = Literal[1, 2, 3, 4]
-GuildEventLocationType = Literal[1, 2, 3]
+ScheduledEventStatus = Literal[1, 2, 3, 4]
+ScheduledEventLocationType = Literal[1, 2, 3]
 
 
-class GuildEventLocation(TypedDict):
+class ScheduledEventLocation(TypedDict):
     location: Union[StageChannel, VoiceChannel, str]
-    type: GuildEventLocationType
+    type: ScheduledEventLocationType
 
 
-class GuildEvent(TypedDict):
+class ScheduledEvent(TypedDict):
     id: Snowflake
     guild: Guild
     name: str
@@ -50,10 +50,10 @@ class GuildEvent(TypedDict):
     #image
     start_time: datetime
     end_time: datetime
-    status: GuildEventStatus
+    status: ScheduledEventStatus
     user_count: Optional[int]
     creator_id: Snowflake
     creator: User
-    location: GuildEventLocation
+    location: ScheduledEventLocation
 
     entity_id: Snowflake
