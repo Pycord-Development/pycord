@@ -18,7 +18,7 @@ class BotClass(commands.Bot):
     async def on_ready(self):
         if not self.persistent_views_added:
             
-            #you can add <discord.ui.View> classes to the <commands.Bot.add_view> to make it work after restart
+            # You can add <discord.ui.View> classes to the <commands.Bot.add_view> to make it work after restart
             # self.add_view(<discord.ui.View>)
 
             print(f'Connected as {self.user} with ID {self.user.id}')
