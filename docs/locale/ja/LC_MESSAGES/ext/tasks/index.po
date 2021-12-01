@@ -39,9 +39,9 @@ msgstr "スリープできる最大時間は何秒ですか？"
 
 #: ../../ext/tasks/index.rst:14
 msgid ""
-"The goal of this discord.py extension is to abstract all these worries "
+"The goal of this pycord extension is to abstract all these worries "
 "away from you."
-msgstr "discord.pyの拡張機能の目的は、こういった苦労の種を抽象化することです。"
+msgstr "pycordの拡張機能の目的は、こういった苦労の種を抽象化することです。"
 
 #: ../../ext/tasks/index.rst:17
 msgid "Recipes"
