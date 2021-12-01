@@ -57,7 +57,7 @@ Historically however, thanks to:
   --nav-hover-text: var(--grey-6);
   --nav-header-text: var(--black);
   --sub-header-background: var(--grey-6);
-  --search-border: var(--blurple);
+  --search-border: var(--grey-7);
   --search-text: var(--white);
   --search-focus: var(--blue-1);
   --search-button: var(--grey-1);
@@ -66,7 +66,7 @@ Historically however, thanks to:
   --footer-link: var(--grey-6);
   --hr-border: var(--grey-2);
   --main-big-headers-text: var(--black);
-  --main-big-headers-border: var(--blurple);
+  --main-big-headers-border: var(--grey-7);
   --main-h5-header-text: var(--black);
   --main-h6-header-text: var(--grey-4);
   --main-h4-header-border: var(--grey-4);
@@ -119,7 +119,7 @@ Historically however, thanks to:
   --link-text: var(--blue-1);
   --link-hover-text: var(--blue-2);
   --main-text: var(--white);
-  --sub-header-background: var(--blurple);
+  --sub-header-background: var(--grey-7);
   --search-border: var(--grey-5);
   --nav-background: var(--main-background);
   --nav-text: var(--grey-1);
