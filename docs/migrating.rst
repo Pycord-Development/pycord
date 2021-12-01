@@ -10,7 +10,7 @@ v2.0 includes many breaking changes and added features.
 This update adds new features from the discord API such as application commands (slash, user, and message), as well as
 message components and much more.
 
-Since Pycord is still relatively new, we have attempted to make the migration from discord.py and v1 to pycord and v2 as
+Since Pycord is still relatively new, we have attempted to make the migration from discord.py v1.7.x to pycord v2 as
 smooth as possible.
 
 Python Version Change
