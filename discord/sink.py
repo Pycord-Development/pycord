@@ -53,6 +53,12 @@ default_filters = {
 
 
 class Filters:
+    """Filters for sink
+    
+    .. versionadded:: 2.1
+    
+    """
+    # TODO: Make Docstring Better
     # TODO: Filter for max size per file; audio can be split into multiple files
     def __init__(self, **kwargs):
         self.filtered_users = kwargs.get("users", default_filters["users"])
@@ -81,7 +87,12 @@ class Filters:
 
 
 class RawData:
-    """Handles raw data from Discord so that it can be decrypted and decoded to be used."""
+    # TODO: Advance Docstring
+    """Handles raw data from Discord so that it can be decrypted and decoded to be used.
+    
+    .. versionadded:: 2.1
+    
+    """
 
     def __init__(self, data, client):
         self.data = bytearray(data)
@@ -101,7 +112,12 @@ class RawData:
 
 
 class AudioData:
-    """Handles data that's been completely decrypted and decoded and is ready to be saved to file."""
+    # TODO: Advance Docstring
+    """Handles data that's been completely decrypted and decoded and is ready to be saved to file.
+    
+    .. versionadded:: 2.1
+    
+    """
 
     def __init__(self, file):
         self.file = open(file, "ab")
@@ -131,6 +147,9 @@ class AudioData:
 
 class Sink(Filters):
     """A Sink "stores" all the audio data.
+
+    .. versionadded:: 2.1
+
     Parameters
     ----------
     encoding: :class:`string`
@@ -153,8 +172,6 @@ class Sink(Filters):
 
         encoding = encoding.lower()
 
-        # Would also like to add opus but don't
-        # know how I would go about it.
         if encoding not in self.valid_encodings:
             raise ClientException("An invalid encoding type was specified.")
 
