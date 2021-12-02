@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Pycord
-===========================
+=================
 
 .. image:: /images/snake.svg
 .. image:: /images/snake_dark.svg
