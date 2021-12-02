@@ -594,7 +594,7 @@ class Thread(Messageable, Hashable):
     async def archive(self, locked: bool = MISSING) -> Thread:
         """|coro|
 
-        Used to archive a thread, aliases :meth:`Thread.edit` to archive a thread.
+        Archives the thread. This is a shorthand of :meth:`.edit`.
 
         Parameters
         ------------
