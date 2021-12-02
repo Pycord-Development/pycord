@@ -22,3 +22,4 @@ __pycache__
 env/
 build/
 node_modules/*
+test.py

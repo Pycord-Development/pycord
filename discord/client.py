@@ -676,8 +676,6 @@ class Client:
         """:class:`bool`: Indicates if the websocket connection is closed."""
         return self._closed
 
-    # TODO: Finish Checking For Errors
-
     @property
     def activity(self) -> Optional[ActivityTypes]:
         """Optional[:class:`.BaseActivity`]: The activity being used upon
@@ -835,7 +833,7 @@ class Client:
         return self._connection.get_user(id)
 
     def get_emoji(self, id: int, /) -> Optional[Emoji]:
-        """Returns an emoji with the given ID.
+        """Returns the emoji with the given ID.
 
         Parameters
         -----------
@@ -850,7 +848,7 @@ class Client:
         return self._connection.get_emoji(id)
 
     def get_sticker(self, id: int, /) -> Optional[GuildSticker]:
-        """Returns a guild sticker with the given ID.
+        """Returns the guild sticker with the given ID.
 
         .. versionadded:: 2.0
 

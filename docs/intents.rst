@@ -57,7 +57,7 @@ Another example showing a bot that only deals with messages and guild informatio
 Privileged Intents
 ---------------------
 
-With the API change requiring bot authors to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**.
+With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**.
 
 A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:
 
@@ -84,14 +84,14 @@ A privileged intent is one that requires you to go to the developer portal and m
     through code as well.
 
 Do I need privileged intents?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a quick checklist to see if you need specific privileged intents.
 
 .. _need_presence_intent:
 
 Presence Intent
-+++++++++++++++++
++++++++++++++++
 
 - Whether you use :attr:`Member.status` at all to track member statuses.
 - Whether you use :attr:`Member.activity` or :attr:`Member.activities` to check member's activities.
@@ -99,7 +99,7 @@ Presence Intent
 .. _need_members_intent:
 
 Member Intent
-+++++++++++++++
++++++++++++++
 
 - Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events.
 - Whether you want to track member updates such as nickname or role changes.
@@ -110,7 +110,7 @@ Member Intent
 .. _need_message_content_intent:
 
 Message Content Intent
-++++++++++++++++++++++++
+++++++++++++++++++++++
 
 - Whether you have a message based command system using ext.commands
 - Whether you use the :func:`on_message` event for anything, such as auto-moderation.
@@ -166,7 +166,7 @@ Troubleshooting
 Some common issues relating to the mandatory intent change.
 
 Where'd my members go?
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true.
 
