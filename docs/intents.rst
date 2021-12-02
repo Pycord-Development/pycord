@@ -84,7 +84,7 @@ A privileged intent is one that requires you to go to the developer portal and m
     through code as well.
 
 Do I need privileged intents?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a quick checklist to see if you need specific privileged intents.
 
