@@ -599,7 +599,7 @@ class Thread(Messageable, Hashable):
         Parameters
         ------------
         locked: :class:`bool`
-            When set to True it will lock the thread. This will default to False.
+            Whether to lock the thread on archive, Defaults to ``False``.
         
 
         Returns
