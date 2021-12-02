@@ -143,7 +143,7 @@ Other events that take a :class:`Member` will require the use of the member cach
 .. _retrieving_members:
 
 Retrieving Members
---------------------
+------------------
 
 If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:
 
@@ -161,7 +161,7 @@ If the cache is disabled or you disable chunking guilds at startup, we might sti
 It should be noted that the gateway has a strict rate limit of 120 requests per 60 seconds.
 
 Troubleshooting
-------------------
+---------------
 
 Some common issues relating to the mandatory intent change.
 
@@ -186,7 +186,7 @@ For example:
     # bot = commands.Bot(command_prefix='!', intents=intents)
 
 Why does ``on_ready`` take so long to fire?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested.
 

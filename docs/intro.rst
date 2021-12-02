@@ -11,7 +11,7 @@ This is the documentation for Pycord, a library for Python to aid
 in creating applications that utilise the Discord API.
 
 Prerequisites
----------------
+-------------
 
 Pycord works with Python 3.8 or higher. Support for earlier versions of Python
 is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported.
@@ -99,7 +99,7 @@ However, for the quick and dirty:
 Congratulations. You now have a virtual environment all set up.
 
 Basic Concepts
----------------
+--------------
 
 Pycord revolves around the concept of :ref:`events <discord-api-events>`.
 An event is something you listen to and then respond to. For example, when a message
