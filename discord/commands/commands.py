@@ -1135,25 +1135,25 @@ docs = "https://discord.com/developers/docs"
 def validate_chat_input_name(name: Any):
     # Must meet the regex ^[\w-]{1,32}$
     if not isinstance(name, str):
-        raise TypeError(f"Chat input command names and options must be of type str. Recieved {name}")
+        raise TypeError(f"Chat input command names and options must be of type str. Received {name}")
     if not re.match(r"^[\w-]{1,32}$", name):
         raise ValidationError(
             r'Chat input command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
-            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. Recieved "
+            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. Received "
             f"{name}"
         )
     if not 1 <= len(name) <= 32:
         raise ValidationError(
-            f"Chat input command names and options must be 1-32 characters long. Recieved {name}"
+            f"Chat input command names and options must be 1-32 characters long. Received {name}"
         )
     if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(f"Chat input command names and options must be lowercase. Recieved {name}")
+        raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
 
 
 def validate_chat_input_description(description: Any):
     if not isinstance(description, str):
-        raise TypeError(f"Command description must be of type str. Recieved {description}")
+        raise TypeError(f"Command description must be of type str. Received {description}")
     if not 1 <= len(description) <= 100:
         raise ValidationError(
-            f"Command description must be 1-100 characters long. Recieved {description}"
+            f"Command description must be 1-100 characters long. Received {description}"
         )
