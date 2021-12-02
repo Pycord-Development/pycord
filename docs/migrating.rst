@@ -292,4 +292,4 @@ BadInviteArgument arguments changed
 Where Is The 1.0.0 Migation Page?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is is here: :doc:`migrating_to_v1`
+The v1.0 migration guide can be found at :ref:`migrating_1_0`.
