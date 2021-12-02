@@ -262,7 +262,7 @@ class Client:
         return float('nan') if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """:class:`bool`: Whether the websocket is currently rate limited or not.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -675,6 +675,8 @@ class Client:
     def is_closed(self) -> bool:
         """:class:`bool`: Indicates if the websocket connection is closed."""
         return self._closed
+
+    # TODO: Finish Checking For Errors
 
     @property
     def activity(self) -> Optional[ActivityTypes]:

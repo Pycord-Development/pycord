@@ -1204,8 +1204,6 @@ class Webhook(BaseWebhook):
             Whether to use the bot token over the webhook token
             if available. Defaults to ``True``.
 
-            .. versionadded:: 2.0
-
         Raises
         -------
         HTTPException
