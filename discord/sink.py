@@ -58,6 +58,7 @@ class Filters:
     .. versionadded:: 2.1
     
     """
+    # TODO: Deprecate Users Filter
     # TODO: Make Docstring Better
     # TODO: Filter for max size per file; audio can be split into multiple files
     def __init__(self, **kwargs):

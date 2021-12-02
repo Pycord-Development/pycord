@@ -4444,6 +4444,23 @@ Select
 
 .. autofunction:: discord.ui.select
 
+Voice Recording
+~~~~~~~~~~~~~~~
+
+.. attributetable:: discord.sink
+
+.. autoclass:: discord.sink.Filter
+    :members:
+
+.. autoclass:: discord.sink.Sink
+    :members:
+
+.. autoclass:: discord.sink.AudioData
+    :members:
+
+.. autoclass:: discord.sink.RawData
+    :members:
+
 
 Exceptions
 ------------
@@ -4491,6 +4508,7 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
+                - :exe:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
