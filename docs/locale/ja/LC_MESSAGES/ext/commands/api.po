@@ -20,9 +20,9 @@ msgstr "APIリファレンス"
 
 #: ../../ext/commands/api.rst:6
 msgid ""
-"The following section outlines the API of discord.py's command extension "
+"The following section outlines the API of pycord's command extension "
 "module."
-msgstr "この項目ではdiscord.pyのAPIが持つコマンド拡張モジュールについて解説します。"
+msgstr "この項目ではpycordのAPIが持つコマンド拡張モジュールについて解説します。"
 
 #: ../../ext/commands/api.rst:11
 msgid "Bot"
