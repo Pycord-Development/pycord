@@ -33,31 +33,31 @@ import struct
 
 
 __all__ = (
-    'Filters',
-    'Sink',
-    'AudioData',
-    'RawData',
+    "Filters",
+    "Sink",
+    "AudioData",
+    "RawData",
 )
 
 
-if sys.platform != 'win32':
+if sys.platform != "win32":
     CREATE_NO_WINDOW = 0
 else:
     CREATE_NO_WINDOW = 0x08000000
 
 default_filters = {
-    'time': 0,
-    'users': [],
-    'max_size': 0,
+    "time": 0,
+    "users": [],
+    "max_size": 0,
 }
 
 
 class Filters:
     # TODO: Filter for max size per file; audio can be split into multiple files
     def __init__(self, **kwargs):
-        self.filtered_users = kwargs.get('users', default_filters['users'])
-        self.seconds = kwargs.get('time', default_filters['time'])
-        self.max_size = kwargs.get('max_size', default_filters['max_size'])
+        self.filtered_users = kwargs.get("users", default_filters["users"])
+        self.seconds = kwargs.get("time", default_filters["time"])
+        self.max_size = kwargs.get("max_size", default_filters["max_size"])
         self.finished = False
 
     @staticmethod
@@ -65,6 +65,7 @@ class Filters:
         def _filter(self, data, user):
             if not self.filtered_users or user in self.filtered_users:
                 return func(self, data, user)
+
         return _filter
 
     def init(self):
@@ -81,6 +82,7 @@ class Filters:
 
 class RawData:
     """Handles raw data from Discord so that it can be decrypted and decoded to be used."""
+
     def __init__(self, data, client):
         self.data = bytearray(data)
         self.client = client
@@ -88,9 +90,11 @@ class RawData:
         self.header = data[:12]
         self.data = self.data[12:]
 
-        unpacker = struct.Struct('>xxHII')
+        unpacker = struct.Struct(">xxHII")
         self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.header)
-        self.decrypted_data = getattr(self.client, '_decrypt_' + self.client.mode)(self.header, self.data)
+        self.decrypted_data = getattr(self.client, "_decrypt_" + self.client.mode)(
+            self.header, self.data
+        )
         self.decoded_data = None
 
         self.user_id = None
@@ -98,8 +102,9 @@ class RawData:
 
 class AudioData:
     """Handles data that's been completely decrypted and decoded and is ready to be saved to file."""
+
     def __init__(self, file):
-        self.file = open(file, 'ab')
+        self.file = open(file, "ab")
         self.dir_path = os.path.split(file)[0]
 
         self.finished = False
@@ -120,27 +125,27 @@ class AudioData:
         if not self.finished:
             raise ClientException("This AudioData is still writing.")
         name = os.path.split(self.file)[1]
-        name = name.split('.')[0] + f'.{encoding}'
+        name = name.split(".")[0] + f".{encoding}"
         self.file = os.path.join(self.dir_path, name)
 
 
 class Sink(Filters):
     """A Sink "stores" all the audio data.
-        Parameters
-        ----------
-        encoding: :class:`string`
-            The encoding to use. Valid types include wav, mp3, and pcm (even though it's not an actual encoding).
-        output_path: :class:`string`
-            A path to where the audio files should be output.
-        Raises
-        ------
-        ClientException
-            An invalid encoding type was specified.
+    Parameters
+    ----------
+    encoding: :class:`string`
+        The encoding to use. Valid types include wav, mp3, and pcm (even though it's not an actual encoding).
+    output_path: :class:`string`
+        A path to where the audio files should be output.
+    Raises
+    ------
+    ClientException
+        An invalid encoding type was specified.
     """
 
-    valid_encodings = ['wav', 'mp3', 'pcm']
+    valid_encodings = ["wav", "mp3", "pcm"]
 
-    def __init__(self, *, encoding='wav', output_path='', filters=None):
+    def __init__(self, *, encoding="wav", output_path="", filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
@@ -166,7 +171,7 @@ class Sink(Filters):
     def write(self, data, user):
         if user not in self.audio_data:
             ssrc = self.vc.get_ssrc(user)
-            file = os.path.join(self.file_path, f'{ssrc}.pcm')
+            file = os.path.join(self.file_path, f"{ssrc}.pcm")
             self.audio_data.update({user: AudioData(file)})
 
         file = self.audio_data[user]
@@ -180,29 +185,46 @@ class Sink(Filters):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise ClientException("Audio may only be formatted after recording is finished.")
-        if self.encoding == 'pcm':
+            raise ClientException(
+                "Audio may only be formatted after recording is finished."
+            )
+        if self.encoding == "pcm":
             return
-        if self.encoding == 'mp3':
-            mp3_file = audio.file.split('.')[0] + '.mp3'
-            args = ['ffmpeg', '-f', 's16le', '-ar', '48000', '-ac', '2', '-i', audio.file, mp3_file]
+        if self.encoding == "mp3":
+            mp3_file = audio.file.split(".")[0] + ".mp3"
+            args = [
+                "ffmpeg",
+                "-f",
+                "s16le",
+                "-ar",
+                "48000",
+                "-ac",
+                "2",
+                "-i",
+                audio.file,
+                mp3_file,
+            ]
             process = None
             if os.path.exists(mp3_file):
-                os.remove(mp3_file)  # process will get stuck asking whether or not to overwrite, if file already exists.
+                os.remove(
+                    mp3_file
+                )  # process will get stuck asking whether or not to overwrite, if file already exists.
             try:
                 process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
             except FileNotFoundError:
-                raise ClientException('ffmpeg was not found.') from None
+                raise ClientException("ffmpeg was not found.") from None
             except subprocess.SubprocessError as exc:
-                raise ClientException('Popen failed: {0.__class__.__name__}: {0}'.format(exc)) from exc
+                raise ClientException(
+                    "Popen failed: {0.__class__.__name__}: {0}".format(exc)
+                ) from exc
             process.wait()
-        elif self.encoding == 'wav':
-            with open(audio.file, 'rb') as pcm:
+        elif self.encoding == "wav":
+            with open(audio.file, "rb") as pcm:
                 data = pcm.read()
                 pcm.close()
 
-            wav_file = audio.file.split('.')[0] + '.wav'
-            with wave.open(wav_file, 'wb') as f:
+            wav_file = audio.file.split(".")[0] + ".wav"
+            with wave.open(wav_file, "wb") as f:
                 f.setnchannels(self.vc.decoder.CHANNELS)
                 f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
                 f.setframerate(self.vc.decoder.SAMPLING_RATE)

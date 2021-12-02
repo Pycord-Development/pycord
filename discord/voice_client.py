@@ -651,8 +651,8 @@ class VoiceClient(VoiceProtocol):
         self._player = AudioPlayer(source, self, after=after)
         self._player.start()
 
-        def unpack_audio(self, data):
-            """Takes an audio packet received from Discord and decodes it into pcm audio data.
+    def unpack_audio(self, data):
+        """Takes an audio packet received from Discord and decodes it into pcm audio data.
         If there are no users talking in the channel, `None` will be returned.
 
         You must be connected to receive audio.
@@ -661,7 +661,7 @@ class VoiceClient(VoiceProtocol):
         ---------
         data: :class:`bytes`
             Bytes received by Discord via the UDP connection used for sending and receiving voice data.
-            """
+        """
         if 200 <= data[1] <= 204:
             # RTCP received.
             # RTCP provides information about the connection

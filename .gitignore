@@ -21,3 +21,4 @@ __pycache__
 .vs/slnx.sqlite
 env/
 build/
+test.py
