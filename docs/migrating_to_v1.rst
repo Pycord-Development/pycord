@@ -3,7 +3,7 @@
 .. _migrating_1_0:
 
 Migrating to v1.0
-======================
+=================
 
 v1.0 is one of the biggest breaking changes in the library due to a complete
 redesign.
@@ -15,19 +15,19 @@ Part of the redesign involves making things more easy to use and natural. Things
 :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work.
 
 Python Version Change
------------------------
+---------------------
 
 In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher,
 the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4
 is dropped**.
 
 Major Model Changes
----------------------
+-------------------
 
 Below are major model changes that have happened in v1.0
 
 Snowflakes are int
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`.
 
@@ -47,7 +47,7 @@ This change allows for fewer errors when using the Copy ID feature in the offici
 to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally.
 
 Server is now Guild
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 The official API documentation calls the "Server" concept a "Guild" instead. In order to be more consistent with the
 API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has
@@ -84,7 +84,7 @@ A list of changes is as follows:
 .. _migrating_1_0_model_state:
 
 Models are Stateful
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 As mentioned earlier, a lot of functionality was moved out of :class:`Client` and
 put into their respective :ref:`model <discord_api_models>`.
@@ -210,7 +210,7 @@ A list of these changes is enumerated below.
 +---------------------------------------+------------------------------------------------------------------------------+
 
 Property Changes
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 In order to be a bit more consistent, certain things that were properties were changed to methods instead.
 
@@ -221,7 +221,7 @@ The following are now methods instead of properties (requires parentheses):
 - :meth:`Client.is_closed`
 
 Dict Value Change
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Prior to v1.0 some aggregating properties that retrieved models would return "dict view" objects.
 

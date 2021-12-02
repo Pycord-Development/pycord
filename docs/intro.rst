@@ -5,7 +5,7 @@
 .. _intro:
 
 Introduction
-==============
+============
 
 This is the documentation for Pycord, a library for Python to aid
 in creating applications that utilise the Discord API.
@@ -60,7 +60,7 @@ For a Debian-based system, the following command will get these dependencies:
 Remember to check your permissions!
 
 Virtual Environments
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Sometimes you want to keep libraries from polluting system installs or use a different version of
 libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide.
