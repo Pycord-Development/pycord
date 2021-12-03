@@ -10,6 +10,7 @@ docs/crowdin.py
 *.mp3
 *.m4a
 *.wav
+*.pcm
 *.png
 *.jpg
 *.flac
