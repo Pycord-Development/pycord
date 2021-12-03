@@ -14,7 +14,7 @@ pycord
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
-A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 Key Features
 -------------
@@ -22,7 +22,7 @@ Key Features
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
 - Optimised for both speed and memory usage.
-- Supports Slash Commands, Context Menus and Message Components.
+- Full Application Command Support
 
 Installing
 ----------
@@ -78,7 +78,7 @@ Optional Packages
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.6-dev`` for Python 3.6)
+* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
 
 Quick Example
 --------------
