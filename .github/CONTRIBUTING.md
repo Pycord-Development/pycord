@@ -10,7 +10,7 @@ Generally speaking questions are better suited in our resources below.
 
 - The official support server: https://discord.gg/UCXwPR7Pew
 - The Discord API server under #python_discord-py: https://discord.gg/discord-api
-- [The FAQ in the documentation](https://pycord.readthedocs.io/en/latest/faq.html)
+- [The FAQ in the documentation](https://docs.pycord.dev/en/latest/faq.html)
 - [StackOverflow's `discord.py` tag](https://stackoverflow.com/questions/tagged/discord.py)
 
 Please try your best not to ask questions in our issue tracker. Most of them don't belong there unless they provide value to a larger audience.
