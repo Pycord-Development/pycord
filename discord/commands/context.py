@@ -109,6 +109,9 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def voice_client(self):
+        if self.guild is None:
+            return None
+        
         return self.guild.voice_client
 
     @cached_property

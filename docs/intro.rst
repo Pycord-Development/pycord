@@ -31,7 +31,17 @@ If you are using Windows, then the following should be used instead: ::
     py -3 -m pip install -U py-cord
 
 
-To get voice support, you should use ``py-cord[voice]`` instead of ``pycord``, e.g. ::
+To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g. ::
+
+.. code:: sh
+
+    # Linux/macOS
+    python3 -m pip install -U "py-cord[speed]"
+    # Windows
+    py -3 -m pip install -U py-cord[speed]
+
+
+To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::
 
     python3 -m pip install -U py-cord[voice]
 

@@ -271,7 +271,7 @@ html_js_files = [
 ]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'discord.pydoc'
+htmlhelp_basename = 'pycorddoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 

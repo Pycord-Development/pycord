@@ -15,14 +15,14 @@ msgstr ""
 "Generated-By: Babel 2.5.3\n"
 
 #: ../../index.rst:7
-msgid "Welcome to discord.py"
-msgstr "discord.py へようこそ。"
+msgid "Welcome to pycord"
+msgstr "pycord へようこそ。"
 
 #: ../../index.rst:11
 msgid ""
-"discord.py is a modern, easy to use, feature-rich, and async ready API "
+"pycord is a modern, easy to use, feature-rich, and async ready API "
 "wrapper for Discord."
-msgstr "discord.py は機能豊富かつモダンで使いやすい、非同期処理にも対応したDiscord用のAPIラッパーです。"
+msgstr "pycord は機能豊富かつモダンで使いやすい、非同期処理にも対応したDiscord用のAPIラッパーです。"
 
 #: ../../index.rst:14
 msgid "**Features:**"
