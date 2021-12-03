@@ -1,5 +1,6 @@
 # A Test Which Imports Everything
-# Mostly to help reduce issues with untested code that will not even parse/run on python3
+# Mostly to help reduce issues with untested code that will not even parse/run on python3 or future version 
+# EX: Code Might Run On Python 3.8/9 But Not On 3.10+
 
 from discord.client import *
 from discord.appinfo import *
