@@ -37,7 +37,10 @@ class Dropdown(discord.ui.Select):
         # the user's favourite colour or choice. The self object refers to the
         # Select object, and the values attribute gets a list of the user's
         # selected options. We only want the first one.
-        await interaction.response.send_message(f"Your favourite colour is {self.values[0]}")
+        await interaction.response.send_message(
+            f"Your favourite colour is {self.values[0]}"
+        )
+
 
 class DropdownView(discord.ui.View):
     def __init__(self):
@@ -46,13 +49,16 @@ class DropdownView(discord.ui.View):
         # Adds the dropdown to our view object.
         self.add_item(Dropdown())
 
-class DropdownExample(commands.Cog):
-    def __init__(self,client):
-        self.client = client
 
-    @slash_command(guild_ids=[...],name="color",description="tell me your favourite color!")
-    async def whatcolor(self,ctx):
-        await ctx.respond("what is your favrouite color?",view=DropdownView())
+class DropdownExample(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @slash_command(
+        guild_ids=[...], name="color", description="tell me your favourite color!"
+    )
+    async def whatcolor(self, ctx):
+        await ctx.respond("what is your favrouite color?", view=DropdownView())
 
         # ephemeral makes "Only you can see this" message
         """
@@ -60,8 +66,11 @@ class DropdownExample(commands.Cog):
         """
 
     @whatcolor.error
-    async def color_error(self, ctx:Context ,error):
-        return await ctx.respond(error,ephemeral=True) # ephemeral makes "Only you can see this" message
+    async def color_error(self, ctx: Context, error):
+        return await ctx.respond(
+            error, ephemeral=True
+        )  # ephemeral makes "Only you can see this" message
 
-def setup(client):
-    client.add_cog(DropdownExample(client))
+
+def setup(bot):
+    bot.add_cog(DropdownExample(bot))
