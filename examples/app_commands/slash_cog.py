@@ -12,7 +12,7 @@ class Example(commands.Cog):
 
     @slash_command() # Not passing in guild_ids creates a global slash command (might take an hour to register).
     async def hi(self, ctx):
-        await ctx.respond(f"Hi, this is a global slash command from a cog!")
+        await ctx.respond("Hi, this is a global slash command from a cog!")
 
 def setup(bot):
     bot.add_cog(Example(bot))
