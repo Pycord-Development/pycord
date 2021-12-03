@@ -17,9 +17,9 @@ class MyClient(discord.Client):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
 
-    @tasks.loop(seconds=60)  # task runs every 60 seconds
+    @tasks.loop(seconds=60)  # task that runs every 60 seconds
     async def my_background_task(self):
-        channel = self.get_channel(1234567)  # channel ID goes here
+        channel = self.get_channel(1234567)  # your channel ID goes here
         self.counter += 1
         await channel.send(self.counter)
 
