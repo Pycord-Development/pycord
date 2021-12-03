@@ -1,10 +1,12 @@
 import re
 from setuptools import setup
 
+# Requirements
 requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
+# Version Info
 version = ""
 with open("discord/__init__.py") as f:
 
@@ -35,10 +37,13 @@ if version.endswith(('a', 'b', 'rc')):
     except Exception:
         pass
 
+# README
 readme = ""
 with open("README.rst") as f:
     readme = f.read()
 
+# Extra Requirements 
+# Ex: pip install pycord[voice] or [speed]
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.5"],
     "docs": [
@@ -54,6 +59,7 @@ extras_require = {
     ],
 }
 
+# Folders And Such Included
 packages = [
     "discord",
     "discord.types",
@@ -70,6 +76,7 @@ setup(
     author="Pycord Development",
     url="https://github.com/Pycord-Development/pycord",
     project_urls={
+        "Website": "https://pycord.dev",
         "Documentation": "https://docs.pycord.dev/en/latest/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
     },
@@ -97,5 +104,5 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
     ],
-    test_suite="tests",
+    test_suite="tests", # Test Folder For Workflows
 )
