@@ -53,7 +53,7 @@ def get_encoding(args):
         except IndexError:
             return
     else:
-        return "wav"
+        return "mp3"
 
 
 class Client(discord.Client):
