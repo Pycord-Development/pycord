@@ -555,7 +555,7 @@ class DecodeManager(threading.Thread, _OpusStruct):
             try:
                 data.decoded_data = self.decoder.decode(data.decrypted_data)
             except OpusError:
-                print("Error occurred decoding opus frame.")
+                print("Error occurred while decoding opus frame.")
                 continue
 
             self.client.recv_decoded_audio(data)
@@ -568,3 +568,4 @@ class DecodeManager(threading.Thread, _OpusStruct):
     @property
     def decoding(self):
         return bool(self.decode_queue)
+

@@ -829,7 +829,7 @@ class VoiceClient(VoiceProtocol):
     def recv_decoded_audio(self, data):
         if data.ssrc not in self.user_timestamps:
             self.user_timestamps.update({data.ssrc: data.timestamp})
-            # Add silence of when they were not being recorded.
+            # Add silence when they were not being recorded.
             silence = 0
         else:
             silence = data.timestamp - self.user_timestamps[data.ssrc] - 960

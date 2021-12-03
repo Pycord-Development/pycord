@@ -88,11 +88,10 @@ class Filters:
 
 
 class RawData:
-    # TODO: Advance Docstring
     """Handles raw data from Discord so that it can be decrypted and decoded to be used.
     
     .. versionadded:: 2.1
-    
+
     """
 
     def __init__(self, data, client):
@@ -113,11 +112,15 @@ class RawData:
 
 
 class AudioData:
-    # TODO: Advance Docstring
     """Handles data that's been completely decrypted and decoded and is ready to be saved to file.
     
     .. versionadded:: 2.1
-    
+
+    Raises
+    ------
+    ClientException
+        This AudioData is already finished writing,
+        This AudioData is still writing
     """
 
     def __init__(self, file):
