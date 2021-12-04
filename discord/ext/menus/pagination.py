@@ -124,6 +124,35 @@ class Paginate(discord.ui.View):
             return self.user == interaction.user
         return True
 
+    def customize_button(
+        self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray
+    ) -> Union[PaginateButton, bool]:
+        """Allows you to easily customize the various pagination buttons.
+        Parameters
+        ----------
+        button_name: :class:`str`
+            Name of the button to customize
+        button_label: :class:`str`
+            Label to display on the button
+        button_emoji:
+            Emoji to display on the button
+        button_style: :class:`~discord.ButtonStyle`
+            ButtonStyle to use for the button
+
+        Returns
+        -------
+        :class:`~PaginateButton`
+            The button that was customized
+        """
+
+        if button_name not in self.buttons.keys():
+            return False
+        button: PaginateButton = self.buttons[button_name]["object"]
+        button.label = button_label
+        button.emoji = button_emoji
+        button.style = button_style
+        return button
+
     def update_buttons(self):
         for key, button in self.buttons.items():
             if key == "first":
