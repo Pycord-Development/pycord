@@ -119,7 +119,7 @@ class ApplicationCommandMixin:
             The command to add.
         """
         try:
-            if getattr("parent", command) is not None:
+            if getattr(command, "parent") is not None:
                 raise TypeError("The provided command is a sub-command of group")
         except AttributeError:
             pass
