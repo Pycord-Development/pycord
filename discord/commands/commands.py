@@ -30,7 +30,7 @@ import types
 import functools
 import inspect
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Type, Union, TYPE_CHECKING
 
 from ..enums import SlashCommandOptionType, ChannelType
 from ..member import Member
@@ -786,7 +786,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def command_group(self, name, description) -> SlashCommandGroup:
+    def create_group(self, name, description) -> SlashCommandGroup:
         if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
@@ -794,6 +794,47 @@ class SlashCommandGroup(ApplicationCommand, Option):
         sub_command_group = SlashCommandGroup(name, description, parent=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
+
+    def subgroup(
+        self,
+        name: str,
+        description: str = None, 
+        guild_ids: Optional[List[int]] = None,
+    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
+        as a subgroup.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
+            The slash command group that was created.
+        """
+        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+            group = cls(
+                name,
+                description or (
+                    inspect.cleandoc(cls.__doc__).splitlines()[0]
+                    if cls.__doc__ is not None
+                    else "No description provided"
+                ),
+                guild_ids=guild_ids,
+                parent=self,
+            )
+            self.subcommands.append(group)
+            return group
+        return inner
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
