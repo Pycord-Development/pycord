@@ -147,7 +147,7 @@ class CogMeta(type):
 
                 try:
                     if getattr(value, "parent") is not None:
-                        # Skip commands if they are apart of a group
+                        # Skip commands if they are a part of a group
                         continue
                 except AttributeError:
                     pass
