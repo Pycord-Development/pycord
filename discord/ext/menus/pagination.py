@@ -80,24 +80,24 @@ class Paginate(discord.ui.View):
     def update_buttons(self):
         for key, button in self.buttons.items():
             if key == "first":
-                if self.current_page <= 0:
+                if self.current_page <= 1:
                     button["hidden"] = True
-                elif self.current_page >= 0 and self.page_count > 0:
+                elif self.current_page >= 1:
                     button["hidden"] = False
             elif key == "prev":
                 if self.current_page <= 0:
                     button["hidden"] = True
-                elif self.current_page >= 0 and self.page_count > 0:
+                elif self.current_page >= 0:
                     button["hidden"] = False
             elif key == "next":
                 if self.current_page == self.page_count:
                     button["hidden"] = True
-                elif self.current_page < self.page_count and self.page_count > 0:
+                elif self.current_page < self.page_count:
                     button["hidden"] = False
             elif key == "last":
-                if self.current_page == self.page_count:
+                if self.current_page >= self.page_count - 1:
                     button["hidden"] = True
-                if self.current_page < self.page_count and self.page_count > 0:
+                if self.current_page < self.page_count - 1:
                     button["hidden"] = False
         self.clear_items()
         for key, button in self.buttons.items():
