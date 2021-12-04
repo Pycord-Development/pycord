@@ -732,6 +732,15 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         self.__initial_commands__ = []
         for i, c in cls.__dict__.items():
+            if isinstance(c, type) and SlashCommandGroup in c.__bases__:
+                c = c(
+                    c.__name__,
+                    (
+                        inspect.cleandoc(cls.__doc__).splitlines()[0]
+                        if cls.__doc__ is not None
+                        else "No description provided"
+                    )
+                )
             if isinstance(c, (SlashCommand, SlashCommandGroup)):
                 c.parent = self
                 c.attached_to_group = True
