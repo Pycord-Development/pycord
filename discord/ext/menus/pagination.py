@@ -190,8 +190,9 @@ class Paginate(discord.ui.View):
             elif self.show_indicator:
                 self.add_item(button["object"])
 
-        for item in self.custom_view.children:
-            self.add_item(item)
+        if self.custom_view:
+            for item in self.custom_view.children:
+                self.add_item(item)
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
