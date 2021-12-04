@@ -4,7 +4,6 @@ import discord
 from discord import abc
 from discord.commands import ApplicationContext
 from discord.ext.commands import Context
-from discord.utils import MISSING
 
 
 class PaginateButton(discord.ui.Button):
@@ -140,12 +139,17 @@ class Paginate(discord.ui.View):
         if isinstance(messageable, (ApplicationContext, Context)):
             self.user = messageable.author
 
-        if isinstance(messageable, ApplicationContext):
-            message = await messageable.respond(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else MISSING, view=self, ephemeral=ephemeral
+        return (
+            await messageable.respond(
+                content=page if isinstance(page, str) else None,
+                embed=page if isinstance(page, discord.Embed) else None,
+                view=self,
+                ephemeral=ephemeral,
             )
-        else:
-            message = await messageable.send(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
+            if isinstance(messageable, ApplicationContext)
+            else await messageable.send(
+                content=page if isinstance(page, str) else None,
+                embed=page if isinstance(page, discord.Embed) else None,
+                view=self,
             )
-        return message
+        )
