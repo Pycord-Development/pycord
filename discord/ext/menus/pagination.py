@@ -150,12 +150,15 @@ class Paginate(discord.ui.View):
         if self.show_indicator:
             self.buttons["page_indicator"]["object"].label = f"{self.current_page}/{self.page_count}"
         for key, button in self.buttons.items():
-            if button["hidden"]:
-                button["object"].disabled = True
-                if self.show_disabled:
+            if key != "page_indicator":
+                if button["hidden"]:
+                    button["object"].disabled = True
+                    if self.show_disabled:
+                        self.add_item(button["object"])
+                else:
+                    button["object"].disabled = False
                     self.add_item(button["object"])
-            else:
-                button["object"].disabled = key == "page_indicator"
+            elif self.show_indicator:
                 self.add_item(button["object"])
 
         for item in self.custom_view.children:
