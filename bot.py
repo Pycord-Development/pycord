@@ -311,7 +311,7 @@ def main(source, verbose=False):
             channelid = results['gasChannel']
             gas = results['gasNum']
 
-            channel = bot.get_channel(id=int(channelid))
+            channel = bot.get_channel(int(channelid))
             print(f"<@{user}>, Gwei is now {gas}")
            
             #delete from database
