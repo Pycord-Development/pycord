@@ -140,4 +140,3 @@ class Paginate(discord.ui.View):
                 content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
             )
         return message
-
