@@ -774,7 +774,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
-            "default_permission": self.default_permission
+            "default_permission": self.default_permission,
         }
 
         if self.parent is not None:
