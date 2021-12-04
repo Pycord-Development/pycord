@@ -41,34 +41,76 @@ class Paginate(discord.ui.View):
         Your list of strings or embeds to paginate
     show_disabled: :class:`bool`
         Choose whether or not to show disabled buttons
+    show_indicator: :class:`bool`
+        Choose whether to show the page indicator
     author_check: :class:`bool`
         Choose whether or not only the original user of the command can change pages
     custom_view: :class:`discord.ui.View`
         A custom view whose items are appended below the pagination buttons
     """
 
-    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled=True, author_check=True, custom_view: discord.ui.View = None):
+    def __init__(
+        self, pages: Union[List[str], List[discord.Embed]], show_disabled=True, show_indicator=True, author_check=True, custom_view: discord.ui.View = None
+    ):
         super().__init__()
         self.pages = pages
         self.current_page = 0
         self.page_count = len(self.pages) - 1
         self.show_disabled = show_disabled
+        self.show_indicator = show_indicator
         self.buttons = {
             "first": {
-                "object": PaginateButton(label="<<", style=discord.ButtonStyle.blurple, emoji=None, disabled=True, button_type="first", paginator=self),
-                "hidden": True,  # We always start by showing the first page, so there's no need to start with this button enabled
-            },
-            "prev": {
-                "object": PaginateButton(label="<", style=discord.ButtonStyle.red, emoji=None, disabled=True, button_type="prev", paginator=self),
+                "object": PaginateButton(
+                    label="<<",
+                    style=discord.ButtonStyle.blurple,
+                    emoji=None,
+                    disabled=True,
+                    button_type="first",
+                    paginator=self,
+                ),
                 "hidden": True,
             },
-            "next": {
-                "object": PaginateButton(label=">", style=discord.ButtonStyle.green, emoji=None, disabled=True, button_type="next", paginator=self),
+            "prev": {
+                "object": PaginateButton(
+                    label="<",
+                    style=discord.ButtonStyle.red,
+                    emoji=None,
+                    disabled=True,
+                    button_type="prev",
+                    paginator=self,
+                ),
+                "hidden": True,
+            },
+            "page_indicator": {
+                "object": discord.ui.Button(
+                    label=f"{self.current_page}/{self.page_count}",
+                    style=discord.ButtonStyle.gray,
+                    disabled=True,
+                    row=0,
+                ),
                 "hidden": False,
             },
+            "next": {
+                "object": PaginateButton(
+                    label=">",
+                    style=discord.ButtonStyle.green,
+                    emoji=None,
+                    disabled=True,
+                    button_type="next",
+                    paginator=self,
+                ),
+                "hidden": True,
+            },
             "last": {
-                "object": PaginateButton(label=">>", style=discord.ButtonStyle.blurple, emoji=None, disabled=True, button_type="last", paginator=self),
-                "hidden": False,
+                "object": PaginateButton(
+                    label=">>",
+                    style=discord.ButtonStyle.blurple,
+                    emoji=None,
+                    disabled=True,
+                    button_type="last",
+                    paginator=self,
+                ),
+                "hidden": True,
             },
         }
         self.custom_view = custom_view
@@ -89,29 +131,31 @@ class Paginate(discord.ui.View):
                     button["hidden"] = True
                 elif self.current_page >= 1:
                     button["hidden"] = False
-            elif key == "prev":
-                if self.current_page <= 0:
+            elif key == "last":
+                if self.current_page >= self.page_count - 1:
                     button["hidden"] = True
-                elif self.current_page >= 0:
+                if self.current_page < self.page_count - 1:
                     button["hidden"] = False
             elif key == "next":
                 if self.current_page == self.page_count:
                     button["hidden"] = True
                 elif self.current_page < self.page_count:
                     button["hidden"] = False
-            elif key == "last":
-                if self.current_page >= self.page_count - 1:
+            elif key == "prev":
+                if self.current_page <= 0:
                     button["hidden"] = True
-                if self.current_page < self.page_count - 1:
+                elif self.current_page >= 0:
                     button["hidden"] = False
         self.clear_items()
+        if self.show_indicator:
+            self.buttons["page_indicator"]["object"].label = f"{self.current_page}/{self.page_count}"
         for key, button in self.buttons.items():
             if button["hidden"]:
                 button["object"].disabled = True
                 if self.show_disabled:
                     self.add_item(button["object"])
             else:
-                button["object"].disabled = False
+                button["object"].disabled = key == "page_indicator"
                 self.add_item(button["object"])
 
         for item in self.custom_view.children:
