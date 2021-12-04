@@ -9,7 +9,7 @@ from discord.utils import MISSING
 
 class PaginateButton(discord.ui.Button):
     def __init__(self, label, emoji, style, disabled, button_type, paginator):
-        super().__init__(label=label, emoji=emoji, style=style, disabled=disabled)
+        super().__init__(label=label, emoji=emoji, style=style, disabled=disabled, row=0)
         self.label = label
         self.emoji = emoji
         self.style = style
@@ -35,15 +35,20 @@ class PaginateButton(discord.ui.Button):
 
 class Paginate(discord.ui.View):
     """Creates a paginator for a message that is navigated with buttons.
+
     Parameters
     ------------
     pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
         Your list of strings or embeds to paginate
     show_disabled: :class:`bool`
         Choose whether or not to show disabled buttons
+    author_check: :class:`bool`
+        Choose whether or not only the original user of the command can change pages
+    custom_view: :class:`discord.ui.View`
+        A custom view whose items are appended below the pagination buttons
     """
 
-    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled=True, author_check=True):
+    def __init__(self, pages: Union[List[str], List[discord.Embed]], show_disabled=True, author_check=True, custom_view: discord.ui.View = None):
         super().__init__()
         self.pages = pages
         self.current_page = 0
@@ -67,6 +72,7 @@ class Paginate(discord.ui.View):
                 "hidden": False,
             },
         }
+        self.custom_view = custom_view
         self.update_buttons()
 
         self.usercheck = author_check
@@ -108,6 +114,9 @@ class Paginate(discord.ui.View):
             else:
                 button["object"].disabled = False
                 self.add_item(button["object"])
+
+        for item in self.custom_view.children:
+            self.add_item(item)
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
