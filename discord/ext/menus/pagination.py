@@ -83,7 +83,7 @@ class Paginate(discord.ui.View):
             },
             "page_indicator": {
                 "object": discord.ui.Button(
-                    label=f"{self.current_page}/{self.page_count}",
+                    label=f"{self.current_page + 1}/{self.page_count + 1}",
                     style=discord.ButtonStyle.gray,
                     disabled=True,
                     row=0,
@@ -177,7 +177,7 @@ class Paginate(discord.ui.View):
                     button["hidden"] = False
         self.clear_items()
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page}/{self.page_count}"
+            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
         for key, button in self.buttons.items():
             if key != "page_indicator":
                 if button["hidden"]:
