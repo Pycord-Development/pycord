@@ -54,6 +54,7 @@ from .commands import (
     UserCommand,
     ApplicationCommand,
     ApplicationContext,
+    AutocompleteContext,
     command,
 )
 from .cog import CogMixin
@@ -431,7 +432,9 @@ class ApplicationCommandMixin:
             self.dispatch("unknown_command", interaction)
         else:
             if interaction.type is InteractionType.auto_complete:
-                return await command.invoke_autocomplete_callback(interaction)
+                ctx = await self.get_autocomplete_context(interaction)
+                ctx.command = command
+                return await command.invoke_autocomplete_callback(ctx)
             
             ctx = await self.get_application_context(interaction)
             ctx.command = command
@@ -566,6 +569,37 @@ class ApplicationCommandMixin:
         if cls is None:
             cls = ApplicationContext
         return cls(self, interaction)
+
+    async def get_autocomplete_context(
+        self, interaction: Interaction, cls=None
+    ) -> AutocompleteContext:
+        r"""|coro|
+
+        Returns the autocomplete context from the interaction.
+
+        This is a more low-level counter-part for :meth:`.process_application_commands`
+        to allow users more fine grained control over the processing.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction to get the invocation context from.
+        cls
+            The factory class that will be used to create the context.
+            By default, this is :class:`.AutocompleteContext`. Should a custom
+            class be provided, it must be similar enough to
+            :class:`.AutocompleteContext`\'s interface.
+
+        Returns
+        --------
+        :class:`.AutocompleteContext`
+            The autocomplete context. The type of this can change via the
+            ``cls`` parameter.
+        """
+        if cls is None:
+            cls = AutocompleteContext
+        return cls(self, interaction)
+
 
 
 class BotBase(ApplicationCommandMixin, CogMixin):

@@ -21,9 +21,9 @@ msgstr "よくある質問"
 #: ../../faq.rst:7
 msgid ""
 "This is a list of Frequently Asked Questions regarding using "
-"``discord.py`` and its extension modules. Feel free to suggest a new "
+"``pycord`` and its extension modules. Feel free to suggest a new "
 "question or submit one via pull requests."
-msgstr "これは ``discord.py`` 及び 拡張モジュールに対して、よくある質問をまとめたものです。気軽に質問やプルリクエストを提出してください。"
+msgstr "これは ``pycord`` 及び 拡張モジュールに対して、よくある質問をまとめたものです。気軽に質問やプルリクエストを提出してください。"
 
 #: ../../faq.rst:11
 msgid "Questions"
@@ -141,7 +141,7 @@ msgstr ""
 #: ../../faq.rst:82
 msgid ""
 "Example code can be found in the `examples folder "
-"<https://github.com/Rapptz/discord.py/tree/master/examples>`_ in the "
+"<https://github.com/pycord-development/pycord/tree/master/examples>`_ in the "
 "repository."
 msgstr ""
 
@@ -357,10 +357,10 @@ msgstr "バックグラウンドで何かを動かすにはどうすればいい
 #: ../../faq.rst:247
 msgid ""
 "`Check the background_task.py example. "
-"<https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py>`_"
+"<https://github.com/pycord-development/pycord/blob/master/examples/background_task.py>`_"
 msgstr ""
 "`background_task.pyの例を参照してください。 "
-"<https://github.com/Rapptz/discord.py/blob/master/examples/background_task.py>`_"
+"<https://github.com/pycord-development/pycord/blob/master/examples/background_task.py>`_"
 
 #: ../../faq.rst:250
 msgid "How do I get a specific model?"

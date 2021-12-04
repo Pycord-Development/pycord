@@ -2741,54 +2741,38 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Betrayal.io
     
-    .. attribute:: cg2_qa
-        
-        Represents the embedded application CG2 QA.
-    
-    .. attribute:: cg2_staging
-        
-        Represents the embedded application CG2 Staging.
+    .. attribute:: checkers_in_the_park
 
-    .. attribute:: cg3_prod
-
-        Represents the embedded application CG3 Prod.
+        Represents the embedded application Checkers in the Park Prod.
     
-    .. attribute:: cg3_qa
+    .. attribute:: checkers_in_the_park_dev
+
+        Represents the embedded application Checkers in the Park Development.
+    
+    .. attribute:: checkers_in_the_park_staging
         
-        Represents the embedded application CG3 QA.
+        Represents the embedded application Checkers in the Park Staging.
     
-    .. attribute:: cg3_staging
+    .. attribute:: checkers_in_the_park_qa
         
-        Represents the embedded application CG3 Staging.
+        Represents the embedded application Checkers in the Park QA.
     
-    .. attribute:: cg3_dev
-
-        Represents the embedded application CG3 Development.
-    
-    .. attribute:: cg4_prod
-    
-        Represents the embedded application CG4 Prod.
-
-    .. attribute:: cg4_qa
-        
-        Represents the embedded application CG4 QA.
-    
-    .. attribute:: cg4_staging
-        
-        Represents the embedded application CG4 Staging.
-    
-    .. attribute:: cg4_dev
-
-        Represents the embedded application CG4 Development.
-
     .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
 
     .. attribute:: chess_in_the_park_dev
 
-        Development version of :attr:`~EmbeddedActivity.chess_in_the_park`.
+        Represents the embedded application Chess in the Park Development.
 
+    .. attribute:: chest_in_the_park_staging
+        
+        Represents the embedded application Chess in the Park Staging.
+
+    .. attribute:: chest_in_the_park_qa
+        
+        Represents the embedded application Chess in the Park QA.
+    
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
@@ -2800,6 +2784,22 @@ of :class:`enum.Enum`.
     .. attribute:: letter_tile
 
         Represents the embedded application Letter Tile.
+    
+    .. attribute:: ocho
+    
+        Represents the embedded application Ocho.
+
+    .. attribute:: ocho_dev
+
+        Represents the embedded application Ocho Development.
+
+    .. attribute:: ocho_staging
+        
+        Represents the embedded application Ocho Staging.
+    
+    .. attribute:: ocho_qa
+        
+        Represents the embedded application Ocho QA.
     
     .. attribute:: pn_stagging
 

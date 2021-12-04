@@ -12,9 +12,7 @@ Make sure to load this cog when your bot starts!
 """
 
 # this is the list of role IDs that will be added as buttons.
-role_ids = [
-    846383888003760217, 846383888036134932
-]
+role_ids = [...]
 
 
 class RoleButton(discord.ui.Button):
@@ -65,7 +63,7 @@ class ButtonRoleCog(commands.Cog):
         self.bot = bot
 
     # make sure to set the guild ID here to whatever server you want the buttons in
-    @slash_command(guild_ids=[846383887973482516], description="Post the button role message")
+    @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
         """Slash command to post a new view with a button for each role
         """
@@ -91,7 +89,7 @@ class ButtonRoleCog(commands.Cog):
         # we recreate the view as we did in the /post command
         view = discord.ui.View(timeout=None)
         # make sure to set the guild ID here to whatever server you want the buttons in
-        guild = self.bot.get_guild(846383887973482516)
+        guild = self.bot.get_guild(...)
         for role_id in role_ids:
             role = guild.get_role(role_id)
             view.add_item(RoleButton(role))
