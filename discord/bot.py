@@ -118,6 +118,12 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
+        try:
+            if getattr("parent", command) is not None:
+                raise TypeError("The provided command is a sub-command of group")
+        except AttributeError:
+            pass
+
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)

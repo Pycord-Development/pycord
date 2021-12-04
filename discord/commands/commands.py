@@ -317,6 +317,9 @@ class ApplicationCommand(_BaseCommand):
         else:
             return self.name
 
+    def _set_cog(self, cog):
+        self.cog = cog
+
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
 
@@ -771,6 +774,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
+            "default_permission": self.default_permission,
         }
 
         if self.parent is not None:
@@ -847,6 +851,50 @@ class SlashCommandGroup(ApplicationCommand, Option):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
+
+    def copy(self):
+        """Creates a copy of this command group.
+
+        Returns
+        --------
+        :class:`SlashCommandGroup`
+            A new instance of this command.
+        """
+        ret = self.__class__(
+            self.name,
+            self.description,
+            **self.__original_kwargs__,
+        )
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other.parent = self.parent
+
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+
+        if self.subcommands != other.subcommands:
+            other.subcommands = self.subcommands.copy()
+        
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
+    def _set_cog(self, cog):
+        self.cog = cog
+        for subcommand in self.subcommands:
+            subcommand._set_cog(cog)
+        
 
 
 class ContextMenuCommand(ApplicationCommand):
