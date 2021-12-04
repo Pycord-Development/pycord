@@ -21,3 +21,5 @@ __pycache__
 .vs/slnx.sqlite
 env/
 build/
+config.yaml
+gasPingLog.txt
