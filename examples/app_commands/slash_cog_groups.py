@@ -17,7 +17,7 @@ class Example(commands.Cog):
     international_greetings = greetings.command_group("international", "International greetings")
 
     secret_greetings = SlashCommandGroup("secret_greetings", "Secret greetings", permissions=[
-        Permission("owner", 2, True) # Ensures the owner_id user can access this, and noone else
+        Permission("owner", 2, True) # Ensures the owner_id user can access this, and no one else
     ])
  
     @greetings.command()
