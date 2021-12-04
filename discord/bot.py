@@ -541,7 +541,7 @@ class ApplicationCommandMixin:
     def create_group(
         self,
         name: str,
-        description: str,
+        description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
@@ -553,7 +553,7 @@ class ApplicationCommandMixin:
         ----------
         name: :class:`str`
             The name of the group to create.
-        description: :class:`str`
+        description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
@@ -564,6 +564,7 @@ class ApplicationCommandMixin:
         SlashCommandGroup
             The slash command group that was created.
         """
+        description = description or "No description provided."
         group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
@@ -571,7 +572,7 @@ class ApplicationCommandMixin:
     def group(
         self,
         name: str,
-        description: str, 
+        description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
@@ -583,7 +584,7 @@ class ApplicationCommandMixin:
         ----------
         name: :class:`str`
             The name of the group to create.
-        description: :class:`str`
+        description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
@@ -595,7 +596,14 @@ class ApplicationCommandMixin:
             The slash command group that was created.
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
-            group = cls(name, description, guild_ids=guild_ids)
+            group = cls(
+                name,
+                (
+                    description or inspect.cleandoc(cls.__doc__).splitlines()[0]
+                    if cls.__doc__ is not None else "No description provided"
+                ),
+                guild_ids=guild_ids
+            )
             self.add_application_command(group)
             return group
         return inner
