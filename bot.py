@@ -4,6 +4,7 @@ Run a Discord bot that takes the !gas command and shows the status in an embed +
 # Example:
 # python3 gas_bot.py -s etherscan
 
+from asyncio.windows_events import NULL
 from typing import Tuple
 import logging
 import yaml
@@ -116,17 +117,22 @@ def main(source, verbose=False):
     There are a number of utility commands being showcased here."""
 
     intents = discord.Intents.default()
+    intents.guilds = True
     intents.members = False
 
     bot = commands.Bot(command_prefix="!", description=description, intents=intents, help_command=None)
 
+    @bot.event
+    async def on_thread_join(thread):
+        await thread.join()
+        # print(thread.members)
+        # botid = thread.get_member(892495224629231617)
+        # if(botid == NULL):
+        #     await thread.send("Im here!")
+
 
     @bot.event
     async def on_message(message):
-
-        if message.content == "!thread":
-            f = await message.channel.create_thread(name="Thread", minutes=60, message=message)
-
 
         openseaAssetURL = "https://opensea.io/assets"
         if openseaAssetURL in message.content:
@@ -242,46 +248,48 @@ def main(source, verbose=False):
         trimmed = message.rstrip()
         #remove command
         gasNum  = trimmed.split("!gasping ")
-        gasNum = gasNum[1]
-        gasUser = ctx.message.author.id
-        gasChannel = ctx.message.channel.id
+        if gasNum[1] != None:
+            gasNum = gasNum[1]
+            gasUser = ctx.message.author.id
+            gasChannel = ctx.message.channel.id
 
-        #print(ctx.message)
+            #print(ctx.message)
 
+            embed = discord.Embed(title=":fuelpump: GasPing Logged")
 
-        embed = discord.Embed(title=":fuelpump: GasPing Logged")
+            fast, average, slow = get_gas_from_etherscan(config['etherscanKey'],verbose=verbose)
+            embed.add_field(name=f"I'll let you know when it hits ", value=f"{gasNum} Gwei", inline=False)
+            embed.set_footer(text=f"Fetched from {source}\nUse help to get the list of commands")
+            embed.set_author(
+                name='{0.display_name}'.format(ctx.author),
+                icon_url='{0.avatar.url}'.format(ctx.author)
+            )
+
         
-        fast, average, slow = get_gas_from_etherscan(config['etherscanKey'],verbose=verbose)
-        embed.add_field(name=f"I'll let you know when it hits ", value=f"{gasNum} Gwei", inline=False)
-        embed.set_footer(text=f"Fetched from {source}\nUse help to get the list of commands")
-        embed.set_author(
-            name='{0.display_name}'.format(ctx.author),
-            icon_url='{0.avatar.url}'.format(ctx.author)
-        )
+            print(f"Gas watch: {gasNum}")
+            print(f"Gas User: {gasUser}")
 
-        
-        print(f"Gas watch: {gasNum}")
-        print(f"Gas User: {gasUser}")
+            #search if user already there
+            search = db.search(where('gasUser') == f'{gasUser}')
 
-        #search if user already there
-        search = db.search(where('gasUser') == f'{gasUser}')
-        
-        #if user not already in db
-        if not search:
-            #insert
-            db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
+            #if user not already in db
+            if not search:
+                #insert
+                db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
+            else:
+                #update 
+                db.remove(where('gasUser') == f"{gasUser}")
+                db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
+
+            #add to text file
+            #file1 = open("gasPingLog.txt", "a")
+            #file1.write(f"{gasNum} {gasUser} {gasChannel}\n")
+            #file1.close()
+
+
+            await ctx.send(embed=embed)
         else:
-            #update 
-            db.remove(where('gasUser') == f"{gasUser}")
-            db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
-
-        #add to text file
-        #file1 = open("gasPingLog.txt", "a")
-        #file1.write(f"{gasNum} {gasUser} {gasChannel}\n")
-        #file1.close()
-
-
-        await ctx.send(embed=embed)
+            await ctx.send("please provide a gas value ```!gasing 100```")
 
     # 2. Load config
     filename = 'config.yaml'
