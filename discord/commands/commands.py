@@ -863,7 +863,8 @@ class SlashCommandGroup(ApplicationCommand, Option):
         ret = self.__class__(
             self.name,
             self.description,
-            **self.__original_kwargs__)
+            **self.__original_kwargs__,
+        )
         return self._ensure_assignment_on_copy(ret)
 
     def _ensure_assignment_on_copy(self, other):
