@@ -25,7 +25,6 @@ class PaginateButton(discord.ui.Button):
             self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
-        self.paginator.update_buttons()
         await self.paginator.goto_page(interaction=interaction, page_number=self.paginator.current_page)
 
 
@@ -117,6 +116,8 @@ class Paginator(discord.ui.View):
         self.user = None
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
+        """Updates the interaction response message to show the specified page number."""
+        self.update_buttons()
         page = self.pages[page_number]
         await interaction.response.edit_message(
             content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
@@ -157,6 +158,7 @@ class Paginator(discord.ui.View):
         return button
 
     def update_buttons(self):
+        """Updates the display state of the buttons (disabled/hidden)"""
         for key, button in self.buttons.items():
             if key == "first":
                 if self.current_page <= 1:
@@ -178,7 +180,7 @@ class Paginator(discord.ui.View):
                     button["hidden"] = True
                 elif self.current_page >= 0:
                     button["hidden"] = False
-        self.clear_items()
+        self.clear_items()  # Using this instead of remove_item allows for more consistent tracking of component visibility and adding custom_view items
         if self.show_indicator:
             self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
         for key, button in self.buttons.items():
