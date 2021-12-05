@@ -32,7 +32,7 @@ class PaginateButton(discord.ui.Button):
         )
 
 
-class Paginate(discord.ui.View):
+class Paginator(discord.ui.View):
     """Creates a paginator for a message that is navigated with buttons.
 
     Parameters
@@ -119,6 +119,12 @@ class Paginate(discord.ui.View):
         self.usercheck = author_check
         self.user = None
 
+    async def goto_page(self, interaction: discord.Interaction, page_number=0):
+        page = self.pages[page_number]
+        await interaction.response.edit_message(
+            content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
+        )
+
     async def interaction_check(self, interaction):
         if self.usercheck:
             return self.user == interaction.user
@@ -190,6 +196,8 @@ class Paginate(discord.ui.View):
             elif self.show_indicator:
                 self.add_item(button["object"])
 
+        # We're done adding standard buttons, so we can now add any specified custom view items below them
+        # The bot developer should handle row assignments for their view before passing it to Paginator
         if self.custom_view:
             for item in self.custom_view.children:
                 self.add_item(item)
