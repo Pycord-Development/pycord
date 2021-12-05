@@ -372,11 +372,18 @@ class SlashCommand(ApplicationCommand):
         self.callback = func
 
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        kwargs.pop("guild_ids", None)
 
         name = kwargs.get("name") or func.__name__
+        kwargs.pop("name", None)
+
         validate_chat_input_name(name)
         self.name: str = name
         self.id = None
+
+        # Extra Kwargs
+        for i in kwargs:
+            setattr(self, i, kwargs[i])
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0]
