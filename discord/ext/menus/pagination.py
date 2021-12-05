@@ -26,10 +26,7 @@ class PaginateButton(discord.ui.Button):
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
         self.paginator.update_buttons()
-        page = self.paginator.pages[self.paginator.current_page]
-        await interaction.response.edit_message(
-            content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self.paginator
-        )
+        await self.paginator.goto_page(interaction=interaction, page_number=self.paginator.current_page)
 
 
 class Paginator(discord.ui.View):
