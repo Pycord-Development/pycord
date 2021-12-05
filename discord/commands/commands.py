@@ -35,7 +35,7 @@ from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .permissions import Permission
+from .permissions import CommandPermission
 from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
 from ..member import Member
@@ -99,7 +99,7 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand):
     cog = None
-    
+
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -143,8 +143,8 @@ class ApplicationCommand(_BaseCommand):
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
-    
+        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore
+
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
@@ -341,12 +341,12 @@ class SlashCommand(ApplicationCommand):
         isn't one.
     default_permission: :class:`bool`
         Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`Permission`]
+    permissions: List[:class:`CommandPermission`]
         The permissions for this command.
 
         .. note::
 
-            If this is not empty then default_permissions will be set to False.    
+            If this is not empty then default_permissions will be set to False.
 
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
@@ -406,7 +406,7 @@ class SlashCommand(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
+        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -525,7 +525,7 @@ class SlashCommand(ApplicationCommand):
         for o in self.options:
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
         else:
@@ -533,12 +533,12 @@ class SlashCommand(ApplicationCommand):
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = { i.name: i.default for i in self.options }
-        
+
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
-                    i["name"]:i["value"] 
+                    i["name"]:i["value"]
                     for i in ctx.interaction.data["options"]
                 })
                 ctx.command = self
@@ -554,7 +554,7 @@ class SlashCommand(ApplicationCommand):
 
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
-                    
+
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
@@ -648,7 +648,7 @@ class Option:
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-        
+
         if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
             raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
@@ -759,7 +759,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[Permission] = kwargs.get("permissions", [])
+        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -860,7 +860,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
-        
+
         self.validate_parameters()
 
         # Context Menu commands don't have permissions
@@ -902,7 +902,7 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
-    
+
     def qualified_name(self):
         return self.name
 
@@ -941,10 +941,10 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:   
+        else:
             await self.callback(ctx, target)
 
     def copy(self):
@@ -1007,12 +1007,12 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-    
+
     def copy(self):
         """Creates a copy of this command.
 

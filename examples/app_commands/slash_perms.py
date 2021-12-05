@@ -26,7 +26,7 @@ bot = discord.Bot()
 # --------------------------------------------
 # or supply permissions directly in @bot.slash_command
 # @bot.slash_command(default_permission=False,
-#                   permissions=[permissions.Permission(id=ID, type=TYPE, permission=True, guild_id=GUILD_ID)])
+#                   permissions=[permissions.CommandPermission(id=ID, type=TYPE, permission=True, guild_id=GUILD_ID)])
 
 # Note: Please replace token, GUILD_ID, USER_ID and ROLE_NAME.
 
@@ -58,7 +58,7 @@ async def multirole(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
 
-# Guild Slash Command Example with Permission Decorator
+# Guild Slash Command Example with CommandPermission Decorator
 @bot.slash_command(guild_ids=[GUILD_ID], default_permission=False)
 @permissions.permission(user_id=USER_ID, permission=True)
 async def permission_decorator(ctx):
@@ -66,7 +66,7 @@ async def permission_decorator(ctx):
     await ctx.respond(f"Hello {ctx.author}!")
 
 # Guild Slash Command Example with Permissions Kwarg
-@bot.slash_command(guild_ids=[GUILD_ID], default_permission=False, permissions=[permissions.Permission(id=USER_ID, type=2, permission=True)])
+@bot.slash_command(guild_ids=[GUILD_ID], default_permission=False, permissions=[permissions.CommandPermission(id=USER_ID, type=2, permission=True)])
 async def permission_kwarg(ctx):
     """Say hello to the author"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
