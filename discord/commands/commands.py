@@ -799,7 +799,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def create_group(self, name, description) -> SlashCommandGroup:
+    def create_subgroup(self, name, description) -> SlashCommandGroup:
         if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")

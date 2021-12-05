@@ -11,7 +11,7 @@ class Example(commands.Cog):
 
     greetings = SlashCommandGroup("greetings", "Various greeting from cogs!")
 
-    international_greetings = greetings.subgroup(
+    international_greetings = greetings.create_subgroup(
         "international", "International greetings"
     )
 
