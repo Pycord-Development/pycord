@@ -1,4 +1,5 @@
 import re
+
 from setuptools import setup
 
 requirements = []
@@ -17,9 +18,9 @@ with open("discord/__init__.py") as f:
         raise RuntimeError("Could not grab version string")
 
 if not version:
-    raise RuntimeError('version is not set')
+    raise RuntimeError("version is not set")
 
-if version.endswith(('a', 'b', 'rc')):
+if version.endswith(("a", "b", "rc")):
     # append version identifier based on commit count
     try:
         import subprocess
@@ -31,7 +32,7 @@ if version.endswith(('a', 'b', 'rc')):
         p = subprocess.Popen(["git", "rev-parse", "--short", "HEAD"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if out:
-            version += "+g" + out.decode("utf-8").strip()
+            version += f"+g{out.decode('utf-8').strip()}"
     except Exception:
         pass
 
@@ -55,14 +56,14 @@ extras_require = {
 }
 
 packages = [
-    'discord',
-    'discord.types',
-    'discord.ui',
-    'discord.webhook',
-    'discord.commands',
-    'discord.ext.commands',
-    'discord.ext.tasks',
-    'discord.ext.menus',
+    "discord",
+    "discord.types",
+    "discord.ui",
+    "discord.webhook",
+    "discord.commands",
+    "discord.ext.commands",
+    "discord.ext.tasks",
+    "discord.ext.menus",
 ]
 
 
