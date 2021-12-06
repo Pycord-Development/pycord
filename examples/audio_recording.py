@@ -52,7 +52,13 @@ def get_encoding(args):
         except IndexError:
             return
     else:
-        # Make wav if you don't have ffmpeg
+        """
+        Currently Supported:
+
+        mp3
+        wave(.wav)
+        pcm
+        """
         return "mp3"
 
 

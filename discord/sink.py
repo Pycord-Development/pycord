@@ -168,7 +168,11 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
-    valid_encodings = ["wav", "mp3", "pcm"] # TODO: Add More Encoding Types
+    valid_encodings = [
+        "wav", 
+        "mp3", 
+        "pcm",
+    ] 
 
     def __init__(self, *, encoding="wav", output_path="", filters=None):
         if filters is None:
