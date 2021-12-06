@@ -1,5 +1,6 @@
 import discord
-from discord.commands import slash_command, Option
+from discord.commands import Option, slash_command
+
 bot = discord.Bot()
 
 COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
@@ -85,7 +86,9 @@ LOTS_OF_COLORS = [
     "yellowgreen",
 ]
 
-BASIC_ALLOWED = [...]  # this would normally be a list of discord user IDs for the purpose of this example
+BASIC_ALLOWED = [
+    ...
+]  # this would normally be a list of discord user IDs for the purpose of this example
 
 
 async def color_searcher(ctx: discord.AutocompleteContext):
@@ -93,7 +96,9 @@ async def color_searcher(ctx: discord.AutocompleteContext):
     In this example, we've added logic to only display any results in the returned list if the user's ID exists in the BASIC_ALLOWED list.
     This is to demonstrate passing a callback in the discord.utils.basic_autocomplete function.
     """
-    return [color for color in LOTS_OF_COLORS if ctx.interaction.user.id in BASIC_ALLOWED]
+    return [
+        color for color in LOTS_OF_COLORS if ctx.interaction.user.id in BASIC_ALLOWED
+    ]
 
 
 async def get_colors(ctx: discord.AutocompleteContext):
@@ -115,7 +120,9 @@ async def get_animals(ctx: discord.AutocompleteContext):
     elif picked_color == "blue":
         return ["blue jay", "blue whale"]
     elif picked_color == "indigo":
-        return ["eastern indigo snake"]  # needs to return an iterable even if only one item
+        return [
+            "eastern indigo snake"
+        ]  # needs to return an iterable even if only one item
     elif picked_color == "violet":
         return ["purple emperor butterfly", "orchid dottyback"]
     else:
@@ -129,14 +136,26 @@ async def autocomplete_example(
     animal: Option(str, "Pick an animal!", autocomplete=get_animals),
 ):
     """This demonstrates using the ctx.options parameter to to create slash command options that are dependent on the values entered for other options."""
-    await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for the animal.")
+    await ctx.respond(
+        f"You picked {color} for the color, which allowed you to choose {animal} for the animal."
+    )
 
 
 @bot.slash_command(name="ac_basic_example")
 async def autocomplete_basic_example(
     ctx: discord.ApplicationContext,
-    color: Option(str, "Pick a color from this big list", autocomplete=discord.utils.basic_autocomplete(color_searcher)),  # Demonstrates passing a callback to discord.utils.basic_autocomplete
-    animal: Option(str, "Pick an animal from this small list", autocomplete=discord.utils.basic_autocomplete(["snail", "python", "cricket", "orca"])),  # Demonstrates passing a static iterable discord.utils.basic_autocomplete
+    color: Option(
+        str,
+        "Pick a color from this big list",
+        autocomplete=discord.utils.basic_autocomplete(color_searcher),
+    ),  # Demonstrates passing a callback to discord.utils.basic_autocomplete
+    animal: Option(
+        str,
+        "Pick an animal from this small list",
+        autocomplete=discord.utils.basic_autocomplete(
+            ["snail", "python", "cricket", "orca"]
+        ),
+    ),  # Demonstrates passing a static iterable discord.utils.basic_autocomplete
 ):
     """This demonstrates using the discord.utils.basic_autocomplete helper function.
     For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
@@ -144,5 +163,6 @@ async def autocomplete_basic_example(
     While a small amount of values for `animal` are used in this example, iterables of any length can be passed to discord.utils.basic_autocomplete
     Note that the basic_autocomplete function itself will still only return a maximum of 25 items."""
     await ctx.respond(f"You picked {color} as your color, and {animal} as your animal!")
+
 
 bot.run("TOKEN")

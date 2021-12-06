@@ -26,21 +26,22 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import types
 import functools
 import inspect
+import re
+import types
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
 
-from ..enums import SlashCommandOptionType, ChannelType
-from ..member import Member
-from ..user import User
-from ..message import Message
 from .context import ApplicationContext, AutocompleteContext
-from ..utils import find, get_or_fetch, async_all
-from ..errors import ValidationError, ClientException
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .permissions import Permission
+from ..enums import SlashCommandOptionType, ChannelType
+from ..errors import ValidationError, ClientException
+from ..member import Member
+from ..message import Message
+from ..user import User
+from ..utils import find, get_or_fetch, async_all
 
 __all__ = (
     "_BaseCommand",
@@ -60,8 +61,8 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING: 
-    from ..interactions import Interaction
+if TYPE_CHECKING:
+    pass
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -459,6 +460,9 @@ class SlashCommand(ApplicationCommand):
                 option.name = p_name
             option._parameter_name = p_name
 
+            validate_chat_input_name(option.name)
+            validate_chat_input_description(option.description)
+
             final_options.append(option)
 
         return final_options
@@ -640,7 +644,7 @@ class Option:
             minmax_types = (int, float, type(None))
         else:
             minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]] # type: ignore
+        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
@@ -1123,24 +1127,33 @@ def command(**kwargs):
     """
     return application_command(**kwargs)
 
+
+docs = "https://discord.com/developers/docs"
+
+
 # Validation
 def validate_chat_input_name(name: Any):
+    # Must meet the regex ^[\w-]{1,32}$
     if not isinstance(name, str):
-        raise TypeError("Name of a command must be a string.")
-    if " " in name:
-        raise ValidationError("Name of a chat input command cannot have spaces.")
-    if not name.islower():
-        raise ValidationError("Name of a chat input command must be lowercase.")
-    if len(name) > 32 or len(name) < 1:
+        raise TypeError(f"Chat input command names and options must be of type str. Received {name}")
+    if not re.match(r"^[\w-]{1,32}$", name):
         raise ValidationError(
-            "Name of a chat input command must be less than 32 characters and non empty."
+            r'Chat input command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
+            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. Received "
+            f"{name}"
         )
+    if not 1 <= len(name) <= 32:
+        raise ValidationError(
+            f"Chat input command names and options must be 1-32 characters long. Received {name}"
+        )
+    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+        raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
 
 
 def validate_chat_input_description(description: Any):
     if not isinstance(description, str):
-        raise TypeError("Description of a command must be a string.")
-    if len(description) > 100 or len(description) < 1:
+        raise TypeError(f"Command description must be of type str. Received {description}")
+    if not 1 <= len(description) <= 100:
         raise ValidationError(
-            "Description of a chat input command must be less than 100 characters and non empty."
+            f"Command description must be 1-100 characters long. Received {description}"
         )
