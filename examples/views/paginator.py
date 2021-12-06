@@ -20,13 +20,27 @@ class PageTest(commands.Cog):
         return self.pages
 
     @slash_command(name="pagetest")
-    async def page(self, ctx):
+    async def pagetest(self, ctx):
         await ctx.defer()
         pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
         pages.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
         pages.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
         pages.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
         pages.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
+        await pages.send(ctx, ephemeral=False)
+
+    @slash_command(name="pagetest_custom")
+    async def pagetest_custom(self, ctx):
+        await ctx.defer()
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="Test Button, Does Nothing", row=1))
+        view.add_item(
+            discord.ui.Select(
+                placeholder="Test Select Menu, Does Nothing",
+                options=[discord.SelectOption(label="Example Option", value="Example Value", description="This menu does nothing!")],
+            )
+        )
+        pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
         await pages.send(ctx, ephemeral=False)
 
 
