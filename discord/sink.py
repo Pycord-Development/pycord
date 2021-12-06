@@ -55,7 +55,7 @@ default_filters = {
 class Filters:
     """Filters for sink
     
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
     
     """
     def __init__(self, **kwargs):
@@ -87,7 +87,7 @@ class Filters:
 class RawData:
     """Handles raw data from Discord so that it can be decrypted and decoded to be used.
     
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     """
 
@@ -111,7 +111,7 @@ class RawData:
 class AudioData:
     """Handles data that's been completely decrypted and decoded and is ready to be saved to file.
     
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     Raises
     ------
@@ -152,7 +152,7 @@ class AudioData:
 class Sink(Filters):
     """A Sink "stores" all the audio data.
 
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     Parameters
     ----------
@@ -160,6 +160,7 @@ class Sink(Filters):
         The encoding to use. Valid types include wav, mp3, and pcm (even though it's not an actual encoding).
     output_path: :class:`string`
         A path to where the audio files should be output.
+        
     Raises
     ------
     ClientException

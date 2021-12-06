@@ -681,7 +681,7 @@ class VoiceClient(VoiceProtocol):
 
         You must be connected to receive audio.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Parameters
         ---------
@@ -759,7 +759,7 @@ class VoiceClient(VoiceProtocol):
         Must be already recording.
         Raises
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         ------
         RecordingException
@@ -775,7 +775,7 @@ class VoiceClient(VoiceProtocol):
         """Pauses or unpauses the recording.
         Must be already recording.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Raises
         ------
