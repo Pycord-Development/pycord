@@ -129,7 +129,10 @@ class AudioData:
     def write(self, data):
         if self.finished:
             raise ClientException("This AudioData is already finished writing.")
-        self.file.write(data)
+        try:
+            self.file.write(data)
+        except ValueError:
+            pass
 
     def cleanup(self):
         if self.finished:
