@@ -4508,7 +4508,7 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
-                - :exe:`RecordingException`
+                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
