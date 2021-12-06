@@ -58,9 +58,6 @@ class Filters:
     .. versionadded:: 2.1
     
     """
-    # TODO: Deprecate Users Filter
-    # TODO: Make Docstring Better
-    # TODO: Filter for max size per file; audio can be split into multiple files
     def __init__(self, **kwargs):
         self.filtered_users = kwargs.get("users", default_filters["users"])
         self.seconds = kwargs.get("time", default_filters["time"])
@@ -164,9 +161,10 @@ class Sink(Filters):
     ------
     ClientException
         An invalid encoding type was specified.
+        Audio may only be formatted after recording is finished.
     """
 
-    valid_encodings = ["wav", "mp3", "pcm"]
+    valid_encodings = ["wav", "mp3", "pcm"] # TODO: Add More Encoding Types
 
     def __init__(self, *, encoding="wav", output_path="", filters=None):
         if filters is None:

@@ -46,6 +46,7 @@ import math
 import os.path
 import struct
 import sys
+import gc
 import threading
 import traceback
 import time
@@ -536,7 +537,7 @@ class DecodeManager(threading.Thread, _OpusStruct):
         self.client = client
         self.decode_queue = []
 
-        self.decoder = Decoder()
+        self.decoder = {}
 
         self._end_thread = threading.Event()
 
@@ -553,7 +554,10 @@ class DecodeManager(threading.Thread, _OpusStruct):
                 continue
 
             try:
-                data.decoded_data = self.decoder.decode(data.decrypted_data)
+                if data.decrypted_data is None:
+                    continue
+                else:
+                    data.decoded_data = self.get_decoder(data.ssrc).decode(data.decrypted_data)
             except OpusError:
                 print("Error occurred while decoding opus frame.")
                 continue
@@ -563,7 +567,19 @@ class DecodeManager(threading.Thread, _OpusStruct):
     def stop(self):
         while self.decoding:
             time.sleep(0.1)
+            self.decoder = {}
+            gc.collect()
+            print("Decoder Process Killed")
         self._end_thread.set()
+    
+
+    def get_decoder(self, ssrc):
+        d = self.decoder.get(ssrc)
+        if d is None:
+            self.decoder[ssrc] = Decoder()
+            return self.decoder[ssrc]
+        else:
+            return d
 
     @property
     def decoding(self):

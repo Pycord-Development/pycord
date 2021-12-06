@@ -1,7 +1,6 @@
 import discord
 import os
 
-
 def vc_required(func):
     async def get_vc(self, msg):
         vc = await self.get_vc(msg)
@@ -53,6 +52,7 @@ def get_encoding(args):
         except IndexError:
             return
     else:
+        # Make wav if you don't have ffmpeg
         return "mp3"
 
 
