@@ -32,14 +32,34 @@ my_list = [
 ]
 ```
 
+Then make a list of User id's which can use this:
+
+```py
+allowed_users_list = [
+    "..."
+    "..."
+]
+```
+
 Then make a function which would search for results in the list:
 
 ```py
 async def list_search(ctx: discord.AutocompleteContext):
     """Return's A List Of Autocomplete Results"""
     return [
-        color for color in LOTS_OF_COLORS if ctx.interaction.user.id in BASIC_ALLOWED
+        color for color in my_list if ctx.interaction.user.id in allowed_users_list
     ]
+```
+
+Now you can make your command 
+
+```py
+@bot.slash_command(name="ac_example")
+async def autocomplete_example(
+    ctx: discord.ApplicationContext,
+    choice: Option(str, "what will be your choice!", autocomplete=list_search),
+):
+    await ctx.respond(f"You picked {choice}!")
 ```
 
 ## Context Menu's
@@ -56,7 +76,11 @@ async def mention(ctx, member: discord.Member):  # User Commands return the memb
     await ctx.respond(f"{ctx.author.name} just mentioned {member.mention}!")
 ```
 
-
+And it should return the following:
+```{eval-rst}
+.. image:: /images/guide/user_command.png
+    :alt: User Command Image
+```
 
 ### Message Commands
 Message Commands are again Simular to slash & user commands and you would make them like so:
@@ -65,4 +89,10 @@ Message Commands are again Simular to slash & user commands and you would make t
 @bot.message_command(name="Show Message ID") # Creates a global message command
 async def message_id(ctx, message: discord.Message): # Message commands return the message
     await ctx.respond(f"{ctx.author.name}, here's the message id: {message.id}!")
+```
+
+And it should return with the following:
+```{eval-rst}
+.. image:: /images/guide/message_command.png
+    :alt: Message Command Image
 ```
