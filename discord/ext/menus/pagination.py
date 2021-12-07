@@ -275,8 +275,8 @@ class Paginator(discord.ui.View):
 
         Returns
         --------
-        :class:`~discord.Message`
-            The message that was sent.
+        :class:`~discord.abc.Messageable`
+            The messageable channel the message was sent to.
         """
 
         if not isinstance(messageable, abc.Messageable):
@@ -287,20 +287,20 @@ class Paginator(discord.ui.View):
         if isinstance(messageable, (ApplicationContext, Context)):
             self.user = messageable.author
 
-        return (
+        if isinstance(messageable, ApplicationContext):
             await messageable.respond(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
                 ephemeral=ephemeral,
             )
-            if isinstance(messageable, ApplicationContext)
-            else await messageable.send(
+        else:
+            await messageable.send(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
             )
-        )
+        return messageable
 
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
@@ -310,21 +310,23 @@ class Paginator(discord.ui.View):
         interaction: :class:`discord.Interaction`
             The interaction associated with this response.
         ephemeral: :class:`bool`
-            Choose whether or not the message is ephemeral. Only works with slash commands.
+            Choose whether or not the message is ephemeral.
 
         Returns
         --------
-        :class:`~discord.Message`
-            The message that was sent.
+        :class:`~discord.Interaction`
+            The interaction associated with this response.
         """
         page = self.pages[0]
         self.user = interaction.user
-        return (
+
+        if interaction.response.is_done():
             await interaction.followup.send(
                 content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
             )
-            if interaction.response.is_done()
-            else interaction.response.send_message(
+
+        else:
+            await interaction.response.send_message(
                 content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
             )
-        )
+        return interaction
