@@ -1,3 +1,4 @@
+```{eval-rst}
 :orphan:
 
 .. currentmodule:: discord
@@ -203,3 +204,4 @@ Under the original system this would result in 2 requests to fetch the member li
 Unfortunately due to this change being required from Discord there is nothing that the library can do to mitigate this.
 
 If you truly dislike the direction Discord is going with their API, you can contact them via `support <https://dis.gd/contact>`_.
+```

@@ -26,7 +26,7 @@ Getting started
 Is this your first time using the library? This is the place to get started!
 
 - **First steps:** :doc:`intro` | :doc:`quickstart` | :doc:`logging` | :doc:`guide/index`
-- **Working with Discord:** :doc:`discord` | :doc:`intents`
+- **Working with Discord:** :doc:`discord` | :doc:`guide/misc/intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
 Getting help

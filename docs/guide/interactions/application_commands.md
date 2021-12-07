@@ -1,3 +1,4 @@
+<!--TODO: Make Into Sperate Files-->
 # Application Commands
 The Application Command Guide!
 
@@ -85,6 +86,13 @@ And it should return the following:
 ### Message Commands
 Message Commands are again Simular to slash & user commands and you would make them like so:
 
+```{eval-rst}
+
+.. warning::
+
+    Message Commands have to take in message
+
+```
 ```py
 @bot.message_command(name="Show Message ID") # Creates a global message command
 async def message_id(ctx, message: discord.Message): # Message commands return the message
