@@ -216,7 +216,7 @@ class Paginator(discord.ui.View):
 
         Returns
         -------
-        :class:`Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+        Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
             The dictionary of buttons that was updated.
         """
         for key, button in self.buttons.items():
