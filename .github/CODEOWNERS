@@ -26,6 +26,9 @@
 # Documentation
 /docs/ @RPSMain @Lulalaby
 
+# Examples 
+/examples/ @Grace-codes @Dorukyum @Middledot
+
 # Abc
 /discord/abc.py @Grace-codes @Middledot @Dorukyum
 
