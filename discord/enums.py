@@ -627,6 +627,7 @@ class SlashCommandOptionType(Enum):
     role = 8
     mentionable = 9
     number = 10
+    # TODO: Implement attachments
     attachment = 11
 
     @classmethod
