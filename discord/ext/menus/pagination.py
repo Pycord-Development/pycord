@@ -74,7 +74,7 @@ class Paginator(discord.ui.View):
         Zero-indexed value showing the total number of pages
     buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
         Dictionary containing the :class:`~PaginatorButton` objects included in this Paginator
-    user: Optional[Union[:class:`User`, :class:`Member`]]
+    user: Optional[Union[:class:`discord.User`, :class:`discord.Member`]]
         The user or member that invoked the Paginator.
 
     Parameters
@@ -87,7 +87,7 @@ class Paginator(discord.ui.View):
         Choose whether to show the page indicator
     author_check: :class:`bool`
         Choose whether or not only the original user of the command can change pages
-    custom_view: :class:`discord.ui.View`
+    custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination buttons
     """
 
@@ -174,7 +174,11 @@ class Paginator(discord.ui.View):
         interaction: :class:`discord.Interaction`
             The interaction which called the Paginator
         page_number: :class:`int`
-            The page to display. Note that this is zero-indexed everywhere internally, but appears as one-indexed when shown to the user
+            The page to display.
+
+            .. note::
+
+            Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
 
         Returns
         ---------
@@ -317,7 +321,7 @@ class Paginator(discord.ui.View):
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
 
-        
+
         Parameters
         ------------
         interaction: :class:`discord.Interaction`
