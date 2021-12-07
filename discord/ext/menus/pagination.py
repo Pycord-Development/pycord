@@ -266,12 +266,13 @@ class Paginator(discord.ui.View):
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
 
+
         Parameters
         ------------
         messageable: :class:`discord.abc.Messageable`
             The messageable channel to send to.
         ephemeral: :class:`bool`
-            Choose whether or not the message is ephemeral. Only works with slash commands.
+            Choose whether the message is ephemeral or not. Only works with slash commands.
 
         Returns
         --------
@@ -305,6 +306,7 @@ class Paginator(discord.ui.View):
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
 
+        
         Parameters
         ------------
         interaction: :class:`discord.Interaction`
