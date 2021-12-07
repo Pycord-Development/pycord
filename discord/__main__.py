@@ -286,7 +286,7 @@ def add_newcog_args(subparser: argparse._SubParsersAction) -> None:
     parser.add_argument('--full', help='add all special methods as well', action='store_true')
 
 def parse_args() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
-    parser = argparse.ArgumentParser(prog='discord', description='Tools for helping with discord.py')
+    parser = argparse.ArgumentParser(prog='discord', description='Tools for helping with Pycord')
     parser.add_argument('-v', '--version', action='store_true', help='shows the library version')
     parser.set_defaults(func=core)
 
