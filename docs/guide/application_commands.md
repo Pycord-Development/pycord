@@ -78,7 +78,7 @@ async def mention(ctx, member: discord.Member):  # User Commands return the memb
 
 And it should return the following:
 ```{eval-rst}
-.. image:: /images/user_command.png
+.. image:: /images/guide/user_command.png
     :alt: User Command Image
 ```
 
@@ -93,6 +93,6 @@ async def message_id(ctx, message: discord.Message): # Message commands return t
 
 And it should return with the following:
 ```{eval-rst}
-.. image:: /images/message_command.png
+.. image:: /images/guide/message_command.png
     :alt: Message Command Image
 ```
