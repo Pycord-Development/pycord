@@ -37,3 +37,12 @@
 
 # raw_models
 /discord/raw_models.py @nerdguyahmad
+
+# Interactions
+/discord/interactions.py @plun1331 @Dorukyum
+
+# Utils
+/discord/utils.py @Lulalaby @Dorukyum
+
+# Welcome Screens
+/discord/welcome_screen.py @nerdguyahmed @Prince2347X @Middledot
