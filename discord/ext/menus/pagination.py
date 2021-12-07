@@ -64,10 +64,21 @@ class PaginatorButton(discord.ui.Button):
 
 
 class Paginator(discord.ui.View):
-    """Creates a paginator for a message that is navigated with buttons.
+    """Creates a paginator which can be sent as a message and uses buttons for navigation.
+
+    Attributes
+    ----------
+    current_page: :class:`int`
+        Zero-indexed value showing the current page number
+    page_count: :class:`int`
+        Zero-indexed value showing the total number of pages
+    buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+        Dictionary containing the :class:`~PaginatorButton` objects included in this Paginator
+    user: Optional[Union[:class:`User`, :class:`Member`]]
+        The user or member that invoked the Paginator.
 
     Parameters
-    ------------
+    ----------
     pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
         Your list of strings or embeds to paginate
     show_disabled: :class:`bool`
@@ -271,7 +282,7 @@ class Paginator(discord.ui.View):
         messageable: :class:`discord.abc.Messageable`
             The messageable channel to send to.
         ephemeral: :class:`bool`
-            Choose whether or not the message is ephemeral. Only works with slash commands.
+            Choose whether the message is ephemeral or not. Only works with slash commands.
 
         Returns
         --------
@@ -310,7 +321,7 @@ class Paginator(discord.ui.View):
         interaction: :class:`discord.Interaction`
             The interaction associated with this response.
         ephemeral: :class:`bool`
-            Choose whether or not the message is ephemeral.
+            Choose whether the message is ephemeral or not.
 
         Returns
         --------
