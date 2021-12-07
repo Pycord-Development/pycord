@@ -29,7 +29,19 @@ from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
 
-class PaginateButton(discord.ui.Button):
+class PaginatorButton(discord.ui.Button):
+    """Creates a button used to navigate the paginator.
+
+    Parameters
+    ----------
+
+    button_type: :class:`str`
+        The type of button being created.
+        Must be one of ``first``, ``prev``, ``next``, or ``last``.
+    paginator: :class:`Paginator`
+        The Paginator class where this button will be used
+    """
+
     def __init__(self, label, emoji, style, disabled, button_type, paginator):
         super().__init__(label=label, emoji=emoji, style=style, disabled=disabled, row=0)
         self.label = label
@@ -79,7 +91,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.buttons = {
             "first": {
-                "object": PaginateButton(
+                "object": PaginatorButton(
                     label="<<",
                     style=discord.ButtonStyle.blurple,
                     emoji=None,
@@ -90,7 +102,7 @@ class Paginator(discord.ui.View):
                 "hidden": True,
             },
             "prev": {
-                "object": PaginateButton(
+                "object": PaginatorButton(
                     label="<",
                     style=discord.ButtonStyle.red,
                     emoji=None,
@@ -110,7 +122,7 @@ class Paginator(discord.ui.View):
                 "hidden": False,
             },
             "next": {
-                "object": PaginateButton(
+                "object": PaginatorButton(
                     label=">",
                     style=discord.ButtonStyle.green,
                     emoji=None,
@@ -121,7 +133,7 @@ class Paginator(discord.ui.View):
                 "hidden": True,
             },
             "last": {
-                "object": PaginateButton(
+                "object": PaginatorButton(
                     label=">>",
                     style=discord.ButtonStyle.blurple,
                     emoji=None,
@@ -153,8 +165,9 @@ class Paginator(discord.ui.View):
 
     def customize_button(
         self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray
-    ) -> Union[PaginateButton, bool]:
+    ) -> Union[PaginatorButton, bool]:
         """Allows you to easily customize the various pagination buttons.
+
         Parameters
         ----------
         button_name: :class:`str`
@@ -168,13 +181,13 @@ class Paginator(discord.ui.View):
 
         Returns
         -------
-        :class:`~PaginateButton`
+        :class:`~PaginatorButton`
             The button that was customized
         """
 
         if button_name not in self.buttons.keys():
             return False
-        button: PaginateButton = self.buttons[button_name]["object"]
+        button: PaginatorButton = self.buttons[button_name]["object"]
         button.label = button_label
         button.emoji = button_emoji
         button.style = button_style
@@ -226,14 +239,14 @@ class Paginator(discord.ui.View):
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
-        
+
         Parameters
         ------------
         messageable: :class:`discord.abc.Messageable`
             The messageable channel to send to.
         ephemeral: :class:`bool`
             Choose whether or not the message is ephemeral. Only works with slash commands.
-        
+
         Returns
         --------
         :class:`~discord.Message`
@@ -265,14 +278,14 @@ class Paginator(discord.ui.View):
 
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
-        
+
         Parameters
         ------------
         interaction: :class:`discord.Interaction`
             The interaction associated with this response.
         ephemeral: :class:`bool`
             Choose whether or not the message is ephemeral. Only works with slash commands.
-        
+
         Returns
         --------
         :class:`~discord.Message`

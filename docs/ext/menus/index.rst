@@ -71,3 +71,6 @@ API Reference
 
 .. autoclass:: discord.ext.menus.Paginator
     :members:
+
+.. autoclass:: discord.ext.menus.PaginatorButton
+    :members:
