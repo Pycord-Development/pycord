@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import List, Union
+from typing import Dict, List, Optional, Union
 
 import discord
 from discord import abc
@@ -81,7 +81,12 @@ class Paginator(discord.ui.View):
     """
 
     def __init__(
-        self, pages: Union[List[str], List[discord.Embed]], show_disabled=True, show_indicator=True, author_check=True, custom_view: discord.ui.View = None
+        self,
+        pages: Union[List[str], List[discord.Embed]],
+        show_disabled=True,
+        show_indicator=True,
+        author_check=True,
+        custom_view: Optional[discord.ui.View] = None,
     ):
         super().__init__()
         self.pages = pages
@@ -151,7 +156,20 @@ class Paginator(discord.ui.View):
         self.user = None
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
-        """Updates the interaction response message to show the specified page number."""
+        """Updates the interaction response message to show the specified page number.
+
+        Parameters
+        ----------
+        interaction: :class:`discord.Interaction`
+            The interaction which called the Paginator
+        page_number: :class:`int`
+            The page to display. Note that this is zero-indexed everywhere internally, but appears as one-indexed when shown to the user
+
+        Returns
+        ---------
+        :class:`~Paginator`
+            The Paginator class
+        """
         self.update_buttons()
         page = self.pages[page_number]
         await interaction.response.edit_message(
@@ -193,8 +211,14 @@ class Paginator(discord.ui.View):
         button.style = button_style
         return button
 
-    def update_buttons(self):
-        """Updates the display state of the buttons (disabled/hidden)"""
+    def update_buttons(self) -> Dict:
+        """Updates the display state of the buttons (disabled/hidden)
+
+        Returns
+        -------
+        :class:`Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+            The dictionary of buttons that was updated.
+        """
         for key, button in self.buttons.items():
             if key == "first":
                 if self.current_page <= 1:
@@ -236,6 +260,8 @@ class Paginator(discord.ui.View):
         if self.custom_view:
             for item in self.custom_view.children:
                 self.add_item(item)
+
+        return self.buttons
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
