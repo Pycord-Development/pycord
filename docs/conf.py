@@ -41,6 +41,7 @@ extensions = [
     "attributetable",
     "resourcelinks",
     "nitpick_file_ignorer",
+    "myst_parser",
 ]
 
 autodoc_member_order = "bysource"
@@ -70,7 +71,27 @@ rst_prolog = """
 templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = ".rst"
+source_suffix = {
+    '.rst': 'restructuredtext', # Used For The Other Docs
+    '.md': 'markdown', # Used ONLY In the Guide For Faster Making Time
+}
+
+# MyST Parser Extensions For Custom MarkDown Syntax 
+# https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+myst_enable_extensions = [
+    "amsmath",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "substitution",
+    "tasklist",
+]
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'

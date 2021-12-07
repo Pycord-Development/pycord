@@ -50,6 +50,7 @@ extras_require = {
         "sphinx==4.3.0",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
+        "myst-parser",
     ],
     "speed": [
         "orjson>=3.5.4",
