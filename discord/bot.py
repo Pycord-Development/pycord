@@ -118,11 +118,8 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-        try:
-            if getattr(command, "parent") is not None:
-                raise TypeError("The provided command is a sub-command of group")
-        except AttributeError:
-            pass
+        if isinstance(command, SlashCommand) and command.is_subcommand:
+            raise TypeError("The provided command is a sub-command of group")
 
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
@@ -514,7 +511,6 @@ class ApplicationCommandMixin:
         """
 
         def decorator(func) -> ApplicationCommand:
-            kwargs.setdefault("parent", self)
             result = command(**kwargs)(func)
             self.add_application_command(result)
             return result
