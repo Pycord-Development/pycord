@@ -1,0 +1,39 @@
+# Biggest Contributors To Files/Folders Will be automatically requested review
+
+*       @BobDotCom @CodeWithSwastik
+
+# Commands Module
+/discord/commands/ @Lulalaby @Dorukyum @Prince2347X
+
+# discord.Bot
+/discord/bot.py @Dorukyum @Middledot @nerdguyahmad @TheGamerX20
+
+# discord.Cog
+/discord/cog.py @Middledot @Makiyu @Dorukyum
+
+# Views
+/discord/ui/view.py @Dorukyum
+
+# HTTP
+/discord/http.py @Lulalaby @Middledot
+
+# Flags
+/discord/flags.py @Lulalaby @Dorukyum
+
+# Guild
+/discord/guild.py @Lulalaby @nerdguyahmad @Dorukyum
+
+# Documentation
+/docs/ @RPSMain
+
+# Abc
+/discord/abc.py @Grace-codes @Middledot @Dorukyum
+
+# __main__ 
+/discord/__main__.py @Middledot
+
+# Enums
+/discord/enums.py @Lulalaby @Middledot @Dorukyum
+
+# raw_models
+/discord/raw_models.py @nerdguyahmad
