@@ -4,9 +4,9 @@ The Official Guide For Pycord
 # Guide List
 
 ```{eval-rst}
-Application Guide :doc:`application_commands`
+:doc:`application_commands` Guide
 
-Views Guide :doc:`views`
+:doc:`views` Guide
 
-Webhook Guide :doc:`webhooks`
+:doc:`webhooks` Guide
 ```
