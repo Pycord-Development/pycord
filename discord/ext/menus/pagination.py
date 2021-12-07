@@ -277,6 +277,7 @@ class Paginator(discord.ui.View):
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
 
+
         Parameters
         ------------
         messageable: :class:`discord.abc.Messageable`
@@ -316,6 +317,7 @@ class Paginator(discord.ui.View):
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
 
+        
         Parameters
         ------------
         interaction: :class:`discord.Interaction`
