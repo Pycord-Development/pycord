@@ -178,7 +178,7 @@ class Paginator(discord.ui.View):
 
             .. note::
 
-            Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
+                Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
 
         Returns
         ---------
