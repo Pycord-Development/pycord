@@ -14,7 +14,7 @@ We would suggest you get the basic knowledge of Python before starting there is 
 - How to solve `NameError` or `SyntaxError` exceptions.
 - How to read and understand tracebacks.
 
-This list **doesn't** fully cover everything you should know before using Pycord, We would suggest you atleast know these before atempting to make a bot in Pycord.
+This list **doesn't** fully cover everything you should know before using Pycord, We would suggest you at least know these before attempting to make a bot in Pycord.
 
 ## Guide List
 
