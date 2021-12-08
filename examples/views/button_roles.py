@@ -73,7 +73,7 @@ class ButtonRoleCog(commands.Cog):
 
         # loop through the list of roles and add a new button to the view for each role
         for role_id in role_ids:
-            # get the role the guild by ID
+            # Get the role the guild by ID
             role = ctx.guild.get_role(role_id)
             view.add_item(RoleButton(role))
 
@@ -86,15 +86,15 @@ class ButtonRoleCog(commands.Cog):
         it will be loaded and the bot will start watching for button clicks again.
         """
 
-        # we recreate the view as we did in the /post command
+        # We recreate the view as we did in the /post command
         view = discord.ui.View(timeout=None)
-        # make sure to set the guild ID here to whatever server you want the buttons in
+        # Make sure to set the guild ID here to whatever server you want the buttons in
         guild = self.bot.get_guild(...)
         for role_id in role_ids:
             role = guild.get_role(role_id)
             view.add_item(RoleButton(role))
 
-        # add the view to the bot so it will watch for button interactions
+        # Add the view to the bot so it will watch for button interactions
         self.bot.add_view(view)
 
 
