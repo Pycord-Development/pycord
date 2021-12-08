@@ -19,17 +19,21 @@ This list **doesn't** fully cover everything you should know before using Pycord
 ## Guide List
 
 ```{eval-rst}
-:doc:`misc/making-a-bot`
+:doc:`starting-out/installing`
 
-:doc:`misc/intents`
-
-:doc:`misc/logging`
+:doc:`starting-out/making-a-bot`
 
 :doc:`interactions/slash_commands` Guide
 
 :doc:`interactions/context_menus` Guide
 
-:doc:`interactions/views` Guide
+:doc:`interactions/button_views` Guide
+
+:doc:`interactions/select_views` Guide
+
+:doc:`misc/intents`
+
+:doc:`misc/logging`
 
 :doc:`misc/webhooks` Guide
 ```
