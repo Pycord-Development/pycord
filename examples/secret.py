@@ -39,14 +39,14 @@ def create_overwrites(ctx, *objects):
         ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
     )
 
-    # makes sure the client is always allowed to view the channel.
+    # Makes sure the client is always allowed to view the channel.
     overwrites[ctx.guild.me] = discord.PermissionOverwrite(view_channel=True)
 
     return overwrites
 
 
-# since these commands rely on guild related features,
-# it is best to lock it to be guild-only.
+# Since these commands rely on guild related features,
+# It is best to lock it to be guild-only.
 @secret.command()
 @commands.guild_only()
 async def text(
@@ -95,11 +95,11 @@ async def emoji(
     are allowed to use.
     """
 
-    # fetch the emoji asset and read it as bytes.
+    # Fetch the emoji asset and read it as bytes.
     emoji_bytes = await emoji.read()
 
-    # the key parameter here is `roles`, which controls
-    # what roles are able to use the emoji.
+    # The key parameter here is `roles`, which controls
+    # What roles are able to use the emoji.
     await ctx.guild.create_custom_emoji(
         name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business."
     )
