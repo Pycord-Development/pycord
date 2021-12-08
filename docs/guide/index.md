@@ -23,11 +23,12 @@ Example some commands you can use:
 
 - name
    - The name of your Cog
-- --full
-   - Get Full Features Of Cogs
 
 - directory 
-   - Cogs Directory 
+   - Cogs Directory
+
+- --full
+   - Get Full Features Of Cogs
 
 - --class-name
    - Name of Your Cog Class 
