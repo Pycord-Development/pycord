@@ -23,17 +23,17 @@ def create_overwrites(ctx, *objects):
     of an object, whether it be a `discord.Role` or a `discord.Member`.
 
     In this case, the `view_channel` permission is being used to hide the channel
-    from being viewed by whoever does not meet the criteria, thus creating a
+    From being viewed by whoever does not meet the criteria, thus creating a
     secret channel.
     """
 
-    # a dict comprehension is being utilised here to set the same permission overwrites
-    # for each `discord.Role` or `discord.Member`.
+    # A dict comprehension is being utilised here to set the same permission overwrites
+    # For each `discord.Role` or `discord.Member`.
     overwrites = {
         obj: discord.PermissionOverwrite(view_channel=True) for obj in objects
     }
 
-    # prevents the default role (@everyone) from viewing the channel
+    # Prevents the default role (@everyone) from viewing the channel
     # if it isn't already allowed to view the channel.
     overwrites.setdefault(
         ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
