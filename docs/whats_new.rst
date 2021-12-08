@@ -16,7 +16,7 @@ in specific versions.
 v2.0.0
 ------
 
-The changeset for this version are too big to be listed here, for more information please
+The changeset for this version is too big to be listed here, for more information please
 see :ref:`the migrating page <migrating_2_0>`.
 
 
