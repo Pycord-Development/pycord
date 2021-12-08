@@ -1,5 +1,5 @@
 # Webhooks
-The Guide To Using Webhooks In Pycord <!--TODO: Expand-->
+The Guide To Using Webhooks In Pycord
 
 ## A Basic Webhook
 
