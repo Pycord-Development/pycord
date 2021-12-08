@@ -301,7 +301,7 @@ v1.4.2
 This is a maintenance release with backports from :ref:`vp1p5p0`.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :meth:`Guild.by_category` not showing certain channels.
 - Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` (:issue:`5772`)
@@ -316,7 +316,7 @@ Bug Fixes
 - |tasks| Fix tasks extending the next iteration on handled exceptions (:issue:`5762`, :issue:`5763`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Remove caching layer from :attr:`AutoShardedClient.shards`. This was causing issues if queried before launching shards.
 - |tasks| Lazily fetch the event loop to prevent surprises when changing event loop policy (:issue:`5808`)
@@ -324,10 +324,10 @@ Miscellaneous
 .. _vp1p4p1:
 
 v1.4.1
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Properly terminate the connection when :meth:`Client.close` is called (:issue:`5207`)
 - Fix error being raised when clearing embed author or image when it was already cleared (:issue:`5210`, :issue:`5212`)
@@ -336,12 +336,12 @@ Bug Fixes
 .. _vp1p4p0:
 
 v1.4.0
---------
+------
 
 Another version with a long development time. Features like Intents are slated to be released in a v1.5 release. Thank you for your patience!
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add support for :class:`AllowedMentions` to have more control over what gets mentioned.
     - This can be set globally through :attr:`Client.allowed_mentions`
@@ -398,7 +398,7 @@ New Features
 
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :attr:`PartialEmoji.url` reads leading to a failure (:issue:`4015`, :issue:`4016`)
 - Allow :meth:`abc.Messageable.history` to take a limit of ``1`` even if ``around`` is passed (:issue:`4019`)
@@ -426,7 +426,7 @@ Bug Fixes
 
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - The :attr:`Member.roles` cache introduced in v1.3 was reverted due to issues caused (:issue:`4087`, :issue:`4157`)
 - :class:`Webhook` objects are now comparable and hashable (:issue:`4182`)
@@ -446,20 +446,20 @@ Miscellaneous
 .. _vp1p3p4:
 
 v1.3.4
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix an issue with channel overwrites causing multiple issues including crashes (:issue:`5109`)
 
 .. _vp1p3p3:
 
 v1.3.3
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Change default WS close to 4000 instead of 1000.
     - The previous close code caused sessions to be invalidated at a higher frequency than desired.
@@ -469,12 +469,12 @@ Bug Fixes
 .. _vp1p3p2:
 
 v1.3.2
----------
+------
 
 Another minor bug fix release.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Higher the wait time during the ``GUILD_CREATE`` stream before ``on_ready`` is fired for :class:`AutoShardedClient`.
 - :func:`on_voice_state_update` now uses the inner ``member`` payload which should make it more reliable.
@@ -487,18 +487,18 @@ Bug Fixes
 .. _vp1p3p1:
 
 v1.3.1
---------
+------
 
 Minor bug fix release.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix fetching invites in guilds that the user is not in.
 - Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:issue:`2531`)
 
 Miscellaneous
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Fix compatibility warnings when using the Python 3.9 alpha.
 - Change the unknown event logging from WARNING to DEBUG to reduce noise.
@@ -506,12 +506,12 @@ Miscellaneous
 .. _vp1p3p0:
 
 v1.3.0
---------
+------
 
 This version comes with a lot of bug fixes and new features. It's been in development for a lot longer than was anticipated!
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add :meth:`Guild.fetch_members` to fetch members from the HTTP API. (:issue:`2204`)
 - Add :meth:`Guild.fetch_roles` to fetch roles from the HTTP API. (:issue:`2208`)
@@ -577,7 +577,7 @@ New Features
 - |tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` property. (:issue:`2305`)
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with permission resolution sometimes failing for guilds with no owner.
 - Tokens are now stripped upon use. (:issue:`2135`)
@@ -601,7 +601,7 @@ Bug Fixes
 - |commands| :meth:`Context.send_help <.ext.commands.Context.send_help>` now properly propagates to the :meth:`HelpCommand.on_help_command_error <.ext.commands.HelpCommand.on_help_command_error>` handler.
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - The library now fully supports Python 3.8 without warnings.
 - Bump the dependency of ``websockets`` to 8.0 for those who can use it. (:issue:`2453`)
@@ -625,20 +625,20 @@ Miscellaneous
 .. _vp1p2p5:
 
 v1.2.5
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix a bug that caused crashes due to missing ``animated`` field in Emoji structures in reactions.
 
 .. _vp1p2p4:
 
 v1.2.4
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix a regression when :attr:`Message.channel` would be ``None``.
 - Fix a regression where :attr:`Message.edited_at` would not update during edits.
@@ -650,10 +650,10 @@ Bug Fixes
 .. _vp1p2p3:
 
 v1.2.3
--------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix an AttributeError when accessing :attr:`Member.premium_since` in :func:`on_member_update`. (:issue:`2213`)
 - Handle :exc:`asyncio.CancelledError` in :meth:`abc.Messageable.typing` context manager. (:issue:`2218`)
@@ -664,20 +664,20 @@ Bug Fixes
 .. _vp1p2p2:
 
 v1.2.2
--------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Audit log related attribute access have been fixed to not error out when they shouldn't have.
 
 .. _vp1p2p1:
 
 v1.2.1
--------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - :attr:`User.avatar_url` and related attributes no longer raise an error.
 - More compatibility shims with the ``enum.Enum`` code.
@@ -685,12 +685,12 @@ Bug Fixes
 .. _vp1p2p0:
 
 v1.2.0
---------
+------
 
 This update mainly brings performance improvements and various nitro boosting attributes (referred to in the API as "premium guilds").
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add :attr:`Guild.premium_tier` to query the guild's current nitro boost level.
 - Add :attr:`Guild.emoji_limit`, :attr:`Guild.bitrate_limit`, :attr:`Guild.filesize_limit` to query the new limits of a guild when taking into consideration boosting.
