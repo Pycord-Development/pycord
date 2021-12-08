@@ -11,7 +11,7 @@ https://github.com/Pycord-Development/pycord/blob/master/examples/views/persiste
 Make sure to load this cog when your bot starts!
 """
 
-# this is the list of role IDs that will be added as buttons.
+# This is the list of role IDs that will be added as buttons.
 role_ids = [...]
 
 
@@ -32,24 +32,24 @@ class RoleButton(discord.ui.Button):
             The interaction object that was created when the user clicked on the button
         """
 
-        # figure out who clicked the button
+        # Figure out who clicked the button
         user = interaction.user
-        # get the role this button is for (stored in the custom ID)
+        # Get the role this button is for (stored in the custom ID)
         role = interaction.guild.get_role(int(self.custom_id))
 
         if role is None:
-            # if this role doesn't exist, ignore
-            # you can do some error handling here
+            # If this role doesn't exist, ignore
+            # You can do some error handling here
             return
 
-        # passed all checks
-        # add the role and send a response to the uesr ephemerally (hidden to other users)
+        # Passed all checks
+        # Add the role and send a response to the uesr ephemerally (hidden to other users)
         if role not in user.roles:
-            # give the user the role if they don't already have it
+            # Give the user the role if they don't already have it
             await user.add_roles(role)
             await interaction.response.send_message(f"🎉 You have been given the role {role.mention}", ephemeral=True)
         else:
-            # else, take the role from the user
+            # Else, Take the role from the user
             await user.remove_roles(role)
             await interaction.response.send_message(f"❌ The {role.mention} role has been taken from you", ephemeral=True)
 
@@ -62,13 +62,13 @@ class ButtonRoleCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # make sure to set the guild ID here to whatever server you want the buttons in
+    # Make sure to set the guild ID here to whatever server you want the buttons in
     @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
         """Slash command to post a new view with a button for each role
         """
 
-        # timeout is None because we want this view to be persistent
+        # Timeout is None because we want this view to be persistent
         view = discord.ui.View(timeout=None)
 
         # loop through the list of roles and add a new button to the view for each role
