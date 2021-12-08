@@ -29,7 +29,7 @@ my_list = [
 ]
 ```
 
-Then make a list of User id's which can use this:
+Then make a list of User ID's which can use this:
 
 ```py
 allowed_users_list = [
