@@ -50,3 +50,6 @@ async def my_command_name(ctx):
 And thats it that is all of selects in Pycord!
 
 We hope you learn't how to make selects or advanced your knowledge to with this.
+
+
+### How to disable a select

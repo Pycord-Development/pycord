@@ -58,3 +58,5 @@ async def autocomplete_example(
 ):
     await ctx.respond(f"You picked {choice}!")
 ```
+
+### Managing Slash Command Permissions
