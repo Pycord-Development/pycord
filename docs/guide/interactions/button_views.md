@@ -1,10 +1,4 @@
-# Views
-The Guide To Using Views In Pycord!
-
-## Select Menus
-A Primer On Select Menus For Beginners & Advanced Users Of Pycord
-
-## Button Menus
+# Button Menus
 A Primer For Beginners & Advanced Users To Buttons In Pycord
 
 ### Basic Reply Button
