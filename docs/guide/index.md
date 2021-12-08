@@ -6,6 +6,32 @@ Pycord comes with automatic generation of files using your command prompt.
 
 Example some commands you can use:
 
+``python -m py-cord newbot (args)``
+
+#### Args:
+
+- name
+  - Your Project Name
+- --sharded
+   - If your bot should be sharded or not
+- --prefix
+   - Your Bot Prefix
+
+``python -m py-cord newcog (args)``
+
+#### Args:
+
+- name
+   - The name of your Cog
+- --full
+   - Get Full Features Of Cogs
+
+- directory 
+   - Cogs Directory 
+
+- --class-name
+   - Name of Your Cog Class 
+
 ## Before you begin...
 Pycord has a lot of features which would be too advanced for a person just starting out with python,
 We would suggest you get the basic knowledge of Python before starting there is a lot of tutorials to follow and we would suggest you start off with small projects then get bigger as you progress.
