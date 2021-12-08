@@ -4,6 +4,8 @@
 *.egg-info
 venv/
 .venv/
+*.pem
+.env
 docs/_build
 docs/crowdin.py
 *.buildinfo

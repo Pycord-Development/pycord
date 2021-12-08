@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import sys
 from typing import (
     Any,
@@ -55,6 +56,15 @@ from . import __version__, utils
 from .utils import MISSING
 
 _log = logging.getLogger(__name__)
+
+TEST_MODE = bool(int(os.getenv('PYCORD_TEST_MODE', 0)))
+if TEST_MODE:
+    import ssl
+    ssl_cert = os.getenv('PYCORD_CERT_PATH')
+    assert os.path.exists(ssl_cert)
+    ssl_context_override = ssl.create_default_context(cafile=ssl_cert)
+else:
+    ssl_context_override = None
 
 if TYPE_CHECKING:
     from .file import File
@@ -380,7 +390,7 @@ class HTTPClient:
         self.token = token
 
         try:
-            data = await self.request(Route('GET', '/users/@me'))
+            data = await self.request(Route('GET', '/users/@me'), ssl=ssl_context_override)  # Without this it can't login during unit testing
         except HTTPException as exc:
             self.token = old_token
             if exc.status == 401:
