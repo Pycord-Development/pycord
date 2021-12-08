@@ -60,3 +60,14 @@ async def autocomplete_example(
 ```
 
 ### Managing Slash Command Permissions
+
+You will first want to make a slash command
+```py
+@bot.slash_command(guild_ids=[...]) # Limits guilds with this command
+```
+
+Then in the bottom add
+
+```py
+@permissions.foo() # Replace foo with has_role or is_user etc.
+```
