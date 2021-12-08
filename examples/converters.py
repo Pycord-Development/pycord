@@ -14,11 +14,11 @@ bot = commands.Bot("!", intents=intents)
 @bot.command()
 async def userinfo(ctx: commands.Context, user: discord.User):
     # In the command signature above, you can see that the `user`
-    # parameter is typehinted to `discord.User`. This means that
-    # during command invocation we will attempt to convert
-    # the value passed as `user` to a `discord.User` instance.
+    # Parameter is typehinted to `discord.User`. This means that
+    # During command invocation we will attempt to convert
+    # The value passed as `user` to a `discord.User` instance.
     # The documentation notes what can be converted, in the case of `discord.User`
-    # you pass an ID, mention or username (discrim optional)
+    # You pass an ID, mention or username (discrim optional)
     # E.g. 80088516616269824, @Danny or Danny#0007
 
     # NOTE: typehinting acts as a converter within the `commands` framework only.
