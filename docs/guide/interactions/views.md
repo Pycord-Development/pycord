@@ -31,6 +31,3 @@ ctx.send("Your_Message", view=My_View_Name())
 ```
 
 And that's it! you have made your first button with Pycord
-## Ext.Menus Guide
-
-Coming *Soon*
