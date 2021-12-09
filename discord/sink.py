@@ -54,6 +54,10 @@ default_filters = {
 
 class Filters:
     """Filters for sink
+
+    Parameters
+    ----------
+    filter_decorator: :meth:`Filters.filter_decorator`
     
     .. versionadded:: 2.0
     
