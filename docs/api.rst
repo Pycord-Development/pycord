@@ -4449,7 +4449,7 @@ Voice Recording
 
 .. attributetable:: discord.sink
 
-.. autoclass:: discord.sink.Filter
+.. autoclass:: discord.sink.Filters
     :members:
 
 .. autoclass:: discord.sink.Sink
