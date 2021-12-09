@@ -174,85 +174,85 @@ else:
 
 
 class ChannelType(Enum):
-    text = 0
-    private = 1
-    voice = 2
-    group = 3
-    category = 4
-    news = 5
-    store = 6
-    news_thread = 10
-    public_thread = 11
-    private_thread = 12
-    stage_voice = 13
-    directory = 14
-    forum = 15
+    text                = 0
+    private             = 1
+    voice               = 2
+    group               = 3
+    category            = 4
+    news                = 5
+    store               = 6
+    news_thread         = 10
+    public_thread       = 11
+    private_thread      = 12
+    stage_voice         = 13
+    directory           = 14
+    forum               = 15
 
     def __str__(self):
         return self.name
 
 
 class MessageType(Enum):
-    default = 0
-    recipient_add = 1
-    recipient_remove = 2
-    call = 3
-    channel_name_change = 4
-    channel_icon_change = 5
-    pins_add = 6
-    new_member = 7
-    premium_guild_subscription = 8
-    premium_guild_tier_1 = 9
-    premium_guild_tier_2 = 10
-    premium_guild_tier_3 = 11
-    channel_follow_add = 12
-    guild_stream = 13
-    guild_discovery_disqualified = 14
-    guild_discovery_requalified = 15
-    guild_discovery_grace_period_initial_warning = 16
-    guild_discovery_grace_period_final_warning = 17
-    thread_created = 18
-    reply = 19
-    application_command = 20
-    thread_starter_message = 21
-    guild_invite_reminder = 22
-    context_menu_command = 23
+    default                                         = 0
+    recipient_add                                   = 1
+    recipient_remove                                = 2
+    call                                            = 3
+    channel_name_change                             = 4
+    channel_icon_change                             = 5
+    pins_add                                        = 6
+    new_member                                      = 7
+    premium_guild_subscription                      = 8
+    premium_guild_tier_1                            = 9
+    premium_guild_tier_2                            = 10
+    premium_guild_tier_3                            = 11
+    channel_follow_add                              = 12
+    guild_stream                                    = 13
+    guild_discovery_disqualified                    = 14
+    guild_discovery_requalified                     = 15
+    guild_discovery_grace_period_initial_warning    = 16
+    guild_discovery_grace_period_final_warning      = 17
+    thread_created                                  = 18
+    reply                                           = 19
+    application_command                             = 20
+    thread_starter_message                          = 21
+    guild_invite_reminder                           = 22
+    context_menu_command                            = 23
 
 
 class VoiceRegion(Enum):
-    us_west = 'us-west'
-    us_east = 'us-east'
-    us_south = 'us-south'
-    us_central = 'us-central'
-    eu_west = 'eu-west'
-    eu_central = 'eu-central'
-    singapore = 'singapore'
-    london = 'london'
-    sydney = 'sydney'
-    amsterdam = 'amsterdam'
-    frankfurt = 'frankfurt'
-    brazil = 'brazil'
-    hongkong = 'hongkong'
-    russia = 'russia'
-    japan = 'japan'
+    us_west     = 'us-west'
+    us_east     = 'us-east'
+    us_south    = 'us-south'
+    us_central  = 'us-central'
+    eu_west     = 'eu-west'
+    eu_central  = 'eu-central'
+    singapore   = 'singapore'
+    london      = 'london'
+    sydney      = 'sydney'
+    amsterdam   = 'amsterdam'
+    frankfurt   = 'frankfurt'
+    brazil      = 'brazil'
+    hongkong    = 'hongkong'
+    russia      = 'russia'
+    japan       = 'japan'
     southafrica = 'southafrica'
     south_korea = 'south-korea'
-    india = 'india'
-    europe = 'europe'
-    dubai = 'dubai'
-    vip_us_east = 'vip-us-east'
-    vip_us_west = 'vip-us-west'
-    vip_amsterdam = 'vip-amsterdam'
+    india       = 'india'
+    europe      = 'europe'
+    dubai       = 'dubai'
+    vip_us_east     = 'vip-us-east'
+    vip_us_west     = 'vip-us-west'
+    vip_amsterdam   = 'vip-amsterdam'
 
     def __str__(self):
         return self.value
 
 
 class SpeakingState(Enum):
-    none = 0
-    voice = 1
-    soundshare = 2
-    priority = 4
+    none        = 0
+    voice       = 1
+    soundshare  = 2
+    priority    = 4
 
     def __str__(self):
         return self.name
@@ -262,10 +262,10 @@ class SpeakingState(Enum):
 
 
 class VerificationLevel(Enum, comparable=True):
-    none = 0
-    low = 1
-    medium = 2
-    high = 3
+    none    = 0
+    low     = 1
+    medium  = 2
+    high    = 3
     highest = 4
 
     def __str__(self):
@@ -273,8 +273,8 @@ class VerificationLevel(Enum, comparable=True):
 
 
 class ContentFilter(Enum, comparable=True):
-    disabled = 0
-    no_role = 1
+    disabled    = 0
+    no_role     = 1
     all_members = 2
 
     def __str__(self):
@@ -282,13 +282,13 @@ class ContentFilter(Enum, comparable=True):
 
 
 class Status(Enum):
-    online = 'online'
-    offline = 'offline'
-    idle = 'idle'
-    dnd = 'dnd'
-    do_not_disturb = 'dnd'
-    invisible = 'invisible'
-    streaming = 'streaming'
+    online          = 'online'
+    offline         = 'offline'
+    idle            = 'idle'
+    dnd             = 'dnd'
+    do_not_disturb  = 'dnd'
+    invisible       = 'invisible'
+    streaming       = 'streaming'
 
     def __str__(self):
         return self.value
@@ -296,11 +296,11 @@ class Status(Enum):
 
 class DefaultAvatar(Enum):
     blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
+    grey    = 1
+    gray    = 1
+    green   = 2
+    orange  = 3
+    red     = 4
 
     def __str__(self):
         return self.name
@@ -360,9 +360,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
-    scheduled_event_create    = 100
-    scheduled_event_update    = 101
-    scheduled_event_delete    = 102
+    scheduled_event_create   = 100
+    scheduled_event_update   = 101
+    scheduled_event_delete   = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -459,70 +459,70 @@ class AuditLogAction(Enum):
 
 
 class UserFlags(Enum):
-    staff = 1
-    partner = 2
-    hypesquad = 4
-    bug_hunter = 8
-    mfa_sms = 16
-    premium_promo_dismissed = 32
-    hypesquad_bravery = 64
-    hypesquad_brilliance = 128
-    hypesquad_balance = 256
-    early_supporter = 512
-    team_user = 1024
-    partner_or_verification_application = 2048
-    system = 4096
-    has_unread_urgent_messages = 8192
-    bug_hunter_level_2 = 16384
-    underage_deleted = 32768
-    verified_bot = 65536
-    verified_bot_developer = 131072
-    discord_certified_moderator = 262144
-    bot_http_interactions = 524288
-    spammer = 1048576
+    staff                                   = 1
+    partner                                 = 2
+    hypesquad                               = 4
+    bug_hunter                              = 8
+    mfa_sms                                 = 16
+    premium_promo_dismissed                 = 32
+    hypesquad_bravery                       = 64
+    hypesquad_brilliance                    = 128
+    hypesquad_balance                       = 256
+    early_supporter                         = 512
+    team_user                               = 1024
+    partner_or_verification_application     = 2048
+    system                                  = 4096
+    has_unread_urgent_messages              = 8192
+    bug_hunter_level_2                      = 16384
+    underage_deleted                        = 32768
+    verified_bot                            = 65536
+    verified_bot_developer                  = 131072
+    discord_certified_moderator             = 262144
+    bot_http_interactions                   = 524288
+    spammer                                 = 1048576
 
 
 class ActivityType(Enum):
-    unknown = -1
-    playing = 0
-    streaming = 1
-    listening = 2
-    watching = 3
-    custom = 4
-    competing = 5
+    unknown     = -1
+    playing     = 0
+    streaming   = 1
+    listening   = 2
+    watching    = 3
+    custom      = 4
+    competing   = 5
 
     def __int__(self):
         return self.value
 
 
 class TeamMembershipState(Enum):
-    invited = 1
-    accepted = 2
+    invited     = 1
+    accepted    = 2
 
 
 class WebhookType(Enum):
-    incoming = 1
-    channel_follower = 2
-    application = 3
+    incoming            = 1
+    channel_follower    = 2
+    application         = 3
 
 
 class ExpireBehaviour(Enum):
     remove_role = 0
-    kick = 1
+    kick        = 1
 
 
 ExpireBehavior = ExpireBehaviour
 
 
 class StickerType(Enum):
-    standard = 1
-    guild = 2
+    standard    = 1
+    guild       = 2
 
 
 class StickerFormatType(Enum):
-    png = 1
-    apng = 2
-    lottie = 3
+    png     = 1
+    apng    = 2
+    lottie  = 3
 
     @property
     def file_extension(self) -> str:
@@ -537,27 +537,27 @@ class StickerFormatType(Enum):
 
 
 class InviteTarget(Enum):
-    unknown = 0
-    stream = 1
-    embedded_application = 2
+    unknown                 = 0
+    stream                  = 1
+    embedded_application    = 2
 
 
 class InteractionType(Enum):
-    ping = 1
-    application_command = 2
-    component = 3
-    auto_complete = 4
+    ping                    = 1
+    application_command     = 2
+    component               = 3
+    auto_complete           = 4
 
 
 class InteractionResponseType(Enum):
-    pong = 1
-    # ack = 2 (deprecated)
-    # channel_message = 3 (deprecated)
-    channel_message = 4  # (with source)
-    deferred_channel_message = 5  # (with source)
-    deferred_message_update = 6  # for components
-    message_update = 7  # for components
-    auto_complete_result = 8 # for autocomplete interactions
+    pong                        = 1
+    # ack                       = 2 (deprecated)
+    # channel_message           = 3 (deprecated)
+    channel_message             = 4  # (with source)
+    deferred_channel_message    = 5  # (with source)
+    deferred_message_update     = 6  # for components
+    message_update              = 7  # for components
+    auto_complete_result        = 8 # for autocomplete interactions
 
 
 class VideoQualityMode(Enum):
@@ -569,65 +569,65 @@ class VideoQualityMode(Enum):
 
 
 class ComponentType(Enum):
-    action_row = 1
-    button = 2
-    select = 3
+    action_row  = 1
+    button      = 2
+    select      = 3
 
     def __int__(self):
         return self.value
 
 
 class ButtonStyle(Enum):
-    primary = 1
-    secondary = 2
-    success = 3
-    danger = 4
-    link = 5
+    primary     = 1
+    secondary   = 2
+    success     = 3
+    danger      = 4
+    link        = 5
 
     # Aliases
-    blurple = 1
-    grey = 2
-    gray = 2
-    green = 3
-    red = 4
-    url = 5
+    blurple     = 1
+    grey        = 2
+    gray        = 2
+    green       = 3
+    red         = 4
+    url         = 5
 
     def __int__(self):
         return self.value
 
 
 class ApplicationType(Enum):
-    game = 1
-    music = 2
-    ticketed_events = 3
-    guild_role_subscriptions = 4
+    game                        = 1
+    music                       = 2
+    ticketed_events             = 3
+    guild_role_subscriptions    = 4
 
 
 class StagePrivacyLevel(Enum):
-    public = 1
-    closed = 2
-    guild_only = 2
+    public      = 1
+    closed      = 2
+    guild_only  = 2
 
 
 class NSFWLevel(Enum, comparable=True):
-    default = 0
-    explicit = 1
-    safe = 2
-    age_restricted = 3
+    default         = 0
+    explicit        = 1
+    safe            = 2
+    age_restricted  = 3
 
 
 class SlashCommandOptionType(Enum):
-    sub_command = 1
-    sub_command_group = 2
-    string = 3
-    integer = 4
-    boolean = 5
-    user = 6
-    channel = 7
-    role = 8
-    mentionable = 9
-    number = 10
-    attachment = 11
+    sub_command         = 1
+    sub_command_group   = 2
+    string              = 3
+    integer             = 4
+    boolean             = 5
+    user                = 6
+    channel             = 7
+    role                = 8
+    mentionable         = 9
+    number              = 10
+    attachment          = 11
 
     @classmethod
     def from_datatype(cls, datatype):
@@ -667,37 +667,37 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
-    awkword = 879863881349087252
-    betrayal = 773336526917861400
-    checkers_in_the_park = 832013003968348200
-    checkers_in_the_park_dev = 832012682520428625
-    checkers_in_the_park_staging = 832012938398400562
-    checkers_in_the_park_qa = 832012894068801636
-    chess_in_the_park = 832012774040141894
-    chess_in_the_park_dev = 832012586023256104
-    chest_in_the_park_staging = 832012730599735326
-    chest_in_the_park_qa = 832012815819604009
-    decoders_dev = 891001866073296967
-    doodle_crew = 878067389634314250
-    doodle_crew_dev = 878067427668275241
-    fishington = 814288819477020702
-    letter_tile = 879863686565621790
-    ocho = 832025144389533716
-    ocho_dev = 832013108234289153
-    ocho_staging = 832025061657280566
-    ocho_qa = 832025114077298718
-    poker_night = 755827207812677713
-    poker_night_staging = 763116274876022855
-    poker_night_qa = 801133024841957428
-    putts = 832012854282158180
-    sketchy_artist = 879864070101172255
-    sketchy_artist_dev = 879864104980979792
-    spell_cast = 852509694341283871
-    watch_together = 880218394199220334
-    watch_together_dev = 880218832743055411
-    word_snacks = 879863976006127627
-    word_snacks_dev = 879864010126786570
-    youtube_together = 755600276941176913 
+    awkword                         = 879863881349087252
+    betrayal                        = 773336526917861400
+    checkers_in_the_park            = 832013003968348200
+    checkers_in_the_park_dev        = 832012682520428625
+    checkers_in_the_park_staging    = 832012938398400562
+    checkers_in_the_park_qa         = 832012894068801636
+    chess_in_the_park               = 832012774040141894
+    chess_in_the_park_dev           = 832012586023256104
+    chest_in_the_park_staging       = 832012730599735326
+    chest_in_the_park_qa            = 832012815819604009
+    decoders_dev                    = 891001866073296967
+    doodle_crew                     = 878067389634314250
+    doodle_crew_dev                 = 878067427668275241
+    fishington                      = 814288819477020702
+    letter_tile                     = 879863686565621790
+    ocho                            = 832025144389533716
+    ocho_dev                        = 832013108234289153
+    ocho_staging                    = 832025061657280566
+    ocho_qa                         = 832025114077298718
+    poker_night                     = 755827207812677713
+    poker_night_staging             = 763116274876022855
+    poker_night_qa                  = 801133024841957428
+    putts                           = 832012854282158180
+    sketchy_artist                  = 879864070101172255
+    sketchy_artist_dev              = 879864104980979792
+    spell_cast                      = 852509694341283871
+    watch_together                  = 880218394199220334
+    watch_together_dev              = 880218832743055411
+    word_snacks                     = 879863976006127627
+    word_snacks_dev                 = 879864010126786570
+    youtube_together                = 755600276941176913 
 
 T = TypeVar('T')
 
