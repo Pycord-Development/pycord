@@ -4445,7 +4445,7 @@ Select
 .. autofunction:: discord.ui.select
 
 Voice Recording
-~~~~~~~~~~~~~~~
+---------------
 
 .. attributetable:: discord.sink
 
