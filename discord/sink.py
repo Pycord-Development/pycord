@@ -55,11 +55,11 @@ default_filters = {
 class Filters:
     """Filters for sink
 
+    .. versionadded:: 2.0
+    
     Parameters
     ----------
     filter_decorator: :meth:`Filters.filter_decorator`
-    
-    .. versionadded:: 2.0
     
     """
     def __init__(self, **kwargs):
