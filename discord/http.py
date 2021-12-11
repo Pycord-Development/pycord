@@ -1655,7 +1655,7 @@ class HTTPClient:
 
         return self.request(Route('PATCH', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), json=payload)
 
-    def get_scheduled_event_users(self, guild_id: Snowflake, event_id: Snowflake, limit: int, with_member: bool = False, before: Snowflake = None, after: Snwofalke = None) -> Response[None]:
+    def get_scheduled_event_users(self, guild_id: Snowflake, event_id: Snowflake, limit: int, with_member: bool = False, before: Snowflake = None, after: Snowflake = None) -> Response[None]:
         params = {
             'limit': int(limit),
             'with_member': int(with_member),

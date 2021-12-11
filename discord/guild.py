@@ -3079,4 +3079,3 @@ class Guild(Hashable):
         if options:
             new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
-        
