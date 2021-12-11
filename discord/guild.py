@@ -3103,11 +3103,6 @@ class Guild(Hashable):
         return result
 
     async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True):
-        #event = utils.get(self._guild_scheduled_events)
-
-        #if event:
-        #    return event
-
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
         return ScheduledEvent(state=self._state, data=data)
 
@@ -3143,3 +3138,4 @@ class Guild(Hashable):
             payload["end_time"] = end_time.isoformat()
 
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
+        return ScheduledEvent(state=self._state, data=data)
