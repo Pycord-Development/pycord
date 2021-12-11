@@ -22,16 +22,16 @@ msgid "Introduction"
 msgstr "はじめに"
 
 #: ../../intro.rst:8
-msgid "This is the documentation for discord.py, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "これはDiscord APIを利用したアプリケーションを作成するのに便利なPythonライブラリ、discord.pyのドキュメントです。"
+msgid "This is the documentation for pycord, a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "これはDiscord APIを利用したアプリケーションを作成するのに便利なPythonライブラリ、pycordのドキュメントです。"
 
 #: ../../intro.rst:12
 msgid "Prerequisites"
 msgstr "前提"
 
 #: ../../intro.rst:14
-msgid "discord.py works with Python 3.5.3 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.4 or lower is not supported due to one of the dependencies (:doc:`aiohttp <aio:index>`) not supporting Python 3.4."
-msgstr "discord.pyは3.5.3以降のバージョンのPythonで動作します。Python2.7のような旧バージョンはサポートされていません。Python3.4以下は依存関係にあるライブラリ (:doc:`aiohttp <aio:index>`) がサポートされていないため、サポートしていません。"
+msgid "pycord works with Python 3.5.3 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.4 or lower is not supported due to one of the dependencies (:doc:`aiohttp <aio:index>`) not supporting Python 3.4."
+msgstr "pycordは3.5.3以降のバージョンのPythonで動作します。Python2.7のような旧バージョンはサポートされていません。Python3.4以下は依存関係にあるライブラリ (:doc:`aiohttp <aio:index>`) がサポートされていないため、サポートしていません。"
 
 #: ../../intro.rst:22
 msgid "Installing"
@@ -118,8 +118,8 @@ msgid "Basic Concepts"
 msgstr "基本概念"
 
 #: ../../intro.rst:104
-msgid "discord.py revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "discord.pyは :ref:`イベント <discord-api-events>` の概念を中心としています。イベントは何かを受け取り、それに対する応答を行います。例えば、メッセージが発生すると、メッセージの発生に関連するイベントを受け取り、そのイベントに対して応答を返すことができます。"
+msgid "pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
+msgstr "pycordは :ref:`イベント <discord-api-events>` の概念を中心としています。イベントは何かを受け取り、それに対する応答を行います。例えば、メッセージが発生すると、メッセージの発生に関連するイベントを受け取り、そのイベントに対して応答を返すことができます。"
 
 #: ../../intro.rst:108
 msgid "A quick example to showcase how events work:"

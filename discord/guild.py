@@ -3034,7 +3034,7 @@ class Guild(Hashable):
         self,
         *,
         description: Optional[str] = ...,
-        welcome_channels: Optional[List[WelcomeChannel]] = ...,
+        welcome_channels: Optional[List[WelcomeScreenChannel]] = ...,
         enabled: Optional[bool] = ...,
     ) -> WelcomeScreen:
         ...

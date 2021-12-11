@@ -42,7 +42,7 @@ with open("README.rst") as f:
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.5"],
     "docs": [
-        "sphinx==4.3.0",
+        "sphinx==4.3.1",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
     ],
@@ -91,7 +91,8 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10" "Topic :: Internet",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Internet",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Utilities",
