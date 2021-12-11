@@ -64,6 +64,8 @@ from .enums import (
     ContentFilter,
     NotificationLevel,
     NSFWLevel,
+    ScheduledEventStatus,
+    ScheduledEventLocationType,
 )
 from .mixins import Hashable
 from .user import User
@@ -100,6 +102,7 @@ if TYPE_CHECKING:
     from .webhook import Webhook
     from .state import ConnectionState
     from .voice_client import VoiceProtocol
+    from .scheduled_events import ScheduledEventLocation
 
     import datetime
 
@@ -483,6 +486,7 @@ class Guild(Hashable):
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get('nsfw_level', 0))
         self.approximate_presence_count = guild.get('approximate_presence_count')
         self.approximate_member_count = guild.get('approximate_member_count')
+        self._scheduled_events: List[ScheduledEvent] = guild.get('guild_scheduled_events', [])
 
         self._stage_instances: Dict[int, StageInstance] = {}
         for s in guild.get('stage_instances', []):
@@ -2049,14 +2053,6 @@ class Guild(Hashable):
             result.append(Invite(state=self._state, data=invite, guild=self, channel=channel))
 
         return result
-    
-    async def events(self, with_user_count: bool = False) -> List[ScheduledEvent]:
-        data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
-        result = []
-        for event in data:
-            result.append(ScheduledEvent(state=self._state, data=event))
-        
-        return result
 
     async def create_template(self, *, name: str, description: str = MISSING) -> Template:
         """|coro|
@@ -3097,3 +3093,53 @@ class Guild(Hashable):
         if options:
             new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
+
+    async def fetch_scheduled_events(self, with_user_count: bool = True) -> List[ScheduledEvent]:
+        data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
+        result = []
+        for event in data:
+            result.append(ScheduledEvent(state=self._state, data=event))
+        
+        return result
+
+    async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True):
+        #event = utils.get(self._guild_scheduled_events)
+
+        #if event:
+        #    return event
+
+        data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
+        return ScheduledEvent(state=self._state, data=data)
+
+    async def create_scheduled_event(
+        self,
+        *,
+        name: str,
+        description: str = MISSING,
+        start_time: datetime,
+        end_time: datetime = MISSING,
+        privacy_level: Union[ScheduledEventStatus, int],
+        location: ScheduledEventLocation,
+    ):
+        payload: Dict[str, str] = {}
+
+        payload["name"] = name
+        payload["start_time"] = start_time.isoformat()
+        payload["privacy_level"] = privacy_level if isinstance(privacy_level, int) else privacy_level.value
+
+        payload["entity_type"] = location.type.value
+
+        if isinstance(location.type, ScheduledEventLocationType.external):
+            payload["channel_id"] = None
+            payload["entity_metadata"] = {"location": location.location}
+        else:
+            payload["channel_id"] = location.location.id
+            payload["entity_metadata"] = {"location": None}
+
+        if description is not MISSING:
+            payload["description"] = description
+
+        if end_time is not MISSING:
+            payload["end_time"] = end_time.isoformat()
+
+        data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
