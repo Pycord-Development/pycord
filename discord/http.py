@@ -1618,15 +1618,19 @@ class HTTPClient:
     # TODO:
     # 1. Typehint responses
 
-    def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = False) -> Response[None]:
+    def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = True) -> Response[None]:
         params = {
-            'with_user_count': int(with_user_count)
+            'with_user_count': int(with_user_count),
         }
 
         return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id), params=params)
 
-    def get_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
-        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
+    def get_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, with_user_count: bool = True) -> Response[None]:
+        params = {
+            'with_user_count': int(with_user_count),
+        }
+
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), params=params)
 
     def create_scheduled_event(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
         valid_keys = (
@@ -1634,8 +1638,9 @@ class HTTPClient:
             'name',
             'privacy_level',
             'scheduled_start_time',
+            'scheduled_end_time',
             'description',
-            'entity_type'
+            'entity_type',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
@@ -1651,7 +1656,7 @@ class HTTPClient:
             'privacy_level',
             'scheduled_start_time',
             'description',
-            'entity_type'
+            'entity_type',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
