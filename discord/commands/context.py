@@ -69,7 +69,13 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
@@ -103,15 +109,20 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
+    @cached_property
+    def author(self) -> Optional[Union[Member, User]]:
+        return self.user
+
     @property
     def voice_client(self):
+        if self.guild is None:
+            return None
+        
         return self.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
-
-    author = user
 
     @property
     def respond(self):
@@ -175,10 +186,10 @@ class AutocompleteContext:
         self.bot = bot
         self.interaction = interaction
 
-        # self.command = command
-        # self.focused = focused
-        # self.value = value
-        # self.options = options
+        self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
 
     @property
     def cog(self) -> Optional[Cog]:
