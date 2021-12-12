@@ -54,6 +54,8 @@ class ScheduledEventLocation:
     - :class:`VoiceChannel`: :attr:`.ScheduledEventLocationType.voice`
     - :class:`str`: :attr:`.ScheduledEventLocationType.external`
 
+    .. versionadded:: 2.1
+
     Attributes
     ----------
     value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]

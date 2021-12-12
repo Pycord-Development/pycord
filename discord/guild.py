@@ -3164,7 +3164,7 @@ class Guild(Hashable):
         Parameters
         ----------
         event_id: :class:`int`
-            The member's ID to fetch from.
+            The event's ID to fetch from.
 
         Raises
         ------
@@ -3200,7 +3200,7 @@ class Guild(Hashable):
         Optional[:class:`ScheduledEvent`]
             The scheduled event or ``None`` if not found.
         """
-        return self._members.get(event_id)
+        return self._scheduled_events.get(event_id)
 
     async def create_scheduled_event(
         self,
