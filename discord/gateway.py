@@ -364,8 +364,7 @@ class DiscordWebSocket:
         """
 
         future = self.loop.create_future()
-        entry = EventListener(event=event, predicate=predicate, result=result, future=future)
-        self._dispatch_listeners.append(entry)
+        self._dispatch_listeners.append(EventListener(event=event, predicate=predicate, result=result, future=future))
         return future
 
     async def identify(self):
