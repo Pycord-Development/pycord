@@ -86,6 +86,7 @@ if TYPE_CHECKING:
         voice,
         sticker,
         welcome_screen,
+        scheduled_events,
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.message import Attachment
@@ -1618,21 +1619,21 @@ class HTTPClient:
     # TODO:
     # 1. Typehint responses
 
-    def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = True) -> Response[None]:
+    def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = True) -> Response[List[scheduled_events.ScheduledEvent]]:
         params = {
             'with_user_count': int(with_user_count),
         }
 
         return self.request(Route('GET', '/guilds/{guild_id}/events', guild_id=guild_id), params=params)
 
-    def get_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, with_user_count: bool = True) -> Response[None]:
+    def get_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, with_user_count: bool = True) -> Response[scheduled_events.ScheduledEvent]:
         params = {
             'with_user_count': int(with_user_count),
         }
 
         return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), params=params)
 
-    def create_scheduled_event(self, guild_id: Snowflake, **payload: Any) -> Response[None]:
+    def create_scheduled_event(self, guild_id: Snowflake, **payload: Any) -> Response[scheduled_events.ScheduledEvent]:
         valid_keys = (
             'channel_id',
             'name',

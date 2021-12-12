@@ -22,29 +22,19 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-# NOTE: This is a work in progress
-# plus the endpoints aren't available yet
-
 from __future__ import annotations
 
 import datetime
-from typing import (
-    TYPE_CHECKING,
-    Optional,
-    NamedTuple,
-    List,
-    Dict,
-    Any
-)
+from typing import TYPE_CHECKING, Optional, List, Dict, Any, Union
 from .enums import (
-    StagePrivacyLevel,
     ScheduledEventStatus,
     ScheduledEventLocationType,
     try_enum
 )
-from .object import Object
 from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
+from .mixins import Hashable
+from .user import User
 
 __all__ = (
     'ScheduledEvent',
@@ -56,27 +46,89 @@ if TYPE_CHECKING:
     from .types.guild import Guild
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
-class ScheduledEventEntityMetadata(NamedTuple):
-    location: Optional[str]
-
 class ScheduledEventLocation:
-    def __init__(self, *, state: ConnectionState, location, type: ScheduledEventLocationType):
+    """Represents a scheduled event's location.
+
+    Setting the ``location`` to its corresponding type will set the location type automatically:
+    - :class:`StageChannel`: :attr:`.ScheduledEventLocationType.external`
+    - :class:`VoiceChannel`: :attr:`.ScheduledEventLocationType.voice`
+    - :class:`str`: :attr:`.ScheduledEventLocationType.external`
+
+    Attributes
+    ----------
+    value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]
+        The actual location of the scheduled event.
+    type: :class:`ScheduledEventLocationType`
+        The type of location.
+    """
+
+    __slots__ = (
+        'value',
+        'type',
+    )
+
+    def __init__(self, *, state: ConnectionState, location: Union[str, int, VoiceChannel, StageChannel]):
         self._state = state
-        if type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
-            self.location = self._state._get_channel(int(location))
+        if isinstance(location, int):
+            self.value = self._state._get_channel(int(location))
         else:
-            self.location = location
+            self.value = location
     
     @property
     def type(self):
-        if isinstance(self.location, StageChannel):
+        if isinstance(self.value, StageChannel):
             return ScheduledEventLocationType.stage_instance
-        elif isinstance(self.location, VoiceChannel):
+        elif isinstance(self.value, VoiceChannel):
             return ScheduledEventLocationType.voice
         else:
             return ScheduledEventLocationType.external
 
-class ScheduledEvent(Object):
+
+class ScheduledEvent(Hashable):
+    """Represents a Discord Guild Scheduled Event.
+
+    .. versionadded:: 2.1
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the scheduled event.
+    description: Optional[:class:`str`]
+        The description of the scheduled event.
+    start_time: :class:`datetime.datetime`
+        The time when the event will start
+    end_time: Optional[:class:`datetime.datetime`]
+        The time when the event is supposed to end.
+    status: :class:`ScheduledEventStatus`
+        The status of the scheduled event.
+    user_count: Optional[:class:`int`]
+        The number of users that have marked themselves as interested for the event.
+    interested: Optional[:class:`int`]
+        Alias to :attr:`user_count`
+    creator_id: Optional[:class:`int`]
+        The ID of the user who created the event.
+        It may be ``None`` because events created before October 25th, 2021, haven't had their creators tracked.
+    creator: Optional[:class:`User`]
+        The resolved user object of who created the event.
+    location: :class:`ScheduledEventLocation`
+        The location of the event.
+        See :class:`ScheduledEventLocation` for more information.
+    guild: :class:`Guild`
+        The guild where the scheduled event is happening.
+    """
+    
+    __slots__ = (
+        'name',
+        'description',
+        'start_time',
+        'end_time',
+        'status',
+        'creator_id',
+        'creator',
+        'location',
+        'guild',
+    )
+
     def __init__(self, *, state: ConnectionState, guild: Guild, data: ScheduledEventPayload):
         self._state = state
         
@@ -90,11 +142,10 @@ class ScheduledEvent(Object):
         if end_time != None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
-        # self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data.get('privacy_level')) # TODO: https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
-        self.creator = data.get('creator', None) # TODO: Convert
+        self.creator = User(state=self._state, data=data.get('creator', None))
 
         entity_metadata = data.get('entity_metadata')
         entity_type = try_enum(ScheduledEventLocationType, data.get('entity_type'))
@@ -102,7 +153,7 @@ class ScheduledEvent(Object):
         if channel_id != None:
             self.location = ScheduledEventLocation(state=state, location=channel_id, type=entity_type)
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata.location, type=entity_type)
+            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"], type=entity_type)
 
         # TODO: find out what the following means/does
         self.entity_id: int = data.get('entity_id')
@@ -117,7 +168,6 @@ class ScheduledEvent(Object):
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
         location: ScheduledEventLocation = MISSING,
-        privacy_level: StagePrivacyLevel = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
     ) -> Optional[ScheduledEvent]:
@@ -137,8 +187,6 @@ class ScheduledEvent(Object):
             The new description of the event.
         channel_id: :class:`int`
             The id of the new channel the event will be taking place.
-        privacy_level: :class:`.StagePrivacyLevel`
-            The new privacy level of this event (if it's happening in a stage channel).
         start_time: :class:`datetime.datetime`
             The new starting time for the event.
 
@@ -155,7 +203,6 @@ class ScheduledEvent(Object):
             The newly updated scheduled event object. This is only returned when certain
             fields are updated.
         """
-
         payload: Dict[str, Any] = {}
 
         if name is not MISSING:
@@ -164,13 +211,10 @@ class ScheduledEvent(Object):
         if description is not MISSING:
             payload["description"] = description
 
-        if privacy_level is not MISSING:
-            payload["privacy_level"] = privacy_level.value
-
         if location is not MISSING:
             if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
                 payload["channel_id"] = location.location.id
-                payload["entity_metadata"] = {"location":str(location.location.id)}
+                payload["entity_metadata"] = None
             else:
                 payload["channel_id"] = None
                 payload["entity_metadata"] = {"location":str(location.location)}

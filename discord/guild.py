@@ -64,7 +64,6 @@ from .enums import (
     ContentFilter,
     NotificationLevel,
     NSFWLevel,
-    ScheduledEventStatus,
     ScheduledEventLocationType,
 )
 from .mixins import Hashable
@@ -257,13 +256,13 @@ class Guild(Hashable):
         The guild's NSFW level.
 
         .. versionadded:: 2.0
-        
+
     approximate_member_count: Optional[:class:`int`]
         The approximate number of members in the guild. This is ``None`` unless the guild is obtained
         using :meth:`Client.fetch_guild` with ``with_counts=True``.
 
         .. versionadded:: 2.0
-        
+
     approximate_presence_count: Optional[:class:`int`]
         The approximate number of members currently active in the guild.
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
@@ -271,11 +270,6 @@ class Guild(Hashable):
         with ``with_counts=True``.
 
         .. versionadded:: 2.0
-
-    scheduled_events: List[:class:`.ScheduledEvent`]
-        Scheduled Events for the guild.
-
-        .. versionadded:: 2.1
     """
 
     __slots__ = (
@@ -322,7 +316,6 @@ class Guild(Hashable):
         '_threads',
         'approximate_member_count',
         'approximate_presence_count',
-        'scheduled_events',
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
@@ -3118,6 +3111,33 @@ class Guild(Hashable):
             return WelcomeScreen(data=new, guild=self)
 
     async def fetch_scheduled_events(self, with_user_count: bool = True) -> List[ScheduledEvent]:
+        """|coro|
+        
+        Returns a list of :class:`ScheduledEvent` in the guild.
+
+        .. note::
+
+            This method is an API call. For general usage, consider :attr:`scheduled_events` instead.
+
+        Parameters
+        ----------
+        with_user_count: Optional[:class:`bool`]
+            If the scheduled event should be fetch with the number of
+            users that are interested in the event.
+            Defaults to ``True``
+
+        Raises
+        ------
+        ClientException
+            The scheduled events intent is not enabled.
+        HTTPException
+            Getting the scheduled events failed.
+
+        Returns
+        -------
+        List[:class:`ScheduledEvent`]
+            The fetch scheduled events
+        """
         data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
         for event in data:
@@ -3126,7 +3146,36 @@ class Guild(Hashable):
         self._scheduled_events_from_list(result)
         return result
 
-    async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True) -> Optional[ScheduledEvent]:
+    async def fetch_scheduled_event(
+        self,
+        event_id: int,
+        /,
+        *,
+        with_user_count: bool = True
+    ) -> Optional[ScheduledEvent]:
+        """|coro|
+
+        Retrieves a :class:`ScheduledEvent` from event ID.
+
+        .. note::
+
+            This method is an API call. If you have :attr:`Intents.scheduled_events`, consider :meth:`get_scheduled_event` instead.
+
+        Parameters
+        ----------
+        event_id: :class:`int`
+            The member's ID to fetch from.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the event failed.
+
+        Returns
+        -------
+        Optional[:class:`ScheduledEvent`]
+            The scheduled event from the event ID.
+        """
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
         event = ScheduledEvent(state=self._state, guild=self, data=data)
 
@@ -3138,6 +3187,21 @@ class Guild(Hashable):
 
         return event
 
+    def get_scheduled_event(self, event_id: int, /) -> Optional[ScheduledEvent]:
+        """Returns a Scheduled Event with the given ID.
+
+        Parameters
+        ----------
+        user_id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`ScheduledEvent`]
+            The scheduled event or ``None`` if not found.
+        """
+        return self._members.get(event_id)
+
     async def create_scheduled_event(
         self,
         *,
@@ -3145,14 +3209,29 @@ class Guild(Hashable):
         description: str = MISSING,
         start_time: datetime,
         end_time: datetime = MISSING,
-        privacy_level: Union[ScheduledEventStatus, int],
         location: ScheduledEventLocation,
     ) -> Optional[ScheduledEvent]:
-        payload: Dict[str, str] = {}
+        """|coro|
+        Creates a scheduled event.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the scheduled event.
+        description: Optional[:class:`str`]
+            The description of the scheduled event.
+        start_time: :class:`datetime.datetime`
+            A datetime object of when the scheduled event is supposed to start.
+        end_time: Optional[:class:`datetime.datetime`]
+            A datetime object of when the scheduled event is supposed to end.
+        location: :class:`ScheduledEventLocation`
+            The location of where the event is happening.
+        """
+        payload: Dict[str, Union[str, int]] = {}
 
         payload["name"] = name
         payload["start_time"] = start_time.isoformat()
-        payload["privacy_level"] = privacy_level if isinstance(privacy_level, int) else privacy_level.value
+        payload["privacy_level"] = 2 # Required parameter with 1 possible value???
 
         payload["entity_type"] = location.type.value
 
