@@ -271,6 +271,11 @@ class Guild(Hashable):
         with ``with_counts=True``.
 
         .. versionadded:: 2.0
+
+    scheduled_events: List[:class:`.ScheduledEvent`]
+        Scheduled Events for the guild.
+
+        .. versionadded:: 2.1
     """
 
     __slots__ = (
@@ -298,6 +303,7 @@ class Guild(Hashable):
         'preferred_locale',
         'nsfw_level',
         '_members',
+        '_scheduled_events'
         '_channels',
         '_icon',
         '_banner',
@@ -314,8 +320,9 @@ class Guild(Hashable):
         '_public_updates_channel_id',
         '_stage_instances',
         '_threads',
-        "approximate_member_count",
-        "approximate_presence_count",
+        'approximate_member_count',
+        'approximate_presence_count',
+        'scheduled_events',
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
@@ -329,6 +336,7 @@ class Guild(Hashable):
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
         self._channels: Dict[int, GuildChannel] = {}
         self._members: Dict[int, Member] = {}
+        self._scheduled_events: Dict[int, ScheduledEvent] = {}
         self._voice_states: Dict[int, VoiceState] = {}
         self._threads: Dict[int, Thread] = {}
         self._state: ConnectionState = state
@@ -353,6 +361,17 @@ class Guild(Hashable):
 
     def _remove_member(self, member: Snowflake, /) -> None:
         self._members.pop(member.id, None)
+
+    def _add_scheduled_event(self, event: ScheduledEvent, /) -> None:
+        self._scheduled_events[event.id] = event
+
+    def _remove_scheduled_event(self, event: Snowflake, /) -> None:
+        self._scheduled_events.pop(event.id, None)
+
+    def _scheduled_events_from_list(self, events: List[ScheduledEvent], /) -> None:
+        self._scheduled_events.clear()
+        for event in events:
+            self._scheduled_events[event.id] = event
 
     def _add_thread(self, thread: Thread, /) -> None:
         self._threads[thread.id] = thread
@@ -486,7 +505,11 @@ class Guild(Hashable):
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get('nsfw_level', 0))
         self.approximate_presence_count = guild.get('approximate_presence_count')
         self.approximate_member_count = guild.get('approximate_member_count')
-        self.scheduled_events: List[ScheduledEvent] = guild.get('guild_scheduled_events', [])
+
+        events = []
+        for event in guild.get('guild_scheduled_events', []):
+            events.append(ScheduledEvent(state=self._state, data=event))
+        self._scheduled_events_from_list(events)
 
         self._stage_instances: Dict[int, StageInstance] = {}
         for s in guild.get('stage_instances', []):
@@ -3100,18 +3123,19 @@ class Guild(Hashable):
         for event in data:
             result.append(ScheduledEvent(state=self._state, data=event))
 
-        self.scheduled_events = result
+        self._scheduled_events_from_list(result)
         return result
 
-    async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True):
+    async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True) -> Optional[ScheduledEvent]:
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
         event = ScheduledEvent(state=self._state, data=data)
 
-        old_event = utils.get(self.scheduled_events, id=event.id)
+        old_event = self.scheduled_events.get(event.id)
         if old_event:
-            self.scheduled_events.remove(old_event)
+            self.scheduled_events[event.id] = event
+        else:
+            self._add_scheduled_event(event)
 
-        self.scheduled_events.append(event)
         return event
 
     async def create_scheduled_event(
@@ -3123,7 +3147,7 @@ class Guild(Hashable):
         end_time: datetime = MISSING,
         privacy_level: Union[ScheduledEventStatus, int],
         location: ScheduledEventLocation,
-    ):
+    ) -> Optional[ScheduledEvent]:
         payload: Dict[str, str] = {}
 
         payload["name"] = name
@@ -3147,5 +3171,10 @@ class Guild(Hashable):
 
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
         event = ScheduledEvent(state=self._state, data=data)
-        self.scheduled_events.append(event)
+        self._add_scheduled_event(event)
         return event
+
+    @property
+    def scheduled_events(self) -> List[ScheduledEvent]:
+        """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
+        return list(self._scheduled_events.values())
