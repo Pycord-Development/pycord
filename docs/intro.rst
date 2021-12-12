@@ -33,8 +33,6 @@ If you are using Windows, then the following should be used instead: ::
 
 To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g. ::
 
-.. code:: sh
-
     # Linux/macOS
     python3 -m pip install -U "py-cord[speed]"
     # Windows
