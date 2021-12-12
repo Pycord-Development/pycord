@@ -486,7 +486,7 @@ class Guild(Hashable):
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get('nsfw_level', 0))
         self.approximate_presence_count = guild.get('approximate_presence_count')
         self.approximate_member_count = guild.get('approximate_member_count')
-        self._scheduled_events: List[ScheduledEvent] = guild.get('guild_scheduled_events', [])
+        self.scheduled_events: List[ScheduledEvent] = guild.get('guild_scheduled_events', [])
 
         self._stage_instances: Dict[int, StageInstance] = {}
         for s in guild.get('stage_instances', []):
@@ -3099,12 +3099,20 @@ class Guild(Hashable):
         result = []
         for event in data:
             result.append(ScheduledEvent(state=self._state, data=event))
-        
+
+        self.scheduled_events = result
         return result
 
     async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True):
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
-        return ScheduledEvent(state=self._state, data=data)
+        event = ScheduledEvent(state=self._state, data=data)
+
+        old_event = utils.get(self.scheduled_events, id=event.id)
+        if old_event:
+            self.scheduled_events.remove(old_event)
+
+        self.scheduled_events.append(event)
+        return event
 
     async def create_scheduled_event(
         self,
@@ -3138,4 +3146,6 @@ class Guild(Hashable):
             payload["end_time"] = end_time.isoformat()
 
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
-        return ScheduledEvent(state=self._state, data=data)
+        event = ScheduledEvent(state=self._state, data=data)
+        self.scheduled_events.append(event)
+        return event
