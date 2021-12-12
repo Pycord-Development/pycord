@@ -98,13 +98,17 @@ class Paginator(discord.ui.View):
         show_indicator=True,
         author_check=True,
         custom_view: Optional[discord.ui.View] = None,
+        timeout: Optional[float] = 180.0,
+        message: Union[abc.Messageable, discord.Interaction] = None,
     ):
-        super().__init__()
+        super().__init__(timeout=timeout)
+        self.timeout = timeout
         self.pages = pages
         self.current_page = 0
         self.page_count = len(self.pages) - 1
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
+        self.message = message
         self.buttons = {
             "first": {
                 "object": PaginatorButton(
@@ -165,6 +169,14 @@ class Paginator(discord.ui.View):
 
         self.usercheck = author_check
         self.user = None
+
+    async def on_timeout(self) -> None:
+        """Disables all buttons when the view times out."""
+        for key, btn in self.buttons.items():
+            btn["hidden"] = True
+            btn["object"].disabled = True
+        if isinstance(self.message, abc.Messageable):
+            await self.message.edit()
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
         """Updates the interaction response message to show the specified page number.
@@ -277,6 +289,14 @@ class Paginator(discord.ui.View):
                 self.add_item(item)
 
         return self.buttons
+
+    async def build_message(self, page: Union[ApplicationContext, Context, discord.Interaction], ephemeral: bool = False):
+        """Builds a message with the paginated items.
+
+        Parameters
+        ----------
+        """
+        pass
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
