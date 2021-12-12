@@ -1220,15 +1220,33 @@ class ConnectionState:
     # TODO: https://cdn.discordapp.com/attachments/881411804734033940/911444852124844052/unknown.png for guild_scheduled_event_delete
 
     def parse_guild_scheduled_event_create(self, data) -> None:
-        scheduled_event = ScheduledEvent(state=self, data=data)
+        guild = self._get_guild(data['guild_id'])
+        if guild is None:
+            _log.debug('GUILD_SCHEDULED_EVENT_CREATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+            return
+
+        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        guild._add_scheduled_event(scheduled_event)
         self.dispatch('guild_event_create', scheduled_event)
 
     def parse_guild_scheduled_event_update(self, data) -> None:
-        scheduled_event = ScheduledEvent(state=self, data=data)
+        guild = self._get_guild(data['guild_id'])
+        if guild is None:
+            _log.debug('GUILD_SCHEDULED_EVENT_UPDATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+            return
+
+        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        guild._add_scheduled_event(scheduled_event)
         self.dispatch('guild_event_update', scheduled_event)
 
     def parse_guild_scheduled_event_delete(self, data) -> None:
-        scheduled_event = ScheduledEvent(state=self, data=data)
+        guild = self._get_guild(data['guild_id'])
+        if guild is None:
+            _log.debug('GUILD_SCHEDULED_EVENT_DELETE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+            return
+
+        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        guild._remove_scheduled_event(scheduled_event)
         self.dispatch('guild_event_delete', scheduled_event)
     
     # TODO: Not officially supported/experimental

@@ -3121,14 +3121,14 @@ class Guild(Hashable):
         data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
         for event in data:
-            result.append(ScheduledEvent(state=self._state, data=event))
+            result.append(ScheduledEvent(state=self._state, guild=self, data=event))
 
         self._scheduled_events_from_list(result)
         return result
 
     async def fetch_scheduled_event(self, event_id: Snowflake, with_user_count: bool = True) -> Optional[ScheduledEvent]:
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
-        event = ScheduledEvent(state=self._state, data=data)
+        event = ScheduledEvent(state=self._state, guild=self, data=data)
 
         old_event = self.scheduled_events.get(event.id)
         if old_event:
@@ -3170,7 +3170,7 @@ class Guild(Hashable):
             payload["end_time"] = end_time.isoformat()
 
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
-        event = ScheduledEvent(state=self._state, data=data)
+        event = ScheduledEvent(state=self._state, guild=self, data=data)
         self._add_scheduled_event(event)
         return event
 

@@ -36,7 +36,6 @@ from typing import (
     Dict,
     Any
 )
-
 from .enums import (
     StagePrivacyLevel,
     ScheduledEventStatus,
@@ -55,6 +54,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.guild import Guild
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
 class ScheduledEventEntityMetadata(NamedTuple):
     location: Optional[str]
@@ -77,11 +77,11 @@ class ScheduledEventLocation:
             return ScheduledEventLocationType.external
 
 class ScheduledEvent(Object):
-    def __init__(self, *, state: ConnectionState, data):
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: ScheduledEventPayload):
         self._state = state
         
         self.id: int = data.get('id')
-        self.guild: Guild = self._state._get_guild(int(data.get('guild_id')))
+        self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
         #self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
