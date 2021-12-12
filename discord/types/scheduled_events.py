@@ -38,7 +38,7 @@ ScheduledEventLocationType = Literal[1, 2, 3]
 
 
 class ScheduledEventLocation(TypedDict):
-    location: Union[StageChannel, VoiceChannel, str]
+    value: Union[StageChannel, VoiceChannel, str]
     type: ScheduledEventLocationType
 
 
