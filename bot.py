@@ -45,7 +45,7 @@ def get_NFT_image(url):
     #print(x.name, x.hometown.name, x.hometown.id)
 
     
-    if x.image_original_url != None and x.image_original_url.startswith('https://ipfs.io') != True:
+    if x.image_original_url != None and x.image_original_url.startswith('https://ipfs.io') != True and x.image_original_url.endswith('.svg') != True and "." in x.image_original_url[len(x.image_original_url) -4]:
         print(x.image_original_url)
         return x.image_original_url
     else:
@@ -248,7 +248,8 @@ def main(source, verbose=False):
         trimmed = message.rstrip()
         #remove command
         gasNum  = trimmed.split("!gasping ")
-        if gasNum[1] != None:
+        print (gasNum)
+        if int(gasNum[1]) >= 0:
             gasNum = int(gasNum[1])
             gasUser = ctx.message.author.id
             gasChannel = ctx.message.channel.id
@@ -288,8 +289,11 @@ def main(source, verbose=False):
 
 
             await ctx.send(embed=embed)
+        elif gasNum[1] != None:
+            await ctx.send("please provide a gas value greater than or equal to 0 ```!gasing 100```")
         else:
-            await ctx.send("please provide a gas value ```!gasing 100```")
+            await ctx.send("STFU stupac")
+            
 
     # 2. Load config
     filename = 'config.yaml'
