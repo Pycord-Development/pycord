@@ -16,8 +16,7 @@ async def info(ctx, user: discord.Member = None):
     e = discord.Embed()
     e.set_author(name=user.name)
     e.add_field(name="ID", value=user.id, inline=False) # user ID
-    e.add_field(name='Joined',
-                value=f"<t:{round(user.joined_at.timestamp())}:F>", inline=False) # When the user joined the server
+    e.add_field(name="Joined", value=discord.utils.format_dt(round(user.joined_at.timestamp()), "F"), inline=False) # When the user joined the server
     e.add_field(name="Created", value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"), inline=False) # When the user's account was created
     colour = user.colour
     if colour.value: # if user has a role with a color
