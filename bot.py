@@ -45,7 +45,7 @@ def get_NFT_image(url):
     #print(x.name, x.hometown.name, x.hometown.id)
 
     
-    if x.image_original_url != None:
+    if x.image_original_url != None and x.image_original_url.startswith('https://ipfs.io') != True:
         print(x.image_original_url)
         return x.image_original_url
     else:
@@ -249,7 +249,7 @@ def main(source, verbose=False):
         #remove command
         gasNum  = trimmed.split("!gasping ")
         if gasNum[1] != None:
-            gasNum = gasNum[1]
+            gasNum = int(gasNum[1])
             gasUser = ctx.message.author.id
             gasChannel = ctx.message.channel.id
 
@@ -275,11 +275,11 @@ def main(source, verbose=False):
             #if user not already in db
             if not search:
                 #insert
-                db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
+                db.insert({'gasNum': gasNum, 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
             else:
                 #update 
                 db.remove(where('gasUser') == f"{gasUser}")
-                db.insert({'gasNum': f'{gasNum}', 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
+                db.insert({'gasNum': gasNum, 'gasUser': f'{gasUser}', 'gasChannel': f'{gasChannel}'})
 
             #add to text file
             #file1 = open("gasPingLog.txt", "a")
@@ -301,14 +301,14 @@ def main(source, verbose=False):
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing,name=status))
                                                             
         for guild in bot.guilds:
-            guser = guild.get_member(bot.user.id);
-            await guser.edit(nick=f'Gas: 🚶{average}');
+            guser = guild.get_member(bot.user.id)
+            await guser.edit(nick=f'Gas: 🚶{average}')
 
         #print (f"{guild}")
         print (f"{average}")
 
         ##search db for gas notification
-        notifyList = db.search(Query()['gasNum'] == f"{average}")
+        notifyList = db.search((Query()['gasNum']) >= average)
         print(f"{notifyList}")
 
         #loop through notifyList post in discord tagging users of that gas number
@@ -328,7 +328,7 @@ def main(source, verbose=False):
             #remove from LIST
             #notifyList.pop(idx)
             
-            await channel.send(f"<@{user}>, Gwei is now {gas}")
+            await channel.send(f"<@{user}>, Gwei is now {gas} or less.")
 
 
 
