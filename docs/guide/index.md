@@ -6,7 +6,7 @@ Pycord comes with automatic generation of files using your command prompt.
 
 Example some commands you can use:
 
-``python -m py-cord newbot (args)``
+## ``python -m py-cord newbot (args)``
 
 #### Args:
 
@@ -17,7 +17,7 @@ Example some commands you can use:
 - --prefix
    - Your Bot Prefix
 
-``python -m py-cord newcog (args)``
+## ``python -m py-cord newcog (args)``
 
 #### Args:
 
