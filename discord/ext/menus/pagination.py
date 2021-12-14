@@ -74,8 +74,10 @@ class Paginator(discord.ui.View):
         Zero-indexed value showing the total number of pages
     buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
         Dictionary containing the :class:`~PaginatorButton` objects included in this Paginator
-    user: Optional[Union[:class:`discord.User`, :class:`discord.Member`]]
+    user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
         The user or member that invoked the Paginator.
+    message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+        The message sent from the Paginator.
 
     Parameters
     ----------
@@ -87,6 +89,8 @@ class Paginator(discord.ui.View):
         Choose whether to show the page indicator
     author_check: :class:`bool`
         Choose whether or not only the original user of the command can change pages
+    disable_on_timeout: :class:`bool`
+        Should the buttons be disabled when the pagintator view times out?
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination buttons
     """
@@ -97,9 +101,9 @@ class Paginator(discord.ui.View):
         show_disabled=True,
         show_indicator=True,
         author_check=True,
+        disable_on_timeout=True,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
-        message: discord.Message = None,
     ):
         super().__init__(timeout=timeout)
         self.timeout = timeout
@@ -108,7 +112,9 @@ class Paginator(discord.ui.View):
         self.page_count = len(self.pages) - 1
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
-        self.message = message
+        self.disable_on_timeout = disable_on_timeout
+        self.custom_view = custom_view
+        self.message = Union[discord.Message, discord.WebhookMessage]
         self.buttons = {
             "first": {
                 "object": PaginatorButton(
@@ -164,7 +170,6 @@ class Paginator(discord.ui.View):
                 "hidden": True,
             },
         }
-        self.custom_view = custom_view
         self.update_buttons()
 
         self.usercheck = author_check
@@ -172,12 +177,10 @@ class Paginator(discord.ui.View):
 
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
-        # for key, btn in self.buttons.items():
-        #     btn["hidden"] = True
-        #     btn["object"].disabled = True
-        for item in self.children:
-            item.disabled = True
-        await self.message.edit(view=self)
+        if self.disable_on_timeout:
+            for item in self.children:
+                item.disabled = True
+            await self.message.edit(view=self)
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
         """Updates the interaction response message to show the specified page number.
@@ -290,14 +293,6 @@ class Paginator(discord.ui.View):
                 self.add_item(item)
 
         return self.buttons
-
-    async def build_message(self, page: Union[ApplicationContext, Context, discord.Interaction], ephemeral: bool = False):
-        """Builds a message with the paginated items.
-
-        Parameters
-        ----------
-        """
-        pass
 
     async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
         """Sends a message with the paginated items.
