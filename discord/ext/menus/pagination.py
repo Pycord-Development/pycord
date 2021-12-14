@@ -177,7 +177,7 @@ class Paginator(discord.ui.View):
         #     btn["object"].disabled = True
         for item in self.children:
             item.disabled = True
-            await self.message.edit(view=self)
+        await self.message.edit(view=self)
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
         """Updates the interaction response message to show the specified page number.
