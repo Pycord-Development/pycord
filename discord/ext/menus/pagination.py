@@ -172,9 +172,11 @@ class Paginator(discord.ui.View):
 
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
-        for key, btn in self.buttons.items():
-            btn["hidden"] = True
-            btn["object"].disabled = True
+        # for key, btn in self.buttons.items():
+        #     btn["hidden"] = True
+        #     btn["object"].disabled = True
+        for item in self.children:
+            item.disabled = True
             await self.message.edit(view=self)
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
