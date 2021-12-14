@@ -354,18 +354,22 @@ class Paginator(discord.ui.View):
         Returns
         --------
         :class:`~discord.Interaction`
-            The interaction associated with this response.
+            The message sent with the paginator
         """
         page = self.pages[0]
         self.user = interaction.user
 
         if interaction.response.is_done():
-            await interaction.followup.send(
+            msg = await interaction.followup.send(
                 content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
             )
 
         else:
-            await interaction.response.send_message(
+            msg = await interaction.response.send_message(
                 content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
             )
-        return interaction
+        if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            self.message = msg
+        elif isinstance(msg, discord.Interaction):
+            self.message = await msg.original_message()
+        return self.message
