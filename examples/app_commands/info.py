@@ -23,7 +23,7 @@ async def info(ctx, user: discord.Member = None):
            e.colour = colour
     
     if isinstance(user, discord.User): # checks if the user in the server
-        e.set_footer(text='This member is not in this server.')
+        e.set_footer(text="This member is not in this server.")
 
     await ctx.respond(embed=e) # sends the embed
 
