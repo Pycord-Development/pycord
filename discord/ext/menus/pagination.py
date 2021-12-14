@@ -99,7 +99,7 @@ class Paginator(discord.ui.View):
         author_check=True,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
-        message: Union[abc.Messageable, discord.Interaction] = None,
+        message: discord.Message = None,
     ):
         super().__init__(timeout=timeout)
         self.timeout = timeout
@@ -175,8 +175,7 @@ class Paginator(discord.ui.View):
         for key, btn in self.buttons.items():
             btn["hidden"] = True
             btn["object"].disabled = True
-        if isinstance(self.message, abc.Messageable):
-            await self.message.edit()
+            await self.message.edit(view=self)
 
     async def goto_page(self, interaction: discord.Interaction, page_number=0):
         """Updates the interaction response message to show the specified page number.
