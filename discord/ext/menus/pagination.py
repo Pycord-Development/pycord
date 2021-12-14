@@ -310,8 +310,8 @@ class Paginator(discord.ui.View):
 
         Returns
         --------
-        :class:`~discord.abc.Messageable`
-            The messageable channel the message was sent to.
+        Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+            The message that was sent with the Paginator.
         """
 
         if not isinstance(messageable, abc.Messageable):
@@ -323,19 +323,25 @@ class Paginator(discord.ui.View):
             self.user = messageable.author
 
         if isinstance(messageable, ApplicationContext):
-            await messageable.respond(
+            msg = await messageable.respond(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
                 ephemeral=ephemeral,
             )
+
         else:
-            await messageable.send(
+            msg = await messageable.send(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
             )
-        return messageable
+        if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            self.message = msg
+        elif isinstance(msg, discord.Interaction):
+            self.message = await msg.original_message()
+
+        return self.message
 
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
