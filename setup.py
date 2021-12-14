@@ -32,7 +32,7 @@ if version.endswith(("a", "b", "rc")):
         p = subprocess.Popen(["git", "rev-parse", "--short", "HEAD"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if out:
-            version += f"+g{out.decode('utf-8').strip()}"
+            version += "+g" + out.decode("utf-8").strip()
     except Exception:
         pass
 
