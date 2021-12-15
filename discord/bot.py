@@ -118,6 +118,9 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
+        if isinstance(command, SlashCommand) and command.is_subcommand:
+            raise TypeError("The provided command is a sub-command of group")
+
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
@@ -508,7 +511,6 @@ class ApplicationCommandMixin:
         """
 
         def decorator(func) -> ApplicationCommand:
-            kwargs.setdefault("parent", self)
             result = command(**kwargs)(func)
             self.add_application_command(result)
             return result
@@ -532,13 +534,77 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(
-        self, name: str, description: str, guild_ids=None
+    def create_group(
+        self,
+        name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
-        # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
+        """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
+        command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        SlashCommandGroup
+            The slash command group that was created.
+        """
+        description = description or "No description provided."
         group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
+    def group(
+        self,
+        name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
+    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
+        and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
+            The slash command group that was created.
+        """
+        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+            group = cls(
+                name,
+                (
+                    description or inspect.cleandoc(cls.__doc__).splitlines()[0]
+                    if cls.__doc__ is not None else "No description provided"
+                ),
+                guild_ids=guild_ids
+            )
+            self.add_application_command(group)
+            return group
+        return inner
+
+    slash_group = group
 
     async def get_application_context(
         self, interaction: Interaction, cls=None

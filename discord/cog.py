@@ -29,7 +29,7 @@ import sys
 import discord.utils
 import types
 from . import errors
-from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand
+from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand, SlashCommandGroup
 
 from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
 
@@ -144,6 +144,13 @@ class CogMeta(type):
                     del commands[elem]
                 if elem in listeners:
                     del listeners[elem]
+
+                try:
+                    if getattr(value, "parent") is not None:
+                        # Skip commands if they are a part of a group
+                        continue
+                except AttributeError:
+                    pass
 
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
@@ -445,7 +452,8 @@ class Cog(metaclass=CogMeta):
         # we've added so far for some form of atomic loading.
         
         for index, command in enumerate(self.__cog_commands__):
-            command.cog = self
+            command._set_cog(self)
+
             if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
                     try:
