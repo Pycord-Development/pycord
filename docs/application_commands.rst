@@ -5,7 +5,7 @@
 .. _application_commands:
 
 Application Commands
-=====================
+====================
 
 Application commands are commands that an application can register to Discord. They provide users a way of interacting
 directly with your application that feels deeply integrated into Discord.
@@ -29,6 +29,11 @@ Application commands can be used with either :class:`.Bot` or :class:`.ext.comma
     @bot.slash_command()
     async def foo(ctx, arg):
         await ctx.respond(arg)
+
+How to use Application Commands in a Cog
+----------------------------------------
+
+This is gonna be a short 
 
 Application Command Types
 -------------------------
@@ -98,7 +103,7 @@ All option fields can be set using :class:`.Option` as the type of the argument.
 Slash Command Groups
 --------------------
 
-To get started with slash command groups you should firstly define your command group!
+To get started with using slash command groups you should firstly define your command group.
 
 .. code-block:: python3
     
