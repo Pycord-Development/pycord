@@ -29,6 +29,7 @@ import logging
 import asyncio
 import json
 import re
+import weakref
 
 from urllib.parse import quote as urlquote
 from typing import Any, Dict, List, Literal, NamedTuple, Optional, TYPE_CHECKING, Tuple, Union, overload
@@ -98,7 +99,7 @@ class AsyncDeferredLock:
 
 class AsyncWebhookAdapter:
     def __init__(self):
-        self._locks: Dict[Any, asyncio.Lock] = {}
+        self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
 
     async def request(
         self,
