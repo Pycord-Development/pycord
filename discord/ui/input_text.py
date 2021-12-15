@@ -25,6 +25,8 @@ class InputText(Item[V]):
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
+    label: Optional[:class:`str`]
+        The label for the input text field, if any.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     min_length: Optional[:class:`int`]

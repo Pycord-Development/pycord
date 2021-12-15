@@ -147,7 +147,7 @@ class InputText(Component):
     Attributes
     ----------
     style: :class:`.InputTextStyle`
-        The style of the Input Text field.
+        The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
     label: Optional[:class:`str`]
@@ -159,6 +159,10 @@ class InputText(Component):
         Defaults to 0
     max_length: Optional[:class:`int`]
         The maximum number of characters that can be entered
+    required: Optional[:class:`bool`]
+        Whether the input text field is required or not. Defaults to `True`.
+    value: Optional[:class:`str`]
+        The value that has been entered in the input text field.
     """
 
     __slots__: Tuple[str, ...] = (
