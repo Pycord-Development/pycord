@@ -109,7 +109,7 @@ class ModalStore:
     def remove_modal(self, modal: Modal, message_id):
         self._modals.pop((message_id, modal.custom_id))
 
-    def dispatch(self, message_id: int, custom_id: str, interaction: Interaction):
+    async def dispatch(self, message_id: int, custom_id: str, interaction: Interaction):
         key = (message_id, custom_id)
         value = self._modals.get(key)
         if value is None:
