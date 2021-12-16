@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import os
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
@@ -21,7 +21,7 @@ class Modal:
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
-        self.custom_id = custom_id
+        self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[Item] = []
         self.__weights = _ViewWeights(self.children)
