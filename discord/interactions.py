@@ -30,7 +30,7 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
-from ui.modal import Modal
+from .ui.modal import Modal
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
