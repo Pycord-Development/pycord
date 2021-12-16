@@ -21,7 +21,7 @@ async def add(ctx, num1: int, num2: int):
 from discord.commands import SlashCommandGroup
 
 math = SlashCommandGroup("math", "Commands related to mathematics.")
-bot.add_application_command(math)
+
 
 @math.command(guild_ids=[...])
 async def add(ctx, num1: int, num2: int):
