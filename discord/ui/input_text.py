@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Optional, TypeVar
+from typing import TYPE_CHECKING, Optional
 
 from ..components import InputText as InputTextComponent
 from ..enums import InputTextStyle
@@ -13,10 +13,8 @@ __all__ = ("InputText",)
 if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
-V = TypeVar("V", bound="View", covariant=True)
 
-
-class InputText(Item[V]):
+class InputText(Item):
     """Represents a UI text input field.
 
     Parameters
