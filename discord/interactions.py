@@ -30,8 +30,6 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
-from .ui.modal import Modal
-
 from . import utils
 from .channel import ChannelType, PartialMessageable
 from .enums import InteractionResponseType, InteractionType, try_enum
@@ -76,6 +74,7 @@ if TYPE_CHECKING:
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
     from .ui.view import View
+    from .ui.modal import Modal
 
     InteractionChannel = Union[
         VoiceChannel,
