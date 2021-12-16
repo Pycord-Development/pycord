@@ -57,6 +57,7 @@ __all__ = (
     "InteractionResponseType",
     "NSFWLevel",
     "EmbeddedActivity",
+    "InputTextStyle",
 )
 
 
