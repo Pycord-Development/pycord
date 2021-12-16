@@ -548,6 +548,7 @@ class InteractionType(Enum):
     application_command = 2
     component = 3
     auto_complete = 4
+    modal_submit = 5
 
 
 class InteractionResponseType(Enum):
@@ -559,7 +560,7 @@ class InteractionResponseType(Enum):
     deferred_message_update = 6  # for components
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
-
+    modal = 9  # for modal dialogs
 
 class VideoQualityMode(Enum):
     auto = 1

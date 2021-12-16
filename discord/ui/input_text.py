@@ -81,7 +81,9 @@ class InputText(Item[V]):
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError("style must be of type InputTextStyle")
+            raise TypeError(
+                f"style must be of type InputTextStyle not {value.__class__}"
+            )
         self._underlying.style = value
 
     @property
@@ -92,8 +94,18 @@ class InputText(Item[V]):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError("custom_id must be None or str")
+            raise TypeError(f"custom_id must be None or str not {value.__class__}")
         self._underlying.custom_id = value
+
+    @property
+    def label(self) -> str:
+        """:class:`str`: The label of the input text field."""
+        return self._underlying.label
+
+    @label.setter
+    def label(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError(f"label should be None or str not {value.__class__}")
 
     @property
     def placeholder(self) -> Optional[str]:
@@ -103,7 +115,7 @@ class InputText(Item[V]):
     @placeholder.setter
     def placeholder(self, value: Optional[str]):
         if value and not isinstance(value, str):
-            raise TypeError("placeholder must be None or str")
+            raise TypeError(f"placeholder must be None or str not {value.__class__}")  # type: ignore
         self._underlying.placeholder = value
 
     @property
@@ -114,7 +126,7 @@ class InputText(Item[V]):
     @min_length.setter
     def min_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
-            raise TypeError("min_length must be None or int")
+            raise TypeError(f"min_length must be None or int not {value.__class__}")  # type: ignore
         self._underlying.min_length = value
 
     @property
@@ -125,7 +137,7 @@ class InputText(Item[V]):
     @max_length.setter
     def max_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
-            raise TypeError("min_length must be None or int")
+            raise TypeError(f"min_length must be None or int not {value.__class__}")  # type: ignore
         self._underlying.max_length = value
 
     @property
@@ -136,17 +148,17 @@ class InputText(Item[V]):
     @required.setter
     def required(self, value: Optional[bool]):
         if not isinstance(value, bool):
-            raise TypeError("required must be bool")
+            raise TypeError(f"required must be bool not {value.__class__}")  # type: ignore
 
     @property
     def value(self) -> Optional[str]:
-        """Optionan[:class:`str`]: Pre-fills the input text field with this value."""
-        return self._underlying.value
+        """Optional[:class:`str`]: The value entered in the text field."""
+        return self._input_value or self._underlying.value
 
     @value.setter
     def value(self, value: Optional[str]):
         if value and not isinstance(value, str):
-            raise TypeError("value must be None or str")
+            raise TypeError(f"value must be None or str not {value.__class__}")  # type: ignore
         self._underlying.value = value
 
     def to_component_dict(self) -> InputTextComponentPayload:

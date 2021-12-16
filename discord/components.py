@@ -130,7 +130,9 @@ class ActionRow(Component):
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.children: List[Component] = [_component_factory(d) for d in data.get("components", [])]
+        self.children: List[Component] = [
+            _component_factory(d) for d in data.get("components", [])
+        ]
 
     def to_dict(self) -> ActionRowPayload:
         return {
@@ -193,7 +195,7 @@ class InputText(Component):
     def to_dict(self) -> InputTextComponentPayload:
         payload = {
             "type": 4,
-            "style": self.style,
+            "style": self.style.value,
             "label": self.label,
         }
         if self.custom_id:
@@ -337,7 +339,9 @@ class SelectMenu(Component):
         self.placeholder: Optional[str] = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
-        self.options: List[SelectOption] = [SelectOption.from_dict(option) for option in data.get("options", [])]
+        self.options: List[SelectOption] = [
+            SelectOption.from_dict(option) for option in data.get("options", [])
+        ]
         self.disabled: bool = data.get("disabled", False)
 
     def to_dict(self) -> SelectMenuPayload:
@@ -408,13 +412,18 @@ class SelectOption:
             elif isinstance(emoji, _EmojiTag):
                 emoji = emoji._to_partial()
             else:
-                raise TypeError(f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}")
+                raise TypeError(
+                    f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}"
+                )
 
         self.emoji = emoji
         self.default = default
 
     def __repr__(self) -> str:
-        return f"<SelectOption label={self.label!r} value={self.value!r} description={self.description!r} " f"emoji={self.emoji!r} default={self.default!r}>"
+        return (
+            f"<SelectOption label={self.label!r} value={self.value!r} description={self.description!r} "
+            f"emoji={self.emoji!r} default={self.default!r}>"
+        )
 
     def __str__(self) -> str:
         if self.emoji:
