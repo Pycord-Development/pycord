@@ -99,18 +99,18 @@ class Modal:
 
 class ModalStore:
     def __init__(self, state: ConnectionState) -> None:
-        # (message_id, custom_id) : Modal
+        # (user_id, custom_id) : Modal
         self._modals: Dict[Tuple[int, str], Modal] = {}
         self._state: ConnectionState = state
 
-    def add_modal(self, modal: Modal, message_id: int):
-        self._modals[(message_id, modal.custom_id)] = modal
+    def add_modal(self, modal: Modal, user_id: int):
+        self._modals[(user_id, modal.custom_id)] = modal
 
-    def remove_modal(self, modal: Modal, message_id):
-        self._modals.pop((message_id, modal.custom_id))
+    def remove_modal(self, modal: Modal, user_id):
+        self._modals.pop((user_id, modal.custom_id))
 
-    async def dispatch(self, message_id: int, custom_id: str, interaction: Interaction):
-        key = (message_id, custom_id)
+    async def dispatch(self, user_id: int, custom_id: str, interaction: Interaction):
+        key = (user_id, custom_id)
         value = self._modals.get(key)
         if value is None:
             return
@@ -124,4 +124,4 @@ class ModalStore:
                     child.refresh_state(component)
                     break
         await value.callback(interaction)
-        self.remove_modal(value, message_id)
+        self.remove_modal(value, user_id)

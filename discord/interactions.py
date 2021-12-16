@@ -796,7 +796,7 @@ class InteractionResponse:
             data=payload,
         )
         self._responded = True
-        self._parent._state.store_modal(modal, self._parent.message.id)
+        self._parent._state.store_modal(modal, self._parent.user.id)
 
 
 class _InteractionMessageState:
