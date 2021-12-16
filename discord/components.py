@@ -184,7 +184,7 @@ class InputText(Component):
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
-        self.custom_id: Optional[str] = data.get("custom_id", None)
+        self.custom_id = data["custom_id"]
         self.label: Optional[str] = data.get("label", None)
         self.placeholder: Optional[str] = data.get("placeholder", None)
         self.min_length: Optional[int] = data.get("min_length", None)
