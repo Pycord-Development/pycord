@@ -1,7 +1,7 @@
 pycord
 ======
 
-.. image:: https://discord.com/api/guilds/881207955029110855/embed.png
+.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord
    :target: https://pycord.dev/discord
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
