@@ -117,10 +117,15 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
-    author: Optional[Union[Member, User]] = user
+    @cached_property
+    def author(self) -> Optional[Union[Member, User]]:
+        return self.user
 
     @property
-    def voice_client(self) -> Optional[VoiceProtocol]:
+    def voice_client(self):
+        if self.guild is None:
+            return None
+
         return self.guild.voice_client
 
     @discord.utils.cached_property
@@ -134,7 +139,7 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
             return None
 
         return self.command.cog
-
+      
     @property
     def respond(self):
         return self.followup.send if self.response.is_done() else self.interaction.response.send_message
@@ -186,6 +191,8 @@ class AutocompleteContext:
 
     Attributes
     -----------
+    bot: :class:`.Bot`
+        The bot that the command belongs to.    
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
     command: :class:`.ApplicationCommand`
@@ -198,7 +205,7 @@ class AutocompleteContext:
         A name to value mapping of the options that the user has selected before this option.
     """
 
-    __slots__ = ("interaction", "command", "focused", "value", "options")
+    __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
     
     def __init__(
             self,

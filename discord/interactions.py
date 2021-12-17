@@ -408,7 +408,7 @@ class InteractionResponse:
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            This only applies for interactions of type :attr:`InteractionType.application_command`.
+            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
 
         Raises
         -------
@@ -424,7 +424,11 @@ class InteractionResponse:
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
         if parent.type is InteractionType.component:
-            defer_type = InteractionResponseType.deferred_message_update.value
+            if ephemeral:
+                data = {'flags': 64}
+                defer_type = InteractionResponseType.deferred_channel_message.value
+            else:
+                defer_type = InteractionResponseType.deferred_message_update.value
         elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:

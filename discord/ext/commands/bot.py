@@ -922,22 +922,6 @@ class BotBase(GroupMixin):
         await self.process_commands(message)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Bot(BotBase, discord.Bot):
     """Represents a discord bot.
 
