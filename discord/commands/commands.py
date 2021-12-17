@@ -877,11 +877,11 @@ class SlashCommandGroup(ApplicationCommand, Option):
         Returns
         --------
         :class:`SlashCommandGroup`
-            A new instance of this command.
+            A new instance of this command group.
         """
         ret = self.__class__(
-            self.name,
-            self.description,
+            name=self.name,
+            description=self.description,
             **self.__original_kwargs__,
         )
         return self._ensure_assignment_on_copy(ret)
