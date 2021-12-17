@@ -253,11 +253,11 @@ class Asset(AssetMixin):
     def __len__(self) -> int:
         return len(self._url)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         shorten = self._url.replace(self.BASE, '')
         return f'<Asset url={shorten!r}>'
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return isinstance(other, Asset) and self._url == other._url
 
     def __hash__(self):

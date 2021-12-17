@@ -553,7 +553,7 @@ class SyncWebhook(BaseWebhook):
         super().__init__(data, token, state)
         self.session = session
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Webhook id={self.id!r}>'
 
     @property

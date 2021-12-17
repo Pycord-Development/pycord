@@ -65,7 +65,7 @@ class WelcomeScreenChannel:
         self.description = description
         self.emoji = emoji
      
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'WelcomeScreenChannel(channel={self.channel} description={self.description})'
 
     def to_dict(self) -> WelcomeScreenChannelPayload:
@@ -123,7 +123,7 @@ class WelcomeScreen:
         self._guild = guild
         self._update(data)
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}'
     
     def _update(self, data: WelcomeScreenPayload):
