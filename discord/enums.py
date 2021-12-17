@@ -627,7 +627,6 @@ class SlashCommandOptionType(Enum):
     role = 8
     mentionable = 9
     number = 10
-    # TODO: Implement attachments
     attachment = 11
 
     @classmethod
@@ -660,6 +659,8 @@ class SlashCommandOptionType(Enum):
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
+        if datatype.__name__ == "Attachment":
+            return cls.attachment
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
 
