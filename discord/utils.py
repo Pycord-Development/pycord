@@ -1111,7 +1111,26 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         if asyncio.iscoroutine(_values):
             _values = await _values
 
-        gen = (val for val in _values if str(val).lower().startswith(str(ctx.value or "").lower()))
+        def check(item: Any) -> bool:
+            """Comparator method
+
+            Parameters
+            ----------
+            x : str
+                parameter
+
+            Returns
+            -------
+            bool
+                if valid
+            """
+            if isinstance(item, tuple):
+                item, _ = item
+            if hasattr(item, "to_dict"):
+                item = item.to_dict()["name"]
+            return str(item).lower().startswith(str(ctx.value or "").lower())
+        
+        gen = (val for val in _values if check(val))
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
