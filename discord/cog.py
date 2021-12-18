@@ -146,7 +146,7 @@ class CogMeta(type):
                     del listeners[elem]
 
                 try:
-                    if getattr(value, "parent") is not None:
+                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
                         # Skip commands if they are a part of a group
                         continue
                 except AttributeError:
