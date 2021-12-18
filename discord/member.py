@@ -414,7 +414,9 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def status(self) -> Status:
-        """:class:`Status`: The member's overall status. If the value is unknown, then it will be a :class:`str` instead."""
+        """:class:`Status`: The member's overall status.
+        If the value is unknown, then it will be a :class:`str` instead.
+        """
         return try_enum(Status, self._client_status[None])
 
     @property
@@ -675,7 +677,7 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | voice_channel                | :attr:`Permissions.move_members`     |
         +------------------------------+--------------------------------------+
-        | communication_disabled_until | :attr:`Permissions.manage_members`   |
+        | communication_disabled_until | :attr:`Permissions.moderate_members` |
         +------------------------------+--------------------------------------+
 
         All parameters are optional.
@@ -779,7 +781,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Timeouts a member from the guild for the set duration.
 
-        You must have the :attr:`~Permissions.manage_members` permission to
+        You must have the :attr:`~Permissions.moderate_members` permission to
         timeout a member.
 
         Parameters
@@ -803,7 +805,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Removes the timeout from a member.
 
-        You must have the :attr:`~Permissions.manage_members` permission to
+        You must have the :attr:`~Permissions.moderate_members` permission to
         remove the timeout.
 
         This is equivalent to calling :meth:`~.timeout` and passing ``None`` to :param:`~.timeout.until`.
