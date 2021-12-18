@@ -717,11 +717,11 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         await self.process_application_commands(interaction)
         if interaction.type == discord.InteractionType.modal_submit:
             state: ConnectionState = self._connection  # type: ignore
-            message_id, custom_id = (
-                interaction.message.id,
+            user_id, custom_id = (
+                interaction.user.id,
                 interaction.data["custom_id"],
             )
-            await state._modal_store.dispatch(message_id, custom_id, interaction)
+            await state._modal_store.dispatch(user_id, custom_id, interaction)
 
     async def on_application_command_error(
         self, context: ApplicationContext, exception: DiscordException
