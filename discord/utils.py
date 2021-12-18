@@ -1116,7 +1116,7 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
             Parameters
             ----------
-            x : str
+            item : Any
                 parameter
 
             Returns
