@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING, Dict, TypedDict, Union, List, Literal
 
-from discord.types.message import Attachment
+from .message import Attachment
 from .snowflake import Snowflake
 from .components import Component, ComponentType
 from .embed import Embed
