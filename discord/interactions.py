@@ -782,11 +782,7 @@ class InteractionResponse:
         if self._responded:
             raise InteractionResponded(self._parent)
 
-        payload = {
-            "title": modal.title,
-            "custom_id": modal.custom_id,
-            "components": modal.to_components(),
-        }
+        payload = modal.to_dict()
         adapter = async_context.get()
         await adapter.create_interaction_response(
             self._parent.id,

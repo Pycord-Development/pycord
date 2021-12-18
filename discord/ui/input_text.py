@@ -159,6 +159,10 @@ class InputText(Item):
             raise TypeError(f"value must be None or str not {value.__class__}")  # type: ignore
         self._underlying.value = value
 
+    @property
+    def width(self) -> int:
+        return 5
+
     def to_component_dict(self) -> InputTextComponentPayload:
         return self._underlying.to_dict()
 

@@ -94,7 +94,7 @@ class Modal:
             self.__weights.remove_item(item)
 
     def to_dict(self):
-        return {"title": self.title, "custom_id": self.custom_id}
+        return {"title": self.title, "custom_id": self.custom_id, "components": self.to_components()}
 
 
 class ModalStore:
@@ -115,10 +115,8 @@ class ModalStore:
         if value is None:
             return
 
-        parent_components = [component for component in interaction.data["components"]]
-        child_components = [component for component in parent_components]
-
-        for component in child_components:
+        components = [component for parent_component in interaction.data["components"] for component in parent_component["components"]]
+        for component in components:
             for child in value.children:
                 if child.custom_id == component["custom_id"]:  # type: ignore
                     child.refresh_state(component)
