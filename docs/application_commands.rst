@@ -121,4 +121,4 @@ Now your will want to use :class:`.command` with your list name, Full list of op
 
 .. code-block:: python3
     
-    @foo.command(guild_ids=[])
+    @foo.command(guild_ids=[], foo: int, bar)
