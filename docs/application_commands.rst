@@ -103,25 +103,22 @@ All option fields can be set using :class:`.Option` as the type of the argument.
 Slash Command Groups
 --------------------
 
-To get started with using slash command groups you should firstly define your command group.
+Slash Command groups allow for the creation of multiple commands under the same command.
+
+All available options are listed at :class:`.Bot.create_group`.
 
 .. code-block:: python3
     
-    py_list = bot.command_group()
+    foo = bot.create_group()
 
-We are defining the ``py_list`` phrase to bot.command_group, Once you have done this make sure to then make the group
-inside your defined phrase:
+Only 2 options are allowed to be parsed in, your name and description.
 
 .. code-block:: python3
         
-        "python_versions_list", "A List of commands showing python versions"
+        "foo", "bar"
 
-Now that you have defined your command group you can actually make the commands, This isn't too hard in anyway shape or form.
+Now your will want to use :class:`.command` with your list name, Full list of options and type hints are on :class:`Bot.slash_command`.
 
 .. code-block:: python3
     
-    @py_list.command(guild_ids=[])
-
-The example shown above is what every command should look like ``my_list_name.command()``
-
-and everything from here should be self explanitory and the same as normal application commands.
+    @foo.command(guild_ids=[])
