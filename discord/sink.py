@@ -21,16 +21,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from .errors import SinkException
 import wave
+import logging
 import os
 import threading
 import time
 import subprocess
 import sys
 import struct
+from .errors import SinkException
 
+_log = logging.getLogger(__name__)
 
 __all__ = (
     "Filters",
@@ -44,6 +45,16 @@ if sys.platform != "win32":
     CREATE_NO_WINDOW = 0
 else:
     CREATE_NO_WINDOW = 0x08000000
+
+
+dir = os.getcwd()
+dire = f"{dir}/.pycord/"
+
+if os.path.isdir(dire) != True:
+    os.mkdir(".pycord/")
+else:
+    _log.debug("Directory ./pycord already exists putting files there instead.")
+
 
 default_filters = {
     "time": 0,
@@ -178,7 +189,7 @@ class Sink(Filters):
         "pcm",
     ] 
 
-    def __init__(self, *, encoding="wav", output_path="", filters=None):
+    def __init__(self, *, encoding="wav", output_path=".pycord/", filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
