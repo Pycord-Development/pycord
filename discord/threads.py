@@ -590,7 +590,6 @@ class Thread(Messageable, Hashable):
         # The data payload will always be a Thread payload
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
     
-
     async def archive(self, locked: bool = MISSING) -> Thread:
         """|coro|
 
