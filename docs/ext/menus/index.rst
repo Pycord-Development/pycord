@@ -18,7 +18,7 @@ A Basic Example Of `ext.menus` Being Used
     from discord.ext import commands, menus
 
 
-    class MenusExample(commands.Cog):
+    class PageTest(commands.Cog):
         def __init__(self, bot):
             self.bot = bot
 
@@ -34,8 +34,8 @@ A Basic Example Of `ext.menus` Being Used
         def get_pages(self):
             return self.pages
 
-        @slash_command(name="pageexample")
-        async def pageexample(self, ctx):
+        @slash_command(name="pagetest")
+        async def pagetest(self, ctx):
             await ctx.defer()
             pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
             pages.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
@@ -44,8 +44,8 @@ A Basic Example Of `ext.menus` Being Used
             pages.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
             await pages.send(ctx, ephemeral=False)
 
-        @slash_command(name="pageexample_custom")
-        async def pageexample_custom(self, ctx):
+        @slash_command(name="pagetest_custom")
+        async def pagetest_custom(self, ctx):
             await ctx.defer()
             view = discord.ui.View()
             view.add_item(discord.ui.Button(label="Test Button, Does Nothing", row=1))
@@ -60,7 +60,7 @@ A Basic Example Of `ext.menus` Being Used
 
 
     def setup(bot):
-        bot.add_cog(MenusExample(bot))
+        bot.add_cog(PageTest(bot))
 
 .. _discord_ext_menus_api:
 
