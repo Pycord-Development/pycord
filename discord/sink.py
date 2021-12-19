@@ -120,8 +120,8 @@ class AudioData:
     Raises
     ------
     ClientException
-        This AudioData is already finished writing,
-        This AudioData is still writing
+        The AudioData is already finished writing,
+        The AudioData is still writing
     """
 
     def __init__(self, file):
@@ -132,7 +132,7 @@ class AudioData:
 
     def write(self, data):
         if self.finished:
-            raise ClientException("This AudioData is already finished writing.")
+            raise ClientException("The AudioData is already finished writing.")
         try:
             self.file.write(data)
         except ValueError:
@@ -140,14 +140,14 @@ class AudioData:
 
     def cleanup(self):
         if self.finished:
-            raise ClientException("This AudioData is already finished writing.")
+            raise ClientException("The AudioData is already finished writing.")
         self.file.close()
         self.file = os.path.join(self.dir_path, self.file.name)
         self.finished = True
 
     def on_format(self, encoding):
         if not self.finished:
-            raise ClientException("This AudioData is still writing.")
+            raise ClientException("The AudioData is still writing.")
         name = os.path.split(self.file)[1]
         name = name.split(".")[0] + f".{encoding}"
         self.file = os.path.join(self.dir_path, name)
