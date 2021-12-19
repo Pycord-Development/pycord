@@ -690,6 +690,9 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             "debug_guild", None
         )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
+        self.register_commands_on_connect = options.pop(
+            "register_commands_on_connect", True
+        )
 
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
@@ -713,7 +716,8 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = None
 
     async def on_connect(self):
-        await self.register_commands()
+        if self.register_commands_on_connect:
+            await self.register_commands()
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
@@ -1059,6 +1063,10 @@ class Bot(BotBase, Client):
         .. note::
 
             You cannot set both debug_guild and debug_guilds.
+    
+    register_commands_on_connect: bool
+        Whether to run :meth:`.register_commands` on connect. This is useful when you are
+        using other library to register application commands. Defaults to ``true``.
     """
 
     pass
