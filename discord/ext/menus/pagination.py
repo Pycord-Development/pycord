@@ -114,7 +114,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.custom_view = custom_view
-        self.message = Union[discord.Message, discord.WebhookMessage]
+        self.message: Union[discord.Message, discord.WebhookMessage]
         self.buttons = {
             "first": {
                 "object": PaginatorButton(
