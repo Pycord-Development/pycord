@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .errors import ClientException
+from .errors import SinkException
 import wave
 import os
 import threading
@@ -132,7 +132,7 @@ class AudioData:
 
     def write(self, data):
         if self.finished:
-            raise ClientException("The AudioData is already finished writing.")
+            raise SinkException("The AudioData is already finished writing.")
         try:
             self.file.write(data)
         except ValueError:
@@ -140,14 +140,14 @@ class AudioData:
 
     def cleanup(self):
         if self.finished:
-            raise ClientException("The AudioData is already finished writing.")
+            raise SinkException("The AudioData is already finished writing.")
         self.file.close()
         self.file = os.path.join(self.dir_path, self.file.name)
         self.finished = True
 
     def on_format(self, encoding):
         if not self.finished:
-            raise ClientException("The AudioData is still writing.")
+            raise SinkException("The AudioData is still writing.")
         name = os.path.split(self.file)[1]
         name = name.split(".")[0] + f".{encoding}"
         self.file = os.path.join(self.dir_path, name)
@@ -187,7 +187,7 @@ class Sink(Filters):
         encoding = encoding.lower()
 
         if encoding not in self.valid_encodings:
-            raise ClientException("An invalid encoding type was specified.")
+            raise SinkException("An invalid encoding type was specified.")
 
         self.encoding = encoding
         self.file_path = output_path
@@ -216,7 +216,7 @@ class Sink(Filters):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise ClientException(
+            raise SinkException(
                 "Audio may only be formatted after recording is finished."
             )
         if self.encoding == "pcm":
@@ -243,9 +243,9 @@ class Sink(Filters):
             try:
                 process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
             except FileNotFoundError:
-                raise ClientException("ffmpeg was not found.") from None
+                raise SinkException("ffmpeg was not found.") from None
             except subprocess.SubprocessError as exc:
-                raise ClientException(
+                raise SinkException(
                     "Popen failed: {0.__class__.__name__}: {0}".format(exc)
                 ) from exc
             process.wait()
