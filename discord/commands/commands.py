@@ -570,8 +570,7 @@ class SlashCommand(ApplicationCommand):
                     result = await result
                     
                 choices = [
-                    o if isinstance(o, OptionChoice) 
-                    else (OptionChoice(*o) if isinstance(o, tuple) else OptionChoice(o))
+                    o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
                 ][:25]
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
