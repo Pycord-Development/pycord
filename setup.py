@@ -63,7 +63,7 @@ packages = [
     "discord.commands",
     "discord.ext.commands",
     "discord.ext.tasks",
-    "discord.ext.menus",
+    "discord.ext.pages",
 ]
 
 
