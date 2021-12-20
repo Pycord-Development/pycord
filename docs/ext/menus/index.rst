@@ -5,11 +5,9 @@
 
 .. versionadded:: 2.0
 
-Menus provide a easy pagination system with buttons
+This module provides an easy pagination system with buttons.
 
-Example:
---------
-A Basic Example Of `ext.menus` Being Used
+Example usage in a cog:
 
 .. code-block:: python3
 
@@ -23,9 +21,9 @@ A Basic Example Of `ext.menus` Being Used
             self.bot = bot
 
             self.pages = [
-                "Page One",
-                discord.Embed(title="Page Two"),
-                discord.Embed(title="Page Three"),
+                "Page One",  # string (text)
+                discord.Embed(title="Page Two"),  # rich embed
+                discord.Embed(title="Page Three"),  # another rich embed
             ]
             self.pages[1].set_image(url="https://c.tenor.com/pPKOYQpTO8AAAAAM/monkey-developer.gif")
             self.pages[2].add_field(name="Example Field", value="Example Value", inline=False)
@@ -37,13 +35,19 @@ A Basic Example Of `ext.menus` Being Used
         @slash_command(name="pagetest")
         async def pagetest(self, ctx):
             await ctx.defer()
+            # initializing the paginator
             pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
+
+            # customising buttons
             pages.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
             pages.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
             pages.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
             pages.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
+
+            # start paginating
             await pages.send(ctx, ephemeral=False)
 
+        # using a custom view
         @slash_command(name="pagetest_custom")
         async def pagetest_custom(self, ctx):
             await ctx.defer()
