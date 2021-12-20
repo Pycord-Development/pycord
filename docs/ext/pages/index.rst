@@ -1,6 +1,6 @@
-.. _discord_ext_menus:
+.. _discord_ext_pages:
 
-``discord.ext.menus`` -- An extension module to provide useful menu options
+``discord.ext.pages`` -- An extension module to provide useful pagination options
 ===========================================================================
 
 .. versionadded:: 2.0
@@ -13,7 +13,7 @@ Example usage in a cog:
 
     import discord
     from discord.commands import slash_command
-    from discord.ext import commands, menus
+    from discord.ext import commands, pages
 
 
     class PageTest(commands.Cog):
@@ -36,16 +36,16 @@ Example usage in a cog:
         async def pagetest(self, ctx):
             await ctx.defer()
             # initializing the paginator
-            pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
+            paginator = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
 
             # customising buttons
-            pages.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
-            pages.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
-            pages.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
-            pages.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
+            paginator.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
+            paginator.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
+            paginator.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
+            paginator.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
 
             # start paginating
-            await pages.send(ctx, ephemeral=False)
+            await paginator.send(ctx, ephemeral=False)
 
         # using a custom view
         @slash_command(name="pagetest_custom")
@@ -59,22 +59,22 @@ Example usage in a cog:
                     options=[discord.SelectOption(label="Example Option", value="Example Value", description="This menu does nothing!")],
                 )
             )
-            pages = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
-            await pages.send(ctx, ephemeral=False)
+            paginator = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
+            await paginator.send(ctx, ephemeral=False)
 
 
     def setup(bot):
         bot.add_cog(PageTest(bot))
 
-.. _discord_ext_menus_api:
+.. _discord_ext_pages_api:
 
 API Reference
 -------------
 
-.. attributetable:: discord.ext.menus.Paginator
+.. attributetable:: discord.ext.pages.Paginator
 
-.. autoclass:: discord.ext.menus.Paginator
+.. autoclass:: discord.ext.pages.Paginator
     :members:
 
-.. autoclass:: discord.ext.menus.PaginatorButton
+.. autoclass:: discord.ext.pages.PaginatorButton
     :members:
