@@ -92,6 +92,8 @@ class Paginator(discord.ui.View):
         Whether the buttons get disabled when the paginator view times out.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination buttons.
+    timeout: Optional[:class:`float`]
+        Timeout in seconds from last interaction with the paginator before no longer accepting input. 
     """
 
     def __init__(
