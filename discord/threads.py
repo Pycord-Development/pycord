@@ -607,6 +607,24 @@ class Thread(Messageable, Hashable):
             The updated thread.
         """
         return await self.edit(archived=True, locked=locked)
+    
+    async def unarchive(self, locked: bool = MISSING) -> Thread:
+        """|coro|
+
+        Unarchives the thread. This is a shorthand of :meth:`.edit`.
+
+        Parameters
+        ------------
+        locked: :class:`bool`
+            Whether to lock the thread on unarchive, Defaults to ``False``.
+        
+
+        Returns
+        --------
+        :class:`Thread`
+            The updated thread.
+        """
+        return await self.edit(archived=False, locked=locked)
 
     async def join(self):
         """|coro|
