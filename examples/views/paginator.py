@@ -42,7 +42,7 @@ class PageTest(commands.Cog):
                 options=[discord.SelectOption(label="Example Option", value="Example Value", description="This menu does nothing!")],
             )
         )
-        paginator = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
+        paginator = pages.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
         await paginator.send(ctx, ephemeral=False)
 
 
