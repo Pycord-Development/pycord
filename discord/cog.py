@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 __all__ = (
     'CogMeta',
     'Cog',
-    'CogMixin'
+    'CogMixin',
 )
 
 CogT = TypeVar('CogT', bound='Cog')
