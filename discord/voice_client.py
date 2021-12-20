@@ -704,7 +704,7 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
-    def start_recording(self, sink, callback, *args):
+    def listen(self, sink, callback, *args):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
         Must be in a voice channel to use.
@@ -754,7 +754,7 @@ class VoiceClient(VoiceProtocol):
         )
         t.start()
 
-    def stop_recording(self):
+    def stop_listening(self):
         """Stops the recording.
         Must be already recording.
         Raises
