@@ -49,6 +49,7 @@ class PaginatorButton(discord.ui.Button):
         self.disabled = disabled
         self.button_type = button_type
         self.paginator = paginator
+        self.active = True
 
     async def callback(self, interaction: discord.Interaction):
         if self.button_type == "first":
@@ -207,7 +208,7 @@ class Paginator(discord.ui.View):
         return True
 
     def customize_button(
-        self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray
+        self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray, active: bool = True,
     ) -> PaginatorButton:
         """Allows you to easily customize the various pagination buttons.
 
@@ -222,6 +223,8 @@ class Paginator(discord.ui.View):
             The emoji to display on the button.
         button_style: :class:`~discord.ButtonStyle`
             The ButtonStyle to use for the button.
+        active: :class:`bool`
+            Whether the button is active and functional in the paginator.
 
         Returns
         -------
@@ -235,6 +238,7 @@ class Paginator(discord.ui.View):
         button.label = button_label
         button.emoji = button_emoji
         button.style = button_style
+        button.active = active
         return button
 
     def update_buttons(self) -> Dict:
