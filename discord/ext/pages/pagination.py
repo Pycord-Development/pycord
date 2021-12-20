@@ -89,7 +89,7 @@ class Paginator(discord.ui.View):
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
-        Whether the buttons get disabled when the pagintator view times out.
+        Whether the buttons get disabled when the paginator view times out.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination buttons.
     """
@@ -187,7 +187,7 @@ class Paginator(discord.ui.View):
         Parameters
         ----------
         interaction: :class:`discord.Interaction`
-            The interaction which called the Paginator
+            The interaction that invoked the Paginator
         page_number: :class:`int`
             The page to display.
 
