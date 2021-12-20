@@ -47,15 +47,6 @@ else:
     CREATE_NO_WINDOW = 0x08000000
 
 
-dir = os.getcwd()
-dire = f"{dir}/.pycord/"
-
-if os.path.isdir(dire) != True:
-    os.mkdir(".pycord/")
-else:
-    _log.debug("Directory ./pycord already exists putting files there instead.")
-
-
 default_filters = {
     "time": 0,
     "users": [],
@@ -189,7 +180,7 @@ class Sink(Filters):
         "pcm",
     ] 
 
-    def __init__(self, *, encoding="wav", output_path=".pycord/", filters=None):
+    def __init__(self, *, encoding="wav", output_path="", filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
