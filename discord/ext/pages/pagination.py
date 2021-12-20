@@ -65,19 +65,6 @@ class PaginatorButton(discord.ui.Button):
 class Paginator(discord.ui.View):
     """Creates a paginator which can be sent as a message and uses buttons for navigation.
 
-    Attributes
-    ----------
-    current_page: :class:`int`
-        A zero-indexed value showing the current page number.
-    page_count: :class:`int`
-        A zero-indexed value showing the total number of pages.
-    buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
-        A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
-    user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
-        The user or member that invoked the paginator.
-    message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
-        The message the paginator is attached to.
-
     Parameters
     ----------
     pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
@@ -94,6 +81,19 @@ class Paginator(discord.ui.View):
         A custom view whose items are appended below the pagination buttons.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the paginator before no longer accepting input. 
+
+    Attributes
+    ----------
+    current_page: :class:`int`
+        A zero-indexed value showing the current page number.
+    page_count: :class:`int`
+        A zero-indexed value showing the total number of pages.
+    buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+        A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
+    user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
+        The user or member that invoked the paginator.
+    message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+        The message the paginator is attached to.
     """
 
     def __init__(
