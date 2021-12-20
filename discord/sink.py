@@ -87,7 +87,7 @@ class Filters:
         time.sleep(self.seconds)
         if self.finished:
             return
-        self.vc.stop_recording()
+        self.vc.stop_listening()
 
 
 class RawData:
@@ -196,7 +196,7 @@ class Sink(Filters):
         self.vc = None
         self.audio_data = {}
 
-    def init(self, vc):  # called under start_recording
+    def init(self, vc):  # called under listen
         self.vc = vc
         super().init()
 
