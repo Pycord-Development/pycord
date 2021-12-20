@@ -34,12 +34,11 @@ class PaginatorButton(discord.ui.Button):
 
     Parameters
     ----------
-
     button_type: :class:`str`
         The type of button being created.
         Must be one of ``first``, ``prev``, ``next``, or ``last``.
     paginator: :class:`Paginator`
-        The Paginator class where this button will be used
+        The paginator class where this button will be used.
     """
 
     def __init__(self, label, emoji, style, disabled, button_type, paginator):
@@ -69,30 +68,30 @@ class Paginator(discord.ui.View):
     Attributes
     ----------
     current_page: :class:`int`
-        Zero-indexed value showing the current page number
+        A zero-indexed value showing the current page number.
     page_count: :class:`int`
-        Zero-indexed value showing the total number of pages
+        A zero-indexed value showing the total number of pages.
     buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
-        Dictionary containing the :class:`~PaginatorButton` objects included in this Paginator
+        A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
     user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
-        The user or member that invoked the Paginator.
+        The user or member that invoked the paginator.
     message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
-        The message sent from the Paginator.
+        The message the paginator is attached to.
 
     Parameters
     ----------
     pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
-        Your list of strings or embeds to paginate
+        The list of strings and/or embeds to paginate.
     show_disabled: :class:`bool`
-        Choose whether or not to show disabled buttons
+        Whether to show disabled buttons.
     show_indicator: :class:`bool`
-        Choose whether to show the page indicator
+        Whether to show the page indicator.
     author_check: :class:`bool`
-        Choose whether or not only the original user of the command can change pages
+        Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
-        Should the buttons be disabled when the pagintator view times out?
+        Whether the buttons get disabled when the pagintator view times out.
     custom_view: Optional[:class:`discord.ui.View`]
-        A custom view whose items are appended below the pagination buttons
+        A custom view whose items are appended below the pagination buttons.
     """
 
     def __init__(
@@ -104,7 +103,7 @@ class Paginator(discord.ui.View):
         disable_on_timeout=True,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
-    ):
+    ) -> None:
         super().__init__(timeout=timeout)
         self.timeout = timeout
         self.pages = pages
@@ -114,7 +113,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.custom_view = custom_view
-        self.message: Union[discord.Message, discord.WebhookMessage]
+        self.message: Union[discord.Message, discord.WebhookMessage, None] = None
         self.buttons = {
             "first": {
                 "object": PaginatorButton(
@@ -182,7 +181,7 @@ class Paginator(discord.ui.View):
                 item.disabled = True
             await self.message.edit(view=self)
 
-    async def goto_page(self, interaction: discord.Interaction, page_number=0):
+    async def goto_page(self, interaction: discord.Interaction, page_number=0) -> None:
         """Updates the interaction response message to show the specified page number.
 
         Parameters
@@ -195,11 +194,6 @@ class Paginator(discord.ui.View):
             .. note::
 
                 Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
-
-        Returns
-        ---------
-        :class:`~Paginator`
-            The Paginator class
         """
         self.update_buttons()
         page = self.pages[page_number]
@@ -207,35 +201,36 @@ class Paginator(discord.ui.View):
             content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
         )
 
-    async def interaction_check(self, interaction):
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if self.usercheck:
             return self.user == interaction.user
         return True
 
     def customize_button(
         self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray
-    ) -> Union[PaginatorButton, bool]:
+    ) -> PaginatorButton:
         """Allows you to easily customize the various pagination buttons.
 
         Parameters
         ----------
         button_name: :class:`str`
-            Name of the button to customize
+            The name of the button to customize.
+            Must be one of ``first``, ``prev``, ``next``, or ``last``.
         button_label: :class:`str`
-            Label to display on the button
+            The label to display on the button.
         button_emoji:
-            Emoji to display on the button
+            The emoji to display on the button.
         button_style: :class:`~discord.ButtonStyle`
-            ButtonStyle to use for the button
+            The ButtonStyle to use for the button.
 
         Returns
         -------
         :class:`~PaginatorButton`
-            The button that was customized
+            The button that was customized.
         """
 
         if button_name not in self.buttons.keys():
-            return False
+            raise ValueError(f"no button named {button_name} was found in this view.")
         button: PaginatorButton = self.buttons[button_name]["object"]
         button.label = button_label
         button.emoji = button_emoji
@@ -248,7 +243,7 @@ class Paginator(discord.ui.View):
         Returns
         -------
         Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
-            The dictionary of buttons that was updated.
+            The dictionary of buttons that were updated.
         """
         for key, button in self.buttons.items():
             if key == "first":
@@ -294,7 +289,7 @@ class Paginator(discord.ui.View):
 
         return self.buttons
 
-    async def send(self, messageable: abc.Messageable, ephemeral: bool = False):
+    async def send(self, messageable: abc.Messageable, ephemeral: bool = False) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
 
@@ -308,7 +303,7 @@ class Paginator(discord.ui.View):
         Returns
         --------
         Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
-            The message that was sent with the Paginator.
+            The message that was sent with the paginator.
         """
 
         if not isinstance(messageable, abc.Messageable):
@@ -354,7 +349,7 @@ class Paginator(discord.ui.View):
         Returns
         --------
         :class:`~discord.Interaction`
-            The message sent with the paginator
+            The message sent with the paginator.
         """
         page = self.pages[0]
         self.user = interaction.user
