@@ -700,6 +700,7 @@ class VoiceClient(VoiceProtocol):
         data = RawData(data, self)
 
         if data.decrypted_data == b"\xf8\xff\xfe":  # Frame of silence
+            print("silence??")
             return
 
         self.decoder.decode(data)
