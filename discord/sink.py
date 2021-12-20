@@ -61,7 +61,7 @@ class Filters:
     
     Parameters
     ----------
-    filter_decorator: :meth:`Filters.filter_decorator`
+    interface: :meth:`Filters.interface`
     
     """
     def __init__(self, **kwargs):
@@ -71,7 +71,7 @@ class Filters:
         self.finished = False
 
     @staticmethod
-    def filter_decorator(func):  # Contains all filters
+    def interface(func):  # Contains all filters
         def _filter(self, data, user):
             if not self.filtered_users or user in self.filtered_users:
                 return func(self, data, user)
@@ -200,7 +200,7 @@ class Sink(Filters):
         self.vc = vc
         super().init()
 
-    @Filters.filter_decorator
+    @Filters.interface
     def write(self, data, user):
         if user not in self.audio_data:
             ssrc = self.vc.get_ssrc(user)
