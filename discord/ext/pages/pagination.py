@@ -189,7 +189,7 @@ class Paginator(discord.ui.View):
         Parameters
         ----------
         interaction: :class:`discord.Interaction`
-            The interaction that invoked the Paginator
+            The interaction that invoked the paginator.
         page_number: :class:`int`
             The page to display.
 
