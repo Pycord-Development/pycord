@@ -44,6 +44,7 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
+    Coroutine,
     Dict,
     ForwardRef,
     Generic,
@@ -220,6 +221,17 @@ class SequenceProxy(Generic[T_co], collections.abc.Sequence):
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
+
+
+def delay_task(delay: float, func: Coroutine):
+    async def inner_call():
+        await asyncio.sleep(delay)
+        try:
+            await func
+        except HTTPException:
+            pass
+
+    asyncio.create_task(inner_call())
 
 
 @overload
