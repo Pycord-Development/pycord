@@ -65,6 +65,23 @@ class PaginatorButton(discord.ui.Button):
 class Paginator(discord.ui.View):
     """Creates a paginator which can be sent as a message and uses buttons for navigation.
 
+    Parameters
+    ----------
+    pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
+        The list of strings and/or embeds to paginate.
+    show_disabled: :class:`bool`
+        Whether to show disabled buttons.
+    show_indicator: :class:`bool`
+        Whether to show the page indicator.
+    author_check: :class:`bool`
+        Whether only the original user of the command can change pages.
+    disable_on_timeout: :class:`bool`
+        Whether the buttons get disabled when the paginator view times out.
+    custom_view: Optional[:class:`discord.ui.View`]
+        A custom view whose items are appended below the pagination buttons.
+    timeout: Optional[:class:`float`]
+        Timeout in seconds from last interaction with the paginator before no longer accepting input. 
+
     Attributes
     ----------
     current_page: :class:`int`
@@ -77,21 +94,6 @@ class Paginator(discord.ui.View):
         The user or member that invoked the paginator.
     message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
         The message the paginator is attached to.
-
-    Parameters
-    ----------
-    pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
-        The list of strings and/or embeds to paginate.
-    show_disabled: :class:`bool`
-        Whether to show disabled buttons.
-    show_indicator: :class:`bool`
-        Whether to show the page indicator.
-    author_check: :class:`bool`
-        Whether only the original user of the command can change pages.
-    disable_on_timeout: :class:`bool`
-        Whether the buttons get disabled when the pagintator view times out.
-    custom_view: Optional[:class:`discord.ui.View`]
-        A custom view whose items are appended below the pagination buttons.
     """
 
     def __init__(
@@ -187,7 +189,7 @@ class Paginator(discord.ui.View):
         Parameters
         ----------
         interaction: :class:`discord.Interaction`
-            The interaction which called the Paginator
+            The interaction that invoked the paginator.
         page_number: :class:`int`
             The page to display.
 
