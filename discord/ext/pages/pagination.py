@@ -28,6 +28,11 @@ from discord import abc
 from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
+__all__ = (
+    "PaginatorButton",
+    "Paginator",
+)
+
 
 class PaginatorButton(discord.ui.Button):
     """Creates a button used to navigate the paginator.
@@ -36,20 +41,45 @@ class PaginatorButton(discord.ui.Button):
     ----------
     button_type: :class:`str`
         The type of button being created.
-        Must be one of ``first``, ``prev``, ``next``, or ``last``.
+        Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``.
+    label: :class:`str`
+        The label shown on the button.
+        Defaults to a capitalized version of `button_type` (e.g. "Next", "Prev", etc)
+    emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
+        The emoji shown on the button in front of the label.
+    disabled: :class:`bool`
+        Whether to initially show the button as disabled.
+
+    Attributes
+    ----------
     paginator: :class:`Paginator`
-        The paginator class where this button will be used.
+        The paginator class where this button is being used.
+        Assigned to the button when `Paginator.add_button` is called.
     """
 
-    def __init__(self, label, emoji, style, disabled, button_type, paginator):
-        super().__init__(label=label, emoji=emoji, style=style, disabled=disabled, row=0)
+    def __init__(
+        self,
+        button_type: str,
+        label: str = None,
+        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        style: discord.ButtonStyle = discord.ButtonStyle.green,
+        disabled: bool = False,
+        custom_id: str = None,
+    ):
+        super().__init__(
+            label=label,
+            emoji=emoji,
+            style=style,
+            disabled=disabled,
+            custom_id=custom_id,
+            row=0,
+        )
+        self.button_type = button_type
         self.label = label
         self.emoji = emoji
         self.style = style
         self.disabled = disabled
-        self.button_type = button_type
-        self.paginator = paginator
-        self.active = True
+        self.paginator = None
 
     async def callback(self, interaction: discord.Interaction):
         if self.button_type == "first":
@@ -60,7 +90,9 @@ class PaginatorButton(discord.ui.Button):
             self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
-        await self.paginator.goto_page(interaction=interaction, page_number=self.paginator.current_page)
+        await self.paginator.goto_page(
+            interaction=interaction, page_number=self.paginator.current_page
+        )
 
 
 class Paginator(discord.ui.View):
@@ -86,11 +118,16 @@ class Paginator(discord.ui.View):
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
-        Whether to show the page indicator.
+        Whether to show the page indicator when using the default buttons.
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
         Whether the buttons get disabled when the pagintator view times out.
+    use_default_buttons: :class:`bool`
+        Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    custom_buttons: Optional[List[:class:`PaginatorButton`]]
+        A list of PaginatorButtons to initialize the Paginator with.
+        If ``use_default_buttons`` is ``True``, this parameter is ignored.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination buttons.
     """
@@ -102,75 +139,28 @@ class Paginator(discord.ui.View):
         show_indicator=True,
         author_check=True,
         disable_on_timeout=True,
+        use_default_buttons=True,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
+        custom_buttons: Optional[List[PaginatorButton]] = None,
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout = timeout
         self.pages = pages
         self.current_page = 0
         self.page_count = len(self.pages) - 1
+        self.buttons = {}
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
+        self.use_default_buttons = use_default_buttons
         self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
-        self.buttons = {
-            "first": {
-                "object": PaginatorButton(
-                    label="<<",
-                    style=discord.ButtonStyle.blurple,
-                    emoji=None,
-                    disabled=True,
-                    button_type="first",
-                    paginator=self,
-                ),
-                "hidden": True,
-            },
-            "prev": {
-                "object": PaginatorButton(
-                    label="<",
-                    style=discord.ButtonStyle.red,
-                    emoji=None,
-                    disabled=True,
-                    button_type="prev",
-                    paginator=self,
-                ),
-                "hidden": True,
-            },
-            "page_indicator": {
-                "object": discord.ui.Button(
-                    label=f"{self.current_page + 1}/{self.page_count + 1}",
-                    style=discord.ButtonStyle.gray,
-                    disabled=True,
-                    row=0,
-                ),
-                "hidden": False,
-            },
-            "next": {
-                "object": PaginatorButton(
-                    label=">",
-                    style=discord.ButtonStyle.green,
-                    emoji=None,
-                    disabled=True,
-                    button_type="next",
-                    paginator=self,
-                ),
-                "hidden": True,
-            },
-            "last": {
-                "object": PaginatorButton(
-                    label=">>",
-                    style=discord.ButtonStyle.blurple,
-                    emoji=None,
-                    disabled=True,
-                    button_type="last",
-                    paginator=self,
-                ),
-                "hidden": True,
-            },
-        }
-        self.update_buttons()
+        if custom_buttons and not self.use_default_buttons:
+            for button in custom_buttons:
+                self.add_button(button)
+        elif not custom_buttons and self.use_default_buttons:
+            self.add_default_buttons()
 
         self.usercheck = author_check
         self.user = None
@@ -199,7 +189,9 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         page = self.pages[page_number]
         await interaction.response.edit_message(
-            content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
+            content=page if isinstance(page, str) else None,
+            embed=page if isinstance(page, discord.Embed) else None,
+            view=self,
         )
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
@@ -207,39 +199,44 @@ class Paginator(discord.ui.View):
             return self.user == interaction.user
         return True
 
-    def customize_button(
-        self, button_name: str = None, button_label: str = None, button_emoji=None, button_style: discord.ButtonStyle = discord.ButtonStyle.gray, active: bool = True,
-    ) -> PaginatorButton:
-        """Allows you to easily customize the various pagination buttons.
+    def add_default_buttons(self):
+        default_buttons = [
+            PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple),
+            PaginatorButton("prev", label="<", style=discord.ButtonStyle.red),
+            PaginatorButton(
+                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
+            ),
+            PaginatorButton("next", label=">", style=discord.ButtonStyle.green),
+            PaginatorButton("last", label=">>", style=discord.ButtonStyle.blurple),
+        ]
+        for button in default_buttons:
+            self.add_button(button)
 
-        Parameters
-        ----------
-        button_name: :class:`str`
-            The name of the button to customize.
-            Must be one of ``first``, ``prev``, ``next``, or ``last``.
-        button_label: :class:`str`
-            The label to display on the button.
-        button_emoji:
-            The emoji to display on the button.
-        button_style: :class:`~discord.ButtonStyle`
-            The ButtonStyle to use for the button.
-        active: :class:`bool`
-            Whether the button is active and functional in the paginator.
+    def add_button(self, button: PaginatorButton):
+        self.buttons[button.button_type] = {
+            "object": discord.ui.Button(
+                style=button.style,
+                label=button.label or button.button_type.capitalize()
+                if button.button_type != "page_indicator"
+                else f"{self.current_page + 1}/{self.page_count + 1}",
+                disabled=button.disabled,
+                custom_id=button.custom_id,
+                emoji=button.emoji,
+                row=button.row,
+            ),
+            "hidden": button.disabled
+            if button.button_type != "page_indicator"
+            else not self.show_indicator,
+        }
+        self.buttons[button.button_type]["object"].callback = button.callback
+        button.paginator = self
 
-        Returns
-        -------
-        :class:`~PaginatorButton`
-            The button that was customized.
-        """
-
-        if button_name not in self.buttons.keys():
-            raise ValueError(f"no button named {button_name} was found in this view.")
-        button: PaginatorButton = self.buttons[button_name]["object"]
-        button.label = button_label
-        button.emoji = button_emoji
-        button.style = button_style
-        button.active = active
-        return button
+    def remove_button(self, button_type: str):
+        if button_type not in self.buttons.keys():
+            raise ValueError(
+                f"no button_type {button_type} was found in this paginator."
+            )
+        self.buttons.pop(button_type)
 
     def update_buttons(self) -> Dict:
         """Updates the display state of the buttons (disabled/hidden)
@@ -272,7 +269,9 @@ class Paginator(discord.ui.View):
                     button["hidden"] = False
         self.clear_items()
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            self.buttons["page_indicator"][
+                "object"
+            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
         for key, button in self.buttons.items():
             if key != "page_indicator":
                 if button["hidden"]:
@@ -293,7 +292,9 @@ class Paginator(discord.ui.View):
 
         return self.buttons
 
-    async def send(self, messageable: abc.Messageable, ephemeral: bool = False) -> Union[discord.Message, discord.WebhookMessage]:
+    async def send(
+        self, messageable: abc.Messageable, ephemeral: bool = False
+    ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
 
@@ -312,7 +313,7 @@ class Paginator(discord.ui.View):
 
         if not isinstance(messageable, abc.Messageable):
             raise TypeError("messageable should be a subclass of abc.Messageable")
-
+        self.update_buttons()
         page = self.pages[0]
 
         if isinstance(messageable, (ApplicationContext, Context)):
@@ -355,17 +356,27 @@ class Paginator(discord.ui.View):
         :class:`~discord.Interaction`
             The message sent with the paginator.
         """
+        if not isinstance(interaction, discord.Interaction):
+            raise TypeError(f"expected Interaction not {interaction.__class__!r}")
+        self.update_buttons()
+
         page = self.pages[0]
         self.user = interaction.user
 
         if interaction.response.is_done():
             msg = await interaction.followup.send(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
+                content=page if isinstance(page, str) else None,
+                embed=page if isinstance(page, discord.Embed) else None,
+                view=self,
+                ephemeral=ephemeral,
             )
 
         else:
             msg = await interaction.response.send_message(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
+                content=page if isinstance(page, str) else None,
+                embed=page if isinstance(page, discord.Embed) else None,
+                view=self,
+                ephemeral=ephemeral,
             )
         if isinstance(msg, (discord.WebhookMessage, discord.Message)):
             self.message = msg
