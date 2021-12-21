@@ -603,7 +603,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         --------
-        :class:`Thread`
+        :class:`.Thread`
             The updated thread.
         """
         return await self.edit(archived=True, locked=locked)
@@ -615,7 +615,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         --------
-        :class:`Thread`
+        :class:`.Thread`
             The updated thread.
         """
         return await self.edit(archived=False)
