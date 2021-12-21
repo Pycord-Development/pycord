@@ -1066,7 +1066,7 @@ class Bot(BotBase, Client):
     
     register_commands_on_connect: bool
         Whether to run :meth:`.register_commands` on connect. This is useful when you are
-        using other library to register application commands. Defaults to ``true``.
+        using another library to register application commands. Defaults to ``true``.
     """
 
     pass
