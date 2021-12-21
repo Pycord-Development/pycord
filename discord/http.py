@@ -1642,10 +1642,11 @@ class HTTPClient:
             'scheduled_end_time',
             'description',
             'entity_type',
+            'entity_metadata',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
-        return self.request(Route('POST', 'guilds/{guild_id}/scheduled-events/', guild_id=guild_id), json=payload)
+        return self.request(Route('POST', '/guilds/{guild_id}/scheduled-events', guild_id=guild_id), json=payload)
 
     def delete_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
         return self.request(Route('DELETE', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
@@ -1658,6 +1659,7 @@ class HTTPClient:
             'scheduled_start_time',
             'description',
             'entity_type',
+            'status',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 

@@ -324,6 +324,7 @@ class Invite(Hashable):
         '_state',
         'approximate_member_count',
         'approximate_presence_count',
+        'scheduled_event',
         'target_application',
         'expires_at',
     )

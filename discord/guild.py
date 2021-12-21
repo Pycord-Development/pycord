@@ -52,8 +52,7 @@ from .permissions import PermissionOverwrite
 from .colour import Colour
 from .errors import InvalidArgument, ClientException
 from .channel import *
-from .channel import _guild_channel_factory
-from .channel import _threaded_guild_channel_factory
+from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .enums import (
     AuditLogAction,
     VideoQualityMode,
@@ -79,8 +78,7 @@ from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
 from .file import File
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
-from .scheduled_events import ScheduledEvent
-
+from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 
 __all__ = (
     'Guild',
@@ -101,7 +99,6 @@ if TYPE_CHECKING:
     from .webhook import Webhook
     from .state import ConnectionState
     from .voice_client import VoiceProtocol
-    from .scheduled_events import ScheduledEventLocation
 
     import datetime
 
@@ -296,8 +293,8 @@ class Guild(Hashable):
         'premium_progress_bar_enabled',
         'preferred_locale',
         'nsfw_level',
+        '_scheduled_events',
         '_members',
-        '_scheduled_events'
         '_channels',
         '_icon',
         '_banner',
@@ -327,6 +324,12 @@ class Guild(Hashable):
     }
 
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
+        # NOTE:
+        # Adding an attribute here and getting
+        # an AttributeError saying the attr doesn't
+        # exist? it has something to do with the
+        # order of the attr in __slots__
+
         self._channels: Dict[int, GuildChannel] = {}
         self._members: Dict[int, Member] = {}
         self._scheduled_events: Dict[int, ScheduledEvent] = {}
@@ -499,11 +502,6 @@ class Guild(Hashable):
         self.approximate_presence_count = guild.get('approximate_presence_count')
         self.approximate_member_count = guild.get('approximate_member_count')
 
-        events = []
-        for event in guild.get('guild_scheduled_events', []):
-            events.append(ScheduledEvent(state=self._state, data=event))
-        self._scheduled_events_from_list(events)
-
         self._stage_instances: Dict[int, StageInstance] = {}
         for s in guild.get('stage_instances', []):
             stage_instance = StageInstance(guild=self, data=s, state=state)
@@ -515,6 +513,12 @@ class Guild(Hashable):
             member = Member(data=mdata, guild=self, state=state)
             if cache_joined or member.id == self_id:
                 self._add_member(member)
+
+        events = []
+        for event in guild.get('guild_scheduled_events', []):
+            creator = None if not event.get('creator', None) else self.get_member(event.get('creator_id'))
+            events.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
+        self._scheduled_events_from_list(events)
 
         self._sync(guild)
         self._large: Optional[bool] = None if member_count is None else self._member_count >= 250
@@ -3067,7 +3071,7 @@ class Guild(Hashable):
         The guild must have ``COMMUNITY`` in :attr:`Guild.features`
         
         Parameters
-        ------------
+        -----------
         
         description: Optional[:class:`str`]
             The new description of welcome screen.
@@ -3120,28 +3124,29 @@ class Guild(Hashable):
             This method is an API call. For general usage, consider :attr:`scheduled_events` instead.
 
         Parameters
-        ----------
+        -----------
         with_user_count: Optional[:class:`bool`]
             If the scheduled event should be fetch with the number of
             users that are interested in the event.
             Defaults to ``True``
 
         Raises
-        ------
+        -------
         ClientException
             The scheduled events intent is not enabled.
         HTTPException
             Getting the scheduled events failed.
 
         Returns
-        -------
+        --------
         List[:class:`ScheduledEvent`]
             The fetch scheduled events
         """
         data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
         for event in data:
-            result.append(ScheduledEvent(state=self._state, guild=self, data=event))
+            creator = None if not event.get('creator', None) else self.get_member(event.get('creator_id'))
+            result.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
 
         self._scheduled_events_from_list(result)
         return result
@@ -3162,26 +3167,27 @@ class Guild(Hashable):
             This method is an API call. If you have :attr:`Intents.scheduled_events`, consider :meth:`get_scheduled_event` instead.
 
         Parameters
-        ----------
+        -----------
         event_id: :class:`int`
             The event's ID to fetch from.
 
         Raises
-        ------
+        -------
         HTTPException
             Fetching the event failed.
 
         Returns
-        -------
+        --------
         Optional[:class:`ScheduledEvent`]
             The scheduled event from the event ID.
         """
         data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
-        event = ScheduledEvent(state=self._state, guild=self, data=data)
+        creator = None if not data.get('creator', None) else self.get_member(data.get('creator_id'))
+        event = ScheduledEvent(state=self._state, guild=self, creator=creator, data=data)
 
-        old_event = self.scheduled_events.get(event.id)
+        old_event = self._scheduled_events.get(event.id)
         if old_event:
-            self.scheduled_events[event.id] = event
+            self._scheduled_events[event.id] = event
         else:
             self._add_scheduled_event(event)
 
@@ -3191,7 +3197,7 @@ class Guild(Hashable):
         """Returns a Scheduled Event with the given ID.
 
         Parameters
-        ----------
+        -----------
         user_id: :class:`int`
             The ID to search for.
 
@@ -3209,13 +3215,13 @@ class Guild(Hashable):
         description: str = MISSING,
         start_time: datetime,
         end_time: datetime = MISSING,
-        location: ScheduledEventLocation,
+        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation],
     ) -> Optional[ScheduledEvent]:
         """|coro|
         Creates a scheduled event.
 
         Parameters
-        ----------
+        -----------
         name: :class:`str`
             The name of the scheduled event.
         description: Optional[:class:`str`]
@@ -3226,30 +3232,42 @@ class Guild(Hashable):
             A datetime object of when the scheduled event is supposed to end.
         location: :class:`ScheduledEventLocation`
             The location of where the event is happening.
+
+        Returns
+        --------
+        Optional[:class:`ScheduledEvent`]
+            The created scheduled event.
         """
         payload: Dict[str, Union[str, int]] = {}
 
         payload["name"] = name
-        payload["start_time"] = start_time.isoformat()
-        payload["privacy_level"] = 2 # Required parameter with 1 possible value???
+
+        payload["scheduled_start_time"] = start_time.isoformat()
+
+        payload["privacy_level"] = 2 # Required parameter with 1 possible value
+
+        if not isinstance(location, ScheduledEventLocation):
+            location = ScheduledEventLocation(state=self._state, location=location)
 
         payload["entity_type"] = location.type.value
 
-        if isinstance(location.type, ScheduledEventLocationType.external):
+        if location.type == ScheduledEventLocationType.external:
             payload["channel_id"] = None
-            payload["entity_metadata"] = {"location": location.location}
+            payload["entity_metadata"] = {"location": location.value}
         else:
-            payload["channel_id"] = location.location.id
-            payload["entity_metadata"] = {"location": None}
+            payload["channel_id"] = location.value.id
+            payload["entity_metadata"] = None
 
         if description is not MISSING:
             payload["description"] = description
 
         if end_time is not MISSING:
-            payload["end_time"] = end_time.isoformat()
+            payload["scheduled_end_time"] = end_time.isoformat()
 
+        print(payload)
+        print(self.id)
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
-        event = ScheduledEvent(state=self._state, guild=self, data=data)
+        event = ScheduledEvent(state=self._state, guild=self, creator=self.me, data=data)
         self._add_scheduled_event(event)
         return event
 

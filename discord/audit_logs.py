@@ -61,6 +61,7 @@ if TYPE_CHECKING:
     from .stage_instance import StageInstance
     from .sticker import GuildSticker
     from .threads import Thread
+    from .scheduled_events import ScheduledEvent
 
 
 def _transform_permissions(entry: AuditLogEntry, data: str) -> Permissions:
@@ -147,7 +148,7 @@ def _enum_transformer(enum: Type[T]) -> Callable[[AuditLogEntry, int], T]:
 
     return _transform
 
-def _transform_type(entry: AuditLogEntry, data: Union[int]) -> Union[enums.ChannelType, enums.StickerType]:
+def _transform_type(entry: AuditLogEntry, data: int) -> Union[enums.ChannelType, enums.StickerType]:
     if entry.action.name.startswith('sticker_'):
         return enums.try_enum(enums.StickerType, data)
     else:
@@ -523,3 +524,6 @@ class AuditLogEntry(Hashable):
 
     def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
         return self.guild.get_thread(target_id) or Object(id=target_id)
+
+    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, None]:
+        return self.guild.get_scheduled_event(target_id)

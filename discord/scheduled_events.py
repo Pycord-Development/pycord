@@ -31,10 +31,8 @@ from .enums import (
     ScheduledEventLocationType,
     try_enum
 )
-from .channel import VoiceChannel, StageChannel
 from .utils import MISSING
 from .mixins import Hashable
-from .user import User
 
 __all__ = (
     'ScheduledEvent',
@@ -43,8 +41,10 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .state import ConnectionState
+    from .member import Member
     from .types.guild import Guild
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .types.channel import StageChannel, VoiceChannel
 
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
@@ -54,7 +54,7 @@ class ScheduledEventLocation:
     - :class:`VoiceChannel`: :attr:`.ScheduledEventLocationType.voice`
     - :class:`str`: :attr:`.ScheduledEventLocationType.external`
 
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     Attributes
     ----------
@@ -65,11 +65,11 @@ class ScheduledEventLocation:
     """
 
     __slots__ = (
+        '_state',
         'value',
-        'type',
     )
 
-    def __init__(self, *, state: ConnectionState, location: Union[str, int, VoiceChannel, StageChannel]):
+    def __init__(self, *, state: ConnectionState, location: Union[str, int, StageChannel, VoiceChannel]):
         self._state = state
         if isinstance(location, int):
             self.value = self._state._get_channel(int(location))
@@ -78,18 +78,37 @@ class ScheduledEventLocation:
     
     @property
     def type(self):
-        if isinstance(self.value, StageChannel):
-            return ScheduledEventLocationType.stage_instance
-        elif isinstance(self.value, VoiceChannel):
-            return ScheduledEventLocationType.voice
-        else:
+        if isinstance(self.value, str):
             return ScheduledEventLocationType.external
+        elif self.value.__class__.__name__ == "StageChannel":
+            return ScheduledEventLocationType.stage_instance
+        elif self.value.__class__.__name__ == "VoiceChannel":
+            return ScheduledEventLocationType.voice
+
 
 
 class ScheduledEvent(Hashable):
     """Represents a Discord Guild Scheduled Event.
 
-    .. versionadded:: 2.1
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two scheduled events are equal.
+
+        .. describe:: x != y
+
+            Checks if two scheduled events are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the scheduled event's hash.
+
+        .. describe:: str(x)
+
+            Returns the scheduled event's name.
+
+    .. versionadded:: 2.0
 
     Attributes
     ----------
@@ -120,6 +139,7 @@ class ScheduledEvent(Hashable):
     """
     
     __slots__ = (
+        'id',
         'name',
         'description',
         'start_time',
@@ -129,12 +149,14 @@ class ScheduledEvent(Hashable):
         'creator',
         'location',
         'guild',
+        '_state',
+        'user_count',
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, data: ScheduledEventPayload):
+    def __init__(self, *, state: ConnectionState, guild: Guild, creator: Optional[Member], data: ScheduledEventPayload):
         self._state = state
         
-        self.id: int = data.get('id')
+        self.id: int = int(data.get('id'))
         self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
@@ -147,18 +169,14 @@ class ScheduledEvent(Hashable):
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
         self.user_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
-        self.creator = User(state=self._state, data=data.get('creator', None))
+        self.creator: Optional[Member] = creator
 
         entity_metadata = data.get('entity_metadata')
-        entity_type = try_enum(ScheduledEventLocationType, data.get('entity_type'))
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=channel_id, type=entity_type)
+            self.location = ScheduledEventLocation(state=state, location=channel_id)
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"], type=entity_type)
-
-        # TODO: find out what the following means/does
-        self.entity_id: int = data.get('entity_id')
+            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
 
     @property
     def interested(self):
@@ -167,9 +185,10 @@ class ScheduledEvent(Hashable):
     async def edit(
         self,
         *,
-        name: Optional[str] = MISSING,
-        description: Optional[str] = MISSING,
-        location: ScheduledEventLocation = MISSING,
+        name: str = MISSING,
+        description: str = MISSING,
+        status: Union[int, ScheduledEventStatus] = MISSING,
+        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
     ) -> Optional[ScheduledEvent]:
@@ -213,13 +232,20 @@ class ScheduledEvent(Hashable):
         if description is not MISSING:
             payload["description"] = description
 
+        if status is not MISSING:
+            payload["status"] = status if isinstance(status, int) else status.value
+            print(payload["status"])
+
+        if not isinstance(location, ScheduledEventLocation):
+            location = ScheduledEventLocation(state=self._state, location=location)
+
         if location is not MISSING:
             if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
-                payload["channel_id"] = location.location.id
+                payload["channel_id"] = location.value.id
                 payload["entity_metadata"] = None
             else:
                 payload["channel_id"] = None
-                payload["entity_metadata"] = {"location":str(location.location)}
+                payload["entity_metadata"] = {"location":str(location.value)}
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
@@ -228,8 +254,8 @@ class ScheduledEvent(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(self.id, **payload)
-            return ScheduledEvent(data=data, state=self._state)
+            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload)
+            return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
 
     async def delete(self) -> None:
         """|coro|
@@ -243,7 +269,7 @@ class ScheduledEvent(Hashable):
         HTTPException
             The operation failed.
         """
-        await self._state.http.delete_scheduled_event(self.id)
+        await self._state.http.delete_scheduled_event(self.guild.id, self.id)
 
     async def users(self):
         pass # TODO: discord/abc.py#1587
