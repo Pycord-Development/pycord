@@ -620,6 +620,15 @@ class Member(discord.abc.Messageable, _UserTag):
         """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
+    @property
+    def timed_out(self) -> bool:
+        """bool: Returns whether the member is timed out.
+
+        .. versionadded:: 2.0
+        """
+        return self.communication_disabled_until is not None and self.communication_disabled_until > datetime.datetime.now(datetime.timezone.utc)
+
+
     async def ban(
         self,
         *,
