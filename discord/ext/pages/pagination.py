@@ -98,6 +98,27 @@ class PaginatorButton(discord.ui.Button):
 class Paginator(discord.ui.View):
     """Creates a paginator which can be sent as a message and uses buttons for navigation.
 
+    Parameters
+    ----------
+    pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
+        The list of strings and/or embeds to paginate.
+    show_disabled: :class:`bool`
+        Whether to show disabled buttons.
+    show_indicator: :class:`bool`
+        Whether to show the page indicator when using the default buttons.
+    author_check: :class:`bool`
+        Whether only the original user of the command can change pages.
+    disable_on_timeout: :class:`bool`
+        Whether the buttons get disabled when the paginator view times out.
+    use_default_buttons: :class:`bool`
+        Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    custom_buttons: Optional[List[:class:`PaginatorButton`]]
+        A list of PaginatorButtons to initialize the Paginator with.
+        If ``use_default_buttons`` is ``True``, this parameter is ignored.
+    custom_view: Optional[:class:`discord.ui.View`]
+        A custom view whose items are appended below the pagination buttons.
+
+
     Attributes
     ----------
     current_page: :class:`int`
@@ -110,26 +131,6 @@ class Paginator(discord.ui.View):
         The user or member that invoked the paginator.
     message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
         The message the paginator is attached to.
-
-    Parameters
-    ----------
-    pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
-        The list of strings and/or embeds to paginate.
-    show_disabled: :class:`bool`
-        Whether to show disabled buttons.
-    show_indicator: :class:`bool`
-        Whether to show the page indicator when using the default buttons.
-    author_check: :class:`bool`
-        Whether only the original user of the command can change pages.
-    disable_on_timeout: :class:`bool`
-        Whether the buttons get disabled when the pagintator view times out.
-    use_default_buttons: :class:`bool`
-        Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
-    custom_buttons: Optional[List[:class:`PaginatorButton`]]
-        A list of PaginatorButtons to initialize the Paginator with.
-        If ``use_default_buttons`` is ``True``, this parameter is ignored.
-    custom_view: Optional[:class:`discord.ui.View`]
-        A custom view whose items are appended below the pagination buttons.
     """
 
     def __init__(
@@ -178,7 +179,7 @@ class Paginator(discord.ui.View):
         Parameters
         ----------
         interaction: :class:`discord.Interaction`
-            The interaction which called the Paginator
+            The interaction that invoked the Paginator
         page_number: :class:`int`
             The page to display.
 
@@ -322,7 +323,7 @@ class Paginator(discord.ui.View):
         if isinstance(messageable, ApplicationContext):
             msg = await messageable.respond(
                 content=page if isinstance(page, str) else None,
-                embed=page if isinstance(page, discord.Embed) else None,
+                embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -330,7 +331,7 @@ class Paginator(discord.ui.View):
         else:
             msg = await messageable.send(
                 content=page if isinstance(page, str) else None,
-                embed=page if isinstance(page, discord.Embed) else None,
+                embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
             )
         if isinstance(msg, (discord.WebhookMessage, discord.Message)):
@@ -366,7 +367,7 @@ class Paginator(discord.ui.View):
         if interaction.response.is_done():
             msg = await interaction.followup.send(
                 content=page if isinstance(page, str) else None,
-                embed=page if isinstance(page, discord.Embed) else None,
+                embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -374,7 +375,7 @@ class Paginator(discord.ui.View):
         else:
             msg = await interaction.response.send_message(
                 content=page if isinstance(page, str) else None,
-                embed=page if isinstance(page, discord.Embed) else None,
+                embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
                 ephemeral=ephemeral,
             )
