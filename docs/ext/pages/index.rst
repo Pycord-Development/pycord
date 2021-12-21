@@ -36,7 +36,7 @@ Example usage in a cog:
         async def pagetest(self, ctx):
             await ctx.defer()
             # initializing the paginator
-            paginator = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
+            paginator = pages.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True)
 
             # customising buttons
             paginator.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
@@ -59,7 +59,7 @@ Example usage in a cog:
                     options=[discord.SelectOption(label="Example Option", value="Example Value", description="This menu does nothing!")],
                 )
             )
-            paginator = menus.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
+            paginator = pages.Paginator(pages=self.get_pages(), show_disabled=False, show_indicator=True, custom_view=view)
             await paginator.send(ctx, ephemeral=False)
 
 
