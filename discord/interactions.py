@@ -272,6 +272,7 @@ class Interaction:
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -303,6 +304,10 @@ class Interaction:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -346,6 +351,10 @@ class Interaction:
         message = InteractionMessage(state=self._state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             self._state.store_view(view, message.id)
+
+        if delete_after is not None:
+            await self.delete_original_message(delay=delete_after)
+
         return message
 
     async def delete_original_message(self, *, delay: Optional[float] = None) -> None:
@@ -611,10 +620,7 @@ class InteractionResponse:
 
         self._responded = True
         if delete_after is not None:
-            async def delete():
-                await asyncio.sleep(delete_after)
-                await self._parent.delete_original_message()
-            asyncio.ensure_future(delete(), loop=self._parent._state.loop)
+            await self._parent.delete_original_message(delay=delete_after)
         return self._parent
 
     async def edit_message(
@@ -625,6 +631,7 @@ class InteractionResponse:
         embeds: List[Embed] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
+        delete_after: Optional[float] = None
     ) -> None:
         """|coro|
 
@@ -646,6 +653,10 @@ class InteractionResponse:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -708,6 +719,8 @@ class InteractionResponse:
             state.store_view(view, message_id)
 
         self._responded = True
+        if delete_after is not None:
+            await self._parent.delete_original_message(delay=delete_after)
 
     async def send_autocomplete_result(
         self,
@@ -800,6 +813,7 @@ class InteractionMessage(Message):
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -825,6 +839,10 @@ class InteractionMessage(Message):
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -850,6 +868,7 @@ class InteractionMessage(Message):
             files=files,
             view=view,
             allowed_mentions=allowed_mentions,
+            delete_after=delete_after
         )
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
