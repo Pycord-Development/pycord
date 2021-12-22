@@ -979,8 +979,10 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        # Context Menu commands don't have permissions
-        self.permissions = []
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
+        if self.permissions and self.default_permission:
+            self.default_permission = False
 
         # Context Menu commands can't have parents
         self.parent = None
@@ -1023,7 +1025,7 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {"name": self.name, "description": self.description, "type": self.type}
+        return {"name": self.name, "description": self.description, "type": self.type, "default_permission": self.default_permission}
 
 
 class UserCommand(ContextMenuCommand):
