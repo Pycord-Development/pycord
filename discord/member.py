@@ -785,7 +785,7 @@ class Member(discord.abc.Messageable, _UserTag):
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
             return Member(data=data, guild=self.guild, state=self._state)
 
-    async def timeout(self, until: Optional[datetime.datetime], *, reason: Optional[str] = None) -> None:
+    async def timeout(self, until: Optional[Union[int, datetime.datetime]], *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Timeouts a member from the guild for the set duration.
@@ -807,6 +807,9 @@ class Member(discord.abc.Messageable, _UserTag):
         HTTPException
             An error occurred doing the request.
         """
+        if isinstance(until, int):
+            until = datetime.datetime(seconds=until)
+
         await self.edit(communication_disabled_until=until, reason=reason)
 
     async def remove_timeout(self, *, reason: Optional[str] = None) -> None:
