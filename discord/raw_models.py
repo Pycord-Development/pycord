@@ -40,7 +40,8 @@ if TYPE_CHECKING:
         ReactionClearEmojiEvent,
         IntegrationDeleteEvent,
         ThreadDeleteEvent,
-        TypingEvent
+        TypingEvent,
+        ScheduledEventUserAction,
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
@@ -59,6 +60,7 @@ __all__ = (
     'RawIntegrationDeleteEvent',
     'RawThreadDeleteEvent',
     'RawTypingEvent',
+    'RawScheduledEventUserAction',
 )
 
 
@@ -346,4 +348,27 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: Optional[int] = int(data['guild_id'])
         except KeyError:
             self.guild_id: Optional[int] = None
- 
+
+class RawScheduledEventUserAction(_RawReprMixin):
+    """Represents the payload for a :func:`on_scheduled_event_user_add` or
+    :func:`on_scheduled_event_user_remove` event.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    event_id: :class:`int`
+        The channel ID where the typing originated from.
+    user_id: :class:`int`
+        The ID of the user that started typing.
+    guild_id: Optional[:class:`int`]
+        The guild ID where the typing originated from, if applicable.
+    """
+
+    __slots__ = ("event_id", "member_id", "user_id")
+
+    def __init__(self, data: ScheduledEventUserAction, event_type: str):
+        self.event_id: int = int(data['guild_scheduled_event_id'])
+        self.member_id: int = int(data['user_id'])
+        self.guild: int = None
+        self.event_type: str = event_type
