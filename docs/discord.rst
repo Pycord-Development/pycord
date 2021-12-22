@@ -71,10 +71,10 @@ If you want to invite your bot you must create an invite URL for it.
     .. image:: /images/discord_oauth2.png
         :alt: How the OAuth2 tab should look like.
 
-5. Tick the "bot" checkbox under "scopes".
+5. Tick the "bot" and "applications.commands" checkboxes under "scopes".
 
     .. image:: /images/discord_oauth2_scope.png
-        :alt: The scopes checkbox with "bot" ticked.
+        :alt: The scopes checkbox with "bot" and "applications.commands" ticked.
 
 6. Tick the permissions required for your bot to function under "Bot Permissions".
 
