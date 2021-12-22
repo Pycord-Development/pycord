@@ -910,7 +910,7 @@ class Client:
 
         Parameters
         -----------
-        id: int
+        id: :class:`int`
             The ID to search for.
 
         Returns
