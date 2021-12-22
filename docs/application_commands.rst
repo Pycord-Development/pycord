@@ -33,8 +33,6 @@ Application commands can be used with either :class:`.Bot` or :class:`.ext.comma
 How to use Application Commands in a Cog
 ----------------------------------------
 
-This is gonna be a short 
-
 Application Command Types
 -------------------------
 
@@ -87,7 +85,7 @@ Typehints can be used to set option types. All option types are listed under :cl
     async def foo(ctx, number: int, member: discord.Member):
         # command code
 
-All option fields can be set using :class:`.Option` as the type of the argument.
+Option fields can be set using :class:`.Option` as the type of the argument.
 
 .. code-block:: python3
 
@@ -103,7 +101,7 @@ All option fields can be set using :class:`.Option` as the type of the argument.
 Slash Command Groups
 --------------------
 
-Slash Command groups allow for the creation of multiple commands under the same command.
+Slash Command Groups allows for the creation of multiple subcommands grouped under the same command.
 
 All available options are listed at :class:`.Bot.create_group`.
 
@@ -111,13 +109,13 @@ All available options are listed at :class:`.Bot.create_group`.
     
     foo = bot.create_group()
 
-Only 2 options are allowed to be parsed in, your name and description.
+Options take two arguments, which are name and description.
 
 .. code-block:: python3
         
         "foo", "bar"
 
-Now your will want to use :class:`.command` with your list name, Full list of options and type hints are on :class:`Bot.slash_command`.
+Now your will want to use :class:`.command` with your list name, Full list of options and type hints are on :class:`.Bot.slash_command`.
 
 .. code-block:: python3
     
