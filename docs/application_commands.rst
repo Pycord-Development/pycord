@@ -104,13 +104,7 @@ All available options are listed at :class:`.Bot.create_group`.
 
 .. code-block:: python3
     
-    foo = bot.create_group()
-
-Options take two arguments, which are name and description.
-
-.. code-block:: python3
-        
-        "foo", "bar"
+    foo = bot.create_group("name", "description")
 
 Now your will want to use :class:`.command` with your list name, Full list of options and type hints are on :class:`.Bot.slash_command`.
 
