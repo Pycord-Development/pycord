@@ -30,9 +30,6 @@ Application commands can be used with either :class:`.Bot` or :class:`.ext.comma
     async def foo(ctx, arg):
         await ctx.respond(arg)
 
-How to use Application Commands in a Cog
-----------------------------------------
-
 Application Command Types
 -------------------------
 
@@ -120,3 +117,6 @@ Now your will want to use :class:`.command` with your list name, Full list of op
 .. code-block:: python3
     
     @foo.command(guild_ids=[], foo: int, bar)
+
+Using Cogs
+----------
