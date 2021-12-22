@@ -365,7 +365,7 @@ class RawScheduledEventUserAction(_RawReprMixin):
         The guild ID where the typing originated from, if applicable.
     """
 
-    __slots__ = ("event_id", "member_id", "user_id")
+    __slots__ = ("event_id", "guild", "user_id", "event_type")
 
     def __init__(self, data: ScheduledEventUserAction, event_type: str):
         self.event_id: int = int(data['guild_scheduled_event_id'])
