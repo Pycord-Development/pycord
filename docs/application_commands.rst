@@ -106,11 +106,12 @@ All available options are listed at :class:`.Bot.create_group`.
     
     foo = bot.create_group("name", "description")
 
-Now your will want to use :class:`.command` with your list name, Full list of options and type hints are on :class:`.Bot.slash_command`.
+To create a subcommand, use :meth:`.SlashCommandGroup.command`.
 
 .. code-block:: python3
-    
-    @foo.command(guild_ids=[], foo: int, bar)
+
+    @foo.command()
+    async def bar(ctx):  # this will show up as "/foo bar"
 
 Using Cogs
 ----------
