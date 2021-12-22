@@ -2749,7 +2749,7 @@ of :class:`enum.Enum`.
 
         A invite that targets an embedded application.
 
-        Note that your bot wont be verified if you provide users access to this
+        Note that your bot won't be verified if you provide users access to this
 
 .. class:: VideoQualityMode
 
