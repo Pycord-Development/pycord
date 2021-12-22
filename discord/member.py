@@ -30,19 +30,17 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union, overload
+from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union
 
 import discord.abc
-
 from . import utils
-from .asset import Asset
-from .utils import MISSING
-from .user import BaseUser, User, _UserTag
 from .activity import create_activity, ActivityTypes
-from .permissions import Permissions
-from .enums import Status, try_enum
 from .colour import Colour
+from .enums import Status, try_enum
 from .object import Object
+from .permissions import Permissions
+from .user import BaseUser, User, _UserTag
+from .utils import MISSING
 
 __all__ = (
     'VoiceState',
@@ -788,10 +786,9 @@ class Member(discord.abc.Messageable, _UserTag):
     async def timeout(self, until: Optional[datetime.datetime], *, reason: Optional[str] = None) -> None:
         """|coro|
 
-        Timeouts a member from the guild for the set duration.
+        Applies a timeout to a member in the guild until a set datetime.
 
-        You must have the :attr:`~Permissions.moderate_members` permission to
-        timeout a member.
+        You must have the :attr:`~Permissions.moderate_members` permission to  timeout a member.
 
         Parameters
         -----------
@@ -808,6 +805,31 @@ class Member(discord.abc.Messageable, _UserTag):
             An error occurred doing the request.
         """
         await self.edit(communication_disabled_until=until, reason=reason)
+
+    async def timeout_for(self, duration: datetime.timedelta, *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Applies a timeout to a member in the guild for a set duration. A shortcut method for :meth:`~.timeout`, and
+        equivalent to ``timeout(until=datetime.utcnow() + duration, reason=reason)``.
+
+        You must have the :attr:`~Permissions.moderate_members` permission to
+        timeout a member.
+
+        Parameters
+        -----------
+        duration: :class:`datetime.timedelta`
+            The duration to timeout the member for.
+        reason: Optional[:class:`str`]
+            The reason for doing this action. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to timeout members.
+        HTTPException
+            An error occurred doing the request.
+        """
+        await self.timeout(datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason)
 
     async def remove_timeout(self, *, reason: Optional[str] = None) -> None:
         """|coro|
