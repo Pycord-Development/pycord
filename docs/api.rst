@@ -2747,7 +2747,9 @@ of :class:`enum.Enum`.
 
     .. attribute:: embedded_application
 
-        A stream invite that targets an embedded application.
+        A invite that targets an embedded application.
+
+        Note that your bot wont be verified if you provide users access to this
 
 .. class:: VideoQualityMode
 
