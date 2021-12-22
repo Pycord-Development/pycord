@@ -1,0 +1,60 @@
+# Biggest Contributors To Files/Folders Will be automatically requested review
+
+*       @BobDotCom @CodeWithSwastik
+
+# Commands Module
+/discord/commands/ @Lulalaby @Dorukyum @Prince2347X
+
+# discord.Bot
+/discord/bot.py @Dorukyum @Middledot @nerdguyahmad @TheGamerX20
+
+# discord.Cog
+/discord/cog.py @Middledot @Makiyu-py @Dorukyum
+
+# Views
+/discord/ui/view.py @Dorukyum
+
+# HTTP
+/discord/http.py @Lulalaby @Middledot
+
+# Flags
+/discord/flags.py @Lulalaby @Dorukyum
+
+# Guild
+/discord/guild.py @Lulalaby @nerdguyahmad @Dorukyum
+
+# Documentation
+/docs/ @RPSMai @Lulalaby @Dorukyum
+
+# Examples 
+/examples/ @Grace-codes @Dorukyum @Middledot
+
+# Abc
+/discord/abc.py @Grace-codes @Middledot @Dorukyum
+
+# __main__ 
+/discord/__main__.py @Middledot
+
+# Enums
+/discord/enums.py @Lulalaby @Middledot @Dorukyum
+
+# raw_models
+/discord/raw_models.py @nerdguyahmad
+
+# Interactions
+/discord/interactions.py @plun1331 @Dorukyum
+
+# Utils
+/discord/utils.py @Lulalaby @Dorukyum
+
+# Welcome Screens
+/discord/welcome_screen.py @nerdguyahmad @Prince2347X @Middledot
+
+# Webhooks
+/discord/webhook @krittick @nerdguyahmad
+
+# Github
+/.github/ @Lulalaby
+
+# About.md
+about.md @Dorukyum
