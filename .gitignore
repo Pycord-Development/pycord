@@ -2,8 +2,8 @@
 *.py[cod]
 *.log
 *.egg-info
-venv
-.venv
+venv/
+.venv/
 docs/_build
 docs/crowdin.py
 *.buildinfo
@@ -17,3 +17,7 @@ docs/crowdin.py
 .idea/
 env/
 .vs/
+.DS_Store
+.python-version
+__pycache__
+build/

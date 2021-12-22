@@ -148,7 +148,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(0b111111111111111111111111111111111111111)
+        return cls(-1)
 
     @classmethod
     def all_channel(cls: Type[P]) -> P:
@@ -559,6 +559,14 @@ class Permissions(BaseFlags):
         .. versionadded:: 2.0
         """
         return 1 << 39
+    
+    @flag_value
+    def moderate_members(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can moderate members (timeout).
+
+        .. versionadded:: 2.0
+        """
+        return 1 << 40
 
 PO = TypeVar('PO', bound='PermissionOverwrite')
 
@@ -674,6 +682,7 @@ class PermissionOverwrite:
         external_stickers: Optional[bool]
         use_external_stickers: Optional[bool]
         start_embedded_activities: Optional[bool]
+        moderate_members: Optional[bool]
 
     def __init__(self, **kwargs: Optional[bool]):
         self._values: Dict[str, Optional[bool]] = {}

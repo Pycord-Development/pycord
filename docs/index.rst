@@ -1,4 +1,4 @@
-.. discord.py documentation master file, created by
+.. pycord documentation master file, created by
    sphinx-quickstart on Fri Aug 21 05:43:30 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -50,6 +50,7 @@ These extensions help you during development when it comes to common tasks.
 
   ext/commands/index.rst
   ext/tasks/index.rst
+  ext/pages/index.rst
 
 Manuals
 ---------
@@ -62,6 +63,7 @@ These pages go into great detail about everything the API can do.
   api
   discord.ext.commands API Reference <ext/commands/api.rst>
   discord.ext.tasks API Reference <ext/tasks/index.rst>
+  discord.ext.pages API Reference <ext/pages/index.rst>
 
 Meta
 ------

@@ -19,8 +19,8 @@ msgid "API Reference"
 msgstr "APIリファレンス"
 
 #: ../../api.rst:6
-msgid "The following section outlines the API of discord.py."
-msgstr "ここではdiscord.pyのAPIについて解説します。"
+msgid "The following section outlines the API of pycord."
+msgstr "ここではpycordのAPIについて解説します。"
 
 #: ../../api.rst:10
 msgid ""
@@ -28,9 +28,9 @@ msgid ""
 "in an output independent way.  If the logging module is not configured, "
 "these logs will not be output anywhere.  See :ref:`logging_setup` for "
 "more information on how to set up and use the logging module with "
-"discord.py."
+"pycord."
 msgstr ""
-"このモジュールはPythonのloggingモジュールを使用して、出力に依存しない方法でエラーや診断の内容を記録します。loggingモジュールが設定されていない場合、これらのログはどこにも出力されません。discord.pyでloggingモジュールを使用する方法の詳細は"
+"このモジュールはPythonのloggingモジュールを使用して、出力に依存しない方法でエラーや診断の内容を記録します。loggingモジュールが設定されていない場合、これらのログはどこにも出力されません。pycordでloggingモジュールを使用する方法の詳細は"
 " :ref:`logging_setup` を参照してください。"
 
 #: ../../api.rst:17
@@ -6727,7 +6727,7 @@ msgstr "Webhookサポート"
 
 #: ../../api.rst:2505
 msgid ""
-"discord.py offers support for creating, editing, and executing webhooks "
+"pycord offers support for creating, editing, and executing webhooks "
 "through the :class:`Webhook` class."
 msgstr ""
 
@@ -16700,7 +16700,7 @@ msgid "The following exceptions are thrown by the library."
 msgstr ""
 
 #: discord.DiscordException:1 of
-msgid "Base exception class for discord.py"
+msgid "Base exception class for pycord"
 msgstr ""
 
 #: discord.DiscordException:3 of

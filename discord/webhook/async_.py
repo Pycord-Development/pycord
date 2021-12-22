@@ -29,6 +29,7 @@ import logging
 import asyncio
 import json
 import re
+import weakref
 
 from urllib.parse import quote as urlquote
 from typing import Any, Dict, List, Literal, NamedTuple, Optional, TYPE_CHECKING, Tuple, Union, overload
@@ -98,7 +99,7 @@ class AsyncDeferredLock:
 
 class AsyncWebhookAdapter:
     def __init__(self):
-        self._locks: Dict[Any, asyncio.Lock] = {}
+        self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
 
     async def request(
         self,
@@ -1312,6 +1313,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         wait: bool = False,
+        delete_after: float = None,
     ) -> Optional[WebhookMessage]:
         """|coro|
 
@@ -1377,6 +1379,9 @@ class Webhook(BaseWebhook):
             The thread to send this webhook to.
 
             .. versionadded:: 2.0
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
 
         Raises
         --------
@@ -1458,6 +1463,12 @@ class Webhook(BaseWebhook):
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
             self._state.store_view(view, message_id)
+
+        if delete_after is not None:
+            async def delete():
+                await asyncio.sleep(delete_after)
+                await msg.delete()
+            asyncio.ensure_future(delete(), loop=self._state.loop)
 
         return msg
 

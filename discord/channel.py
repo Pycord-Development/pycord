@@ -1084,7 +1084,7 @@ class VoiceChannel(VocalGuildChannel):
         if isinstance(activity, EmbeddedActivity):
             activity = activity.value
 
-        if not isinstance(activity, int):
+        elif not isinstance(activity, int):
             raise TypeError('Invalid type provided for the activity.')
 
         return await self.create_invite(
