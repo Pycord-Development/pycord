@@ -935,6 +935,14 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
+    default_permission: :class:`bool`
+        Whether the command is enabled by default when it is added to a guild.
+    permissions: List[:class:`Permission`]
+        The permissions for this command.
+
+        .. note::
+
+            If this is not empty then default_permissions will be set to False.
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
