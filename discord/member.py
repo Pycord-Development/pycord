@@ -795,7 +795,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         -----------
-        until: Union[:class:`int, :class:`datetime.datetime`]
+        until: Union[:class:`int`, :class:`datetime.datetime`]
             The date and time or seconds to timeout the member for. If this is ``None`` then the member is removed from timeout.
         reason: Optional[:class:`str`]
             The reason for doing this action. Shows up on the audit log.
