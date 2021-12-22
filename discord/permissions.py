@@ -487,6 +487,14 @@ class Permissions(BaseFlags):
         .. versionadded:: 1.7
         """
         return 1 << 31
+    
+    @make_permission_alias('use_slash_commands')
+    def use_application_commands(self) -> int:
+        """:class:`bool`: An alias for :attr:`use_slash_commands`.
+
+        .. versionadded:: 2.0
+        """
+        return 1 << 31
 
     @flag_value
     def request_to_speak(self) -> int:
