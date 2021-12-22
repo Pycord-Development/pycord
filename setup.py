@@ -70,9 +70,9 @@ packages = [
 setup(
     name="py-cord",
     author="Pycord Development",
-    url="https://github.com/Pycord-Development/pycord",
+    url="https://pycord.dev/github",
     project_urls={
-        "Documentation": "https://pycord.readthedocs.io/en/latest/",
+        "Documentation": "https://docs.pycord.dev/en/latest/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
     },
     version=version,
