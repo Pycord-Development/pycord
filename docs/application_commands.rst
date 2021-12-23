@@ -95,6 +95,25 @@ Option fields can be set using :class:`.Option` as the type of the argument.
     ):
         # command code
 
+Options can also be used with custom converters.
+
+.. code-block:: python3
+
+    from discord.ext.commands import Converter
+
+    class ColorConverter(Converter):
+        async def convert(self, ctx, arg):
+            if arg == "0":
+                return "Black"
+            return arg
+
+    @bot.slash_command()
+    async def show_color(
+        ctx,
+        color: Option(ColorConverter, "Your color choice"),
+    ):
+        # command code
+
 Slash Command Groups
 --------------------
 
