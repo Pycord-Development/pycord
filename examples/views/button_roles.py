@@ -87,7 +87,7 @@ class ButtonRoleCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        """This function is called every time the bot restarts.
+        """This function is called every time the bot connects to Discord.
         If a view was already created before (with the same custom IDs for buttons)
         it will be loaded and the bot will start watching for button clicks again.
         """
