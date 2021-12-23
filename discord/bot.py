@@ -687,9 +687,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.owner_id = options.get("owner_id")
         self.owner_ids = options.get("owner_ids", set())
 
-        self.debug_guild = options.pop(
-            "debug_guild", None
-        )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
 
         if self.owner_id and self.owner_ids:
@@ -701,12 +698,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
-
-        if self.debug_guild:
-            if self.debug_guilds is None:
-                self.debug_guilds = [self.debug_guild]
-            else:
-                raise TypeError("Both debug_guild and debug_guilds are set.")
 
         self._checks = []
         self._check_once = []
@@ -1086,17 +1077,10 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-    debug_guild: Optional[:class:`int`]
-        Guild ID of a guild to use for testing commands. Prevents setting global commands
-        in favor of guild commands, which update instantly.
-        .. note::
-
-            The bot will not create any global commands if a debug_guild is passed.
+           
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        .. note::
-
-            You cannot set both debug_guild and debug_guilds.
+        The bot will not create any global commands if a debug_guilds is passed.
     """
 
     pass
