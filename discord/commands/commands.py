@@ -942,7 +942,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         .. note::
 
-            If this is not empty then default_permissions will be set to False.
+            If this is not empty then default_permissions will be set to ``False``.
 
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
