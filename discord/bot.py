@@ -62,6 +62,7 @@ from .cog import CogMixin
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
 from .enums import InteractionType
+from .user import User
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
@@ -1018,6 +1019,43 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         self._after_invoke = coro
         return coro
+
+    async def is_owner(self, user: User) -> bool:
+        """|coro|
+
+        Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of
+        this bot.
+
+        If an :attr:`owner_id` is not set, it is fetched automatically
+        through the use of :meth:`~.Bot.application_info`.
+
+        .. versionchanged:: 1.3
+            The function also checks if the application is team-owned if
+            :attr:`owner_ids` is not set.
+
+        Parameters
+        -----------
+        user: :class:`.abc.User`
+            The user to check for.
+
+        Returns
+        --------
+        :class:`bool`
+            Whether the user is the owner.
+        """
+
+        if self.owner_id:
+            return user.id == self.owner_id
+        elif self.owner_ids:
+            return user.id in self.owner_ids
+        else:
+            app = await self.application_info()  # type: ignore
+            if app.team:
+                self.owner_ids = ids = {m.id for m in app.team.members}
+                return user.id in ids
+            else:
+                self.owner_id = owner_id = app.owner.id
+                return user.id == owner_id
 
 
 class Bot(BotBase, Client):

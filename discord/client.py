@@ -905,6 +905,22 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
+    async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
+        """Looks up a user in the user cache or fetches if not found.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        ---------
+        Optional[:class:`~discord.User`]
+            The user or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
+
     # listeners/waiters
 
     async def wait_until_ready(self) -> None:

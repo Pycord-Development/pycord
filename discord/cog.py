@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 __all__ = (
     'CogMeta',
     'Cog',
-    'CogMixin'
+    'CogMixin',
 )
 
 CogT = TypeVar('CogT', bound='Cog')
@@ -254,16 +254,7 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [
-            c for c in (
-                c for c in self.__cog_commands__
-                if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))
-            ) if c.parent is None
-        ] + [
-            c for c in self.__cog_commands__
-            if isinstance(c, (SlashCommand, MessageCommand, UserCommand))
-        ]
-
+        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
     @property
     def qualified_name(self) -> str:
         """:class:`str`: Returns the cog's specified name, not the class name."""
