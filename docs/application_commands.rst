@@ -102,7 +102,7 @@ Slash command groups allows grouping multiple subcommands under the same parent.
 
 .. code-block:: python3
     
-    foo = bot.create_group("name", "description")
+    my_group = bot.create_group("name", "description")
 
 To create a subcommand, use the :meth:`.SlashCommandGroup.command` decorator.
 
@@ -110,6 +110,27 @@ To create a subcommand, use the :meth:`.SlashCommandGroup.command` decorator.
 
     @foo.command()
     async def bar(ctx):  # this will show up as "/foo bar"
+
+Slash command groups can also be created by subclassing :class:`.SlashCommandGroup`.
+
+.. code-block:: python3
+
+    from discord import SlashCommandGroup, slash_command
+
+    class Foo(SlashCommandGroup):
+        @slash_command()
+        async def bar(self, ctx):
+            ...
+
+    bot.add_application_command(Foo())
+
+    # or
+
+    @bot.slash_group()
+    class foo(SlashCommandGroup):
+        @slash_command()
+        async def bar(self, ctx):
+            ...
 
 Using Cogs
 ----------
