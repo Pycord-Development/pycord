@@ -217,7 +217,7 @@ class Asset(AssetMixin):
 
         return cls(
             state,
-            url=f"{cls.BASE}/{path}/{guild_id}/{image}.{format}?size=1024",
+            url=f'{cls.BASE}/{path}/{guild_id}/{image}.{format}?size=1024',
             key=image,
             animated=animated,
         )
