@@ -91,22 +91,20 @@ Option fields can be set using :class:`.Option` as the type of the argument.
     @bot.slash_command()
     async def show_color(
         ctx,
-        color: Option(str, "Your color choice", choices=["red", "green"], required=False)
+        color: Option(str, "Your color choice", choices=["red", "green"]),
     ):
         # command code
 
 Slash Command Groups
 --------------------
 
-Slash Command Groups allows for the creation of multiple subcommands grouped under the same command.
-
-All available options are listed at :class:`.Bot.create_group`.
+Slash command groups allows grouping multiple subcommands under the same parent.
 
 .. code-block:: python3
     
     foo = bot.create_group("name", "description")
 
-To create a subcommand, use :meth:`.SlashCommandGroup.command`.
+To create a subcommand, use the :meth:`.SlashCommandGroup.command` decorator.
 
 .. code-block:: python3
 
