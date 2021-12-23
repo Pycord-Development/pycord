@@ -699,12 +699,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
 
-        if self.debug_guild:
-            if self.debug_guilds is None:
-                self.debug_guilds = [self.debug_guild]
-            else:
-                raise TypeError("Both debug_guild and debug_guilds are set.")
-
         self._checks = []
         self._check_once = []
         self._before_invoke = None
