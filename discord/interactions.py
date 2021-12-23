@@ -143,8 +143,8 @@ class Interaction:
         self.channel_id: Optional[int] = utils._get_as_snowflake(data, 'channel_id')
         self.guild_id: Optional[int] = utils._get_as_snowflake(data, 'guild_id')
         self.application_id: int = int(data['application_id'])
-        self.locale: Optional[str] = data['locale']
-        self.guild_locale: Optional[str] = data['guild_locale']
+        self.locale: Optional[str] = data.get('locale')
+        self.guild_locale: Optional[str] = data.get('guild_locale')
 
         self.message: Optional[Message]
         try:
