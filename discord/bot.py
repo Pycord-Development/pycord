@@ -285,8 +285,8 @@ class ApplicationCommandMixin:
             for name, command in registered_commands_dict.items():
                 if not name in global_pending_application_commands_dict.keys():
                     print(f"A registered global command '{name}' is not found in the pending global commands, will send to Discord to update")
-                    needs_bulk
-
+                    needs_bulk = True
+    
         if needs_bulk:
             commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
         else:
