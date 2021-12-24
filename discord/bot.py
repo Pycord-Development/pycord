@@ -214,7 +214,7 @@ class ApplicationCommandMixin:
 
     async def register_commands(
             self,
-            printWarnings: bool = True
+            print_warnings: bool = True
     ) -> None:
         """|coro|
 
@@ -229,7 +229,7 @@ class ApplicationCommandMixin:
 
         Parameters
         -----------
-        printWarnings: :class:`bool`
+        print_warnings: :class:`bool`
             Whether warnings should be printed to the console.
         """
         commands = []
@@ -354,7 +354,7 @@ class ApplicationCommandMixin:
                                         }
                                     )
                                 else:
-                                    if printWarnings:
+                                    if print_warnings:
                                         print(
                                             "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
                                                 guild_id=guild_id, role=permission["id"]
@@ -388,7 +388,7 @@ class ApplicationCommandMixin:
 
                     # Make sure we don't have over 10 overwrites
                     if len(new_cmd_perm["permissions"]) > 10:
-                        if printWarnings:
+                        if print_warnings:
                             print(
                                 "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
                                     name=self._application_commands[new_cmd_perm["id"]].name,
@@ -406,7 +406,7 @@ class ApplicationCommandMixin:
                         self.user.id, guild_id, guild_cmd_perms
                     )
                 except Forbidden:
-                    if printWarnings:
+                    if print_warnings:
                         print(
                             f"Failed to add command permissions to guild {guild_id}",
                             file=sys.stderr,
