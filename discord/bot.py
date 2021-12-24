@@ -217,6 +217,7 @@ class ApplicationCommandMixin:
 
         Registers all commands that have been added through :meth:`.add_application_command`.
         This method cleans up all commands over the API and should sync them with the internal cache of commands.
+        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
 
         By default, this coroutine is called inside the :func:`.on_connect`
         event. If you choose to override the :func:`.on_connect` event, then
@@ -224,30 +225,74 @@ class ApplicationCommandMixin:
 
         .. versionadded:: 2.0
         """
-        commands = []
+        commands_to_bulk = []
+
+        needs_bulk = False
 
         # Global Command Permissions
         global_permissions: List = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
-        for command in [
-            cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
-        ]:
-            as_dict = command.to_dict()
-            if len(registered_commands) > 0:
-                matches = [
-                    x
-                    for x in registered_commands
-                    if x["name"] == command.name and x["type"] == command.type
-                ]
-                # TODO: rewrite this, it seems inefficient
-                if matches:
-                    as_dict["id"] = matches[0]["id"]
-            commands.append(as_dict)
+        # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
+        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
+        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+        global_pending_application_commands_dict = {}
+        
+        if len(registered_commands) > 0:
+            for command in [
+                cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
+            ]:
+                as_dict = command.to_dict()
+                
+                global_pending_application_commands_dict[command.name] = as_dict
+                if command.name in registered_commands_dict:
+                    match = registered_commands_dict[command.name]
+                else:
+                    match = None
+                # TODO: There is probably a far more efficient way of doing this
+                # We want to check if the registered global command on Discord servers matches the given global commands
+                if match:
+                    as_dict["id"] = match["id"]
 
-        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+                    keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description"]}
+                    for key, more_keys in {
+                        key:more_keys
+                        for key, more_keys in keys_to_check.items()
+                        if key in as_dict.keys()
+                        if key in match.keys()
+                    }.items():
+                        if key == "options":
+                            for i, option_dict in enumerate(as_dict[key]):
+                                for key2_change in [
+                                    key2
+                                    for key2 in more_keys
+                                    if key2 in option_dict.keys() and key2 in match[key][i].keys()
+                                    if option_dict[key2] != match[key][i][key2]
+                                ]:
+                                    print(f"A change in the '{key2_change}' property of '{key}' in the '{command.name}' global command was noticed, will send to Discord to update")
+                                    needs_bulk = True
+                        else:
+                            if as_dict[key] != match[key]:
+                                print(f"A change in the '{key}' property of '{command.name}' global command was noticed, will send to Discord to update")
+                                needs_bulk = True
+                else:
+                    print(f"A pending global command '{command.name}' is not registered in Discord servers, will send to Discord to update")
+                    needs_bulk = True
 
-        for i in cmds:
+                commands_to_bulk.append(as_dict)
+        
+        if len(registered_commands_dict) > 0:
+            for name, command in registered_commands_dict.items():
+                if not name in global_pending_application_commands_dict.keys():
+                    print(f"A registered global command '{name}' is not found in the pending global commands, will send to Discord to update")
+                    needs_bulk
+
+        if needs_bulk:
+            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+        else:
+            commands = registered_commands
+
+        for i in commands:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
@@ -275,7 +320,7 @@ class ApplicationCommandMixin:
 
         for guild_id, guild_data in update_guild_commands.items():
             try:
-                cmds = await self.http.bulk_upsert_guild_commands(
+                commands = await self.http.bulk_upsert_guild_commands(
                     self.user.id, guild_id, update_guild_commands[guild_id]
                 )
 
@@ -287,7 +332,7 @@ class ApplicationCommandMixin:
                 print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
                 raise
             else:
-                for i in cmds:
+                for i in commands:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     cmd.id = i["id"]
                     self._application_commands[cmd.id] = cmd
