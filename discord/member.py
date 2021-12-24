@@ -788,7 +788,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Applies a timeout to a member in the guild until a set datetime.
 
-        You must have the :attr:`~Permissions.moderate_members` permission to  timeout a member.
+        You must have the :attr:`~Permissions.moderate_members` permission to timeout a member.
 
         Parameters
         -----------
