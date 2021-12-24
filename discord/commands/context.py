@@ -69,7 +69,13 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
@@ -90,6 +96,14 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
+
+    @cached_property
+    def locale(self) -> Optional[str]:
+        return self.interaction.locale
+
+    @cached_property
+    def guild_locale(self) -> Optional[str]:
+        return self.interaction.guild_locale
 
     @cached_property
     def me(self) -> Union[Member, User]:
@@ -180,10 +194,10 @@ class AutocompleteContext:
         self.bot = bot
         self.interaction = interaction
 
-        # self.command = command
-        # self.focused = focused
-        # self.value = value
-        # self.options = options
+        self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
 
     @property
     def cog(self) -> Optional[Cog]:

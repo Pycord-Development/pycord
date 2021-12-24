@@ -361,7 +361,7 @@ class Client:
     def _schedule_event(self, coro: Callable[..., Coroutine[Any, Any, Any]], event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         # Schedules the task
-        return asyncio.create_task(wrapped, name=f'discord.py: {event_name}')
+        return asyncio.create_task(wrapped, name=f'pycord: {event_name}')
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
         _log.debug('Dispatching event %s', event)
@@ -904,6 +904,22 @@ class Client:
         """
         for guild in self.guilds:
             yield from guild.members
+
+    async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
+        """Looks up a user in the user cache or fetches if not found.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        ---------
+        Optional[:class:`~discord.User`]
+            The user or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
 
     # listeners/waiters
 

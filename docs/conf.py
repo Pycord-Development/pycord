@@ -163,11 +163,12 @@ html_experimental_html5_writer = True
 html_theme = "basic"
 
 html_context = {
-    "discord_invite": "https://pycord.dev/discord",
-    "discord_extensions": [
-        ("discord.ext.commands", "ext/commands"),
-        ("discord.ext.tasks", "ext/tasks"),
-    ],
+  'discord_invite': 'https://pycord.dev/discord',
+  'discord_extensions': [
+    ('discord.ext.commands', 'ext/commands'),
+    ('discord.ext.tasks', 'ext/tasks'),
+    ('discord.ext.pages', 'ext/pages'),
+  ],
 }
 
 resource_links = {
@@ -270,7 +271,7 @@ html_search_scorer = "_static/scorer.js"
 html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "discord.pydoc"
+htmlhelp_basename = 'pycorddoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 

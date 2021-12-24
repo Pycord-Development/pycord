@@ -3,6 +3,7 @@ import typing
 import discord
 from discord.ext import commands
 
+
 # Defines a custom Select containing colour options
 # That the user can choose. The callback function
 # Of this class is called when the user changes their choice

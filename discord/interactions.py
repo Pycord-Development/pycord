@@ -100,6 +100,10 @@ class Interaction:
         for 15 minutes.
     data: :class:`dict`
         The raw interaction data.
+    locale: :class:`str`
+        The users locale.
+    guild_locale: :class:`str`
+        The guilds preferred locale, if invoked in a guild.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -111,6 +115,8 @@ class Interaction:
         'application_id',
         'message',
         'user',
+        'locale',
+        'guild_locale',
         'token',
         'version',
         '_permissions',
@@ -137,6 +143,8 @@ class Interaction:
         self.channel_id: Optional[int] = utils._get_as_snowflake(data, 'channel_id')
         self.guild_id: Optional[int] = utils._get_as_snowflake(data, 'guild_id')
         self.application_id: int = int(data['application_id'])
+        self.locale: Optional[str] = data.get('locale')
+        self.guild_locale: Optional[str] = data.get('guild_locale')
 
         self.message: Optional[Message]
         try:

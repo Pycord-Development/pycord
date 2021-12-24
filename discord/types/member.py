@@ -46,6 +46,7 @@ class Member(PartialMember, total=False):
     premium_since: str
     pending: bool
     permissions: str
+    communication_disabled_until: str
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):

@@ -34,9 +34,9 @@ bot = MyBot(command_prefix="!")
 
 @bot.command()
 async def guess(ctx, number: int):
-    """ Guess a random number from 1 to 6. """
-    # Explained in a previous example, this gives you
-    # A random number from 1-6
+    """Guess a random number from 1 to 6."""
+    # explained in a previous example, this gives you
+    # a random number from 1-6
     value = random.randint(1, 6)
     # With your new helper function, you can add a
     # Green check mark if the guess was correct,

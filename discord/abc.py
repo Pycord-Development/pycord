@@ -211,10 +211,10 @@ class _Overwrites:
         }
 
     def is_role(self) -> bool:
-        return self.type == 0
+        return self.type == self.ROLE
 
     def is_member(self) -> bool:
-        return self.type == 1
+        return self.type == self.MEMBER
 
 
 GCH = TypeVar('GCH', bound='GuildChannel')
