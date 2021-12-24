@@ -230,7 +230,7 @@ class ApplicationCommandMixin:
         Parameters
         -----------
         printWarnings: :class:`bool`
-            Whether or not warnings should be printed to the console.
+            Whether warnings should be printed to the console.
         """
         commands = []
 
