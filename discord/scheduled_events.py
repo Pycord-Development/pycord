@@ -27,6 +27,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Optional, List, Dict, Any, Union
 from .enums import (
+    ScheduledEventPrivacyLevel,
     ScheduledEventStatus,
     ScheduledEventLocationType,
     try_enum
@@ -128,7 +129,8 @@ class ScheduledEvent(Hashable):
         Alias to :attr:`user_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
-        It may be ``None`` because events created before October 25th, 2021, haven't had their creators tracked.
+        It may be ``None`` because events created before October 25th, 2021, haven't
+        had their creators tracked.
     creator: Optional[:class:`User`]
         The resolved user object of who created the event.
     location: :class:`ScheduledEventLocation`
@@ -180,6 +182,7 @@ class ScheduledEvent(Hashable):
 
     @property
     def interested(self):
+        """An alias to :attr:`.user_count`"""
         return self.user_count
     
     async def edit(
@@ -191,6 +194,7 @@ class ScheduledEvent(Hashable):
         location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> Optional[ScheduledEvent]:
         """|coro|
         
@@ -201,25 +205,31 @@ class ScheduledEvent(Hashable):
         Will return a new :class:`.ScheduledEvent` object if applicable.
         
         Parameters
-        ----------
-        name: Optional[:class:`str`]
+        -----------
+        name: :class:`str`
             The new name of the event.
-        description: Optional[:class:`str`]
+        description: :class:`str`
             The new description of the event.
-        channel_id: :class:`int`
-            The id of the new channel the event will be taking place.
+        location: :class:`.ScheduledEventLocation`
+            The location of the event.
+        status: :class:`ScheduledEventStatus`
+            The status of the event. It is recommended, however,
+            to use :meth:`.start`, :meth:`.complete`, and
+            :meth:`cancel` to edit statuses instead.
         start_time: :class:`datetime.datetime`
             The new starting time for the event.
+        end_time: :class:`datetime.datetime`
+            The new ending time of the event.
 
         Raises
-        ------
+        -------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
 
         Returns
-        -------
+        --------
         Optional[:class:`.ScheduledEvent`]
             The newly updated scheduled event object. This is only returned when certain
             fields are updated.
@@ -233,8 +243,10 @@ class ScheduledEvent(Hashable):
             payload["description"] = description
 
         if status is not MISSING:
-            payload["status"] = status if isinstance(status, int) else status.value
-            print(payload["status"])
+            payload["status"] = int(status)
+
+        if privacy_level is not MISSING:
+            payload["privacy_level"] = int(privacy_level)
 
         if not isinstance(location, ScheduledEventLocation):
             location = ScheduledEventLocation(state=self._state, location=location)
@@ -263,13 +275,74 @@ class ScheduledEvent(Hashable):
         Deletes the scheduled event.
 
         Raises
-        ------
+        -------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
+
         """
         await self._state.http.delete_scheduled_event(self.guild.id, self.id)
+
+    async def start(self) -> None:
+        """|coro|
+
+        Starts the scheduled event. Shortcut from :meth:`.edit`.
+
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
+        Returns
+        --------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
+            fields are updated.
+        """
+        return await self.edit(status=ScheduledEventStatus.active)
+
+    async def complete(self) -> None:
+        """|coro|
+
+        Ends/completes the scheduled event. Shortcut from :meth:`.edit`.
+
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
+        Returns
+        --------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
+            fields are updated.
+        """
+        return await self.edit(status=ScheduledEventStatus.completed)
+
+    async def cancel(self) -> None:
+        """|coro|
+
+        Cancels the scheduled event. Shortcut from :meth:`.edit`.
+
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
+        Returns
+        --------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
+            fields are updated.
+        """
+        return await self.edit(status=ScheduledEventStatus.canceled)
 
     async def users(self):
         pass # TODO: discord/abc.py#1587

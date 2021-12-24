@@ -707,6 +707,18 @@ class ScheduledEventStatus(Enum):
     active = 2
     completed = 3
     canceled = 4
+    cancelled = 4
+
+    def __int__(self):
+        return self.value
+
+
+class ScheduledEventPrivacyLevel(Enum):
+    # leaving this here undocumented in case
+    guild_only = 2
+
+    def __int__(self):
+        return self.value
 
 
 class ScheduledEventLocationType(Enum):

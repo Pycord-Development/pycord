@@ -2848,8 +2848,33 @@ of :class:`enum.Enum`.
     .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
-    
-    
+
+.. class:: ScheduledEventStatus
+
+    Represents the status of a scheduled event.
+
+    .. verssionadded:: 2.0
+
+    .. attribute:: scheduled
+
+        The scheduled event hasn't started or been canceled yet.
+
+    .. attribute:: active
+
+        The scheduled event is in progress.
+
+    .. atrribute:: completed
+
+        The scheduled event is over.
+
+    .. attribute:: canceled
+
+        The scheduled event has been canceled before it can start.
+
+    .. attribute:: cancelled
+
+        Alias to :attr:`canceled`.
+
 
 Async Iterator
 ----------------
@@ -3770,6 +3795,21 @@ Guild
 
         :type: :class:`User`
 
+ScheduledEvent
+~~~~~~~~~~~~~~~
+
+.. attributestable:: ScheduledEvent
+
+.. autoclass:: ScheduledEvent()
+    :members:
+
+ScheduledEventLocation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+..attributestable:: ScheduledEventLocation
+
+.. autoclass:: ScheduledEventLocation()
+    :members:
 
 Integration
 ~~~~~~~~~~~~

@@ -1345,6 +1345,10 @@ class Client:
             :attr:`.Invite.expires_at` field.
 
             .. versionadded:: 2.0
+        scheduled_event_id: :class:`int`
+            The ID of the scheduled event to be associated with the event.
+
+            ..versionadded:: 2.0
 
         Raises
         -------

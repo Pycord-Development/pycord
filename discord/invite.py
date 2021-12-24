@@ -443,7 +443,8 @@ class Invite(Hashable):
         return (
             f'<Invite code={self.code!r} guild={self.guild!r} '
             f'online={self.approximate_presence_count} '
-            f'members={self.approximate_member_count}>'
+            f'members={self.approximate_member_count} '
+            f'scheduled_event={self.scheduled_event}>'
         )
 
     def __hash__(self) -> int:
@@ -457,7 +458,7 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """:class:`str`: A property that retrieves the invite URL."""
-        return self.BASE + '/' + self.code
+        return self.BASE + '/' + self.code + (f'?event={self.scheduled_event.id}' if self.scheduled_event.id else '')
 
     async def delete(self, *, reason: Optional[str] = None):
         """|coro|
@@ -482,3 +483,13 @@ class Invite(Hashable):
         """
 
         await self._state.http.delete_invite(self.code, reason=reason)
+
+    def add_scheduled_event(self, event: ScheduledEvent) -> None:
+        """Links the given scheduled event to this invite.
+
+        Parameters
+        -----------
+        event: :class:`ScheduledEvent`
+            The scheduled event object to link.
+        """
+        self.scheduled_event = event

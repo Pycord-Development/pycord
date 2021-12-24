@@ -1256,7 +1256,7 @@ class ConnectionState:
 
         payload = RawScheduledEventUserAction(data, 'USER_ADD')
         payload.guild = guild
-        self.dispatch('raw_event_user_add', payload)
+        self.dispatch('raw_scheduled_event_user_add', payload)
 
         member = guild.get_member(data['user_id'])
         if member is not None:
@@ -1272,7 +1272,7 @@ class ConnectionState:
 
         payload = RawScheduledEventUserAction(data, 'USER_REMOVE')
         payload.guild = guild
-        self.dispatch('raw_event_user_remove', payload)
+        self.dispatch('raw_scheduled_event_user_remove', payload)
 
         member = guild.get_member(data['user_id'])
         if member is not None:

@@ -64,6 +64,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     ScheduledEventLocationType,
+    ScheduledEventPrivacyLevel,
 )
 from .mixins import Hashable
 from .user import User
@@ -3175,6 +3176,8 @@ class Guild(Hashable):
         -------
         HTTPException
             Fetching the event failed.
+        NotFound
+            Event not found.
 
         Returns
         --------
@@ -3216,6 +3219,7 @@ class Guild(Hashable):
         start_time: datetime,
         end_time: datetime = MISSING,
         location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation],
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> Optional[ScheduledEvent]:
         """|coro|
         Creates a scheduled event.
@@ -3233,6 +3237,13 @@ class Guild(Hashable):
         location: :class:`ScheduledEventLocation`
             The location of where the event is happening.
 
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
         Returns
         --------
         Optional[:class:`ScheduledEvent`]
@@ -3244,7 +3255,7 @@ class Guild(Hashable):
 
         payload["scheduled_start_time"] = start_time.isoformat()
 
-        payload["privacy_level"] = 2 # Required parameter with 1 possible value
+        payload["privacy_level"] = int(privacy_level)
 
         if not isinstance(location, ScheduledEventLocation):
             location = ScheduledEventLocation(state=self._state, location=location)
@@ -3264,8 +3275,6 @@ class Guild(Hashable):
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
-        print(payload)
-        print(self.id)
         data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
         event = ScheduledEvent(state=self._state, guild=self, creator=self.me, data=data)
         self._add_scheduled_event(event)
