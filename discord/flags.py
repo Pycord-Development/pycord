@@ -929,15 +929,22 @@ class Intents(BaseFlags):
     
     @flag_value
     def scheduled_events(self):
-        """:class:`bool`: Whether guild scheduled events related events are enabled.
+        """:class:`bool`: Whether "scheduled event" related events are enabled.
 
         This corresponds to the following events:
+        
+        - :func:`on_scheduled_event_create`
+        - :func:`on_scheduled_event_update`
+        - :func:`on_scheduled_event_delete`
+        - :func:`on_scheduled_event_user_add`
+        - :func:`on_raw_scheduled_event_user_add`
+        - :func:`on_scheduled_event_user_remove`
+        - :func:`on_raw_scheduled_event_user_remove`
 
-        Lorem ipsum
+        This also corresponds to the following attributes and classes in terms of cache:
 
-        This does not correspond to any attributes or classes in the library in terms of cache.
+        TODO:
         """
-        # TODO: Doc wording and event listing
         return 1 << 16
 
 

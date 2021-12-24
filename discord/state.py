@@ -1225,7 +1225,7 @@ class ConnectionState:
 
         scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
         guild._add_scheduled_event(scheduled_event)
-        self.dispatch('guild_event_create', scheduled_event)
+        self.dispatch('scheduled_event_create', scheduled_event)
 
     def parse_guild_scheduled_event_update(self, data) -> None:
         guild = self._get_guild(data['guild_id'])
@@ -1235,7 +1235,7 @@ class ConnectionState:
 
         scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
         guild._add_scheduled_event(scheduled_event)
-        self.dispatch('guild_event_update', scheduled_event)
+        self.dispatch('scheduled_event_update', scheduled_event)
 
     def parse_guild_scheduled_event_delete(self, data) -> None:
         guild = self._get_guild(data['guild_id'])
@@ -1246,7 +1246,7 @@ class ConnectionState:
         scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
         scheduled_event.status = ScheduledEventStatus.canceled
         guild._remove_scheduled_event(scheduled_event)
-        self.dispatch('guild_event_delete', scheduled_event)
+        self.dispatch('scheduled_event_delete', scheduled_event)
 
     def parse_guild_scheduled_event_user_add(self, data) -> None:
         guild = self._get_guild(data['guild_id'])
