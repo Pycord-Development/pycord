@@ -299,11 +299,12 @@ class ApplicationCommandMixin:
                 guild_ids=None,
                 type=i["type"],
             )
-            cmd.id = i["id"]
-            self._application_commands[cmd.id] = cmd
+            if cmd:
+                cmd.id = i["id"]
+                self._application_commands[cmd.id] = cmd
 
-            # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-            global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
+                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
