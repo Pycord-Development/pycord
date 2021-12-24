@@ -62,7 +62,6 @@ from .cog import CogMixin
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
 from .enums import InteractionType
-from .user import User
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
@@ -212,7 +211,10 @@ class ApplicationCommandMixin:
         # TODO: Write this function as described in the docstring (bob will do this)
         raise NotImplementedError
 
-    async def register_commands(self) -> None:
+    async def register_commands(
+            self,
+            printWarnings: bool = True
+    ) -> None:
         """|coro|
 
         Registers all commands that have been added through :meth:`.add_application_command`.
@@ -223,6 +225,11 @@ class ApplicationCommandMixin:
         you should invoke this coroutine as well.
 
         .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        printWarnings: :class:`bool`
+            Whether or not warnings should be printed to the console.
         """
         commands = []
 
@@ -346,11 +353,12 @@ class ApplicationCommandMixin:
                                         }
                                     )
                                 else:
-                                    print(
-                                        "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                            guild_id=guild_id, role=permission["id"]
+                                    if printWarnings:
+                                        print(
+                                            "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
+                                                guild_id=guild_id, role=permission["id"]
+                                            )
                                         )
-                                    )
                             # Add owner IDs
                             elif (
                                 permission["type"] == 2 and permission["id"] == "owner"
@@ -379,12 +387,13 @@ class ApplicationCommandMixin:
 
                     # Make sure we don't have over 10 overwrites
                     if len(new_cmd_perm["permissions"]) > 10:
-                        print(
-                            "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self._application_commands[new_cmd_perm["id"]].name,
-                                guild_id=guild_id,
+                        if printWarnings:
+                            print(
+                                "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
+                                    name=self._application_commands[new_cmd_perm["id"]].name,
+                                    guild_id=guild_id,
+                                )
                             )
-                        )
                         new_cmd_perm["permissions"] = new_cmd_perm["permissions"][:10]
 
                     # Append to guild_cmd_perms
@@ -396,10 +405,11 @@ class ApplicationCommandMixin:
                         self.user.id, guild_id, guild_cmd_perms
                     )
                 except Forbidden:
-                    print(
-                        f"Failed to add command permissions to guild {guild_id}",
-                        file=sys.stderr,
-                    )
+                    if printWarnings:
+                        print(
+                            f"Failed to add command permissions to guild {guild_id}",
+                            file=sys.stderr,
+                        )
                     raise
 
     async def process_application_commands(self, interaction: Interaction) -> None:
@@ -687,6 +697,9 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.owner_id = options.get("owner_id")
         self.owner_ids = options.get("owner_ids", set())
 
+        self.debug_guild = options.pop(
+            "debug_guild", None
+        )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
 
         if self.owner_id and self.owner_ids:
@@ -698,6 +711,12 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
+
+        if self.debug_guild:
+            if self.debug_guilds is None:
+                self.debug_guilds = [self.debug_guild]
+            else:
+                raise TypeError("Both debug_guild and debug_guilds are set.")
 
         self._checks = []
         self._check_once = []
@@ -1011,43 +1030,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = coro
         return coro
 
-    async def is_owner(self, user: User) -> bool:
-        """|coro|
-
-        Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of
-        this bot.
-
-        If an :attr:`owner_id` is not set, it is fetched automatically
-        through the use of :meth:`~.Bot.application_info`.
-
-        .. versionchanged:: 1.3
-            The function also checks if the application is team-owned if
-            :attr:`owner_ids` is not set.
-
-        Parameters
-        -----------
-        user: :class:`.abc.User`
-            The user to check for.
-
-        Returns
-        --------
-        :class:`bool`
-            Whether the user is the owner.
-        """
-
-        if self.owner_id:
-            return user.id == self.owner_id
-        elif self.owner_ids:
-            return user.id in self.owner_ids
-        else:
-            app = await self.application_info()  # type: ignore
-            if app.team:
-                self.owner_ids = ids = {m.id for m in app.team.members}
-                return user.id in ids
-            else:
-                self.owner_id = owner_id = app.owner.id
-                return user.id == owner_id
-
 
 class Bot(BotBase, Client):
     """Represents a discord bot.
@@ -1077,10 +1059,17 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-           
+    debug_guild: Optional[:class:`int`]
+        Guild ID of a guild to use for testing commands. Prevents setting global commands
+        in favor of guild commands, which update instantly.
+        .. note::
+
+            The bot will not create any global commands if a debug_guild is passed.
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        The bot will not create any global commands if a debug_guilds is passed.
+        .. note::
+
+            You cannot set both debug_guild and debug_guilds.
     """
 
     pass
