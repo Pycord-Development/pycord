@@ -14,8 +14,8 @@ bot = discord.Bot()
 async def hello(ctx):
     """Say hello to the bot"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
-    # Please note that you MUST either use ctx.respond() or ctx.defer() in your
-    # slash command code, otherwise the interaction will fail.
+    # Please note that you MUST use ctx.respond(), ctx.defer(), or any other interaction response
+    # in your slash command code, otherwise the interaction will fail.
 
 
 @bot.slash_command(
