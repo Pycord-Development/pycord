@@ -92,7 +92,7 @@ It looks something like this:
 
     @bot.event
     async def on_ready():
-        print(f'We have logged in as {bot.user}')
+        print(f"We have logged in as {bot.user}")
 
     @bot.slash_command(name="hello", guild_ids=[your, guild_ids, here])
     async def hello_slash(ctx):
