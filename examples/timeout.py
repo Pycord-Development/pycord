@@ -9,7 +9,7 @@ bot = discord.Bot()
 async def timeout(ctx, member: discord.Member, minutes: int):
     """Set timeout on a member"""
 
-    now = datetime.datetime.utcnow()  # get current time
+    now = discord.utils.utcnow()  # get current time
     until = now + datetime.timedelta(minutes=minutes)  # add the duration
     await member.timeout(until=until)
     await ctx.respond(f"Member timed out for {minutes} minutes.")
