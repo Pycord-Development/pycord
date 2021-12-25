@@ -136,14 +136,14 @@ def has_role(item: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def cog_has_role(parent: Cog, item: Union[int, str], guild_id: int = None):
+def cog_has_role(parent, item: Union[int, str], guild_id: int = None):
     """Modified version of has_role that applies to all functions in a cog.
     
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent: discord.Cog
+    parent
         The parent cog where all of the commands should have this permission set.
     item: Union[:class:`int`, :class:`str`]
         An integer or string that represent the id or name of the role 
@@ -194,14 +194,14 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def cog_has_any_role(parent: Cog, *items: Union[int, str], guild_id: int = None):
+def cog_has_any_role(parent, *items: Union[int, str], guild_id: int = None):
     """Modified version of has_any_role that applies to all functions in a cog.
     
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent: discord.Cog
+    parent
         The parent cog where all of the commands should have this permission set.
     *items: Union[:class:`int`, :class:`str`]
         The integers or strings that represent the ids or names of the roles
@@ -250,14 +250,14 @@ def is_user(user: int, guild_id: int = None):
 
     return decorator
 
-def cog_is_user(parent: Cog, user: int, guild_id: int = None):
+def cog_is_user(parent, user: int, guild_id: int = None):
     """Modified version of is_user that applies to all functions in a cog.
     
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent: discord.Cog
+    parent
         The parent cog where all of the commands should have this permission set.
     user: :class:`int`
         An integer that represent the id of the user that the permission is tied to.
@@ -303,13 +303,15 @@ def is_owner(guild_id: int = None):
 
     return decorator
 
-def cog_is_owner(parent: Cog, guild_id: int = None):
+def cog_is_owner(parent, guild_id: int = None):
     """Modified version of is_owner that applies to all functions in a cog.
     
     .. versionadded:: 2.0
     
     Parameters
     -----------
+    parent
+        The parent cog where all of the commands should have this permission set.
     guild_id: :class:`int`
         The integer which represents the id of the guild that the
         permission may be tied to.
