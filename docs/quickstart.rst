@@ -78,7 +78,7 @@ On other systems:
 Now you can try playing around with your basic bot.
 
 A Minimal Bot with Slash Commands
----------------
+-----------------------------------
 
 As a continuation, let's create a bot that registers a simple slash command!
 
