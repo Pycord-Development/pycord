@@ -214,15 +214,12 @@ class ApplicationCommandMixin:
 
     async def register_commands(self) -> None:
         """|coro|
-
         Registers all commands that have been added through :meth:`.add_application_command`.
         This method cleans up all commands over the API and should sync them with the internal cache of commands.
         This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
-
         By default, this coroutine is called inside the :func:`.on_connect`
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
-
         .. versionadded:: 2.0
         """
         commands_to_bulk = []
@@ -253,7 +250,7 @@ class ApplicationCommandMixin:
             if match:
                 as_dict["id"] = match["id"]
 
-                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description"]}
+                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
                 for key, more_keys in {
                     key:more_keys
                     for key, more_keys in keys_to_check.items()
@@ -262,14 +259,23 @@ class ApplicationCommandMixin:
                 }.items():
                     if key == "options":
                         for i, option_dict in enumerate(as_dict[key]):
-                            for key2_change in [
-                                key2
-                                for key2 in more_keys
-                                if key2 in option_dict.keys() and key2 in match[key][i].keys()
-                                if option_dict[key2] != match[key][i][key2]
-                            ]:
-                                # When a property in the options of a pending global command is changed
-                                needs_bulk = True
+                            if command.name == "recent":
+                                print(option_dict, "|||||", match[key][i])
+                            for key2 in more_keys:
+                                pendingVal = None
+                                if key2 in option_dict.keys():
+                                    pendingVal = option_dict[key2]
+                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        pendingVal = None
+                                matchVal = None
+                                if key2 in match[key][i].keys():
+                                    matchVal = match[key][i][key2]
+                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        matchVal = None
+
+                                if pendingVal != matchVal:
+                                    # When a property in the options of a pending global command is changed
+                                    needs_bulk = True
                     else:
                         if as_dict[key] != match[key]:
                             # When a property in a pending global command is changed
