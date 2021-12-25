@@ -943,7 +943,8 @@ class Intents(BaseFlags):
 
         This also corresponds to the following attributes and classes in terms of cache:
 
-        TODO:
+        - :class:`ScheduledEvent`
+        - :meth:`Guild.get_scheduled_event`
         """
         return 1 << 16
 

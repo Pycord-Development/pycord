@@ -1161,6 +1161,81 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param user: The user that joined or left.
     :type user: :class:`User`
 
+.. function:: on_scheduled_event_create(event)
+
+    Called when an :class:`ScheduledEvent` is created.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The newly created scheduled event.
+    :type event: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_update(event)
+
+    Called when a scheduled event is updated.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The updated scheduled event.
+    :type event: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_delete(event)
+
+    Called when a scheduled event is deleted.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The deleted scheduled event.
+    :type event: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_user_add(event, member)
+
+    Called when a user subscribes to an event. If the member is not found
+    in the internal cache, then this event will not be called. Consider
+    using :func:`on_raw_scheduled_event_user_add` instead.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The scheduled event subscribed to.
+    :type event: :class:`ScheduledEvent`
+    :param member: The member who subscribed.
+    :type member: :class:`Member`
+
+.. function:: on_raw_scheduled_event_user_add(payload)
+
+    Called when a user subscribes to an event. Unlike
+    :meth:`on_scheduled_event_user_add`, this will be called
+    regardless of the state of the internal member cache.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawScheduledEventUserAction`
+
+.. function:: on_scheduled_event_user_remove(event, member)
+
+    Called when a user unsubscribes to an event. If the member is not found
+    in the internal cache, then this event will not be called. Consider using
+    :func:`on_raw_scheduled_event_user_remove` instead.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The scheduled event unsubscribed from.
+    :type event: :class:`ScheduledEvent`
+    :param member: The member who unsubscribed.
+    :type member: :class:`Member`
+
+.. function:: on_raw_scheduled_event_user_remove(payload)
+
+    Called when a user unsubscribes to an event. Unlike
+    :meth:`on_scheduled_event_user_remove`, this will be called
+    regardless of the state of the internal member cache.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawScheduledEventUserAction`
+
 .. _discord-api-utils:
 
 Utility Functions
@@ -2863,7 +2938,7 @@ of :class:`enum.Enum`.
 
         The scheduled event is in progress.
 
-    .. atrribute:: completed
+    .. attribute:: completed
 
         The scheduled event is over.
 
