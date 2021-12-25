@@ -23,6 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from ..cog import Cog
 from typing import Union, Dict, Callable
 
 __all__ = (
@@ -134,6 +135,28 @@ def has_role(item: Union[int, str], guild_id: int = None):
         return func
 
     return decorator
+
+def cog_has_role(parent: Cog, item: Union[int, str], guild_id: int = None):
+    """Modified version of has_role that applies to all functions in a cog.
+    
+    .. versionadded:: 2.0
+    
+    Parameters
+    -----------
+    parent: discord.Cog
+        The parent cog where all of the commands should have this permission set.
+    item: Union[:class:`int`, :class:`str`]
+        An integer or string that represent the id or name of the role 
+        that the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
+    for command in parent.__cog_commands__:
+        if not hasattr(command, "__app_cmd_perms__'):
+                       command.__app_cmd_perms__ = []
+        app_cmd_perm = Permission(item, 1, True, guild_id)
+        command.__app_cmd_perms__.append(app_cmd_perm)  
 
 def has_any_role(*items: Union[int, str], guild_id: int = None):
     """The method used to specify multiple application command role restrictions,
