@@ -152,9 +152,12 @@ def cog_has_role(parent: Cog, item: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
+    # Loop through every command in the cog
     for command in parent.__cog_commands__:
-        if not hasattr(command, "__app_cmd_perms__'):
-                       command.__app_cmd_perms__ = []
+        # Create __app_cmd_perms__
+        if not hasattr(command, "__app_cmd_perms__"):
+            command.__app_cmd_perms__ = []
+        
         app_cmd_perm = Permission(item, 1, True, guild_id)
         command.__app_cmd_perms__.append(app_cmd_perm)  
 
@@ -191,6 +194,32 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 
     return decorator
 
+def cog_has_any_role(parent: Cog, *items: Union[int, str], guild_id: int = None):
+    """Modified version of has_any_role that applies to all functions in a cog.
+    
+    .. versionadded:: 2.0
+    
+    Parameters
+    -----------
+    parent: discord.Cog
+        The parent cog where all of the commands should have this permission set.
+    *items: Union[:class:`int`, :class:`str`]
+        The integers or strings that represent the ids or names of the roles
+        that the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
+    for command in parent.__cog_commands__:
+        # Create __app_cmd_perms__
+        if not hasattr(command, '__app_cmd_perms__'):
+            command.__app_cmd_perms__ = []
+
+        for item in items:
+            app_cmd_perm = Permission(item, 1, True, guild_id)
+
+            command.__app_cmd_perms__.append(app_cmd_perm)
+
 def is_user(user: int, guild_id: int = None):
     """The method used to specify application command user restrictions.
     
@@ -221,6 +250,30 @@ def is_user(user: int, guild_id: int = None):
 
     return decorator
 
+def cog_is_user(parent: Cog, user: int, guild_id: int = None):
+    """Modified version of is_user that applies to all functions in a cog.
+    
+    .. versionadded:: 2.0
+    
+    Parameters
+    -----------
+    parent: discord.Cog
+        The parent cog where all of the commands should have this permission set.
+    user: :class:`int`
+        An integer that represent the id of the user that the permission is tied to.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
+    for command in parent.__cog_commands__:
+        # Create __app_cmd_perms__
+        if not hasattr(command, '__app_cmd_perms__'):
+            command.__app_cmd_perms__ = []
+
+        app_cmd_perm = Permission(user, 2, True, guild_id)
+
+        command.__app_cmd_perms__.append(app_cmd_perm)
+
 def is_owner(guild_id: int = None):
     """The method used to limit application commands exclusively
     to the owner of the bot.
@@ -249,3 +302,23 @@ def is_owner(guild_id: int = None):
         return func
 
     return decorator
+
+def cog_is_owner(parent: Cog, guild_id: int = None):
+    """Modified version of is_owner that applies to all functions in a cog.
+    
+    .. versionadded:: 2.0
+    
+    Parameters
+    -----------
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
+    for command in parent.__cog_commands__:
+        # Create __app_cmd_perms__
+        if not hasattr(command, '__app_cmd_perms__'):
+            command.__app_cmd_perms__ = []
+
+        app_cmd_perm = Permission("owner", 2, True, guild_id)
+
+        command.__app_cmd_perms__.append(app_cmd_perm)
