@@ -94,8 +94,8 @@ It looks something like this:
     async def on_ready():
         print(f"We have logged in as {bot.user}")
 
-    @bot.slash_command(name="hello", guild_ids=[your, guild_ids, here])
-    async def hello_slash(ctx):
+    @bot.slash_command(guild_ids=[your, guild_ids, here])
+    async def hello(ctx):
         await ctx.respond("Hello!")
 
     bot.run("your token here")
@@ -105,10 +105,9 @@ Let's look at the differences compared to the previous example, step-by-step:
 1. The first line remains unchanged.
 2. Next, we create an instance of :class:`Bot`. This is different from :class:`Client`, as it supports
    slash command creation and other features, while inheriting all the features of :class:`Client`.
-3. We then use the :meth:`Bot.slash_command` decorator to register a new slash command. The first
-   keyword-argument, ``name``, sets the command's name to ``hello``. The ``guild_ids`` attribute contains
-   a list of guilds where this command will be active. If you omit it, the command will be globally
-   available, and may take up to an hour to register.
+3. We then use the :meth:`Bot.slash_command` decorator to register a new slash command. 
+   The ``guild_ids`` attribute contains a list of guilds where this command will be active. 
+   If you omit it, the command will be globally available, and may take up to an hour to register.
 4. Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that
    all slash commands must have some form of response, otherwise they will fail.
 6. Finally, we, once again, run the bot with our login token.
