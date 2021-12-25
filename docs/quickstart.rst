@@ -98,7 +98,7 @@ It looks something like this:
     async def hello_slash(ctx):
         await ctx.respond("Hello!")
 
-    bot.run('your token here')
+    bot.run("your token here")
 
 Let's look at the differences compared to the previous example, step-by-step:
 
