@@ -238,54 +238,52 @@ class ApplicationCommandMixin:
         registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
         global_pending_application_commands_dict = {}
         
-        if len(registered_commands) > 0:
-            for command in [
-                cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
-            ]:
-                as_dict = command.to_dict()
-                
-                global_pending_application_commands_dict[command.name] = as_dict
-                if command.name in registered_commands_dict:
-                    match = registered_commands_dict[command.name]
-                else:
-                    match = None
-                # TODO: There is probably a far more efficient way of doing this
-                # We want to check if the registered global command on Discord servers matches the given global commands
-                if match:
-                    as_dict["id"] = match["id"]
+        for command in [
+            cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
+        ]:
+            as_dict = command.to_dict()
+            
+            global_pending_application_commands_dict[command.name] = as_dict
+            if command.name in registered_commands_dict:
+                match = registered_commands_dict[command.name]
+            else:
+                match = None
+            # TODO: There is probably a far more efficient way of doing this
+            # We want to check if the registered global command on Discord servers matches the given global commands
+            if match:
+                as_dict["id"] = match["id"]
 
-                    keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description"]}
-                    for key, more_keys in {
-                        key:more_keys
-                        for key, more_keys in keys_to_check.items()
-                        if key in as_dict.keys()
-                        if key in match.keys()
-                    }.items():
-                        if key == "options":
-                            for i, option_dict in enumerate(as_dict[key]):
-                                for key2_change in [
-                                    key2
-                                    for key2 in more_keys
-                                    if key2 in option_dict.keys() and key2 in match[key][i].keys()
-                                    if option_dict[key2] != match[key][i][key2]
-                                ]:
-                                    print(f"A change in the '{key2_change}' property of '{key}' in the '{command.name}' global command was noticed, will send to Discord to update")
-                                    needs_bulk = True
-                        else:
-                            if as_dict[key] != match[key]:
-                                print(f"A change in the '{key}' property of '{command.name}' global command was noticed, will send to Discord to update")
+                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description"]}
+                for key, more_keys in {
+                    key:more_keys
+                    for key, more_keys in keys_to_check.items()
+                    if key in as_dict.keys()
+                    if key in match.keys()
+                }.items():
+                    if key == "options":
+                        for i, option_dict in enumerate(as_dict[key]):
+                            for key2_change in [
+                                key2
+                                for key2 in more_keys
+                                if key2 in option_dict.keys() and key2 in match[key][i].keys()
+                                if option_dict[key2] != match[key][i][key2]
+                            ]:
+                                # When a property in the options of a pending global command is changed
                                 needs_bulk = True
-                else:
-                    print(f"A pending global command '{command.name}' is not registered in Discord servers, will send to Discord to update")
-                    needs_bulk = True
+                    else:
+                        if as_dict[key] != match[key]:
+                            # When a property in a pending global command is changed
+                            needs_bulk = True
+            else:
+                # When a name of a pending global command is not registered in Discord
+                needs_bulk = True
 
-                commands_to_bulk.append(as_dict)
+            commands_to_bulk.append(as_dict)
         
-        if len(registered_commands_dict) > 0:
-            for name, command in registered_commands_dict.items():
-                if not name in global_pending_application_commands_dict.keys():
-                    print(f"A registered global command '{name}' is not found in the pending global commands, will send to Discord to update")
-                    needs_bulk = True
+        for name, command in registered_commands_dict.items():
+            if not name in global_pending_application_commands_dict.keys():
+                # When a registered global command is not available in the pending global commands
+                needs_bulk = True
     
         if needs_bulk:
             commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)

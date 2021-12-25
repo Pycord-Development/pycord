@@ -153,7 +153,7 @@ class MaybeUnlock:
         if self._unlock:
             self.lock.release()
 
-
+ 
 # For some reason, the Discord voice websocket expects this header to be
 # completely lowercase while aiohttp respects spec and does it as case-insensitive
 aiohttp.hdrs.WEBSOCKET = 'websocket'  # type: ignore
