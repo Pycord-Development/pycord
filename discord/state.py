@@ -1262,6 +1262,8 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data['guild_scheduled_event_id'])
             if event:
+                event.user_count += 1
+                guild._add_scheduled_event(event)
                 self.dispatch('scheduled_event_user_add', event, member)
 
     def parse_guild_scheduled_event_user_remove(self, data) -> None:
@@ -1278,6 +1280,8 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data['guild_scheduled_event_id'])
             if event:
+                event.user_count += 1
+                guild._add_scheduled_event(event)
                 self.dispatch('scheduled_event_user_remove', event, member)
 
     def parse_guild_integrations_update(self, data) -> None:

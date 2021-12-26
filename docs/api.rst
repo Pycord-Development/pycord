@@ -1190,9 +1190,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_scheduled_event_user_add(event, member)
 
-    Called when a user subscribes to an event. If the member is not found
-    in the internal cache, then this event will not be called. Consider
-    using :func:`on_raw_scheduled_event_user_add` instead.
+    Called when a user subscribes to an event. If the member or event
+    is not found in the internal cache, then this event will not be
+    called. Consider using :func:`on_raw_scheduled_event_user_add` instead.
 
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
@@ -1205,7 +1205,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     Called when a user subscribes to an event. Unlike
     :meth:`on_scheduled_event_user_add`, this will be called
-    regardless of the state of the internal member cache.
+    regardless of the state of the internal cache.
 
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
@@ -1214,9 +1214,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_scheduled_event_user_remove(event, member)
 
-    Called when a user unsubscribes to an event. If the member is not found
-    in the internal cache, then this event will not be called. Consider using
-    :func:`on_raw_scheduled_event_user_remove` instead.
+    Called when a user unsubscribes to an event. If the member or event is
+    not found in the internal cache, then this event will not be called.
+    Consider using :func:`on_raw_scheduled_event_user_remove` instead.
 
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
@@ -1229,7 +1229,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     Called when a user unsubscribes to an event. Unlike
     :meth:`on_scheduled_event_user_remove`, this will be called
-    regardless of the state of the internal member cache.
+    regardless of the state of the internal cache.
 
     This requires :attr:`Intents.scheduled_events` to be enabled.
 

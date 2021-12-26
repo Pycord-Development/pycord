@@ -34,6 +34,7 @@ from .enums import (
 )
 from .utils import MISSING
 from .mixins import Hashable
+from .iterators import ScheduledEventSubscribersIterator
 
 __all__ = (
     'ScheduledEvent',
@@ -41,8 +42,10 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    from .abc import Snowflake
     from .state import ConnectionState
     from .member import Member
+    from .iterators import AsyncIterator
     from .types.guild import Guild
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.channel import StageChannel, VoiceChannel
@@ -85,7 +88,6 @@ class ScheduledEventLocation:
             return ScheduledEventLocationType.stage_instance
         elif self.value.__class__.__name__ == "VoiceChannel":
             return ScheduledEventLocationType.voice
-
 
 
 class ScheduledEvent(Hashable):
@@ -344,5 +346,13 @@ class ScheduledEvent(Hashable):
         """
         return await self.edit(status=ScheduledEventStatus.canceled)
 
-    async def users(self):
-        pass # TODO: discord/abc.py#1587
+    async def users(
+        self,
+        limit: Optional[int] = None,
+        as_member: bool = False,
+        before: Optional[Snowflake] = None,
+        after: Optional[Snowflake] = None,
+    ) -> AsyncIterator:
+        """Returns an :class:`AsyncIterator` representing the users (or members depending on the ``as_member`` parameter) subscribed to the event.
+        """
+        return ScheduledEventSubscribersIterator(event=self, limit=limit, with_member=as_member, before=before, after=after)
