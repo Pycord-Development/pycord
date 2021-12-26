@@ -137,7 +137,7 @@ class ApplicationContext(discord.abc.Messageable):
         if not self.response.is_done():
             return self.interaction.response.send_message
         else:
-            raise RuntimeError(f"Interaction was already issued a response. Try using {type(self).__name__}.followup() instead.")
+            raise RuntimeError(f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead.")
     
     @property
     def send_followup(self):
