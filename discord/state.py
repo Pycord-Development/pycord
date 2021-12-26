@@ -1262,7 +1262,7 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data['guild_scheduled_event_id'])
             if event:
-                event.user_count += 1
+                event.subscriber_count += 1
                 guild._add_scheduled_event(event)
                 self.dispatch('scheduled_event_user_add', event, member)
 
@@ -1280,7 +1280,7 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data['guild_scheduled_event_id'])
             if event:
-                event.user_count += 1
+                event.subscriber_count += 1
                 guild._add_scheduled_event(event)
                 self.dispatch('scheduled_event_user_remove', event, member)
 

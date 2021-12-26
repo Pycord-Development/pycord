@@ -125,7 +125,7 @@ class ScheduledEvent(Hashable):
         The time when the event is supposed to end.
     status: :class:`ScheduledEventStatus`
         The status of the scheduled event.
-    user_count: Optional[:class:`int`]
+    subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
     interested: Optional[:class:`int`]
         Alias to :attr:`user_count`
@@ -154,7 +154,7 @@ class ScheduledEvent(Hashable):
         'location',
         'guild',
         '_state',
-        'user_count',
+        'subscriber_count',
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, creator: Optional[Member], data: ScheduledEventPayload):
@@ -171,7 +171,7 @@ class ScheduledEvent(Hashable):
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
-        self.user_count: Optional[int] = data.get('user_count', None)
+        self.subscriber_count: Optional[int] = data.get('user_count', None)
         self.creator_id = data.get('creator_id', None)
         self.creator: Optional[Member] = creator
 
@@ -184,8 +184,8 @@ class ScheduledEvent(Hashable):
 
     @property
     def interested(self):
-        """An alias to :attr:`.user_count`"""
-        return self.user_count
+        """An alias to :attr:`.subscriber_count`"""
+        return self.subscriber_count
     
     async def edit(
         self,
@@ -346,7 +346,7 @@ class ScheduledEvent(Hashable):
         """
         return await self.edit(status=ScheduledEventStatus.canceled)
 
-    async def users(
+    async def subscribers(
         self,
         *,
         limit: Optional[int] = None,
@@ -369,17 +369,17 @@ class ScheduledEvent(Hashable):
 
         Usage ::
 
-            async for user in event.users(limit=100):
+            async for user in event.subscribers(limit=100):
                 print(user.name)
 
         Flattening into a list: ::
 
-            users = await event.users(limit=100).flatten()
+            users = await event.subscribers(limit=100).flatten()
             # users is now a list of User...
 
         Getting members instead of user objects: ::
 
-            async for member in event.users(limit=100, as_member=True):
+            async for member in event.subscribers(limit=100, as_member=True):
                 print(member.display_name)
 
         Parameters
