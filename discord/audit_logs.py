@@ -62,6 +62,7 @@ if TYPE_CHECKING:
     from .sticker import GuildSticker
     from .threads import Thread
     from .scheduled_events import ScheduledEvent
+    from .state import ConnectionState
 
 
 def _transform_permissions(entry: AuditLogEntry, data: str) -> Permissions:
@@ -216,11 +217,11 @@ class AuditLogChanges:
     }
     # fmt: on
 
-    def __init__(self, entry: AuditLogEntry, data: List[AuditLogChangePayload]):
+    def __init__(self, entry: AuditLogEntry, data: List[AuditLogChangePayload], *, state: ConnectionState):
         self.before = AuditLogDiff()
         self.after = AuditLogDiff()
 
-        for elem in data:
+        for elem in sorted(data, key=lambda i: i['key']):
             attr = elem['key']
 
             # special cases for role add/remove
@@ -249,6 +250,14 @@ class AuditLogChanges:
                 if transformer:
                     before = transformer(entry, before)
 
+            if attr == 'location':
+                if hasattr(self.before, 'location_type'):
+                    from .scheduled_events import ScheduledEventLocation
+                    if self.before.location_type is enums.ScheduledEventLocationType.external:
+                        before = ScheduledEventLocation(state=state, location=before)
+                    elif hasattr(self.before, 'channel'):
+                        before = ScheduledEventLocation(state=state, location=self.before.channel)
+
             setattr(self.before, attr, before)
 
             try:
@@ -258,6 +267,14 @@ class AuditLogChanges:
             else:
                 if transformer:
                     after = transformer(entry, after)
+
+            if attr == 'location':
+                if hasattr(self.after, 'location_type'):
+                    from .scheduled_events import ScheduledEventLocation
+                    if self.after.location_type is enums.ScheduledEventLocationType.external:
+                        after = ScheduledEventLocation(state=state, location=after)
+                    elif hasattr(self.after, 'channel'):
+                        after = ScheduledEventLocation(state=state, location=self.after.channel)
 
             setattr(self.after, attr, after)
 
@@ -466,7 +483,7 @@ class AuditLogEntry(Hashable):
     @utils.cached_property
     def changes(self) -> AuditLogChanges:
         """:class:`AuditLogChanges`: The list of changes this entry has."""
-        obj = AuditLogChanges(self, self._changes)
+        obj = AuditLogChanges(self, self._changes, state=self._state)
         del self._changes
         return obj
 

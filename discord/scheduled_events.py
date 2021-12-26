@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import datetime
 
-import utils
+from . import utils
 from typing import TYPE_CHECKING, Optional, Dict, Any, Union
 from .enums import (
     ScheduledEventPrivacyLevel,
