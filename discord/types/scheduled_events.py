@@ -31,6 +31,8 @@ from .guild import Guild
 from .user import User
 from .snowflake import Snowflake
 from .channel import StageChannel, VoiceChannel
+from .user import User
+from .member import Member
 
 
 ScheduledEventStatus = Literal[1, 2, 3, 4]
@@ -56,4 +58,5 @@ class ScheduledEvent(TypedDict):
     creator: User
     location: ScheduledEventLocation
 
-    entity_id: Snowflake
+class ScheduledEventSubscriber(User):
+    member: Member

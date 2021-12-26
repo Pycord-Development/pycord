@@ -348,11 +348,67 @@ class ScheduledEvent(Hashable):
 
     async def users(
         self,
+        *,
         limit: Optional[int] = None,
         as_member: bool = False,
-        before: Optional[Snowflake] = None,
-        after: Optional[Snowflake] = None,
+        before: Optional[Union[Snowflake, datetime.datetime]] = None,
+        after: Optional[Union[Snowflake, datetime.datetime]] = None,
     ) -> AsyncIterator:
-        """Returns an :class:`AsyncIterator` representing the users (or members depending on the ``as_member`` parameter) subscribed to the event.
+        """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
+
+        The ``after`` and ``before`` parameters must represent member
+        or user objects and meet the :class:`abc.Snowflake` abc.
+
+        .. note:: 
+
+            Even is ``as_member`` is set to ``True``, if the user
+            is outside the guild, it will be a :class:`User` object.
+
+        Examples
+        ---------
+
+        Usage ::
+
+            async for user in event.users(limit=100):
+                print(user.name)
+
+        Flattening into a list: ::
+
+            users = await event.users(limit=100).flatten()
+            # users is now a list of User...
+
+        Getting members instead of user objects: ::
+
+            async for member in event.users(limit=100, as_member=True):
+                print(member.display_name)
+
+        Parameters
+        -----------
+        limit: Optional[:class:`int`]
+            The maximum number of results to return.
+        as_member: Optional[:class:`bool`]
+            Whether to fetch :class:`Member` objects instead of user objects.
+            There may still be :class:`User` objects if the user is outside
+            the guild.
+        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieves users before this date or object. If a datetime is provided,
+            it is recommended to use a UTC aware datetime. If the datetime is naive,
+            it is assumed to be local time.
+        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieves users after this date or object. If a datetime is provided,
+            it is recommended to use a UTC aware datetime. If the datetime is naive,
+            it is assumed to be local time.
+
+        Raises
+        -------
+        HTTPException
+            Fetching the subscribed users failed.
+
+        Yields
+        -------
+        Union[:class:`User`, :class:`Member`]
+            The subscribed :class:`Member`. If ``as_member`` is set to
+            ``False`` or the user is outside the guild, it will be a
+            :class:`User` object.
         """
         return ScheduledEventSubscribersIterator(event=self, limit=limit, with_member=as_member, before=before, after=after)

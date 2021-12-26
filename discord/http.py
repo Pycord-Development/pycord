@@ -1616,8 +1616,6 @@ class HTTPClient:
         return self.request(Route('DELETE', '/stage-instances/{channel_id}', channel_id=channel_id), reason=reason)
     
     # Guild scheduled events management
-    # TODO:
-    # 1. Typehint responses
 
     def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = True) -> Response[List[scheduled_events.ScheduledEvent]]:
         params = {
@@ -1651,7 +1649,7 @@ class HTTPClient:
     def delete_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
         return self.request(Route('DELETE', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
 
-    def edit_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, **payload: Any) -> Response[None]:
+    def edit_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, **payload: Any) -> Response[scheduled_events.ScheduledEvent]:
         valid_keys = (
             'channel_id',
             'name',
@@ -1673,7 +1671,7 @@ class HTTPClient:
         with_member: bool = False,
         before: Snowflake = None,
         after: Snowflake = None
-    ) -> Response[List]:
+    ) -> Response[List[scheduled_events.ScheduledEventSubscriber]]:
         params = {
             'limit': int(limit),
             'with_member': int(with_member),
