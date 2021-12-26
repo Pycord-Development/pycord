@@ -124,7 +124,14 @@ class ApplicationCommandMixin:
 
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
-        self._pending_application_commands.append(command)
+
+        for cmd in self.pending_application_commands:
+            if cmd == command:
+                command.id = cmd.id
+                self._application_commands[command.id] = command
+                break
+        else:
+            self._pending_application_commands.append(command)
 
     def remove_application_command(
         self, command: ApplicationCommand
