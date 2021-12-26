@@ -440,25 +440,32 @@ class ApplicationCommandMixin:
         try:
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
-            self.dispatch("unknown_command", interaction)
-        else:
-            if interaction.type is InteractionType.auto_complete:
-                ctx = await self.get_autocomplete_context(interaction)
-                ctx.command = command
-                return await command.invoke_autocomplete_callback(ctx)
-            
-            ctx = await self.get_application_context(interaction)
-            ctx.command = command
-            self.dispatch("application_command", ctx)
-            try:
-                if await self.can_run(ctx, call_once=True):
-                    await ctx.command.invoke(ctx)
-                else:
-                    raise CheckFailure("The global check once functions failed.")
-            except DiscordException as exc:
-                await ctx.command.dispatch_error(ctx, exc)
+            for cmd in self.application_commands:
+                if (
+                    cmd.name == interaction.data["name"]
+                    and interaction.data["guild_id"] in cmd.guild_ids
+                ):
+                    command = cmd
+                    break
             else:
-                self.dispatch("application_command_completion", ctx)
+                return self.dispatch("unknown_command", interaction)
+        if interaction.type is InteractionType.auto_complete:
+            ctx = await self.get_autocomplete_context(interaction)
+            ctx.command = command
+            return await command.invoke_autocomplete_callback(ctx)
+        
+        ctx = await self.get_application_context(interaction)
+        ctx.command = command
+        self.dispatch("application_command", ctx)
+        try:
+            if await self.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self.dispatch("application_command_completion", ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
