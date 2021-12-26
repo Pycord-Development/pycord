@@ -31,7 +31,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Type, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -62,7 +62,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    pass
+    from ..interactions import Interaction
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -99,7 +99,7 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand):
     cog = None
-    
+
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -143,8 +143,8 @@ class ApplicationCommand(_BaseCommand):
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore    
-    
+        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore
+
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
@@ -318,6 +318,9 @@ class ApplicationCommand(_BaseCommand):
         else:
             return self.name
 
+    def _set_cog(self, cog):
+        self.cog = cog
+
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
 
@@ -346,7 +349,7 @@ class SlashCommand(ApplicationCommand):
 
         .. note::
 
-            If this is not empty then default_permissions will be set to False.    
+            If this is not empty then default_permissions will be set to False.
 
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
@@ -386,7 +389,7 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.parent = kwargs.get('parent')
-        self.is_subcommand: bool = self.parent is not None
+        self.attached_to_group: bool = False
 
         self.cog = None
 
@@ -476,6 +479,10 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
+    @property
+    def is_subcommand(self) -> bool:
+        return self.parent is not None
+
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
@@ -508,8 +515,13 @@ class SlashCommand(ApplicationCommand):
                 <= op.input_type.value
                 <= SlashCommandOptionType.role.value
             ):
-                name = "member" if op.input_type.name == "user" else op.input_type.name
-                arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
+                if ctx.guild is None and op.input_type.name == "user":
+                    _data = ctx.interaction.data["resolved"]["users"][arg]
+                    _data["id"] = int(arg)
+                    arg = User(state=ctx.interaction._state, data=_data)
+                else:
+                    name = "member" if op.input_type.name == "user" else op.input_type.name
+                    arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
@@ -525,20 +537,22 @@ class SlashCommand(ApplicationCommand):
         for o in self.options:
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
+        elif self.parent is not None and self.attached_to_group is True:
+            await self.callback(self.parent, ctx, **kwargs)
         else:
             await self.callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = { i.name: i.default for i in self.options }
-        
+
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
                 values.update({
-                    i["name"]:i["value"] 
+                    i["name"]:i["value"]
                     for i in ctx.interaction.data["options"]
                 })
                 ctx.command = self
@@ -648,7 +662,7 @@ class Option:
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-        
+
         if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
             raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
@@ -729,8 +743,24 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
         self = super().__new__(cls)
-
         self.__original_kwargs__ = kwargs.copy()
+
+        self.__initial_commands__ = []
+        for i, c in cls.__dict__.items():
+            if isinstance(c, type) and SlashCommandGroup in c.__bases__:
+                c = c(
+                    c.__name__,
+                    (
+                        inspect.cleandoc(cls.__doc__).splitlines()[0]
+                        if cls.__doc__ is not None
+                        else "No description provided"
+                    )
+                )
+            if isinstance(c, (SlashCommand, SlashCommandGroup)):
+                c.parent = self
+                c.attached_to_group = True
+                self.__initial_commands__.append(c)
+
         return self
 
     def __init__(
@@ -748,7 +778,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
-        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = []
+        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
         self.checks = []
@@ -768,6 +798,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
+            "default_permission": self.default_permission,
         }
 
         if self.parent is not None:
@@ -783,7 +814,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         return wrap
 
-    def command_group(self, name, description) -> SlashCommandGroup:
+    def create_subgroup(self, name, description) -> SlashCommandGroup:
         if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
@@ -791,6 +822,47 @@ class SlashCommandGroup(ApplicationCommand, Option):
         sub_command_group = SlashCommandGroup(name, description, parent=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
+
+    def subgroup(
+        self,
+        name: str,
+        description: str = None, 
+        guild_ids: Optional[List[int]] = None,
+    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
+        as a subgroup.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
+            The slash command group that was created.
+        """
+        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+            group = cls(
+                name,
+                description or (
+                    inspect.cleandoc(cls.__doc__).splitlines()[0]
+                    if cls.__doc__ is not None
+                    else "No description provided"
+                ),
+                guild_ids=guild_ids,
+                parent=self,
+            )
+            self.subcommands.append(group)
+            return group
+        return inner
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
@@ -803,6 +875,50 @@ class SlashCommandGroup(ApplicationCommand, Option):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
+
+    def copy(self):
+        """Creates a copy of this command group.
+
+        Returns
+        --------
+        :class:`SlashCommandGroup`
+            A new instance of this command group.
+        """
+        ret = self.__class__(
+            name=self.name,
+            description=self.description,
+            **self.__original_kwargs__,
+        )
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other.parent = self.parent
+
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+
+        if self.subcommands != other.subcommands:
+            other.subcommands = self.subcommands.copy()
+        
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
+    def _set_cog(self, cog):
+        self.cog = cog
+        for subcommand in self.subcommands:
+            subcommand._set_cog(cog)
+        
 
 
 class ContextMenuCommand(ApplicationCommand):
@@ -860,7 +976,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
-        
+
         self.validate_parameters()
 
         # Context Menu commands don't have permissions
@@ -902,7 +1018,7 @@ class ContextMenuCommand(ApplicationCommand):
             )
         except StopIteration:
             pass
-    
+
     def qualified_name(self):
         return self.name
 
@@ -941,7 +1057,7 @@ class UserCommand(ContextMenuCommand):
                 guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
                 state=ctx.interaction._state,
             )
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:   
@@ -1007,12 +1123,12 @@ class MessageCommand(ContextMenuCommand):
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
-        
+
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-    
+
     def copy(self):
         """Creates a copy of this command.
 
