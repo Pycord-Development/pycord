@@ -49,7 +49,6 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from .asset import Asset
     from .channel import DMChannel, VoiceChannel, StageChannel
     from .flags import PublicUserFlags
     from .guild import Guild
