@@ -86,6 +86,9 @@ class ScheduledEventLocation:
 
     def __repr__(self) -> str:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
+
+    def __str__(self) -> str:
+        return self.value
     
     @property
     def type(self) -> ScheduledEventLocationType:
