@@ -211,6 +211,8 @@ class AuditLogChanges:
         'privacy_level':                 (None, _enum_transformer(enums.StagePrivacyLevel)),
         'format_type':                   (None, _enum_transformer(enums.StickerFormatType)),
         'type':                          (None, _transform_type),
+        'status':                        (None, _enum_transformer(enums.ScheduledEventStatus)),
+        'entity_type':                   ('location_type', _enum_transformer(enums.ScheduledEventLocationType)),
     }
     # fmt: on
 
