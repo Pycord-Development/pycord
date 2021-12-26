@@ -144,7 +144,7 @@ class ApplicationContext(discord.abc.Messageable):
         if self.response.is_done():
             return self.followup.send
         else:
-            raise RuntimeError("Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first.")
+            raise RuntimeError(f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first.")
 
     @property
     def defer(self):
