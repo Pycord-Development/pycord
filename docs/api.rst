@@ -1210,7 +1210,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
     :param payload: The raw event payload data.
-    :type payload: :class:`RawScheduledEventUserAction`
+    :type payload: :class:`RawScheduledEventSubscription`
 
 .. function:: on_scheduled_event_user_remove(event, member)
 
@@ -1234,7 +1234,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
     :param payload: The raw event payload data.
-    :type payload: :class:`RawScheduledEventUserAction`
+    :type payload: :class:`RawScheduledEventSubscription`
 
 .. _discord-api-utils:
 

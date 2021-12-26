@@ -1337,7 +1337,7 @@ class Client:
 
     # Invite management
 
-    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, scheduled_event_id: Snowflake = None) -> Invite:
+    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, event_id: Snowflake = None) -> Invite:
         """|coro|
 
         Gets an :class:`.Invite` from a discord.gg URL or ID.
@@ -1361,8 +1361,11 @@ class Client:
             :attr:`.Invite.expires_at` field.
 
             .. versionadded:: 2.0
-        scheduled_event_id: :class:`int`
+        event_id: :class:`int`
             The ID of the scheduled event to be associated with the event.
+
+            See :meth:`Invite.set_scheduled_event` for more
+            info on event invite linking.
 
             ..versionadded:: 2.0
 
@@ -1380,7 +1383,7 @@ class Client:
         """
 
         invite_id = utils.resolve_invite(url)
-        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=scheduled_event_id)
+        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=event_id)
         return Invite.from_incomplete(state=self._connection, data=data)
 
     async def delete_invite(self, invite: Union[Invite, str]) -> None:

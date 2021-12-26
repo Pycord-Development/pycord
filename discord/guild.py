@@ -326,10 +326,9 @@ class Guild(Hashable):
 
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
         # NOTE:
-        # Adding an attribute here and getting
-        # an AttributeError saying the attr doesn't
-        # exist? it has something to do with the
-        # order of the attr in __slots__
+        # Adding an attribute here and getting an AttributeError saying
+        # the attr doesn't exist? it has something to do with the order
+        # of the attr in __slots__
 
         self._channels: Dict[int, GuildChannel] = {}
         self._members: Dict[int, Member] = {}
@@ -3115,7 +3114,7 @@ class Guild(Hashable):
             new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
 
-    async def fetch_scheduled_events(self, with_user_count: bool = True) -> List[ScheduledEvent]:
+    async def fetch_scheduled_events(self, *, with_user_count: bool = True) -> List[ScheduledEvent]:
         """|coro|
         
         Returns a list of :class:`ScheduledEvent` in the guild.
@@ -3236,6 +3235,10 @@ class Guild(Hashable):
             A datetime object of when the scheduled event is supposed to end.
         location: :class:`ScheduledEventLocation`
             The location of where the event is happening.
+        privacy_level: :class:`ScheduledEventPrivacyLevel`
+            The privacy level of the event. Currently, the only possible value
+            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
+            so there is no need to change this parameter.
 
         Raises
         -------

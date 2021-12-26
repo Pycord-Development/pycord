@@ -25,16 +25,18 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Optional, List, Dict, Any, Union
+
+import utils
+from typing import TYPE_CHECKING, Optional, Dict, Any, Union
 from .enums import (
     ScheduledEventPrivacyLevel,
     ScheduledEventStatus,
     ScheduledEventLocationType,
-    try_enum
+    try_enum,
 )
-from .utils import MISSING
 from .mixins import Hashable
 from .iterators import ScheduledEventSubscribersIterator
+from .errors import ValidationError
 
 __all__ = (
     'ScheduledEvent',
@@ -49,6 +51,8 @@ if TYPE_CHECKING:
     from .types.guild import Guild
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.channel import StageChannel, VoiceChannel
+
+MISSING = utils.MISSING
 
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
@@ -79,6 +83,9 @@ class ScheduledEventLocation:
             self.value = self._state._get_channel(int(location))
         else:
             self.value = location
+
+    def __repr__(self) -> str:
+        return f"<ScheduledEventLocation value={self.value} type={self.type}>"
     
     @property
     def type(self):
@@ -164,7 +171,7 @@ class ScheduledEvent(Hashable):
         self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
-        #self.image: Optional[str] = data.get('image', None) # Waiting on documentation 
+        #self.image: Optional[str] = data.get('image', None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
         end_time = data.get('scheduled_end_time', None)
         if end_time != None:
@@ -181,6 +188,27 @@ class ScheduledEvent(Hashable):
             self.location = ScheduledEventLocation(state=state, location=channel_id)
         else:
             self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return (
+            f'<ScheduledEvent id={self.id} '
+            f'name={self.name} '
+            f'description={self.description} '
+            f'start_time={self.start_time} '
+            f'end_time={self.end_time} '
+            f'location={self.location} '
+            f'status={self.status.name} '
+            f'subscriber_count={self.subscriber_count} '
+            f'creator_id={self.creator_id}>'
+        )
+
+    @property
+    def created_at(self) -> datetime.datetime:
+        """:class:`datetime.datetime`: Returns the scheduled event's creation time in UTC."""
+        return utils.snowflake_time(self.id)
 
     @property
     def interested(self):
@@ -202,7 +230,9 @@ class ScheduledEvent(Hashable):
         
         Edits the Scheduled Event's data
         
-        All parameters are optional
+        All parameters are optional unless ``location.type`` is
+        :attr:`ScheduledEventLocationType.external`, then ``end_time``
+        is required.
         
         Will return a new :class:`.ScheduledEvent` object if applicable.
         
@@ -222,6 +252,10 @@ class ScheduledEvent(Hashable):
             The new starting time for the event.
         end_time: :class:`datetime.datetime`
             The new ending time of the event.
+        privacy_level: :class:`ScheduledEventPrivacyLevel`
+            The privacy level of the event. Currently, the only possible value
+            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
+            so there is no need to change this parameter.
 
         Raises
         -------
@@ -261,6 +295,10 @@ class ScheduledEvent(Hashable):
                 payload["channel_id"] = None
                 payload["entity_metadata"] = {"location":str(location.value)}
 
+        location = location if location is not MISSING else self.location
+        if end_time is MISSING and location.type is ScheduledEventLocationType.external:
+            raise ValidationError("end_time needs to be passed if location type is external.")
+
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
         
@@ -282,7 +320,6 @@ class ScheduledEvent(Hashable):
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
         """
         await self._state.http.delete_scheduled_event(self.guild.id, self.id)
 
@@ -290,6 +327,10 @@ class ScheduledEvent(Hashable):
         """|coro|
 
         Starts the scheduled event. Shortcut from :meth:`.edit`.
+
+        .. note::
+
+            This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
         Raises
         -------
@@ -311,6 +352,10 @@ class ScheduledEvent(Hashable):
 
         Ends/completes the scheduled event. Shortcut from :meth:`.edit`.
 
+        .. note::
+
+            This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.active`.
+
         Raises
         -------
         Forbidden
@@ -331,6 +376,10 @@ class ScheduledEvent(Hashable):
 
         Cancels the scheduled event. Shortcut from :meth:`.edit`.
 
+        .. note::
+
+            This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
+
         Raises
         -------
         Forbidden
@@ -346,7 +395,7 @@ class ScheduledEvent(Hashable):
         """
         return await self.edit(status=ScheduledEventStatus.canceled)
 
-    async def subscribers(
+    def subscribers(
         self,
         *,
         limit: Optional[int] = None,

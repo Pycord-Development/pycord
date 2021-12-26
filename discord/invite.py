@@ -458,7 +458,7 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """:class:`str`: A property that retrieves the invite URL."""
-        return self.BASE + '/' + self.code + (f'?event={self.scheduled_event.id}' if self.scheduled_event.id else '')
+        return self.BASE + '/' + self.code + (f'?event={self.scheduled_event.id}' if self.scheduled_event else '')
 
     async def delete(self, *, reason: Optional[str] = None):
         """|coro|
@@ -484,8 +484,16 @@ class Invite(Hashable):
 
         await self._state.http.delete_invite(self.code, reason=reason)
 
-    def add_scheduled_event(self, event: ScheduledEvent) -> None:
+    def set_scheduled_event(self, event: ScheduledEvent) -> None:
         """Links the given scheduled event to this invite.
+
+        .. note::
+
+            Scheduled events aren't actually associated to invites on the API.
+            Any invite can have an event attached to it. Using :meth:`abc.GuildChannel.create_invite`,
+            :meth:`Client.fetch_invite`, or this method, you can link scheduled events.
+
+        .. versionadded:: 2.0
 
         Parameters
         -----------

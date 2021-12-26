@@ -49,7 +49,7 @@ class ScheduledEvent(TypedDict):
     guild: Guild
     name: str
     description: str
-    #image
+    #image: Optional[str]
     start_time: datetime
     end_time: datetime
     status: ScheduledEventStatus
@@ -59,4 +59,4 @@ class ScheduledEvent(TypedDict):
     location: ScheduledEventLocation
 
 class ScheduledEventSubscriber(User):
-    member: Member
+    member: Optional[Member]

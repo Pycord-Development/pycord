@@ -41,12 +41,13 @@ if TYPE_CHECKING:
         IntegrationDeleteEvent,
         ThreadDeleteEvent,
         TypingEvent,
-        ScheduledEventUserAction,
+        ScheduledEventSubscription,
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .member import Member
     from .threads import Thread
+    from .guild import Guild
 
 
 
@@ -60,7 +61,7 @@ __all__ = (
     'RawIntegrationDeleteEvent',
     'RawThreadDeleteEvent',
     'RawTypingEvent',
-    'RawScheduledEventUserAction',
+    'RawScheduledEventSubscription',
 )
 
 
@@ -349,26 +350,29 @@ class RawTypingEvent(_RawReprMixin):
         except KeyError:
             self.guild_id: Optional[int] = None
 
-class RawScheduledEventUserAction(_RawReprMixin):
-    """Represents the payload for a :func:`on_scheduled_event_user_add` or
-    :func:`on_scheduled_event_user_remove` event.
+class RawScheduledEventSubscription(_RawReprMixin):
+    """Represents the payload for a :func:`raw_scheduled_event_user_add` or
+    :func:`raw_scheduled_event_user_remove` event.
 
     .. versionadded:: 2.0
 
     Attributes
     -----------
     event_id: :class:`int`
-        The channel ID where the typing originated from.
+        The event ID where the typing originated from.
     user_id: :class:`int`
-        The ID of the user that started typing.
-    guild_id: Optional[:class:`int`]
-        The guild ID where the typing originated from, if applicable.
+        The ID of the user that subscribed/unsubscribed.
+    guild: Optional[:class:`Guild`]
+        The guild where the subscription/unsubscription happened.
+    entity_type: :class:`str`
+        Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
+        the event called.
     """
 
     __slots__ = ("event_id", "guild", "user_id", "event_type")
 
-    def __init__(self, data: ScheduledEventUserAction, event_type: str):
+    def __init__(self, data: ScheduledEventSubscription, event_type: str):
         self.event_id: int = int(data['guild_scheduled_event_id'])
-        self.member_id: int = int(data['user_id'])
-        self.guild: int = None
+        self.user_id: int = int(data['user_id'])
+        self.guild: Guild = None
         self.event_type: str = event_type

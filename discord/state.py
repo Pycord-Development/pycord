@@ -1254,7 +1254,7 @@ class ConnectionState:
             _log.debug('GUILD_SCHEDULED_EVENT_USER_ADD referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
 
-        payload = RawScheduledEventUserAction(data, 'USER_ADD')
+        payload = RawScheduledEventSubscription(data, 'USER_ADD')
         payload.guild = guild
         self.dispatch('raw_scheduled_event_user_add', payload)
 
@@ -1269,10 +1269,10 @@ class ConnectionState:
     def parse_guild_scheduled_event_user_remove(self, data) -> None:
         guild = self._get_guild(data['guild_id'])
         if guild is None:
-            _log.debug('GUILD_SCHEDULED_EVENT_USER_remove referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+            _log.debug('GUILD_SCHEDULED_EVENT_USER_REMOVE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
 
-        payload = RawScheduledEventUserAction(data, 'USER_REMOVE')
+        payload = RawScheduledEventSubscription(data, 'USER_REMOVE')
         payload.guild = guild
         self.dispatch('raw_scheduled_event_user_remove', payload)
 
