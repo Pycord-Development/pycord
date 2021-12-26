@@ -134,14 +134,24 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def respond(self):
-        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
+        if not self.response.is_done():
+            return self.interaction.response.send_message
+        else:
+            raise RuntimeError("Interaction was already issued a response. Try using ApplicationContext.followup() instead.")
+    
+    @property
+    def followup(self):
+        if self.response.is_done():
+            return self.followup.send
+        else:
+            raise RuntimeError("Interaction was not yet issued a response. Try using ApplicationContext.respond() first.")
 
     @property
     def defer(self):
         return self.interaction.response.defer
 
     @property
-    def followup(self):
+    def followup_webhook(self):
         return self.interaction.followup
 
     async def delete(self):
