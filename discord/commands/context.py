@@ -141,7 +141,8 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     async def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
-        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response or a followup response depending if the interaction has been responded to yet or not.
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not."""
         if not self.response.is_done():
             return self.interaction.response.send_message  # self.response
         else:
