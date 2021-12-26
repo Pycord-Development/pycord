@@ -2958,11 +2958,11 @@ of :class:`enum.Enum`.
 
     .. attribute:: stage_instance
 
-        Represents a scheduled event that is happenning in a :class:`StageChannel`.
+        Represents a scheduled event that is happening in a :class:`StageChannel`.
 
     .. attribute:: voice
 
-        Represents a scheduled event that is happenning in a :class:`VoiceChannel`.
+        Represents a scheduled event that is happening in a :class:`VoiceChannel`.
 
     .. attribute:: external
 
