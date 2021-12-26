@@ -47,8 +47,8 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .state import ConnectionState
     from .member import Member
+    from .guild import Guild
     from .iterators import AsyncIterator
-    from .types.guild import Guild
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.channel import StageChannel, VoiceChannel
 
@@ -88,7 +88,7 @@ class ScheduledEventLocation:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
     
     @property
-    def type(self):
+    def type(self) -> ScheduledEventLocationType:
         if isinstance(self.value, str):
             return ScheduledEventLocationType.external
         elif self.value.__class__.__name__ == "StageChannel":
@@ -127,6 +127,9 @@ class ScheduledEvent(Hashable):
         The time when the event is supposed to end.
     status: :class:`ScheduledEventStatus`
         The status of the scheduled event.
+    location: :class:`ScheduledEventLocation`
+        The location of the event.
+        See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
     interested: Optional[:class:`int`]
@@ -137,15 +140,12 @@ class ScheduledEvent(Hashable):
         had their creators tracked.
     creator: Optional[:class:`User`]
         The resolved user object of who created the event.
-    location: :class:`ScheduledEventLocation`
-        The location of the event.
-        See :class:`ScheduledEventLocation` for more information.
-    guild: :class:`Guild`
-        The guild where the scheduled event is happening.
     privacy_level: :class:`ScheduledEventPrivacyLevel`
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
+    guild: :class:`Guild`
+        The guild where the scheduled event is happening.
     """
     
     __slots__ = (

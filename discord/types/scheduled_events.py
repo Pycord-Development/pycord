@@ -37,6 +37,7 @@ from .member import Member
 
 ScheduledEventStatus = Literal[1, 2, 3, 4]
 ScheduledEventLocationType = Literal[1, 2, 3]
+ScheduledEventPrivacyLevel = Literal[2]
 
 
 class ScheduledEventLocation(TypedDict):
