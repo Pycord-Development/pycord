@@ -755,6 +755,11 @@ class ArchivedThreadIterator(_AsyncIterator['Thread']):
 
 class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]]):
     def __init__(self, event, limit, with_member=False, before=None, after=None):
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
         self.event = event
         self.limit = limit
         self.with_member = with_member
