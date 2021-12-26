@@ -104,16 +104,21 @@ class ScheduledEvent(Hashable):
     """Represents a Discord Guild Scheduled Event.
 
     .. container:: operations
+
         .. describe:: x == y
+
             Checks if two scheduled events are equal.
 
         .. describe:: x != y
+
             Checks if two scheduled events are not equal.
 
         .. describe:: hash(x)
+
             Returns the scheduled event's hash.
 
         .. describe:: str(x)
+
             Returns the scheduled event's name.
 
     .. versionadded:: 2.0
