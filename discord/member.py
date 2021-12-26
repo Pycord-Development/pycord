@@ -35,6 +35,7 @@ from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Typ
 import discord.abc
 from . import utils
 from .activity import create_activity, ActivityTypes
+from .asset import Asset
 from .colour import Colour
 from .enums import Status, try_enum
 from .object import Object
