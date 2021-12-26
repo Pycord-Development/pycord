@@ -2950,6 +2950,34 @@ of :class:`enum.Enum`.
 
         Alias to :attr:`canceled`.
 
+.. class:: ScheduledEventLocationType
+
+    Represents a scheduled event location type (otherwise known as the entity type on the API).
+
+    .. verssionadded:: 2.0
+
+    .. attribute:: stage_instance
+
+        Represents a scheduled event that is happenning in a :class:`StageChannel`.
+
+    .. attribute:: voice
+
+        Represents a scheduled event that is happenning in a :class:`VoiceChannel`.
+
+    .. attribute:: external
+
+        Represents a generic location as a :class:`str`.
+
+.. class:: ScheduledEventPrivacyLevel
+
+    Represents the privacy level of a scheduled event.
+    Scheduled event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
+
+    .. attribute:: guild_only
+
+        Represents a scheduled event that is only available to members inside the guild.
+
 
 Async Iterator
 ----------------

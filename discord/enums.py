@@ -58,6 +58,7 @@ __all__ = (
     'NSFWLevel',
     'EmbeddedActivity',
     'ScheduledEventStatus',
+    'ScheduledEventPrivacyLevel',
     'ScheduledEventLocationType',
 )
 
@@ -714,7 +715,6 @@ class ScheduledEventStatus(Enum):
 
 
 class ScheduledEventPrivacyLevel(Enum):
-    # leaving this here undocumented in case
     guild_only = 2
 
     def __int__(self):

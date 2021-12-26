@@ -53,6 +53,7 @@ if TYPE_CHECKING:
     from .abc import GuildChannel
     from .user import User
     from .scheduled_events import ScheduledEvent
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
     InviteGuildType = Union[Guild, 'PartialInviteGuild', Object]
     InviteChannelType = Union[GuildChannel, 'PartialInviteChannel', Object]
@@ -365,7 +366,7 @@ class Invite(Hashable):
         self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
 
         from .scheduled_events import ScheduledEvent
-        scheduled_event = data.get('guild_scheduled_event')
+        scheduled_event: ScheduledEventPayload = data.get('guild_scheduled_event')
         self.scheduled_event: Optional[ScheduledEvent] = ScheduledEvent(state=state, data=scheduled_event) if scheduled_event else None 
 
         application = data.get('target_application')
@@ -491,8 +492,9 @@ class Invite(Hashable):
         .. note::
 
             Scheduled events aren't actually associated to invites on the API.
-            Any invite can have an event attached to it. Using :meth:`abc.GuildChannel.create_invite`,
-            :meth:`Client.fetch_invite`, or this method, you can link scheduled events.
+            Any guild channel invite can have an event attached to it. Using
+            :meth:`abc.GuildChannel.create_invite`, :meth:`Client.fetch_invite`,
+            or this method, you can link scheduled events.
 
         .. versionadded:: 2.0
 

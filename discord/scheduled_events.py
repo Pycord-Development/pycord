@@ -58,9 +58,9 @@ class ScheduledEventLocation:
     """Represents a scheduled event's location.
 
     Setting the ``location`` to its corresponding type will set the location type automatically:
-    - :class:`StageChannel`: :attr:`.ScheduledEventLocationType.external`
-    - :class:`VoiceChannel`: :attr:`.ScheduledEventLocationType.voice`
-    - :class:`str`: :attr:`.ScheduledEventLocationType.external`
+    - :class:`StageChannel`: :attr:`ScheduledEventLocationType.external`
+    - :class:`VoiceChannel`: :attr:`ScheduledEventLocationType.voice`
+    - :class:`str`: :attr:`ScheduledEventLocationType.external`
 
     .. versionadded:: 2.0
 
@@ -101,21 +101,16 @@ class ScheduledEvent(Hashable):
     """Represents a Discord Guild Scheduled Event.
 
     .. container:: operations
-
         .. describe:: x == y
-
             Checks if two scheduled events are equal.
 
         .. describe:: x != y
-
             Checks if two scheduled events are not equal.
 
         .. describe:: hash(x)
-
             Returns the scheduled event's hash.
 
         .. describe:: str(x)
-
             Returns the scheduled event's name.
 
     .. versionadded:: 2.0
@@ -135,7 +130,7 @@ class ScheduledEvent(Hashable):
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
     interested: Optional[:class:`int`]
-        Alias to :attr:`user_count`
+        Alias to :attr:`.subscriber_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -147,6 +142,10 @@ class ScheduledEvent(Hashable):
         See :class:`ScheduledEventLocation` for more information.
     guild: :class:`Guild`
         The guild where the scheduled event is happening.
+    privacy_level: :class:`ScheduledEventPrivacyLevel`
+        The privacy level of the event. Currently, the only possible value
+        is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
+        so there is no need to use this attribute.
     """
     
     __slots__ = (
@@ -165,7 +164,7 @@ class ScheduledEvent(Hashable):
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, creator: Optional[Member], data: ScheduledEventPayload):
-        self._state = state
+        self._state: ConnectionState = state
         
         self.id: int = int(data.get('id'))
         self.guild: Guild = guild
@@ -225,6 +224,7 @@ class ScheduledEvent(Hashable):
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        reason: Optional[str] = None
     ) -> Optional[ScheduledEvent]:
         """|coro|
         
@@ -256,6 +256,8 @@ class ScheduledEvent(Hashable):
             The privacy level of the event. Currently, the only possible value
             is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
             so there is no need to change this parameter.
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
 
         Raises
         -------
@@ -306,7 +308,7 @@ class ScheduledEvent(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload)
+            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload, reason=reason)
             return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
 
     async def delete(self) -> None:
@@ -323,7 +325,7 @@ class ScheduledEvent(Hashable):
         """
         await self._state.http.delete_scheduled_event(self.guild.id, self.id)
 
-    async def start(self) -> None:
+    async def start(self, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Starts the scheduled event. Shortcut from :meth:`.edit`.
@@ -332,6 +334,11 @@ class ScheduledEvent(Hashable):
 
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
+        Parameters
+        -----------
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
+
         Raises
         -------
         Forbidden
@@ -342,12 +349,11 @@ class ScheduledEvent(Hashable):
         Returns
         --------
         Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object. This is only returned when certain
-            fields are updated.
+            The newly updated scheduled event object.
         """
-        return await self.edit(status=ScheduledEventStatus.active)
+        return await self.edit(status=ScheduledEventStatus.active, reason=reason)
 
-    async def complete(self) -> None:
+    async def complete(self, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Ends/completes the scheduled event. Shortcut from :meth:`.edit`.
@@ -356,6 +362,11 @@ class ScheduledEvent(Hashable):
 
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.active`.
 
+        Parameters
+        -----------
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
+
         Raises
         -------
         Forbidden
@@ -366,12 +377,11 @@ class ScheduledEvent(Hashable):
         Returns
         --------
         Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object. This is only returned when certain
-            fields are updated.
+            The newly updated scheduled event object.
         """
-        return await self.edit(status=ScheduledEventStatus.completed)
+        return await self.edit(status=ScheduledEventStatus.completed, reason=reason)
 
-    async def cancel(self) -> None:
+    async def cancel(self, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Cancels the scheduled event. Shortcut from :meth:`.edit`.
@@ -380,6 +390,11 @@ class ScheduledEvent(Hashable):
 
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
+        Parameters
+        -----------
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
+
         Raises
         -------
         Forbidden
@@ -390,10 +405,9 @@ class ScheduledEvent(Hashable):
         Returns
         --------
         Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object. This is only returned when certain
-            fields are updated.
+            The newly updated scheduled event object.
         """
-        return await self.edit(status=ScheduledEventStatus.canceled)
+        return await self.edit(status=ScheduledEventStatus.canceled, reason=reason)
 
     def subscribers(
         self,

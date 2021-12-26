@@ -3140,7 +3140,7 @@ class Guild(Hashable):
         Returns
         --------
         List[:class:`ScheduledEvent`]
-            The fetch scheduled events
+            The fetched scheduled events
         """
         data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
@@ -3169,7 +3169,7 @@ class Guild(Hashable):
         Parameters
         -----------
         event_id: :class:`int`
-            The event's ID to fetch from.
+            The event's ID to fetch with.
 
         Raises
         -------
@@ -3200,7 +3200,7 @@ class Guild(Hashable):
 
         Parameters
         -----------
-        user_id: :class:`int`
+        event_id: :class:`int`
             The ID to search for.
 
         Returns
@@ -3219,6 +3219,7 @@ class Guild(Hashable):
         end_time: datetime = MISSING,
         location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation],
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        reason: Optional[str] = None
     ) -> Optional[ScheduledEvent]:
         """|coro|
         Creates a scheduled event.
@@ -3239,6 +3240,8 @@ class Guild(Hashable):
             The privacy level of the event. Currently, the only possible value
             is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
             so there is no need to change this parameter.
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
 
         Raises
         -------
@@ -3278,7 +3281,7 @@ class Guild(Hashable):
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
-        data = await self._state.http.create_scheduled_event(guild_id=self.id, **payload)
+        data = await self._state.http.create_scheduled_event(guild_id=self.id, reason=reason, **payload)
         event = ScheduledEvent(state=self._state, guild=self, creator=self.me, data=data)
         self._add_scheduled_event(event)
         return event

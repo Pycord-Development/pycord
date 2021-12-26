@@ -1115,7 +1115,8 @@ class GuildChannel:
             target_application_id=target_application_id,
         )
         invite = Invite.from_incomplete(data=data, state=self._state)
-        invite.set_scheduled_event(target_event)
+        if target_event:
+            invite.set_scheduled_event(target_event)
         return invite
 
     async def invites(self) -> List[Invite]:
