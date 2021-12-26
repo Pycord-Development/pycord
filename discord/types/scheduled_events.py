@@ -51,11 +51,11 @@ class ScheduledEvent(TypedDict):
     description: str
     #image: Optional[str]
     start_time: datetime
-    end_time: datetime
+    end_time: Optional[datetime]
     status: ScheduledEventStatus
-    user_count: Optional[int]
+    subscriber_count: Optional[int]
     creator_id: Snowflake
-    creator: User
+    creator: Optional[User]
     location: ScheduledEventLocation
 
 class ScheduledEventSubscriber(User):
