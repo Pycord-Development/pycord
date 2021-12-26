@@ -151,7 +151,7 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response.defer
 
     @property
-    def followup_webhook(self):
+    def followup(self):
         return self.interaction.followup
 
     async def delete(self):
