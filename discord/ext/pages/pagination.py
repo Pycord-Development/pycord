@@ -298,7 +298,7 @@ class Paginator(discord.ui.View):
         Parameters
         ------------
         ctx: Union[:class:`~discord.ext.commands.Context`, :class:`~discord.ApplicationContext`]
-            The invocation context.
+            A command's invocation context.
         ephemeral: :class:`bool`
             Choose whether the message is ephemeral or not. Only works with slash commands.
 
