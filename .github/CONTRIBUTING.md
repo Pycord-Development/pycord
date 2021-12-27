@@ -43,12 +43,72 @@ deciding to ignore type checking warnings.
 
 By submitting a pull request, you agree that; 1) You hold the copyright on all submitted code inside said pull request; 2) You agree to transfer all rights to the owner of this repository, and; 3) If you are found to be in fault with any of the above, we shall not be held responsible in any way after the pull request has been merged.
 
-### Git Commit Guidelines
+## Git Commit Styling
 
-- Use present tense (e.g. "Add feature" not "Added feature")
-- Limit all lines to 72 characters or less.
-- Reference issues or pull requests outside of the first line.
-    - Please use the shorthand `#123` and not the full URL.
-- Commits regarding the commands extension must be prefixed with `[commands]`
+Not following this guideline could lead to your pull being squashed for a cleaner commit history
 
-If you do not meet any of these guidelines, don't fret. Chances are they will be fixed upon rebasing but please do try to meet them to remove some of the workload.
+This style guide is most based of the [conventional commits](https://www.conventionalcommits.org/) style guide, in where it follows following guidelines:
+```txt
+type(scope): <description>
+```
+different with conventional commits is that we are gonna be defining the types you can use.
+
+### Normal Types
+
+These here are some types normally used without the library
+
+#### Feature Types:
+```
+feat:
+feature:
+addition:
+creation:
+```
+#### Bug Fix Types:
+```
+fix:
+bug:
+bug-fix:
+```
+#### Fixing Grammar Mistakes:
+```
+typo:
+grammar:
+nit:
+```
+#### When refactoring or efficientizing code:
+```
+speed:
+refactor:
+efficent:
+```
+
+### Extension Types
+
+Some types used in the `ext`'s
+
+#### ommands Types:
+```
+ext.commands:
+commands.Bot
+checks:
+cogs:
+cooldowns:
+```
+#### ages Types:
+```
+ext.pages:
+pages:
+paginator:
+```
+Tasks Types:
+```
+ext.tasks:
+tasks:
+```
+
+### Displaying breaking changes or closing issues in a commit
+When closing issues or displaying a breaking change just add the following to your extended description:
+```
+BREAKING CHANGE:
+CLOSES: #<issue-number>
