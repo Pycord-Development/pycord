@@ -31,7 +31,8 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Type, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing_extensions import ParamSpec
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -61,8 +62,17 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: 
+    from ..cog import Cog
     from ..interactions import Interaction
+
+T = TypeVar('T')
+CogT = TypeVar('CogT', bound='Cog')
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -97,7 +107,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 class _BaseCommand:
     __slots__ = ()
 
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __repr__(self):
