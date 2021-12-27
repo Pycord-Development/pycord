@@ -55,16 +55,20 @@ This list **doesn't** fully cover everything you should know before using Pycord
 
 :doc:`starting-out/making-a-bot`
 
-:doc:`interactions/slash_commands` Guide
+:doc:`starting-out/initial-files`
 
-:doc:`interactions/context_menus` Guide
+The Pycord :ref:`slash commands <interactions/slash_commands>` Guide.
 
-:doc:`interactions/button_views` Guide
+The Pycord :ref:`Context Menus <interactions/context_menus>` Guide.
 
-:doc:`interactions/select_views` Guide
+The Pycord :ref:`Button Menus <interactions/button_views>` Guide.
 
-:doc:`misc/intents`
+The Pycord :ref:`Select Menus <interactions/select_views>` Guide.
 
-:doc:`misc/logging`
+A thing you might wanna look at is :ref:`how to use ``ext.commands`` <ext/commands/index>`
+
+A primer to :ref:`gateway intents <misc/intents>`
+
+You may wanna try :doc:`misc/logging` in Pycord.
 ```
-<!--:doc:`misc/webhooks` Guide-->
+<!--:doc:`misc/webhooks` Guide, Finishing this isn't too important, if anyone wants they can finish it.-->

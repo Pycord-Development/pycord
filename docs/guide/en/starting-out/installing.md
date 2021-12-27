@@ -38,6 +38,7 @@ To install additional packages for speedup,  you should use ``py-cord[speed]`` i
 
     # Linux/macOS
     python3 -m pip install -U "py-cord[speed]"
+    
     # Windows
     py -3 -m pip install -U py-cord[speed]
 

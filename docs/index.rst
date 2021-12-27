@@ -25,8 +25,8 @@ Getting started
 
 Is this your first time using the library? This is the place to get started!
 
-- **First steps:** :doc:`guide/starting-out/installing` | :doc:`quickstart` | :doc:`guide/misc/logging` | :doc:`guide/index`
-- **Working with Discord:** :doc:`guide/starting-out/making-a-bot` | :doc:`guide/misc/intents`
+- **First steps:** :doc:`guide/index` | :doc:`guide/en/starting-out/installing` | :doc:`quickstart` | :doc:`guide/en/misc/logging`
+- **Working with Discord:** :doc:`guide/en/starting-out/making-a-bot` | :doc:`guide/en/misc/intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
 Getting help
