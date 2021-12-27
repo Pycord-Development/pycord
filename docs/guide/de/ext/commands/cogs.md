@@ -1,0 +1,2 @@
+# Verwendung von Cogs in Pycord
+Das Modul ``ext.commands``, das von Pycord zur Verfügung gestellt wird, führt ein `Cog`-System ein, das es erlaubt, Befehle jeglicher Art oder sogar Ereignisse in einer anderen Datei zu erzeugen.
