@@ -47,82 +47,8 @@ By submitting a pull request, you agree that; 1) You hold the copyright on all s
 
 Not following this guideline could lead to your pull being squashed for a cleaner commit history
 
-This style guide is most based of the [conventional commits](https://www.conventionalcommits.org/) style guide, in where it follows following guidelines:
-```txt
-type(scope): <description>
-```
-different with conventional commits is that we are gonna be defining the types you can use.
+Some style guides we would recommed using in your pulls:
 
-### Normal Types
+The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style is a very widely used style and a good style to start with.
 
-These here are some types normally used without the library
-
-#### Feature Types:
-```
-feat:
-feature:
-```
-#### Bug Fix Types:
-```
-fix:
-bug-fix:
-```
-#### Fixing Grammar Mistakes:
-```
-typo:
-nit:
-```
-#### When refactoring or efficientizing code:
-```
-speed:
-refactor:
-```
-
-### Extension Types
-
-Some types used in the `ext`'s
-
-#### Commands Types:
-```
-ext.commands:
-commands.Bot:
-```
-#### Pages Types:
-```
-ext.pages:
-pages:
-```
-#### Tasks Types:
-```
-ext.tasks:
-tasks:
-```
-
-### Displaying breaking changes or closing issues in a commit
-
-When closing issues or displaying a breaking change just add the following to your extended description:
-```
-BREAKING CHANGE:
-CLOSES: #<issue-number>
-```
-
-### Special Commit Types
-
-#### Github
-```
-git:
-actions:
-ci:
-CONTRIBUTING:
-```
-#### Docs
-```
-docs:
-```
-
-### Displaying multiple commits
-
-When displaying multiple commits in one use the type:
-```
-Mega Change:
-```
+The [gitmoji](https://gitmoji.dev) style guide would make your pull look more lively and different to others.
