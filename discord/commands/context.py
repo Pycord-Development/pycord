@@ -134,7 +134,26 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def respond(self):
-        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
+        if not self.response.is_done():
+            return self.interaction.response.send_message
+        else:
+            raise RuntimeError(f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead.")
+
+    @property
+    async def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not."""
+        if not self.response.is_done():
+            return self.interaction.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
+
+    @property
+    def send_followup(self):
+        if self.response.is_done():
+            return self.followup.send
+        else:
+            raise RuntimeError(f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first.")
 
     @property
     def defer(self):
