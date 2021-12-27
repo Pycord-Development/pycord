@@ -259,8 +259,6 @@ class ApplicationCommandMixin:
                 }.items():
                     if key == "options":
                         for i, option_dict in enumerate(as_dict[key]):
-                            if command.name == "recent":
-                                print(option_dict, "|||||", match[key][i])
                             for key2 in more_keys:
                                 pendingVal = None
                                 if key2 in option_dict.keys():
