@@ -10,11 +10,11 @@ Beispiel für einige Befehle, die Sie verwenden können:
 
 #### Args:
 
-- name
+- Name
   - Ihr Projektname
 --gesharded
    - Ob Ihr Bot sharded sein soll oder nicht
---präfix
+--prefix
    - Dein Bot-Präfix
 
 ## ``python -m py-cord newcog (args)``
@@ -40,7 +40,7 @@ Wir würden vorschlagen, dass Sie sich die Grundkenntnisse von Python aneignen, 
 ### Wie viel Python muss ich wissen?
 
 - Der Unterschied zwischen Instanzen und Klassenattributen.
-    - z.B. `guild.name` vs. `discord.Guild.name` oder jede Variation davon.
+    - z.B. `Gildenname` vs. `Discord.Gildenname` oder jede Variation davon.
 - Wie man Datenstrukturen in der Sprache verwendet.
     - `dict`/`tuple`/`list`/`str`/`...`
 - Wie man Ausnahmen wie `NameError` oder `SyntaxError` löst.
@@ -51,24 +51,24 @@ Diese Liste deckt **nicht** alles ab, was Sie wissen sollten, bevor Sie Pycord b
 ## Leitfaden-Liste
 
 ```{eval-rst}
-Die Anleitung zur :ref:`Installation von Pycord <starting-out/installing>`
+Der Leitfaden, wie Sie es versuchen können :doc:`Start/Installation>`
 
-Wenn du nicht weißt, wie man einen Bot in Discord erstellt, wäre :ref:`diese Anleitung nützlich <starting-out/making-a-bot>`
+Wenn Sie nicht wissen, wie Sie einen Bot in Discord erstellen können -> :doc:`starting-out/making-a-bot`
 
-Und wenn du nicht weißt, welche Dateien du für den Anfang auswählen sollst, empfehlen wir dir :ref:`die besten Dateien für den Anfang <starting-out/initial-files>`
+Und wenn du nicht weißt, welche Dateien du beim Start auswählen sollst, empfehlen wir dir :doc:`starting-out/initial-files`
 
-Der Pycord :ref:`Slash-Befehle <interactions/slash_commands>` Guide.
+Der Pycord :doc:`interactions/slash_commands` Guide.
 
-Der Pycord :ref:`Kontextmenüs <interactions/context_menus>` Leitfaden.
+Der Pycord :doc:`interactions/context_menus` Leitfaden.
 
-Der Pycord :ref:`Schaltflächenmenüs <interactions/button_views>` Leitfaden.
+Der Pycord :doc:`interactions/button_views` Leitfaden.
 
-Der Pycord :ref:`Auswahlmenüs <interactions/select_views>` Leitfaden.
+Der Pycord :doc:`interactions/select_views` Leitfaden.
 
-Eine Sache, die Sie sich ansehen sollten, ist :ref:`Wie man ``ext.commands`` <ext/commands/index>` benutzt.
+Eine Sache, die Sie sich vielleicht ansehen sollten, ist :doc:`ext/commands/index`.
 
-Eine Fibel zu :ref:`Gateway-Intents <misc/intents>`
+:doc:`misc/intents`
 
 Sie sollten :doc:`misc/logging` in Pycord ausprobieren.
 ```
-<!--:doc:`misc/webhooks` Guide, Die Fertigstellung ist nicht so wichtig, wenn jemand will, kann er es fertigstellen.-->
+<!--:doc:`misc/webhooks` Guide, Das Fertigstellen ist nicht so wichtig, wenn jemand will, kann er es fertigstellen.-->

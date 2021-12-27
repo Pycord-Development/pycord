@@ -5,8 +5,8 @@
 
 .. _intro:
 
-Introduction
-============
+Installing Pycord
+=================
 
 This is the documentation for Pycord, a library for Python to aid
 in creating applications that utilise the Discord API.

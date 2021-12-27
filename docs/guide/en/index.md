@@ -51,23 +51,23 @@ This list **doesn't** fully cover everything you should know before using Pycord
 ## Guide List
 
 ```{eval-rst}
-The guide on how to :ref:`install Pycord <starting-out/installing>`
+The guide on how you can try :doc:`starting-out/installing>`
 
-If you don't know how to make a bot in discord :ref:`this guide would be handy <starting-out/making-a-bot>`
+If you don't know how to make a bot in discord -> :doc:`starting-out/making-a-bot`
 
-And if you don't know which files or what files to chose when starting we suggest you look at :ref:`best files to start with <starting-out/initial-files>`
+And if you don't know which files or what files to chose when starting we suggest you look at :doc:`starting-out/initial-files`
 
-The Pycord :ref:`slash commands <interactions/slash_commands>` Guide.
+The Pycord :doc:`interactions/slash_commands` Guide.
 
-The Pycord :ref:`Context Menus <interactions/context_menus>` Guide.
+The Pycord :doc:`interactions/context_menus` Guide.
 
-The Pycord :ref:`Button Menus <interactions/button_views>` Guide.
+The Pycord :doc:`interactions/button_views` Guide.
 
-The Pycord :ref:`Select Menus <interactions/select_views>` Guide.
+The Pycord :doc:`interactions/select_views` Guide.
 
-A thing you might wanna look at is :ref:`how to use ``ext.commands`` <ext/commands/index>`
+A thing you might wanna look at is :doc:`ext/commands/index`.
 
-A primer to :ref:`gateway intents <misc/intents>`
+:doc:`misc/intents`
 
 You may wanna try :doc:`misc/logging` in Pycord.
 ```
