@@ -61,26 +61,21 @@ These here are some types normally used without the library
 ```
 feat:
 feature:
-addition:
-creation:
 ```
 #### Bug Fix Types:
 ```
 fix:
-bug:
 bug-fix:
 ```
 #### Fixing Grammar Mistakes:
 ```
 typo:
-grammar:
 nit:
 ```
 #### When refactoring or efficientizing code:
 ```
-speed:
+speedup:
 refactor:
-efficent:
 ```
 
 ### Extension Types
@@ -91,15 +86,11 @@ Some types used in the `ext`'s
 ```
 ext.commands:
 commands.Bot:
-checks:
-cogs:
-cooldowns:
 ```
 #### Pages Types:
 ```
 ext.pages:
 pages:
-paginator:
 ```
 #### Tasks Types:
 ```
@@ -120,14 +111,11 @@ CLOSES: #<issue-number>
 #### Github
 ```
 git:
-github:
 actions:
 ci:
-ci/cd:
 CONTRIBUTING:
 ```
 #### Docs
 ```
 docs:
-sphinx:
 ```
