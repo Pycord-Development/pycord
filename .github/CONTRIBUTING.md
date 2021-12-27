@@ -87,7 +87,7 @@ efficent:
 
 Some types used in the `ext`'s
 
-#### ommands Types:
+#### Commands Types:
 ```
 ext.commands:
 commands.Bot
@@ -95,20 +95,39 @@ checks:
 cogs:
 cooldowns:
 ```
-#### ages Types:
+#### Pages Types:
 ```
 ext.pages:
 pages:
 paginator:
 ```
-Tasks Types:
+#### Tasks Types:
 ```
 ext.tasks:
 tasks:
 ```
 
 ### Displaying breaking changes or closing issues in a commit
+
 When closing issues or displaying a breaking change just add the following to your extended description:
 ```
 BREAKING CHANGE:
 CLOSES: #<issue-number>
+```
+
+### Special Commit Types
+
+#### Github
+```
+git:
+github:
+actions:
+ci:
+ci/cd:
+CONTRIBUTING:
+```
+#### Docs
+```
+docs:
+sphinx:
+```
