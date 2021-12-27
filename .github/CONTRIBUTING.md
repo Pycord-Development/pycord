@@ -90,7 +90,7 @@ Some types used in the `ext`'s
 #### Commands Types:
 ```
 ext.commands:
-commands.Bot
+commands.Bot:
 checks:
 cogs:
 cooldowns:
