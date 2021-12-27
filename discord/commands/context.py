@@ -69,7 +69,13 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
@@ -90,6 +96,14 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
+
+    @cached_property
+    def locale(self) -> Optional[str]:
+        return self.interaction.locale
+
+    @cached_property
+    def guild_locale(self) -> Optional[str]:
+        return self.interaction.guild_locale
 
     @cached_property
     def me(self) -> Union[Member, User]:
@@ -120,7 +134,26 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def respond(self):
-        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
+        if not self.response.is_done():
+            return self.interaction.response.send_message
+        else:
+            raise RuntimeError(f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead.")
+
+    @property
+    async def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not."""
+        if not self.response.is_done():
+            return self.interaction.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
+
+    @property
+    def send_followup(self):
+        if self.response.is_done():
+            return self.followup.send
+        else:
+            raise RuntimeError(f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first.")
 
     @property
     def defer(self):
@@ -180,10 +213,10 @@ class AutocompleteContext:
         self.bot = bot
         self.interaction = interaction
 
-        # self.command = command
-        # self.focused = focused
-        # self.value = value
-        # self.options = options
+        self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
 
     @property
     def cog(self) -> Optional[Cog]:

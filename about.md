@@ -9,4 +9,4 @@ Pycord ("py-cord" on PyPI) is a maintained fork of discord.py which will be upda
 
 ## Features
 Pycord v1.7.3 is the same as discord.py v1.7.3. However Pycord v2.0.0 will support interactions and other features introduced in discord.py v2.0.0a as it's a fork of the master branch. <br>
-We also have a FAQ channel in our Discord server. You can [click here](https://discord.gg/nRMbjMnxCz) to join.
+We also have a FAQ channel in our Discord server. You can [click here](https://pycord.dev/discord) to join.

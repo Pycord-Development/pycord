@@ -1,4 +1,5 @@
 import re
+
 from setuptools import setup
 
 requirements = []
@@ -17,9 +18,9 @@ with open("discord/__init__.py") as f:
         raise RuntimeError("Could not grab version string")
 
 if not version:
-    raise RuntimeError('version is not set')
+    raise RuntimeError("version is not set")
 
-if version.endswith(('a', 'b', 'rc')):
+if version.endswith(("a", "b", "rc")):
     # append version identifier based on commit count
     try:
         import subprocess
@@ -42,7 +43,7 @@ with open("README.rst") as f:
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.5"],
     "docs": [
-        "sphinx==4.3.1",
+        "sphinx==4.3.2",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
     ],
@@ -62,6 +63,7 @@ packages = [
     "discord.commands",
     "discord.ext.commands",
     "discord.ext.tasks",
+    "discord.ext.pages",
 ]
 
 

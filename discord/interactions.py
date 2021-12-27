@@ -100,6 +100,10 @@ class Interaction:
         for 15 minutes.
     data: :class:`dict`
         The raw interaction data.
+    locale: :class:`str`
+        The users locale.
+    guild_locale: :class:`str`
+        The guilds preferred locale, if invoked in a guild.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -111,6 +115,8 @@ class Interaction:
         'application_id',
         'message',
         'user',
+        'locale',
+        'guild_locale',
         'token',
         'version',
         '_permissions',
@@ -137,6 +143,8 @@ class Interaction:
         self.channel_id: Optional[int] = utils._get_as_snowflake(data, 'channel_id')
         self.guild_id: Optional[int] = utils._get_as_snowflake(data, 'guild_id')
         self.application_id: int = int(data['application_id'])
+        self.locale: Optional[str] = data.get('locale')
+        self.guild_locale: Optional[str] = data.get('guild_locale')
 
         self.message: Optional[Message]
         try:
@@ -272,6 +280,7 @@ class Interaction:
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -303,6 +312,10 @@ class Interaction:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -346,15 +359,25 @@ class Interaction:
         message = InteractionMessage(state=self._state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             self._state.store_view(view, message.id)
+
+        if delete_after is not None:
+            await self.delete_original_message(delay=delete_after)
+
         return message
 
-    async def delete_original_message(self) -> None:
+    async def delete_original_message(self, *, delay: Optional[float] = None) -> None:
         """|coro|
 
         Deletes the original interaction response message.
 
         This is a lower level interface to :meth:`InteractionMessage.delete` in case
         you do not want to fetch the message and save an HTTP request.
+
+        Parameters
+        -----------
+        delay: Optional[:class:`float`]
+            If provided, the number of seconds to wait before deleting the message.
+            The waiting is done in the background and deletion failures are ignored.
 
         Raises
         -------
@@ -364,11 +387,16 @@ class Interaction:
             Deleted a message that is not yours.
         """
         adapter = async_context.get()
-        await adapter.delete_original_interaction_response(
+        func = adapter.delete_original_interaction_response(
             self.application_id,
             self.token,
             session=self._session,
         )
+
+        if delay is not None:
+            utils.delay_task(delay, func)
+        else:
+            await func
 
 
 class InteractionResponse:
@@ -600,10 +628,7 @@ class InteractionResponse:
 
         self._responded = True
         if delete_after is not None:
-            async def delete():
-                await asyncio.sleep(delete_after)
-                await self._parent.delete_original_message()
-            asyncio.ensure_future(delete(), loop=self._parent._state.loop)
+            await self._parent.delete_original_message(delay=delete_after)
         return self._parent
 
     async def edit_message(
@@ -614,6 +639,7 @@ class InteractionResponse:
         embeds: List[Embed] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
+        delete_after: Optional[float] = None
     ) -> None:
         """|coro|
 
@@ -635,6 +661,10 @@ class InteractionResponse:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -697,6 +727,8 @@ class InteractionResponse:
             state.store_view(view, message_id)
 
         self._responded = True
+        if delete_after is not None:
+            await self._parent.delete_original_message(delay=delete_after)
 
     async def send_autocomplete_result(
         self,
@@ -789,6 +821,7 @@ class InteractionMessage(Message):
         files: List[File] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -814,6 +847,10 @@ class InteractionMessage(Message):
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -839,6 +876,7 @@ class InteractionMessage(Message):
             files=files,
             view=view,
             allowed_mentions=allowed_mentions,
+            delete_after=delete_after
         )
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
@@ -861,16 +899,4 @@ class InteractionMessage(Message):
         HTTPException
             Deleting the message failed.
         """
-
-        if delay is not None:
-
-            async def inner_call(delay: float = delay):
-                await asyncio.sleep(delay)
-                try:
-                    await self._state._interaction.delete_original_message()
-                except HTTPException:
-                    pass
-
-            asyncio.create_task(inner_call())
-        else:
-            await self._state._interaction.delete_original_message()
+        await self._state._interaction.delete_original_message(delay=delay)

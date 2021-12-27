@@ -62,6 +62,7 @@ from .cog import CogMixin
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
 from .enums import InteractionType
+from .user import User
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
@@ -118,6 +119,9 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
+        if isinstance(command, SlashCommand) and command.is_subcommand:
+            raise TypeError("The provided command is a sub-command of group")
+
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
         self._pending_application_commands.append(command)
@@ -210,51 +214,101 @@ class ApplicationCommandMixin:
 
     async def register_commands(self) -> None:
         """|coro|
-
         Registers all commands that have been added through :meth:`.add_application_command`.
         This method cleans up all commands over the API and should sync them with the internal cache of commands.
-
+        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
         By default, this coroutine is called inside the :func:`.on_connect`
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
-
         .. versionadded:: 2.0
         """
-        commands = []
+        commands_to_bulk = []
+
+        needs_bulk = False
 
         # Global Command Permissions
         global_permissions: List = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
+        # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
+        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
+        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+        global_pending_application_commands_dict = {}
+        
         for command in [
             cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
         ]:
             as_dict = command.to_dict()
-            if len(registered_commands) > 0:
-                matches = [
-                    x
-                    for x in registered_commands
-                    if x["name"] == command.name and x["type"] == command.type
-                ]
-                # TODO: rewrite this, it seems inefficient
-                if matches:
-                    as_dict["id"] = matches[0]["id"]
-            commands.append(as_dict)
+            
+            global_pending_application_commands_dict[command.name] = as_dict
+            if command.name in registered_commands_dict:
+                match = registered_commands_dict[command.name]
+            else:
+                match = None
+            # TODO: There is probably a far more efficient way of doing this
+            # We want to check if the registered global command on Discord servers matches the given global commands
+            if match:
+                as_dict["id"] = match["id"]
 
-        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
+                for key, more_keys in {
+                    key:more_keys
+                    for key, more_keys in keys_to_check.items()
+                    if key in as_dict.keys()
+                    if key in match.keys()
+                }.items():
+                    if key == "options":
+                        for i, option_dict in enumerate(as_dict[key]):
+                            if command.name == "recent":
+                                print(option_dict, "|||||", match[key][i])
+                            for key2 in more_keys:
+                                pendingVal = None
+                                if key2 in option_dict.keys():
+                                    pendingVal = option_dict[key2]
+                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        pendingVal = None
+                                matchVal = None
+                                if key2 in match[key][i].keys():
+                                    matchVal = match[key][i][key2]
+                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        matchVal = None
 
-        for i in cmds:
+                                if pendingVal != matchVal:
+                                    # When a property in the options of a pending global command is changed
+                                    needs_bulk = True
+                    else:
+                        if as_dict[key] != match[key]:
+                            # When a property in a pending global command is changed
+                            needs_bulk = True
+            else:
+                # When a name of a pending global command is not registered in Discord
+                needs_bulk = True
+
+            commands_to_bulk.append(as_dict)
+        
+        for name, command in registered_commands_dict.items():
+            if not name in global_pending_application_commands_dict.keys():
+                # When a registered global command is not available in the pending global commands
+                needs_bulk = True
+    
+        if needs_bulk:
+            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+        else:
+            commands = registered_commands
+
+        for i in commands:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
                 guild_ids=None,
                 type=i["type"],
             )
-            cmd.id = i["id"]
-            self._application_commands[cmd.id] = cmd
+            if cmd:
+                cmd.id = i["id"]
+                self._application_commands[cmd.id] = cmd
 
-            # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-            global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
+                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
@@ -271,7 +325,7 @@ class ApplicationCommandMixin:
 
         for guild_id, guild_data in update_guild_commands.items():
             try:
-                cmds = await self.http.bulk_upsert_guild_commands(
+                commands = await self.http.bulk_upsert_guild_commands(
                     self.user.id, guild_id, update_guild_commands[guild_id]
                 )
 
@@ -283,7 +337,7 @@ class ApplicationCommandMixin:
                 print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
                 raise
             else:
-                for i in cmds:
+                for i in commands:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     cmd.id = i["id"]
                     self._application_commands[cmd.id] = cmd
@@ -508,7 +562,6 @@ class ApplicationCommandMixin:
         """
 
         def decorator(func) -> ApplicationCommand:
-            kwargs.setdefault("parent", self)
             result = command(**kwargs)(func)
             self.add_application_command(result)
             return result
@@ -532,13 +585,77 @@ class ApplicationCommandMixin:
         """
         return self.application_command(**kwargs)
 
-    def command_group(
-        self, name: str, description: str, guild_ids=None
+    def create_group(
+        self,
+        name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
-        # TODO: Write documentation for this. I'm not familiar enough with what this function does to do it myself.
+        """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
+        command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        SlashCommandGroup
+            The slash command group that was created.
+        """
+        description = description or "No description provided."
         group = SlashCommandGroup(name, description, guild_ids)
         self.add_application_command(group)
         return group
+
+    def group(
+        self,
+        name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
+    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
+        and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
+            The slash command group that was created.
+        """
+        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+            group = cls(
+                name,
+                (
+                    description or inspect.cleandoc(cls.__doc__).splitlines()[0]
+                    if cls.__doc__ is not None else "No description provided"
+                ),
+                guild_ids=guild_ids
+            )
+            self.add_application_command(group)
+            return group
+        return inner
+
+    slash_group = group
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
@@ -620,9 +737,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.owner_id = options.get("owner_id")
         self.owner_ids = options.get("owner_ids", set())
 
-        self.debug_guild = options.pop(
-            "debug_guild", None
-        )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
 
         if self.owner_id and self.owner_ids:
@@ -634,12 +748,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
-
-        if self.debug_guild:
-            if self.debug_guilds is None:
-                self.debug_guilds = [self.debug_guild]
-            else:
-                raise TypeError("Both debug_guild and debug_guilds are set.")
 
         self._checks = []
         self._check_once = []
@@ -953,6 +1061,43 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = coro
         return coro
 
+    async def is_owner(self, user: User) -> bool:
+        """|coro|
+
+        Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of
+        this bot.
+
+        If an :attr:`owner_id` is not set, it is fetched automatically
+        through the use of :meth:`~.Bot.application_info`.
+
+        .. versionchanged:: 1.3
+            The function also checks if the application is team-owned if
+            :attr:`owner_ids` is not set.
+
+        Parameters
+        -----------
+        user: :class:`.abc.User`
+            The user to check for.
+
+        Returns
+        --------
+        :class:`bool`
+            Whether the user is the owner.
+        """
+
+        if self.owner_id:
+            return user.id == self.owner_id
+        elif self.owner_ids:
+            return user.id in self.owner_ids
+        else:
+            app = await self.application_info()  # type: ignore
+            if app.team:
+                self.owner_ids = ids = {m.id for m in app.team.members}
+                return user.id in ids
+            else:
+                self.owner_id = owner_id = app.owner.id
+                return user.id == owner_id
+
 
 class Bot(BotBase, Client):
     """Represents a discord bot.
@@ -982,17 +1127,10 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-    debug_guild: Optional[:class:`int`]
-        Guild ID of a guild to use for testing commands. Prevents setting global commands
-        in favor of guild commands, which update instantly.
-        .. note::
-
-            The bot will not create any global commands if a debug_guild is passed.
+           
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        .. note::
-
-            You cannot set both debug_guild and debug_guilds.
+        The bot will not create any global commands if a debug_guilds is passed.
     """
 
     pass
