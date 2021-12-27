@@ -119,3 +119,10 @@ CONTRIBUTING:
 ```
 docs:
 ```
+
+### Displaying multiple commits
+
+When displaying multiple commits in one use the type:
+```
+Mega Change:
+```
