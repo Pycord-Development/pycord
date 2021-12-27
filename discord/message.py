@@ -1137,18 +1137,11 @@ class Message(Hashable):
         HTTPException
             Deleting the message failed.
         """
+        del_func = self._state.http.delete_message(self.channel.id, self.id)
         if delay is not None:
-
-            async def delete(delay: float):
-                await asyncio.sleep(delay)
-                try:
-                    await self._state.http.delete_message(self.channel.id, self.id)
-                except HTTPException:
-                    pass
-
-            asyncio.create_task(delete(delay))
+            utils.delay_task(delay, del_func)
         else:
-            await self._state.http.delete_message(self.channel.id, self.id)
+            await del_func
 
     @overload
     async def edit(
