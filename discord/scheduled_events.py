@@ -152,6 +152,8 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
+    created_at: :class:`datetime.datetime`
+        The datetime object of when the event was created.
     guild: :class:`Guild`
         The guild where the scheduled event is happening.
     """

@@ -307,6 +307,8 @@ class Invite(Hashable):
         The embedded application the invite targets, if any.
 
         .. versionadded:: 2.0
+    scheduled_event: Optional[:class:`ScheduledEvent`]
+        The scheduled event linked with the invite.
     """
 
     __slots__ = (

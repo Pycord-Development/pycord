@@ -1170,14 +1170,16 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param event: The newly created scheduled event.
     :type event: :class:`ScheduledEvent`
 
-.. function:: on_scheduled_event_update(event)
+.. function:: on_scheduled_event_update(before, after)
 
     Called when a scheduled event is updated.
 
     This requires :attr:`Intents.scheduled_events` to be enabled.
 
-    :param event: The updated scheduled event.
-    :type event: :class:`ScheduledEvent`
+    :param before: The old scheduled event.
+    :type before: :class:`ScheduledEvent`
+    :param after: The updated scheduled event.
+    :type after: :class:`ScheduledEvent`
 
 .. function:: on_scheduled_event_delete(event)
 
