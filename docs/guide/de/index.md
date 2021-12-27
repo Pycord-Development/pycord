@@ -40,7 +40,7 @@ Wir würden vorschlagen, dass Sie sich die Grundkenntnisse von Python aneignen, 
 ### Wie viel Python muss ich wissen?
 
 - Der Unterschied zwischen Instanzen und Klassenattributen.
-    - z.B. `Gildenname` vs. `Discord.Gildenname` oder jede Variation davon.
+    - z.B. `guild.name` vs. `discord.Guild.name` oder jede Variation davon.
 - Wie man Datenstrukturen in der Sprache verwendet.
     - `dict`/`tuple`/`list`/`str`/`...`
 - Wie man Ausnahmen wie `NameError` oder `SyntaxError` löst.
