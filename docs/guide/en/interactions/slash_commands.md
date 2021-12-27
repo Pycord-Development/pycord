@@ -12,8 +12,8 @@ But it is very easy to make them:
 
 ```py
 @bot.slash_command(guild_ids=[...]) # limits Guild ID's available
-"""Example Description"""
 async def example(ctx):
+    """Example Description"""
     await ctx.respond("message", view=None) # Send Message
 ```
 
@@ -44,7 +44,7 @@ Then make a function which would search for results in the list:
 async def list_search(ctx: discord.AutocompleteContext):
     """Return's A List Of Autocomplete Results"""
     return [
-        color for color in my_list if ctx.interaction.user.id in allowed_users_list
+        thing for thing in my_list if ctx.interaction.user.id in allowed_users_list
     ]
 ```
 
@@ -69,5 +69,5 @@ You will first want to make a slash command
 Then in the bottom add
 
 ```py
-@permissions.foo() # Replace foo with has_role or is_user etc.
+@Permissions.foo() # Replace foo with has_role or is_user etc.
 ```

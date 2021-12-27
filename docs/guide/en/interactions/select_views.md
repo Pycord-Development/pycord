@@ -48,5 +48,3 @@ async def my_command_name(ctx):
 ```
 
 And that's it that is all of selects in Pycord!
-
-We hope you learn't how to make selects or advanced your knowledge to with this.

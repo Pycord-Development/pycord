@@ -51,11 +51,11 @@ This list **doesn't** fully cover everything you should know before using Pycord
 ## Guide List
 
 ```{eval-rst}
-:doc:`starting-out/installing`
+The guide on how to :ref:`install Pycord <starting-out/installing>`
 
-:doc:`starting-out/making-a-bot`
+If you don't know how to make a bot in discord :ref:`this guide would be handy <starting-out/making-a-bot>`
 
-:doc:`starting-out/initial-files`
+And if you don't know which files or what files to chose when starting we suggest you look at :ref:`best files to start with <starting-out/initial-files>`
 
 The Pycord :ref:`slash commands <interactions/slash_commands>` Guide.
 
