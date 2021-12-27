@@ -218,7 +218,7 @@ class ScheduledEvent(Hashable):
         return utils.snowflake_time(self.id)
 
     @property
-    def interested(self):
+    def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
     
