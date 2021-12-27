@@ -74,7 +74,7 @@ nit:
 ```
 #### When refactoring or efficientizing code:
 ```
-speedup:
+speed:
 refactor:
 ```
 
