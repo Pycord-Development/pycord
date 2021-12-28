@@ -294,15 +294,15 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     async def send(
-        self, messageable: abc.Messageable, ephemeral: bool = False
+        self, ctx: Union[ApplicationContext, Context], ephemeral: bool = False
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
 
         Parameters
         ------------
-        messageable: :class:`discord.abc.Messageable`
-            The messageable channel to send to.
+        ctx: Union[:class:`~discord.ext.commands.Context`, :class:`~discord.ApplicationContext`]
+            The invocation context.
         ephemeral: :class:`bool`
             Choose whether the message is ephemeral or not. Only works with slash commands.
 
@@ -312,16 +312,13 @@ class Paginator(discord.ui.View):
             The message that was sent with the paginator.
         """
 
-        if not isinstance(messageable, abc.Messageable):
-            raise TypeError("messageable should be a subclass of abc.Messageable")
         self.update_buttons()
         page = self.pages[0]
 
-        if isinstance(messageable, (ApplicationContext, Context)):
-            self.user = messageable.author
+        self.user = ctx.author
 
-        if isinstance(messageable, ApplicationContext):
-            msg = await messageable.respond(
+        if isinstance(ctx, ApplicationContext):
+            msg = await ctx.respond(
                 content=page if isinstance(page, str) else None,
                 embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
@@ -329,7 +326,7 @@ class Paginator(discord.ui.View):
             )
 
         else:
-            msg = await messageable.send(
+            msg = await ctx.send(
                 content=page if isinstance(page, str) else None,
                 embeds=[page] if isinstance(page, discord.Embed) else None,
                 view=self,
