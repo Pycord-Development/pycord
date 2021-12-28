@@ -239,6 +239,7 @@ class Paginator(discord.ui.View):
                 emoji=button.emoji,
                 row=button.row,
             ),
+            "label": button.label,
             "loop_label": button.loop_label,
             "hidden": button.disabled
             if button.button_type != "page_indicator"
@@ -277,6 +278,7 @@ class Paginator(discord.ui.View):
                 if self.current_page == self.page_count:
                     if not self.loop_pages:
                         button["hidden"] = True
+                        button["object"].label = button["label"]
                     else:
                         button["object"].label = button["loop_label"]
                 elif self.current_page < self.page_count:
@@ -285,6 +287,7 @@ class Paginator(discord.ui.View):
                 if self.current_page <= 0:
                     if not self.loop_pages:
                         button["hidden"] = True
+                        button["object"].label = button["label"]
                     else:
                         button["object"].label = button["loop_label"]
                 elif self.current_page >= 0:
