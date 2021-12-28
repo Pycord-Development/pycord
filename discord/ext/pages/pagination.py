@@ -206,17 +206,11 @@ class Paginator(discord.ui.View):
         """
         self.update_buttons()
         page = self.pages[page_number]
+        page = self.get_page_content(page)
+
         await interaction.response.edit_message(
             content=page if isinstance(page, str) else None,
-            embeds=[page]
-            if (
-                isinstance(page, discord.Embed)
-                or (
-                    isinstance(page, List)
-                    and all(isinstance(x, discord.Embed) for x in page)
-                )
-            )
-            else None,
+            embeds=[] if isinstance(page, str) else page,
             view=self,
         )
 
@@ -334,6 +328,17 @@ class Paginator(discord.ui.View):
 
         return self.buttons
 
+    def get_page_content(self, page: Union[str, discord.Embed, List[discord.Embed]]):
+        if isinstance(page, discord.Embed):
+            return [page]
+        elif isinstance(page, List):
+            if all(isinstance(x, discord.Embed) for x in page):
+                return page
+            else:
+                raise TypeError("All list items must be embeds.")
+        elif isinstance(page, str):
+            return page
+
     async def send(
         self,
         ctx: Union[ApplicationContext, Context],
@@ -357,21 +362,14 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
         page = self.pages[0]
+        page = self.get_page_content(page)
 
         self.user = ctx.author
 
         if isinstance(ctx, ApplicationContext):
             msg = await ctx.respond(
                 content=page if isinstance(page, str) else None,
-                embeds=[page]
-                if (
-                    isinstance(page, discord.Embed)
-                    or (
-                        isinstance(page, List)
-                        and all(isinstance(x, discord.Embed) for x in page)
-                    )
-                )
-                else None,
+                embeds=[] if isinstance(page, str) else page,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -379,15 +377,7 @@ class Paginator(discord.ui.View):
         else:
             msg = await ctx.send(
                 content=page if isinstance(page, str) else None,
-                embeds=[page]
-                if (
-                    isinstance(page, discord.Embed)
-                    or (
-                        isinstance(page, List)
-                        and all(isinstance(x, discord.Embed) for x in page)
-                    )
-                )
-                else None,
+                embeds=[] if isinstance(page, str) else page,
                 view=self,
             )
         if isinstance(msg, (discord.WebhookMessage, discord.Message)):
@@ -418,20 +408,14 @@ class Paginator(discord.ui.View):
         self.update_buttons()
 
         page = self.pages[0]
+        page = self.get_page_content(page)
+
         self.user = interaction.user
 
         if interaction.response.is_done():
             msg = await interaction.followup.send(
                 content=page if isinstance(page, str) else None,
-                embeds=[page]
-                if (
-                    isinstance(page, discord.Embed)
-                    or (
-                        isinstance(page, List)
-                        and all(isinstance(x, discord.Embed) for x in page)
-                    )
-                )
-                else None,
+                embeds=[] if isinstance(page, str) else page,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -439,15 +423,7 @@ class Paginator(discord.ui.View):
         else:
             msg = await interaction.response.send_message(
                 content=page if isinstance(page, str) else None,
-                embeds=[page]
-                if (
-                    isinstance(page, discord.Embed)
-                    or (
-                        isinstance(page, List)
-                        and all(isinstance(x, discord.Embed) for x in page)
-                    )
-                )
-                else None,
+                embeds=[] if isinstance(page, str) else page,
                 view=self,
                 ephemeral=ephemeral,
             )
