@@ -387,7 +387,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
+        pages: List[Union[:class:`str`, :class:`discord.Embed`]]
             The list of strings and/or embeds to paginate.
         show_disabled: Optional[:class:`bool`]
             Whether to show disabled buttons.
