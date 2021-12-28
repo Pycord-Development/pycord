@@ -294,7 +294,9 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     async def send(
-        self, ctx: Union[ApplicationContext, Context], ephemeral: bool = False
+        self,
+        ctx: Union[ApplicationContext, Context],
+        ephemeral: bool = False,
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
