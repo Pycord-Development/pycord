@@ -268,12 +268,14 @@ class Paginator(discord.ui.View):
                     button["hidden"] = False
             elif key == "next":
                 if self.current_page == self.page_count:
-                    button["hidden"] = True
+                    if not self.loop_pages:
+                        button["hidden"] = True
                 elif self.current_page < self.page_count:
                     button["hidden"] = False
             elif key == "prev":
                 if self.current_page <= 0:
-                    button["hidden"] = True
+                    if not self.loop_pages:
+                        button["hidden"] = True
                 elif self.current_page >= 0:
                     button["hidden"] = False
         self.clear_items()
