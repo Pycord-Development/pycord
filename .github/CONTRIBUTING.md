@@ -53,4 +53,4 @@ The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style
 
 The [gitmoji](https://gitmoji.dev) style guide would make your pull look more lively and different to others.
 
-We dont limit nor deny you using anyother style although, please make sure it is apropriate and makes sense in this library.
+We don't limit nor deny your pulls when you're using another style although, please make sure it is appropriate and makes sense in this library.
