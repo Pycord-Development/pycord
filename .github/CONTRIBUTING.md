@@ -52,3 +52,5 @@ Some style guides we would recommed using in your pulls:
 The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style is a very widely used style and a good style to start with.
 
 The [gitmoji](https://gitmoji.dev) style guide would make your pull look more lively and different to others.
+
+We dont limit nor deny you using anyother style although, please make sure it is apropriate and makes sense in this library.
