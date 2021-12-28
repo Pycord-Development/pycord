@@ -382,7 +382,7 @@ class Paginator(discord.ui.View):
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None
     ):
-        """Updated the paginator itself. This might be usefull if you use a view with :class:`discord.SelectOption`
+        """Updates the paginator. This might be useful if you use a view with :class:`discord.SelectOption`
         and you have a different amount of pages depending on the selected option.
 
         Parameters
