@@ -35,6 +35,8 @@ if TYPE_CHECKING:
 
     from .commands import ApplicationCommand, Option
     from ..cog import Cog
+    from ..webhook import Webhook
+    from typing import Callable
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -140,7 +142,7 @@ class ApplicationContext(discord.abc.Messageable):
             raise RuntimeError(f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead.")
 
     @property
-    async def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
+    def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
         if not self.response.is_done():
