@@ -85,9 +85,15 @@ class PaginatorButton(discord.ui.Button):
         if self.button_type == "first":
             self.paginator.current_page = 0
         elif self.button_type == "prev":
-            self.paginator.current_page -= 1
+            if self.paginator.loop_pages and self.paginator.current_page == 0:
+                self.paginator.current_page = self.paginator.page_count
+            else:
+                self.paginator.current_page -= 1
         elif self.button_type == "next":
-            self.paginator.current_page += 1
+            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count:
+                self.paginator.current_page = 0
+            else:
+                self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
         await self.paginator.goto_page(
@@ -141,6 +147,7 @@ class Paginator(discord.ui.View):
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
+        loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
@@ -155,6 +162,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
+        self.loop_pages = loop_pages
         self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
         if custom_buttons and not self.use_default_buttons:
