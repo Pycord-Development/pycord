@@ -529,8 +529,8 @@ class SlashCommand(ApplicationCommand):
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
 
-            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
-                arg = await op._converter.convert(ctx, arg)
+            elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
+                arg = await converter.convert(converter, ctx, arg)
 
             kwargs[op._parameter_name] = arg
 
@@ -626,11 +626,11 @@ class Option:
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
-        self._converter = None
+        self.converter = None
         self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
-                self._converter = input_type
+                self.converter = input_type
                 input_type = SlashCommandOptionType.string
             else:
                 _type = SlashCommandOptionType.from_datatype(input_type)
