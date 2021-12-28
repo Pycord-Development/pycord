@@ -371,14 +371,17 @@ class Paginator(discord.ui.View):
             self.message = await msg.original_message()
         return self.message
 
-    async def update_paginator(self, interaction: discord.Interaction,
-        pages: Union[List[str], List[discord.Embed]],
+    async def update(
+        self,
+        interaction: discord.Interaction,
+        pages: List[Union[str, discord.Embed]],
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
-        timeout: Optional[float] = None):
+        timeout: Optional[float] = None
+    ):
         """Updated the paginator itself. This might be usefull if you use a view with :class:`discord.SelectOption`
         and you have a different amount of pages depending on the selected option.
 
