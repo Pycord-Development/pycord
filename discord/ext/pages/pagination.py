@@ -94,7 +94,10 @@ class PaginatorButton(discord.ui.Button):
             else:
                 self.paginator.current_page -= 1
         elif self.button_type == "next":
-            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count:
+            if (
+                self.paginator.loop_pages
+                and self.paginator.current_page == self.paginator.page_count
+            ):
                 self.paginator.current_page = 0
             else:
                 self.paginator.current_page += 1
@@ -205,7 +208,15 @@ class Paginator(discord.ui.View):
         page = self.pages[page_number]
         await interaction.response.edit_message(
             content=page if isinstance(page, str) else None,
-            embeds=[page] if isinstance(page, discord.Embed) else None,
+            embeds=[page]
+            if (
+                isinstance(page, discord.Embed)
+                or (
+                    isinstance(page, List)
+                    and all(isinstance(x, discord.Embed) for x in page)
+                )
+            )
+            else None,
             view=self,
         )
 
@@ -217,11 +228,15 @@ class Paginator(discord.ui.View):
     def add_default_buttons(self):
         default_buttons = [
             PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple),
-            PaginatorButton("prev", label="<", style=discord.ButtonStyle.red, loop_label="↪"),
+            PaginatorButton(
+                "prev", label="<", style=discord.ButtonStyle.red, loop_label="↪"
+            ),
             PaginatorButton(
                 "page_indicator", style=discord.ButtonStyle.gray, disabled=True
             ),
-            PaginatorButton("next", label=">", style=discord.ButtonStyle.green, loop_label="↩"),
+            PaginatorButton(
+                "next", label=">", style=discord.ButtonStyle.green, loop_label="↩"
+            ),
             PaginatorButton("last", label=">>", style=discord.ButtonStyle.blurple),
         ]
         for button in default_buttons:
@@ -348,7 +363,15 @@ class Paginator(discord.ui.View):
         if isinstance(ctx, ApplicationContext):
             msg = await ctx.respond(
                 content=page if isinstance(page, str) else None,
-                embeds=[page] if isinstance(page, discord.Embed) else None,
+                embeds=[page]
+                if (
+                    isinstance(page, discord.Embed)
+                    or (
+                        isinstance(page, List)
+                        and all(isinstance(x, discord.Embed) for x in page)
+                    )
+                )
+                else None,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -356,7 +379,15 @@ class Paginator(discord.ui.View):
         else:
             msg = await ctx.send(
                 content=page if isinstance(page, str) else None,
-                embeds=[page] if isinstance(page, discord.Embed) else None,
+                embeds=[page]
+                if (
+                    isinstance(page, discord.Embed)
+                    or (
+                        isinstance(page, List)
+                        and all(isinstance(x, discord.Embed) for x in page)
+                    )
+                )
+                else None,
                 view=self,
             )
         if isinstance(msg, (discord.WebhookMessage, discord.Message)):
@@ -392,7 +423,15 @@ class Paginator(discord.ui.View):
         if interaction.response.is_done():
             msg = await interaction.followup.send(
                 content=page if isinstance(page, str) else None,
-                embeds=[page] if isinstance(page, discord.Embed) else None,
+                embeds=[page]
+                if (
+                    isinstance(page, discord.Embed)
+                    or (
+                        isinstance(page, List)
+                        and all(isinstance(x, discord.Embed) for x in page)
+                    )
+                )
+                else None,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -400,7 +439,15 @@ class Paginator(discord.ui.View):
         else:
             msg = await interaction.response.send_message(
                 content=page if isinstance(page, str) else None,
-                embeds=[page] if isinstance(page, discord.Embed) else None,
+                embeds=[page]
+                if (
+                    isinstance(page, discord.Embed)
+                    or (
+                        isinstance(page, List)
+                        and all(isinstance(x, discord.Embed) for x in page)
+                    )
+                )
+                else None,
                 view=self,
                 ephemeral=ephemeral,
             )
