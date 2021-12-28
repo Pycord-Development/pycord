@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
     from .commands import ApplicationCommand, Option
     from ..cog import Cog
-    from ..webhook import Webhook
+    from ..webhook import WebhookMessage
     from typing import Callable
 
 from ..guild import Guild
@@ -142,7 +142,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    def send_response(self) -> Callable[..., Union[Interaction, Webhook]]:
+    def send_response(self) -> Callable[..., Union[Interaction, WebhookMessage]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
         if not self.response.is_done():
