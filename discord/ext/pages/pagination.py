@@ -205,7 +205,7 @@ class Paginator(discord.ui.View):
         page = self.pages[page_number]
         await interaction.response.edit_message(
             content=page if isinstance(page, str) else None,
-            embed=page if isinstance(page, discord.Embed) else None,
+            embeds=[page] if isinstance(page, discord.Embed) else None,
             view=self,
         )
 
