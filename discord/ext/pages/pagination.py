@@ -49,6 +49,8 @@ class PaginatorButton(discord.ui.Button):
         The emoji shown on the button in front of the label.
     disabled: :class:`bool`
         Whether to initially show the button as disabled.
+    loop_label: :class:`str`
+        The label shown on the button when ``loop_pages`` is set to ``True`` in the Paginator class.
 
     Attributes
     ----------
@@ -65,6 +67,7 @@ class PaginatorButton(discord.ui.Button):
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
+        loop_label: str = None,
     ):
         super().__init__(
             label=label,
@@ -79,6 +82,7 @@ class PaginatorButton(discord.ui.Button):
         self.emoji = emoji
         self.style = style
         self.disabled = disabled
+        self.loop_label = self.label if not loop_label else loop_label
         self.paginator = None
 
     async def callback(self, interaction: discord.Interaction):
@@ -118,6 +122,8 @@ class Paginator(discord.ui.View):
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    loop_pages: :class:`bool`
+        Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
@@ -211,11 +217,11 @@ class Paginator(discord.ui.View):
     def add_default_buttons(self):
         default_buttons = [
             PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple),
-            PaginatorButton("prev", label="<", style=discord.ButtonStyle.red),
+            PaginatorButton("prev", label="<", style=discord.ButtonStyle.red, loop_label="↪"),
             PaginatorButton(
                 "page_indicator", style=discord.ButtonStyle.gray, disabled=True
             ),
-            PaginatorButton("next", label=">", style=discord.ButtonStyle.green),
+            PaginatorButton("next", label=">", style=discord.ButtonStyle.green, loop_label="↩"),
             PaginatorButton("last", label=">>", style=discord.ButtonStyle.blurple),
         ]
         for button in default_buttons:
@@ -271,7 +277,7 @@ class Paginator(discord.ui.View):
                     if not self.loop_pages:
                         button["hidden"] = True
                     else:
-                        button["object"].label = "↪"
+                        button["object"].label = button.loop_label
                 elif self.current_page < self.page_count:
                     button["hidden"] = False
             elif key == "prev":
@@ -279,7 +285,7 @@ class Paginator(discord.ui.View):
                     if not self.loop_pages:
                         button["hidden"] = True
                     else:
-                        button["object"].label = "↩"
+                        button["object"].label = button.loop_label
                 elif self.current_page >= 0:
                     button["hidden"] = False
         self.clear_items()
