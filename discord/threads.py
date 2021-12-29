@@ -589,6 +589,36 @@ class Thread(Messageable, Hashable):
         data = await self._state.http.edit_channel(self.id, **payload)
         # The data payload will always be a Thread payload
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
+    
+    async def archive(self, locked: bool = MISSING) -> Thread:
+        """|coro|
+
+        Archives the thread. This is a shorthand of :meth:`.edit`.
+
+        Parameters
+        ------------
+        locked: :class:`bool`
+            Whether to lock the thread on archive, Defaults to ``False``.
+        
+
+        Returns
+        --------
+        :class:`.Thread`
+            The updated thread.
+        """
+        return await self.edit(archived=True, locked=locked)
+    
+    async def unarchive(self) -> Thread:
+        """|coro|
+
+        Unarchives the thread. This is a shorthand of :meth:`.edit`.
+
+        Returns
+        --------
+        :class:`.Thread`
+            The updated thread.
+        """
+        return await self.edit(archived=False)
 
     async def join(self):
         """|coro|

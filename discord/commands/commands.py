@@ -31,7 +31,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Type, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -61,8 +61,19 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING: 
+    from typing_extensions import ParamSpec
+
+    from ..cog import Cog
     from ..interactions import Interaction
+
+T = TypeVar('T')
+CogT = TypeVar('CogT', bound='Cog')
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -97,7 +108,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 class _BaseCommand:
     __slots__ = ()
 
-class ApplicationCommand(_BaseCommand):
+class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __repr__(self):
@@ -529,8 +540,8 @@ class SlashCommand(ApplicationCommand):
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
 
-            elif op.input_type == SlashCommandOptionType.string and op._converter is not None:
-                arg = await op._converter.convert(ctx, arg)
+            elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
+                arg = await converter.convert(converter, ctx, arg)
 
             kwargs[op._parameter_name] = arg
 
@@ -626,11 +637,11 @@ class Option:
     ) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
-        self._converter = None
+        self.converter = None
         self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
-                self._converter = input_type
+                self.converter = input_type
                 input_type = SlashCommandOptionType.string
             else:
                 _type = SlashCommandOptionType.from_datatype(input_type)
