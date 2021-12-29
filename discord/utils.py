@@ -1112,8 +1112,7 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
             _values = await _values
 
         def check(item: Any) -> bool:
-            if hasattr(item, "to_dict"):
-                item = item.to_dict()["name"]
+            item = getattr(item, "name", item)
             return str(item).lower().startswith(str(ctx.value or "").lower())
         
         gen = (val for val in _values if check(val))
