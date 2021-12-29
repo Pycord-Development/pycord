@@ -25,6 +25,7 @@ from typing import Dict, List, Optional, Union
 
 import discord
 from discord import abc
+from discord.utils import MISSING
 from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
@@ -200,7 +201,7 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         page = self.pages[page_number]
         await interaction.response.edit_message(
-            content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self
+            content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else MISSING, view=self
         )
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
@@ -315,7 +316,7 @@ class Paginator(discord.ui.View):
         if isinstance(ctx, ApplicationContext):
             msg = await ctx.respond(
                 content=page if isinstance(page, str) else None,
-                embed=page if isinstance(page, discord.Embed) else None,
+                embed=page if isinstance(page, discord.Embed) else MISSING,
                 view=self,
                 ephemeral=ephemeral,
             )
@@ -354,12 +355,12 @@ class Paginator(discord.ui.View):
 
         if interaction.response.is_done():
             msg = await interaction.followup.send(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
+                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else MISSING, view=self, ephemeral=ephemeral
             )
 
         else:
             msg = await interaction.response.send_message(
-                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else None, view=self, ephemeral=ephemeral
+                content=page if isinstance(page, str) else None, embed=page if isinstance(page, discord.Embed) else MISSING, view=self, ephemeral=ephemeral
             )
         if isinstance(msg, (discord.WebhookMessage, discord.Message)):
             self.message = msg
