@@ -937,8 +937,9 @@ class ContextMenuCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     default_permission: :class:`bool`
         Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`Permission`]
+    permissions: List[:class:`.Permission`]
         The permissions for this command.
+
         .. note::
             If this is not empty then default_permissions will be set to ``False``.
 
