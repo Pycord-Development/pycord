@@ -249,33 +249,61 @@ class View:
             return time.monotonic() + self.timeout
         return None
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item, position: Optional[int] = None) -> None:
         """Adds an item to the view.
 
         Parameters
-        -----------
+        ----------
         item: :class:`Item`
             The item to add to the view.
+        position: Optional[:class:`int`]
+            Position on witch to add the item.
 
         Raises
-        --------
+        ------
         TypeError
             An :class:`Item` was not passed.
         ValueError
-            Maximum number of children has been exceeded (25)
-            or the row the item is trying to be added to is full.
+            Maximum number of children has been exceeded (25),
+            the row the item is trying to be added to is full
+            or an invalid position is given.
         """
 
         if len(self.children) > 25:
             raise ValueError('maximum number of children exceeded')
 
+        if position != None and 25 >= position >= 0:
+            raise ValueError('Allowed position values are 0 to 25')
+
         if not isinstance(item, Item):
             raise TypeError(f'expected Item not {item.__class__!r}')
 
         self.__weights.add_item(item)
-
         item._view = self
-        self.children.append(item)
+        if position is None:
+            self.children.append(item)
+        else:
+            self.children.insert(position, item)
+
+    def edit_item(self, item: Item):
+        """Edits an item in the view.
+
+        Parameters
+        ----------
+        item: :class:`Item`
+            The item to add to the view.
+
+        Raises
+        ------
+        TypeError
+            An :class:`Item` was not passed.
+        """
+        if not isinstance(item, Item):
+            raise TypeError(f'expected Item not {item.__class__!r}')
+
+        position = self.children.index(item)
+        self.remove_item(item)
+        self.add_item(item, position)
 
     def remove_item(self, item: Item) -> None:
         """Removes an item from the view.
