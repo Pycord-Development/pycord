@@ -32,7 +32,6 @@ import re
 import types
 from collections import OrderedDict
 from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
-from typing_extensions import ParamSpec
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -63,6 +62,8 @@ __all__ = (
 )
 
 if TYPE_CHECKING: 
+    from typing_extensions import ParamSpec
+
     from ..cog import Cog
     from ..interactions import Interaction
 
