@@ -104,9 +104,9 @@ It looks something like this:
 Let's look at the differences compared to the previous example, step-by-step:
 
 1. The first line remains unchanged.
-2. Next, we create an instance of :class:`Bot`. This is different from :class:`Client`, as it supports
-   slash command creation and other features, while inheriting all the features of :class:`Client`.
-3. We then use the :meth:`Bot.slash_command` decorator to register a new slash command. 
+2. Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports
+   slash command creation and other features, while inheriting all the features of :class:`.Client`.
+3. We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. 
    The ``guild_ids`` attribute contains a list of guilds where this command will be active. 
    If you omit it, the command will be globally available, and may take up to an hour to register.
 4. Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that
