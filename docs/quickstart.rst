@@ -5,13 +5,13 @@
 .. currentmodule:: discord
 
 Quickstart
-============
+==========
 
 This page gives a brief introduction to the library. It assumes you have the library installed,
 if you don't check the :ref:`installing` portion.
 
 A Minimal Bot
----------------
+-------------
 
 Let's make a bot that responds to a specific message and walk you through it.
 
@@ -79,7 +79,7 @@ On other systems:
 Now you can try playing around with your basic bot.
 
 A Minimal Bot with Slash Commands
------------------------------------
+---------------------------------
 
 As a continuation, let's create a bot that registers a simple slash command!
 
