@@ -35,7 +35,7 @@ from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, 
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .permissions import Permission
+from .permissions import CommandPermission
 from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
 from ..member import Member
@@ -355,7 +355,7 @@ class SlashCommand(ApplicationCommand):
         isn't one.
     default_permission: :class:`bool`
         Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`Permission`]
+    permissions: List[:class:`CommandPermission`]
         The permissions for this command.
 
         .. note::
@@ -420,7 +420,7 @@ class SlashCommand(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
+        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -800,7 +800,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[Permission] = kwargs.get("permissions", [])
+        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
