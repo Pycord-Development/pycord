@@ -6,6 +6,24 @@ from discord.commands import SlashCommandGroup, slash_command
 from discord.ext import commands, pages
 
 
+class PageSwapMenu(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label="First Page Group", value="1"),
+            discord.SelectOption(label="Second Page Group", value="2"),
+        ]
+        super().__init__(options=options, row=1, max_values=1, min_values=1)
+        self.paginator = None
+        self.page_groups = None
+
+    async def callback(self, interaction: discord.Interaction):
+        if self.values[0] == "1":
+            self.paginator.pages = self.page_groups[0]
+        elif self.values[0] == "2":
+            self.paginator.pages = self.page_groups[1]
+        await self.paginator.goto_page(interaction, self.paginator.current_page)
+
+
 class PageTest(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -17,6 +35,12 @@ class PageTest(commands.Cog):
         self.pages[1].set_image(url="https://c.tenor.com/pPKOYQpTO8AAAAAM/monkey-developer.gif")
         self.pages[2].add_field(name="Example Field", value="Example Value", inline=False)
         self.pages[2].add_field(name="Another Example Field", value="Another Example Value", inline=False)
+
+        self.more_pages = [
+            "Second Page One",
+            discord.Embed(title="Second Page Two"),
+            discord.Embed(title="Second Page Three")
+        ]
 
     def get_pages(self):
         return self.pages
@@ -90,6 +114,21 @@ class PageTest(commands.Cog):
         )
         paginator = pages.Paginator(pages=self.get_pages(), custom_view=view)
         await paginator.send(ctx, ephemeral=False)
+
+    @pagetest.command(name="update_paginator")
+    async def pagetest_update_paginator(self, ctx: discord.ApplicationContext):
+        """Demonstrates updating the paginatior with a new set of pages."""
+        view = discord.ui.View()
+        swap_menu = PageSwapMenu()
+        paginator = pages.Paginator(pages=self.get_pages())
+        swap_menu.paginator = paginator
+        swap_menu.page_groups = [self.pages, self.more_pages]
+        view.add_item(swap_menu)
+        paginator.custom_view = view
+
+        await paginator.send(ctx, ephemeral=False)
+
+
 
 
 def setup(bot):

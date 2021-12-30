@@ -113,8 +113,8 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[:class:`discord.Embed`]]
-        The list of strings and/or embeds to paginate.
+    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+        The list of strings, embeds, or list of embeds to paginate.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
@@ -127,12 +127,13 @@ class Paginator(discord.ui.View):
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
+    custom_view: Optional[:class:`discord.ui.View`]
+        A custom view whose items are appended below the pagination buttons.
+    timeout: Optional[:class:`float`]
+        Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
-    custom_view: Optional[:class:`discord.ui.View`]
-        A custom view whose items are appended below the pagination buttons.
-
 
     Attributes
     ----------
@@ -150,7 +151,7 @@ class Paginator(discord.ui.View):
 
     def __init__(
         self,
-        pages: Union[List[str], List[discord.Embed]],
+        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
         show_disabled=True,
         show_indicator=True,
         author_check=True,
@@ -163,16 +164,16 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout = timeout
-        self.pages = pages
+        self.pages = pages  # type: ignore
         self.current_page = 0
-        self.page_count = len(self.pages) - 1
+        self.page_count = len(self.pages) - 1  # type: ignore
         self.buttons = {}
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
         self.loop_pages = loop_pages
-        self.custom_view = custom_view
+        self.custom_view = custom_view  # type: ignore
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
         if custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
@@ -182,6 +183,74 @@ class Paginator(discord.ui.View):
 
         self.usercheck = author_check
         self.user = None
+
+    async def update(
+        self,
+        interaction: discord.Interaction,
+        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        show_disabled: Optional[bool] = None,
+        show_indicator: Optional[bool] = None,
+        author_check: Optional[bool] = None,
+        disable_on_timeout: Optional[bool] = None,
+        use_default_buttons: Optional[bool] = None,
+        loop_pages: Optional[bool] = None,
+        custom_view: Optional[discord.ui.View] = None,
+        timeout: Optional[float] = None,
+        custom_buttons: Optional[List[PaginatorButton]] = None,
+    ):
+        """Updates the existing :class:`Paginator` instance with the provided options.
+        This can be useful when you want to change which pages are used with the instance.
+
+        Parameters
+        ----------
+        interaction: :class:`discord.Interaction`
+            The interaction associated with the paginator.
+        pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+            The list of strings, embeds, or list of embeds to paginate.
+        show_disabled: :class:`bool`
+            Whether to show disabled buttons.
+        show_indicator: :class:`bool`
+            Whether to show the page indicator when using the default buttons.
+        author_check: :class:`bool`
+            Whether only the original user of the command can change pages.
+        disable_on_timeout: :class:`bool`
+            Whether the buttons get disabled when the paginator view times out.
+        use_default_buttons: :class:`bool`
+            Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+        loop_pages: :class:`bool`
+            Whether to loop the pages when clicking prev/next while at the first/last page in the list.
+        custom_view: Optional[:class:`discord.ui.View`]
+            A custom view whose items are appended below the pagination buttons.
+        timeout: Optional[:class:`float`]
+            Timeout in seconds from last interaction with the paginator before no longer accepting input.
+        custom_buttons: Optional[List[:class:`PaginatorButton`]]
+            A list of PaginatorButtons to initialize the Paginator with.
+            If ``use_default_buttons`` is ``True``, this parameter is ignored.
+        """
+
+        # Update pages and reset current_page to 0 (default)
+        self.pages = pages  # type: ignore
+        self.page_count = len(self.pages) - 1  # type: ignore
+        self.current_page = 0
+        # Apply config changes, if specified
+        self.show_disabled = show_disabled or self.show_disabled
+        self.show_indicator = show_indicator or self.show_indicator
+        self.usercheck = author_check or self.usercheck
+        self.disable_on_timeout = disable_on_timeout or self.disable_on_timeout
+        self.use_default_buttons = use_default_buttons or self.use_default_buttons
+        self.loop_pages = loop_pages or self.loop_pages
+        self.custom_view = custom_view or self.custom_view
+        self.timeout = timeout or self.timeout
+
+        if custom_buttons and not self.use_default_buttons:
+            self.buttons = {}
+            for button in custom_buttons:
+                self.add_button(button)
+        elif not custom_buttons and self.use_default_buttons:
+            self.buttons = {}
+            self.add_default_buttons()
+
+        await self.goto_page(interaction, self.current_page)
 
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
@@ -347,7 +416,6 @@ class Paginator(discord.ui.View):
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
-
         Parameters
         ------------
         ctx: Union[:class:`~discord.ext.commands.Context`, :class:`~discord.ApplicationContext`]
@@ -390,7 +458,6 @@ class Paginator(discord.ui.View):
 
     async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
         """Sends an interaction response or followup with the paginated items.
-
 
         Parameters
         ------------
