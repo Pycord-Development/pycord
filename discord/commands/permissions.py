@@ -26,6 +26,10 @@ DEALINGS IN THE SOFTWARE.
 from typing import Union, Dict, Callable
 
 __all__ = (
+    "cog_has_role",
+    "cog_has_any_role",
+    "cog_is_user",
+    "cog_is_owner",
     "Permission",
     "has_role",
     "has_any_role",
