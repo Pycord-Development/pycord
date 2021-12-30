@@ -196,103 +196,161 @@ class ApplicationCommandMixin:
 
     async def sync_commands(self) -> None:
         """|coro|
+        Checks and compares all commands that have been added through :meth:`.add_application_command`
+        then calls :meth:`.register_commands` if changed.
 
-        Registers all commands that have been added through :meth:`.add_application_command`
-        since :meth:`.register_commands`. This does not remove any registered commands that are not in the internal
-        cache, like :meth:`.register_commands` does, but rather just adds new ones.
+        By default, this coroutine is called inside the :func:`.on_connect`
+        event. If you choose to override the :func:`.on_connect` event, then
+        you should invoke this coroutine as well.
 
         This should usually be used instead of :meth:`.register_commands` when commands are already registered and you
-        want to add more.
+        want to update them.
 
         This can cause bugs if you run this command excessively without using register_commands, as the bot's internal
         cache can get un-synced with discord's registered commands.
 
         .. versionadded:: 2.0
         """
-        # TODO: Write this function as described in the docstring (bob will do this)
-        raise NotImplementedError
+        # NOTE: Since this was bob's original task, please get him to review register_commands and sync_commands
 
-    async def register_commands(self) -> None:
-        """|coro|
-        Registers all commands that have been added through :meth:`.add_application_command`.
-        This method cleans up all commands over the API and should sync them with the internal cache of commands.
-        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
-        By default, this coroutine is called inside the :func:`.on_connect`
-        event. If you choose to override the :func:`.on_connect` event, then
-        you should invoke this coroutine as well.
-        .. versionadded:: 2.0
-        """
         commands_to_bulk = []
 
-        needs_bulk = False
-
-        # Global Command Permissions
-        global_permissions: List = []
+        needs_update = False
 
         registered_commands = await self.http.get_global_commands(self.user.id)
         # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
-        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
+        # We can therefore safely use the name of the command in our global commands as a unique identifier
         registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+
         global_pending_application_commands_dict = {}
-        
+   
+        ignore_props = ["application_id", "version"]
+        default_props_choice ={
+            "required": False,
+            "choices": [],
+            "autocomplete": False,
+            "default_permission": True,
+        }
+        default_props_cmd_type = {
+            "options": [],
+            "default_permission": True,
+            "default_member_permissions": None,
+            "dm_permission": None,
+        }
+        missing_props_cmd_option = {
+            # specific to type: 1 sub_command
+            1: default_props_cmd_type,
+            # specific to type: 2 sub_command_group
+            2: {
+                "options": [],
+                "default_permission": True,
+            },
+            # specific to type: 3 - 10 options
+            3: default_props_choice,
+            4: default_props_choice,
+            5: default_props_choice,
+            6: default_props_choice,
+            7: default_props_choice,
+            8: default_props_choice,
+            9: default_props_choice,
+            10: default_props_choice
+        }
+        missing_props_cmd = {
+            # specific to type: 1 - 3 app command types
+            1: default_props_cmd_type,
+            2: default_props_cmd_type,
+            3: default_props_cmd_type
+        }
+
+        def fill_missing_props(layer, command):
+            # if not type(command) == dict:
+            #     command = command.to_dict()
+
+            if not "type" in command.keys():
+                command["type"] = 1 # Default to type = 1 if it does not exist
+
+            missing_props_dict = missing_props_cmd_option
+            if layer == 0:
+                missing_props_dict = missing_props_cmd
+
+            for k, v in missing_props_dict[command["type"]].items():
+                if not k in command.keys():
+                    command[k] = v # Fill missing values
+
+        def compare_commands(layer, command_1, command_2):
+            fill_missing_props(layer, command_1)
+            fill_missing_props(layer, command_2)
+
+            for k in command_1.keys(): # We don't need to do this a second time for command_2 since we can assume that we have filled in every missing properties
+                if k in ignore_props:
+                    continue
+                if k == "options": # type(command_1[k]) == list:
+                    if len(command_1[k]) != len(command_2[k]):
+                        return False
+                    else:
+                        for i, v in enumerate(command_1[k]):
+                            is_same = compare_commands(layer + 1, command_1[k][i], command_2[k][i]) # Recursively check
+                            if not is_same:
+                                return False
+                elif command_1[k] != command_2[k]:
+                    return False
+
+            return True
+
+        # Find and match global command IDs
         for command in [
             cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
         ]:
             as_dict = command.to_dict()
             
             global_pending_application_commands_dict[command.name] = as_dict
+
             if command.name in registered_commands_dict:
                 match = registered_commands_dict[command.name]
             else:
                 match = None
-            # TODO: There is probably a far more efficient way of doing this
-            # We want to check if the registered global command on Discord servers matches the given global commands
+            
             if match:
                 as_dict["id"] = match["id"]
 
-                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
-                for key, more_keys in {
-                    key:more_keys
-                    for key, more_keys in keys_to_check.items()
-                    if key in as_dict.keys()
-                    if key in match.keys()
-                }.items():
-                    if key == "options":
-                        for i, option_dict in enumerate(as_dict[key]):
-                            for key2 in more_keys:
-                                pendingVal = None
-                                if key2 in option_dict.keys():
-                                    pendingVal = option_dict[key2]
-                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        pendingVal = None
-                                matchVal = None
-                                if key2 in match[key][i].keys():
-                                    matchVal = match[key][i][key2]
-                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        matchVal = None
-
-                                if pendingVal != matchVal:
-                                    # When a property in the options of a pending global command is changed
-                                    needs_bulk = True
-                    else:
-                        if as_dict[key] != match[key]:
-                            # When a property in a pending global command is changed
-                            needs_bulk = True
+            if as_dict and match:
+                # Check if something in the type: 1 sub_command is changed
+                is_same = compare_commands(0, as_dict, match)
             else:
-                # When a name of a pending global command is not registered in Discord
-                needs_bulk = True
+                # A new command has been added
+                is_same = False
+
+            if not is_same:
+                needs_update = True
 
             commands_to_bulk.append(as_dict)
-        
-        for name, command in registered_commands_dict.items():
+
+        for name in registered_commands_dict.keys():
             if not name in global_pending_application_commands_dict.keys():
                 # When a registered global command is not available in the pending global commands
-                needs_bulk = True
+                needs_update = True 
+
+        await self.register_commands(commands_to_bulk, needs_update)
+
+    async def register_commands(self, commands, needs_update) -> None:
+        """|coro|
+        Registers all global commands in :list:`commands` if :bool:`needs_update` is true
+        and guild commands that have been added through :meth:`.add_application_command`.
+
+        This method cleans up all commands over the API and should sync them with the internal cache of commands.
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        commands: :list:
+            A bulk list of global commands to upsert
+        """
+
+        # Global Command Permissions
+        global_permissions: List = []
     
-        if needs_bulk:
-            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
-        else:
-            commands = registered_commands
+        if needs_update:
+            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands)
 
         for i in commands:
             cmd = get(
@@ -753,7 +811,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = None
 
     async def on_connect(self):
-        await self.register_commands()
+        await self.sync_commands()
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
