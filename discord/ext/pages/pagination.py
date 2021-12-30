@@ -70,7 +70,7 @@ class PaginatorButton(discord.ui.Button):
         loop_label: str = None,
     ):
         super().__init__(
-            label=label,
+            label=label or button_type.capitalize(),
             emoji=emoji,
             style=style,
             disabled=disabled,
@@ -78,7 +78,7 @@ class PaginatorButton(discord.ui.Button):
             row=0,
         )
         self.button_type = button_type
-        self.label = label
+        self.label = label or button_type.capitalize()
         self.emoji = emoji
         self.style = style
         self.disabled = disabled
