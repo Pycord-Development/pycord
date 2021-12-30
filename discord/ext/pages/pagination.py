@@ -29,9 +29,64 @@ from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
 __all__ = (
+    "PaginatorMenu",
     "PaginatorButton",
     "Paginator",
 )
+
+
+class PaginatorMenu(discord.ui.Select):
+    """Creates a select menu used to switch between page groups, which can each have their own set of buttons.
+
+    Parameters
+    ----------
+    placeholder: :class:`str`
+        The placeholder text that is shown if nothing is selected.
+
+    Attributes
+    ----------
+    paginator: :class:`Paginator`
+        The paginator class where this menu is being used.
+        Assigned to the menu when `Paginator.add_menu` is called.
+    """
+
+    def __init__(self, placeholder: str = "Select Page Group"):
+        self.placeholder = placeholder
+        super().__init__(placeholder=placeholder, row=1, max_values=1, min_values=1)
+        self.paginator = None
+        self.page_groups: Optional[List[PageGroup]] = None
+
+    async def callback(self, interaction: discord.Interaction):
+        selection = self.values[0]
+
+
+class PageGroup(discord.SelectOption):
+    """Creates a group of pages which the user can switch between.
+
+    Parameters
+    ----------
+    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+        The list of strings, embeds, or list of embeds to include in the page group.
+    label: :class:`str`
+        The label shown on the corresponding PaginatorMenu dropdown option.
+    description: :class:`str`
+        The description shown on the corresponding PaginatorMenu dropdown option.
+    emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
+        The emoji shown on the corresponding PaginatorMenu dropdown option.
+    """
+
+    def __init__(
+        self,
+        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        label: str,
+        description: str,
+        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+    ):
+        self.value = pages
+        self.label = label
+        self.description = description
+        self.emoji = emoji
+        super().__init__(label=label, description=description, emoji=emoji)
 
 
 class PaginatorButton(discord.ui.Button):
@@ -119,6 +174,8 @@ class Paginator(discord.ui.View):
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
         Whether to show the page indicator when using the default buttons.
+    show_menu: :class:`bool`
+        Whether to show a select menu that allows the user to switch between groups of pages.
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
@@ -152,8 +209,9 @@ class Paginator(discord.ui.View):
     def __init__(
         self,
         pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
-        show_disabled=True,
+        show_disabled: bool = True,
         show_indicator=True,
+        show_menu=False,
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
@@ -164,21 +222,23 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout = timeout
-        self.pages = pages  # type: ignore
+        self.pages = pages
         self.current_page = 0
-        self.page_count = len(self.pages) - 1  # type: ignore
+        self.page_count = len(self.pages) - 1
         self.buttons = {}
+        self.custom_buttons = custom_buttons
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
+        self.show_menu = show_menu
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
         self.loop_pages = loop_pages
-        self.custom_view = custom_view  # type: ignore
+        self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
-        if custom_buttons and not self.use_default_buttons:
+        if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
                 self.add_button(button)
-        elif not custom_buttons and self.use_default_buttons:
+        elif not self.custom_buttons and self.use_default_buttons:
             self.add_default_buttons()
 
         self.usercheck = author_check
@@ -229,24 +289,35 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages = pages  # type: ignore
-        self.page_count = len(self.pages) - 1  # type: ignore
+        self.pages = pages
+        self.page_count = len(self.pages) - 1
         self.current_page = 0
         # Apply config changes, if specified
-        self.show_disabled = show_disabled or self.show_disabled
-        self.show_indicator = show_indicator or self.show_indicator
-        self.usercheck = author_check or self.usercheck
-        self.disable_on_timeout = disable_on_timeout or self.disable_on_timeout
-        self.use_default_buttons = use_default_buttons or self.use_default_buttons
-        self.loop_pages = loop_pages or self.loop_pages
-        self.custom_view = custom_view or self.custom_view
-        self.timeout = timeout or self.timeout
-
-        if custom_buttons and (not use_default_buttons or not self.use_default_buttons):
+        self.show_disabled = (
+            show_disabled if show_disabled is not None else self.show_disabled
+        )
+        self.show_indicator = (
+            show_indicator if show_indicator is not None else self.show_indicator
+        )
+        self.usercheck = author_check if author_check is not None else self.usercheck
+        self.disable_on_timeout = (
+            disable_on_timeout
+            if disable_on_timeout is not None
+            else self.disable_on_timeout
+        )
+        self.use_default_buttons = (
+            use_default_buttons
+            if use_default_buttons is not None
+            else self.use_default_buttons
+        )
+        self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
+        self.custom_view = custom_view if custom_view is not None else self.custom_view
+        self.timeout = timeout if timeout is not None else self.timeout
+        if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
             for button in custom_buttons:
                 self.add_button(button)
-        elif not custom_buttons and (use_default_buttons or self.use_default_buttons):
+        else:
             self.buttons = {}
             self.add_default_buttons()
 
