@@ -242,11 +242,11 @@ class Paginator(discord.ui.View):
         self.custom_view = custom_view or self.custom_view
         self.timeout = timeout or self.timeout
 
-        if custom_buttons and not self.use_default_buttons:
+        if custom_buttons and (not use_default_buttons or not self.use_default_buttons):
             self.buttons = {}
             for button in custom_buttons:
                 self.add_button(button)
-        elif not custom_buttons and self.use_default_buttons:
+        elif not custom_buttons and (use_default_buttons or self.use_default_buttons):
             self.buttons = {}
             self.add_default_buttons()
 
