@@ -30,6 +30,7 @@ from discord.ext.commands import Context
 
 __all__ = (
     "PaginatorMenu",
+    "PageGroup",
     "PaginatorButton",
     "Paginator",
 )
