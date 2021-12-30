@@ -29,65 +29,11 @@ from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
 __all__ = (
-    "PaginatorMenu",
-    "PageGroup",
     "PaginatorButton",
     "Paginator",
+    "PageGroup",
+    "PaginatorMenu",
 )
-
-
-class PaginatorMenu(discord.ui.Select):
-    """Creates a select menu used to switch between page groups, which can each have their own set of buttons.
-
-    Parameters
-    ----------
-    placeholder: :class:`str`
-        The placeholder text that is shown if nothing is selected.
-
-    Attributes
-    ----------
-    paginator: :class:`Paginator`
-        The paginator class where this menu is being used.
-        Assigned to the menu when `Paginator.add_menu` is called.
-    """
-
-    def __init__(self, placeholder: str = "Select Page Group"):
-        self.placeholder = placeholder
-        super().__init__(placeholder=placeholder, row=1, max_values=1, min_values=1)
-        self.paginator = None
-        self.page_groups: Optional[List[PageGroup]] = None
-
-    async def callback(self, interaction: discord.Interaction):
-        selection = self.values[0]
-
-
-class PageGroup(discord.SelectOption):
-    """Creates a group of pages which the user can switch between.
-
-    Parameters
-    ----------
-    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
-        The list of strings, embeds, or list of embeds to include in the page group.
-    label: :class:`str`
-        The label shown on the corresponding PaginatorMenu dropdown option.
-    description: :class:`str`
-        The description shown on the corresponding PaginatorMenu dropdown option.
-    emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
-        The emoji shown on the corresponding PaginatorMenu dropdown option.
-    """
-
-    def __init__(
-        self,
-        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
-        label: str,
-        description: str,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
-    ):
-        self.value = pages
-        self.label = label
-        self.description = description
-        self.emoji = emoji
-        super().__init__(label=label, description=description, emoji=emoji)
 
 
 class PaginatorButton(discord.ui.Button):
@@ -572,3 +518,118 @@ class Paginator(discord.ui.View):
         elif isinstance(msg, discord.Interaction):
             self.message = await msg.original_message()
         return self.message
+
+
+class PageGroup(discord.SelectOption):
+    """Creates a group of pages which the user can switch between.
+
+    Parameters
+    ----------
+    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+        The list of strings, embeds, or list of embeds to include in the page group.
+    label: :class:`str`
+        The label shown on the corresponding PaginatorMenu dropdown option.
+        Also used as the SelectOption value.
+    description: :class:`str`
+        The description shown on the corresponding PaginatorMenu dropdown option.
+    emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
+        The emoji shown on the corresponding PaginatorMenu dropdown option.
+    show_disabled: :class:`bool`
+        Whether to show disabled buttons.
+    show_indicator: :class:`bool`
+        Whether to show the page indicator when using the default buttons.
+    author_check: :class:`bool`
+        Whether only the original user of the command can change pages.
+    disable_on_timeout: :class:`bool`
+        Whether the buttons get disabled when the paginator view times out.
+    use_default_buttons: :class:`bool`
+        Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    loop_pages: :class:`bool`
+        Whether to loop the pages when clicking prev/next while at the first/last page in the list.
+    custom_view: Optional[:class:`discord.ui.View`]
+        A custom view whose items are appended below the pagination buttons.
+    timeout: Optional[:class:`float`]
+        Timeout in seconds from last interaction with the paginator before no longer accepting input.
+    custom_buttons: Optional[List[:class:`PaginatorButton`]]
+        A list of PaginatorButtons to initialize the Paginator with.
+        If ``use_default_buttons`` is ``True``, this parameter is ignored.
+    """
+
+    def __init__(
+        self,
+        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        label: str,
+        description: str,
+        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        show_disabled: Optional[bool] = None,
+        show_indicator: Optional[bool] = None,
+        author_check: Optional[bool] = None,
+        disable_on_timeout: Optional[bool] = None,
+        use_default_buttons: Optional[bool] = None,
+        loop_pages: Optional[bool] = None,
+        custom_view: Optional[discord.ui.View] = None,
+        timeout: Optional[float] = None,
+        custom_buttons: Optional[List[PaginatorButton]] = None,
+    ):
+        self.label = label
+        self.description = description
+        self.emoji = emoji
+        self.pages = pages
+        self.show_disabled = show_disabled
+        self.show_indicator = show_indicator
+        self.author_check = author_check
+        self.disable_on_timeout = disable_on_timeout
+        self.use_default_buttons = use_default_buttons
+        self.loop_pages = loop_pages
+        self.custom_view = custom_view
+        self.timeout = timeout
+        self.custom_buttons = custom_buttons
+        super().__init__(label=label, description=description, emoji=emoji)
+
+
+class PaginatorMenu(discord.ui.Select):
+    """Creates a select menu used to switch between page groups, which can each have their own set of buttons.
+
+    Parameters
+    ----------
+    placeholder: :class:`str`
+        The placeholder text that is shown if nothing is selected.
+
+    Attributes
+    ----------
+    paginator: :class:`Paginator`
+        The paginator class where this menu is being used.
+        Assigned to the menu when `Paginator.add_menu` is called.
+    """
+
+    def __init__(
+        self, page_groups: List[PageGroup], placeholder: str = "Select Page Group"
+    ):
+        self.placeholder = placeholder
+        super().__init__(placeholder=placeholder, row=1, max_values=1, min_values=1)
+        self.paginator: Optional[Paginator] = None
+        self.page_groups = page_groups
+        for page_group in self.page_groups:
+            self.add_option(
+                label=page_group.label,
+                value=page_group.label,
+                description=page_group.description,
+                emoji=page_group.emoji,
+            )
+
+    async def callback(self, interaction: discord.Interaction):
+        selection = self.values[0]
+        for page_group in self.page_groups:
+            if selection == page_group.label:
+                return await self.paginator.update(
+                    interaction,
+                    pages=page_group.pages,
+                    show_disabled=page_group.show_disabled,
+                    show_indicator=page_group.show_indicator,
+                    author_check=page_group.author_check,
+                    disable_on_timeout=page_group.disable_on_timeout,
+                    use_default_buttons=page_group.use_default_buttons,
+                    loop_pages=page_group.loop_pages,
+                    custom_view=page_group.custom_view,
+                    custom_buttons=page_group.custom_buttons,
+                )
