@@ -946,6 +946,14 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
+    default_permission: :class:`bool`
+        Whether the command is enabled by default when it is added to a guild.
+    permissions: List[:class:`.Permission`]
+        The permissions for this command.
+
+        .. note::
+            If this is not empty then default_permissions will be set to ``False``.
+
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -990,8 +998,10 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        # Context Menu commands don't have permissions
-        self.permissions = []
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[Permission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
+        if self.permissions and self.default_permission:
+            self.default_permission = False
 
         # Context Menu commands can't have parents
         self.parent = None
@@ -1034,7 +1044,7 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {"name": self.name, "description": self.description, "type": self.type}
+        return {"name": self.name, "description": self.description, "type": self.type, "default_permission": self.default_permission}
 
 
 class UserCommand(ContextMenuCommand):
