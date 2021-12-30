@@ -43,12 +43,14 @@ deciding to ignore type checking warnings.
 
 By submitting a pull request, you agree that; 1) You hold the copyright on all submitted code inside said pull request; 2) You agree to transfer all rights to the owner of this repository, and; 3) If you are found to be in fault with any of the above, we shall not be held responsible in any way after the pull request has been merged.
 
-### Git Commit Guidelines
+## Git Commit Styling
 
-- Use present tense (e.g. "Add feature" not "Added feature")
-- Limit all lines to 72 characters or less.
-- Reference issues or pull requests outside of the first line.
-    - Please use the shorthand `#123` and not the full URL.
-- Commits regarding the commands extension must be prefixed with `[commands]`
+Not following this guideline could lead to your pull being squashed for a cleaner commit history
 
-If you do not meet any of these guidelines, don't fret. Chances are they will be fixed upon rebasing but please do try to meet them to remove some of the workload.
+Some style guides we would recommed using in your pulls:
+
+The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style is a very widely used style and a good style to start with.
+
+The [gitmoji](https://gitmoji.dev) style guide would make your pull look more lively and different to others.
+
+We don't limit nor deny your pulls when you're using another style although, please make sure it is appropriate and makes sense in this library.

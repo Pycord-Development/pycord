@@ -291,14 +291,14 @@ class Paginator(discord.ui.View):
 
         return self.buttons
 
-    async def send(self, messageable: abc.Messageable, ephemeral: bool = False) -> Union[discord.Message, discord.WebhookMessage]:
+    async def send(self, ctx: Union[ApplicationContext, Context], ephemeral: bool = False) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends a message with the paginated items.
 
 
         Parameters
         ------------
-        messageable: :class:`discord.abc.Messageable`
-            The messageable channel to send to.
+        ctx: Union[:class:`~discord.ext.commands.Context`, :class:`~discord.ApplicationContext`]
+            A command's invocation context.
         ephemeral: :class:`bool`
             Choose whether the message is ephemeral or not. Only works with slash commands.
 
@@ -308,16 +308,12 @@ class Paginator(discord.ui.View):
             The message that was sent with the paginator.
         """
 
-        if not isinstance(messageable, abc.Messageable):
-            raise TypeError("messageable should be a subclass of abc.Messageable")
-
         page = self.pages[0]
 
-        if isinstance(messageable, (ApplicationContext, Context)):
-            self.user = messageable.author
+        self.user = ctx.author
 
-        if isinstance(messageable, ApplicationContext):
-            msg = await messageable.respond(
+        if isinstance(ctx, ApplicationContext):
+            msg = await ctx.respond(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
@@ -325,7 +321,7 @@ class Paginator(discord.ui.View):
             )
 
         else:
-            msg = await messageable.send(
+            msg = await ctx.send(
                 content=page if isinstance(page, str) else None,
                 embed=page if isinstance(page, discord.Embed) else None,
                 view=self,
@@ -370,3 +366,49 @@ class Paginator(discord.ui.View):
         elif isinstance(msg, discord.Interaction):
             self.message = await msg.original_message()
         return self.message
+
+    async def update(
+        self,
+        interaction: discord.Interaction,
+        pages: List[Union[str, discord.Embed]],
+        show_disabled: Optional[bool] = None,
+        show_indicator: Optional[bool] = None,
+        author_check: Optional[bool] = None,
+        disable_on_timeout: Optional[bool] = None,
+        custom_view: Optional[discord.ui.View] = None,
+        timeout: Optional[float] = None
+    ):
+        """Updates the paginator. This might be useful if you use a view with :class:`discord.SelectOption`
+        and you have a different amount of pages depending on the selected option.
+
+        Parameters
+        ----------
+        pages: List[Union[:class:`str`, :class:`discord.Embed`]]
+            The list of strings and/or embeds to paginate.
+        show_disabled: Optional[:class:`bool`]
+            Whether to show disabled buttons.
+        show_indicator: Optional[:class:`bool`]
+            Whether to show the page indicator.
+        author_check: Optional[:class:`bool`]
+            Whether only the original user of the command can change pages.
+        disable_on_timeout: Optional[:class:`bool`]
+            Whether the buttons get disabled when the paginator view times out.
+        custom_view: Optional[:class:`discord.ui.View`]
+            A custom view whose items are appended below the pagination buttons.
+        timeout: Optional[:class:`float`]
+            Timeout in seconds from last interaction with the paginator before no longer accepting input. 
+        """
+
+        # Update pages and reset current_page to 0 (default)
+        self.pages = pages
+        self.page_count = len(self.pages) - 1
+        self.current_page = 0
+        # Apply config changes, if specified
+        self.show_disabled = show_disabled if show_disabled else self.show_disabled
+        self.show_indicator = show_indicator if show_indicator else self.show_indicator
+        self.usercheck = author_check if author_check else self.usercheck
+        self.disable_on_timeout = disable_on_timeout if disable_on_timeout else self.disable_on_timeout
+        self.custom_view = custom_view if custom_view else self.custom_view
+        self.timeout = timeout if timeout else self.timeout
+
+        await self.goto_page(interaction, self.current_page)

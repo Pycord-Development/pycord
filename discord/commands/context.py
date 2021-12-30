@@ -24,11 +24,13 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Callable, TYPE_CHECKING, Optional, TypeVar, Union
 
 import discord.abc
 
 if TYPE_CHECKING:
+    from typing_extensions import ParamSpec
+
     import discord
     from discord import Bot
     from discord.state import ConnectionState
@@ -42,6 +44,15 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
+from ..webhook import Webhook
+
+T = TypeVar('T')
+CogT = TypeVar('CogT', bound="Cog")
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
 
 __all__ = (
     "ApplicationContext",
@@ -80,6 +91,32 @@ class ApplicationContext(discord.abc.Messageable):
 
     async def _get_channel(self) -> discord.abc.Messageable:
         return self.channel
+
+    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+        r"""|coro|
+        Calls a command with the arguments given.
+        This is useful if you want to just call the callback that a
+        :class:`.ApplicationCommand` holds internally.
+        .. note::
+            This does not handle converters, checks, cooldowns, pre-invoke,
+            or after-invoke hooks in any matter. It calls the internal callback
+            directly as-if it was a regular function.
+            You must take care in passing the proper arguments when
+            using this function.
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command that is going to be called.
+        \*args
+            The arguments to use.
+        \*\*kwargs
+            The keyword arguments to use.
+        Raises
+        -------
+        TypeError
+            The command argument to invoke is missing.
+        """
+        return await command(self, *args, **kwargs)
 
     @cached_property
     def channel(self):
