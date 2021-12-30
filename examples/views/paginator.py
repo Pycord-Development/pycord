@@ -29,6 +29,18 @@ class PageTest(commands.Cog):
         paginator = pages.Paginator(pages=self.get_pages())
         await paginator.send(ctx, ephemeral=False)
 
+    @pagetest.command(name="loop")
+    async def pagetest_loop(self, ctx: discord.ApplicationContext):
+        """Demonstrates using the loop_pages option."""
+        paginator = pages.Paginator(pages=self.get_pages(), loop_pages=True)
+        await paginator.send(ctx, ephemeral=False)
+
+    @pagetest.command(name="strings")
+    async def pagetest_strings(self, ctx: discord.ApplicationContext):
+        """Demonstrates passing a list of strings as pages."""
+        paginator = pages.Paginator(pages=["Page 1", "Page 2", "Page 3"], loop_pages=True)
+        await paginator.send(ctx, ephemeral=False)
+
     @pagetest.command(name="timeout")
     async def pagetest_timeout(self, ctx: discord.ApplicationContext):
         """Demonstrates having the buttons be disabled when the paginator view times out."""
