@@ -31,6 +31,7 @@ __all__ = (
     "cog_is_user",
     "cog_is_owner",
     "Permission",
+    "CommandPermission",
     "has_role",
     "has_any_role",
     "is_user",
