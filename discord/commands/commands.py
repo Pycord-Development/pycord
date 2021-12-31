@@ -356,6 +356,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             await hook(ctx)
 
     @property
+    def cooldown(self):
+        return self._buckets._cooldown
+
+    @property
     def full_parent_name(self) -> str:
         """:class:`str`: Retrieves the fully qualified parent command name.
 
@@ -427,6 +431,11 @@ class SlashCommand(ApplicationCommand):
         :exc:`.CommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+
+        .. versionadded:: 2.0
     """
     type = 1
 
@@ -1012,6 +1021,11 @@ class ContextMenuCommand(ApplicationCommand):
         :exc:`.CommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+
+        .. versionadded:: 2.0
     """
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
