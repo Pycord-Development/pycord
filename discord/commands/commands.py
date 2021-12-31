@@ -154,7 +154,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existant message)
+            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existent message)
 
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -172,14 +172,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
         if self._max_concurrency is not None:
             # For this application, context can be duck-typed as a Message
-            await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existant message)
+            await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
 
         try:
             self._prepare_cooldowns(ctx)
             await self.call_before_hooks(ctx)
         except:
             if self._max_concurrency is not None:
-                await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existant message)
+                await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
             raise
 
     def reset_cooldown(self, ctx: ApplicationContext) -> None:
@@ -191,7 +191,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existant message)
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
             bucket.reset()
 
     async def invoke(self, ctx: ApplicationContext) -> None:
