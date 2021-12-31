@@ -53,7 +53,13 @@ from .errors import *
 from ...errors import *
 from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
 from .converter import run_converters, get_converter, Greedy
-from ...commands import _BaseCommand, slash_command, user_command, message_command
+from ...commands import (
+    ApplicationCommand,
+    _BaseCommand,
+    slash_command,
+    user_command,
+    message_command,
+)
 from .cog import Cog
 from .context import Context
 
@@ -2174,7 +2180,7 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
     """
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
-        if isinstance(func, Command):
+        if isinstance(func, (Command, ApplicationCommand)):
             func._buckets = CooldownMapping(Cooldown(rate, per), type)
         else:
             func.__commands_cooldown__ = CooldownMapping(Cooldown(rate, per), type)
@@ -2247,7 +2253,7 @@ def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: 
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
         value = MaxConcurrency(number, per=per, wait=wait)
-        if isinstance(func, Command):
+        if isinstance(func, (Command, ApplicationCommand)):
             func._max_concurrency = value
         else:
             func.__commands_max_concurrency__ = value

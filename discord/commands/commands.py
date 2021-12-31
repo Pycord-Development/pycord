@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 import functools
 import inspect
 import re
@@ -111,6 +112,29 @@ class _BaseCommand:
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
+    def __init__(self, func: Callable, **kwargs) -> None:
+        from ..ext.commands.cooldowns import CooldownMapping, BucketType, MaxConcurrency
+
+        try:
+            cooldown = func.__commands_cooldown__
+        except AttributeError:
+            cooldown = kwargs.get('cooldown')
+        
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+        self._buckets: CooldownMapping = buckets
+
+        try:
+            max_concurrency = func.__commands_max_concurrency__
+        except AttributeError:
+            max_concurrency = kwargs.get('max_concurrency')
+
+        self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
+
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -127,6 +151,18 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         """
         return await self.callback(ctx, *args, **kwargs)
 
+    def _prepare_cooldowns(self, ctx: ApplicationContext):
+        if self._buckets.valid:
+            current = datetime.datetime.now().timestamp()
+            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existant message)
+
+            if bucket is not None:
+                retry_after = bucket.update_rate_limit(current)
+
+                if retry_after:
+                    from ..ext.commands.errors import CommandOnCooldown
+                    raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
@@ -134,9 +170,29 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not await self.can_run(ctx):
             raise CheckFailure(f'The check functions for the command {self.name} failed')
 
-        # TODO: Add cooldown
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existant message)
 
-        await self.call_before_hooks(ctx)
+        try:
+            self._prepare_cooldowns(ctx)
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existant message)
+            raise
+
+    def reset_cooldown(self, ctx: ApplicationContext) -> None:
+        """Resets the cooldown on this command.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to reset the cooldown under.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existant message)
+            bucket.reset()
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -381,6 +437,7 @@ class SlashCommand(ApplicationCommand):
         return self
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
+        super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
@@ -963,6 +1020,7 @@ class ContextMenuCommand(ApplicationCommand):
         return self
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
+        super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
