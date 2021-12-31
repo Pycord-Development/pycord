@@ -2153,7 +2153,7 @@ def is_nsfw() -> Callable[[T], T]:
     return check(pred)
 
 def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], Any]] = BucketType.default) -> Callable[[T], T]:
-    """A decorator that adds a cooldown to a :class:`.Command`
+    """A decorator that adds a cooldown to a command
 
     A cooldown allows a command to only be used a specific amount
     of times in a specific time frame. These cooldowns can be based
@@ -2188,7 +2188,7 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
     return decorator  # type: ignore
 
 def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type: BucketType = BucketType.default) -> Callable[[T], T]:
-    """A decorator that adds a dynamic cooldown to a :class:`.Command`
+    """A decorator that adds a dynamic cooldown to a command
 
     This differs from :func:`.cooldown` in that it takes a function that
     accepts a single parameter of type :class:`.discord.Message` and must
@@ -2228,7 +2228,7 @@ def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type
     return decorator  # type: ignore
 
 def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: bool = False) -> Callable[[T], T]:
-    """A decorator that adds a maximum concurrency to a :class:`.Command` or its subclasses.
+    """A decorator that adds a maximum concurrency to a command
 
     This enables you to only allow a certain number of command invocations at the same time,
     for example if a command takes too long or if only one user can use it at a time. This
