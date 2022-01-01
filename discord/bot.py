@@ -253,13 +253,13 @@ class ApplicationCommandMixin:
             7: default_props_choice,
             8: default_props_choice,
             9: default_props_choice,
-            10: default_props_choice
+            10: default_props_choice,
         }
         missing_props_cmd = {
             # specific to type: 1 - 3 app command types
             1: default_props_cmd_type,
             2: default_props_cmd_type,
-            3: default_props_cmd_type
+            3: default_props_cmd_type,
         }
 
         def fill_missing_props(layer, command):
@@ -332,7 +332,11 @@ class ApplicationCommandMixin:
 
         await self.register_commands(commands_to_bulk, needs_update)
 
-    async def register_commands(self, commands, needs_update) -> None:
+    async def register_commands(
+        self,
+        commands: List[ApplicationCommand],
+        needs_update: bool = False,
+    ) -> None:
         """|coro|
         Registers all global commands in :list:`commands` if :bool:`needs_update` is true
         and guild commands that have been added through :meth:`.add_application_command`.
@@ -342,7 +346,7 @@ class ApplicationCommandMixin:
 
         Parameters
         -----------
-        commands: :list:
+        commands: List[:class:`.ApplicationCommand`]
             A bulk list of global commands to upsert
         """
 
