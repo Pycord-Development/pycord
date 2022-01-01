@@ -267,7 +267,7 @@ class HTTPClient:
                         f.reset(seek=tries)
 
                 if form:
-                    form_data = aiohttp.FormData()
+                    form_data = aiohttp.FormData(quote_fields=False)
                     for params in form:
                         form_data.add_field(**params)
                     kwargs['data'] = form_data
@@ -497,28 +497,20 @@ class HTTPClient:
         if stickers:
             payload['sticker_ids'] = stickers
 
-        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
-        if len(files) == 1:
-            file = files[0]
+        attachments = []
+        form.append({'name': 'payload_json'})
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
-
+        payload['attachments'] = attachments
+        form[0]['value'] = utils._to_json(payload)
         return self.request(route, form=form, files=files)
 
     def send_files(
@@ -559,27 +551,23 @@ class HTTPClient:
     ) -> Response[message.Message]:
         form = []
 
-        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
-        if len(files) == 1:
-            file = files[0]
+        attachments = []
+        form.append({'name': 'payload_json'})
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
+        if 'attachments' not in payload:
+            payload['attachments'] = attachments
         else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
+            payload['attachments'].extend(attachments)
+        form[0]['value'] = utils._to_json(payload)
 
         return self.request(route, form=form, files=files)
     
