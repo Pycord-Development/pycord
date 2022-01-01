@@ -855,6 +855,8 @@ class SlashCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
+        self.name = name
+        self.description = description
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
