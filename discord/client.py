@@ -113,7 +113,7 @@ def _cleanup_loop(loop: asyncio.AbstractEventLoop) -> None:
         loop.close()
 
 
-def get_event_loop():
+def get_event_loop() -> asyncio.AbstractEventLoop:
     running_loop = events._get_running_loop()
     if running_loop is not None:
         return running_loop
