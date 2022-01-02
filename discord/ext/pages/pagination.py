@@ -113,7 +113,7 @@ class PageGroup:
 
     .. note::
 
-    If multiple ``PageGroup`` objects have different options, they should all be set explicitly when creating each instance.
+        If multiple ``PageGroup`` objects have different options, they should all be set explicitly when creating each instance.
 
 
     Parameters
