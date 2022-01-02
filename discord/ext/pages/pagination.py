@@ -108,8 +108,13 @@ class PaginatorButton(discord.ui.Button):
 
 class PageGroup:
     """Creates a group of pages which the user can switch between.
+
     Each group of pages can have its own options, custom buttons, custom views, etc.
-    If multiple PageGroups have different options, they should all be set explicitly when creating each instance.
+
+    .. note::
+
+    If multiple ``PageGroup`` objects have different options, they should all be set explicitly when creating each instance.
+
 
     Parameters
     ----------
