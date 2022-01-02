@@ -103,9 +103,7 @@ class PaginatorButton(discord.ui.Button):
                 self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
-        await self.paginator.goto_page(
-            interaction=interaction, page_number=self.paginator.current_page
-        )
+        await self.paginator.goto_page(page_number=self.paginator.current_page)
 
 
 class PageGroup:
@@ -352,7 +350,7 @@ class Paginator(discord.ui.View):
             self.buttons = {}
             self.add_default_buttons()
 
-        await self.goto_page(interaction, self.current_page)
+        await self.goto_page(self.current_page)
 
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
@@ -565,7 +563,7 @@ class Paginator(discord.ui.View):
         return self.message
 
     async def respond(
-        self, interaction: discord.Interaction, ephemeral: bool = False, target: Optional[discord.abc.Messageable] = None,
+        self, interaction: discord.Interaction, ephemeral: bool = False, target: Optional[discord.abc.Messageable] = None, target_message: str = "Paginator sent!",
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends an interaction response or followup with the paginated items.
 
@@ -575,9 +573,11 @@ class Paginator(discord.ui.View):
             The interaction which invoked the paginator.
         ephemeral: :class:`bool`
             Whether the paginator message and its components are ephemeral.
-            Has no effect if the `target` parameter is set.
+            If `target` is specified, the ephemeral message will be `target_message` instead.
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different than the original :class:`discord.Interaction`
+        target_message: :class:`str`
+            The interaction response shown when the paginator message is sent elsewhere.
 
         Returns
         --------
@@ -598,6 +598,7 @@ class Paginator(discord.ui.View):
 
         self.user = interaction.user
         if target:
+            await interaction.response.send_message(target_message, ephemeral=ephemeral)
             self.message = await target.send(
                 content=page if isinstance(page, str) else None,
                 embeds=[] if isinstance(page, str) else page,
