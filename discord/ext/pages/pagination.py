@@ -44,7 +44,7 @@ class PaginatorButton(discord.ui.Button):
         Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``.
     label: :class:`str`
         The label shown on the button.
-        Defaults to a capitalized version of `button_type` (e.g. "Next", "Prev", etc.)
+        Defaults to a capitalized version of ``button_type`` (e.g. "Next", "Prev", etc.)
     emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
         The emoji shown on the button in front of the label.
     disabled: :class:`bool`
@@ -56,7 +56,7 @@ class PaginatorButton(discord.ui.Button):
     ----------
     paginator: :class:`Paginator`
         The paginator class where this button is being used.
-        Assigned to the button when `Paginator.add_button` is called.
+        Assigned to the button when ``Paginator.add_button`` is called.
     """
 
     def __init__(
@@ -109,6 +109,7 @@ class PaginatorButton(discord.ui.Button):
 class PageGroup:
     """Creates a group of pages which the user can switch between.
     Each group of pages can have its own options, custom buttons, custom views, etc.
+    If multiple PageGroups have different options, they should all be set explicitly when creating each instance.
 
     Parameters
     ----------
@@ -389,11 +390,14 @@ class Paginator(discord.ui.View):
         return True
 
     def add_menu(self):
+        """Adds the default :class:`PaginatorMenu` instance to the paginator."""
         self.menu = PaginatorMenu(self.page_groups)
         self.menu.paginator = self
         self.add_item(self.menu)
 
     def add_default_buttons(self):
+        """Adds the full list of default buttons that can be used with the paginator.
+        Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."""
         default_buttons = [
             PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple),
             PaginatorButton(
@@ -411,6 +415,7 @@ class Paginator(discord.ui.View):
             self.add_button(button)
 
     def add_button(self, button: PaginatorButton):
+        """Adds a :class:`PaginatorButton` to the paginator. """
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
@@ -432,6 +437,7 @@ class Paginator(discord.ui.View):
         button.paginator = self
 
     def remove_button(self, button_type: str):
+        """Removes a :class:`PaginatorButton` from the paginator."""
         if button_type not in self.buttons.keys():
             raise ValueError(
                 f"no button_type {button_type} was found in this paginator."
@@ -507,6 +513,7 @@ class Paginator(discord.ui.View):
 
     @staticmethod
     def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]):
+        """Returns the correct content type for a page based on its content."""
         if isinstance(page, discord.Embed):
             return [page]
         elif isinstance(page, List):
@@ -579,11 +586,11 @@ class Paginator(discord.ui.View):
             The interaction which invoked the paginator.
         ephemeral: :class:`bool`
             Whether the paginator message and its components are ephemeral.
-            If `target` is specified, the ephemeral message will be `target_message` instead.
+            If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
         target_message: :class:`str`
-            The interaction response shown when the paginator message is sent elsewhere.
+            The content of the interaction response shown when the paginator message is sent elsewhere.
 
         Returns
         --------
@@ -646,7 +653,7 @@ class PaginatorMenu(discord.ui.Select):
     ----------
     paginator: :class:`Paginator`
         The paginator class where this menu is being used.
-        Assigned to the menu when `Paginator.add_menu` is called.
+        Assigned to the menu when ``Paginator.add_menu`` is called.
     """
 
     def __init__(
