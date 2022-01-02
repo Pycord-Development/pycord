@@ -267,7 +267,7 @@ Example usage in a cog:
 .. _discord_ext_pages_api:
 
 API Reference
--------------
+=============
 
 Paginator
 ---------
