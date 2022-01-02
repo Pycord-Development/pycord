@@ -274,7 +274,6 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        interaction: discord.Interaction,
         pages: Optional[
             Union[List[str], List[Union[List[discord.Embed], discord.Embed]]]
         ] = None,
@@ -292,8 +291,6 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        interaction: :class:`discord.Interaction`
-            The interaction associated with the paginator.
         pages: Optional[Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
             The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
