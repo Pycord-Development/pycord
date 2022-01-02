@@ -44,7 +44,7 @@ class PaginatorButton(discord.ui.Button):
         Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``.
     label: :class:`str`
         The label shown on the button.
-        Defaults to a capitalized version of `button_type` (e.g. "Next", "Prev", etc)
+        Defaults to a capitalized version of `button_type` (e.g. "Next", "Prev", etc.)
     emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
         The emoji shown on the button in front of the label.
     disabled: :class:`bool`
@@ -530,7 +530,7 @@ class Paginator(discord.ui.View):
         ctx: Union[:class:`~discord.ext.commands.Context`]
             A command's invocation context.
         target: Optional[:class:`~discord.abc.Messageable`]
-            A target where the paginated message should be sent, if different than the original :class:`Context`
+            A target where the paginated message should be sent, if different from the original :class:`Context`
         target_message: Optional[:class:`str`]
             An optional message shown when the paginator message is sent elsewhere.
 
@@ -581,14 +581,14 @@ class Paginator(discord.ui.View):
             Whether the paginator message and its components are ephemeral.
             If `target` is specified, the ephemeral message will be `target_message` instead.
         target: Optional[:class:`~discord.abc.Messageable`]
-            A target where the paginated message should be sent, if different than the original :class:`discord.Interaction`
+            A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
         target_message: :class:`str`
             The interaction response shown when the paginator message is sent elsewhere.
 
         Returns
         --------
         Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
-            The :class:`~discord.Message` or :class:`~discord.WebhookMessage`] that was sent with the paginator.
+            The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
         if not isinstance(interaction, discord.Interaction):
@@ -672,7 +672,6 @@ class PaginatorMenu(discord.ui.Select):
         for page_group in self.page_groups:
             if selection == page_group.label:
                 return await self.paginator.update(
-                    interaction,
                     pages=page_group.pages,
                     show_disabled=page_group.show_disabled,
                     show_indicator=page_group.show_indicator,
