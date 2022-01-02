@@ -524,6 +524,7 @@ class Paginator(discord.ui.View):
         self,
         ctx: Context,
         target: Optional[discord.abc.Messageable] = None,
+        target_message: Optional[str] = None,
     ) -> Union[discord.Message]:
         """Sends a message with the paginated items.
 
@@ -533,6 +534,8 @@ class Paginator(discord.ui.View):
             A command's invocation context.
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different than the original :class:`Context`
+        target_message: Optional[:class:`str`]
+            An optional message shown when the paginator message is sent elsewhere.
 
         Returns
         --------
@@ -552,6 +555,8 @@ class Paginator(discord.ui.View):
         self.user = ctx.author
 
         if target:
+            if target_message:
+                await ctx.send(target_message)
             ctx = target
 
         self.message = await ctx.send(
@@ -563,7 +568,11 @@ class Paginator(discord.ui.View):
         return self.message
 
     async def respond(
-        self, interaction: discord.Interaction, ephemeral: bool = False, target: Optional[discord.abc.Messageable] = None, target_message: str = "Paginator sent!",
+        self,
+        interaction: discord.Interaction,
+        ephemeral: bool = False,
+        target: Optional[discord.abc.Messageable] = None,
+        target_message: str = "Paginator sent!",
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends an interaction response or followup with the paginated items.
 
