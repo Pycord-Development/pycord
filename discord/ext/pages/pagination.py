@@ -525,6 +525,7 @@ class Paginator(discord.ui.View):
     async def send(
         self,
         ctx: Context,
+        target: Optional[discord.abc.Messageable] = None,
     ) -> Union[discord.Message]:
         """Sends a message with the paginated items.
 
@@ -532,6 +533,8 @@ class Paginator(discord.ui.View):
         ------------
         ctx: Union[:class:`~discord.ext.commands.Context`]
             A command's invocation context.
+        target: Optional[:class:`~discord.abc.Messageable`]
+            A target where the paginated message should be sent, if different than the original :class:`Context`
 
         Returns
         --------
@@ -541,11 +544,17 @@ class Paginator(discord.ui.View):
         if not isinstance(ctx, Context):
             raise TypeError(f"expected Context not {ctx.__class__!r}")
 
+        if target is not None and not isinstance(target, discord.abc.Messageable):
+            raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
+
         self.update_buttons()
         page = self.pages[0]
         page = self.get_page_content(page)
 
         self.user = ctx.author
+
+        if target:
+            ctx = target
 
         self.message = await ctx.send(
             content=page if isinstance(page, str) else None,
@@ -556,7 +565,7 @@ class Paginator(discord.ui.View):
         return self.message
 
     async def respond(
-        self, interaction: discord.Interaction, ephemeral: bool = False
+        self, interaction: discord.Interaction, ephemeral: bool = False, target: Optional[discord.abc.Messageable] = None,
     ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends an interaction response or followup with the paginated items.
 
@@ -566,6 +575,9 @@ class Paginator(discord.ui.View):
             The interaction which invoked the paginator.
         ephemeral: :class:`bool`
             Whether the paginator message and its components are ephemeral.
+            Has no effect if the `target` parameter is set.
+        target: Optional[:class:`~discord.abc.Messageable`]
+            A target where the paginated message should be sent, if different than the original :class:`discord.Interaction`
 
         Returns
         --------
@@ -575,32 +587,43 @@ class Paginator(discord.ui.View):
 
         if not isinstance(interaction, discord.Interaction):
             raise TypeError(f"expected Interaction not {interaction.__class__!r}")
+
+        if target is not None and not isinstance(target, discord.abc.Messageable):
+            raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
+
         self.update_buttons()
 
         page = self.pages[0]
         page = self.get_page_content(page)
 
         self.user = interaction.user
-
-        if interaction.response.is_done():
-            msg = await interaction.followup.send(
+        if target:
+            self.message = await target.send(
                 content=page if isinstance(page, str) else None,
                 embeds=[] if isinstance(page, str) else page,
                 view=self,
-                ephemeral=ephemeral,
             )
-
         else:
-            msg = await interaction.response.send_message(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
-                view=self,
-                ephemeral=ephemeral,
-            )
-        if isinstance(msg, (discord.WebhookMessage, discord.Message)):
-            self.message = msg
-        elif isinstance(msg, discord.Interaction):
-            self.message = await msg.original_message()
+            if interaction.response.is_done():
+                msg = await interaction.followup.send(
+                    content=page if isinstance(page, str) else None,
+                    embeds=[] if isinstance(page, str) else page,
+                    view=self,
+                    ephemeral=ephemeral,
+                )
+
+            else:
+                msg = await interaction.response.send_message(
+                    content=page if isinstance(page, str) else None,
+                    embeds=[] if isinstance(page, str) else page,
+                    view=self,
+                    ephemeral=ephemeral,
+                )
+            if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+                self.message = msg
+            elif isinstance(msg, discord.Interaction):
+                self.message = await msg.original_message()
+
         return self.message
 
 
