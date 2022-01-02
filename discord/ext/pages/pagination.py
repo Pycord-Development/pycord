@@ -250,7 +250,6 @@ class Paginator(discord.ui.View):
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
             self.pages = self.page_groups[0].pages
-            print(repr(self.page_groups))
 
         self.page_count = len(self.pages) - 1
         self.buttons = {}
@@ -278,9 +277,9 @@ class Paginator(discord.ui.View):
     async def update(
         self,
         interaction: discord.Interaction,
-        pages: Union[
-            List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
-        ],
+        pages: Optional[
+            Union[List[str], List[Union[List[discord.Embed], discord.Embed]]]
+        ] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
@@ -298,7 +297,7 @@ class Paginator(discord.ui.View):
         ----------
         interaction: :class:`discord.Interaction`
             The interaction associated with the paginator.
-        pages: Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
             The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
@@ -322,7 +321,7 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages = pages
+        self.pages = pages if pages is not None else self.pages
         self.page_count = len(self.pages) - 1
         self.current_page = 0
         # Apply config changes, if specified
@@ -381,7 +380,7 @@ class Paginator(discord.ui.View):
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
-        await interaction.response.edit_message(
+        await self.message.edit(
             content=page if isinstance(page, str) else None,
             embeds=[] if isinstance(page, str) else page,
             view=self,
@@ -523,23 +522,22 @@ class Paginator(discord.ui.View):
 
     async def send(
         self,
-        ctx: Union[ApplicationContext, Context],
-        ephemeral: bool = False,
-    ) -> Union[discord.Message, discord.WebhookMessage]:
+        ctx: Context,
+    ) -> Union[discord.Message]:
         """Sends a message with the paginated items.
 
         Parameters
         ------------
-        ctx: Union[:class:`~discord.ext.commands.Context`, :class:`~discord.ApplicationContext`]
+        ctx: Union[:class:`~discord.ext.commands.Context`]
             A command's invocation context.
-        ephemeral: :class:`bool`
-            Choose whether the message is ephemeral or not. Only works with slash commands.
 
         Returns
         --------
-        Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+        Union[:class:`~discord.Message`]
             The message that was sent with the paginator.
         """
+        if not isinstance(ctx, Context):
+            raise TypeError(f"expected Context not {ctx.__class__!r}")
 
         self.update_buttons()
         page = self.pages[0]
@@ -547,42 +545,32 @@ class Paginator(discord.ui.View):
 
         self.user = ctx.author
 
-        if isinstance(ctx, ApplicationContext):
-            msg = await ctx.respond(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
-                view=self,
-                ephemeral=ephemeral,
-            )
-
-        else:
-            msg = await ctx.send(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
-                view=self,
-            )
-        if isinstance(msg, (discord.WebhookMessage, discord.Message)):
-            self.message = msg
-        elif isinstance(msg, discord.Interaction):
-            self.message = await msg.original_message()
+        self.message = await ctx.send(
+            content=page if isinstance(page, str) else None,
+            embeds=[] if isinstance(page, str) else page,
+            view=self,
+        )
 
         return self.message
 
-    async def respond(self, interaction: discord.Interaction, ephemeral: bool = False):
+    async def respond(
+        self, interaction: discord.Interaction, ephemeral: bool = False
+    ) -> Union[discord.Message, discord.WebhookMessage]:
         """Sends an interaction response or followup with the paginated items.
 
         Parameters
         ------------
         interaction: :class:`discord.Interaction`
-            The interaction associated with this response.
+            The interaction which invoked the paginator.
         ephemeral: :class:`bool`
-            Choose whether the message is ephemeral or not.
+            Whether the paginator message and its components are ephemeral.
 
         Returns
         --------
-        :class:`~discord.Interaction`
-            The message sent with the paginator.
+        Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+            The :class:`~discord.Message` or :class:`~discord.WebhookMessage`] that was sent with the paginator.
         """
+
         if not isinstance(interaction, discord.Interaction):
             raise TypeError(f"expected Interaction not {interaction.__class__!r}")
         self.update_buttons()
@@ -651,7 +639,6 @@ class PaginatorMenu(discord.ui.Select):
         selection = self.values[0]
         for page_group in self.page_groups:
             if selection == page_group.label:
-                print(page_group.use_default_buttons)
                 return await self.paginator.update(
                     interaction,
                     pages=page_group.pages,
