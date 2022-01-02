@@ -1,11 +1,11 @@
 .. _discord_ext_pages:
 
-``discord.ext.pages`` -- A pagination extension module
+``discord.ext.pages`` API Reference -- A pagination extension module
 ===========================================================================
 
 .. versionadded:: 2.0
 
-This module provides an easy pagination system with buttons.
+This module provides an easy pagination system with buttons, page groups, and custom view support.
 
 Example usage in a cog:
 
@@ -266,11 +266,8 @@ Example usage in a cog:
 
 .. _discord_ext_pages_api:
 
-API Reference
--------------
-
 Paginator
-~~~~~~~~~
+---------
 
 .. attributetable:: discord.ext.pages.Paginator
 
@@ -278,7 +275,7 @@ Paginator
     :members:
 
 PaginatorButton
-~~~~~~~~~~~~~~~
+---------------
 
 .. attributetable:: discord.ext.pages.PaginatorButton
 
@@ -286,7 +283,7 @@ PaginatorButton
     :members:
 
 PaginatorMenu
-~~~~~~~~~~~~~
+-------------
 
 .. attributetable:: discord.ext.pages.PaginatorMenu
 
@@ -294,7 +291,7 @@ PaginatorMenu
     :members:
 
 PageGroup
-~~~~~~~~~
+---------
 
 .. attributetable:: discord.ext.pages.PageGroup
 
