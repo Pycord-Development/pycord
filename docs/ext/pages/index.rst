@@ -1,7 +1,7 @@
 .. _discord_ext_pages:
 
-``discord.ext.pages`` API Reference -- A pagination extension module
-===========================================================================
+``discord.ext.pages`` -- A pagination extension module
+======================================================
 
 .. versionadded:: 2.0
 
@@ -265,6 +265,9 @@ Example usage in a cog:
         bot.add_cog(PageTest(bot))
 
 .. _discord_ext_pages_api:
+
+API Reference
+=============
 
 Paginator
 ---------
