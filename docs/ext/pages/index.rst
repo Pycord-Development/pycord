@@ -276,6 +276,7 @@ Paginator
 
 .. autoclass:: discord.ext.pages.Paginator
     :members:
+    :inherited-members:
 
 PaginatorButton
 ---------------
@@ -284,6 +285,7 @@ PaginatorButton
 
 .. autoclass:: discord.ext.pages.PaginatorButton
     :members:
+    :inherited-members:
 
 PaginatorMenu
 -------------
@@ -292,6 +294,7 @@ PaginatorMenu
 
 .. autoclass:: discord.ext.pages.PaginatorMenu
     :members:
+    :inherited-members:
 
 PageGroup
 ---------
@@ -300,3 +303,4 @@ PageGroup
 
 .. autoclass:: discord.ext.pages.PageGroup
     :members:
+    :inherited-members:
