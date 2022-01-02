@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 from typing import Dict, List, Optional, Union
 
 import discord
-from discord.commands import ApplicationContext
 from discord.ext.commands import Context
 
 __all__ = (
@@ -111,6 +110,7 @@ class PaginatorButton(discord.ui.Button):
 
 class PageGroup:
     """Creates a group of pages which the user can switch between.
+    Each group of pages can have its own options, custom buttons, custom views, etc.
 
     Parameters
     ----------
@@ -198,7 +198,7 @@ class Paginator(discord.ui.View):
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
-        A custom view whose items are appended below the pagination buttons.
+        A custom view whose items are appended below the pagination components.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
@@ -291,7 +291,6 @@ class Paginator(discord.ui.View):
         custom_buttons: Optional[List[PaginatorButton]] = None,
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
-        This can be useful when you want to change which pages are used with the instance.
 
         Parameters
         ----------
@@ -312,7 +311,7 @@ class Paginator(discord.ui.View):
         loop_pages: :class:`bool`
             Whether to loop the pages when clicking prev/next while at the first/last page in the list.
         custom_view: Optional[:class:`discord.ui.View`]
-            A custom view whose items are appended below the pagination buttons.
+            A custom view whose items are appended below the pagination components.
         timeout: Optional[:class:`float`]
             Timeout in seconds from last interaction with the paginator before no longer accepting input.
         custom_buttons: Optional[List[:class:`PaginatorButton`]]
@@ -343,7 +342,7 @@ class Paginator(discord.ui.View):
             else self.use_default_buttons
         )
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
-        self.custom_view = custom_view if custom_view is not None else self.custom_view
+        self.custom_view = None if custom_view is None else custom_view
         self.timeout = timeout if timeout is not None else self.timeout
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
@@ -362,25 +361,28 @@ class Paginator(discord.ui.View):
                 item.disabled = True
             await self.message.edit(view=self)
 
-    async def goto_page(self, interaction: discord.Interaction, page_number=0) -> None:
-        """Updates the interaction response message to show the specified page number.
+    async def goto_page(self, page_number=0) -> discord.Message:
+        """Updates the paginator message to show the specified page number.
 
         Parameters
         ----------
-        interaction: :class:`discord.Interaction`
-            The interaction that invoked the Paginator
         page_number: :class:`int`
             The page to display.
 
             .. note::
 
                 Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
+
+        Returns
+        -------
+        :class:`~discord.Message`
+            The message associated with the paginator.
         """
         self.update_buttons()
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
-        await self.message.edit(
+        return await self.message.edit(
             content=page if isinstance(page, str) else None,
             embeds=[] if isinstance(page, str) else page,
             view=self,
