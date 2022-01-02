@@ -773,7 +773,7 @@ class Option:
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
-        self.value = value or name
+        self.value = value if value is not None else name
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
@@ -857,6 +857,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         )
         self.name = name
         self.description = description
+        self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
