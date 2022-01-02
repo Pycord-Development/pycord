@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+from asyncio import events
 import logging
 import signal
 import sys
@@ -85,7 +86,7 @@ def _cancel_tasks(loop: asyncio.AbstractEventLoop) -> None:
     if not tasks:
         return
 
-    _log.info('Cleaning up after %d tasks.', len(tasks))
+    _log.info('Cleaning up after %d task(s).', len(tasks))
     for task in tasks:
         task.cancel()
 
@@ -106,9 +107,20 @@ def _cleanup_loop(loop: asyncio.AbstractEventLoop) -> None:
     try:
         _cancel_tasks(loop)
         loop.run_until_complete(loop.shutdown_asyncgens())
+        loop.run_until_complete(loop.shutdown_default_executor())
     finally:
         _log.info('Closing the event loop.')
         loop.close()
+
+
+def get_event_loop():
+    running_loop = events._get_running_loop()
+    if running_loop is not None:
+        return running_loop
+
+    loop = events.new_event_loop()
+    events.set_event_loop(loop)
+    return loop
 
 class Client:
     r"""Represents a client connection that connects to Discord.
@@ -209,7 +221,7 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
+        self.loop: asyncio.AbstractEventLoop = get_event_loop() if loop is None else loop
         self._listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         self.shard_id: Optional[int] = options.get('shard_id')
         self.shard_count: Optional[int] = options.get('shard_count')
@@ -637,8 +649,8 @@ class Client:
         loop = self.loop
 
         try:
-            loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
-            loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
+            loop.add_signal_handler(signal.SIGINT, loop.stop)
+            loop.add_signal_handler(signal.SIGTERM, loop.stop)
         except NotImplementedError:
             pass
 
