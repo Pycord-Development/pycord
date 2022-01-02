@@ -247,7 +247,7 @@ class PageTest(commands.Cog):
     async def pagetest_target(self, ctx: commands.Context):
         """Demonstrates sending the paginator to a different target than where it was invoked (prefix-command version)."""
         paginator = pages.Paginator(pages=self.get_pages())
-        await paginator.send(ctx, target=ctx.author)
+        await paginator.send(ctx, target=ctx.author, target_message="Paginator sent!")
 
 
 def setup(bot):
