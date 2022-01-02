@@ -1,6 +1,6 @@
 .. _discord_ext_pages:
 
-``discord.ext.pages`` -- An extension module to provide useful pagination options
+``discord.ext.pages`` -- A pagination extension module
 ===========================================================================
 
 .. versionadded:: 2.0
@@ -269,16 +269,34 @@ Example usage in a cog:
 API Reference
 -------------
 
+Paginator
+~~~~~~~~~
+
 .. attributetable:: discord.ext.pages.Paginator
 
 .. autoclass:: discord.ext.pages.Paginator
     :members:
 
+PaginatorButton
+~~~~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.pages.PaginatorButton
+
 .. autoclass:: discord.ext.pages.PaginatorButton
     :members:
 
+PaginatorMenu
+~~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.pages.PaginatorMenu
+
 .. autoclass:: discord.ext.pages.PaginatorMenu
     :members:
+
+PageGroup
+~~~~~~~~~
+
+.. attributetable:: discord.ext.pages.PageGroup
 
 .. autoclass:: discord.ext.pages.PageGroup
     :members:
