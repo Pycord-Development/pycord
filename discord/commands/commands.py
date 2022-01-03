@@ -787,7 +787,7 @@ def option(name, type=None, **kwargs):
         return func
     return decor
 
-class SlashCommandGroup(ApplicationCommand, Option):
+class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
 
     These can be created manually, but they should be created via the
@@ -850,13 +850,9 @@ class SlashCommandGroup(ApplicationCommand, Option):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        super().__init__(
-            SlashCommandOptionType.sub_command_group,
-            name=name,
-            description=description,
-        )
         self.name = name
         self.description = description
+        self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
