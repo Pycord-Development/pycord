@@ -170,17 +170,18 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not await self.can_run(ctx):
             raise CheckFailure(f'The check functions for the command {self.name} failed')
 
-        if self._max_concurrency is not None:
-            # For this application, context can be duck-typed as a Message
-            await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
-
-        try:
-            self._prepare_cooldowns(ctx)
-            await self.call_before_hooks(ctx)
-        except:
+        if hasattr(self, "_max_concurrency"):
             if self._max_concurrency is not None:
-                await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
-            raise
+                # For this application, context can be duck-typed as a Message
+                await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
+
+            try:
+                self._prepare_cooldowns(ctx)
+                await self.call_before_hooks(ctx)
+            except:
+                if self._max_concurrency is not None:
+                    await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
+                raise
 
     def reset_cooldown(self, ctx: ApplicationContext) -> None:
         """Resets the cooldown on this command.
