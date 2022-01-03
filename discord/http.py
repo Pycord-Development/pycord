@@ -1454,13 +1454,15 @@ class HTTPClient:
         return self.request(r, reason=reason, json=payload)
 
     def get_invite(
-        self, invite_id: str, *, with_counts: bool = True, with_expiration: bool = True, guild_scheduled_event_id: Snowflake = None
+        self, invite_id: str, *, with_counts: bool = True, with_expiration: bool = True, guild_scheduled_event_id: Optional[int] = None
     ) -> Response[invite.Invite]:
         params = {
             'with_counts': int(with_counts),
-            'with_expiration': int(with_expiration),
-            'guild_scheduled_event_id': int(guild_scheduled_event_id),
+            'with_expiration': int(with_expiration)
         }
+
+        if guild_scheduled_event_id is not None:
+            params['guild_scheduled_event_id'] = guild_scheduled_event_id
 
         return self.request(Route('GET', '/invites/{invite_id}', invite_id=invite_id), params=params)
 
