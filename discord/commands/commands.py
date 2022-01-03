@@ -904,8 +904,8 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
     def subgroup(
         self,
-        name: str,
-        description: str = None, 
+        name: Optional[str] = None,
+        description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
@@ -915,8 +915,8 @@ class SlashCommandGroup(ApplicationCommand, Option):
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the group to create.
+        name: Optional[:class:`str`]
+            The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
         description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
@@ -930,7 +930,7 @@ class SlashCommandGroup(ApplicationCommand, Option):
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
-                name,
+                name or cls.__name__,
                 description or (
                     inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None
@@ -997,7 +997,6 @@ class SlashCommandGroup(ApplicationCommand, Option):
         self.cog = cog
         for subcommand in self.subcommands:
             subcommand._set_cog(cog)
-        
 
 
 class ContextMenuCommand(ApplicationCommand):
