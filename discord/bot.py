@@ -618,7 +618,7 @@ class ApplicationCommandMixin:
 
     def group(
         self,
-        name: str,
+        name: Optional[str] = None,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
@@ -629,8 +629,8 @@ class ApplicationCommandMixin:
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the group to create.
+        name: Optional[:class:`str`]
+            The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
         description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
@@ -644,7 +644,7 @@ class ApplicationCommandMixin:
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
-                name,
+                name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None else "No description provided"
