@@ -138,8 +138,19 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
-    def __eq__(self, other):
-        return isinstance(other, self.__class__)
+    def __eq__(self, other) -> bool:
+        if hasattr(self, "id") and hasattr(other, "id"):
+            check = self.id == other.id
+        else:
+            check = (
+                self.name == other.name
+                and self.guild_ids == self.guild_ids
+            )
+        return (
+            isinstance(other, self.__class__)
+            and self.parent == other.parent
+            and check
+        )
 
     async def __call__(self, ctx, *args, **kwargs):
         """|coro|
@@ -573,13 +584,6 @@ class SlashCommand(ApplicationCommand):
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
         return as_dict
-
-    def __eq__(self, other) -> bool:
-        return (
-            isinstance(other, SlashCommand)
-            and other.name == self.name
-            and other.description == self.description
-        )
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         # TODO: Parse the args better
