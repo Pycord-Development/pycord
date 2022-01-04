@@ -68,15 +68,15 @@ class Cog(Cog):
                     if isinstance(command, GroupMixin):
                         yield from command.walk_commands()
 
-    def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
+    def get_commands(self) -> List[Command]:
         r"""
         Returns
         --------
-        List[Union[:class:`~discord.ApplicationCommand`, :class:`.Command`]]
+        List[class:`.Command`]
             A :class:`list` of commands that are defined inside this cog.
 
             .. note::
 
                 This does not include subcommands.
         """
-        return [c for c in self.__cog_commands__ if c.parent is None]
+        return [c for c in self.__cog_commands__ if isinstance(c, Command) and c.parent is None]
