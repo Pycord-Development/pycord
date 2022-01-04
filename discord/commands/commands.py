@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 import functools
 import inspect
 import re
@@ -111,6 +112,29 @@ class _BaseCommand:
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
+    def __init__(self, func: Callable, **kwargs) -> None:
+        from ..ext.commands.cooldowns import CooldownMapping, BucketType, MaxConcurrency
+
+        try:
+            cooldown = func.__commands_cooldown__
+        except AttributeError:
+            cooldown = kwargs.get('cooldown')
+        
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+        self._buckets: CooldownMapping = buckets
+
+        try:
+            max_concurrency = func.__commands_max_concurrency__
+        except AttributeError:
+            max_concurrency = kwargs.get('max_concurrency')
+
+        self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
+
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -127,6 +151,18 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         """
         return await self.callback(ctx, *args, **kwargs)
 
+    def _prepare_cooldowns(self, ctx: ApplicationContext):
+        if self._buckets.valid:
+            current = datetime.datetime.now().timestamp()
+            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existent message)
+
+            if bucket is not None:
+                retry_after = bucket.update_rate_limit(current)
+
+                if retry_after:
+                    from ..ext.commands.errors import CommandOnCooldown
+                    raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+
     async def prepare(self, ctx: ApplicationContext) -> None:
         # This should be same across all 3 types
         ctx.command = self
@@ -134,9 +170,29 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not await self.can_run(ctx):
             raise CheckFailure(f'The check functions for the command {self.name} failed')
 
-        # TODO: Add cooldown
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
 
-        await self.call_before_hooks(ctx)
+        try:
+            self._prepare_cooldowns(ctx)
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
+            raise
+
+    def reset_cooldown(self, ctx: ApplicationContext) -> None:
+        """Resets the cooldown on this command.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to reset the cooldown under.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
+            bucket.reset()
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -300,6 +356,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             await hook(ctx)
 
     @property
+    def cooldown(self):
+        return self._buckets._cooldown
+
+    @property
     def full_parent_name(self) -> str:
         """:class:`str`: Retrieves the fully qualified parent command name.
 
@@ -371,6 +431,11 @@ class SlashCommand(ApplicationCommand):
         :exc:`.CommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+
+        .. versionadded:: 2.0
     """
     type = 1
 
@@ -381,6 +446,7 @@ class SlashCommand(ApplicationCommand):
         return self
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
+        super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
@@ -789,6 +855,8 @@ class SlashCommandGroup(ApplicationCommand, Option):
             name=name,
             description=description,
         )
+        self.name = name
+        self.description = description
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
@@ -963,6 +1031,11 @@ class ContextMenuCommand(ApplicationCommand):
         :exc:`.CommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+
+        .. versionadded:: 2.0
     """
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
@@ -971,6 +1044,7 @@ class ContextMenuCommand(ApplicationCommand):
         return self
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
+        super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func

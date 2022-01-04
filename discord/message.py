@@ -154,9 +154,14 @@ class Attachment(Hashable):
         Whether the attachment is ephemeral or not.
 
         .. versionadded:: 1.7
+
+    description: Optional[:class:`str`]
+        The attachment's description. 
+
+        .. versionadded:: 2.0
     """
 
-    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral')
+    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral', 'description')
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
         self.id: int = int(data['id'])
@@ -169,6 +174,7 @@ class Attachment(Hashable):
         self._http = state.http
         self.content_type: Optional[str] = data.get('content_type')
         self.ephemeral: bool = data.get('ephemeral', False)
+        self.description: Optional[str] = data.get('description')
 
     def is_spoiler(self) -> bool:
         """:class:`bool`: Whether this attachment contains a spoiler."""
@@ -305,7 +311,7 @@ class Attachment(Hashable):
         """
 
         data = await self.read(use_cached=use_cached)
-        return File(io.BytesIO(data), filename=self.filename, spoiler=spoiler)
+        return File(io.BytesIO(data), filename=self.filename, spoiler=spoiler, description=self.description)
 
     def to_dict(self) -> AttachmentPayload:
         result: AttachmentPayload = {
@@ -322,6 +328,8 @@ class Attachment(Hashable):
             result['width'] = self.width
         if self.content_type:
             result['content_type'] = self.content_type
+        if self.description:
+            result['description'] = self.description
         return result
 
 
@@ -1312,6 +1320,9 @@ class Message(Hashable):
             raise InvalidArgument('cannot pass both file and files parameter to edit()')
 
         if file is not MISSING:
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
             if not isinstance(file, File):
                 raise InvalidArgument('file parameter must be File')
 
@@ -1330,6 +1341,9 @@ class Message(Hashable):
                 raise InvalidArgument('files parameter must be a list of up to 10 elements')
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
 
             try:
                 data = await self._state.http.edit_files(

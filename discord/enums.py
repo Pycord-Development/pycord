@@ -57,6 +57,9 @@ __all__ = (
     'InteractionResponseType',
     'NSFWLevel',
     'EmbeddedActivity',
+    'ScheduledEventStatus',
+    'ScheduledEventPrivacyLevel',
+    'ScheduledEventLocationType',
 )
 
 
@@ -360,9 +363,9 @@ class AuditLogAction(Enum):
     sticker_create           = 90
     sticker_update           = 91
     sticker_delete           = 92
-    scheduled_event_create    = 100
-    scheduled_event_update    = 101
-    scheduled_event_delete    = 102
+    scheduled_event_create   = 100
+    scheduled_event_update   = 101
+    scheduled_event_delete   = 102
     thread_create            = 110
     thread_update            = 111
     thread_delete            = 112
@@ -372,53 +375,53 @@ class AuditLogAction(Enum):
     def category(self) -> Optional[AuditLogActionCategory]:
         # fmt: off
         lookup: Dict[AuditLogAction, Optional[AuditLogActionCategory]] = {
-            AuditLogAction.guild_update:          AuditLogActionCategory.update,
-            AuditLogAction.channel_create:        AuditLogActionCategory.create,
-            AuditLogAction.channel_update:        AuditLogActionCategory.update,
-            AuditLogAction.channel_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.overwrite_create:      AuditLogActionCategory.create,
-            AuditLogAction.overwrite_update:      AuditLogActionCategory.update,
-            AuditLogAction.overwrite_delete:      AuditLogActionCategory.delete,
-            AuditLogAction.kick:                  None,
-            AuditLogAction.member_prune:          None,
-            AuditLogAction.ban:                   None,
-            AuditLogAction.unban:                 None,
-            AuditLogAction.member_update:         AuditLogActionCategory.update,
-            AuditLogAction.member_role_update:    AuditLogActionCategory.update,
-            AuditLogAction.member_move:           None,
-            AuditLogAction.member_disconnect:     None,
-            AuditLogAction.bot_add:               None,
-            AuditLogAction.role_create:           AuditLogActionCategory.create,
-            AuditLogAction.role_update:           AuditLogActionCategory.update,
-            AuditLogAction.role_delete:           AuditLogActionCategory.delete,
-            AuditLogAction.invite_create:         AuditLogActionCategory.create,
-            AuditLogAction.invite_update:         AuditLogActionCategory.update,
-            AuditLogAction.invite_delete:         AuditLogActionCategory.delete,
-            AuditLogAction.webhook_create:        AuditLogActionCategory.create,
-            AuditLogAction.webhook_update:        AuditLogActionCategory.update,
-            AuditLogAction.webhook_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.emoji_create:          AuditLogActionCategory.create,
-            AuditLogAction.emoji_update:          AuditLogActionCategory.update,
-            AuditLogAction.emoji_delete:          AuditLogActionCategory.delete,
-            AuditLogAction.message_delete:        AuditLogActionCategory.delete,
-            AuditLogAction.message_bulk_delete:   AuditLogActionCategory.delete,
-            AuditLogAction.message_pin:           None,
-            AuditLogAction.message_unpin:         None,
-            AuditLogAction.integration_create:    AuditLogActionCategory.create,
-            AuditLogAction.integration_update:    AuditLogActionCategory.update,
-            AuditLogAction.integration_delete:    AuditLogActionCategory.delete,
-            AuditLogAction.stage_instance_create: AuditLogActionCategory.create,
-            AuditLogAction.stage_instance_update: AuditLogActionCategory.update,
-            AuditLogAction.stage_instance_delete: AuditLogActionCategory.delete,
-            AuditLogAction.sticker_create:        AuditLogActionCategory.create,
-            AuditLogAction.sticker_update:        AuditLogActionCategory.update,
-            AuditLogAction.sticker_delete:        AuditLogActionCategory.delete,
+            AuditLogAction.guild_update:           AuditLogActionCategory.update,
+            AuditLogAction.channel_create:         AuditLogActionCategory.create,
+            AuditLogAction.channel_update:         AuditLogActionCategory.update,
+            AuditLogAction.channel_delete:         AuditLogActionCategory.delete,
+            AuditLogAction.overwrite_create:       AuditLogActionCategory.create,
+            AuditLogAction.overwrite_update:       AuditLogActionCategory.update,
+            AuditLogAction.overwrite_delete:       AuditLogActionCategory.delete,
+            AuditLogAction.kick:                   None,
+            AuditLogAction.member_prune:           None,
+            AuditLogAction.ban:                    None,
+            AuditLogAction.unban:                  None,
+            AuditLogAction.member_update:          AuditLogActionCategory.update,
+            AuditLogAction.member_role_update:     AuditLogActionCategory.update,
+            AuditLogAction.member_move:            None,
+            AuditLogAction.member_disconnect:      None,
+            AuditLogAction.bot_add:                None,
+            AuditLogAction.role_create:            AuditLogActionCategory.create,
+            AuditLogAction.role_update:            AuditLogActionCategory.update,
+            AuditLogAction.role_delete:            AuditLogActionCategory.delete,
+            AuditLogAction.invite_create:          AuditLogActionCategory.create,
+            AuditLogAction.invite_update:          AuditLogActionCategory.update,
+            AuditLogAction.invite_delete:          AuditLogActionCategory.delete,
+            AuditLogAction.webhook_create:         AuditLogActionCategory.create,
+            AuditLogAction.webhook_update:         AuditLogActionCategory.update,
+            AuditLogAction.webhook_delete:         AuditLogActionCategory.delete,
+            AuditLogAction.emoji_create:           AuditLogActionCategory.create,
+            AuditLogAction.emoji_update:           AuditLogActionCategory.update,
+            AuditLogAction.emoji_delete:           AuditLogActionCategory.delete,
+            AuditLogAction.message_delete:         AuditLogActionCategory.delete,
+            AuditLogAction.message_bulk_delete:    AuditLogActionCategory.delete,
+            AuditLogAction.message_pin:            None,
+            AuditLogAction.message_unpin:          None,
+            AuditLogAction.integration_create:     AuditLogActionCategory.create,
+            AuditLogAction.integration_update:     AuditLogActionCategory.update,
+            AuditLogAction.integration_delete:     AuditLogActionCategory.delete,
+            AuditLogAction.stage_instance_create:  AuditLogActionCategory.create,
+            AuditLogAction.stage_instance_update:  AuditLogActionCategory.update,
+            AuditLogAction.stage_instance_delete:  AuditLogActionCategory.delete,
+            AuditLogAction.sticker_create:         AuditLogActionCategory.create,
+            AuditLogAction.sticker_update:         AuditLogActionCategory.update,
+            AuditLogAction.sticker_delete:         AuditLogActionCategory.delete,
             AuditLogAction.scheduled_event_create: AuditLogActionCategory.create,
             AuditLogAction.scheduled_event_update: AuditLogActionCategory.update,
             AuditLogAction.scheduled_event_delete: AuditLogActionCategory.delete,
-            AuditLogAction.thread_create:         AuditLogActionCategory.create,
-            AuditLogAction.thread_update:         AuditLogActionCategory.update,
-            AuditLogAction.thread_delete:         AuditLogActionCategory.delete,
+            AuditLogAction.thread_create:          AuditLogActionCategory.create,
+            AuditLogAction.thread_update:          AuditLogActionCategory.update,
+            AuditLogAction.thread_delete:          AuditLogActionCategory.delete,
         }
         # fmt: on
         return lookup[self]
@@ -698,6 +701,31 @@ class EmbeddedActivity(Enum):
     word_snacks = 879863976006127627
     word_snacks_dev = 879864010126786570
     youtube_together = 755600276941176913 
+
+
+class ScheduledEventStatus(Enum):
+    scheduled = 1
+    active = 2
+    completed = 3
+    canceled = 4
+    cancelled = 4
+
+    def __int__(self):
+        return self.value
+
+
+class ScheduledEventPrivacyLevel(Enum):
+    guild_only = 2
+
+    def __int__(self):
+        return self.value
+
+
+class ScheduledEventLocationType(Enum):
+    stage_instance = 1
+    voice = 2
+    external = 3
+
 
 T = TypeVar('T')
 

@@ -115,8 +115,6 @@ class Thread(Messageable, Hashable):
     invitable: :class:`bool`
         Whether non-moderators can add other non-moderators to this thread.
         This is always ``True`` for public threads.
-    archiver_id: Optional[:class:`int`]
-        The user's ID that archived this thread.
     auto_archive_duration: :class:`int`
         The duration in minutes until the thread is automatically archived due to inactivity.
         Usually a value of 60, 1440, 4320 and 10080.
@@ -141,7 +139,6 @@ class Thread(Messageable, Hashable):
         'locked',
         'archived',
         'invitable',
-        'archiver_id',
         'auto_archive_duration',
         'archive_timestamp',
     )
@@ -185,7 +182,6 @@ class Thread(Messageable, Hashable):
 
     def _unroll_metadata(self, data: ThreadMetadata):
         self.archived = data['archived']
-        self.archiver_id = _get_as_snowflake(data, 'archiver_id')
         self.auto_archive_duration = data['auto_archive_duration']
         self.archive_timestamp = parse_time(data['archive_timestamp'])
         self.locked = data.get('locked', False)
