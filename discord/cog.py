@@ -242,7 +242,7 @@ class Cog(metaclass=CogMeta):
 
         return self
 
-    def get_commands(self) -> List[ApplicationCommand]:
+    def get_application_commands(self) -> List[ApplicationCommand]:
         r"""
         Returns
         --------
