@@ -32,7 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -958,6 +958,19 @@ class SlashCommandGroup(ApplicationCommand):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
+
+    def walk_commands(self) -> Generator[SlashCommand, None, None]:
+        """An iterator that recursively walks through all slash commands in this group.
+
+        Yields
+        ------
+        :class:`.SlashCommand`
+            A slash command from the group.
+        """
+        for command in self.subcommands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
 
     def copy(self):
         """Creates a copy of this command group.
