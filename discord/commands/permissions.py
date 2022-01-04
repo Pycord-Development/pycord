@@ -23,7 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Union, Dict, Callable
+from ..cog import Cog
+
+from typing import Union, Dict, Callable, TypeVar
 
 __all__ = (
     "CommandPermission",
@@ -37,6 +39,8 @@ __all__ = (
     "cog_is_user",
     "cog_is_owner",
 )
+
+CogT = TypeVar('CogT', bound='Cog')
 
 class CommandPermission:
     """The class used in the application command decorators
@@ -139,7 +143,7 @@ def has_role(item: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def cog_has_role(parent, item: Union[int, str], guild_id: int = None):
+def cog_has_role(item: Union[int, str], guild_id: int = None):
     """Modified version of has_role that applies to all functions in a cog.
     
     .. versionadded:: 2.0
@@ -155,14 +159,21 @@ def cog_has_role(parent, item: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    # Loop through every command in the cog
-    for command in parent.__cog_commands__:
-        # Create __app_cmd_perms__
-        if not hasattr(command, "__app_cmd_perms__"):
-            command.__app_cmd_perms__ = []
-        
-        app_cmd_perm = CommandPermission(item, 1, True, guild_id)
-        command.__app_cmd_perms__.append(app_cmd_perm)  
+    def decorator(func: Callable):
+        parent: CogT = func.__annotations__["self"]
+
+        # Loop through every command in the cog
+        for command in parent.__cog_commands__:
+            # Create __app_cmd_perms__
+            if not hasattr(command, "__app_cmd_perms__"):
+                command.__app_cmd_perms__ = []
+            
+            app_cmd_perm = CommandPermission(item, 1, True, guild_id)
+            command.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
 
 def has_any_role(*items: Union[int, str], guild_id: int = None):
     """The method used to specify multiple application command role restrictions,
@@ -197,7 +208,7 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def cog_has_any_role(parent, *items: Union[int, str], guild_id: int = None):
+def cog_has_any_role(*items: Union[int, str], guild_id: int = None):
     """Modified version of has_any_role that applies to all functions in a cog.
     
     .. versionadded:: 2.0
@@ -213,15 +224,22 @@ def cog_has_any_role(parent, *items: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    for command in parent.__cog_commands__:
-        # Create __app_cmd_perms__
-        if not hasattr(command, '__app_cmd_perms__'):
-            command.__app_cmd_perms__ = []
+    def decorator(func: Callable):
+        parent: CogT = func.__annotations__["self"]
 
-        for item in items:
-            app_cmd_perm = CommandPermission(item, 1, True, guild_id)
+        for command in parent.__cog_commands__:
+            # Create __app_cmd_perms__
+            if not hasattr(command, '__app_cmd_perms__'):
+                command.__app_cmd_perms__ = []
 
-            command.__app_cmd_perms__.append(app_cmd_perm)
+            for item in items:
+                app_cmd_perm = CommandPermission(item, 1, True, guild_id)
+
+                command.__app_cmd_perms__.append(app_cmd_perm)
+        
+        return func
+
+    return decorator
 
 def is_user(user: int, guild_id: int = None):
     """The method used to specify application command user restrictions.
@@ -253,7 +271,7 @@ def is_user(user: int, guild_id: int = None):
 
     return decorator
 
-def cog_is_user(parent, user: int, guild_id: int = None):
+def cog_is_user(user: int, guild_id: int = None):
     """Modified version of is_user that applies to all functions in a cog.
     
     .. versionadded:: 2.0
@@ -268,14 +286,21 @@ def cog_is_user(parent, user: int, guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    for command in parent.__cog_commands__:
-        # Create __app_cmd_perms__
-        if not hasattr(command, '__app_cmd_perms__'):
-            command.__app_cmd_perms__ = []
+    def decorator(func: Callable):
+        parent: CogT = func.__annotations__["self"]
 
-        app_cmd_perm = CommandPermission(user, 2, True, guild_id)
+        for command in parent.__cog_commands__:
+            # Create __app_cmd_perms__
+            if not hasattr(command, '__app_cmd_perms__'):
+                command.__app_cmd_perms__ = []
 
-        command.__app_cmd_perms__.append(app_cmd_perm)
+            app_cmd_perm = CommandPermission(user, 2, True, guild_id)
+
+            command.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
 
 def is_owner(guild_id: int = None):
     """The method used to limit application commands exclusively
@@ -319,11 +344,18 @@ def cog_is_owner(parent, guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    for command in parent.__cog_commands__:
-        # Create __app_cmd_perms__
-        if not hasattr(command, '__app_cmd_perms__'):
-            command.__app_cmd_perms__ = []
+    def decorator(func: Callable):
+        parent: CogT = func.__annotations__["self"]
 
-        app_cmd_perm = CommandPermission("owner", 2, True, guild_id)
+        for command in parent.__cog_commands__:
+            # Create __app_cmd_perms__
+            if not hasattr(command, '__app_cmd_perms__'):
+                command.__app_cmd_perms__ = []
 
-        command.__app_cmd_perms__.append(app_cmd_perm)
+            app_cmd_perm = CommandPermission("owner", 2, True, guild_id)
+
+            command.__app_cmd_perms__.append(app_cmd_perm)
+
+        return func
+
+    return decorator
