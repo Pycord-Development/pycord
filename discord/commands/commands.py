@@ -375,6 +375,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
         return ' '.join(reversed(entries))
 
+    @property
     def qualified_name(self) -> str:
         """:class:`str`: Retrieves the fully qualified command name.
 
@@ -1110,6 +1111,7 @@ class ContextMenuCommand(ApplicationCommand):
         except StopIteration:
             pass
 
+    @property
     def qualified_name(self):
         return self.name
 
