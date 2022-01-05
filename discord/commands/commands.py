@@ -700,7 +700,8 @@ channel_type_map = {
     'TextChannel': ChannelType.text,
     'VoiceChannel': ChannelType.voice,
     'StageChannel': ChannelType.stage_voice,
-    'CategoryChannel': ChannelType.category
+    'CategoryChannel': ChannelType.category,
+    'Thread': ChannelType.public_thread
 }
 
 class ThreadOption:
