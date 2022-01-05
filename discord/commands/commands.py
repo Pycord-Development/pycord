@@ -32,7 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generic, List, Literal, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -703,6 +703,19 @@ channel_type_map = {
     'CategoryChannel': ChannelType.category
 }
 
+class ThreadOption:
+    def __init__(self, thread_type: Union[Literal["public"], Literal["private"], Literal["news"]]):
+        type_map = {
+            "public": ChannelType.public_thread,
+            "private": ChannelType.private_thread,
+            "news": ChannelType.news_thread
+        }
+        self._type = type_map[thread_type]
+    
+    @property
+    def __name__(self):
+        return 'ThreadOption'
+
 class Option:
     def __init__(
         self, input_type: Any, /, description: str = None, **kwargs
@@ -710,7 +723,7 @@ class Option:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
-        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
+        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
@@ -722,6 +735,9 @@ class Option:
                         input_type = (input_type,)
                     for i in input_type:
                         if i.__name__ == 'GuildChannel':
+                            continue
+                        if isinstance(i, ThreadOption):
+                            self.channel_types.append(i._type)
                             continue
 
                         channel_type = channel_type_map[i.__name__]
