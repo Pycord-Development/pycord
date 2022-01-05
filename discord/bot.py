@@ -130,8 +130,7 @@ class ApplicationCommandMixin:
                 command.id = cmd.id
                 self._application_commands[command.id] = command
                 break
-        else:
-            self._pending_application_commands.append(command)
+        self._pending_application_commands.append(command)
 
     def remove_application_command(
         self, command: ApplicationCommand
