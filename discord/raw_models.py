@@ -364,7 +364,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
         The ID of the user that subscribed/unsubscribed.
     guild: Optional[:class:`Guild`]
         The guild where the subscription/unsubscription happened.
-    entity_type: :class:`str`
+    event_type: :class:`str`
         Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
         the event called.
     """
