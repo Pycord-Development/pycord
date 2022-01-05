@@ -278,6 +278,7 @@ class Interaction:
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
         delete_after: Optional[float] = None,
@@ -306,6 +307,9 @@ class Interaction:
         files: List[:class:`File`]
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
@@ -339,6 +343,7 @@ class Interaction:
             content=content,
             file=file,
             files=files,
+            attachments=attachments,
             embed=embed,
             embeds=embeds,
             view=view,
