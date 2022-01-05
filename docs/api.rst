@@ -4335,6 +4335,14 @@ RawThreadDeleteEvent
 .. autoclass:: RawThreadDeleteEvent()
     :members:
 
+RawScheduledEventSubscription
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawScheduledEventSubscription
+
+.. autoclass:: RawScheduledEventSubscription()
+    :members:
+
 PartialWebhookGuild
 ~~~~~~~~~~~~~~~~~~~~
 
