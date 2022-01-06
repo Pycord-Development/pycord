@@ -124,6 +124,12 @@ class ApplicationCommandMixin:
 
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
+
+        for cmd in self.pending_application_commands:
+            if cmd == command:
+                command.id = cmd.id
+                self._application_commands[command.id] = command
+                break
         self._pending_application_commands.append(command)
 
     def remove_application_command(
@@ -483,25 +489,32 @@ class ApplicationCommandMixin:
         try:
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
-            self.dispatch("unknown_command", interaction)
-        else:
-            if interaction.type is InteractionType.auto_complete:
-                ctx = await self.get_autocomplete_context(interaction)
-                ctx.command = command
-                return await command.invoke_autocomplete_callback(ctx)
-            
-            ctx = await self.get_application_context(interaction)
-            ctx.command = command
-            self.dispatch("application_command", ctx)
-            try:
-                if await self.can_run(ctx, call_once=True):
-                    await ctx.command.invoke(ctx)
-                else:
-                    raise CheckFailure("The global check once functions failed.")
-            except DiscordException as exc:
-                await ctx.command.dispatch_error(ctx, exc)
+            for cmd in self.application_commands:
+                if (
+                    cmd.name == interaction.data["name"]
+                    and interaction.data["guild_id"] in cmd.guild_ids
+                ):
+                    command = cmd
+                    break
             else:
-                self.dispatch("application_command_completion", ctx)
+                return self.dispatch("unknown_command", interaction)
+        if interaction.type is InteractionType.auto_complete:
+            ctx = await self.get_autocomplete_context(interaction)
+            ctx.command = command
+            return await command.invoke_autocomplete_callback(ctx)
+        
+        ctx = await self.get_application_context(interaction)
+        ctx.command = command
+        self.dispatch("application_command", ctx)
+        try:
+            if await self.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self.dispatch("application_command_completion", ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -618,7 +631,7 @@ class ApplicationCommandMixin:
 
     def group(
         self,
-        name: str,
+        name: Optional[str] = None,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
@@ -629,8 +642,8 @@ class ApplicationCommandMixin:
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the group to create.
+        name: Optional[:class:`str`]
+            The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
         description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
@@ -644,7 +657,7 @@ class ApplicationCommandMixin:
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
-                name,
+                name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None else "No description provided"
