@@ -781,7 +781,7 @@ class Option:
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
-        self.value = value or name
+        self.value = value if value is not None else name
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
