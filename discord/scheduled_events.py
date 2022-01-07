@@ -84,6 +84,7 @@ class ScheduledEventLocation:
 
     def __init__(self, *, state: ConnectionState, value: Union[str, int, StageChannel, VoiceChannel]):
         self._state = state
+        self.value: Union[str, StageChannel, VoiceChannel]
         if isinstance(value, int):
             self.value = self._state._get_guild_channel({"channel_id": int(value)})
         else:
