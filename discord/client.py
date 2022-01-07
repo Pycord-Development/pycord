@@ -639,7 +639,7 @@ class Client:
         try:
             loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
             loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
-        except NotImplementedError:
+        except (NotImplementedError, RuntimeError):
             pass
 
         async def runner():
