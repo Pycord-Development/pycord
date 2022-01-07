@@ -377,11 +377,6 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.bug_hunter.value
 
     @flag_value
-    def mfa_sms(self):
-        """:class:`bool`: Returns ``True`` if the user has SMS recovery for 2FA enabled"""
-        return UserFlags.mfa_sms.value
-
-    @flag_value
     def premium_promo_dismissed(self):
         """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion"""
         return UserFlags.premium_promo_dismissed.value
@@ -412,11 +407,6 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.team_user.value
 
     @flag_value
-    def partner_or_verification_application(self):
-        """:class:`bool`: Relates to partner/verification applications."""
-        return UserFlags.partner_or_verification_application.value
-
-    @flag_value
     def system(self):
         """:class:`bool`: Returns ``True`` if the user is a system user (i.e. represents Discord officially)."""
         return UserFlags.system.value
@@ -425,16 +415,6 @@ class PublicUserFlags(BaseFlags):
     def bug_hunter_level_2(self):
         """:class:`bool`: Returns ``True`` if the user is a Bug Hunter Level 2"""
         return UserFlags.bug_hunter_level_2.value
-
-    @flag_value
-    def has_unread_urgent_messages(self):
-        """:class:`bool`: Returns ``True`` if the user has a unread urgent messages."""
-        return UserFlags.has_unread_urgent_messages.value
-
-    @flag_value
-    def underage_deleted(self):
-        """:class:`bool`: Returns ``True`` if the user has a pending deletion for being underage in DOB prompt"""
-        return UserFlags.underage_deleted.value
 
     @flag_value
     def verified_bot(self):
@@ -469,14 +449,6 @@ class PublicUserFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return UserFlags.bot_http_interactions.value
-
-    @flag_value
-    def spammer(self):
-        """:class:`bool`: Returns ``True`` if the user is disabled for being a spammer.
-
-        .. versionadded:: 2.0
-        """
-        return UserFlags.spammer.value
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
@@ -551,12 +523,11 @@ class Intents(BaseFlags):
     @classmethod
     def default(cls: Type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
-        except :attr:`presences`, :attr:`members`, and :attr:`guild_messages`.
+        except :attr:`presences` and :attr:`members`.
         """
         self = cls.all()
         self.presences = False
         self.members = False
-        self.guild_messages = False
         return self
 
     @flag_value
@@ -774,12 +745,11 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (both guilds and DMs)
         - :func:`on_reaction_clear` (both guilds and DMs)
 
-        Since this includes :attr:`guild_messages`, this intent is privileged. For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
-
         .. note::
 
-            Currently, this requires opting in explicitly via the developer portal as well.
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
             Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return (1 << 9) | (1 << 12)
 
@@ -808,12 +778,20 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
 
+        Without the :attr:`ApplicationFlags.gateway_message_content` intent enabled, the following fields are either an empty string or empty array:
+
+        - :attr:`Message.content`
+        - :attr:`Message.embeds`
+        - :attr:`Message.attachments`
+        - :attr:`Message.components`
+
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
 
         .. note::
 
-            Currently, this requires opting in explicitly via the developer portal as well.
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the messages.
             Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
         """
         return 1 << 9
 
@@ -948,6 +926,27 @@ class Intents(BaseFlags):
         This does not correspond to any attributes or classes in the library in terms of cache.
         """
         return 1 << 14
+    
+    @flag_value
+    def scheduled_events(self):
+        """:class:`bool`: Whether "scheduled event" related events are enabled.
+
+        This corresponds to the following events:
+        
+        - :func:`on_scheduled_event_create`
+        - :func:`on_scheduled_event_update`
+        - :func:`on_scheduled_event_delete`
+        - :func:`on_scheduled_event_user_add`
+        - :func:`on_raw_scheduled_event_user_add`
+        - :func:`on_scheduled_event_user_remove`
+        - :func:`on_raw_scheduled_event_user_remove`
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :class:`ScheduledEvent`
+        - :meth:`Guild.get_scheduled_event`
+        """
+        return 1 << 16
 
 
 @fill_with_flags()

@@ -346,8 +346,8 @@ msgid "Running the Client"
 msgstr "クライアントの実行"
 
 #: ../../migrating_to_async.rst:273
-msgid "In earlier versions of discord.py, ``client.run()`` was a blocking call to the main thread that called it. In v0.10.0 it is still a blocking call but it handles the event loop for you. However, in order to do that you must pass in your credentials to :meth:`Client.run`."
-msgstr "以前のバージョンのdiscord.pyでは ``client.run()`` は呼び出したメインスレッドをブロッキングするブロック付き呼び出しでした。v0.10.0でも未だブロック付き呼び出しですが、イベントループで処理を行います。ただし、それを行うためには認証情報を :meth:`Client.run` に渡す必要があります。"
+msgid "In earlier versions of pycord, ``client.run()`` was a blocking call to the main thread that called it. In v0.10.0 it is still a blocking call but it handles the event loop for you. However, in order to do that you must pass in your credentials to :meth:`Client.run`."
+msgstr "以前のバージョンのpycordでは ``client.run()`` は呼び出したメインスレッドをブロッキングするブロック付き呼び出しでした。v0.10.0でも未だブロック付き呼び出しですが、イベントループで処理を行います。ただし、それを行うためには認証情報を :meth:`Client.run` に渡す必要があります。"
 
 #: ../../migrating_to_async.rst:277
 msgid "Basically, before:"

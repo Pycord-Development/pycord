@@ -40,6 +40,7 @@ __all__ = (
     'AuditLogIterator',
     'GuildIterator',
     'MemberIterator',
+    'ScheduledEventSubscribersIterator',
 )
 
 if TYPE_CHECKING:
@@ -269,7 +270,6 @@ class HistoryIterator(_AsyncIterator['Message']):
     """
 
     def __init__(self, messageable, limit, before=None, after=None, around=None, oldest_first=None):
-
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):
@@ -525,7 +525,6 @@ class GuildIterator(_AsyncIterator['Guild']):
     """
 
     def __init__(self, bot, limit, before=None, after=None):
-
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):
@@ -752,3 +751,63 @@ class ArchivedThreadIterator(_AsyncIterator['Thread']):
     def create_thread(self, data: ThreadPayload) -> Thread:
         from .threads import Thread
         return Thread(guild=self.guild, state=self.guild._state, data=data)
+
+
+class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]]):
+    def __init__(self, event, limit, with_member=False, before=None, after=None):
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        self.event = event
+        self.limit = limit
+        self.with_member = with_member
+        self.before = before
+        self.after = after
+
+        self.subscribers = asyncio.Queue()
+        self.get_subscribers = self.event._state.http.get_scheduled_event_users
+
+    async def next(self) -> Union[User, Member]:
+        if self.subscribers.empty():
+            await self.fill_subs()
+
+        try:
+            return self.subscribers.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 100:
+            r = 100
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    def member_from_payload(self, data):
+        from .member import Member
+
+        member = data.pop('member', None)
+        member['user'] = data
+
+        return Member(data=member, guild=self.event.guild, state=self.event._state)
+
+    def user_from_payload(self, data):
+        from .user import User
+
+        return User(state=self.event._state, data=data)
+
+    async def fill_subs(self):
+        if self._get_retrieve():
+            before = self.before.id if self.before else None
+            after = self.after.id if self.after else None
+            data = await self.get_subscribers(guild_id=self.event.guild.id, event_id=self.event.id, limit=self.retrieve, with_member=self.with_member, before=before, after=after)
+
+            for element in reversed(data):
+                if 'member' in element:
+                    self.subscribers.put(self.member_from_payload(element))
+                else:
+                    self.subscribers.put(self.user_from_payload(element))

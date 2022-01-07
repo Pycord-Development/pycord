@@ -1,7 +1,7 @@
 pycord
-==========
+======
 
-.. image:: https://discord.com/api/guilds/881207955029110855/embed.png
+.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord
    :target: https://pycord.dev/discord
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg
@@ -17,7 +17,7 @@ pycord
 A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 Key Features
--------------
+------------
 
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
@@ -49,6 +49,15 @@ Otherwise to get voice support you should run the following command:
     # Windows
     py -3 -m pip install -U py-cord[voice]
 
+To install additional packages for speedup, run the following command:
+
+.. code:: sh
+
+    # Linux/macOS
+    python3 -m pip install -U "py-cord[speed]"
+    # Windows
+    py -3 -m pip install -U py-cord[speed]
+
 
 To install the development version, do the following:
 
@@ -60,9 +69,11 @@ To install the development version, do the following:
 
 
 Optional Packages
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
+* `aiodns <https://pypi.org/project/aiodns/>`__, `Brotli <https://pypi.org/project/Brotli/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
+* `orjson <https://pypi.org/project/orjson/>`__ (for json speedup)
 
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
@@ -70,7 +81,7 @@ Please note that while installing voice support on Linux, you must install the f
 * python-dev (e.g. ``python3.6-dev`` for Python 3.6)
 
 Quick Example
---------------
+-------------
 
 .. code:: py
 
@@ -89,8 +100,8 @@ Quick Example
         
     bot.run("token")
 
-Normal Commands Example
-~~~~~~~~~~~~~
+Traditional Commands Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: py
 
@@ -110,9 +121,9 @@ You can find more examples in the examples directory.
 Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
 
 Links
-------
+-----
 
 - `Documentation <https://docs.pycord.dev/en/master/index.html>`_
-- `Official Discord Server <https://pycord.dev/discord>`_
-- `Discord Developers <https://discord.gg/discord-developers>`_
-- `Discord API <https://discord.gg/discord-api>`_
+- `Our Official Discord Server <https://pycord.dev/discord>`_
+- `Official Discord Developers Server <https://discord.gg/discord-developers>`_
+- `Unofficial Discord API Server <https://discord.gg/discord-api>`_
