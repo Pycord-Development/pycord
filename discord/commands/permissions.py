@@ -112,6 +112,49 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
 
     return decorator
 
+def cog_permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
+    """Modified version of permission that applies to all functions in a cog.
+    
+    This method is meant to be used as a decorator.
+
+    .. versionadded:: 2.0
+    
+    Parameters
+    -----------
+    role_id: :class:`int`
+        An integer which represents the id of the role that the
+        permission may be tied to.
+    user_id: :class:`int`
+        An integer which represents the id of the user that the
+        permission may be tied to.
+    permission: :class:`bool`
+        A boolean representing the permission's value.
+    guild_id: :class:`int`
+        The integer which represents the id of the guild that the
+        permission may be tied to.
+    """
+    def decorator(func: Callable):
+        parent: CogT = func.__annotations__["self"]
+
+        if not role_id is None:
+            app_cmd_perm = CommandPermission(role_id, 1, permission, guild_id)
+        elif not user_id is None:
+            app_cmd_perm = CommandPermission(user_id, 2, permission, guild_id)
+        else:
+            raise ValueError("role_id or user_id must be specified!")
+
+        # Loop through every command in the cog
+        for command in parent.__cog_commands__:
+            # Create __app_cmd_perms__
+            if not hasattr(command, "__app_cmd_perms__"):
+                command.__app_cmd_perms__ = []
+
+            command.__app_cmd_perms__.append(app_cmd_perm)
+        
+        return func
+
+    return decorator
+
 def has_role(item: Union[int, str], guild_id: int = None):
     """The method used to specify application command role restrictions.
     
@@ -146,12 +189,12 @@ def has_role(item: Union[int, str], guild_id: int = None):
 def cog_has_role(item: Union[int, str], guild_id: int = None):
     """Modified version of has_role that applies to all functions in a cog.
     
+    This method is meant to be used as a decorator.
+
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent
-        The parent cog where all of the commands should have this permission set.
     item: Union[:class:`int`, :class:`str`]
         An integer or string that represent the id or name of the role 
         that the permission is tied to.
@@ -211,12 +254,12 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 def cog_has_any_role(*items: Union[int, str], guild_id: int = None):
     """Modified version of has_any_role that applies to all functions in a cog.
     
+    This method is meant to be used as a decorator.
+
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent
-        The parent cog where all of the commands should have this permission set.
     *items: Union[:class:`int`, :class:`str`]
         The integers or strings that represent the ids or names of the roles
         that the permission is tied to.
@@ -274,12 +317,12 @@ def is_user(user: int, guild_id: int = None):
 def cog_is_user(user: int, guild_id: int = None):
     """Modified version of is_user that applies to all functions in a cog.
     
+    This method is meant to be used as a decorator.
+
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent
-        The parent cog where all of the commands should have this permission set.
     user: :class:`int`
         An integer that represent the id of the user that the permission is tied to.
     guild_id: :class:`int`
@@ -331,15 +374,15 @@ def is_owner(guild_id: int = None):
 
     return decorator
 
-def cog_is_owner(parent, guild_id: int = None):
+def cog_is_owner(guild_id: int = None):
     """Modified version of is_owner that applies to all functions in a cog.
     
+    This method is meant to be used as a decorator.
+
     .. versionadded:: 2.0
     
     Parameters
     -----------
-    parent
-        The parent cog where all of the commands should have this permission set.
     guild_id: :class:`int`
         The integer which represents the id of the guild that the
         permission may be tied to.
