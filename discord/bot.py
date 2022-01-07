@@ -127,7 +127,7 @@ class ApplicationCommandMixin:
 
         for cmd in self.pending_application_commands:
             if cmd == command:
-                command.id = cmd.id
+                command.id = int(cmd.id)
                 self._application_commands[command.id] = command
                 break
         self._pending_application_commands.append(command)
