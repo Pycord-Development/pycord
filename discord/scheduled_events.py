@@ -59,13 +59,13 @@ class ScheduledEventLocation:
 
     Setting the ``value`` to its corresponding type will set the location type automatically:
 
-    +------------------------+---------------------------------------------+
-    |     Type of Input      |                Location Type                |
-    +========================+=============================================+
-    | :class:`StageChannel`: | :attr:`ScheduledEventLocationType.external` |
-    | :class:`VoiceChannel`: | :attr:`ScheduledEventLocationType.voice`    |
-    | :class:`str`:          | :attr:`ScheduledEventLocationType.external` |
-    +------------------------+---------------------------------------------+
+    +------------------------+---------------------------------------------------+
+    |     Type of Input      |                   Location Type                   |
+    +========================+===================================================+
+    | :class:`StageChannel`: | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`: | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`:          | :attr:`ScheduledEventLocationType.external`       |
+    +------------------------+---------------------------------------------------+
 
     .. versionadded:: 2.0
 
