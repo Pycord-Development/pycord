@@ -32,7 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -102,6 +102,8 @@ def hooked_wrapped_callback(command, ctx, coro):
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
+            if hasattr(command, '_max_concurrency') and command._max_concurrency is not None:
+                await command._max_concurrency.release(ctx)
             await command.call_after_hooks(ctx)
         return ret
     return wrapped
@@ -779,7 +781,7 @@ class Option:
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
-        self.value = value or name
+        self.value = value if value is not None else name
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
@@ -956,6 +958,19 @@ class SlashCommandGroup(ApplicationCommand):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
+
+    def walk_commands(self) -> Generator[SlashCommand, None, None]:
+        """An iterator that recursively walks through all slash commands in this group.
+
+        Yields
+        ------
+        :class:`.SlashCommand`
+            A slash command from the group.
+        """
+        for command in self.subcommands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
 
     def copy(self):
         """Creates a copy of this command group.

@@ -80,7 +80,7 @@ class ScheduledEventLocation:
     def __init__(self, *, state: ConnectionState, location: Union[str, int, StageChannel, VoiceChannel]):
         self._state = state
         if isinstance(location, int):
-            self.value = self._state._get_channel(int(location))
+            self.value = self._state._get_guild_channel({"channel_id": int(location)})
         else:
             self.value = location
 
@@ -194,7 +194,7 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get('entity_metadata')
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=channel_id)
+            self.location = ScheduledEventLocation(state=state, location=int(channel_id))
         else:
             self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
 
@@ -296,16 +296,16 @@ class ScheduledEvent(Hashable):
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
 
-        if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, location=location)
-
         if location is not MISSING:
-            if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
+            if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
+                location = ScheduledEventLocation(state=self._state, location=location)
+
+            if location.type is ScheduledEventLocationType.external:
+                payload["channel_id"] = None
+                payload["entity_metadata"] = {"location": str(location.value)}
+            else:
                 payload["channel_id"] = location.value.id
                 payload["entity_metadata"] = None
-            else:
-                payload["channel_id"] = None
-                payload["entity_metadata"] = {"location":str(location.value)}
 
         location = location if location is not MISSING else self.location
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
