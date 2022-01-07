@@ -71,7 +71,7 @@ class ScheduledEventLocation:
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
