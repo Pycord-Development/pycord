@@ -562,7 +562,7 @@ class InteractionResponse:
         if embed is not MISSING and embeds is not MISSING:
             raise TypeError('cannot mix embed and embeds keyword arguments')
 
-        if embed is not MISSING:
+        if embed is not MISSING and embed is not None:
             embeds = [embed]
 
         if embeds:
@@ -576,7 +576,7 @@ class InteractionResponse:
         if ephemeral:
             payload['flags'] = 64
 
-        if view is not MISSING:
+        if view is not MISSING and view is not None:
             payload['components'] = view.to_components()
 
         state = self._parent._state
@@ -620,7 +620,7 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not MISSING:
+        if view is not MISSING and view is not None:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
@@ -713,7 +713,6 @@ class InteractionResponse:
                 payload['components'] = []
             else:
                 payload['components'] = view.to_components()
-
         adapter = async_context.get()
         await adapter.create_interaction_response(
             parent.id,
