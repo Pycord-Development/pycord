@@ -102,7 +102,7 @@ def hooked_wrapped_callback(command, ctx, coro):
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
-            if command._max_concurrency is not None:
+            if hasattr(command, '_max_concurrency') and command._max_concurrency is not None:
                 await command._max_concurrency.release(ctx)
             await command.call_after_hooks(ctx)
         return ret
