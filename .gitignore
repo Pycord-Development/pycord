@@ -2,8 +2,10 @@
 *.py[cod]
 *.log
 *.egg-info
-venv/
-.venv/
+*.pem
+.env
+venv
+.venv
 docs/_build
 docs/crowdin.py
 *.buildinfo
