@@ -584,7 +584,7 @@ class SlashCommand(ApplicationCommand):
         for o in options:
             p_name, p_obj = next(params)
             p_obj = p_obj.annotation
-            if (isinstance(o._raw_type, tuple) and not p_obj == o.input_type) or not issubclass(p_obj, o._raw_type):
+            if not (isinstance(o._raw_type, tuple) and p_obj == Union[o._raw_type]) and not issubclass(p_obj, o._raw_type):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
         
