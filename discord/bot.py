@@ -493,7 +493,7 @@ class ApplicationCommandMixin:
             for cmd in self.application_commands:
                 if (
                     cmd.name == interaction.data["name"]
-                    and interaction.data["guild_id"] in cmd.guild_ids
+                    and interaction.data.get("guild_id", None) in cmd.guild_ids
                 ):
                     command = cmd
                     break
