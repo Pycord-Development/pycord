@@ -486,11 +486,10 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
-
-        # This is for if the options are defined in kwargs, since it causes an error later on
-        if kwargs.get('options'):
-            self._match_option_param_names(params)
+        if (kwop := kwargs.get('options', None)):
+            self.options: List[Option] = self._match_option_param_names(params, kwop)
+        else:
+            self.options: List[Option] = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -509,35 +508,6 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def _match_option_param_names(self, params) -> None: 
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp) 
-        params = iter(params.items())
-
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(
-                f'Callback for {self.name} command is missing "ctx" parameter.'
-            )
-
-        i = 0
-        for p_name, p_obj in params:
-            option = p_obj.annotation
-            
-            #if option == inspect.Parameter.empty:
-            #    option = str
-
-            #if isinstance(option, Option):
-            #    option = option.input_type
-
-            if option == self.options[i].input_type:
-                self.options[i]._parameter_name = p_name
-
-            i += 1
 
     def _parse_options(self, params) -> List[Option]:
         final_options = []
@@ -594,6 +564,31 @@ class SlashCommand(ApplicationCommand):
             final_options.append(option)
 
         return final_options
+
+
+    def _match_option_param_names(self, params, options):
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params.items())
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
+
+        for o in options:
+            p_name, p_obj = next(params)
+            p_obj = p_obj.annotation
+            if (isinstance(o._raw_type, tuple) and not p_obj == o.input_type) or not issubclass(p_obj, o._raw_type):
+                raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
+            o._parameter_name = p_name
+        
+        return options
 
     def _is_typing_union(self, annotation):
         return (
@@ -745,6 +740,7 @@ class Option:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
+        self._raw_type = input_type
         self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
