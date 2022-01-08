@@ -488,6 +488,11 @@ class SlashCommand(ApplicationCommand):
         params = self._get_signature_parameters()
         self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
 
+        # This is for if the options are defined in kwargs, since it causes an error later on
+        if kwargs.get('options'):
+            for op in self.options:
+                op._parameter_name = op.name
+
         try:
             checks = func.__commands_checks__
             checks.reverse()
