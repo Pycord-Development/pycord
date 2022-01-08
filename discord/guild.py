@@ -3264,7 +3264,7 @@ class Guild(Hashable):
         payload["privacy_level"] = int(privacy_level)
 
         if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, location=location)
+            location = ScheduledEventLocation(state=self._state, value=location)
 
         payload["entity_type"] = location.type.value
 

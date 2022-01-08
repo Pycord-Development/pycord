@@ -200,9 +200,9 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get('entity_metadata')
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=int(channel_id))
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
+            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
 
     def __str__(self) -> str:
         return self.name
@@ -304,7 +304,7 @@ class ScheduledEvent(Hashable):
 
         if location is not MISSING:
             if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
-                location = ScheduledEventLocation(state=self._state, location=location)
+                location = ScheduledEventLocation(state=self._state, value=location)
 
             if location.type is ScheduledEventLocationType.external:
                 payload["channel_id"] = None
