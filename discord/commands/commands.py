@@ -528,11 +528,11 @@ class SlashCommand(ApplicationCommand):
         for p_name, p_obj in params:
             option = p_obj.annotation
             
-            if option == inspect.Parameter.empty:
-                option = str
+            #if option == inspect.Parameter.empty:
+            #    option = str
 
-            if isinstance(option, Option):
-                option = option.input_type
+            #if isinstance(option, Option):
+            #    option = option.input_type
 
             if option == self.options[i].input_type:
                 self.options[i]._parameter_name = p_name
