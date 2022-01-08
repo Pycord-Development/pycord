@@ -3908,11 +3908,6 @@ ScheduledEvent
 .. autoclass:: ScheduledEvent()
     :members:
 
-ScheduledEventLocation
-~~~~~~~~~~~~~~~~~~~~~~~
-
-..attributestable:: ScheduledEventLocation
-
 .. autoclass:: ScheduledEventLocation()
     :members:
 
