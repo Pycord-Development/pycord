@@ -490,8 +490,7 @@ class SlashCommand(ApplicationCommand):
 
         # This is for if the options are defined in kwargs, since it causes an error later on
         if kwargs.get('options'):
-            for op in self.options:
-                op._parameter_name = op.name
+            self._match_option_param_names(params)
 
         try:
             checks = func.__commands_checks__
@@ -510,6 +509,35 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
+    def _match_option_param_names(self, params) -> None: 
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp) 
+        params = iter(params.items())
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
+
+        i = 0
+        for p_name, p_obj in params:
+            option = p_obj.annotation
+            
+            if option == inspect.Parameter.empty:
+                option = str
+
+            if isinstance(option, Option):
+                option = option.input_type
+
+            if option == self.options[i].input_type:
+                self.options[i]._parameter_name = p_name
+
+            i += 1
 
     def _parse_options(self, params) -> List[Option]:
         final_options = []
