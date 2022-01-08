@@ -756,6 +756,9 @@ class WebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
+        if attachments is MISSING:
+            attachments = self.attachments or MISSING
+
         return await self._state._webhook.edit_message(
             self.id,
             content=content,
