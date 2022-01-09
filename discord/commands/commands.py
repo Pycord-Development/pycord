@@ -730,12 +730,12 @@ class Option:
                         self.channel_types.append(channel_type)
                 input_type = _type
         self.input_type = input_type
-        self.required: bool = kwargs.pop("required", True)
+        self.default = kwargs.pop("default", None)
+        self.required: bool = kwargs.pop("required", True) if self.default is None else False
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
-        self.default = kwargs.pop("default", None)
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
