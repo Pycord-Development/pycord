@@ -581,13 +581,26 @@ class SlashCommand(ApplicationCommand):
                 f'Callback for {self.name} command is missing "ctx" parameter.'
             )
 
+        check_annotations = [
+            lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
+            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # union types
+            lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
+            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
+        ]
         for o in options:
             p_name, p_obj = next(params)
             p_obj = p_obj.annotation
-            if not (isinstance(o._raw_type, tuple) and p_obj == Union[o._raw_type]) and not issubclass(p_obj, o._raw_type):
+
+            if not any(c(o, p_obj) for c in check_annotations):       
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
-        
+
+        left_out_params = OrderedDict()
+        left_out_params[''] = ''  # bypass first iter (ctx)
+        for k, v in params:
+            left_out_params[k] = v
+        options.extend(self._parse_options(left_out_params))
+
         return options
 
     def _is_typing_union(self, annotation):
