@@ -136,6 +136,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             max_concurrency = kwargs.get('max_concurrency')
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
+        self.extras: Dict[str, Any] = kwargs.get('extras', {})
 
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
