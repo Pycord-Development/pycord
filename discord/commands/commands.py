@@ -31,7 +31,7 @@ import functools
 import inspect
 import re
 import types
-from collections import OrderedDic
+from collections import OrderedDict
 from typing import Any, Callable, Dict, Generator, Generic, List, Literal, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
