@@ -14,16 +14,17 @@ Pycord
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
-What Happened to Discord.py?
-----------------------------
-Rapptz, also known as Danny, the maintainer and core developer of discord.py will no longer be updating it. Here's his [Full explanation](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1) and an [FAQ](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1#FAQ).
-
 What is Pycord?
 ---------------
 Pycord ("py-cord" on PyPI) is a maintained fork of discord.py which will be updated with new changes to the API. Pycord was created by a group of developers that want to continue developing this Python module.
 
 
 Pycord v1.7.3 is the same as discord.py v1.7.3, Pycord v2.0 will support everything in discord.py v2.0.0a as well as slash commands, context menus, scheduled events, timeouts, and other newer features of the discord API.
+
+
+What Happened to Discord.py?
+----------------------------
+Rapptz, also known as Danny, the maintainer and core developer of discord.py will no longer be updating it. Here's his `Full explanation <https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1>`__ and an `FAQ <https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1#FAQ>`__.
 
 Key Features
 ------------
