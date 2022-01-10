@@ -30,19 +30,18 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union, overload
+from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union
 
 import discord.abc
-
 from . import utils
-from .asset import Asset
-from .utils import MISSING
-from .user import BaseUser, User, _UserTag
 from .activity import create_activity, ActivityTypes
-from .permissions import Permissions
-from .enums import Status, try_enum
+from .asset import Asset
 from .colour import Colour
+from .enums import Status, try_enum
 from .object import Object
+from .permissions import Permissions
+from .user import BaseUser, User, _UserTag
+from .utils import MISSING
 
 __all__ = (
     'VoiceState',
@@ -50,7 +49,6 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from .asset import Asset
     from .channel import DMChannel, VoiceChannel, StageChannel
     from .flags import PublicUserFlags
     from .guild import Guild
@@ -620,6 +618,15 @@ class Member(discord.abc.Messageable, _UserTag):
         """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
+    @property
+    def timed_out(self) -> bool:
+        """bool: Returns whether the member is timed out.
+
+        .. versionadded:: 2.0
+        """
+        return self.communication_disabled_until is not None and self.communication_disabled_until > datetime.datetime.now(datetime.timezone.utc)
+
+
     async def ban(
         self,
         *,
@@ -776,13 +783,12 @@ class Member(discord.abc.Messageable, _UserTag):
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
             return Member(data=data, guild=self.guild, state=self._state)
 
-    async def timeout(self, until: Optional[datetime.datetime], reason: str = None) -> None:
+    async def timeout(self, until: Optional[datetime.datetime], *, reason: Optional[str] = None) -> None:
         """|coro|
 
-        Timeouts a member from the guild for the set duration.
+        Applies a timeout to a member in the guild until a set datetime.
 
-        You must have the :attr:`~Permissions.moderate_members` permission to
-        timeout a member.
+        You must have the :attr:`~Permissions.moderate_members` permission to timeout a member.
 
         Parameters
         -----------
@@ -800,7 +806,32 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         await self.edit(communication_disabled_until=until, reason=reason)
 
-    async def remove_timeout(self, reason: str = None) -> None:
+    async def timeout_for(self, duration: datetime.timedelta, *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Applies a timeout to a member in the guild for a set duration. A shortcut method for :meth:`~.timeout`, and
+        equivalent to ``timeout(until=datetime.utcnow() + duration, reason=reason)``.
+
+        You must have the :attr:`~Permissions.moderate_members` permission to
+        timeout a member.
+
+        Parameters
+        -----------
+        duration: :class:`datetime.timedelta`
+            The duration to timeout the member for.
+        reason: Optional[:class:`str`]
+            The reason for doing this action. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to timeout members.
+        HTTPException
+            An error occurred doing the request.
+        """
+        await self.timeout(datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason)
+
+    async def remove_timeout(self, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Removes the timeout from a member.

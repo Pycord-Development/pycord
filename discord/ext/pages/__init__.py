@@ -1,5 +1,5 @@
 """
-discord.ext.menus
+discord.ext.pages
 ~~~~~~~~~~~~~~~~~~~~~
 An extension module to provide useful menu options.
 

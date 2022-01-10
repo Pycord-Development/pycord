@@ -115,8 +115,6 @@ class Thread(Messageable, Hashable):
     invitable: :class:`bool`
         Whether non-moderators can add other non-moderators to this thread.
         This is always ``True`` for public threads.
-    archiver_id: Optional[:class:`int`]
-        The user's ID that archived this thread.
     auto_archive_duration: :class:`int`
         The duration in minutes until the thread is automatically archived due to inactivity.
         Usually a value of 60, 1440, 4320 and 10080.
@@ -141,7 +139,6 @@ class Thread(Messageable, Hashable):
         'locked',
         'archived',
         'invitable',
-        'archiver_id',
         'auto_archive_duration',
         'archive_timestamp',
     )
@@ -185,7 +182,6 @@ class Thread(Messageable, Hashable):
 
     def _unroll_metadata(self, data: ThreadMetadata):
         self.archived = data['archived']
-        self.archiver_id = _get_as_snowflake(data, 'archiver_id')
         self.auto_archive_duration = data['auto_archive_duration']
         self.archive_timestamp = parse_time(data['archive_timestamp'])
         self.locked = data.get('locked', False)
@@ -530,6 +526,7 @@ class Thread(Messageable, Hashable):
         invitable: bool = MISSING,
         slowmode_delay: int = MISSING,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
+        reason: Optional[str] = None
     ) -> Thread:
         """|coro|
 
@@ -559,6 +556,8 @@ class Thread(Messageable, Hashable):
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this thread, in seconds.
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
+        reason: Optional[:class:`str`]
+            The reason for editing this thread. Shows up on the audit log.
 
         Raises
         -------
@@ -586,9 +585,39 @@ class Thread(Messageable, Hashable):
         if slowmode_delay is not MISSING:
             payload['rate_limit_per_user'] = slowmode_delay
 
-        data = await self._state.http.edit_channel(self.id, **payload)
+        data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
+    
+    async def archive(self, locked: bool = MISSING) -> Thread:
+        """|coro|
+
+        Archives the thread. This is a shorthand of :meth:`.edit`.
+
+        Parameters
+        ------------
+        locked: :class:`bool`
+            Whether to lock the thread on archive, Defaults to ``False``.
+        
+
+        Returns
+        --------
+        :class:`.Thread`
+            The updated thread.
+        """
+        return await self.edit(archived=True, locked=locked)
+    
+    async def unarchive(self) -> Thread:
+        """|coro|
+
+        Unarchives the thread. This is a shorthand of :meth:`.edit`.
+
+        Returns
+        --------
+        :class:`.Thread`
+            The updated thread.
+        """
+        return await self.edit(archived=False)
 
     async def join(self):
         """|coro|

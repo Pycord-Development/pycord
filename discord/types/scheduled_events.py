@@ -1,7 +1,6 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,52 +23,41 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import List, Literal, Optional, TypedDict
 
+from typing import TypedDict, Optional, Literal, Union
+from datetime import datetime
+
+from .guild import Guild
+from .user import User
 from .snowflake import Snowflake
+from .channel import StageChannel, VoiceChannel
+from .user import User
+from .member import Member
 
-ThreadType = Literal[10, 11, 12]
-ThreadArchiveDuration = Literal[60, 1440, 4320, 10080]
+
+ScheduledEventStatus = Literal[1, 2, 3, 4]
+ScheduledEventLocationType = Literal[1, 2, 3]
+ScheduledEventPrivacyLevel = Literal[2]
 
 
-class ThreadMember(TypedDict):
+class ScheduledEventLocation(TypedDict):
+    value: Union[StageChannel, VoiceChannel, str]
+    type: ScheduledEventLocationType
+
+
+class ScheduledEvent(TypedDict):
     id: Snowflake
-    user_id: Snowflake
-    join_timestamp: str
-    flags: int
-
-
-class _ThreadMetadataOptional(TypedDict, total=False):
-    locked: bool
-    invitable: bool
-
-
-class ThreadMetadata(_ThreadMetadataOptional):
-    archived: bool
-    auto_archive_duration: ThreadArchiveDuration
-    archive_timestamp: str
-
-
-class _ThreadOptional(TypedDict, total=False):
-    member: ThreadMember
-    last_message_id: Optional[Snowflake]
-    last_pin_timestamp: Optional[Snowflake]
-
-
-class Thread(_ThreadOptional):
-    id: Snowflake
-    guild_id: Snowflake
-    parent_id: Snowflake
-    owner_id: Snowflake
+    guild: Guild
     name: str
-    type: ThreadType
-    member_count: int
-    message_count: int
-    rate_limit_per_user: int
-    thread_metadata: ThreadMetadata
+    description: str
+    #image: Optional[str]
+    start_time: datetime
+    end_time: Optional[datetime]
+    status: ScheduledEventStatus
+    subscriber_count: Optional[int]
+    creator_id: Snowflake
+    creator: Optional[User]
+    location: ScheduledEventLocation
 
-
-class ThreadPaginationPayload(TypedDict):
-    threads: List[Thread]
-    members: List[ThreadMember]
-    has_more: bool
+class ScheduledEventSubscriber(User):
+    member: Optional[Member]

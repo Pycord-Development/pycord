@@ -41,9 +41,9 @@ with open("README.rst") as f:
     readme = f.read()
 
 extras_require = {
-    "voice": ["PyNaCl>=1.3.0,<1.5"],
+    "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
-        "sphinx==4.3.1",
+        "sphinx==4.3.2",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
     ],
@@ -63,7 +63,7 @@ packages = [
     "discord.commands",
     "discord.ext.commands",
     "discord.ext.tasks",
-    "discord.ext.menus",
+    "discord.ext.pages",
 ]
 
 

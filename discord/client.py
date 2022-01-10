@@ -639,7 +639,7 @@ class Client:
         try:
             loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
             loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
-        except NotImplementedError:
+        except (NotImplementedError, RuntimeError):
             pass
 
         async def runner():
@@ -904,6 +904,22 @@ class Client:
         """
         for guild in self.guilds:
             yield from guild.members
+
+    async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
+        """Looks up a user in the user cache or fetches if not found.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        ---------
+        Optional[:class:`~discord.User`]
+            The user or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
 
     # listeners/waiters
 
@@ -1321,7 +1337,7 @@ class Client:
 
     # Invite management
 
-    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True) -> Invite:
+    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, event_id: Optional[int] = None) -> Invite:
         """|coro|
 
         Gets an :class:`.Invite` from a discord.gg URL or ID.
@@ -1345,6 +1361,13 @@ class Client:
             :attr:`.Invite.expires_at` field.
 
             .. versionadded:: 2.0
+        event_id: Optional[:class:`int`]
+            The ID of the scheduled event to be associated with the event.
+
+            See :meth:`Invite.set_scheduled_event` for more
+            info on event invite linking.
+
+            ..versionadded:: 2.0
 
         Raises
         -------
@@ -1360,7 +1383,7 @@ class Client:
         """
 
         invite_id = utils.resolve_invite(url)
-        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration)
+        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=event_id)
         return Invite.from_incomplete(state=self._connection, data=data)
 
     async def delete_invite(self, invite: Union[Invite, str]) -> None:

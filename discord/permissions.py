@@ -132,10 +132,10 @@ class Permissions(BaseFlags):
         """Returns ``True`` if the permissions on other are a strict superset of those on self."""
         return self.is_superset(other) and self != other
 
-    __le__ = is_subset
-    __ge__ = is_superset
-    __lt__ = is_strict_subset
-    __gt__ = is_strict_superset
+    __le__: Callable[[Permissions], bool] = is_subset
+    __ge__: Callable[[Permissions], bool] = is_superset
+    __lt__: Callable[[Permissions], bool] = is_strict_subset
+    __gt__: Callable[[Permissions], bool] = is_strict_superset
 
     @classmethod
     def none(cls: Type[P]) -> P:
@@ -148,7 +148,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(0b111111111111111111111111111111111111111)
+        return cls(-1)
 
     @classmethod
     def all_channel(cls: Type[P]) -> P:
@@ -485,6 +485,14 @@ class Permissions(BaseFlags):
         """:class:`bool`: Returns ``True`` if a user can use slash commands.
 
         .. versionadded:: 1.7
+        """
+        return 1 << 31
+    
+    @make_permission_alias('use_slash_commands')
+    def use_application_commands(self) -> int:
+        """:class:`bool`: An alias for :attr:`use_slash_commands`.
+
+        .. versionadded:: 2.0
         """
         return 1 << 31
 

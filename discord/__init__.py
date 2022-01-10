@@ -64,6 +64,7 @@ from .bot import *
 from .commands import *
 from .cog import Cog
 from .welcome_screen import *
+from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 
 
 class VersionInfo(NamedTuple):

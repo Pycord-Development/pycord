@@ -27,7 +27,7 @@ from __future__ import annotations
 import discord
 from ...cog import Cog
 
-from typing import Any, Callable, Generator, TYPE_CHECKING, TypeVar, Type
+from typing import Any, Callable, Generator, TYPE_CHECKING, TypeVar, Type, Union
 
 from ...commands import ApplicationCommand
 
@@ -67,3 +67,16 @@ class Cog(Cog):
                     yield command
                     if isinstance(command, GroupMixin):
                         yield from command.walk_commands()
+
+    def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
+        r"""
+        Returns
+        --------
+        List[Union[:class:`~discord.ApplicationCommand`, :class:`.Command`]]
+            A :class:`list` of commands that are defined inside this cog.
+
+            .. note::
+
+                This does not include subcommands.
+        """
+        return [c for c in self.__cog_commands__ if c.parent is None]
