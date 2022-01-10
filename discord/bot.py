@@ -27,10 +27,10 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import copy
 import inspect
+import sys
 import traceback
-from .commands.errors import CheckFailure
-
 from typing import (
     Any,
     Callable,
@@ -40,14 +40,10 @@ from typing import (
     Optional,
     Type,
     TypeVar,
-    Union,
-)
-
-import sys
+    Union, )
 
 from .client import Client
-from .shard import AutoShardedClient
-from .utils import MISSING, get, find, async_all
+from .cog import CogMixin
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -58,12 +54,13 @@ from .commands import (
     AutocompleteContext,
     command,
 )
-from .cog import CogMixin
-
-from .errors import Forbidden, DiscordException
-from .interactions import Interaction
+from .commands.errors import CheckFailure
 from .enums import InteractionType
+from .errors import DiscordException
+from .interactions import Interaction
+from .shard import AutoShardedClient
 from .user import User
+from .utils import MISSING, get, async_all
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar('CFT', bound=CoroFunc)
@@ -73,6 +70,7 @@ __all__ = (
     'Bot',
     'AutoShardedBot',
 )
+
 
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
@@ -134,7 +132,7 @@ class ApplicationCommandMixin:
         self._pending_application_commands.append(command)
 
     def remove_application_command(
-        self, command: ApplicationCommand
+            self, command: ApplicationCommand
     ) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
@@ -167,10 +165,10 @@ class ApplicationCommandMixin:
         return self.get_application_command
 
     def get_application_command(
-        self,
-        name: str,
-        guild_ids: Optional[List[int]] = None,
-        type: Type[ApplicationCommand] = SlashCommand,
+            self,
+            name: str,
+            guild_ids: Optional[List[int]] = None,
+            type: Type[ApplicationCommand] = SlashCommand,
     ) -> Optional[ApplicationCommand]:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
@@ -194,270 +192,547 @@ class ApplicationCommandMixin:
 
         for command in self._application_commands.values():
             if (
-                command.name == name
-                and isinstance(command, type)
+                    command.name == name
+                    and isinstance(command, type)
             ):
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
                 return command
 
-    async def sync_commands(self) -> None:
+    async def get_desynced_commands(self, guild_id: Optional[int] = None):
         """|coro|
-
-        Registers all commands that have been added through :meth:`.add_application_command`
-        since :meth:`.register_commands`. This does not remove any registered commands that are not in the internal
-        cache, like :meth:`.register_commands` does, but rather just adds new ones.
-
-        This should usually be used instead of :meth:`.register_commands` when commands are already registered and you
-        want to add more.
-
-        This can cause bugs if you run this command excessively without using register_commands, as the bot's internal
-        cache can get un-synced with discord's registered commands.
-
-        .. versionadded:: 2.0
         """
-        # TODO: Write this function as described in the docstring (bob will do this)
-        raise NotImplementedError
+        # TODO: Write docstring
+        # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
 
-    async def register_commands(self) -> None:
-        """|coro|
-        Registers all commands that have been added through :meth:`.add_application_command`.
-        This method cleans up all commands over the API and should sync them with the internal cache of commands.
-        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
-        By default, this coroutine is called inside the :func:`.on_connect`
-        event. If you choose to override the :func:`.on_connect` event, then
-        you should invoke this coroutine as well.
-        .. versionadded:: 2.0
-        """
-        commands_to_bulk = []
+        return_value = []
+        cmds = copy.deepcopy(self.pending_application_commands)
 
-        needs_bulk = False
-
-        # Global Command Permissions
-        global_permissions: List = []
-
-        registered_commands = await self.http.get_global_commands(self.user.id)
-        # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
-        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
-        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
-        global_pending_application_commands_dict = {}
-        
-        for command in [
-            cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
-        ]:
-            as_dict = command.to_dict()
-            
-            global_pending_application_commands_dict[command.name] = as_dict
-            if command.name in registered_commands_dict:
-                match = registered_commands_dict[command.name]
-            else:
-                match = None
-            # TODO: There is probably a far more efficient way of doing this
-            # We want to check if the registered global command on Discord servers matches the given global commands
-            if match:
-                as_dict["id"] = match["id"]
-
-                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
-                for key, more_keys in {
-                    key:more_keys
-                    for key, more_keys in keys_to_check.items()
-                    if key in as_dict.keys()
-                    if key in match.keys()
-                }.items():
-                    if key == "options":
-                        for i, option_dict in enumerate(as_dict[key]):
-                            if command.name == "recent":
-                                print(option_dict, "|||||", match[key][i])
-                            for key2 in more_keys:
-                                pendingVal = None
-                                if key2 in option_dict.keys():
-                                    pendingVal = option_dict[key2]
-                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        pendingVal = None
-                                matchVal = None
-                                if key2 in match[key][i].keys():
-                                    matchVal = match[key][i][key2]
-                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        matchVal = None
-
-                                if pendingVal != matchVal:
-                                    # When a property in the options of a pending global command is changed
-                                    needs_bulk = True
-                    else:
-                        if as_dict[key] != match[key]:
-                            # When a property in a pending global command is changed
-                            needs_bulk = True
-            else:
-                # When a name of a pending global command is not registered in Discord
-                needs_bulk = True
-
-            commands_to_bulk.append(as_dict)
-        
-        for name, command in registered_commands_dict.items():
-            if not name in global_pending_application_commands_dict.keys():
-                # When a registered global command is not available in the pending global commands
-                needs_bulk = True
-    
-        if needs_bulk:
-            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+        if guild_id is None:
+            registered_commands = await self.http.get_global_commands(self.user.id)
+            pending = [cmd for cmd in cmds if cmd.guild_ids is None]
         else:
-            commands = registered_commands
+            registered_commands = await self.http.get_guild_commands(self.user.id, guild_id)
+            pending = [cmd for cmd in cmds if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
 
-        for i in commands:
+        registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
+        to_check = {
+            "default_permission": None,
+            "name": None,
+            "description": None,
+            "options": [
+                "type",
+                "name",
+                "description",
+                "autocomplete",
+                "choices"
+            ]
+        }
+        # First let's check if the commands we have locally are the same as the ones on discord
+        for cmd in pending:
+            match = registered_commands_dict.get(cmd.name)
+            if match is None:
+                # We don't have this command registered
+                return_value.append({
+                    "command": cmd,
+                    "action": "upsert"
+                })
+                continue
+
+            as_dict = cmd.to_dict()
+
+            for check in to_check:
+                if type(to_check[check]) == list:
+                    for opt in to_check[check]:
+                        if (hasattr(match, opt) and (getattr(cmd, opt)
+                        if hasattr(cmd, opt)
+                        else as_dict[opt]) != match[opt]
+                        ):
+                            # We have a difference
+                            return_value.append({
+                                "command": cmd,
+                                "action": "edit"
+                            })
+                            break
+                else:
+                    if getattr(cmd, check) != match[check]:
+                        # We have a difference
+                        return_value.append({
+                            "command": cmd,
+                            "action": "edit",
+                            "id": int(registered_commands_dict[cmd.name]["id"])
+                        })
+                        break
+
+        # Now let's see if there are any commands on discord that we need to delete
+        for cmd in registered_commands_dict:
+            match = get(pending, name=registered_commands_dict[cmd]["name"])
+            if match is None:
+                # We have this command registered but not in our list
+                return_value.append({
+                    "command": registered_commands_dict[cmd]["name"],
+                    "id": int(registered_commands_dict[cmd]["id"]),
+                    "action": "delete"
+                })
+                continue
+
+        return return_value
+
+    async def register_command(
+            self,
+            command: ApplicationCommand,
+            force: bool = True,
+            guild_ids: List[int] = None
+    ) -> None:
+        """|coro|
+
+        Registers a command. If the command has guild_ids set, or if the guild_ids parameter is passed, the command will
+        be registered as a guild command for those guilds.
+
+        Parameters
+        ----------
+        command: :class:`~.ApplicationCommand`
+            The command to register.
+        force: :class:`bool`
+            Whether to force the command to be registered. If this is set to False, the command will only be registered
+            if it seems to already be registered and up to date with our internal cache. Defaults to True.
+        guild_ids: :class:`list`
+            A list of guild ids to register the command for. If this is not set, the command's
+            :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
+
+        Returns
+        -------
+        :class:`~.ApplicationCommand`
+            The command that was registered
+        """
+        # TODO: Write this
+        return
+
+    async def register_commands(
+            self,
+            commands: Optional[List[ApplicationCommand]] = None,
+            guild_id: Optional[int] = None,
+            force: bool = False
+    ):
+        """|coro|
+
+        Register some commands.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        commands: Optional[List[:class:`~.ApplicationCommand`]]
+            A list of commands to register. If this is not set (None), then all commands will be registered.
+        force: :class:`bool`
+            Registers the commands regardless of the state of the command on discord, this can take up more API calls
+            but is sometimes a more foolproof method of registering commands. This also allows the bot to dynamically
+            remove stale commands. Defaults to False.
+        """
+        if commands is None:
+            commands = self.pending_application_commands
+
+        commands = copy.deepcopy(commands)
+
+        for cmd in commands:
+            to_rep_with = [guild_id] if guild_id is not None else guild_id
+            cmd.guild_ids = to_rep_with
+
+        is_global = guild_id is None
+
+        registered = []
+
+        if is_global:
+            pending = list(filter(lambda c: c.guild_ids is None, commands))
+            registration_methods = {
+                "bulk": self.http.bulk_upsert_global_commands,
+                "upsert": self.http.upsert_global_command,
+                "delete": self.http.delete_global_command,
+                "edit": self.http.edit_global_command,
+            }
+
+            def register(method: str, *args, **kwargs):
+                return registration_methods[method](self.user.id, *args, **kwargs)
+
+        else:
+            pending = list(filter(lambda c: c.guild_ids is not None and guild_id in c.guild_ids, commands))
+            registration_methods = {
+                "bulk": self.http.bulk_upsert_guild_commands,
+                "upsert": self.http.upsert_guild_command,
+                "delete": self.http.delete_guild_command,
+                "edit": self.http.edit_guild_command,
+            }
+
+            def register(method: str, *args, **kwargs):
+                return registration_methods[method](self.user.id, guild_id, *args, **kwargs)
+
+        pending_actions = []
+
+        if not force:
+            desynced = await self.get_desynced_commands(guild_id=guild_id)
+
+            for cmd in desynced:
+                if cmd["action"] == "delete":
+                    pending_actions.append({
+                        "action": "delete",
+                        "command": cmd["id"],
+                        "name": cmd["command"]
+                    })
+                    continue
+                # We can assume the command item is a command, since it's only a string if action is delete
+                match = get(pending, name=cmd["command"].name)
+                if match is None:
+                    continue
+                if cmd["action"] == "edit":
+                    pending_actions.append({
+                        "action": "edit",
+                        "command": match,
+                        "id": cmd["id"],
+                    })
+                elif cmd["action"] == "upsert":
+                    pending_actions.append({
+                        "action": "upsert",
+                        "command": match,
+                    })
+                else:
+                    raise ValueError(f"Unknown action: {cmd['action']}")
+
+            filtered_deleted = list(filter(lambda a: a["action"] != "delete", pending_actions))
+            if len(filtered_deleted) == len(pending):
+                # It appears that all the commands need to be modified, so we can just do a bulk upsert
+                data = [cmd['command'].to_dict() for cmd in filtered_deleted]
+                registered = await register("bulk", data)
+                count_deleted = len(list(filter(lambda a: a["action"] == "delete", pending_actions)))  # DEBUG
+                print(f'Bulk registered {len(filtered_deleted)} commands with {count_deleted} deleted.')  # DEBUG
+            else:
+                if len(pending_actions) == 0:
+                    print('No changes')  # DEBUG
+                for cmd in pending_actions:
+                    if cmd["action"] == "delete":
+                        print('Deleted a command')  # DEBUG
+                        await register("delete", cmd["command"])
+                        continue
+                    if cmd["action"] == "edit":
+                        print('Edited a command')  # DEBUG
+                        registered.append(await register("edit", cmd["id"], cmd["command"].to_dict()))
+                    elif cmd["action"] == "upsert":
+                        print('Upserted a command')  # DEBUG
+                        registered.append(await register("upsert", cmd["command"].to_dict()))
+                    else:
+                        raise ValueError(f"Unknown action: {cmd['action']}")
+        else:
+            data = [cmd.to_dict() for cmd in pending]
+            registered = await register("bulk", data)
+            print('force')  # DEBUG
+            count_deleted = len(list(filter(lambda a: a["action"] == "delete", pending_actions)))  # DEBUG
+            print(f'Force Bulk registered {len(pending)} commands with unknown amount deleted.')  # DEBUG
+
+        # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
+        if guild_id is None:
+            registered = await self.http.get_global_commands(self.user.id)
+        else:
+            registered = await self.http.get_guild_commands(self.user.id, guild_id)
+
+        for i in registered:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
-                guild_ids=None,
                 type=i["type"],
             )
-            if cmd:
-                cmd.id = i["id"]
-                self._application_commands[cmd.id] = cmd
+            if not cmd:
+                raise ValueError(f"Registered command {i['name']}, type {i['type']} not found in pending commands")
+            cmd.id = i["id"]
+            self._application_commands[cmd.id] = cmd
 
-                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+    # TODO: Use get_desynced_commands to find which commands we need to register. Use rate-limits and command amounts
+    #       to determine if a bulk update should be done or if individual command updates are sufficient. Maybe only
+    #       bulk update if all commands need to be re-registered. Don't edit this function until #634 is merged though,
+    #       to avoid merge conflicts.
+    async def sync_commands(
+            self,
+            commands: Optional[List[ApplicationCommand]] = None,
+            force: bool = False,
+            guild_ids: Optional[List[int]] = None,
+            register_guild_commands: bool = False,
+    ) -> None:
+        """|coro|
 
-        update_guild_commands = {}
-        async for guild in self.fetch_guilds(limit=None):
-            update_guild_commands[guild.id] = []
-        for command in [
-            cmd
-            for cmd in self.pending_application_commands
-            if cmd.guild_ids is not None
-        ]:
-            as_dict = command.to_dict()
-            for guild_id in command.guild_ids:
-                to_update = update_guild_commands[guild_id]
-                update_guild_commands[guild_id] = to_update + [as_dict]
+        Registers all commands that have been added through :meth:`.add_application_command`.
+        This method cleans up all commands over the API and should sync them with the internal cache of commands.
+        This will only be rolled out to Discord if :meth:`~.http.get_global_commands` has certain keys that differ from
+        :attr:`~.pending_application_commands`
 
-        for guild_id, guild_data in update_guild_commands.items():
-            try:
-                commands = await self.http.bulk_upsert_guild_commands(
-                    self.user.id, guild_id, update_guild_commands[guild_id]
-                )
+        By default, this coroutine is called inside the :func:`.on_connect`
+        event. If you choose to override the :func:`.on_connect` event, then
+        you should invoke this coroutine as well.
 
-                # Permissions for this Guild
-                guild_permissions: List = []
-            except Forbidden:
-                if not guild_data:
-                    continue
-                print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
-                raise
-            else:
-                for i in commands:
-                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
-                    cmd.id = i["id"]
-                    self._application_commands[cmd.id] = cmd
+        .. versionadded:: 2.0
 
-                    # Permissions
-                    permissions = [
-                        perm.to_dict()
-                        for perm in cmd.permissions
-                        if perm.guild_id is None
-                        or (
-                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
-                        )
-                    ]
-                    guild_permissions.append(
-                        {"id": i["id"], "permissions": permissions}
-                    )
+        Parameters
+        ----------
+        commands: Optional[List[:class:`~.ApplicationCommand`]]
+            A list of commands to register. If this is not set (None), then all commands will be registered.
+        force: :class:`bool`
+            Registers the commands regardless of the state of the command on discord, this can take up more API calls
+            but is sometimes a more foolproof method of registering commands. This also allows the bot to dynamically
+            remove stale commands. Defaults to False.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of guild ids to register the commands for. If this is not set, the commands'
+            :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
+        """
 
-                for global_command in global_permissions:
-                    permissions = [
-                        perm.to_dict()
-                        for perm in global_command["permissions"]
-                        if perm.guild_id is None
-                        or (
-                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
-                        )
-                    ]
-                    guild_permissions.append(
-                        {"id": global_command["id"], "permissions": permissions}
-                    )
+        if commands is None:
+            commands = self.pending_application_commands
 
-                # Collect & Upsert Permissions for Each Guild
-                # Command Permissions for this Guild
-                guild_cmd_perms: List = []
+        if guild_ids is not None:
+            for cmd in commands:
+                cmd.guild_ids = guild_ids
 
-                # Loop through Commands Permissions available for this Guild
-                for item in guild_permissions:
-                    new_cmd_perm = {"id": item["id"], "permissions": []}
+        await self.register_commands(commands, force=force)
+        print("Registered global commands")  # DEBUG
 
-                    # Replace Role / Owner Names with IDs
-                    for permission in item["permissions"]:
-                        if isinstance(permission["id"], str):
-                            # Replace Role Names
-                            if permission["type"] == 1:
-                                role = get(
-                                    self.get_guild(guild_id).roles,
-                                    name=permission["id"],
-                                )
+        ids = []
+        for cmd in commands:
+            if cmd.guild_ids is not None:
+                ids.extend(cmd.guild_ids)
+        for guild_id in set(ids):
+            await self.register_commands(commands, guild_id=guild_id, force=force)
+            print(f'Registered commands for guild {guild_id}')  # DEBUG
 
-                                # If not missing
-                                if role is not None:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": role.id,
-                                            "type": 1,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                                else:
-                                    print(
-                                        "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                            guild_id=guild_id, role=permission["id"]
-                                        )
-                                    )
-                            # Add owner IDs
-                            elif (
-                                permission["type"] == 2 and permission["id"] == "owner"
-                            ):
-                                app = await self.application_info()  # type: ignore
-                                if app.team:
-                                    for m in app.team.members:
-                                        new_cmd_perm["permissions"].append(
-                                            {
-                                                "id": m.id,
-                                                "type": 2,
-                                                "permission": permission["permission"],
-                                            }
-                                        )
-                                else:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": app.owner.id,
-                                            "type": 2,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                        # Add the rest
-                        else:
-                            new_cmd_perm["permissions"].append(permission)
-
-                    # Make sure we don't have over 10 overwrites
-                    if len(new_cmd_perm["permissions"]) > 10:
-                        print(
-                            "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self._application_commands[new_cmd_perm["id"]].name,
-                                guild_id=guild_id,
-                            )
-                        )
-                        new_cmd_perm["permissions"] = new_cmd_perm["permissions"][:10]
-
-                    # Append to guild_cmd_perms
-                    guild_cmd_perms.append(new_cmd_perm)
-
-                # Upsert
-                try:
-                    await self.http.bulk_upsert_command_permissions(
-                        self.user.id, guild_id, guild_cmd_perms
-                    )
-                except Forbidden:
-                    print(
-                        f"Failed to add command permissions to guild {guild_id}",
-                        file=sys.stderr,
-                    )
-                    raise
+        # Begin old code
+        # commands_to_bulk = []
+        #
+        # needs_bulk = False
+        #
+        # # Global Command Permissions
+        # global_permissions: List = []
+        #
+        # registered_commands = await self.http.get_global_commands(self.user.id)
+        # # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within
+        # # the same name on the same guild.'
+        # # We can therefore safely use the name of the command in our global slash commands as a unique identifier
+        # registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+        # global_pending_application_commands_dict = {}
+        #
+        # for command in [
+        #     cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
+        # ]:
+        #     as_dict = command.to_dict()
+        #
+        #     global_pending_application_commands_dict[command.name] = as_dict
+        #     if command.name in registered_commands_dict:
+        #         match = registered_commands_dict[command.name]
+        #     else:
+        #         match = None
+        #     # TODO: There is probably a far more efficient way of doing this
+        #     # We want to check if the registered global command on Discord servers matches the given global commands
+        #     if match:
+        #         as_dict["id"] = match["id"]
+        #
+        #         keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
+        #         for key, more_keys in {
+        #             key:more_keys
+        #             for key, more_keys in keys_to_check.items()
+        #             if key in as_dict.keys()
+        #             if key in match.keys()
+        #         }.items():
+        #             if key == "options":
+        #                 for i, option_dict in enumerate(as_dict[key]):
+        #                     if command.name == "recent":
+        #                         print(option_dict, "|||||", match[key][i])
+        #                     for key2 in more_keys:
+        #                         pendingVal = None
+        #                         if key2 in option_dict.keys():
+        #                             pendingVal = option_dict[key2]
+        #                             if pendingVal == False or pendingVal == []: # Registered commands are not available
+        #                                 # if choices is an empty array or if autocomplete is false
+        #                                 pendingVal = None
+        #                         matchVal = None
+        #                         if key2 in match[key][i].keys():
+        #                             matchVal = match[key][i][key2]
+        #                             if matchVal == False or matchVal == []: # Registered commands are not available if
+        #                                 # choices is an empty array or if autocomplete is false
+        #                                 matchVal = None
+        #
+        #                         if pendingVal != matchVal:
+        #                             # When a property in the options of a pending global command is changed
+        #                             needs_bulk = True
+        #             else:
+        #                 if as_dict[key] != match[key]:
+        #                     # When a property in a pending global command is changed
+        #                     needs_bulk = True
+        #     else:
+        #         # When a name of a pending global command is not registered in Discord
+        #         needs_bulk = True
+        #
+        #     commands_to_bulk.append(as_dict)
+        #
+        # for name, command in registered_commands_dict.items():
+        #     if not name in global_pending_application_commands_dict.keys():
+        #         # When a registered global command is not available in the pending global commands
+        #         needs_bulk = True
+        #
+        # if needs_bulk:
+        #     commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+        # else:
+        #     commands = registered_commands
+        #
+        # for i in commands:
+        #     cmd = get(
+        #         self.pending_application_commands,
+        #         name=i["name"],
+        #         guild_ids=None,
+        #         type=i["type"],
+        #     )
+        #     if cmd:
+        #         cmd.id = i["id"]
+        #         self._application_commands[cmd.id] = cmd
+        #
+        #         # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
+        #         global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+        #
+        # update_guild_commands = {}
+        # async for guild in self.fetch_guilds(limit=None):
+        #     update_guild_commands[guild.id] = []
+        # for command in [
+        #     cmd
+        #     for cmd in self.pending_application_commands
+        #     if cmd.guild_ids is not None
+        # ]:
+        #     as_dict = command.to_dict()
+        #     for guild_id in command.guild_ids:
+        #         to_update = update_guild_commands[guild_id]
+        #         update_guild_commands[guild_id] = to_update + [as_dict]
+        #
+        # for guild_id, guild_data in update_guild_commands.items():
+        #     try:
+        #         commands = await self.http.bulk_upsert_guild_commands(
+        #             self.user.id, guild_id, update_guild_commands[guild_id]
+        #         )
+        #
+        #         # Permissions for this Guild
+        #         guild_permissions: List = []
+        #     except Forbidden:
+        #         if not guild_data:
+        #             continue
+        #         print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
+        #         raise
+        #     else:
+        #         for i in commands:
+        #             cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in
+        #                                    cmd.guild_ids, self.pending_application_commands)
+        #             cmd.id = i["id"]
+        #             self._application_commands[cmd.id] = cmd
+        #
+        #             # Permissions
+        #             permissions = [
+        #                 perm.to_dict()
+        #                 for perm in cmd.permissions
+        #                 if perm.guild_id is None
+        #                 or (
+        #                     perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+        #                 )
+        #             ]
+        #             guild_permissions.append(
+        #                 {"id": i["id"], "permissions": permissions}
+        #             )
+        #
+        #         for global_command in global_permissions:
+        #             permissions = [
+        #                 perm.to_dict()
+        #                 for perm in global_command["permissions"]
+        #                 if perm.guild_id is None
+        #                 or (
+        #                     perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+        #                 )
+        #             ]
+        #             guild_permissions.append(
+        #                 {"id": global_command["id"], "permissions": permissions}
+        #             )
+        #
+        #         # Collect & Upsert Permissions for Each Guild
+        #         # Command Permissions for this Guild
+        #         guild_cmd_perms: List = []
+        #
+        #         # Loop through Commands Permissions available for this Guild
+        #         for item in guild_permissions:
+        #             new_cmd_perm = {"id": item["id"], "permissions": []}
+        #
+        #             # Replace Role / Owner Names with IDs
+        #             for permission in item["permissions"]:
+        #                 if isinstance(permission["id"], str):
+        #                     # Replace Role Names
+        #                     if permission["type"] == 1:
+        #                         role = get(
+        #                             self.get_guild(guild_id).roles,
+        #                             name=permission["id"],
+        #                         )
+        #
+        #                         # If not missing
+        #                         if role is not None:
+        #                             new_cmd_perm["permissions"].append(
+        #                                 {
+        #                                     "id": role.id,
+        #                                     "type": 1,
+        #                                     "permission": permission["permission"],
+        #                                 }
+        #                             )
+        #                         else:
+        #                             print(
+        #                                 "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
+        #                                     guild_id=guild_id, role=permission["id"]
+        #                                 )
+        #                             )
+        #                     # Add owner IDs
+        #                     elif (
+        #                         permission["type"] == 2 and permission["id"] == "owner"
+        #                     ):
+        #                         app = await self.application_info()  # type: ignore
+        #                         if app.team:
+        #                             for m in app.team.members:
+        #                                 new_cmd_perm["permissions"].append(
+        #                                     {
+        #                                         "id": m.id,
+        #                                         "type": 2,
+        #                                         "permission": permission["permission"],
+        #                                     }
+        #                                 )
+        #                         else:
+        #                             new_cmd_perm["permissions"].append(
+        #                                 {
+        #                                     "id": app.owner.id,
+        #                                     "type": 2,
+        #                                     "permission": permission["permission"],
+        #                                 }
+        #                             )
+        #                 # Add the rest
+        #                 else:
+        #                     new_cmd_perm["permissions"].append(permission)
+        #
+        #             # Make sure we don't have over 10 overwrites
+        #             if len(new_cmd_perm["permissions"]) > 10:
+        #                 print(
+        #                     "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
+        #                         name=self._application_commands[new_cmd_perm["id"]].name,
+        #                         guild_id=guild_id,
+        #                     )
+        #                 )
+        #                 new_cmd_perm["permissions"] = new_cmd_perm["permissions"][:10]
+        #
+        #             # Append to guild_cmd_perms
+        #             guild_cmd_perms.append(new_cmd_perm)
+        #
+        #         # Upsert
+        #         try:
+        #             await self.http.bulk_upsert_command_permissions(
+        #                 self.user.id, guild_id, guild_cmd_perms
+        #             )
+        #         except Forbidden:
+        #             print(
+        #                 f"Failed to add command permissions to guild {guild_id}",
+        #                 file=sys.stderr,
+        #             )
+        #             raise
 
     async def process_application_commands(self, interaction: Interaction) -> None:
         """|coro|
@@ -471,8 +746,8 @@ class ApplicationCommandMixin:
         you should invoke this coroutine as well.
 
         This function finds a registered command matching the interaction id from
-        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
-        command was found, it replies to the interaction with a default message.
+        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no
+        matching command was found, it replies to the interaction with a default message.
 
         .. versionadded:: 2.0
 
@@ -482,8 +757,8 @@ class ApplicationCommandMixin:
             The interaction to process
         """
         if interaction.type not in (
-            InteractionType.application_command, 
-            InteractionType.auto_complete
+                InteractionType.application_command,
+                InteractionType.auto_complete
         ):
             return
 
@@ -492,8 +767,9 @@ class ApplicationCommandMixin:
         except KeyError:
             for cmd in self.application_commands:
                 if (
-                    cmd.name == interaction.data["name"]
-                    and interaction.data.get("guild_id", None) in cmd.guild_ids
+                        cmd.name == interaction.data["name"]
+                        and (interaction.data.get("guild_id", None) in cmd.guild_ids
+                             or interaction.data.get("guild_id", None) == cmd.guild_ids)
                 ):
                     command = cmd
                     break
@@ -503,7 +779,7 @@ class ApplicationCommandMixin:
             ctx = await self.get_autocomplete_context(interaction)
             ctx.command = command
             return await command.invoke_autocomplete_callback(ctx)
-        
+
         ctx = await self.get_application_context(interaction)
         ctx.command = command
         self.dispatch("application_command", ctx)
@@ -600,10 +876,10 @@ class ApplicationCommandMixin:
         return self.application_command(**kwargs)
 
     def create_group(
-        self,
-        name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
+            self,
+            name: str,
+            description: Optional[str] = None,
+            guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
@@ -631,10 +907,10 @@ class ApplicationCommandMixin:
         return group
 
     def group(
-        self,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
+            self,
+            name: Optional[str] = None,
+            description: Optional[str] = None,
+            guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
         and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
@@ -656,6 +932,7 @@ class ApplicationCommandMixin:
         Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
             The slash command group that was created.
         """
+
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
                 name or cls.__name__,
@@ -667,6 +944,7 @@ class ApplicationCommandMixin:
             )
             self.add_application_command(group)
             return group
+
         return inner
 
     slash_group = group
@@ -685,7 +963,7 @@ class ApplicationCommandMixin:
             yield command
 
     async def get_application_context(
-        self, interaction: Interaction, cls=None
+            self, interaction: Interaction, cls=None
     ) -> ApplicationContext:
         r"""|coro|
 
@@ -715,7 +993,7 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
     async def get_autocomplete_context(
-        self, interaction: Interaction, cls=None
+            self, interaction: Interaction, cls=None
     ) -> AutocompleteContext:
         r"""|coro|
 
@@ -745,9 +1023,9 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
 
-
 class BotBase(ApplicationCommandMixin, CogMixin):
     _supports_prefixed_commands = False
+
     # TODO I think
     def __init__(self, description=None, *args, **options):
         # super(Client, self).__init__(*args, **kwargs)
@@ -770,7 +1048,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             raise TypeError("Both owner_id and owner_ids are set.")
 
         if self.owner_ids and not isinstance(
-            self.owner_ids, collections.abc.Collection
+                self.owner_ids, collections.abc.Collection
         ):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
@@ -782,13 +1060,13 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = None
 
     async def on_connect(self):
-        await self.register_commands()
+        await self.sync_commands()
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
 
     async def on_application_command_error(
-        self, context: ApplicationContext, exception: DiscordException
+            self, context: ApplicationContext, exception: DiscordException
     ) -> None:
         """|coro|
 
@@ -920,7 +1198,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         return func
 
     async def can_run(
-        self, ctx: ApplicationContext, *, call_once: bool = False
+            self, ctx: ApplicationContext, *, call_once: bool = False
     ) -> bool:
         data = self._check_once if call_once else self._checks
 
