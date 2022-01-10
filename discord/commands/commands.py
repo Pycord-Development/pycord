@@ -33,9 +33,6 @@ import re
 import types
 from collections import OrderedDict
 from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
-
-import discord.utils
-
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .permissions import CommandPermission
