@@ -380,6 +380,12 @@ class Paginator(discord.ui.View):
             The message associated with the paginator.
         """
         self.update_buttons()
+        self.current_page = page_number
+        if self.show_indicator:
+            self.buttons["page_indicator"][
+                "object"
+            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
