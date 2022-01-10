@@ -14,7 +14,7 @@ Pycord
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
-A fork of discord.py. PyCord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 What Happened to Discord.py?
 ----------------------------
