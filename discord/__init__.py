@@ -57,6 +57,7 @@ from .team import *
 from .sticker import *
 from .stage_instance import *
 from .interactions import *
+from .sink import *
 from .components import *
 from .threads import *
 from .bot import *

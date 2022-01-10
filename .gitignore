@@ -10,6 +10,7 @@ docs/crowdin.py
 *.mp3
 *.m4a
 *.wav
+*.pcm
 *.png
 *.jpg
 *.flac
@@ -18,6 +19,8 @@ docs/crowdin.py
 .DS_Store
 .python-version
 __pycache__
-.vs/slnx.sqlite
+.vs/*
+.vscode/*
 env/
 build/
+test.py
