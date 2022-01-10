@@ -3908,11 +3908,6 @@ ScheduledEvent
 .. autoclass:: ScheduledEvent()
     :members:
 
-ScheduledEventLocation
-~~~~~~~~~~~~~~~~~~~~~~~
-
-..attributestable:: ScheduledEventLocation
-
 .. autoclass:: ScheduledEventLocation()
     :members:
 
@@ -4333,6 +4328,14 @@ RawThreadDeleteEvent
 .. attributetable:: RawThreadDeleteEvent
 
 .. autoclass:: RawThreadDeleteEvent()
+    :members:
+
+RawScheduledEventSubscription
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawScheduledEventSubscription
+
+.. autoclass:: RawScheduledEventSubscription()
     :members:
 
 PartialWebhookGuild

@@ -35,6 +35,7 @@ from typing import (
     Any,
     Callable,
     Coroutine,
+    Generator,
     List,
     Optional,
     Type,
@@ -492,7 +493,7 @@ class ApplicationCommandMixin:
             for cmd in self.application_commands:
                 if (
                     cmd.name == interaction.data["name"]
-                    and interaction.data["guild_id"] in cmd.guild_ids
+                    and interaction.data.get("guild_id", None) in cmd.guild_ids
                 ):
                     command = cmd
                     break
@@ -669,6 +670,19 @@ class ApplicationCommandMixin:
         return inner
 
     slash_group = group
+
+    def walk_application_commands(self) -> Generator[ApplicationCommand, None, None]:
+        """An iterator that recursively walks through all application commands and subcommands.
+
+        Yields
+        ------
+        :class:`.ApplicationCommand`
+            An application command from the internal list of application commands.
+        """
+        for command in self.application_commands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
