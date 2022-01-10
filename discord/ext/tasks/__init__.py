@@ -339,7 +339,7 @@ class Loop(Generic[LF]):
             args = (self._injected, *args)
 
         if self.loop is MISSING:
-            self.loop = asyncio.get_event_loop()
+            self.loop = asyncio.get_running_loop()
 
         self._task = self.loop.create_task(self._loop(*args, **kwargs))
         return self._task
@@ -742,7 +742,7 @@ def loop(
         one used in :meth:`discord.Client.connect`.
     loop: :class:`asyncio.AbstractEventLoop`
         The loop to use to register the task, if not given
-        defaults to :func:`asyncio.get_event_loop`.
+        defaults to :func:`asyncio.get_running_loop`.
 
     Raises
     --------

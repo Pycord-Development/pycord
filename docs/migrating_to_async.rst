@@ -310,7 +310,7 @@ event loop then doing so is quite straightforward:
         yield from client.login('token')
         yield from client.connect()
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     try:
         loop.run_until_complete(main_task())
     except:
