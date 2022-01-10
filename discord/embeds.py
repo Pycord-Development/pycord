@@ -196,7 +196,7 @@ class Embed:
         if self.title is not EmptyEmbed:
             self.title = str(self.title)
 
-        if self.description is not EmptyEmbed:
+        if self.description is not EmptyEmbed and self.description is not None:
             self.description = str(self.description)
 
         if self.url is not EmptyEmbed:
