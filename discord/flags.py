@@ -528,6 +528,7 @@ class Intents(BaseFlags):
         self = cls.all()
         self.presences = False
         self.members = False
+        self.messages = False
         return self
 
     @flag_value
