@@ -30,8 +30,8 @@ import aiohttp
 
 from discord import utils
 
-from ...errors import \
-    ConnectionClosed  # importing it from discord imports discord.commands for some reason..?
+# library stub error.
+from ...errors import ConnectionClosed  # type: ignore
 from .base import SessionBase
 
 # This is a mess of everything.
@@ -41,7 +41,8 @@ if typing.TYPE_CHECKING:
     from discord import AutoShardedClient
     from discord import Bot as Botb
     from discord import Client
-    from discord.ext.commands import AutoShardedBot, Bot
+    # mypy freaks out with us importing a non-stubbed module.
+    from discord.ext.commands import AutoShardedBot, Bot # type: ignore
 
 _log = logging.getLogger(__name__)
 
