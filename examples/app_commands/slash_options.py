@@ -10,11 +10,21 @@ bot = discord.Bot()
 @bot.slash_command(guild_ids=[...])
 async def hello(
     ctx,
-    name: Option(str, "Enter your name"),
-    gender: Option(str, "Choose your gender", choices=["Male", "Female", "Other"]),
-    age: Option(int, "Enter your age", required=False, default=18),
+    name: Option(str, name="your_name", description="Enter your name"),
+    gender: Option(str, description="Choose your gender", choices=["Male", "Female", "Other"]),
+    age: Option(int, description="Enter your age", default=18)  # passing default value makes an argument optional
+    # you also can specify default value using age: Option(int, description="Enter your age") = 18
 ):
     await ctx.respond(f"Hello {name}")
+
+
+@bot.slash_command(guild_ids=[...])
+async def channel(
+    ctx,
+    channel: Option([discord.TextChannel, discord.VoiceChannel], description="Select a channel")
+    # you can specify channel types providing a list of them like [discord.TextChannel, discord.VoiceChannel]
+):
+    await ctx.respond(f"You selected {channel.mention} channel")
 
 
 bot.run("TOKEN")
