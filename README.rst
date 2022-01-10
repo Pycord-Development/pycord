@@ -14,8 +14,6 @@ Pycord
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
-What is Pycord?
----------------
 Pycord ("py-cord" on PyPI) is a maintained fork of discord.py which will be updated with new changes to the API. Pycord was created by a group of developers that want to continue updating the library.
 
 
