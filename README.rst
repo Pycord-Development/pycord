@@ -19,7 +19,7 @@ What is Pycord?
 Pycord ("py-cord" on PyPI) is a maintained fork of discord.py which will be updated with new changes to the API. Pycord was created by a group of developers that want to continue developing this Python module.
 
 
-Pycord v1.7.3 is the same as discord.py v1.7.3, Pycord v2.0 will support everything in discord.py v2.0.0a as well as slash commands, context menus, scheduled events, timeouts, and other newer features of the discord API.
+Pycord v1.7.3 is the same as discord.py v1.7.3, however, Pycord v2.0 will support more features such as slash commands, context menus, scheduled events, timeouts, etc.
 
 
 What Happened to Discord.py?
