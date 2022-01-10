@@ -34,6 +34,8 @@ import types
 from collections import OrderedDict
 from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
+import discord.utils
+
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .permissions import CommandPermission
@@ -64,9 +66,8 @@ __all__ = (
 
 if TYPE_CHECKING: 
     from typing_extensions import ParamSpec
-
     from ..cog import Cog
-    from ..interactions import Interaction
+
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound='Cog')
@@ -75,6 +76,7 @@ if TYPE_CHECKING:
     P = ParamSpec('P')
 else:
     P = TypeVar('P')
+
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -89,6 +91,7 @@ def wrap_callback(coro):
             raise ApplicationCommandInvokeError(exc) from exc
         return ret
     return wrapped
+
 
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
@@ -108,8 +111,10 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
 
+
 class _BaseCommand:
     __slots__ = ()
+
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
@@ -505,10 +510,7 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-
     def _parse_options(self, params) -> List[Option]:
-        final_options = []
-
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -524,9 +526,7 @@ class SlashCommand(ApplicationCommand):
             )
 
         final_options = []
-
         for p_name, p_obj in params:
-
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
@@ -543,10 +543,10 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
-                if p_obj.default != inspect.Parameter.empty:
-                    option.required = False
 
-            option.default = option.default if option.default is not None else p_obj.default
+            if p_obj.default != inspect.Parameter.empty:
+                option.required = False
+            option.default = p_obj.default if option.default is None else option.default
 
             if option.default == inspect.Parameter.empty:
                 option.default = None
@@ -566,7 +566,7 @@ class SlashCommand(ApplicationCommand):
         return (
             getattr(annotation, '__origin__', None) is Union
             or type(annotation) is getattr(types, "UnionType", Union)
-        ) # type: ignore
+        )  # type: ignore
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
@@ -631,7 +631,7 @@ class SlashCommand(ApplicationCommand):
             await self.callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
-        values = { i.name: i.default for i in self.options }
+        values = {i.name: i.default for i in self.options}
 
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
@@ -659,7 +659,6 @@ class SlashCommand(ApplicationCommand):
                     for o in result
                 ][:25]
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
-
 
     def copy(self):
         """Creates a copy of this command.
@@ -773,7 +772,6 @@ class Option:
 
         return as_dict
 
-
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -786,6 +784,7 @@ class OptionChoice:
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
 
+
 def option(name, type=None, **kwargs):
     """A decorator that can be used instead of typehinting Option"""
     def decor(func):
@@ -794,6 +793,7 @@ def option(name, type=None, **kwargs):
         func.__annotations__[name] = Option(type, **kwargs)
         return func
     return decor
+
 
 class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
@@ -1278,6 +1278,7 @@ class MessageCommand(ContextMenuCommand):
         else:
             return self.copy()
 
+
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -1287,6 +1288,7 @@ def slash_command(**kwargs):
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
+
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
@@ -1298,6 +1300,7 @@ def user_command(**kwargs):
     """
     return application_command(cls=UserCommand, **kwargs)
 
+
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -1307,6 +1310,7 @@ def message_command(**kwargs):
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
+
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -1342,6 +1346,7 @@ def application_command(cls=SlashCommand, **attrs):
         return cls(func, **attrs)
 
     return decorator
+
 
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
