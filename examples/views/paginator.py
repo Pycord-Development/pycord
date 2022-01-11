@@ -216,9 +216,7 @@ class PageTest(commands.Cog):
         paginator = pages.Paginator(pages=self.get_pages(), show_disabled=False)
         await paginator.respond(ctx.interaction)
         await asyncio.sleep(3)
-        await paginator.update(
-            ctx.interaction, show_disabled=True, show_indicator=False
-        )
+        await paginator.update(show_disabled=True, show_indicator=False)
 
     @pagetest.command(name="target")
     async def pagetest_target(self, ctx: discord.ApplicationContext):
