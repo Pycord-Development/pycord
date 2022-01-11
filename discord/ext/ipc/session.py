@@ -100,7 +100,7 @@ class Session(SessionBase):
         _log.debug(f"Sending {payload}")
         await self.reqr.send_json(payload, dumps=utils._to_json)
         data = await self.reqr.receive()
-        _log.debug(f"Recieved {data}")
+        _log.debug(f"Received {data}")
 
         if data.type == aiohttp.WSMsgType.PING:
             _log.debug("Server has requested to ping, doing that now.")
