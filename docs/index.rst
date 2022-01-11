@@ -51,6 +51,7 @@ These extensions help you during development when it comes to common tasks.
   ext/commands/index.rst
   ext/tasks/index.rst
   ext/pages/index.rst
+  ext/ipc/index/rst
 
 Manuals
 ---------
@@ -64,6 +65,7 @@ These pages go into great detail about everything the API can do.
   discord.ext.commands API Reference <ext/commands/api.rst>
   discord.ext.tasks API Reference <ext/tasks/index.rst>
   discord.ext.pages API Reference <ext/pages/index.rst>
+  discord.ext.ipc API Reference <ext/pages/api.rst>
 
 Meta
 ------

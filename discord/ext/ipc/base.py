@@ -22,10 +22,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 import abc
+import typing
+
+from aiohttp import web
 
 
 class SessionBase(abc.ABC):
-    # Since this is an ABC class and all, it should't be documented.
+    # Since this is an ABC class and all, it shouldn't be documented.
     def __init__(self, host, multicast_port, port=None):
         self.host = host
         self.port = port
@@ -36,3 +39,39 @@ class SessionBase(abc.ABC):
         return "ws://{0.host}:{1}".format(
             self, self.port if self.port else self.multicast_port
         )
+
+
+class ServerBase(abc.ABC):
+    # also shouldn't be documented
+    def __init__(self, host):
+        self.host = host
+        self.routes = {}
+        self.endpoints = {}
+
+    def route(self, name=None):
+        func = self.endpoints[name]
+        
+        return func
+
+    def update_endpoints(self):
+        self.endpoints = {**self.endpoints, **self.routes}
+
+        self.routes = {}  # mypy does not like this..
+
+    async def _start(self, app, port):
+        runner = web.AppRunner(app)
+        await runner.setup()
+
+        site = web.TCPSite(runner, self.host, port)
+        await site.start()
+
+
+class IPCServerResponseBase(abc.ABC):
+    def __init__(self, data):
+        self._json = data
+        self.length = len(data)
+
+        self.endpoint = data["endpoint"]
+
+        for key, value in data["data"].items():
+            setattr(self, key, value)

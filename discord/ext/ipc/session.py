@@ -33,25 +33,30 @@ from discord import utils
 from ...errors import ConnectionClosed  # type: ignore
 from .base import SessionBase
 
-# This is a mess of everything.
-if typing.TYPE_CHECKING:
-
-    from discord import AutoShardedBot as AutoShardedBotb
-    from discord import AutoShardedClient
-    from discord import Bot as Botb
-    from discord import Client
-    # mypy freaks out with us importing a non-stubbed module.
-    from discord.ext.commands import AutoShardedBot, Bot # type: ignore
-
 _log = logging.getLogger(__name__)
 
 
 class Session(SessionBase):
+    """The session interacting with the :class:`Server`
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    bot :class:`Union`
+        The current bot process
+    host
+        The host to send requests to
+    mcp
+        The multicast port to connect to
+    token
+        The secret token to provide to the Server
+    port
+        The port to connect to
+    """
+
     def __init__(
         self,
-        bot: typing.Union[
-            Client, AutoShardedClient, Botb, AutoShardedBotb, Bot, AutoShardedBot
-        ],
         host,
         multicast_port,
         token,
@@ -61,7 +66,6 @@ class Session(SessionBase):
         self.mcp = multicast_port
         self.port = port
         self.token = token
-        self.bot = bot
         super().__init__(self.host, self.mcp, self.port)
 
     async def identify(self):
