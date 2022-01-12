@@ -649,7 +649,7 @@ class SlashCommandOptionType(Enum):
             "GuildChannel", "TextChannel",
             "VoiceChannel", "StageChannel",
             "CategoryChannel", "ThreadOption",
-            'Thread'
+            "Thread",
         ]:
             return cls.channel
         if datatype.__name__ == "Role":

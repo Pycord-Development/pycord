@@ -707,11 +707,11 @@ channel_type_map = {
 }
 
 class ThreadOption:
-    def __init__(self, thread_type: Union[Literal["public"], Literal["private"], Literal["news"]]):
+    def __init__(self, thread_type: Literal["public", "private", "news"]):
         type_map = {
             "public": ChannelType.public_thread,
             "private": ChannelType.private_thread,
-            "news": ChannelType.news_thread
+            "news": ChannelType.news_thread,
         }
         self._type = type_map[thread_type]
     
