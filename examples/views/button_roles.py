@@ -1,5 +1,5 @@
 import discord
-from discord.commands.commands import slash_command
+from discord.commands.core import slash_command
 from discord.ext import commands
 
 """

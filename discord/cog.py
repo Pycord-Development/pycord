@@ -23,20 +23,17 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import inspect
 import importlib
+import inspect
 import sys
-import discord.utils
 import types
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, \
+    Type
+
+import discord.utils
 from . import errors
+from .commands.core import _BaseCommand
 from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand, SlashCommandGroup
-
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
-
-from .commands.commands import _BaseCommand
-
-if TYPE_CHECKING:
-    from .commands import ApplicationContext, ApplicationCommand
 
 __all__ = (
     'CogMeta',
