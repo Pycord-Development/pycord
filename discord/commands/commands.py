@@ -588,7 +588,14 @@ class SlashCommand(ApplicationCommand):
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
         ]
         for o in options:
-            p_name, p_obj = next(params)
+            validate_chat_input_name(o.name)
+            validate_chat_input_description(o.description)
+            try:
+                p_name, p_obj = next(params)
+            except StopIteration:  # not enough params for all the options
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
             p_obj = p_obj.annotation
 
             if not any(c(o, p_obj) for c in check_annotations):       
