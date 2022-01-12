@@ -57,16 +57,21 @@ MISSING = utils.MISSING
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
 
-    Setting the ``location`` to its corresponding type will set the location type automatically:
-    - :class:`StageChannel`: :attr:`ScheduledEventLocationType.external`
-    - :class:`VoiceChannel`: :attr:`ScheduledEventLocationType.voice`
-    - :class:`str`: :attr:`ScheduledEventLocationType.external`
+    Setting the ``value`` to its corresponding type will set the location type automatically:
+
+    +------------------------+---------------------------------------------------+
+    |     Type of Input      |                   Location Type                   |
+    +========================+===================================================+
+    | :class:`StageChannel`: | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`: | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`:          | :attr:`ScheduledEventLocationType.external`       |
+    +------------------------+---------------------------------------------------+
 
     .. versionadded:: 2.0
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
@@ -77,12 +82,13 @@ class ScheduledEventLocation:
         'value',
     )
 
-    def __init__(self, *, state: ConnectionState, location: Union[str, int, StageChannel, VoiceChannel]):
+    def __init__(self, *, state: ConnectionState, value: Union[str, int, StageChannel, VoiceChannel]):
         self._state = state
-        if isinstance(location, int):
-            self.value = self._state._get_guild_channel({"channel_id": int(location)})
+        self.value: Union[str, StageChannel, VoiceChannel]
+        if isinstance(value, int):
+            self.value = self._state._get_guild_channel({"channel_id": int(value)})
         else:
-            self.value = location
+            self.value = value
 
     def __repr__(self) -> str:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
@@ -194,9 +200,9 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get('entity_metadata')
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=int(channel_id))
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
+            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
 
     def __str__(self) -> str:
         return self.name
@@ -298,7 +304,7 @@ class ScheduledEvent(Hashable):
 
         if location is not MISSING:
             if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
-                location = ScheduledEventLocation(state=self._state, location=location)
+                location = ScheduledEventLocation(state=self._state, value=location)
 
             if location.type is ScheduledEventLocationType.external:
                 payload["channel_id"] = None
