@@ -26,4 +26,5 @@ DEALINGS IN THE SOFTWARE.
 from .context import *
 from .core import *
 from .errors import *
+from .options import *
 from .permissions import *
