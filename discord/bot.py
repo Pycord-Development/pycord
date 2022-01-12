@@ -244,12 +244,16 @@ class ApplicationCommandMixin:
             for check in to_check:
                 if type(to_check[check]) == list:
                     for opt in to_check[check]:
-                        if (
-                                hasattr(cmd, opt) and (not hasattr(match, opt)
-                                                       or getattr(cmd, opt) != getattr(match, opt))
-                                or as_dict.get(opt) is not None and (not hasattr(match, opt)
-                                                                     or getattr(cmd, opt) != getattr(match, opt))
-                        ):
+
+                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]]
+                        for i, val in enumerate(cmd_vals):
+                            # We need to do some falsy conversion here
+                            # The API considers False (autocomplete) and [] (choices) to be falsy values
+                            falsy_vals = (False, [])
+                            if val in falsy_vals:
+                                cmd_vals[i] = MISSING
+                        match_vals = [val.get(opt, MISSING) for val in match[check]]
+                        if cmd_vals != match_vals:
                             # We have a difference
                             return_value.append({
                                 "command": cmd,
