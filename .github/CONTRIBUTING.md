@@ -8,8 +8,7 @@ The following is a set of guidelines for contributing to the repository. These a
 
 Generally speaking questions are better suited in our resources below.
 
-- The official support server: https://discord.gg/UCXwPR7Pew
-- The Discord API server under #python_discord-py: https://discord.gg/discord-api
+- The official support server: https://pycord.dev/discord
 - [The FAQ in the documentation](https://docs.pycord.dev/en/master/faq.html)
 - [StackOverflow's `pycord` tag](https://stackoverflow.com/questions/tagged/pycord)
 
