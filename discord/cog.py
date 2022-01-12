@@ -33,9 +33,7 @@ from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Opti
 import discord.utils
 from . import errors
 from .commands.core import _BaseCommand
-
-if TYPE_CHECKING:
-    from .commands import ApplicationContext, ApplicationCommand
+from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand, SlashCommandGroup
 
 __all__ = (
     'CogMeta',
