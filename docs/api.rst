@@ -1920,7 +1920,7 @@ of :class:`enum.Enum`.
         The member is streaming.
 
 
-.. class:: AuditLogAction
+.. class:: tlogitLogAction
 
     Represents the type of action being done for a :class:`AuditLogEntry`\,
     which is retrievable via :meth:`Guild.audit_logs`.
@@ -3628,6 +3628,12 @@ AuditLogDiff
         The default auto archive duration for newly created threads being changed.
 
         :type: :class:`int`
+
+    .. attribute:: invitable
+
+        Non-moderators can now add other non-moderators to this thread.
+
+        :type: :class:`bool`
 
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these
