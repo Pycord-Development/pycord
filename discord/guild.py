@@ -52,8 +52,7 @@ from .permissions import PermissionOverwrite
 from .colour import Colour
 from .errors import InvalidArgument, ClientException
 from .channel import *
-from .channel import _guild_channel_factory
-from .channel import _threaded_guild_channel_factory
+from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .enums import (
     AuditLogAction,
     VideoQualityMode,
@@ -64,6 +63,8 @@ from .enums import (
     ContentFilter,
     NotificationLevel,
     NSFWLevel,
+    ScheduledEventLocationType,
+    ScheduledEventPrivacyLevel,
 )
 from .mixins import Hashable
 from .user import User
@@ -78,7 +79,7 @@ from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
 from .file import File
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
-
+from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 
 __all__ = (
     'Guild',
@@ -253,13 +254,13 @@ class Guild(Hashable):
         The guild's NSFW level.
 
         .. versionadded:: 2.0
-        
+
     approximate_member_count: Optional[:class:`int`]
         The approximate number of members in the guild. This is ``None`` unless the guild is obtained
         using :meth:`Client.fetch_guild` with ``with_counts=True``.
 
         .. versionadded:: 2.0
-        
+
     approximate_presence_count: Optional[:class:`int`]
         The approximate number of members currently active in the guild.
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
@@ -293,6 +294,7 @@ class Guild(Hashable):
         'premium_progress_bar_enabled',
         'preferred_locale',
         'nsfw_level',
+        '_scheduled_events',
         '_members',
         '_channels',
         '_icon',
@@ -310,8 +312,8 @@ class Guild(Hashable):
         '_public_updates_channel_id',
         '_stage_instances',
         '_threads',
-        "approximate_member_count",
-        "approximate_presence_count",
+        'approximate_member_count',
+        'approximate_presence_count',
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
@@ -323,8 +325,14 @@ class Guild(Hashable):
     }
 
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
+        # NOTE:
+        # Adding an attribute here and getting an AttributeError saying
+        # the attr doesn't exist? it has something to do with the order
+        # of the attr in __slots__
+
         self._channels: Dict[int, GuildChannel] = {}
         self._members: Dict[int, Member] = {}
+        self._scheduled_events: Dict[int, ScheduledEvent] = {}
         self._voice_states: Dict[int, VoiceState] = {}
         self._threads: Dict[int, Thread] = {}
         self._state: ConnectionState = state
@@ -349,6 +357,17 @@ class Guild(Hashable):
 
     def _remove_member(self, member: Snowflake, /) -> None:
         self._members.pop(member.id, None)
+
+    def _add_scheduled_event(self, event: ScheduledEvent, /) -> None:
+        self._scheduled_events[event.id] = event
+
+    def _remove_scheduled_event(self, event: Snowflake, /) -> None:
+        self._scheduled_events.pop(event.id, None)
+
+    def _scheduled_events_from_list(self, events: List[ScheduledEvent], /) -> None:
+        self._scheduled_events.clear()
+        for event in events:
+            self._scheduled_events[event.id] = event
 
     def _add_thread(self, thread: Thread, /) -> None:
         self._threads[thread.id] = thread
@@ -494,6 +513,12 @@ class Guild(Hashable):
             member = Member(data=mdata, guild=self, state=state)
             if cache_joined or member.id == self_id:
                 self._add_member(member)
+
+        events = []
+        for event in guild.get('guild_scheduled_events', []):
+            creator = None if not event.get('creator', None) else self.get_member(event.get('creator_id'))
+            events.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
+        self._scheduled_events_from_list(events)
 
         self._sync(guild)
         self._large: Optional[bool] = None if member_count is None else self._member_count >= 250
@@ -3046,7 +3071,7 @@ class Guild(Hashable):
         The guild must have ``COMMUNITY`` in :attr:`Guild.features`
         
         Parameters
-        ------------
+        -----------
         
         description: Optional[:class:`str`]
             The new description of welcome screen.
@@ -3088,4 +3113,180 @@ class Guild(Hashable):
         if options:
             new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get('reason'))
             return WelcomeScreen(data=new, guild=self)
+
+    async def fetch_scheduled_events(self, *, with_user_count: bool = True) -> List[ScheduledEvent]:
+        """|coro|
         
+        Returns a list of :class:`ScheduledEvent` in the guild.
+
+        .. note::
+
+            This method is an API call. For general usage, consider :attr:`scheduled_events` instead.
+
+        Parameters
+        -----------
+        with_user_count: Optional[:class:`bool`]
+            If the scheduled event should be fetch with the number of
+            users that are interested in the event.
+            Defaults to ``True``
+
+        Raises
+        -------
+        ClientException
+            The scheduled events intent is not enabled.
+        HTTPException
+            Getting the scheduled events failed.
+
+        Returns
+        --------
+        List[:class:`ScheduledEvent`]
+            The fetched scheduled events
+        """
+        data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
+        result = []
+        for event in data:
+            creator = None if not event.get('creator', None) else self.get_member(event.get('creator_id'))
+            result.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
+
+        self._scheduled_events_from_list(result)
+        return result
+
+    async def fetch_scheduled_event(
+        self,
+        event_id: int,
+        /,
+        *,
+        with_user_count: bool = True
+    ) -> Optional[ScheduledEvent]:
+        """|coro|
+
+        Retrieves a :class:`ScheduledEvent` from event ID.
+
+        .. note::
+
+            This method is an API call. If you have :attr:`Intents.scheduled_events`, consider :meth:`get_scheduled_event` instead.
+
+        Parameters
+        -----------
+        event_id: :class:`int`
+            The event's ID to fetch with.
+
+        Raises
+        -------
+        HTTPException
+            Fetching the event failed.
+        NotFound
+            Event not found.
+
+        Returns
+        --------
+        Optional[:class:`ScheduledEvent`]
+            The scheduled event from the event ID.
+        """
+        data = await self._state.http.get_scheduled_event(guild_id=self.id, event_id=event_id, with_user_count=with_user_count)
+        creator = None if not data.get('creator', None) else self.get_member(data.get('creator_id'))
+        event = ScheduledEvent(state=self._state, guild=self, creator=creator, data=data)
+
+        old_event = self._scheduled_events.get(event.id)
+        if old_event:
+            self._scheduled_events[event.id] = event
+        else:
+            self._add_scheduled_event(event)
+
+        return event
+
+    def get_scheduled_event(self, event_id: int, /) -> Optional[ScheduledEvent]:
+        """Returns a Scheduled Event with the given ID.
+
+        Parameters
+        -----------
+        event_id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`ScheduledEvent`]
+            The scheduled event or ``None`` if not found.
+        """
+        return self._scheduled_events.get(event_id)
+
+    async def create_scheduled_event(
+        self,
+        *,
+        name: str,
+        description: str = MISSING,
+        start_time: datetime,
+        end_time: datetime = MISSING,
+        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation],
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        reason: Optional[str] = None
+    ) -> Optional[ScheduledEvent]:
+        """|coro|
+        Creates a scheduled event.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the scheduled event.
+        description: Optional[:class:`str`]
+            The description of the scheduled event.
+        start_time: :class:`datetime.datetime`
+            A datetime object of when the scheduled event is supposed to start.
+        end_time: Optional[:class:`datetime.datetime`]
+            A datetime object of when the scheduled event is supposed to end.
+        location: :class:`ScheduledEventLocation`
+            The location of where the event is happening.
+        privacy_level: :class:`ScheduledEventPrivacyLevel`
+            The privacy level of the event. Currently, the only possible value
+            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
+            so there is no need to change this parameter.
+        reason: Optional[:class:`str`]
+            The reason to show in the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Events permission.
+        HTTPException
+            The operation failed.
+
+        Returns
+        --------
+        Optional[:class:`ScheduledEvent`]
+            The created scheduled event.
+        """
+        payload: Dict[str, Union[str, int]] = {}
+
+        payload["name"] = name
+
+        payload["scheduled_start_time"] = start_time.isoformat()
+
+        payload["privacy_level"] = int(privacy_level)
+
+        if not isinstance(location, ScheduledEventLocation):
+            location = ScheduledEventLocation(state=self._state, value=location)
+
+        payload["entity_type"] = location.type.value
+
+        if location.type == ScheduledEventLocationType.external:
+            payload["channel_id"] = None
+            payload["entity_metadata"] = {"location": location.value}
+        else:
+            payload["channel_id"] = location.value.id
+            payload["entity_metadata"] = None
+
+        if description is not MISSING:
+            payload["description"] = description
+
+        if end_time is not MISSING:
+            payload["scheduled_end_time"] = end_time.isoformat()
+
+        data = await self._state.http.create_scheduled_event(guild_id=self.id, reason=reason, **payload)
+        event = ScheduledEvent(state=self._state, guild=self, creator=self.me, data=data)
+        self._add_scheduled_event(event)
+        return event
+
+    @property
+    def scheduled_events(self) -> List[ScheduledEvent]:
+        """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
+        return list(self._scheduled_events.values())

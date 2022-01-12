@@ -45,7 +45,7 @@ with open("README.rst") as f:
 # Extra Requirements 
 # Ex: pip install pycord[voice] or [speed]
 extras_require = {
-    "voice": ["PyNaCl>=1.3.0,<1.5"],
+    "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
         "sphinx==4.3.2",
         "sphinxcontrib_trio==1.1.2",

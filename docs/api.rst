@@ -1161,6 +1161,83 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param user: The user that joined or left.
     :type user: :class:`User`
 
+.. function:: on_scheduled_event_create(event)
+
+    Called when an :class:`ScheduledEvent` is created.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The newly created scheduled event.
+    :type event: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_update(before, after)
+
+    Called when a scheduled event is updated.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param before: The old scheduled event.
+    :type before: :class:`ScheduledEvent`
+    :param after: The updated scheduled event.
+    :type after: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_delete(event)
+
+    Called when a scheduled event is deleted.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The deleted scheduled event.
+    :type event: :class:`ScheduledEvent`
+
+.. function:: on_scheduled_event_user_add(event, member)
+
+    Called when a user subscribes to an event. If the member or event
+    is not found in the internal cache, then this event will not be
+    called. Consider using :func:`on_raw_scheduled_event_user_add` instead.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The scheduled event subscribed to.
+    :type event: :class:`ScheduledEvent`
+    :param member: The member who subscribed.
+    :type member: :class:`Member`
+
+.. function:: on_raw_scheduled_event_user_add(payload)
+
+    Called when a user subscribes to an event. Unlike
+    :meth:`on_scheduled_event_user_add`, this will be called
+    regardless of the state of the internal cache.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawScheduledEventSubscription`
+
+.. function:: on_scheduled_event_user_remove(event, member)
+
+    Called when a user unsubscribes to an event. If the member or event is
+    not found in the internal cache, then this event will not be called.
+    Consider using :func:`on_raw_scheduled_event_user_remove` instead.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param event: The scheduled event unsubscribed from.
+    :type event: :class:`ScheduledEvent`
+    :param member: The member who unsubscribed.
+    :type member: :class:`Member`
+
+.. function:: on_raw_scheduled_event_user_remove(payload)
+
+    Called when a user unsubscribes to an event. Unlike
+    :meth:`on_scheduled_event_user_remove`, this will be called
+    regardless of the state of the internal cache.
+
+    This requires :attr:`Intents.scheduled_events` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawScheduledEventSubscription`
+
 .. _discord-api-utils:
 
 Utility Functions
@@ -2848,8 +2925,61 @@ of :class:`enum.Enum`.
     .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
-    
-    
+
+.. class:: ScheduledEventStatus
+
+    Represents the status of a scheduled event.
+
+    .. verssionadded:: 2.0
+
+    .. attribute:: scheduled
+
+        The scheduled event hasn't started or been canceled yet.
+
+    .. attribute:: active
+
+        The scheduled event is in progress.
+
+    .. attribute:: completed
+
+        The scheduled event is over.
+
+    .. attribute:: canceled
+
+        The scheduled event has been canceled before it can start.
+
+    .. attribute:: cancelled
+
+        Alias to :attr:`canceled`.
+
+.. class:: ScheduledEventLocationType
+
+    Represents a scheduled event location type (otherwise known as the entity type on the API).
+
+    .. verssionadded:: 2.0
+
+    .. attribute:: stage_instance
+
+        Represents a scheduled event that is happening in a :class:`StageChannel`.
+
+    .. attribute:: voice
+
+        Represents a scheduled event that is happening in a :class:`VoiceChannel`.
+
+    .. attribute:: external
+
+        Represents a generic location as a :class:`str`.
+
+.. class:: ScheduledEventPrivacyLevel
+
+    Represents the privacy level of a scheduled event.
+    Scheduled event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
+
+    .. attribute:: guild_only
+
+        Represents a scheduled event that is only available to members inside the guild.
+
 
 Async Iterator
 ----------------
@@ -3770,6 +3900,16 @@ Guild
 
         :type: :class:`User`
 
+ScheduledEvent
+~~~~~~~~~~~~~~~
+
+.. attributestable:: ScheduledEvent
+
+.. autoclass:: ScheduledEvent()
+    :members:
+
+.. autoclass:: ScheduledEventLocation()
+    :members:
 
 Integration
 ~~~~~~~~~~~~
@@ -4188,6 +4328,14 @@ RawThreadDeleteEvent
 .. attributetable:: RawThreadDeleteEvent
 
 .. autoclass:: RawThreadDeleteEvent()
+    :members:
+
+RawScheduledEventSubscription
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawScheduledEventSubscription
+
+.. autoclass:: RawScheduledEventSubscription()
     :members:
 
 PartialWebhookGuild

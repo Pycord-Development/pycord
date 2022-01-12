@@ -52,6 +52,8 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .abc import GuildChannel
     from .user import User
+    from .scheduled_events import ScheduledEvent
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
     InviteGuildType = Union[Guild, 'PartialInviteGuild', Object]
     InviteChannelType = Union[GuildChannel, 'PartialInviteChannel', Object]
@@ -305,6 +307,8 @@ class Invite(Hashable):
         The embedded application the invite targets, if any.
 
         .. versionadded:: 2.0
+    scheduled_event: Optional[:class:`ScheduledEvent`]
+        The scheduled event linked with the invite.
     """
 
     __slots__ = (
@@ -323,6 +327,7 @@ class Invite(Hashable):
         '_state',
         'approximate_member_count',
         'approximate_presence_count',
+        'scheduled_event',
         'target_application',
         'expires_at',
     )
@@ -361,6 +366,10 @@ class Invite(Hashable):
         self.target_user: Optional[User] = None if target_user_data is None else self._state.create_user(target_user_data)
 
         self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
+
+        from .scheduled_events import ScheduledEvent
+        scheduled_event: ScheduledEventPayload = data.get('guild_scheduled_event')
+        self.scheduled_event: Optional[ScheduledEvent] = ScheduledEvent(state=state, data=scheduled_event) if scheduled_event else None 
 
         application = data.get('target_application')
         self.target_application: Optional[PartialAppInfo] = (
@@ -438,7 +447,8 @@ class Invite(Hashable):
         return (
             f'<Invite code={self.code!r} guild={self.guild!r} '
             f'online={self.approximate_presence_count} '
-            f'members={self.approximate_member_count}>'
+            f'members={self.approximate_member_count} '
+            f'scheduled_event={self.scheduled_event}>'
         )
 
     def __hash__(self) -> int:
@@ -452,7 +462,7 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """:class:`str`: A property that retrieves the invite URL."""
-        return self.BASE + '/' + self.code
+        return self.BASE + '/' + self.code + (f'?event={self.scheduled_event.id}' if self.scheduled_event else '')
 
     async def delete(self, *, reason: Optional[str] = None):
         """|coro|
@@ -477,3 +487,22 @@ class Invite(Hashable):
         """
 
         await self._state.http.delete_invite(self.code, reason=reason)
+
+    def set_scheduled_event(self, event: ScheduledEvent) -> None:
+        """Links the given scheduled event to this invite.
+
+        .. note::
+
+            Scheduled events aren't actually associated to invites on the API.
+            Any guild channel invite can have an event attached to it. Using
+            :meth:`abc.GuildChannel.create_invite`, :meth:`Client.fetch_invite`,
+            or this method, you can link scheduled events.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        event: :class:`ScheduledEvent`
+            The scheduled event object to link.
+        """
+        self.scheduled_event = event
