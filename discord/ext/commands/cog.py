@@ -24,22 +24,23 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any, Callable, Generator, Type, TypeVar, Union
+
 import discord
+
 from ...cog import Cog
-
-from typing import Any, Callable, Generator, TYPE_CHECKING, TypeVar, Type, Union
-
 from ...commands import ApplicationCommand
 
 if TYPE_CHECKING:
     from .core import Command
 
-__all__ = ('Cog',)
+__all__ = ("Cog",)
 
-CogT = TypeVar('CogT', bound='Cog')
-FuncT = TypeVar('FuncT', bound=Callable[..., Any])
+CogT = TypeVar("CogT", bound="Cog")
+FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 
 MISSING: Any = discord.utils.MISSING
+
 
 class Cog(Cog):
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
@@ -59,6 +60,7 @@ class Cog(Cog):
             A command or group from the cog.
         """
         from .core import GroupMixin
+
         for command in self.__cog_commands__:
             if isinstance(command, ApplicationCommand):
                 yield command
