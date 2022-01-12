@@ -1920,7 +1920,7 @@ of :class:`enum.Enum`.
         The member is streaming.
 
 
-.. class:: tlogitLogAction
+.. class:: AuditLogAction
 
     Represents the type of action being done for a :class:`AuditLogEntry`\,
     which is retrievable via :meth:`Guild.audit_logs`.
