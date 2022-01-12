@@ -244,14 +244,17 @@ class ApplicationCommandMixin:
             for check in to_check:
                 if type(to_check[check]) == list:
                     for opt in to_check[check]:
-                        if (hasattr(match, opt) and (getattr(cmd, opt)
-                        if hasattr(cmd, opt)
-                        else as_dict[opt]) != match[opt]
+                        if (
+                                hasattr(cmd, opt) and (not hasattr(match, opt)
+                                                       or getattr(cmd, opt) != getattr(match, opt))
+                                or as_dict.get(opt) is not None and (not hasattr(match, opt)
+                                                                     or getattr(cmd, opt) != getattr(match, opt))
                         ):
                             # We have a difference
                             return_value.append({
                                 "command": cmd,
-                                "action": "edit"
+                                "action": "edit",
+                                "id": int(registered_commands_dict[cmd.name]["id"])
                             })
                             break
                 else:
