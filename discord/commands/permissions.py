@@ -133,9 +133,7 @@ def cog_permission(role_id: int = None, user_id: int = None, permission: bool = 
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
-        parent: CogT = func.__annotations__["self"]
-
+    def decorator(parent: CogT):
         if not role_id is None:
             app_cmd_perm = CommandPermission(role_id, 1, permission, guild_id)
         elif not user_id is None:
@@ -150,8 +148,6 @@ def cog_permission(role_id: int = None, user_id: int = None, permission: bool = 
                 command.__app_cmd_perms__ = []
 
             command.__app_cmd_perms__.append(app_cmd_perm)
-        
-        return func
 
     return decorator
 
@@ -202,9 +198,7 @@ def cog_has_role(item: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
-        parent: CogT = func.__annotations__["self"]
-
+    def decorator(parent: CogT):
         # Loop through every command in the cog
         for command in parent.__cog_commands__:
             # Create __app_cmd_perms__
@@ -213,8 +207,6 @@ def cog_has_role(item: Union[int, str], guild_id: int = None):
             
             app_cmd_perm = CommandPermission(item, 1, True, guild_id)
             command.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
 
     return decorator
 
@@ -267,9 +259,7 @@ def cog_has_any_role(*items: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
-        parent: CogT = func.__annotations__["self"]
-
+    def decorator(parent: CogT):
         for command in parent.__cog_commands__:
             # Create __app_cmd_perms__
             if not hasattr(command, '__app_cmd_perms__'):
@@ -279,8 +269,6 @@ def cog_has_any_role(*items: Union[int, str], guild_id: int = None):
                 app_cmd_perm = CommandPermission(item, 1, True, guild_id)
 
                 command.__app_cmd_perms__.append(app_cmd_perm)
-        
-        return func
 
     return decorator
 
@@ -329,9 +317,7 @@ def cog_is_user(user: int, guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
-        parent: CogT = func.__annotations__["self"]
-
+    def decorator(parent: CogT):
         for command in parent.__cog_commands__:
             # Create __app_cmd_perms__
             if not hasattr(command, '__app_cmd_perms__'):
@@ -340,8 +326,6 @@ def cog_is_user(user: int, guild_id: int = None):
             app_cmd_perm = CommandPermission(user, 2, True, guild_id)
 
             command.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
 
     return decorator
 
@@ -387,9 +371,7 @@ def cog_is_owner(guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
-        parent: CogT = func.__annotations__["self"]
-
+    def decorator(parent: CogT):
         for command in parent.__cog_commands__:
             # Create __app_cmd_perms__
             if not hasattr(command, '__app_cmd_perms__'):
@@ -398,7 +380,5 @@ def cog_is_owner(guild_id: int = None):
             app_cmd_perm = CommandPermission("owner", 2, True, guild_id)
 
             command.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
 
     return decorator
