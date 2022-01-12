@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import Callable, TYPE_CHECKING, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Optional, TypeVar, Union
 
 import discord.abc
 
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from discord import Bot
     from discord.state import ConnectionState
 
-    from .commands import ApplicationCommand, Option
+    from .core import ApplicationCommand, Option
     from ..cog import Cog
     from ..webhook import WebhookMessage
     from typing import Callable
@@ -46,7 +46,6 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
-from ..webhook import Webhook
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound="Cog")

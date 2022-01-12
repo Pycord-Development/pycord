@@ -66,7 +66,6 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from ..cog import Cog
-    from ..interactions import Interaction
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound='Cog')
