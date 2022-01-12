@@ -184,7 +184,7 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+    pages: Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
         If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed.
     show_disabled: :class:`bool`
@@ -380,6 +380,12 @@ class Paginator(discord.ui.View):
             The message associated with the paginator.
         """
         self.update_buttons()
+        self.current_page = page_number
+        if self.show_indicator:
+            self.buttons["page_indicator"][
+                "object"
+            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
