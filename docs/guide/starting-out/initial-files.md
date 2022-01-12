@@ -9,4 +9,4 @@ For advanced users it would be recommended to have your bot split into modules,
 
 Like `moderation_module` or `fun_module`, etc
 
-it's also for these users were it's recommened to subclass `Bot` or `Client` instead of doing `=` to add more features.
+it's also for these users were it's recommended to subclass `Bot` or `Client` instead of doing `=` to add more features.

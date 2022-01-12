@@ -18,7 +18,7 @@ Then finally just add it to your load_extensions:
 ```py
 bot.load_extension("my_cog")
 ```
-Then thats it, You now have a `Cog`!
+Then that's it, You now have a `Cog`!
 
 # How to make a command
 Making commands are as-easy as normal,
