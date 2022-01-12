@@ -24,7 +24,7 @@ Installing
 
 **!!! IMPORTANT !!!** 
 
-For new features like options, buttons, and threads, you need to install from git until our v2.0 release on Jan 28th, 2021. ::
+For new features like options, buttons, and threads, you need to install from git until our v2.0 release on Jan 28th, 2022. ::
 
     python3 -m pip install -U git+https://github.com/Pycord-Development/pycord
     
