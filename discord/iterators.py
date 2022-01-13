@@ -799,9 +799,10 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         from .member import Member
 
         data.pop('guild_scheduled_event_id')
-        data.pop('user')
+        user = data.pop('user')
 
         member = data.pop('member')
+        member['user'] = user
 
         return Member(data=member, guild=self.event.guild, state=self.event._state)
 
