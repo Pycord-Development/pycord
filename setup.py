@@ -43,7 +43,7 @@ with open("README.rst") as f:
     readme = f.read()
 
 # Extra Requirements 
-# Ex: pip install pycord[voice] or [speed]
+# Ex: pip install py-cord[voice] or [speed]
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
