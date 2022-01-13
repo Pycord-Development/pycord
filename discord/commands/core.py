@@ -42,7 +42,7 @@ from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
 from ..user import User
-from ..utils import find, get_or_fetch, async_all
+from ..utils import find, get_or_fetch, async_all, utcnow
 
 __all__ = (
     "_BaseCommand",
@@ -195,6 +195,30 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                     await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
                 raise
 
+    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
+        """Checks whether the command is currently on cooldown.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to use when checking the commands cooldown status.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command is on cooldown.
+        """
+        if not self._buckets.valid:
+            return False
+
+        bucket = self._buckets.get_bucket(ctx)
+        current = utcnow().timestamp()
+        return bucket.get_tokens(current) == 0
+
     def reset_cooldown(self, ctx: ApplicationContext) -> None:
         """Resets the cooldown on this command.
 
@@ -206,6 +230,31 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if self._buckets.valid:
             bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
             bucket.reset()
+
+    def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
+        """Retrieves the amount of seconds before this command can be tried again.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to retrieve the cooldown from.
+
+        Returns
+        --------
+        :class:`float`
+            The amount of time left on this command's cooldown in seconds.
+            If this is ``0.0`` then the command isn't on cooldown.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)
+            current = utcnow().timestamp()
+            return bucket.get_retry_after(current)
+
+        return 0.0
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
