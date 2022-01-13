@@ -823,7 +823,6 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
             if data:
                 self.limit -= self.retrieve
 
-
             for element in reversed(data):
                 if 'member' in element:
                     await self.subscribers.put(self.member_from_payload(element))
