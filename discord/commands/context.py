@@ -24,17 +24,21 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Callable, TYPE_CHECKING, Optional, TypeVar, Union
 
 import discord.abc
 
 if TYPE_CHECKING:
+    from typing_extensions import ParamSpec
+
     import discord
     from discord import Bot
     from discord.state import ConnectionState
 
     from .commands import ApplicationCommand, Option
     from ..cog import Cog
+    from ..webhook import WebhookMessage
+    from typing import Callable
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -42,11 +46,18 @@ from ..member import Member
 from ..message import Message
 from ..user import User
 from ..utils import cached_property
+from ..webhook import Webhook
 
-__all__ = (
-    "ApplicationContext",
-    "AutocompleteContext"
-)
+T = TypeVar('T')
+CogT = TypeVar('CogT', bound="Cog")
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
+
+__all__ = ("ApplicationContext", "AutocompleteContext")
+
 
 class ApplicationContext(discord.abc.Messageable):
     """Represents a Discord application command interaction context.
@@ -69,11 +80,43 @@ class ApplicationContext(discord.abc.Messageable):
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> discord.abc.Messageable:
         return self.channel
+
+    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+        r"""|coro|
+        Calls a command with the arguments given.
+        This is useful if you want to just call the callback that a
+        :class:`.ApplicationCommand` holds internally.
+        .. note::
+            This does not handle converters, checks, cooldowns, pre-invoke,
+            or after-invoke hooks in any matter. It calls the internal callback
+            directly as-if it was a regular function.
+            You must take care in passing the proper arguments when
+            using this function.
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command that is going to be called.
+        \*args
+            The arguments to use.
+        \*\*kwargs
+            The keyword arguments to use.
+        Raises
+        -------
+        TypeError
+            The command argument to invoke is missing.
+        """
+        return await command(self, *args, **kwargs)
 
     @cached_property
     def channel(self):
@@ -90,6 +133,14 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
+
+    @cached_property
+    def locale(self) -> Optional[str]:
+        return self.interaction.locale
+
+    @cached_property
+    def guild_locale(self) -> Optional[str]:
+        return self.interaction.guild_locale
 
     @cached_property
     def me(self) -> Union[Member, User]:
@@ -111,7 +162,7 @@ class ApplicationContext(discord.abc.Messageable):
     def voice_client(self):
         if self.guild is None:
             return None
-        
+
         return self.guild.voice_client
 
     @cached_property
@@ -119,8 +170,31 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response
 
     @property
-    def respond(self):
-        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
+    def respond(self) -> Callable[..., Union[Interaction, WebhookMessage]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not."""
+        if not self.response.is_done():
+            return self.interaction.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
+
+    @property
+    def send_response(self):
+        if not self.response.is_done():
+            return self.interaction.response.send_message
+        else:
+            raise RuntimeError(
+                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
+            )
+
+    @property
+    def send_followup(self):
+        if self.response.is_done():
+            return self.followup.send
+        else:
+            raise RuntimeError(
+                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
+            )
 
     @property
     def defer(self):
@@ -147,7 +221,7 @@ class ApplicationContext(discord.abc.Messageable):
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
-       
+
         return self.command.cog
 
 
@@ -161,7 +235,7 @@ class AutocompleteContext:
     Attributes
     -----------
     bot: :class:`.Bot`
-        The bot that the command belongs to.    
+        The bot that the command belongs to.
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
     command: :class:`.ApplicationCommand`
@@ -175,20 +249,20 @@ class AutocompleteContext:
     """
 
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
-    
+
     def __init__(self, bot: Bot, interaction: Interaction) -> None:
         self.bot = bot
         self.interaction = interaction
 
-        # self.command = command
-        # self.focused = focused
-        # self.value = value
-        # self.options = options
+        self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
 
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
-       
+
         return self.command.cog

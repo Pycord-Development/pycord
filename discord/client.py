@@ -238,7 +238,7 @@ class Client:
 
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, voice will NOT be supported")
+            _log.warning("PyNaCl is not installed, Voice will NOT be supported")
 
     # internals
 
@@ -262,7 +262,7 @@ class Client:
         return float('nan') if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """:class:`bool`: Whether the websocket is currently rate limited or not.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -361,7 +361,7 @@ class Client:
     def _schedule_event(self, coro: Callable[..., Coroutine[Any, Any, Any]], event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         # Schedules the task
-        return asyncio.create_task(wrapped, name=f'discord.py: {event_name}')
+        return asyncio.create_task(wrapped, name=f'pycord: {event_name}')
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
         _log.debug('Dispatching event %s', event)
@@ -639,7 +639,7 @@ class Client:
         try:
             loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
             loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
-        except NotImplementedError:
+        except (NotImplementedError, RuntimeError):
             pass
 
         async def runner():
@@ -833,7 +833,7 @@ class Client:
         return self._connection.get_user(id)
 
     def get_emoji(self, id: int, /) -> Optional[Emoji]:
-        """Returns an emoji with the given ID.
+        """Returns the emoji with the given ID.
 
         Parameters
         -----------
@@ -848,7 +848,7 @@ class Client:
         return self._connection.get_emoji(id)
 
     def get_sticker(self, id: int, /) -> Optional[GuildSticker]:
-        """Returns a guild sticker with the given ID.
+        """Returns the guild sticker with the given ID.
 
         .. versionadded:: 2.0
 
@@ -904,6 +904,22 @@ class Client:
         """
         for guild in self.guilds:
             yield from guild.members
+
+    async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
+        """Looks up a user in the user cache or fetches if not found.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        ---------
+        Optional[:class:`~discord.User`]
+            The user or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
 
     # listeners/waiters
 
@@ -1321,7 +1337,7 @@ class Client:
 
     # Invite management
 
-    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True) -> Invite:
+    async def fetch_invite(self, url: Union[Invite, str], *, with_counts: bool = True, with_expiration: bool = True, event_id: Optional[int] = None) -> Invite:
         """|coro|
 
         Gets an :class:`.Invite` from a discord.gg URL or ID.
@@ -1345,6 +1361,13 @@ class Client:
             :attr:`.Invite.expires_at` field.
 
             .. versionadded:: 2.0
+        event_id: Optional[:class:`int`]
+            The ID of the scheduled event to be associated with the event.
+
+            See :meth:`Invite.set_scheduled_event` for more
+            info on event invite linking.
+
+            ..versionadded:: 2.0
 
         Raises
         -------
@@ -1360,7 +1383,7 @@ class Client:
         """
 
         invite_id = utils.resolve_invite(url)
-        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration)
+        data = await self.http.get_invite(invite_id, with_counts=with_counts, with_expiration=with_expiration, guild_scheduled_event_id=event_id)
         return Invite.from_incomplete(state=self._connection, data=data)
 
     async def delete_invite(self, invite: Union[Invite, str]) -> None:

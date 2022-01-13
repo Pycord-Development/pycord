@@ -43,6 +43,7 @@ from typing import (
     runtime_checkable,
 )
 
+from .scheduled_events import ScheduledEvent
 from .iterators import HistoryIterator
 from .context_managers import Typing
 from .enums import ChannelType
@@ -211,10 +212,10 @@ class _Overwrites:
         }
 
     def is_role(self) -> bool:
-        return self.type == 0
+        return self.type == self.ROLE
 
     def is_member(self) -> bool:
-        return self.type == 1
+        return self.type == self.MEMBER
 
 
 GCH = TypeVar('GCH', bound='GuildChannel')
@@ -1035,6 +1036,7 @@ class GuildChannel:
         max_uses: int = 0,
         temporary: bool = False,
         unique: bool = True,
+        target_event: Optional[ScheduledEvent] = None,
         target_type: Optional[InviteTarget] = None,
         target_user: Optional[User] = None,
         target_application_id: Optional[int] = None,
@@ -1073,8 +1075,17 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
-        target_application_id:: Optional[:class:`int`]
+        target_application_id: Optional[:class:`int`]
             The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.
+
+            .. versionadded:: 2.0
+
+        target_event: Optional[:class:`ScheduledEvent`]
+            The scheduled event object to link to the event.
+            Shortcut to :meth:`Invite.set_scheduled_event`
+
+            See :meth:`Invite.set_scheduled_event` for more
+            info on event invite linking.
 
             .. versionadded:: 2.0
 
@@ -1103,7 +1114,10 @@ class GuildChannel:
             target_user_id=target_user.id if target_user else None,
             target_application_id=target_application_id,
         )
-        return Invite.from_incomplete(data=data, state=self._state)
+        invite = Invite.from_incomplete(data=data, state=self._state)
+        if target_event:
+            invite.set_scheduled_event(target_event)
+        return invite
 
     async def invites(self) -> List[Invite]:
         """|coro|
@@ -1243,7 +1257,7 @@ class Messageable:
     ):
         """|coro|
 
-        Sends a message to the destination with the content given.
+        Sends a message to the destination where the content was given.
 
         The content must be a type that can convert to a string through ``str(content)``.
         If the content is set to ``None`` (the default), then the ``embed`` parameter must

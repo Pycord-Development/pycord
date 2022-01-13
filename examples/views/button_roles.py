@@ -11,7 +11,7 @@ https://github.com/Pycord-Development/pycord/blob/master/examples/views/persiste
 Make sure to load this cog when your bot starts!
 """
 
-# this is the list of role IDs that will be added as buttons.
+# This is the list of role IDs that will be added as buttons.
 role_ids = [...]
 
 
@@ -20,8 +20,11 @@ class RoleButton(discord.ui.Button):
         """
         A button for one role. `custom_id` is needed for persistent views.
         """
-        super().__init__(label=role.name,
-                         style=discord.enums.ButtonStyle.primary, custom_id=str(role.id))
+        super().__init__(
+            label=role.name,
+            style=discord.enums.ButtonStyle.primary,
+            custom_id=str(role.id),
+        )
 
     async def callback(self, interaction: discord.Interaction):
         """This function will be called any time a user clicks on this button.
@@ -31,7 +34,6 @@ class RoleButton(discord.ui.Button):
         interaction : discord.Interaction
             The interaction object that was created when a user clicks on a button.
         """
-
         # Figure out who clicked the button.
         user = interaction.user
         # Get the role this button is for (stored in the custom ID).
@@ -46,11 +48,15 @@ class RoleButton(discord.ui.Button):
         if role not in user.roles:
             # Give the user the role if they don't already have it.
             await user.add_roles(role)
-            await interaction.response.send_message(f"🎉 You have been given the role {role.mention}", ephemeral=True)
+            await interaction.response.send_message(
+                f"🎉 You have been given the role {role.mention}", ephemeral=True
+            )
         else:
-            # Else, take the role from the user.
+            # Else, Take the role from the user
             await user.remove_roles(role)
-            await interaction.response.send_message(f"❌ The {role.mention} role has been taken from you", ephemeral=True)
+            await interaction.response.send_message(
+                f"❌ The {role.mention} role has been taken from you", ephemeral=True
+            )
 
 
 class ButtonRoleCog(commands.Cog):
