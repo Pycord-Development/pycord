@@ -27,13 +27,11 @@ import importlib
 import inspect
 import sys
 import types
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, \
-    Type
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, Tuple, TypeVar, Type
 
 import discord.utils
 from . import errors
-from .commands.core import _BaseCommand
-from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand, SlashCommandGroup
+from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
 
 __all__ = (
     'CogMeta',
