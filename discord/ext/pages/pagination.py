@@ -540,7 +540,7 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: Optional[discord.abc.Messageable] = None,
         target_message: Optional[str] = None,
-    ) -> Union[discord.Message]:
+    ) -> discord.Message:
         """Sends a message with the paginated items.
 
         Parameters
@@ -554,7 +554,7 @@ class Paginator(discord.ui.View):
 
         Returns
         --------
-        Union[:class:`~discord.Message`]
+        :class:`~discord.Message`
             The message that was sent with the paginator.
         """
         if not isinstance(ctx, Context):

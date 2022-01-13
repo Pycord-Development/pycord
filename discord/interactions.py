@@ -31,7 +31,7 @@ import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
-from .errors import InteractionResponded, HTTPException, ClientException, InvalidArgument
+from .errors import InteractionResponded, ClientException, InvalidArgument
 from .channel import PartialMessageable, ChannelType
 from .file import File
 from .user import User
