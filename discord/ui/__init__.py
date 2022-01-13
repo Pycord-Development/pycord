@@ -13,3 +13,5 @@ from .view import *
 from .item import *
 from .button import *
 from .select import *
+from .input_text import *
+from .modal import *

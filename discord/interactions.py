@@ -59,6 +59,7 @@ if TYPE_CHECKING:
     from aiohttp import ClientSession
     from .embeds import Embed
     from .ui.view import View
+    from .ui.modal import Modal
     from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, PartialMessageable
     from .threads import Thread
     from .commands import OptionChoice
@@ -771,7 +772,23 @@ class InteractionResponse:
         )
 
         self._responded = True
-        
+
+        async def send_modal(self, modal: Modal):
+            if self._responded:
+                raise InteractionResponded(self._parent)
+
+            payload = modal.to_dict()
+            adapter = async_context.get()
+            await adapter.create_interaction_response(
+                self._parent.id,
+                self._parent.token,
+                session=self._parent._session,
+                type=InteractionResponseType.modal.value,
+                data=payload,
+            )
+            self._responded = True
+            self._parent._state.store_modal(modal, self._parent.user.id)
+
 class _InteractionMessageState:
     __slots__ = ('_parent', '_interaction')
 
