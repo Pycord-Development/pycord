@@ -18,8 +18,8 @@ scroll = pages.Paginator(pages=my_pages(), show_disabled=False, show_indicator=T
 ```
 Then customize the buttons to your liking
 ```py
-paginator.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
-paginator.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
-paginator.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
-paginator.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
+scroll.customize_button("next", button_label=">", button_style=discord.ButtonStyle.green)
+scroll.customize_button("prev", button_label="<", button_style=discord.ButtonStyle.green)
+scroll.customize_button("first", button_label="<<", button_style=discord.ButtonStyle.blurple)
+scroll.customize_button("last", button_label=">>", button_style=discord.ButtonStyle.blurple)
 ```

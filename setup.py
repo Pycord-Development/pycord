@@ -79,7 +79,7 @@ setup(
     url="https://github.com/Pycord-Development/pycord",
     project_urls={
         "Website": "https://pycord.dev",
-        "Documentation": "https://docs.pycord.dev/en/latest/",
+        "Documentation": "https://docs.pycord.dev/en/master/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
     },
     version=version,
