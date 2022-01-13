@@ -426,7 +426,7 @@ class Paginator(discord.ui.View):
             self.add_button(button)
 
     def add_button(self, button: PaginatorButton):
-        """Adds a :class:`PaginatorButton` to the paginator. """
+        """Adds a :class:`PaginatorButton` to the paginator."""
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,

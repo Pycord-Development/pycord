@@ -52,7 +52,7 @@ def create_overwrites(ctx, *objects):
 async def text(
     ctx: commands.Context,
     name: str,
-    *objects: typing.Union[discord.Role, discord.Member]
+    *objects: typing.Union[discord.Role, discord.Member],
 ):
     """This makes a text channel with a specified name
     that is only visible to roles or members that are specified.
@@ -73,7 +73,7 @@ async def text(
 async def voice(
     ctx: commands.Context,
     name: str,
-    *objects: typing.Union[discord.Role, discord.Member]
+    *objects: typing.Union[discord.Role, discord.Member],
 ):
     """This does the same thing as the `text` subcommand
     but instead creates a voice channel.

@@ -47,13 +47,13 @@ from ..message import Message
 from ..user import User
 from ..utils import cached_property
 
-T = TypeVar('T')
-CogT = TypeVar('CogT', bound="Cog")
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
 
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
@@ -91,7 +91,13 @@ class ApplicationContext(discord.abc.Messageable):
     async def _get_channel(self) -> discord.abc.Messageable:
         return self.channel
 
-    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(
+        self,
+        command: ApplicationCommand[CogT, P, T],
+        /,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> T:
         r"""|coro|
         Calls a command with the arguments given.
         This is useful if you want to just call the callback that a
