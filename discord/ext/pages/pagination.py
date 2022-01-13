@@ -430,7 +430,7 @@ class Paginator(discord.ui.View):
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
-                label=button.label or button.button_type.capitalize()
+                label=button.label if button.label or button.emoji else button.button_type.capitalize()
                 if button.button_type != "page_indicator"
                 else f"{self.current_page + 1}/{self.page_count + 1}",
                 disabled=button.disabled,
