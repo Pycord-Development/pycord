@@ -31,7 +31,7 @@ from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Opti
 
 import discord.utils
 from . import errors
-from .commands.core import _BaseCommand, ApplicationCommand, ApplicationContext
+from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
 
 __all__ = (
     'CogMeta',
