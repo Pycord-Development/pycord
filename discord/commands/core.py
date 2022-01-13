@@ -36,21 +36,19 @@ from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from .options import Option, OptionChoice
 from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType, ChannelType
+from ..enums import SlashCommandOptionType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
 from ..user import User
-from ..utils import find, get_or_fetch, async_all
+from ..utils import find, get_or_fetch, async_all, utcnow
 
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
     "SlashCommand",
-    "Option",
-    "OptionChoice",
-    "option",
     "slash_command",
     "application_command",
     "user_command",
@@ -66,7 +64,6 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from ..cog import Cog
-    from ..interactions import Interaction
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound='Cog')
@@ -196,6 +193,30 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                     await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
                 raise
 
+    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
+        """Checks whether the command is currently on cooldown.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to use when checking the commands cooldown status.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command is on cooldown.
+        """
+        if not self._buckets.valid:
+            return False
+
+        bucket = self._buckets.get_bucket(ctx)
+        current = utcnow().timestamp()
+        return bucket.get_tokens(current) == 0
+
     def reset_cooldown(self, ctx: ApplicationContext) -> None:
         """Resets the cooldown on this command.
 
@@ -207,6 +228,31 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if self._buckets.valid:
             bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
             bucket.reset()
+
+    def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
+        """Retrieves the amount of seconds before this command can be tried again.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to retrieve the cooldown from.
+
+        Returns
+        --------
+        :class:`float`
+            The amount of time left on this command's cooldown in seconds.
+            If this is ``0.0`` then the command isn't on cooldown.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)
+            current = utcnow().timestamp()
+            return bucket.get_retry_after(current)
+
+        return 0.0
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -486,7 +532,10 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
+        if (kwop := kwargs.get('options', None)):
+            self.options: List[Option] = self._match_option_param_names(params, kwop)
+        else:
+            self.options: List[Option] = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -561,6 +610,51 @@ class SlashCommand(ApplicationCommand):
             final_options.append(option)
 
         return final_options
+
+
+    def _match_option_param_names(self, params, options):
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params.items())
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
+
+        check_annotations = [
+            lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
+            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore (union types)
+            lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
+            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
+        ]
+        for o in options:
+            validate_chat_input_name(o.name)
+            validate_chat_input_description(o.description)
+            try:
+                p_name, p_obj = next(params)
+            except StopIteration:  # not enough params for all the options
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
+            p_obj = p_obj.annotation
+
+            if not any(c(o, p_obj) for c in check_annotations):       
+                raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
+            o._parameter_name = p_name
+
+        left_out_params = OrderedDict()
+        left_out_params[''] = ''  # bypass first iter (ctx)
+        for k, v in params:
+            left_out_params[k] = v
+        options.extend(self._parse_options(left_out_params))
+
+        return options
 
     def _is_typing_union(self, annotation):
         return (
@@ -698,102 +792,6 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
-channel_type_map = {
-    'TextChannel': ChannelType.text,
-    'VoiceChannel': ChannelType.voice,
-    'StageChannel': ChannelType.stage_voice,
-    'CategoryChannel': ChannelType.category
-}
-
-class Option:
-    def __init__(
-        self, input_type: Any, /, description: str = None, **kwargs
-    ) -> None:
-        self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = description or "No description provided"
-        self.converter = None
-        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
-        if not isinstance(input_type, SlashCommandOptionType):
-            if hasattr(input_type, "convert"):
-                self.converter = input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == 'GuildChannel':
-                            continue
-
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
-        self.input_type = input_type
-        self.default = kwargs.pop("default", None)
-        self.required: bool = kwargs.pop("required", True) if self.default is None else False
-        self.choices: List[OptionChoice] = [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
-        ]
-
-        if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int, type(None))
-        elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float, type(None))
-        else:
-            minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
-
-        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
-        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-
-        if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
-            raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
-        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
-            raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
-
-        self.autocomplete = kwargs.pop("autocomplete", None)
-
-    def to_dict(self) -> Dict:
-        as_dict = {
-            "name": self.name,
-            "description": self.description,
-            "type": self.input_type.value,
-            "required": self.required,
-            "choices": [c.to_dict() for c in self.choices],
-            "autocomplete": bool(self.autocomplete)
-        }
-        if self.channel_types:
-            as_dict["channel_types"] = [t.value for t in self.channel_types]
-        if self.min_value is not None:
-            as_dict["min_value"] = self.min_value
-        if self.max_value is not None:
-            as_dict["max_value"] = self.max_value
-
-        return as_dict
-
-
-    def __repr__(self):
-        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
-
-
-class OptionChoice:
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
-        self.name = name
-        self.value = value if value is not None else name
-
-    def to_dict(self) -> Dict[str, Union[str, int, float]]:
-        return {"name": self.name, "value": self.value}
-
-def option(name, type=None, **kwargs):
-    """A decorator that can be used instead of typehinting Option"""
-    def decor(func):
-        nonlocal type
-        type = type or func.__annotations__.get(name, str)
-        func.__annotations__[name] = Option(type, **kwargs)
-        return func
-    return decor
 
 class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
