@@ -32,7 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generator, Generic, List, Literal, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -66,7 +66,6 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from ..cog import Cog
-    from ..interactions import Interaction
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound='Cog')
@@ -486,7 +485,10 @@ class SlashCommand(ApplicationCommand):
         self.cog = None
 
         params = self._get_signature_parameters()
-        self.options: List[Option] = kwargs.get('options') or self._parse_options(params)
+        if (kwop := kwargs.get('options', None)):
+            self.options: List[Option] = self._match_option_param_names(params, kwop)
+        else:
+            self.options: List[Option] = self._parse_options(params)
 
         try:
             checks = func.__commands_checks__
@@ -561,6 +563,51 @@ class SlashCommand(ApplicationCommand):
             final_options.append(option)
 
         return final_options
+
+
+    def _match_option_param_names(self, params, options):
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params.items())
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
+
+        check_annotations = [
+            lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
+            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # union types
+            lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
+            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
+        ]
+        for o in options:
+            validate_chat_input_name(o.name)
+            validate_chat_input_description(o.description)
+            try:
+                p_name, p_obj = next(params)
+            except StopIteration:  # not enough params for all the options
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
+            p_obj = p_obj.annotation
+
+            if not any(c(o, p_obj) for c in check_annotations):       
+                raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
+            o._parameter_name = p_name
+
+        left_out_params = OrderedDict()
+        left_out_params[''] = ''  # bypass first iter (ctx)
+        for k, v in params:
+            left_out_params[k] = v
+        options.extend(self._parse_options(left_out_params))
+
+        return options
 
     def _is_typing_union(self, annotation):
         return (
@@ -702,8 +749,22 @@ channel_type_map = {
     'TextChannel': ChannelType.text,
     'VoiceChannel': ChannelType.voice,
     'StageChannel': ChannelType.stage_voice,
-    'CategoryChannel': ChannelType.category
+    'CategoryChannel': ChannelType.category,
+    'Thread': ChannelType.public_thread
 }
+
+class ThreadOption:
+    def __init__(self, thread_type: Literal["public", "private", "news"]):
+        type_map = {
+            "public": ChannelType.public_thread,
+            "private": ChannelType.private_thread,
+            "news": ChannelType.news_thread,
+        }
+        self._type = type_map[thread_type]
+    
+    @property
+    def __name__(self):
+        return 'ThreadOption'
 
 class Option:
     def __init__(
@@ -712,6 +773,7 @@ class Option:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
+        self._raw_type = input_type
         self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
@@ -724,6 +786,9 @@ class Option:
                         input_type = (input_type,)
                     for i in input_type:
                         if i.__name__ == 'GuildChannel':
+                            continue
+                        if isinstance(i, ThreadOption):
+                            self.channel_types.append(i._type)
                             continue
 
                         channel_type = channel_type_map[i.__name__]
