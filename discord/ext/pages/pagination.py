@@ -78,7 +78,7 @@ class PaginatorButton(discord.ui.Button):
             row=0,
         )
         self.button_type = button_type
-        self.label = label or button_type.capitalize()
+        self.label = label if label or emoji else button_type.capitalize()
         self.emoji = emoji
         self.style = style
         self.disabled = disabled
