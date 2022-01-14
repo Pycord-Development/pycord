@@ -158,6 +158,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         'guild',
         'topic',
         '_state',
+        '_banner',
         'nsfw',
         'category_id',
         'position',
@@ -192,6 +193,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         self.category_id: Optional[int] = utils._get_as_snowflake(data, 'parent_id')
         self.topic: Optional[str] = data.get('topic')
         self.position: int = data['position']
+        self._banner: Optional[str] = data.get('banner')
         self.nsfw: bool = data.get('nsfw', False)
         # Does this need coercion into `int`? No idea yet.
         self.slowmode_delay: int = data.get('rate_limit_per_user', 0)
@@ -263,6 +265,13 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         """
         return self._state._get_message(self.last_message_id) if self.last_message_id else None
 
+    @property
+    def banner(self) -> Optional[Asset]:
+        """Optional[:class:`Asset`]: Returns the channel's banner asset, if available."""
+        if self._banner is None:
+            return None
+        return Asset._from_channel_banner(self._state, self.id, self._banner)
+
     @overload
     async def edit(
         self,
@@ -271,6 +280,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         name: str = ...,
         topic: str = ...,
         position: int = ...,
+        banner: Optional[bytes] = ...,
         nsfw: bool = ...,
         sync_permissions: bool = ...,
         category: Optional[CategoryChannel] = ...,
@@ -330,6 +340,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         overwrites: :class:`Mapping`
             A :class:`Mapping` of target (either a role or a member) to
             :class:`PermissionOverwrite` to apply to the channel.
+        banner: :class:`bytes`
+            A :term:`py:bytes-like object` representing the banner.
+            Could be ``None`` to denote removal of the banner. This is only available to guilds that contain
+            ``CHANNEL_BANNER`` in :attr:`Guild.features`.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.

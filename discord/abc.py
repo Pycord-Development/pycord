@@ -385,6 +385,13 @@ class GuildChannel:
                 raise InvalidArgument('type field must be of type ChannelType')
             options['type'] = ch_type.value
 
+        try:
+            banner = options['banner']
+        except KeyError:
+            pass
+        else:
+            options['banner'] = None if banner is None else utils._bytes_to_base64_data(banner)
+
         if options:
             return await self._state.http.edit_channel(self.id, reason=reason, **options)
 
