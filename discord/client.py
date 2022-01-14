@@ -262,7 +262,7 @@ class Client:
         return float('nan') if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited or not.
+        """:class:`bool`: Whether the websocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -833,7 +833,7 @@ class Client:
         return self._connection.get_user(id)
 
     def get_emoji(self, id: int, /) -> Optional[Emoji]:
-        """Returns the emoji with the given ID.
+        """Returns an emoji with the given ID.
 
         Parameters
         -----------
@@ -848,7 +848,7 @@ class Client:
         return self._connection.get_emoji(id)
 
     def get_sticker(self, id: int, /) -> Optional[GuildSticker]:
-        """Returns the guild sticker with the given ID.
+        """Returns a guild sticker with the given ID.
 
         .. versionadded:: 2.0
 

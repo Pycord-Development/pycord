@@ -22,3 +22,4 @@ env/
 build/
 node_modules/*
 test.py
+*.png

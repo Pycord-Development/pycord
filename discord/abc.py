@@ -1257,7 +1257,7 @@ class Messageable:
     ):
         """|coro|
 
-        Sends a message to the destination where the content was given.
+        Sends a message to the destination with the content given.
 
         The content must be a type that can convert to a string through ``str(content)``.
         If the content is set to ``None`` (the default), then the ``embed`` parameter must

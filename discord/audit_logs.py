@@ -335,7 +335,7 @@ class _AuditLogProxyStageInstanceAction:
 class AuditLogEntry(Hashable):
     r"""Represents an Audit Log entry.
 
-    You retrieve these through :meth:`Guild.audit_logs`.
+    You retrieve these via :meth:`Guild.audit_logs`.
 
     .. container:: operations
 
