@@ -238,7 +238,7 @@ class Client:
 
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, Voice will NOT be supported")
+            _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
     # internals
 
