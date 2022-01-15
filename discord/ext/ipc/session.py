@@ -23,7 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 import asyncio
 import logging
-import typing
 
 import aiohttp
 
@@ -60,6 +59,7 @@ class Session(SessionBase):
         host,
         multicast_port,
         token,
+        *,
         port=None,
     ):
         self.host = host
@@ -97,10 +97,10 @@ class Session(SessionBase):
             "data": kwargs,
             "headers": {"Authorization": self.token},
         }
-        _log.debug(f"Sending {payload}")
+        _log.debug(f"< {payload}")
         await self.reqr.send_json(payload, dumps=utils._to_json)
         data = await self.reqr.receive()
-        _log.debug(f"Received {data}")
+        _log.debug(f"> {data}")
 
         if data.type == aiohttp.WSMsgType.PING:
             _log.debug("Server has requested to ping, doing that now.")

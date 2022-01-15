@@ -25,19 +25,20 @@ import logging
 
 from aiohttp import web
 
+from discord import utils
+
 from .base import IPCServerResponseBase, ServerBase
 from .errors import JSONEncodeError
-
-from discord import utils
 
 _log = logging.getLogger(__name__)
 
 
 class IPCServerResponse(IPCServerResponseBase):
     """The IPC Server Response
-    
+
     .. versionadded:: 2.0
     """
+
     def to_json(self):
         return self._json
 
@@ -64,13 +65,14 @@ class Server(ServerBase):
     """
 
     def __init__(
-        self, 
-        host, 
-        token, 
+        self,
+        host,
+        token,
         bot,
-        port=9956, 
-        multicast_connection=True, 
-        multicast_port=20000
+        *,
+        port=9956,
+        multicast_connection=True,
+        multicast_port=20000,
     ):
         self.bot = bot
         self.host = host
@@ -99,7 +101,7 @@ class Server(ServerBase):
         await ws.prepare(request)  # prepares the request.
         async for msg in ws:
             req = msg.json(utils._from_json)
-            _log.debug(f"Got sent {request}")
+            _log.debug(f"> {request}")
             endpoint = req.get("endpoint")
             headers = req.get("headers")
             if not headers or headers.get("Authorization") != self.token:
@@ -122,14 +124,14 @@ class Server(ServerBase):
                     except AttributeError:
                         args = s_r
                     try:
-                        ret = await self.endpoints[endpoint](*args)
+                        response = await self.endpoints[endpoint](*args)
                     except Exception as exc:
                         _log.error(f"Exception with {endpoint} on {request}")
                         self.bot.dispatch("ipc_error", endpoint, request)
-                        ret = {"error": "Error was raised {exc}", "code": 500}
+                        response = {"error": "Error was raised {exc}", "code": 500}
             try:
-                await ws.send_json(ret, dumps=utils._from_json)
-                _log.debug(f"Sent {ret}")
+                await ws.send_json(response, dumps=utils._from_json)
+                _log.debug(f"< {response}")
             except TypeError as exc:
                 if str(exc).startswith("Object of type") and str(exc).endswith(
                     "is not JSON serializable"
@@ -164,11 +166,11 @@ class Server(ServerBase):
                     "port": self.port,
                     "code": 200,
                 }
-            _log.debug(f"Sending {response}")
+            _log.debug(f"< {response}")
             await ws.send_json(response)
 
     def run(self):
-        """Runs the IPC Server
+        """A blocking call used to start the Server function.
 
         .. versionadded:: 2.0
         """

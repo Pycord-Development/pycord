@@ -22,21 +22,20 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 import abc
-import typing
 
 from aiohttp import web
 
 
 class SessionBase(abc.ABC):
     # Since this is an ABC class and all, it shouldn't be documented.
-    def __init__(self, host, multicast_port, port=None):
+    def __init__(self, host, multicast_port, *, port=None):
         self.host = host
         self.port = port
         self.mcp = multicast_port
 
     @property
     def url(self):
-        return "ws://{0.host}:{1}".format(
+        return "ws://{0.host}:{1}".format(  # the url + port and stuff.
             self, self.port if self.port else self.multicast_port
         )
 
@@ -49,9 +48,19 @@ class ServerBase(abc.ABC):
         self.endpoints = {}
 
     def route(self, name=None):
-        func = self.endpoints[name]
-        
-        return func
+        """Used to register a coroutine as a endpoint, With an instance of :class:`discord.ext.ipc.Server`
+
+        .. versionadded:: 2.1
+        """
+
+        def decorator(func):
+            if not name:
+                self.endpoints[func.__name__] = func
+            else:
+                self.endpoints[name] = func
+            return func
+
+        return decorator
 
     def update_endpoints(self):
         self.endpoints = {**self.endpoints, **self.routes}
