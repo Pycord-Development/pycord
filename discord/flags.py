@@ -306,7 +306,7 @@ class MessageFlags(BaseFlags):
 
     @flag_value
     def loading(self):
-        """:class:`bool`: Returns ``True`` if the source message an deferred.
+        """:class:`bool`: Returns ``True`` if the source message is deferred.
 
         The user sees a 'thinking' state
 
