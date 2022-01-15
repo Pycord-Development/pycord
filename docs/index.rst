@@ -49,9 +49,9 @@ These extensions help you during development when it comes to common tasks.
   :maxdepth: 1
 
   ext/commands/index.rst
+  ext/ipc/index/rst
   ext/tasks/index.rst
   ext/pages/index.rst
-  ext/ipc/index/rst
 
 Manuals
 ---------
