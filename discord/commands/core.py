@@ -866,7 +866,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.cog = None
 
         # Permissions
-        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
+        self.default_member_permissions: Optional[Permissions] = kwargs.get("default_member_permissions", None)
         self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
 
     def to_dict(self) -> Dict:
