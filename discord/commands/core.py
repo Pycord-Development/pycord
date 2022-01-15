@@ -41,6 +41,7 @@ from ..enums import SlashCommandOptionType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
+from ..permissions import Permissions
 from ..user import User
 from ..utils import find, get_or_fetch, async_all, utcnow
 
@@ -473,7 +474,7 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
-    dm_permissions: :class:`bool`
+    dm_permission: :class:`bool`
         Whether the command can be used in direct message channels.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
@@ -543,9 +544,8 @@ class SlashCommand(ApplicationCommand):
         self._after_invoke = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
+        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
 
 
     def _parse_options(self, params) -> List[Option]:
@@ -803,7 +803,7 @@ class SlashCommandGroup(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this group belongs to. ``None`` if there
         isn't one.
-    dm_permissions: :class:`bool`
+    dm_permission: :class:`bool`
         Whether the command can be used in direct message channels.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
@@ -866,9 +866,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.cog = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
+        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -1024,7 +1023,7 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    dm_permissions: :class:`bool`
+    dm_permission: :class:`bool`
         Whether the command can be used in direct message channels.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
@@ -1078,9 +1077,8 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        self.default_permission = kwargs.get("default_permission", True)
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
+        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
 
         # Context Menu commands can't have parents
         self.parent = None
