@@ -315,6 +315,8 @@ class View:
 
         The default implementation of this returns ``True``.
 
+        If this returns ``False`` :meth:`on_check_failure` is called
+
         .. note::
 
             If an exception occurs within the body then the check
@@ -338,6 +340,19 @@ class View:
         A callback that is called when a view's timeout elapses without being explicitly stopped.
         """
         pass
+
+    async def on_check_failure(self, interaction: Interaction) -> None:
+        """|coro|
+        A callback that is called when a :meth:`View.interaction_check` returns ``False``.
+        This is good to overwrite when you want a custom error message
+        Per default this calls :meth:`InteractionResponse.defer` if the interaction has not been responded to before
+        Parameters
+        -----------
+        interaction: :class:`~discord.Interaction`
+            The interaction that occurred.
+        """
+        if not interaction.response.is_done():
+            await interaction.response.defer()
 
     async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
@@ -366,7 +381,7 @@ class View:
 
             allow = await self.interaction_check(interaction)
             if not allow:
-                return
+                return await self.on_check_failure(interaction)
 
             await item.callback(interaction)
         except Exception as e:
