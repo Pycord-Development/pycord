@@ -37,7 +37,6 @@ from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .options import Option, OptionChoice
-from .permissions import CommandPermission
 from ..enums import SlashCommandOptionType
 from ..errors import ValidationError, ClientException
 from ..member import Member
@@ -550,7 +549,6 @@ class SlashCommand(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -870,7 +868,6 @@ class SlashCommandGroup(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -1087,7 +1084,6 @@ class ContextMenuCommand(ApplicationCommand):
         self.validate_parameters()
 
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
