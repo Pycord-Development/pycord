@@ -1,4 +1,5 @@
 .. _discord_ext_ipc:
+.. currentmodule:: discord.ext.ipc
 
 ``discord.ext.ipc`` -- Inter-process communication module
 =========================================================

@@ -35,6 +35,7 @@ class SessionBase(abc.ABC):
 
     @property
     def url(self):
+        """The WebSocket URL."""
         return "ws://{0.host}:{1}".format(  # the url + port and stuff.
             self, self.port if self.port else self.multicast_port
         )
@@ -48,12 +49,17 @@ class ServerBase(abc.ABC):
         self.endpoints = {}
 
     def route(self, name=None):
-        """Used to register a coroutine as a endpoint, With an instance of :class:`discord.ext.ipc.Server`
+        """Used to register a coroutine as a endpoint
+        with an instance of :class:`discord.ext.ipc.Server`
 
         .. versionadded:: 2.0
         """
 
         def decorator(func):
+            """The decorator class allowing use of the function name.
+            
+            .. versionadded:: 2.0
+            """
             if not name:
                 self.endpoints[func.__name__] = func
             else:
@@ -63,6 +69,10 @@ class ServerBase(abc.ABC):
         return decorator
 
     def update_endpoints(self):
+        """Updates the current endpoints
+        
+        .. versionadded:: 2.0
+        """
         self.endpoints = {**self.endpoints, **self.routes}
 
         self.routes = {}  # mypy does not like this..

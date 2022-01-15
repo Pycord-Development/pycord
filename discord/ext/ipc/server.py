@@ -172,6 +172,25 @@ class Server(ServerBase):
     def run(self):
         """A blocking call used to start the Server function.
 
+        Basically would be the same as: ::
+
+            from aiohttp import web
+            from discord.ext.ipc import Server
+
+            server = web.Application()
+            
+            server.router.add_route("GET", "/", Server.handle_request)
+            
+            bot.loop.run_forever(self._start(self.__server, self.port))
+        
+        with support for multicasting just changing one line, like so: ::
+
+            # instead of this do
+            server.router.add_route("GET", "/", Server.handle_request)
+            # This
+            server.router.add_route("GET", "/", Server.handle_multicast_request)
+
+
         .. versionadded:: 2.0
         """
         self.bot.dispatch("ipc_ready")

@@ -42,8 +42,6 @@ class Session(SessionBase):
 
     Attributes
     ----------
-    bot :class:`Union`
-        The current bot process
     host
         The host to send requests to
     mcp
