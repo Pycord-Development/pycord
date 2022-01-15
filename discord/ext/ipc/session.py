@@ -69,6 +69,12 @@ class Session(SessionBase):
         super().__init__(self.host, self.mcp, self.port)
 
     async def identify(self):
+        """|maybecoro|
+
+        Identifys the Session to the :class:`Server` instance.
+
+        .. versionadded:: 2.0
+        """
         self.__session = aiohttp.ClientSession()
         if not self.port:
             self.req = await self.__session.ws_connect(self.url, autoping=False)
@@ -89,6 +95,13 @@ class Session(SessionBase):
         return self.reqr
 
     async def request(self, endpoint, **kwargs):
+        """|coro|
+
+        A function used to send requests
+        to be given back data from :meth:`Server.route`
+
+        .. versionadded:: 2.0
+        """
         if not self.__session:
             self.identify()
 
