@@ -473,15 +473,10 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-
-            If this is not empty then default_permissions will be set to False.
-
+    dm_permissions: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -808,6 +803,10 @@ class SlashCommandGroup(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this group belongs to. ``None`` if there
         isn't one.
+    dm_permissions: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
     cog: Optional[:class:`Cog`]
@@ -1025,14 +1024,10 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`.CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-            If this is not empty then default_permissions will be set to ``False``.
-
+    dm_permissions: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
