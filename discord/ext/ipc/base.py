@@ -50,7 +50,7 @@ class ServerBase(abc.ABC):
     def route(self, name=None):
         """Used to register a coroutine as a endpoint, With an instance of :class:`discord.ext.ipc.Server`
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
         """
 
         def decorator(func):
