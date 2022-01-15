@@ -181,14 +181,18 @@ class Server(ServerBase):
             
             server.router.add_route("GET", "/", Server.handle_request)
             
-            bot.loop.run_forever(self._start(self.__server, self.port))
+            bot.loop.run_forever(self._start(server, "your_port"))
         
         with support for multicasting just changing one line, like so: ::
 
-            # instead of this do
+            # Instead of this
             server.router.add_route("GET", "/", Server.handle_request)
-            # This
+            # Do this
             server.router.add_route("GET", "/", Server.handle_multicast_request)
+            # and also changing this
+            bot.loop.run_forever(Server._start(server, "your_port"))
+            # to this
+            bot.loop.run_forever(Server._start(server, "multicast_port"))
 
 
         .. versionadded:: 2.0
@@ -202,5 +206,5 @@ class Server(ServerBase):
             self._mc_server = web.Application()
             self._mc_server.router.add_route("GET", "/", self.handle_multicast_request)
 
-            self.loop.run_forever(self._start(self._mc, self.mc_port))
+            self.loop.run_forever(self._start(self._mc_server, self.mc_port))
         self.loop.run_forever(self._start(self.__server, self.port))
