@@ -667,10 +667,15 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
-            "default_permission": self.default_permission,
         }
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -874,11 +879,16 @@ class SlashCommandGroup(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
-            "default_permission": self.default_permission,
         }
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1122,7 +1132,19 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {"name": self.name, "description": self.description, "type": self.type, "default_permission": self.default_permission}
+        as_dict = {
+            "name": self.name,
+            "description": self.description,
+            "type": self.type,
+        }
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
+
+        return as_dict
 
 
 class UserCommand(ContextMenuCommand):
