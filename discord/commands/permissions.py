@@ -60,4 +60,6 @@ def has_permissions(**perms: bool) -> None:
 
     def inner(func: Callable):
         func.__default_member_permissions__ = Permissions(**perms)
+        return func
+
     return inner
