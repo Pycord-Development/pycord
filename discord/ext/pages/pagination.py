@@ -162,7 +162,7 @@ class PageGroup:
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
-        default_button_row: Optional[int] = None,
+        default_button_row: Optional[int] = 0,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
@@ -177,7 +177,7 @@ class PageGroup:
         self.author_check = author_check
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
-        self.default_button_row = default_button_row or 0
+        self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view = custom_view
         self.timeout = timeout
