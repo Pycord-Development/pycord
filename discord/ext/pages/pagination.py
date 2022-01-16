@@ -319,6 +319,8 @@ class Paginator(discord.ui.View):
             Whether the buttons get disabled when the paginator view times out.
         use_default_buttons: :class:`bool`
             Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+        default_button_row: :class:`int`
+            The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
         loop_pages: :class:`bool`
             Whether to loop the pages when clicking prev/next while at the first/last page in the list.
         custom_view: Optional[:class:`discord.ui.View`]
