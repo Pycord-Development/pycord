@@ -28,9 +28,11 @@ from ..permissions import Permissions
 
 __all__ = (
     "has_permissions",
+    "guild_only",
 )
 
-def has_permissions(**perms: bool) -> None:
+
+def has_permissions(**perms: bool) -> Callable:
     """A decorator that limits the usage of a slash command to members with certain
     permissions.
 
@@ -47,8 +49,10 @@ def has_permissions(**perms: bool) -> None:
 
     .. code-block:: python3
 
+        from discord import has_permissions
+
         @bot.slash_command()
-        @commands.has_permissions(manage_messages=True)
+        @has_permissions(manage_messages=True)
         async def test(ctx):
             await ctx.respond('You can manage messages.')
 
@@ -60,6 +64,31 @@ def has_permissions(**perms: bool) -> None:
 
     def inner(func: Callable):
         func.__default_member_permissions__ = Permissions(**perms)
+        return func
+
+    return inner
+
+
+def guild_only() -> Callable:
+    """A decorator that limits the usage of a slash command to guild contexts.
+    The command won't be able to be used in private message channels.
+
+    Example
+    ---------
+
+    .. code-block:: python3
+
+        from discord import guild_only
+
+        @bot.slash_command()
+        @guild_only()
+        async def test(ctx):
+            await ctx.respond('You\'re in a guild.')
+
+    """
+
+    def inner(func: Callable):
+        func.__dm_permission__ = False
         return func
 
     return inner
