@@ -345,14 +345,12 @@ class View:
         """|coro|
         A callback that is called when a :meth:`View.interaction_check` returns ``False``.
         This is good to overwrite when you want a custom error message
-        Per default this calls :meth:`InteractionResponse.defer` if the interaction has not been responded to before
         Parameters
         -----------
         interaction: :class:`~discord.Interaction`
             The interaction that occurred.
         """
-        if not interaction.response.is_done():
-            await interaction.response.defer()
+        pass
 
     async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
