@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import Callable
 from ..permissions import Permissions
+from .core import ApplicationCommand
 
 __all__ = (
     "has_permissions",
@@ -62,9 +63,12 @@ def has_permissions(**perms: bool) -> Callable:
     if invalid:
         raise TypeError(f"Invalid permission(s): {', '.join(invalid)}")
 
-    def inner(func: Callable):
-        func.__default_member_permissions__ = Permissions(**perms)
-        return func
+    def inner(command: Callable):
+        if isinstance(command, ApplicationCommand):
+            command.default_member_permissions = Permissions(**perms)
+        else:
+            command.__default_member_permissions__ = Permissions(**perms)
+        return command
 
     return inner
 
@@ -87,8 +91,11 @@ def guild_only() -> Callable:
 
     """
 
-    def inner(func: Callable):
-        func.__dm_permission__ = False
-        return func
+    def inner(command: Callable):
+        if isinstance(command, ApplicationCommand):
+            command.dm_permission = False
+        else:
+            command.__dm_permission__ = False
+        return command
 
     return inner
