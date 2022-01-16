@@ -67,7 +67,7 @@ class PaginatorButton(discord.ui.Button):
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
-        row: Optional[int] = None,
+        row: Optional[int] = 0,
         loop_label: str = None,
     ):
         super().__init__(
@@ -76,7 +76,7 @@ class PaginatorButton(discord.ui.Button):
             style=style,
             disabled=disabled,
             custom_id=custom_id,
-            row=row or 0,
+            row=row,
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
@@ -245,7 +245,7 @@ class Paginator(discord.ui.View):
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
-        default_button_row: Optional[int] = None,
+        default_button_row: Optional[int] = 0,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
@@ -270,7 +270,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
-        self.default_button_row = default_button_row or 0
+        self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
