@@ -67,6 +67,7 @@ class PaginatorButton(discord.ui.Button):
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
+        row: Optional[int] = None,
         loop_label: str = None,
     ):
         super().__init__(
@@ -75,7 +76,7 @@ class PaginatorButton(discord.ui.Button):
             style=style,
             disabled=disabled,
             custom_id=custom_id,
-            row=0,
+            row=row or 0,
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
@@ -668,7 +669,7 @@ class PaginatorMenu(discord.ui.Select):
     """
 
     def __init__(
-        self, page_groups: List[PageGroup], placeholder: str = "Select Page Group"
+        self, page_groups: List[PageGroup], placeholder: str = "Select Page Group", row: Optional[int] = None
     ):
         self.page_groups = page_groups
         self.paginator: Optional[Paginator] = None
@@ -682,7 +683,7 @@ class PaginatorMenu(discord.ui.Select):
             for page_group in self.page_groups
         ]
         super().__init__(
-            placeholder=placeholder, row=1, max_values=1, min_values=1, options=opts
+            placeholder=placeholder, row=row or 1, max_values=1, min_values=1, options=opts
         )
 
     async def callback(self, interaction: discord.Interaction):
