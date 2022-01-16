@@ -544,8 +544,10 @@ class SlashCommand(ApplicationCommand):
         self._after_invoke = None
 
         # Permissions
-        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
-        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
+        self.default_member_permissions: Optional[Permissions] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        )
+        self.dm_permission: Optional[bool] = getattr(func, "__dm_permission__", kwargs.get("dm_permissions", None))
 
 
     def _parse_options(self, params) -> List[Option]:
@@ -1087,8 +1089,11 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        self.default_member_permissions: Optional[Permissions] = getattr(func, "__default_member_permissions__", None)
-        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
+        # Permissions
+        self.default_member_permissions: Optional[Permissions] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        )
+        self.dm_permission: Optional[bool] = getattr(func, "__dm_permission__", kwargs.get("dm_permissions", None))
 
         # Context Menu commands can't have parents
         self.parent = None
