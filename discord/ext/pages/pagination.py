@@ -138,6 +138,8 @@ class PageGroup:
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    default_button_row: :class:`int`
+        The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
@@ -160,6 +162,7 @@ class PageGroup:
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
+        default_button_row: Optional[int] = None,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
@@ -174,6 +177,7 @@ class PageGroup:
         self.author_check = author_check
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
+        self.default_button_row = default_button_row or 0
         self.loop_pages = loop_pages
         self.custom_view = custom_view
         self.timeout = timeout
@@ -200,6 +204,8 @@ class Paginator(discord.ui.View):
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    default_button_row: :class:`int`
+        The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
@@ -239,6 +245,7 @@ class Paginator(discord.ui.View):
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
+        default_button_row: Optional[int] = None,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
@@ -263,6 +270,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
+        self.default_button_row = default_button_row or 0
         self.loop_pages = loop_pages
         self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
@@ -289,6 +297,7 @@ class Paginator(discord.ui.View):
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
+        default_button_row: Optional[int] = None,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
@@ -343,6 +352,7 @@ class Paginator(discord.ui.View):
             if use_default_buttons is not None
             else self.use_default_buttons
         )
+        self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view = None if custom_view is None else custom_view
         self.timeout = timeout if timeout is not None else self.timeout
@@ -411,7 +421,7 @@ class Paginator(discord.ui.View):
         """Adds the full list of default buttons that can be used with the paginator.
         Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."""
         default_buttons = [
-            PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple),
+            PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple, row=self.),
             PaginatorButton(
                 "prev", label="<", style=discord.ButtonStyle.red, loop_label="↪"
             ),
