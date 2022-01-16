@@ -67,7 +67,7 @@ class PaginatorButton(discord.ui.Button):
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
-        row: Optional[int] = 0,
+        row: int = 0,
         loop_label: str = None,
     ):
         super().__init__(
@@ -162,7 +162,7 @@ class PageGroup:
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
-        default_button_row: Optional[int] = 0,
+        default_button_row: int = 0,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
@@ -245,7 +245,7 @@ class Paginator(discord.ui.View):
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
-        default_button_row: Optional[int] = 0,
+        default_button_row: int = 0,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
