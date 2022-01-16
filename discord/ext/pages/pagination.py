@@ -352,7 +352,11 @@ class Paginator(discord.ui.View):
             if use_default_buttons is not None
             else self.use_default_buttons
         )
-        self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
+        self.default_button_row = (
+            default_button_row
+            if default_button_row is not None
+            else self.default_button_row
+        )
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view = None if custom_view is None else custom_view
         self.timeout = timeout if timeout is not None else self.timeout
@@ -421,27 +425,50 @@ class Paginator(discord.ui.View):
         """Adds the full list of default buttons that can be used with the paginator.
         Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."""
         default_buttons = [
-            PaginatorButton("first", label="<<", style=discord.ButtonStyle.blurple, row=self.),
             PaginatorButton(
-                "prev", label="<", style=discord.ButtonStyle.red, loop_label="↪"
+                "first",
+                label="<<",
+                style=discord.ButtonStyle.blurple,
+                row=self.default_button_row,
             ),
             PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
+                "prev",
+                label="<",
+                style=discord.ButtonStyle.red,
+                loop_label="↪",
+                row=self.default_button_row,
             ),
             PaginatorButton(
-                "next", label=">", style=discord.ButtonStyle.green, loop_label="↩"
+                "page_indicator",
+                style=discord.ButtonStyle.gray,
+                disabled=True,
+                row=self.default_button_row,
             ),
-            PaginatorButton("last", label=">>", style=discord.ButtonStyle.blurple),
+            PaginatorButton(
+                "next",
+                label=">",
+                style=discord.ButtonStyle.green,
+                loop_label="↩",
+                row=self.default_button_row,
+            ),
+            PaginatorButton(
+                "last",
+                label=">>",
+                style=discord.ButtonStyle.blurple,
+                row=self.default_button_row,
+            ),
         ]
         for button in default_buttons:
             self.add_button(button)
 
     def add_button(self, button: PaginatorButton):
-        """Adds a :class:`PaginatorButton` to the paginator. """
+        """Adds a :class:`PaginatorButton` to the paginator."""
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
-                label=button.label if button.label or button.emoji else button.button_type.capitalize()
+                label=button.label
+                if button.label or button.emoji
+                else button.button_type.capitalize()
                 if button.button_type != "page_indicator"
                 else f"{self.current_page + 1}/{self.page_count + 1}",
                 disabled=button.disabled,
@@ -679,7 +706,9 @@ class PaginatorMenu(discord.ui.Select):
     """
 
     def __init__(
-        self, page_groups: List[PageGroup], placeholder: str = "Select Page Group",
+        self,
+        page_groups: List[PageGroup],
+        placeholder: str = "Select Page Group",
     ):
         self.page_groups = page_groups
         self.paginator: Optional[Paginator] = None
