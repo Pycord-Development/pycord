@@ -70,7 +70,7 @@ class PaginatorButton(discord.ui.Button):
         loop_label: str = None,
     ):
         super().__init__(
-            label=label or button_type.capitalize(),
+            label=label if label or emoji else button_type.capitalize(),
             emoji=emoji,
             style=style,
             disabled=disabled,
@@ -78,7 +78,7 @@ class PaginatorButton(discord.ui.Button):
             row=0,
         )
         self.button_type = button_type
-        self.label = label or button_type.capitalize()
+        self.label = label if label or emoji else button_type.capitalize()
         self.emoji = emoji
         self.style = style
         self.disabled = disabled
@@ -430,7 +430,7 @@ class Paginator(discord.ui.View):
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
-                label=button.label or button.button_type.capitalize()
+                label=button.label if button.label or button.emoji else button.button_type.capitalize()
                 if button.button_type != "page_indicator"
                 else f"{self.current_page + 1}/{self.page_count + 1}",
                 disabled=button.disabled,
@@ -540,7 +540,7 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: Optional[discord.abc.Messageable] = None,
         target_message: Optional[str] = None,
-    ) -> Union[discord.Message]:
+    ) -> discord.Message:
         """Sends a message with the paginated items.
 
         Parameters
@@ -554,7 +554,7 @@ class Paginator(discord.ui.View):
 
         Returns
         --------
-        Union[:class:`~discord.Message`]
+        :class:`~discord.Message`
             The message that was sent with the paginator.
         """
         if not isinstance(ctx, Context):
