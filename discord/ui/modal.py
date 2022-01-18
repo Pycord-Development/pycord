@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class Modal:
     """Represents a UI Modal dialog.
+
     This object must be inherited to create a UI within Discord.
     """
 
@@ -30,6 +31,7 @@ class Modal:
         """|coro|
         The coroutine that is called when the modal dialog is submitted.
         Should be overridden to handle the values submitted by the user.
+
         Parameters
         -----------
         interaction: :class:`~discord.Interaction`
@@ -59,6 +61,7 @@ class Modal:
 
     def add_item(self, item: Item):
         """Adds an item to the modal dialog.
+
         Parameters
         ----------
         item: :class:`Item`
@@ -76,6 +79,7 @@ class Modal:
 
     def remove_item(self, item: Item):
         """Removes an item from the modal dialog.
+
         Parameters
         ----------
         item: :class:`Item`

@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 class InputText(Item):
     """Represents a UI text input field.
+
     Parameters
     ----------
     style: :class:`discord.InputTextStyle`
@@ -27,14 +28,14 @@ class InputText(Item):
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     min_length: Optional[:class:`int`]
-        The minimum number of characters that must be entered
-        Defaults to 0
+        The minimum number of characters that must be entered.
+        Defaults to 0.
     max_length: Optional[:class:`int`]
-        The maximum number of characters that can be entered
+        The maximum number of characters that can be entered.
     required: Optional[:class:`bool`]
         Whether the input text field is required or not. Defaults to `True`.
     value: Optional[:class:`str`]
-        Pre-fills the input text field with this value
+        Pre-fills the input text field with this value.
     row: Optional[:class:`int`]
         The relative row this button belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
