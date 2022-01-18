@@ -129,3 +129,4 @@ class Session(SessionBase):
             return await self.request(endpoint, **kwargs)
 
         return data.json(loads=utils._from_json)
+        
