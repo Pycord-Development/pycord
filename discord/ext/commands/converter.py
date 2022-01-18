@@ -388,7 +388,7 @@ class MessageConverter(IDConverter[discord.Message]):
 
     async def convert(self, ctx: Context, argument: str) -> discord.Message:
         guild_id, message_id, channel_id = PartialMessageConverter._get_id_matches(ctx, argument)
-        message = ctx.bot._connection._get_message(message_id)
+        message = await ctx.fetch_message(message_id)
         if message:
             return message
         channel = PartialMessageConverter._resolve_channel(ctx, guild_id, channel_id)
