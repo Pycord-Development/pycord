@@ -629,6 +629,7 @@ class SlashCommand(ApplicationCommand):
 
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
+            lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore (union types)
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
