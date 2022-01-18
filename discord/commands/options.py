@@ -38,7 +38,7 @@ class Option:
         self.description = description or "No description provided"
         self.converter = None
         self._raw_type = input_type
-        self.channel_types: List[SlashCommandOptionType] = kwargs.pop(
+        self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
         if not isinstance(input_type, SlashCommandOptionType):
