@@ -290,7 +290,7 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
-        Optional[:class:`Asset`]
+        cover: Optional[:class:`Asset`]
             The cover image of the scheduled event.
 
         Raises
