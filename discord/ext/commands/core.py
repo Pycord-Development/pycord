@@ -1159,7 +1159,7 @@ class GroupMixin(Generic[CogT]):
 
     Attributes
     -----------
-    prefix_commands: :class:`dict`
+    prefixed_commands: :class:`dict`
         A mapping of command name to :class:`.Command`
         objects.
     case_insensitive: :class:`bool`
