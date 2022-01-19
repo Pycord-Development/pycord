@@ -728,9 +728,22 @@ def resolve_template(code: Union[Template, str]) -> str:
 
 _MARKDOWN_ESCAPE_SUBREGEX = '|'.join(r'\{0}(?=([\s\S]*((?<!\{0})\{0})))'.format(c) for c in ('*', '`', '_', '~', '|'))
 
-_MARKDOWN_ESCAPE_COMMON = r'^>(?:>>)?\s|\[.+\]\(.+\)'
+# regular expression for finding and escaping links in markdown
+# note: technically, brackets are allowed in link text.
+# perhaps more concerningly, parentheses are also allowed in link destination.
+# this regular expression matches neither of those.
+# this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
+_MARKDOWN_ESCAPE_LINKS = r"""
+\[  # matches link text
+    [^\[\]]* # link text can contain anything but brackets 
+\]
+\(  # matches link destination
+    [^\(\)]+ # link destination cannot contain parentheses
+\)""" # note 2: make sure this regex is consumed in re.X (extended mode) since it has whitespace and comments
 
-_MARKDOWN_ESCAPE_REGEX = re.compile(fr'(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})', re.MULTILINE)
+_MARKDOWN_ESCAPE_COMMON = fr'^>(?:>>)?\s|{_MARKDOWN_ESCAPE_LINKS}'
+
+_MARKDOWN_ESCAPE_REGEX = re.compile(fr'(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})', re.MULTILINE | re.X)
 
 _URL_REGEX = r'(?P<url><[^: >]+:\/[^ >]+>|(?:https?|steam):\/\/[^\s<]+[^<.,:;\"\'\]\s])'
 
@@ -808,7 +821,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f'(?:{_URL_REGEX}|{regex})'
-        return re.sub(regex, replacement, text, 0, re.MULTILINE)
+        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
     else:
         text = re.sub(r'\\', r'\\\\', text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r'\\\1', text)
