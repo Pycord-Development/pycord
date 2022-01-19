@@ -22,6 +22,7 @@ import requests
 import json
 from types import SimpleNamespace
 import re
+from requests import Request, Session
 
 
 db = TinyDB('db.json')
@@ -107,6 +108,32 @@ def get_gas_from_ethgasstation(key: str, verbose: bool = False):
             print(r.status_code)
         time.sleep(10)
 
+def tokenPrice(token,config):
+    #Coinmarketcap call
+    coinurl = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+    coinparameters = {
+      'symbol':token,
+      'convert':'USD'
+    }
+    coinheaders = {
+      'Accepts': 'application/json',
+      'X-CMC_PRO_API_KEY': config['coinmarketcapapi'],
+    }
+    session = Session()
+    session.headers.update(coinheaders)
+    try:
+      response = session.get(coinurl, params=coinparameters).json()
+      data = response['data']
+      ethdata=data[token]
+      pricedata=ethdata['quote']
+      usdprice=pricedata['USD']
+      ethprice=usdprice['price']
+      print(usdprice['price'])
+    except (ConnectionError, Timeout, TooManyRedirects) as e:
+      print(e) 
+    
+    return usdprice['price']
+
 
 def main(source, verbose=False):
     # 1. Instantiate the bot
@@ -145,6 +172,38 @@ def main(source, verbose=False):
         await bot.process_commands(message)
 
 
+    @bot.command(pass_context=True, brief="Get WOOL price")
+    async def wool(ctx):
+        price = tokenPrice('WOOL',config)
+        embed = discord.Embed(title=":sheep: Current wool price")
+        embed.add_field(name=f"1 $WOOL = ", value=f"${price}", inline=False) 
+    
+        await ctx.send(embed=embed)
+
+    @bot.command(pass_context=True, brief="Get LOOKS price")
+    async def looks(ctx):
+        price = tokenPrice('LOOKS',config)
+        embed = discord.Embed(title=":eyes: Current LOOKS price")
+        embed.add_field(name=f"1 LOOKS = ", value=f"${price}", inline=False) 
+    
+        await ctx.send(embed=embed)
+
+    @bot.command(pass_context=True, brief="Get custom Token price")
+    async def customToken(ctx):
+        message = ctx.message.content
+
+        #trim end off
+        trimmed = message.rstrip()
+        #remove command
+        token = trimmed.split("!customToken ")
+        token = token[1]
+        print(token)
+
+        price = tokenPrice(token,config)
+        embed = discord.Embed(title=f"Current {token} price")
+        embed.add_field(name=f"1 {token} = ", value=f"${price}", inline=False) 
+    
+        await ctx.send(embed=embed)
 
     @bot.command(pass_context=True, brief="Get ETH gas prices")
     async def gas(ctx):
