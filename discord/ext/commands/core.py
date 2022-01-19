@@ -1468,7 +1468,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             injected = hooked_wrapped_callback(self, ctx, self.callback)
@@ -1502,7 +1502,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             try:
