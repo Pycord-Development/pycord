@@ -236,8 +236,7 @@ class ScheduledEvent(Hashable):
 
     @property
     def cover(self) -> Optional[Asset]:
-        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available.
-        """
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
         if self._cover is None:
             return None
         return Asset._from_scheduled_event_cover(
