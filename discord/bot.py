@@ -97,6 +97,10 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
+    def all_commands(self):
+        return self._application_commands
+    
+    @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = self.application_commands
         if self._supports_prefixed_commands:
