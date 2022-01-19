@@ -153,11 +153,14 @@ class ApplicationCommandMixin:
         Returns
         --------
         Optional[:class:`.ApplicationCommand`]
-            The command that was removed. If the name is not valid then
+            The command that was removed. If the command is not valid then
             ``None`` is returned instead.
         """
         if command.id is None:
-            index = self._pending_application_commands.index(command)
+            try:
+                index = self._pending_application_commands.index(command)
+            except ValueError:
+                return None
             return self._pending_application_commands.pop(index)
         return self._application_commands.pop(command.id)
 
