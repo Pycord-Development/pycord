@@ -37,6 +37,7 @@ from .enums import (
 from .mixins import Hashable
 from .iterators import ScheduledEventSubscribersIterator
 from .errors import ValidationError
+from .asset import Asset
 
 __all__ = (
     'ScheduledEvent',
@@ -186,7 +187,7 @@ class ScheduledEvent(Hashable):
         self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
-        #self.image: Optional[str] = data.get('image', None)
+        self._cover: Optional[str] = data.get('image', None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
         end_time = data.get('scheduled_end_time', None)
         if end_time != None:
@@ -229,7 +230,19 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
-    
+
+    @property
+    def cover(self) -> Optional[Asset]:
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available.
+        """
+        if self._cover is None:
+            return None
+        return Asset._from_scheduled_event_cover(
+            self._state,
+            self.id,
+            self._image,
+        )
+
     async def edit(
         self,
         *,
