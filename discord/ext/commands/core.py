@@ -1218,7 +1218,7 @@ class GroupMixin(Generic[CogT]):
         if command.name in self.prefixed_commands:
             raise CommandRegistrationError(command.name)
 
-        self.all_commands[command.name] = command
+        self.prefixed_commands[command.name] = command
         for alias in command.aliases:
             if alias in self.prefixed_commands:
                 self.remove_command(command.name)
