@@ -94,3 +94,4 @@ class IPCServerResponseBase(abc.ABC):
 
         for key, value in data["data"].items():
             setattr(self, key, value)
+            
