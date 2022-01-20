@@ -27,17 +27,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
-import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
 from .errors import InteractionResponded, ClientException, InvalidArgument
-from .channel import PartialMessageable, ChannelType
+from .channel import ChannelType
 from .file import File
 from .user import User
 from .member import Member
 from .message import Message, Attachment
-from .mentions import AllowedMentions
 from .object import Object
 from .permissions import Permissions
 from .webhook.async_ import async_context, Webhook, handle_message_parameters
@@ -46,12 +44,14 @@ __all__ = (
     'Interaction',
     'InteractionMessage',
     'InteractionResponse',
+    'MessageInteraction',
 )
 
 if TYPE_CHECKING:
     from .types.interactions import (
         Interaction as InteractionPayload,
         InteractionData,
+        MessageInteraction as MessageInteractionPayload
     )
     from .guild import Guild
     from .state import ConnectionState
@@ -422,7 +422,6 @@ class InteractionResponse:
         An interaction can only be responded to once.
         """
         return self._responded
-        
 
     async def defer(self, *, ephemeral: bool = False) -> None:
         """|coro|
@@ -899,3 +898,46 @@ class InteractionMessage(Message):
             Deleting the message failed.
         """
         await self._state._interaction.delete_original_message(delay=delay)
+
+
+class MessageInteraction:
+    """Represents a Discord message interaction.
+
+    This is sent on the message object when the message is a response
+    to an interaction without an existing message e.g. application command.
+
+    .. versionadded:: 2.0
+
+    .. note::
+        Responses to message components do not include this property.
+
+    Attributes
+    -----------
+    id: :class:`int`
+        The interaction's ID.
+    type: :class:`InteractionType`
+        The interaction type.
+    name: :class:`str`
+        The name of the invoked application command.
+    user: :class:`User`
+        The user that sent the interaction.
+    data: :class:`dict`
+        The raw interaction data.
+    """
+
+    __slots__: Tuple[str, ...] = (
+        'id',
+        'type',
+        'name',
+        'user',
+        'data',
+        '_state'
+    )
+
+    def __init__(self, *, data: MessageInteractionPayload, state: ConnectionState):
+        self._state = state
+        self.data = data
+        self.id: int = int(data['id'])
+        self.type: InteractionType = data['type']
+        self.name: str = data['name']
+        self.user: User = self._state.store_user(data['user'])
