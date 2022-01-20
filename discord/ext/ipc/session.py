@@ -38,7 +38,7 @@ _log = logging.getLogger(__name__)
 class Session(SessionBase):
     """The session interacting with the :class:`Server`
 
-    .. versionadded:: 2.0
+    .. versionadded:: 2.1
 
     Attributes
     ----------
@@ -71,7 +71,7 @@ class Session(SessionBase):
 
         Identifys the Session to the :class:`Server` instance.
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
         self.__session = aiohttp.ClientSession()
         if not self.port:
@@ -98,7 +98,7 @@ class Session(SessionBase):
         A function used to send requests
         to be given back data from :meth:`Server.route`
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
         if not self.__session:
             self.identify()

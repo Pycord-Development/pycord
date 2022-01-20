@@ -52,13 +52,13 @@ class ServerBase(abc.ABC):
         """Used to register a coroutine as a endpoint
         with an instance of :class:`discord.ext.ipc.Server`
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
 
         def decorator(func):
             """The decorator class allowing use of the function name.
             
-            .. versionadded:: 2.0
+            .. versionadded:: 2.1
             """
             if not name:
                 self.endpoints[func.__name__] = func
@@ -71,7 +71,7 @@ class ServerBase(abc.ABC):
     def update_endpoints(self):
         """Updates the current endpoints
         
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
         self.endpoints = {**self.endpoints, **self.routes}
 

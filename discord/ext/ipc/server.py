@@ -36,7 +36,7 @@ _log = logging.getLogger(__name__)
 class IPCServerResponse(IPCServerResponseBase):
     """The IPC Server Response
 
-    .. versionadded:: 2.0
+    .. versionadded:: 2.1
     """
 
     def to_json(self):
@@ -52,7 +52,7 @@ class IPCServerResponse(IPCServerResponseBase):
 class Server(ServerBase):
     """The class which interacts with your :class:`Session`
 
-    .. versionadded:: 2.0
+    .. versionadded:: 2.1
 
     Attributes
     ----------
@@ -88,7 +88,7 @@ class Server(ServerBase):
     async def handle_request(self, request):
         """Handles a request sent from the :class:`Session`
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
 
         Attributes
         ----------
@@ -150,7 +150,7 @@ class Server(ServerBase):
     async def handle_multicast_request(self, request):
         """Handles a multicast request.
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
         _log.info("Starting up IPC Multicast Server...")
         ws = web.WebSocketResponse()
@@ -195,7 +195,7 @@ class Server(ServerBase):
             bot.loop.run_forever(Server._start(server, "multicast_port"))
 
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
         """
         self.bot.dispatch("ipc_ready")
 
