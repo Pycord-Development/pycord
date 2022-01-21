@@ -289,10 +289,10 @@ Example usage in a cog:
 .. _discord_ext_pages_api:
 
 API Reference
-=============
+-------------
 
 Paginator
----------
+~~~~~~~~~
 
 .. attributetable:: discord.ext.pages.Paginator
 
@@ -301,7 +301,7 @@ Paginator
     :inherited-members:
 
 PaginatorButton
----------------
+~~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.pages.PaginatorButton
 
@@ -310,7 +310,7 @@ PaginatorButton
     :inherited-members:
 
 PaginatorMenu
--------------
+~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.pages.PaginatorMenu
 
@@ -319,7 +319,7 @@ PaginatorMenu
     :inherited-members:
 
 PageGroup
----------
+~~~~~~~~~
 
 .. attributetable:: discord.ext.pages.PageGroup
 
