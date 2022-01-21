@@ -3629,6 +3629,12 @@ AuditLogDiff
 
         :type: :class:`int`
 
+    .. attribute:: invitable
+
+        Non-moderators can now add other non-moderators to this thread.
+
+        :type: :class:`bool`
+
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these
 
@@ -3907,11 +3913,6 @@ ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
-
-ScheduledEventLocation
-~~~~~~~~~~~~~~~~~~~~~~~
-
-..attributestable:: ScheduledEventLocation
 
 .. autoclass:: ScheduledEventLocation()
     :members:
@@ -4333,6 +4334,14 @@ RawThreadDeleteEvent
 .. attributetable:: RawThreadDeleteEvent
 
 .. autoclass:: RawThreadDeleteEvent()
+    :members:
+
+RawScheduledEventSubscription
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: RawScheduledEventSubscription
+
+.. autoclass:: RawScheduledEventSubscription()
     :members:
 
 PartialWebhookGuild

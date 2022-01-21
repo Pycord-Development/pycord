@@ -35,6 +35,7 @@ from typing import (
     Any,
     Callable,
     Coroutine,
+    Generator,
     List,
     Optional,
     Type,
@@ -96,6 +97,10 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
+    def all_commands(self):
+        return self._application_commands
+    
+    @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = self.application_commands
         if self._supports_prefixed_commands:
@@ -124,6 +129,12 @@ class ApplicationCommandMixin:
 
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
+
+        for cmd in self.pending_application_commands:
+            if cmd == command:
+                command.id = cmd.id
+                self._application_commands[command.id] = command
+                break
         self._pending_application_commands.append(command)
 
     def remove_application_command(
@@ -142,9 +153,15 @@ class ApplicationCommandMixin:
         Returns
         --------
         Optional[:class:`.ApplicationCommand`]
-            The command that was removed. If the name is not valid then
+            The command that was removed. If the command is not valid then
             ``None`` is returned instead.
         """
+        if command.id is None:
+            try:
+                index = self._pending_application_commands.index(command)
+            except ValueError:
+                return None
+            return self._pending_application_commands.pop(index)
         return self._application_commands.pop(command.id)
 
     @property
@@ -483,25 +500,32 @@ class ApplicationCommandMixin:
         try:
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
-            self.dispatch("unknown_command", interaction)
-        else:
-            if interaction.type is InteractionType.auto_complete:
-                ctx = await self.get_autocomplete_context(interaction)
-                ctx.command = command
-                return await command.invoke_autocomplete_callback(ctx)
-            
-            ctx = await self.get_application_context(interaction)
-            ctx.command = command
-            self.dispatch("application_command", ctx)
-            try:
-                if await self.can_run(ctx, call_once=True):
-                    await ctx.command.invoke(ctx)
-                else:
-                    raise CheckFailure("The global check once functions failed.")
-            except DiscordException as exc:
-                await ctx.command.dispatch_error(ctx, exc)
+            for cmd in self.application_commands:
+                if (
+                    cmd.name == interaction.data["name"]
+                    and interaction.data.get("guild_id", None) in cmd.guild_ids
+                ):
+                    command = cmd
+                    break
             else:
-                self.dispatch("application_command_completion", ctx)
+                return self.dispatch("unknown_command", interaction)
+        if interaction.type is InteractionType.auto_complete:
+            ctx = await self.get_autocomplete_context(interaction)
+            ctx.command = command
+            return await command.invoke_autocomplete_callback(ctx)
+        
+        ctx = await self.get_application_context(interaction)
+        ctx.command = command
+        self.dispatch("application_command", ctx)
+        try:
+            if await self.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self.dispatch("application_command_completion", ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -618,7 +642,7 @@ class ApplicationCommandMixin:
 
     def group(
         self,
-        name: str,
+        name: Optional[str] = None,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
@@ -629,8 +653,8 @@ class ApplicationCommandMixin:
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the group to create.
+        name: Optional[:class:`str`]
+            The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
         description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
@@ -644,7 +668,7 @@ class ApplicationCommandMixin:
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
-                name,
+                name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None else "No description provided"
@@ -656,6 +680,19 @@ class ApplicationCommandMixin:
         return inner
 
     slash_group = group
+
+    def walk_application_commands(self) -> Generator[ApplicationCommand, None, None]:
+        """An iterator that recursively walks through all application commands and subcommands.
+
+        Yields
+        ------
+        :class:`.ApplicationCommand`
+            An application command from the internal list of application commands.
+        """
+        for command in self.application_commands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
 
     async def get_application_context(
         self, interaction: Interaction, cls=None

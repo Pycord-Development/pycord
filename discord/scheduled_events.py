@@ -37,6 +37,7 @@ from .enums import (
 from .mixins import Hashable
 from .iterators import ScheduledEventSubscribersIterator
 from .errors import ValidationError
+from .asset import Asset
 
 __all__ = (
     'ScheduledEvent',
@@ -57,16 +58,21 @@ MISSING = utils.MISSING
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
 
-    Setting the ``location`` to its corresponding type will set the location type automatically:
-    - :class:`StageChannel`: :attr:`ScheduledEventLocationType.external`
-    - :class:`VoiceChannel`: :attr:`ScheduledEventLocationType.voice`
-    - :class:`str`: :attr:`ScheduledEventLocationType.external`
+    Setting the ``value`` to its corresponding type will set the location type automatically:
+
+    +------------------------+---------------------------------------------------+
+    |     Type of Input      |                   Location Type                   |
+    +========================+===================================================+
+    | :class:`StageChannel`: | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`: | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`:          | :attr:`ScheduledEventLocationType.external`       |
+    +------------------------+---------------------------------------------------+
 
     .. versionadded:: 2.0
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
@@ -77,12 +83,13 @@ class ScheduledEventLocation:
         'value',
     )
 
-    def __init__(self, *, state: ConnectionState, location: Union[str, int, StageChannel, VoiceChannel]):
+    def __init__(self, *, state: ConnectionState, value: Union[str, int, StageChannel, VoiceChannel]):
         self._state = state
-        if isinstance(location, int):
-            self.value = self._state._get_channel(int(location))
+        self.value: Union[str, StageChannel, VoiceChannel]
+        if isinstance(value, int):
+            self.value = self._state._get_guild_channel({"channel_id": int(value)})
         else:
-            self.value = location
+            self.value = value
 
     def __repr__(self) -> str:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
@@ -125,6 +132,8 @@ class ScheduledEvent(Hashable):
 
     Attributes
     ----------
+    guild: :class:`Guild`
+        The guild where the scheduled event is happening.
     name: :class:`str`
         The name of the scheduled event.
     description: Optional[:class:`str`]
@@ -154,8 +163,8 @@ class ScheduledEvent(Hashable):
         so there is no need to use this attribute.
     created_at: :class:`datetime.datetime`
         The datetime object of when the event was created.
-    guild: :class:`Guild`
-        The guild where the scheduled event is happening.
+    cover: Optional[:class:`Asset`]
+        The cover image of the scheduled event.
     """
     
     __slots__ = (
@@ -170,6 +179,7 @@ class ScheduledEvent(Hashable):
         'location',
         'guild',
         '_state',
+        '_cover',
         'subscriber_count',
     )
 
@@ -180,7 +190,7 @@ class ScheduledEvent(Hashable):
         self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
-        #self.image: Optional[str] = data.get('image', None)
+        self._cover: Optional[str] = data.get('image', None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
         end_time = data.get('scheduled_end_time', None)
         if end_time != None:
@@ -194,9 +204,9 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get('entity_metadata')
         channel_id = data.get('channel_id', None)
         if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=channel_id)
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
+            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
 
     def __str__(self) -> str:
         return self.name
@@ -223,18 +233,30 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
-    
+
+    @property
+    def cover(self) -> Optional[Asset]:
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
+        if self._cover is None:
+            return None
+        return Asset._from_scheduled_event_cover(
+            self._state,
+            self.id,
+            self._image,
+        )
+
     async def edit(
         self,
         *,
+        reason: Optional[str] = None,
         name: str = MISSING,
         description: str = MISSING,
         status: Union[int, ScheduledEventStatus] = MISSING,
         location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
+        cover: Optional[bytes] = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
-        reason: Optional[str] = None
     ) -> Optional[ScheduledEvent]:
         """|coro|
         
@@ -268,6 +290,8 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        cover: Optional[:class:`Asset`]
+            The cover image of the scheduled event.
 
         Raises
         -------
@@ -296,20 +320,28 @@ class ScheduledEvent(Hashable):
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
 
-        if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, location=location)
+        if cover is not MISSING:
+            if cover is None:
+                payload["image"]
+            else:
+                payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:
-            if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
+            if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
+                location = ScheduledEventLocation(state=self._state, value=location)
+
+            if location.type is ScheduledEventLocationType.external:
+                payload["channel_id"] = None
+                payload["entity_metadata"] = {"location": str(location.value)}
+            else:
                 payload["channel_id"] = location.value.id
                 payload["entity_metadata"] = None
-            else:
-                payload["channel_id"] = None
-                payload["entity_metadata"] = {"location":str(location.value)}
 
         location = location if location is not MISSING else self.location
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
-            raise ValidationError("end_time needs to be passed if location type is external.")
+            end_time = self.end_time
+            if end_time is None:
+                raise ValidationError("end_time needs to be passed if location type is external.")
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()

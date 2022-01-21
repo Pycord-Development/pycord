@@ -341,7 +341,11 @@ class PartialMessageConverter(Converter[discord.PartialMessage]):
         if not match:
             raise MessageNotFound(argument)
         data = match.groupdict()
-        channel_id = discord.utils._get_as_snowflake(data, 'channel_id')
+        channel_id = data.get('channel_id')
+        if channel_id is None:
+            channel_id = ctx.channel and ctx.channel.id
+        else:
+            channel_id = int(channel_id)
         message_id = int(data['message_id'])
         guild_id = data.get('guild_id')
         if guild_id is None:
