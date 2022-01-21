@@ -761,7 +761,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         limit: int,
         with_member: bool = False,
         before: Union[datetime.datetime, int] = None,
-        after: Union[datetime.datetime, int] = None
+        after: Union[datetime.datetime, int] = None,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
