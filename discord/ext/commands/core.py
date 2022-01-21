@@ -1680,7 +1680,7 @@ def check(predicate: Check) -> Callable[[T], T]:
 
     .. code-block:: python3
 
-        async def owner_or_permissions(**perms):
+        def owner_or_permissions(**perms):
             original = commands.has_permissions(**perms).predicate
             async def extended_check(ctx):
                 if ctx.guild is None:
