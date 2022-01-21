@@ -97,6 +97,10 @@ class ApplicationCommandMixin:
         return self._pending_application_commands
 
     @property
+    def all_commands(self):
+        return self._application_commands
+    
+    @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = self.application_commands
         if self._supports_prefixed_commands:
@@ -149,9 +153,15 @@ class ApplicationCommandMixin:
         Returns
         --------
         Optional[:class:`.ApplicationCommand`]
-            The command that was removed. If the name is not valid then
+            The command that was removed. If the command is not valid then
             ``None`` is returned instead.
         """
+        if command.id is None:
+            try:
+                index = self._pending_application_commands.index(command)
+            except ValueError:
+                return None
+            return self._pending_application_commands.pop(index)
         return self._application_commands.pop(command.id)
 
     @property
