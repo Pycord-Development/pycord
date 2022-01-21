@@ -798,7 +798,6 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     def member_from_payload(self, data):
         from .member import Member
 
-        data.pop('guild_scheduled_event_id')
         user = data.pop('user')
 
         member = data.pop('member')
@@ -808,8 +807,6 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 
     def user_from_payload(self, data):
         from .user import User
-
-        data.pop('guild_scheduled_event_id')
 
         user = data.pop('user')
 
