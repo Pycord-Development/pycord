@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import sys
 from typing import (
@@ -1650,6 +1649,7 @@ class HTTPClient:
             'entity_type',
             'status',
             'entity_metadata',
+            'image',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 

@@ -193,13 +193,13 @@ class Embed:
         self.url = url
         self.description = description
 
-        if self.title is not EmptyEmbed:
+        if self.title is not EmptyEmbed and self.title is not None:
             self.title = str(self.title)
 
-        if self.description is not EmptyEmbed:
+        if self.description is not EmptyEmbed and self.description is not None:
             self.description = str(self.description)
 
-        if self.url is not EmptyEmbed:
+        if self.url is not EmptyEmbed and self.url is not None:
             self.url = str(self.url)
 
         if timestamp:

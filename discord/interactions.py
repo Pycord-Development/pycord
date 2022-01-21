@@ -27,17 +27,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
-import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
-from .errors import InteractionResponded, HTTPException, ClientException, InvalidArgument
-from .channel import PartialMessageable, ChannelType
+from .errors import InteractionResponded, ClientException, InvalidArgument
+from .channel import ChannelType
 from .file import File
 from .user import User
 from .member import Member
 from .message import Message, Attachment
-from .mentions import AllowedMentions
 from .object import Object
 from .permissions import Permissions
 from .webhook.async_ import async_context, Webhook, handle_message_parameters
@@ -46,12 +44,14 @@ __all__ = (
     'Interaction',
     'InteractionMessage',
     'InteractionResponse',
+    'MessageInteraction',
 )
 
 if TYPE_CHECKING:
     from .types.interactions import (
         Interaction as InteractionPayload,
         InteractionData,
+        MessageInteraction as MessageInteractionPayload
     )
     from .guild import Guild
     from .state import ConnectionState
@@ -278,6 +278,7 @@ class Interaction:
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
         delete_after: Optional[float] = None,
@@ -306,6 +307,9 @@ class Interaction:
         files: List[:class:`File`]
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
@@ -339,6 +343,7 @@ class Interaction:
             content=content,
             file=file,
             files=files,
+            attachments=attachments,
             embed=embed,
             embeds=embeds,
             view=view,
@@ -422,7 +427,6 @@ class InteractionResponse:
         An interaction can only be responded to once.
         """
         return self._responded
-        
 
     async def defer(self, *, ephemeral: bool = False) -> None:
         """|coro|
@@ -818,6 +822,7 @@ class InteractionMessage(Message):
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
         delete_after: Optional[float] = None,
@@ -840,6 +845,9 @@ class InteractionMessage(Message):
         files: List[:class:`File`]
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
@@ -867,12 +875,15 @@ class InteractionMessage(Message):
         :class:`InteractionMessage`
             The newly edited message.
         """
+        if attachments is MISSING:
+            attachments = self.attachments or MISSING
         return await self._state._interaction.edit_original_message(
             content=content,
             embeds=embeds,
             embed=embed,
             file=file,
             files=files,
+            attachments=attachments,
             view=view,
             allowed_mentions=allowed_mentions,
             delete_after=delete_after
@@ -899,3 +910,46 @@ class InteractionMessage(Message):
             Deleting the message failed.
         """
         await self._state._interaction.delete_original_message(delay=delay)
+
+
+class MessageInteraction:
+    """Represents a Discord message interaction.
+
+    This is sent on the message object when the message is a response
+    to an interaction without an existing message e.g. application command.
+
+    .. versionadded:: 2.0
+
+    .. note::
+        Responses to message components do not include this property.
+
+    Attributes
+    -----------
+    id: :class:`int`
+        The interaction's ID.
+    type: :class:`InteractionType`
+        The interaction type.
+    name: :class:`str`
+        The name of the invoked application command.
+    user: :class:`User`
+        The user that sent the interaction.
+    data: :class:`dict`
+        The raw interaction data.
+    """
+
+    __slots__: Tuple[str, ...] = (
+        'id',
+        'type',
+        'name',
+        'user',
+        'data',
+        '_state'
+    )
+
+    def __init__(self, *, data: MessageInteractionPayload, state: ConnectionState):
+        self._state = state
+        self.data = data
+        self.id: int = int(data['id'])
+        self.type: InteractionType = data['type']
+        self.name: str = data['name']
+        self.user: User = self._state.store_user(data['user'])
