@@ -25,19 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import datetime
 import re
 import io
 from os import PathLike
-from typing import Dict, TYPE_CHECKING, Union, List, Optional, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type
+from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
 
 from . import utils
 from .reaction import Reaction
 from .emoji import Emoji
 from .partial_emoji import PartialEmoji
 from .enums import MessageType, ChannelType, try_enum
-from .errors import InvalidArgument, HTTPException
+from .errors import InvalidArgument
 from .components import _component_factory
 from .embeds import Embed
 from .member import Member
@@ -71,7 +70,7 @@ if TYPE_CHECKING:
     from .abc import GuildChannel, PartialMessageableChannel, MessageableChannel
     from .components import Component
     from .state import ConnectionState
-    from .channel import TextChannel, GroupChannel, DMChannel, PartialMessageable
+    from .channel import TextChannel
     from .mentions import AllowedMentions
     from .user import User
     from .role import Role
@@ -612,6 +611,8 @@ class Message(Hashable):
         .. versionadded:: 2.0
     guild: Optional[:class:`Guild`]
         The guild that the message belongs to, if applicable.
+    interaction: Optional[:class:`MessageInteraction`]
+        The interaction associated with the message, if applicable.
     """
 
     __slots__ = (
@@ -645,6 +646,7 @@ class Message(Hashable):
         'stickers',
         'components',
         'guild',
+        'interaction',
     )
 
     if TYPE_CHECKING:
@@ -711,6 +713,13 @@ class Message(Hashable):
 
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
+
+        from .interactions import MessageInteraction
+        self.interaction: Optional[MessageInteraction]
+        try:
+            self.interaction = MessageInteraction(data=data['interaction'], state=state)
+        except KeyError:
+            self.interaction = None
 
         for handler in ('author', 'member', 'mentions', 'mention_roles'):
             try:

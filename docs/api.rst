@@ -3728,6 +3728,12 @@ AuditLogDiff
 
         :type: :class:`int`
 
+    .. attribute:: invitable
+
+        Non-moderators can now add other non-moderators to this thread.
+
+        :type: :class:`bool`
+
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these
 
