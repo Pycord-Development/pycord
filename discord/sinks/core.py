@@ -21,14 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import wave
 import logging
 import os
+import struct
+import sys
 import threading
 import time
-import subprocess
-import sys
-import struct
+
 from .errors import SinkException
 
 _log = logging.getLogger(__name__)
@@ -57,13 +56,15 @@ default_filters = {
 class Filters:
     """Filters for sink
 
-    .. versionadded:: 2.0
-    
+    .. versionadded:: 2.1
+
     Parameters
     ----------
-    interface: :meth:`Filters.interface`
-    
+    container
+        Container of all Filters.
+
     """
+
     def __init__(self, **kwargs):
         self.filtered_users = kwargs.get("users", default_filters["users"])
         self.seconds = kwargs.get("time", default_filters["time"])
@@ -71,7 +72,7 @@ class Filters:
         self.finished = False
 
     @staticmethod
-    def interface(func):  # Contains all filters
+    def container(func):  # Contains all filters
         def _filter(self, data, user):
             if not self.filtered_users or user in self.filtered_users:
                 return func(self, data, user)
@@ -92,8 +93,8 @@ class Filters:
 
 class RawData:
     """Handles raw data from Discord so that it can be decrypted and decoded to be used.
-    
-    .. versionadded:: 2.0
+
+    .. versionadded:: 2.1
 
     """
 
@@ -116,8 +117,8 @@ class RawData:
 
 class AudioData:
     """Handles data that's been completely decrypted and decoded and is ready to be saved to file.
-    
-    .. versionadded:: 2.0
+
+    .. versionadded:: 2.1
 
     Raises
     ------
@@ -158,15 +159,29 @@ class AudioData:
 class Sink(Filters):
     """A Sink "stores" all the audio data.
 
-    .. versionadded:: 2.0
+    Can be subclassed for extra customizablilty,
+
+    .. warning::
+
+        It is although recommended you use,
+        the officially provided sink classes
+        like :class:`~discord.sinks.WaveSink`
+
+    just replace the following like so: ::
+
+        vc.start_recording(
+            MySubClassedSink(),
+            finished_callback,
+            ctx.channel,
+        )
+
+    .. versionadded:: 2.1
 
     Parameters
     ----------
-    encoding: :class:`string`
-        The encoding to use. Valid types include wav, mp3, and pcm (even though it's not an actual encoding).
     output_path: :class:`string`
         A path to where the audio files should be output.
-        
+
     Raises
     ------
     ClientException
@@ -174,24 +189,11 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
-    valid_encodings = [
-        "wav", 
-        "mp3", 
-        "pcm",
-    ] 
-
-    def __init__(self, *, encoding="wav", output_path="", filters=None):
+    def __init__(self, *, output_path="", filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-
-        encoding = encoding.lower()
-
-        if encoding not in self.valid_encodings:
-            raise SinkException("An invalid encoding type was specified.")
-
-        self.encoding = encoding
         self.file_path = output_path
         self.vc = None
         self.audio_data = {}
@@ -200,7 +202,7 @@ class Sink(Filters):
         self.vc = vc
         super().init()
 
-    @Filters.interface
+    @Filters.container
     def write(self, data, user):
         if user not in self.audio_data:
             ssrc = self.vc.get_ssrc(user)
@@ -215,54 +217,3 @@ class Sink(Filters):
         for file in self.audio_data.values():
             file.cleanup()
             self.format_audio(file)
-
-    def format_audio(self, audio):
-        if self.vc.recording:
-            raise SinkException(
-                "Audio may only be formatted after recording is finished."
-            )
-        if self.encoding == "pcm":
-            return
-        if self.encoding == "mp3":
-            mp3_file = audio.file.split(".")[0] + ".mp3"
-            args = [
-                "ffmpeg",
-                "-f",
-                "s16le",
-                "-ar",
-                "48000",
-                "-ac",
-                "2",
-                "-i",
-                audio.file,
-                mp3_file,
-            ]
-            process = None
-            if os.path.exists(mp3_file):
-                os.remove(
-                    mp3_file
-                )  # process will get stuck asking whether or not to overwrite, if file already exists.
-            try:
-                process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
-            except FileNotFoundError:
-                raise SinkException("ffmpeg was not found.") from None
-            except subprocess.SubprocessError as exc:
-                raise SinkException(
-                    "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-                ) from exc
-            process.wait()
-        elif self.encoding == "wav":
-            with open(audio.file, "rb") as pcm:
-                data = pcm.read()
-                pcm.close()
-
-            wav_file = audio.file.split(".")[0] + ".wav"
-            with wave.open(wav_file, "wb") as f:
-                f.setnchannels(self.vc.decoder.CHANNELS)
-                f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-                f.setframerate(self.vc.decoder.SAMPLING_RATE)
-                f.writeframes(data)
-                f.close()
-
-        os.remove(audio.file)
-        audio.on_format(self.encoding)

@@ -52,7 +52,7 @@ import traceback
 import time
 
 from .errors import DiscordException, InvalidArgument
-from .sink import RawData
+from .sinks.core import RawData
 
 if TYPE_CHECKING:
     T = TypeVar("T")
