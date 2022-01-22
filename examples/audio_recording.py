@@ -69,4 +69,4 @@ async def stop(ctx):
         await ctx.respond("Not recording in this guild.")
 
 
-bot.run("OTMxMDE2MDEzNjMyMzgwOTI5.Yd-SOw.__PCStF7EawdX5qDHwr67E25gGU")
+bot.run("TOKEN")
