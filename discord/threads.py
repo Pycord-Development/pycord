@@ -190,7 +190,7 @@ class Thread(Messageable, Hashable):
         self.archive_timestamp = parse_time(data['archive_timestamp'])
         self.locked = data.get('locked', False)
         self.invitable = data.get('invitable', True)
-        self.created_at = data.get('create_timestamp')
+        self.created_at = parse_time(data.get('create_timestamp'))
 
     def _update(self, data):
         try:
