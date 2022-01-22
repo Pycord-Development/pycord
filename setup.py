@@ -76,7 +76,7 @@ packages = [
 setup(
     name="py-cord",
     author="Pycord Development",
-    url="https://github.com/Pycord-Development/pycord",
+    url="https://pycord.dev/github",
     project_urls={
         "Website": "https://pycord.dev",
         "Documentation": "https://docs.pycord.dev/en/master/",
