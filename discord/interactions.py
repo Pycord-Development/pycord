@@ -31,7 +31,7 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
 from .errors import InteractionResponded, ClientException, InvalidArgument
-from .channel import ChannelType
+from .channel import ChannelType, PartialMessageable
 from .file import File
 from .user import User
 from .member import Member
