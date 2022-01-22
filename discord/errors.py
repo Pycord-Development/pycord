@@ -60,7 +60,6 @@ __all__ = (
     'NoEntryPointError',
     'ExtensionFailed',
     'ExtensionNotFound',
-    'RecordingException',
 )
 
 
@@ -269,20 +268,6 @@ class PrivilegedIntentsRequired(ClientException):
             'possible, then consider disabling the privileged intents instead.'
         )
         super().__init__(msg % shard_id)
-
-class RecordingException(ClientException):
-    """Exception that's thrown when there is an error while trying to record
-    audio from a voice channel.
-
-    .. versionadded:: 2.0
-    """
-    pass
-
-class SinkException(ClientException):
-    """Raised when a Sink error occurs.
-    
-    .. versionadded:: 2.0
-    """
 
 class InteractionResponded(ClientException):
     """Exception that's raised when sending another interaction response using

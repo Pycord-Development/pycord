@@ -52,9 +52,9 @@ from typing import Any, Callable, List, Optional, TYPE_CHECKING, Tuple
 from . import opus, utils
 from .backoff import ExponentialBackoff
 from .gateway import *
-from .errors import ClientException, ConnectionClosed, RecordingException
+from .errors import ClientException, ConnectionClosed
 from .player import AudioPlayer, AudioSource
-from .sink import Sink, RawData
+from .sinks import Sink, RawData, RecordingException
 
 from .utils import MISSING
 
@@ -704,13 +704,13 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
-    def listen(self, sink, callback, *args):
+    def start_recording(self, sink, callback, *args):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
         Must be in a voice channel to use.
         Must not be already recording.
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
 
         Parameters
         ----------
@@ -754,12 +754,12 @@ class VoiceClient(VoiceProtocol):
         )
         t.start()
 
-    def stop_listening(self):
+    def stop_recording(self):
         """Stops the recording.
         Must be already recording.
         Raises
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.1
 
         ------
         RecordingException
@@ -795,9 +795,9 @@ class VoiceClient(VoiceProtocol):
                 s.recv(4096)
 
     def recv_audio(self, sink, callback, *args):
-        #  Gets data from _recv_audio and sorts
-        #  it by user, handles pcm files and
-        #  silence that should be added.
+        # Gets data from _recv_audio and sorts
+        # it by user, handles pcm files and
+        # silence that should be added.
 
         self.user_timestamps = {}
         self.starting_time = time.perf_counter()
@@ -811,7 +811,7 @@ class VoiceClient(VoiceProtocol):
             try:
                 data = self.socket.recv(4096)
             except OSError:
-                self.stop_listening()
+                self.stop_recording()
                 continue
 
             self.unpack_audio(data)
