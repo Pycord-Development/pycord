@@ -85,7 +85,7 @@ class Filters:
         time.sleep(self.seconds)
         if self.finished:
             return
-        self.vc.stop_listening()
+        self.vc.stop_recording()
 
 
 class RawData:

@@ -60,7 +60,6 @@ __all__ = (
     'NoEntryPointError',
     'ExtensionFailed',
     'ExtensionNotFound',
-    'RecordingException',
 )
 
 
