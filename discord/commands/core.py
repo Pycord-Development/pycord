@@ -868,6 +868,7 @@ class SlashCommandGroup(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
         self.cog = None
+        self.id = None
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
