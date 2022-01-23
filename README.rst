@@ -23,14 +23,13 @@ Rapptz, also known as Danny, the maintainer and core developer of discord.py wil
 
 Pycord v1.7.3 is the same as discord.py v1.7.3, however, Pycord v2.0 will support newer features of the API such as slash commands, context menus, scheduled events, timeouts, and others.
 
-
 Key Features
 ------------
 
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
 - Optimised for both speed and memory usage.
-- Supports Slash Commands, Context Menus and Message Components.
+- Full Application Command Support
 
 Installing
 ----------
@@ -86,7 +85,7 @@ Optional Packages
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.6-dev`` for Python 3.6)
+* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
 
 Quick Example
 -------------
@@ -131,7 +130,7 @@ Note: Make sure you do not reveal your bot token to anyone, it can grant access 
 Links
 -----
 
-- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
+- `Documentation <https://docs.pycord.dev/en/latest/index.html>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
 - `Unofficial Discord API Server <https://discord.gg/discord-api>`_

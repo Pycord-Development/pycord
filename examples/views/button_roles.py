@@ -11,7 +11,7 @@ https://github.com/Pycord-Development/pycord/blob/master/examples/views/persiste
 Make sure to load this cog when your bot starts!
 """
 
-# this is the list of role IDs that will be added as buttons.
+# This is the list of role IDs that will be added as buttons.
 role_ids = [...]
 
 
@@ -53,7 +53,7 @@ class RoleButton(discord.ui.Button):
                 f"🎉 You have been given the role {role.mention}", ephemeral=True
             )
         else:
-            # Else, take the role from the user.
+            # Else, Take the role from the user
             await user.remove_roles(role)
             await interaction.response.send_message(
                 f"❌ The {role.mention} role has been taken from you", ephemeral=True
@@ -71,7 +71,8 @@ class ButtonRoleCog(commands.Cog):
     # Make sure to provide a list of guild ids in the guild_ids kwarg argument.
     @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
-        """A slash command to post a new view with a button for each role"""
+        """Slash command to post a new view with a button for each role.
+        """
 
         # timeout is None because we want this view to be persistent.
         view = discord.ui.View(timeout=None)

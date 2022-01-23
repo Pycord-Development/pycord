@@ -28,9 +28,8 @@ from __future__ import annotations
 import asyncio
 import collections
 import inspect
+import sys
 import traceback
-from .commands.errors import CheckFailure
-
 from typing import (
     Any,
     Callable,
@@ -44,11 +43,8 @@ from typing import (
     Type,
 )
 
-import sys
-
 from .client import Client
-from .shard import AutoShardedClient
-from .utils import MISSING, get, find, async_all
+from .cog import CogMixin
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -59,10 +55,11 @@ from .commands import (
     AutocompleteContext,
     command,
 )
-from .cog import CogMixin
-
+from .commands.errors import CheckFailure
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
+from .shard import AutoShardedClient
+from .utils import MISSING, get, find, async_all
 from .enums import InteractionType
 from .user import User
 
@@ -820,17 +817,15 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO: Remove these from commands.Bot
 
     def check(self, func):
-        r"""A decorator that adds a global check to the bot.
-        A global check is similar to a :func:`.check` that is applied
-        on a per command basis except it is run before any command checks
-        have been verified and applies to every command the bot has.
+        """A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is
+        applied on a per command basis except it is run before any command checks have been verified and applies to
+        every command the bot has.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this
+           takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         ---------
@@ -846,17 +841,15 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         return func
 
     def add_check(self, func, *, call_once: bool = False) -> None:
-        """Adds a global check to the bot.
-        This is the non-decorator interface to :meth:`.check`
-        and :meth:`.check_once`.
+        """Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and
+        :meth:`.check_once`.
 
         Parameters
         -----------
         func
             The function that was used as a global check.
         call_once: :class:`bool`
-            If the function should only be called once per
-            :meth:`.invoke` call.
+            If the function should only be called once per :meth:`.Bot.invoke` call.
 
         """
 
@@ -887,26 +880,21 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             pass
 
     def check_once(self, func):
-        r"""A decorator that adds a "call once" global check to the bot.
-        Unlike regular global checks, this one is called only once
-        per :meth:`.invoke` call.
-        Regular global checks are called whenever a command is called
-        or :meth:`.Command.can_run` is called. This type of check
-        bypasses that and ensures that it's called only once, even inside
-        the default help command.
+        """A decorator that adds a "call once" global check to the bot. Unlike regular global checks, this one is called
+        only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or
+        :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once,
+        even inside the default help command.
 
         .. note::
 
-            When using this function the :class:`.Context` sent to a group subcommand
-            may only parse the parent command and not the subcommands due to it
-            being invoked once per :meth:`.Bot.invoke` call.
+           When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command
+           and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`,
+           this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         ---------
