@@ -27,6 +27,7 @@ import struct
 import sys
 import threading
 import time
+from typing import List
 
 from .errors import SinkException
 
@@ -208,3 +209,6 @@ class Sink(Filters):
         for file in self.audio_data.values():
             file.cleanup()
             self.format_audio(file)
+
+    def get_all_audio(self):
+        return [os.path.realpath(x.file) for x in self.audio_data.values()]
