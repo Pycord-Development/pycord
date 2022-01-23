@@ -16,4 +16,5 @@ async def hello(
 ):
     await ctx.respond(f"Hello {name}")
 
-bot.run('TOKEN')
+
+bot.run("TOKEN")

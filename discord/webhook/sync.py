@@ -36,6 +36,7 @@ import logging
 import json
 import time
 import re
+import weakref
 
 from urllib.parse import quote as urlquote
 from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union, overload
@@ -94,7 +95,7 @@ class DeferredLock:
 
 class WebhookAdapter:
     def __init__(self):
-        self._locks: Dict[Any, threading.Lock] = {}
+        self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
 
     def request(
         self,

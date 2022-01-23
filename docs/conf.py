@@ -163,6 +163,7 @@ html_context = {
   'discord_extensions': [
     ('discord.ext.commands', 'ext/commands'),
     ('discord.ext.tasks', 'ext/tasks'),
+    ('discord.ext.pages', 'ext/pages'),
   ],
 }
 
@@ -271,7 +272,7 @@ html_js_files = [
 ]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'discord.pydoc'
+htmlhelp_basename = 'pycorddoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 

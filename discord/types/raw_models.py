@@ -106,3 +106,7 @@ class TypingEvent(_TypingEventOptional):
     timestamp: int
 
 
+class ScheduledEventSubscription(TypedDict, total=False):
+    event_id: Snowflake
+    user_id: Snowflake
+    guild_id: Snowflake

@@ -1,5 +1,5 @@
 import discord
-from discord.commands.commands import slash_command
+from discord.commands.core import slash_command
 from discord.ext import commands
 
 """
@@ -20,8 +20,11 @@ class RoleButton(discord.ui.Button):
         """
         A button for one role. `custom_id` is needed for persistent views.
         """
-        super().__init__(label=role.name,
-                         style=discord.enums.ButtonStyle.primary, custom_id=str(role.id))
+        super().__init__(
+            label=role.name,
+            style=discord.enums.ButtonStyle.primary,
+            custom_id=str(role.id),
+        )
 
     async def callback(self, interaction: discord.Interaction):
         """This function will be called any time a user clicks on this button.
@@ -46,11 +49,15 @@ class RoleButton(discord.ui.Button):
         if role not in user.roles:
             # Give the user the role if they don't already have it.
             await user.add_roles(role)
-            await interaction.response.send_message(f"🎉 You have been given the role {role.mention}", ephemeral=True)
+            await interaction.response.send_message(
+                f"🎉 You have been given the role {role.mention}", ephemeral=True
+            )
         else:
             # Else, take the role from the user.
             await user.remove_roles(role)
-            await interaction.response.send_message(f"❌ The {role.mention} role has been taken from you", ephemeral=True)
+            await interaction.response.send_message(
+                f"❌ The {role.mention} role has been taken from you", ephemeral=True
+            )
 
 
 class ButtonRoleCog(commands.Cog):
@@ -64,8 +71,7 @@ class ButtonRoleCog(commands.Cog):
     # Make sure to provide a list of guild ids in the guild_ids kwarg argument.
     @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
-        """Slash command to post a new view with a button for each role.
-        """
+        """A slash command to post a new view with a button for each role"""
 
         # timeout is None because we want this view to be persistent.
         view = discord.ui.View(timeout=None)

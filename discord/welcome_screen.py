@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Union, overload
+from typing import TYPE_CHECKING, Optional, List, Union, overload
 from .utils import _get_as_snowflake, get
 from .partial_emoji import _EmojiTag
 
@@ -88,7 +88,7 @@ class WelcomeScreenChannel:
         return dict_
 
     @classmethod
-    def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeChannel:
+    def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeScreenChannel:
         channel_id = _get_as_snowflake(data, 'channel_id')
         channel = guild.get_channel(channel_id)
         description = data.get('description')
@@ -145,7 +145,7 @@ class WelcomeScreen:
         self,
         *,
         description: Optional[str] = ...,
-        welcome_channels: Optional[List[WelcomeChannel]] = ...,
+        welcome_channels: Optional[List[WelcomeScreenChannel]] = ...,
         enabled: Optional[bool] = ...,
         reason: Optional[str] = ...,
     ) -> None:

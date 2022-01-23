@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, ParamSpec, List, Any, Dict
+from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, Callable, ParamSpec, List, Any, Dict
 
 import discord.utils
 
 if TYPE_CHECKING:
+    from . import ApplicationCommand, Option
     from ..cog import Cog
-    from ..commands.commands import ApplicationCommand, Option
     from ..embeds import Embed
     from ..file import File
     from ..guild import Guild
@@ -42,13 +42,25 @@ if TYPE_CHECKING:
     from ..user import User
     from ..ui import View
     from ..voice_client import VoiceProtocol
-    from ..webhook import Webhook
+    from ..webhook import Webhook, WebhookMessage
 
+from ..guild import Guild
+from ..interactions import Interaction, InteractionResponse
+from ..member import Member
+from ..message import Message
+from ..user import User
+from ..utils import cached_property
 
-__all__ = (
-    "ApplicationContext",
-    "AutocompleteContext"
-)
+T = TypeVar('T')
+CogT = TypeVar('CogT', bound="Cog")
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
+
+__all__ = ("ApplicationContext", "AutocompleteContext")
+
 
 MISSING: Any = discord.utils.MISSING
 
@@ -83,37 +95,69 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     def __init__(self, bot: BotT, interaction: Interaction) -> None:
         self.bot: BotT = bot
         self.interaction: Interaction = interaction
+
+        # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
+        self.focused: Option = None  # type: ignore
+        self.value: str = None  # type: ignore
+        self.options: dict = None  # type: ignore
+
         self._state: ConnectionState = self.interaction._state
 
     async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.channel
 
-    @discord.utils.cached_property
+    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+        r"""|coro|
+        Calls a command with the arguments given.
+        This is useful if you want to just call the callback that a
+        :class:`.ApplicationCommand` holds internally.
+        .. note::
+            This does not handle converters, checks, cooldowns, pre-invoke,
+            or after-invoke hooks in any matter. It calls the internal callback
+            directly as-if it was a regular function.
+            You must take care in passing the proper arguments when
+            using this function.
+        Parameters
+        -----------
+        command: :class:`.ApplicationCommand`
+            The command that is going to be called.
+        \*args
+            The arguments to use.
+        \*\*kwargs
+            The keyword arguments to use.
+        Raises
+        -------
+        TypeError
+            The command argument to invoke is missing.
+        """
+        return await command(self, *args, **kwargs)
+
+    @cached_property
     def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
-    @discord.utils.cached_property
+    @cached_property
     def channel_id(self) -> Optional[int]:
         return self.interaction.channel_id
 
-    @discord.utils.cached_property
+    @cached_property
     def guild(self) -> Optional[Guild]:
         return self.interaction.guild
 
-    @discord.utils.cached_property
+    @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
 
-    @discord.utils.cached_property
+    @cached_property
     def me(self) -> Union[Member, User]:
         return self.guild.me if self.guild is not None else self.bot.user
 
-    @discord.utils.cached_property
+    @cached_property
     def message(self) -> Optional[Message]:
         return self.interaction.message
 
-    @discord.utils.cached_property
+    @cached_property
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
@@ -128,7 +172,7 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
 
         return self.guild.voice_client
 
-    @discord.utils.cached_property
+    @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
 
@@ -141,8 +185,31 @@ class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
         return self.command.cog
       
     @property
-    def respond(self):
-        return self.followup.send if self.response.is_done() else self.interaction.response.send_message
+    def respond(self) -> Callable[..., Union[Interaction, WebhookMessage]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not."""
+        if not self.response.is_done():
+            return self.interaction.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
+
+    @property
+    def send_response(self):
+        if not self.response.is_done():
+            return self.interaction.response.send_message
+        else:
+            raise RuntimeError(
+                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
+            )
+
+    @property
+    def send_followup(self):
+        if self.response.is_done():
+            return self.followup.send
+        else:
+            raise RuntimeError(
+                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
+            )
 
     @discord.utils.copy_doc(InteractionResponse.defer)
     async def defer(self, *, ephemeral: bool = False) -> None:
@@ -192,7 +259,7 @@ class AutocompleteContext:
     Attributes
     -----------
     bot: :class:`.Bot`
-        The bot that the command belongs to.    
+        The bot that the command belongs to.
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
     command: :class:`.ApplicationCommand`
@@ -208,13 +275,13 @@ class AutocompleteContext:
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
     
     def __init__(
-            self,
-            interaction: Interaction,
-            *,
-            command: ApplicationCommand,
-            focused: Option,
-            value: str,
-            options: Dict[str, Any],
+        self,
+        interaction: Interaction,
+        *,
+        command: ApplicationCommand,
+        focused: Option,
+        value: str,
+        options: Dict[str, Any],
     ) -> None:
         self.interaction: Interaction = interaction
         self.command: ApplicationCommand = command
@@ -227,5 +294,5 @@ class AutocompleteContext:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
-       
+
         return self.command.cog
