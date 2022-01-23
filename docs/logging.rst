@@ -1,4 +1,3 @@
-```{eval-rst}
 :orphan:
 
 .. versionadded:: 0.6.0
@@ -45,4 +44,3 @@ stdout of your program.
 
 For more information, check the documentation and tutorial of the
 :mod:`logging` module.
-```

@@ -70,8 +70,7 @@ class ButtonRoleCog(commands.Cog):
     # Make sure to provide a list of guild ids in the guild_ids kwarg argument.
     @slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: commands.Context):
-        """Slash command to post a new view with a button for each role.
-        """
+        """Slash command to post a new view with a button for each role."""
 
         # timeout is None because we want this view to be persistent.
         view = discord.ui.View(timeout=None)

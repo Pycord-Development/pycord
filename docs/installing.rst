@@ -1,4 +1,3 @@
-```{eval-rst}
 :orphan:
 
 .. currentmodule:: discord
@@ -132,4 +131,3 @@ A quick example to showcase how events work:
 
     client = MyClient()
     client.run('my token goes here')
-```
