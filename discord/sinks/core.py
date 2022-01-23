@@ -27,7 +27,7 @@ import struct
 import sys
 import threading
 import time
-from typing import List
+from ..types import snowflake
 
 from .errors import SinkException
 
@@ -214,6 +214,6 @@ class Sink(Filters):
         """Gets all audio files."""
         return [os.path.realpath(x.file) for x in self.audio_data.values()]
     
-    def get_user_audio(self, user):
+    def get_user_audio(self, user: snowflake.Snowflake):
         """Gets the audio file(s) of one specific user."""
         return os.path.realpath(self.audio_data.pop(user))
