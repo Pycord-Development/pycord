@@ -1075,6 +1075,7 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Name of a command must be a string.")
 
         self.cog = None
+        self.id = None
 
         try:
             checks = func.__commands_checks__

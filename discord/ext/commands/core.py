@@ -1174,7 +1174,9 @@ class GroupMixin(Generic[CogT]):
     @property
     def all_commands(self):
         # merge app and prefixed commands
-        return {**self._application_commands, **self.prefixed_commands}
+        if hasattr(self, "_application_commands"):
+            return {**self._application_commands, **self.prefixed_commands}
+        return self.prefixed_commands
 
     @property
     def commands(self) -> Set[Command[CogT, Any, Any]]:
