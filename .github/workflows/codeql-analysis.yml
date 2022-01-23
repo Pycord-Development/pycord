@@ -22,6 +22,7 @@ on:
 
 jobs:
   analyze:
+    if: !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
