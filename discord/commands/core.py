@@ -38,7 +38,7 @@ from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .options import Option, OptionChoice
 from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType
+from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
