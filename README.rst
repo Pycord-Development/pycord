@@ -130,7 +130,7 @@ Note: Make sure you do not reveal your bot token to anyone, it can grant access 
 Links
 -----
 
-- `Documentation <https://docs.pycord.dev/en/latest/index.html>`_
+- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
 - `Unofficial Discord API Server <https://discord.gg/discord-api>`_
