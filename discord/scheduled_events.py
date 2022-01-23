@@ -37,6 +37,7 @@ from .enums import (
 from .mixins import Hashable
 from .iterators import ScheduledEventSubscribersIterator
 from .errors import ValidationError
+from .asset import Asset
 
 __all__ = (
     'ScheduledEvent',
@@ -131,6 +132,8 @@ class ScheduledEvent(Hashable):
 
     Attributes
     ----------
+    guild: :class:`Guild`
+        The guild where the scheduled event is happening.
     name: :class:`str`
         The name of the scheduled event.
     description: Optional[:class:`str`]
@@ -160,8 +163,8 @@ class ScheduledEvent(Hashable):
         so there is no need to use this attribute.
     created_at: :class:`datetime.datetime`
         The datetime object of when the event was created.
-    guild: :class:`Guild`
-        The guild where the scheduled event is happening.
+    cover: Optional[:class:`Asset`]
+        The cover image of the scheduled event.
     """
     
     __slots__ = (
@@ -176,6 +179,7 @@ class ScheduledEvent(Hashable):
         'location',
         'guild',
         '_state',
+        '_cover',
         'subscriber_count',
     )
 
@@ -186,7 +190,7 @@ class ScheduledEvent(Hashable):
         self.guild: Guild = guild
         self.name: str = data.get('name')
         self.description: Optional[str] = data.get('description', None)
-        #self.image: Optional[str] = data.get('image', None)
+        self._cover: Optional[str] = data.get('image', None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
         end_time = data.get('scheduled_end_time', None)
         if end_time != None:
@@ -229,18 +233,30 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
-    
+
+    @property
+    def cover(self) -> Optional[Asset]:
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
+        if self._cover is None:
+            return None
+        return Asset._from_scheduled_event_cover(
+            self._state,
+            self.id,
+            self._image,
+        )
+
     async def edit(
         self,
         *,
+        reason: Optional[str] = None,
         name: str = MISSING,
         description: str = MISSING,
         status: Union[int, ScheduledEventStatus] = MISSING,
         location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
+        cover: Optional[bytes] = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
-        reason: Optional[str] = None
     ) -> Optional[ScheduledEvent]:
         """|coro|
         
@@ -274,6 +290,8 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        cover: Optional[:class:`Asset`]
+            The cover image of the scheduled event.
 
         Raises
         -------
@@ -302,6 +320,12 @@ class ScheduledEvent(Hashable):
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
 
+        if cover is not MISSING:
+            if cover is None:
+                payload["image"]
+            else:
+                payload["image"] = utils._bytes_to_base64_data(cover)
+
         if location is not MISSING:
             if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
                 location = ScheduledEventLocation(state=self._state, value=location)
@@ -315,7 +339,9 @@ class ScheduledEvent(Hashable):
 
         location = location if location is not MISSING else self.location
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
-            raise ValidationError("end_time needs to be passed if location type is external.")
+            end_time = self.end_time
+            if end_time is None:
+                raise ValidationError("end_time needs to be passed if location type is external.")
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
@@ -428,7 +454,7 @@ class ScheduledEvent(Hashable):
     def subscribers(
         self,
         *,
-        limit: Optional[int] = None,
+        limit: int = 100,
         as_member: bool = False,
         before: Optional[Union[Snowflake, datetime.datetime]] = None,
         after: Optional[Union[Snowflake, datetime.datetime]] = None,

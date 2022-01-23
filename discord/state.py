@@ -28,7 +28,6 @@ from __future__ import annotations
 import asyncio
 from collections import deque, OrderedDict
 import copy
-import datetime
 import itertools
 import logging
 from typing import Dict, Optional, TYPE_CHECKING, Union, Callable, Any, List, TypeVar, Coroutine, Sequence, Tuple, Deque
@@ -1218,39 +1217,42 @@ class ConnectionState:
         self.process_chunk_requests(guild_id, data.get('nonce'), members, complete)
 
     def parse_guild_scheduled_event_create(self, data) -> None:
-        guild = self._get_guild(data['guild_id'])
+        guild = self._get_guild(int(data['guild_id']))
         if guild is None:
             _log.debug('GUILD_SCHEDULED_EVENT_CREATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
 
-        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        creator = None if not data.get('creator', None) else guild.get_member(data.get('creator_id'))
+        scheduled_event = ScheduledEvent(state=self, guild=guild, creator=creator, data=data)
         guild._add_scheduled_event(scheduled_event)
         self.dispatch('scheduled_event_create', scheduled_event)
 
     def parse_guild_scheduled_event_update(self, data) -> None:
-        guild = self._get_guild(data['guild_id'])
+        guild = self._get_guild(int(data['guild_id']))
         if guild is None:
             _log.debug('GUILD_SCHEDULED_EVENT_UPDATE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
 
-        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        creator = None if not data.get('creator', None) else guild.get_member(data.get('creator_id'))
+        scheduled_event = ScheduledEvent(state=self, guild=guild, creator=creator, data=data)
         old_event = guild.get_scheduled_event(data['id'])
         guild._add_scheduled_event(scheduled_event)
         self.dispatch('scheduled_event_update', old_event, scheduled_event)
 
     def parse_guild_scheduled_event_delete(self, data) -> None:
-        guild = self._get_guild(data['guild_id'])
+        guild = self._get_guild(int(data['guild_id']))
         if guild is None:
             _log.debug('GUILD_SCHEDULED_EVENT_DELETE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
 
-        scheduled_event = ScheduledEvent(state=self, guild=guild, data=data)
+        creator = None if not data.get('creator', None) else guild.get_member(data.get('creator_id'))
+        scheduled_event = ScheduledEvent(state=self, guild=guild, creator=creator, data=data)
         scheduled_event.status = ScheduledEventStatus.canceled
         guild._remove_scheduled_event(scheduled_event)
         self.dispatch('scheduled_event_delete', scheduled_event)
 
     def parse_guild_scheduled_event_user_add(self, data) -> None:
-        guild = self._get_guild(data['guild_id'])
+        guild = self._get_guild(int(data['guild_id']))
         if guild is None:
             _log.debug('GUILD_SCHEDULED_EVENT_USER_ADD referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return
@@ -1268,7 +1270,7 @@ class ConnectionState:
                 self.dispatch('scheduled_event_user_add', event, member)
 
     def parse_guild_scheduled_event_user_remove(self, data) -> None:
-        guild = self._get_guild(data['guild_id'])
+        guild = self._get_guild(int(data['guild_id']))
         if guild is None:
             _log.debug('GUILD_SCHEDULED_EVENT_USER_REMOVE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
             return

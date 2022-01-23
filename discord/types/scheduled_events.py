@@ -50,7 +50,7 @@ class ScheduledEvent(TypedDict):
     guild: Guild
     name: str
     description: str
-    #image: Optional[str]
+    image: Optional[str]
     start_time: datetime
     end_time: Optional[datetime]
     status: ScheduledEventStatus
@@ -58,6 +58,7 @@ class ScheduledEvent(TypedDict):
     creator_id: Snowflake
     creator: Optional[User]
     location: ScheduledEventLocation
+    privacy_level: ScheduledEventPrivacyLevel
 
 class ScheduledEventSubscriber(User):
     member: Optional[Member]

@@ -32,25 +32,23 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generator, Generic, List, Literal, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
+from .options import Option, OptionChoice
 from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType, ChannelType
+from ..enums import SlashCommandOptionType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
 from ..user import User
-from ..utils import find, get_or_fetch, async_all
+from ..utils import find, get_or_fetch, async_all, utcnow
 
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
     "SlashCommand",
-    "Option",
-    "OptionChoice",
-    "option",
     "slash_command",
     "application_command",
     "user_command",
@@ -166,7 +164,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existent message)
+            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
 
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -185,15 +183,39 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if hasattr(self, "_max_concurrency"):
             if self._max_concurrency is not None:
                 # For this application, context can be duck-typed as a Message
-                await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
+                await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
 
             try:
                 self._prepare_cooldowns(ctx)
                 await self.call_before_hooks(ctx)
             except:
                 if self._max_concurrency is not None:
-                    await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
+                    await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
                 raise
+
+    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
+        """Checks whether the command is currently on cooldown.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to use when checking the commands cooldown status.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command is on cooldown.
+        """
+        if not self._buckets.valid:
+            return False
+
+        bucket = self._buckets.get_bucket(ctx)
+        current = utcnow().timestamp()
+        return bucket.get_tokens(current) == 0
 
     def reset_cooldown(self, ctx: ApplicationContext) -> None:
         """Resets the cooldown on this command.
@@ -204,8 +226,33 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
             bucket.reset()
+
+    def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
+        """Retrieves the amount of seconds before this command can be tried again.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to retrieve the cooldown from.
+
+        Returns
+        --------
+        :class:`float`
+            The amount of time left on this command's cooldown in seconds.
+            If this is ``0.0`` then the command isn't on cooldown.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)
+            current = utcnow().timestamp()
+            return bucket.get_retry_after(current)
+
+        return 0.0
 
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
@@ -582,7 +629,8 @@ class SlashCommand(ApplicationCommand):
 
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
-            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # union types
+            lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
+            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
         ]
@@ -745,120 +793,6 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
-channel_type_map = {
-    'TextChannel': ChannelType.text,
-    'VoiceChannel': ChannelType.voice,
-    'StageChannel': ChannelType.stage_voice,
-    'CategoryChannel': ChannelType.category,
-    'Thread': ChannelType.public_thread
-}
-
-class ThreadOption:
-    def __init__(self, thread_type: Literal["public", "private", "news"]):
-        type_map = {
-            "public": ChannelType.public_thread,
-            "private": ChannelType.private_thread,
-            "news": ChannelType.news_thread,
-        }
-        self._type = type_map[thread_type]
-    
-    @property
-    def __name__(self):
-        return 'ThreadOption'
-
-class Option:
-    def __init__(
-        self, input_type: Any, /, description: str = None, **kwargs
-    ) -> None:
-        self.name: Optional[str] = kwargs.pop("name", None)
-        self.description = description or "No description provided"
-        self.converter = None
-        self._raw_type = input_type
-        self.channel_types: List[SlashCommandOptionType] = kwargs.pop("channel_types", [])
-        if not isinstance(input_type, SlashCommandOptionType):
-            if hasattr(input_type, "convert"):
-                self.converter = input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == 'GuildChannel':
-                            continue
-                        if isinstance(i, ThreadOption):
-                            self.channel_types.append(i._type)
-                            continue
-
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
-        self.input_type = input_type
-        self.default = kwargs.pop("default", None)
-        self.required: bool = kwargs.pop("required", True) if self.default is None else False
-        self.choices: List[OptionChoice] = [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
-        ]
-
-        if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int, type(None))
-        elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float, type(None))
-        else:
-            minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
-
-        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
-        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-
-        if not (isinstance(self.min_value, minmax_types) or self.min_value is None):
-            raise TypeError(f"Expected {minmax_typehint} for min_value, got \"{type(self.min_value).__name__}\"")
-        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
-            raise TypeError(f"Expected {minmax_typehint} for max_value, got \"{type(self.max_value).__name__}\"")
-
-        self.autocomplete = kwargs.pop("autocomplete", None)
-
-    def to_dict(self) -> Dict:
-        as_dict = {
-            "name": self.name,
-            "description": self.description,
-            "type": self.input_type.value,
-            "required": self.required,
-            "choices": [c.to_dict() for c in self.choices],
-            "autocomplete": bool(self.autocomplete)
-        }
-        if self.channel_types:
-            as_dict["channel_types"] = [t.value for t in self.channel_types]
-        if self.min_value is not None:
-            as_dict["min_value"] = self.min_value
-        if self.max_value is not None:
-            as_dict["max_value"] = self.max_value
-
-        return as_dict
-
-
-    def __repr__(self):
-        return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
-
-
-class OptionChoice:
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
-        self.name = name
-        self.value = value if value is not None else name
-
-    def to_dict(self) -> Dict[str, Union[str, int, float]]:
-        return {"name": self.name, "value": self.value}
-
-def option(name, type=None, **kwargs):
-    """A decorator that can be used instead of typehinting Option"""
-    def decor(func):
-        nonlocal type
-        type = type or func.__annotations__.get(name, str)
-        func.__annotations__[name] = Option(type, **kwargs)
-        return func
-    return decor
 
 class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
