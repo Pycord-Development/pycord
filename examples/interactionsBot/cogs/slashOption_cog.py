@@ -1,8 +1,7 @@
 import discord
+from discord.commands import Option, slash_command
 from discord.ext import commands
 from discord.ext.commands.context import Context
-from discord.commands import slash_command
-from discord.commands import Option
 
 
 class SlashOptionExample(commands.Cog):

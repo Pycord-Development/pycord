@@ -1,4 +1,3 @@
-```{eval-rst}
 :orphan:
 
 .. _discord-intro:
@@ -95,4 +94,3 @@ If you want to invite your bot you must create an invite URL for it.
 
 If you want to generate this URL dynamically at run-time inside your bot and using the
 :class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`.
-```
