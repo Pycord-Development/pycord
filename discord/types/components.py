@@ -34,7 +34,7 @@ ButtonStyle = Literal[1, 2, 3, 4, 5]
 
 class ActionRow(TypedDict):
     type: Literal[1]
-    components: List[Component]
+    components: List[Component]  # type: ignore # recursive types mypy#731
 
 
 class _ButtonComponentOptional(TypedDict, total=False):
@@ -74,4 +74,4 @@ class SelectMenu(_SelectMenuOptional):
     options: List[SelectOption]
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu]
+Component = Union[ActionRow, ButtonComponent, SelectMenu]  # type: ignore # recursive types mypy#731
