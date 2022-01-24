@@ -23,7 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Union, Dict, Callable, Optional
+from typing import Any, Union, Dict, Callable, Optional, TypeVar
+
+AnyFunc = Callable[..., Any]
 
 __all__ = (
     "CommandPermission",
@@ -63,7 +65,7 @@ class CommandPermission:
     def to_dict(self) -> Dict[str, Union[int, str, bool]]:
         return {"id": self.id, "type": self.type, "permission": self.permission}
 
-def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
+def permission(role_id: Optional[int] = None, user_id: Optional[int] = None, permission: bool = True, guild_id: Optional[int] = None) -> Callable[[AnyFunc], AnyFunc]:
     """The method used to specify application command permissions 
     for specific users or roles using their id.
 
@@ -85,7 +87,7 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
+    def decorator(func: AnyFunc) -> AnyFunc:
         if not role_id is None:
             app_cmd_perm = CommandPermission(role_id, 1, permission, guild_id)
         elif not user_id is None:
@@ -104,7 +106,7 @@ def permission(role_id: int = None, user_id: int = None, permission: bool = True
 
     return decorator
 
-def has_role(item: Union[int, str], guild_id: int = None):
+def has_role(item: Union[int, str], guild_id: Optional[int] = None) -> Callable[[AnyFunc], AnyFunc]:
     """The method used to specify application command role restrictions.
     
     This method is meant to be used as a decorator.
@@ -120,7 +122,7 @@ def has_role(item: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
+    def decorator(func: AnyFunc) -> AnyFunc:
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
             setattr(func, "__app_cmd_perms__", [])
@@ -135,7 +137,7 @@ def has_role(item: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def has_any_role(*items: Union[int, str], guild_id: int = None):
+def has_any_role(*items: Union[int, str], guild_id: Optional[int] = None) -> Callable[[AnyFunc], AnyFunc]:
     """The method used to specify multiple application command role restrictions,
     The application command runs if the invoker has **any** of the specified roles.
     
@@ -152,7 +154,7 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
+    def decorator(func: AnyFunc) -> AnyFunc:
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
             setattr(func, "__app_cmd_perms__", [])
@@ -168,7 +170,7 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 
     return decorator
 
-def is_user(user: int, guild_id: int = None):
+def is_user(user: int, guild_id: Optional[int] = None) -> Callable[[AnyFunc], AnyFunc]:
     """The method used to specify application command user restrictions.
     
     This method is meant to be used as a decorator.
@@ -183,7 +185,7 @@ def is_user(user: int, guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
+    def decorator(func: AnyFunc) -> AnyFunc:
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
             setattr(func, "__app_cmd_perms__", [])
@@ -198,7 +200,7 @@ def is_user(user: int, guild_id: int = None):
 
     return decorator
 
-def is_owner(guild_id: int = None):
+def is_owner(guild_id: Optional[int] = None) -> Callable[[AnyFunc], AnyFunc]:
     """The method used to limit application commands exclusively
     to the owner of the bot.
     
@@ -212,7 +214,7 @@ def is_owner(guild_id: int = None):
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def decorator(func: Callable):
+    def decorator(func: AnyFunc) -> AnyFunc:
         # Create __app_cmd_perms__
         if not hasattr(func, '__app_cmd_perms__'):
             setattr(func, "__app_cmd_perms__", [])
