@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, Callable, ParamSpec, List, Any, Dict
+from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, Callable, List, Any, Dict
 
 import discord.utils
 
@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from ..ui import View
     from ..voice_client import VoiceProtocol
     from ..webhook import Webhook, WebhookMessage
+    from typing_extensions import ParamSpec
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -65,7 +66,7 @@ __all__ = ("ApplicationContext", "AutocompleteContext")
 MISSING: Any = discord.utils.MISSING
 
 T = TypeVar("T")
-BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+BotT = TypeVar("BotT", bound="Union[discord.Bot, discord.AutoShardedBot]")
 CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
