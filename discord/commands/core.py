@@ -164,7 +164,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore (ctx instead of non-existent message)
+            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
 
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -183,14 +183,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if hasattr(self, "_max_concurrency"):
             if self._max_concurrency is not None:
                 # For this application, context can be duck-typed as a Message
-                await self._max_concurrency.acquire(ctx)  # type: ignore (ctx instead of non-existent message)
+                await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
 
             try:
                 self._prepare_cooldowns(ctx)
                 await self.call_before_hooks(ctx)
             except:
                 if self._max_concurrency is not None:
-                    await self._max_concurrency.release(ctx)  # type: ignore (ctx instead of non-existent message)
+                    await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
                 raise
 
     def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
@@ -226,7 +226,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore (ctx instead of non-existent message)
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
             bucket.reset()
 
     def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
@@ -630,7 +630,7 @@ class SlashCommand(ApplicationCommand):
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
-            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore (union types)
+            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
         ]

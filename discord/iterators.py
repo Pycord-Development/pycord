@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .threads import Thread
     from .abc import Snowflake
+    from .scheduled_events import ScheduledEvent
 
 T = TypeVar('T')
 OT = TypeVar('OT')
@@ -754,7 +755,14 @@ class ArchivedThreadIterator(_AsyncIterator['Thread']):
 
 
 class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]]):
-    def __init__(self, event, limit, with_member=False, before=None, after=None):
+    def __init__(
+        self,
+        event: ScheduledEvent,
+        limit: int,
+        with_member: bool = False,
+        before: Union[datetime.datetime, int] = None,
+        after: Union[datetime.datetime, int] = None,
+    ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):
@@ -790,24 +798,30 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     def member_from_payload(self, data):
         from .member import Member
 
-        member = data.pop('member', None)
-        member['user'] = data
+        user = data.pop('user')
+
+        member = data.pop('member')
+        member['user'] = user
 
         return Member(data=member, guild=self.event.guild, state=self.event._state)
 
     def user_from_payload(self, data):
         from .user import User
 
-        return User(state=self.event._state, data=data)
+        user = data.pop('user')
+
+        return User(state=self.event._state, data=user)
 
     async def fill_subs(self):
         if self._get_retrieve():
             before = self.before.id if self.before else None
             after = self.after.id if self.after else None
             data = await self.get_subscribers(guild_id=self.event.guild.id, event_id=self.event.id, limit=self.retrieve, with_member=self.with_member, before=before, after=after)
+            if data:
+                self.limit -= self.retrieve
 
             for element in reversed(data):
                 if 'member' in element:
-                    self.subscribers.put(self.member_from_payload(element))
+                    await self.subscribers.put(self.member_from_payload(element))
                 else:
-                    self.subscribers.put(self.user_from_payload(element))
+                    await self.subscribers.put(self.user_from_payload(element))
