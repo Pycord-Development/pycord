@@ -86,7 +86,7 @@ class EnumMeta(type):
         _enum_value_map_: ClassVar[Dict[Any, Any]]
 
     def __new__(cls, name, bases, attrs, *, comparable: bool = False):
-        value_mapping = {}
+        value_mapping: Dict[Any, Any] = {}
         member_mapping = {}
         member_names = []
 
