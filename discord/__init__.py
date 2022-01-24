@@ -60,7 +60,7 @@ from .interactions import *
 from .components import *
 from .threads import *
 from .bot import *
-from .commands import *
+from .commands.__init__ import *
 from .cog import Cog
 from .welcome_screen import *
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
