@@ -22,6 +22,7 @@ on:
 
 jobs:
   analyze:
+    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
