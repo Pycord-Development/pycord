@@ -46,14 +46,15 @@ async def start(ctx: ApplicationContext, encoding: Option(str, choices=["mp3", "
     await ctx.respond("The recording has started!")
 
 
-async def finished_callback(sink, channel, *args):
+async def finished_callback(sink, channel: discord.TextChannel, *args):
 
     recorded_users = [
         f" <@{user_id}> ({os.path.split(audio.file)[1]}) "
         for user_id, audio in sink.audio_data.items()
     ]
     await sink.vc.disconnect()
-    await channel.send(f"Finished! Recorded audio for {', '.join(recorded_users)}.")
+    files = sink.get_all_audio()
+    await channel.send(f"Finished! Recorded audio for {', '.join(recorded_users)}.", files=files)
 
 @bot.command()
 async def stop(ctx):
