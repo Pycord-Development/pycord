@@ -60,7 +60,7 @@ class CommandPermission:
         self.permission = permission
         self.guild_id = guild_id
 
-    def to_dict(self) -> Dict[str, Union[int, bool]]:
+    def to_dict(self) -> Dict[str, Union[int, str, bool]]:
         return {"id": self.id, "type": self.type, "permission": self.permission}
 
 def permission(role_id: int = None, user_id: int = None, permission: bool = True, guild_id: int = None):
