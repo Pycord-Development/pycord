@@ -554,10 +554,7 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-
     def _parse_options(self, params) -> List[Option]:
-        final_options = []
-
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -573,7 +570,6 @@ class SlashCommand(ApplicationCommand):
             )
 
         final_options = []
-
         for p_name, p_obj in params:
 
             option = p_obj.annotation
@@ -592,13 +588,13 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
-                if p_obj.default != inspect.Parameter.empty:
+
+            if option.default is None:
+                if p_obj.default == inspect.Parameter.empty:
+                    option.default = None
+                else:
+                    option.default = p_obj.default
                     option.required = False
-
-            option.default = option.default if option.default is not None else p_obj.default
-
-            if option.default == inspect.Parameter.empty:
-                option.default = None
 
             if option.name is None:
                 option.name = p_name
@@ -610,7 +606,6 @@ class SlashCommand(ApplicationCommand):
             final_options.append(option)
 
         return final_options
-
 
     def _match_option_param_names(self, params, options):
         if list(params.items())[0][0] == "self":
