@@ -2,11 +2,12 @@
 with slash commands user permission it's better to check with <ctx.author.guild_permissions> property
 """
 
-import discord
-from discord.ext import commands
 import os
 
+import discord
+from discord.ext import commands
 from discord.ui.view import View
+
 
 # inherits commands.Bot
 class BotClass(discord.Bot):

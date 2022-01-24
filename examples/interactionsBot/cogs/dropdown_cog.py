@@ -1,7 +1,8 @@
 import discord
+from discord.commands import slash_command
 from discord.ext import commands
 from discord.ext.commands.context import Context
-from discord.commands import slash_command
+
 
 # Defines a custom Select containing colour options
 # that the user can choose. The callback function
