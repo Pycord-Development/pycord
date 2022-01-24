@@ -459,6 +459,7 @@ class AuditLogAction(Enum):
             return 'scheduled_event'
         elif v < 113:
             return 'thread'
+        return None
 
 
 class UserFlags(Enum):
