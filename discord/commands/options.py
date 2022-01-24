@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Type, Tuple, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
 
@@ -70,6 +70,7 @@ class Option:
             for o in kwargs.pop("choices", list())
         ]
 
+        minmax_types: Tuple[Type[Any], ...]
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
         elif self.input_type == SlashCommandOptionType.number:
