@@ -80,7 +80,7 @@ def _is_descriptor(obj):
 
 class EnumMeta(type):
     if TYPE_CHECKING:
-        __name__: ClassVar[str]
+        __name__: ClassVar[str]  # type: ignore # override instance variable
         _enum_member_names_: ClassVar[List[str]]
         _enum_member_map_: ClassVar[Dict[str, Any]]
         _enum_value_map_: ClassVar[Dict[Any, Any]]
