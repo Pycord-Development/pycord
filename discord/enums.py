@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import Any, ClassVar, Dict, List, Optional, TYPE_CHECKING, Type, TypeVar
+from typing import Any, ClassVar, Dict, Generator, List, NamedTuple, Optional, TYPE_CHECKING, Type, TypeVar, Tuple
 
 __all__ = (
     'Enum',
@@ -62,19 +62,31 @@ __all__ = (
     'ScheduledEventLocationType',
 )
 
+class ValCls(NamedTuple):
+    name: str
+    value: Any
 
-def _create_value_cls(name, comparable):
-    cls = namedtuple('_EnumValue_' + name, 'name value')
-    cls.__repr__ = lambda self: f'<{name}.{self.name}: {self.value!r}>'
-    cls.__str__ = lambda self: f'{name}.{self.name}'
+    def __repr__(cls) -> str:
+        ...
+
+    def __str__(cls) -> str:
+        ...
+
+def _create_value_cls(name: str, comparable: bool) -> Type[ValCls]:
+    class TgtCls(ValCls):
+        def __repr__(cls) -> str:
+            return f"<{name}.{cls.name}: {cls.value!r}>"
+        def __str__(cls) -> str:
+            return f"{name}.{cls.name}"
+
     if comparable:
-        cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
-        cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
-        cls.__lt__ = lambda self, other: isinstance(other, self.__class__) and self.value < other.value
-        cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
-    return cls
+        setattr(TgtCls, "__le__", lambda self, other: isinstance(other, self.__class__) and self.value <= other.value)
+        setattr(TgtCls, "__ge__", lambda self, other: isinstance(other, self.__class__) and self.value >= other.value)
+        setattr(TgtCls, "__lt__", lambda self, other: isinstance(other, self.__class__) and self.value < other.value )
+        setattr(TgtCls, "__gt__", lambda self, other: isinstance(other, self.__class__) and self.value > other.value )
+    return TgtCls
 
-def _is_descriptor(obj):
+def _is_descriptor(obj: Any) -> bool:
     return hasattr(obj, '__get__') or hasattr(obj, '__set__') or hasattr(obj, '__delete__')
 
 
@@ -83,14 +95,14 @@ class EnumMeta(type):
         __name__: ClassVar[str]  # type: ignore # override instance variable
         _enum_member_names_: ClassVar[List[str]]
         _enum_member_map_: ClassVar[Dict[str, Any]]
-        _enum_value_map_: ClassVar[Dict[Any, Any]]
+        _enum_value_map_: ClassVar[Dict[Any, ValCls]]
 
-    def __new__(cls, name, bases, attrs, *, comparable: bool = False):
-        value_mapping: Dict[Any, Any] = {}
-        member_mapping = {}
-        member_names = []
+    def __new__(cls, name: str, bases, attrs: Dict[str, Any], *, comparable: bool = False):  # type: ignore # TODO: bases
+        value_mapping: Dict[Any, ValCls] = {}
+        member_mapping: Dict[str, ValCls] = {}
+        member_names: List[str] = []
 
-        value_cls = _create_value_cls(name, comparable)
+        value_cls: Type[ValCls] = _create_value_cls(name, comparable)
         for key, value in list(attrs.items()):
             is_descriptor = _is_descriptor(value)
             if key[0] == '_' and not is_descriptor:
@@ -105,10 +117,11 @@ class EnumMeta(type):
                 del attrs[key]
                 continue
 
+            new_value: ValCls
             try:
                 new_value = value_mapping[value]
             except KeyError:
-                new_value = value_cls(name=key, value=value)
+                new_value = value_cls(key, value)
                 value_mapping[value] = new_value
                 member_names.append(key)
 
@@ -120,41 +133,42 @@ class EnumMeta(type):
         attrs['_enum_member_names_'] = member_names
         attrs['_enum_value_cls_'] = value_cls
         actual_cls = super().__new__(cls, name, bases, attrs)
-        value_cls._actual_enum_cls_ = actual_cls  # type: ignore
+        setattr(value_cls, "_actual_enum_cls_", actual_cls)
         return actual_cls
 
-    def __iter__(cls):
+    def __iter__(cls) -> Generator[Any, None, None]:
         return (cls._enum_member_map_[name] for name in cls._enum_member_names_)
 
-    def __reversed__(cls):
+    def __reversed__(cls) -> Generator[Any, None, None]:
         return (cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_))
 
-    def __len__(cls):
+    def __len__(cls) -> int:
         return len(cls._enum_member_names_)
 
-    def __repr__(cls):
+    def __repr__(cls) -> str:
         return f'<enum {cls.__name__}>'
 
     @property
-    def __members__(cls):
+    def __members__(cls) -> types.MappingProxyType[str, Any]:
         return types.MappingProxyType(cls._enum_member_map_)
 
-    def __call__(cls, value):
+    def __call__(cls, value: Any) -> ValCls: # type: ignore # mypy#6721
         try:
-            return cls._enum_value_map_[value]
+            value_mapping: Dict[Any, ValCls] = getattr(cls, "_enum_value_map_")
+            return value_mapping[value]
         except (KeyError, TypeError):
             raise ValueError(f"{value!r} is not a valid {cls.__name__}")
 
-    def __getitem__(cls, key):
+    def __getitem__(cls, key: str) -> Any:
         return cls._enum_member_map_[key]
 
-    def __setattr__(cls, name, value):
+    def __setattr__(cls, name: str, value: Any) -> None:
         raise TypeError('Enums are immutable.')
 
-    def __delattr__(cls, attr):
+    def __delattr__(cls, attr: str) -> None:
         raise TypeError('Enums are immutable')
 
-    def __instancecheck__(self, instance):
+    def __instancecheck__(self, instance: Any) -> bool:
         # isinstance(x, Y)
         # -> __instancecheck__(Y, x)
         try:
@@ -191,7 +205,7 @@ class ChannelType(Enum):
     directory = 14
     forum = 15
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -247,7 +261,7 @@ class VoiceRegion(Enum):
     vip_us_west = 'vip-us-west'
     vip_amsterdam = 'vip-amsterdam'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
 
@@ -257,10 +271,10 @@ class SpeakingState(Enum):
     soundshare = 2
     priority = 4
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -271,7 +285,7 @@ class VerificationLevel(Enum, comparable=True):
     high = 3
     highest = 4
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -280,7 +294,7 @@ class ContentFilter(Enum, comparable=True):
     no_role = 1
     all_members = 2
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -293,7 +307,7 @@ class Status(Enum):
     invisible = 'invisible'
     streaming = 'streaming'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
 
@@ -305,7 +319,7 @@ class DefaultAvatar(Enum):
     orange = 3
     red = 4
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -495,7 +509,7 @@ class ActivityType(Enum):
     custom = 4
     competing = 5
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -568,7 +582,7 @@ class VideoQualityMode(Enum):
     auto = 1
     full = 2
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -577,7 +591,7 @@ class ComponentType(Enum):
     button = 2
     select = 3
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -596,7 +610,7 @@ class ButtonStyle(Enum):
     red = 4
     url = 5
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -634,7 +648,7 @@ class SlashCommandOptionType(Enum):
     attachment = 11
 
     @classmethod
-    def from_datatype(cls, datatype):
+    def from_datatype(cls, datatype: Any) -> SlashCommandOptionType:
         if isinstance(datatype, tuple): # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
@@ -712,14 +726,14 @@ class ScheduledEventStatus(Enum):
     canceled = 4
     cancelled = 4
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
 class ScheduledEventPrivacyLevel(Enum):
     guild_only = 2
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.value
 
 
@@ -731,19 +745,20 @@ class ScheduledEventLocationType(Enum):
 
 T = TypeVar('T')
 
-def create_unknown_value(cls: Type[T], val: Any) -> T:
-    value_cls = cls._enum_value_cls_  # type: ignore
+def create_unknown_value(cls: Type[T], val: Any) -> ValCls:
+    value_cls: Type[ValCls] = getattr(cls, "_enum_value_cls_")
     name = f'unknown_{val}'
-    return value_cls(name=name, value=val)
+    return value_cls(name, val)
 
 
-def try_enum(cls: Type[T], val: Any) -> T:
+def try_enum(cls: Type[T], val: Any) -> ValCls:
     """A function that tries to turn the value into enum ``cls``.
 
     If it fails it returns a proxy invalid value instead.
     """
 
     try:
-        return cls._enum_value_map_[val]  # type: ignore
+        value_mapping: Dict[Any, ValCls] = getattr(cls, "_enum_value_map_")
+        return value_mapping[val]
     except (KeyError, TypeError, AttributeError):
         return create_unknown_value(cls, val)
