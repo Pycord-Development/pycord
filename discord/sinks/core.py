@@ -113,7 +113,9 @@ class RawData:
 
 class AudioData:
     """Handles data that's been completely decrypted and decoded and is ready to be saved to file.
+
     .. versionadded:: 2.1
+
     Raises
     ------
     ClientException
@@ -166,6 +168,7 @@ class Sink(Filters):
             finished_callback,
             ctx.channel,
         )
+    
     .. versionadded:: 2.1
 
     Parameters
