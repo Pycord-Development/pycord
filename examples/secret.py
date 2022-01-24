@@ -23,30 +23,30 @@ def create_overwrites(ctx, *objects):
     of an object, whether it be a `discord.Role` or a `discord.Member`.
 
     In this case, the `view_channel` permission is being used to hide the channel
-    from being viewed by whoever does not meet the criteria, thus creating a
+    From being viewed by whoever does not meet the criteria, thus creating a
     secret channel.
     """
 
-    # a dict comprehension is being utilised here to set the same permission overwrites
-    # for each `discord.Role` or `discord.Member`.
+    # A dict comprehension is being utilised here to set the same permission overwrites
+    # For each `discord.Role` or `discord.Member`.
     overwrites = {
         obj: discord.PermissionOverwrite(view_channel=True) for obj in objects
     }
 
-    # prevents the default role (@everyone) from viewing the channel
+    # Prevents the default role (@everyone) from viewing the channel
     # if it isn't already allowed to view the channel.
     overwrites.setdefault(
         ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
     )
 
-    # makes sure the client is always allowed to view the channel.
+    # Makes sure the client is always allowed to view the channel.
     overwrites[ctx.guild.me] = discord.PermissionOverwrite(view_channel=True)
 
     return overwrites
 
 
-# since these commands rely on guild related features,
-# it is best to lock it to be guild-only.
+# Since these commands rely on guild related features,
+# It is best to lock it to be guild-only.
 @secret.command()
 @commands.guild_only()
 async def text(
@@ -95,11 +95,11 @@ async def emoji(
     are allowed to use.
     """
 
-    # fetch the emoji asset and read it as bytes.
+    # Fetch the emoji asset and read it as bytes.
     emoji_bytes = await emoji.read()
 
-    # the key parameter here is `roles`, which controls
-    # what roles are able to use the emoji.
+    # The key parameter here is `roles`, which controls
+    # What roles are able to use the emoji.
     await ctx.guild.create_custom_emoji(
         name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business."
     )
