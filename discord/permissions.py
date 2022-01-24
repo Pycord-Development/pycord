@@ -132,10 +132,10 @@ class Permissions(BaseFlags):
         """Returns ``True`` if the permissions on other are a strict superset of those on self."""
         return self.is_superset(other) and self != other
 
-    __le__: Callable[[Permissions], bool] = is_subset
-    __ge__: Callable[[Permissions], bool] = is_superset
-    __lt__: Callable[[Permissions], bool] = is_strict_subset
-    __gt__: Callable[[Permissions], bool] = is_strict_superset
+    __le__: Callable[[Permissions, Permissions], bool] = is_subset
+    __ge__: Callable[[Permissions, Permissions], bool] = is_superset
+    __lt__: Callable[[Permissions, Permissions], bool] = is_strict_subset
+    __gt__: Callable[[Permissions, Permissions], bool] = is_strict_superset
 
     @classmethod
     def none(cls: Type[P]) -> P:
