@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING, Union
+from typing import Any, Optional, TYPE_CHECKING, Union
 
 import os
 import io
@@ -77,7 +77,7 @@ class File:
 
     def __init__(
         self,
-        fp: Union[str, bytes, os.PathLike, io.BufferedIOBase],
+        fp: Union[str, bytes, "os.PathLike[Any]", io.BufferedIOBase],
         filename: Optional[str] = None,
         *,
         description: Optional[str] = None,
