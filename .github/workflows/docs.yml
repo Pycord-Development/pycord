@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -U pip
-        pip install -U sphinx sphinxcontrib-trio aiohttp sphinxcontrib-websupport myst-parser
+        pip install -U sphinx sphinxcontrib-trio aiohttp sphinxcontrib-websupport myst-parser typing-extensions
     - name: Compile to html
       run: |
         cd docs
