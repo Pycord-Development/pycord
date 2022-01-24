@@ -90,7 +90,9 @@ class File:
             self._original_pos = fp.tell()
             self._owner = False
         else:
-            self.fp = open(fp, 'rb')
+            _fp = open(fp, 'rb')
+            assert isinstance(_fp, io.BufferedIOBase)
+            self.fp = _fp
             self._original_pos = 0
             self._owner = True
 
