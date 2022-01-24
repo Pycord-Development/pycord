@@ -101,7 +101,7 @@ class File:
         # close, I need to stub it so it doesn't close unless
         # I tell it to
         self._closer = self.fp.close
-        self.fp.close = lambda: None
+        setattr(self.fp, "close", lambda: None)
 
         if filename is None:
             if isinstance(fp, str):
@@ -130,6 +130,6 @@ class File:
             self.fp.seek(self._original_pos)
 
     def close(self) -> None:
-        self.fp.close = self._closer
+        setattr(self.fp, "close", self._closer)
         if self._owner:
             self._closer()
