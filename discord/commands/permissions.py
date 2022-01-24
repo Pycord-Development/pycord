@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Union, Dict, Callable
+from typing import Union, Dict, Callable, Optional
 
 __all__ = (
     "CommandPermission",
@@ -54,7 +54,7 @@ class CommandPermission:
         The integer which represents the id of the guild that the
         permission may be tied to.
     """
-    def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: int = None):
+    def __init__(self, id: Union[int, str], type: int, permission: bool = True, guild_id: Optional[int] = None):
         self.id = id
         self.type = type
         self.permission = permission
