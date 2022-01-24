@@ -27,6 +27,7 @@ import struct
 import sys
 import threading
 import time
+import io
 from ..types import snowflake
 
 from .errors import SinkException
@@ -125,9 +126,7 @@ class AudioData:
     """
 
     def __init__(self, file):
-        self.file = open(file, "ab")
-        self.dir_path = os.path.split(file)[0]
-
+        self.file = file
         self.finished = False
 
     def write(self, data):
@@ -141,16 +140,12 @@ class AudioData:
     def cleanup(self):
         if self.finished:
             raise SinkException("The AudioData is already finished writing.")
-        self.file.close()
-        self.file = os.path.join(self.dir_path, self.file.name)
+        self.file.seek(0)
         self.finished = True
 
     def on_format(self, encoding):
         if not self.finished:
             raise SinkException("The AudioData is still writing.")
-        name = os.path.split(self.file)[1]
-        name = name.split(".")[0] + f".{encoding}"
-        self.file = os.path.join(self.dir_path, name)
 
 
 class Sink(Filters):
@@ -169,13 +164,8 @@ class Sink(Filters):
             finished_callback,
             ctx.channel,
         )
-    
-    .. versionadded:: 2.1
 
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
+    .. versionadded:: 2.1
     
     Raises
     ------
@@ -184,12 +174,11 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -200,8 +189,7 @@ class Sink(Filters):
     @Filters.container
     def write(self, data, user):
         if user not in self.audio_data:
-            ssrc = self.vc.get_ssrc(user)
-            file = os.path.join(self.file_path, f"{ssrc}.pcm")
+            file = io.BytesIO()
             self.audio_data.update({user: AudioData(file)})
 
         file = self.audio_data[user]
@@ -215,8 +203,8 @@ class Sink(Filters):
 
     def get_all_audio(self):
         """Gets all audio files."""
-        return [os.path.realpath(x.file) for x in self.audio_data.values()]
-    
+        return [x.file for x in self.audio_data.values()]
+
     def get_user_audio(self, user: snowflake.Snowflake):
         """Gets the audio file(s) of one specific user."""
         return os.path.realpath(self.audio_data.pop(user))

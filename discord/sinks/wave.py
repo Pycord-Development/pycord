@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import wave
 
@@ -35,13 +36,6 @@ class WaveSink(Sink):
     
     .. versionadded:: 2.1
     
-    Parameters
-    ----------
-    encoding: :class:`string`
-        The encoding to use. Valid types include wav, mp3, and pcm (even though it's not an actual encoding).
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-    
     Raises
     ------
     ClientException
@@ -49,14 +43,13 @@ class WaveSink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "wav"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -65,16 +58,12 @@ class WaveSink(Sink):
             raise WaveSinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        with open(audio.file, "rb") as pcm:
-            data = pcm.read()
-            pcm.close()
+        data = audio.file
 
-            wav_file = audio.file.split(".")[0] + ".wav"
-            with wave.open(wav_file, "wb") as f:
-                f.setnchannels(self.vc.decoder.CHANNELS)
-                f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-                f.setframerate(self.vc.decoder.SAMPLING_RATE)
-                f.writeframes(data)
-                f.close()
-        os.remove(audio.file)
+        with wave.open(data, "wb") as f:
+            f.setnchannels(self.vc.decoder.CHANNELS)
+            f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
+            f.setframerate(self.vc.decoder.SAMPLING_RATE)
+
+        data.seek(0)
         audio.on_format(self.encoding)

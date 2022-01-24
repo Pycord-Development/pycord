@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import subprocess
 
@@ -35,11 +36,6 @@ class MKVSink(Sink):
     
     .. versionadded:: 2.1
     
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-    
     Raises
     ------
     ClientException
@@ -47,14 +43,13 @@ class MKVSink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "mkv"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -63,7 +58,6 @@ class MKVSink(Sink):
             raise MKVSinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        mkv_file = audio.file.split(".")[0] + ".mkv"
         args = [
             "ffmpeg",
             "-f",
@@ -73,16 +67,14 @@ class MKVSink(Sink):
             "-ac",
             "2",
             "-i",
-            audio.file,
-            mkv_file,
+            "-",
+            "-f",
+            "matroska",
+            "pipe:1"
         ]
-        process = None
-        if os.path.exists(mkv_file):
-            os.remove(
-                mkv_file
-            )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
+            process = subprocess.Popen(args, #creationflags=CREATE_NO_WINDOW,
+                                       stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         except FileNotFoundError:
             raise MKVSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
@@ -90,7 +82,8 @@ class MKVSink(Sink):
                 "Popen failed: {0.__class__.__name__}: {0}".format(exc)
             ) from exc
 
-        process.wait()
-
-        os.remove(audio.file)
+        out = process.communicate(audio.file.read())[0]
+        out = io.BytesIO(out)
+        out.seek(0)
+        audio.file = out
         audio.on_format(self.encoding)

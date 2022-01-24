@@ -21,8 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import subprocess
+import time
 
 from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
 from .errors import M4ASinkError
@@ -35,11 +37,6 @@ class M4ASink(Sink):
     
     .. versionadded:: 2.1
     
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-    
     Raises
     ------
     ClientException
@@ -47,14 +44,13 @@ class M4ASink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "m4a"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -63,7 +59,7 @@ class M4ASink(Sink):
             raise M4ASinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        m4a_file = audio.file.split(".")[0] + ".m4a"
+        m4a_file = f"{time.time()}.tmp"
         args = [
             "ffmpeg",
             "-f",
@@ -73,16 +69,18 @@ class M4ASink(Sink):
             "-ac",
             "2",
             "-i",
-            audio.file,
+            "-",
+            "-f",
+            "ipod",
             m4a_file,
         ]
-        process = None
         if os.path.exists(m4a_file):
             os.remove(
                 m4a_file
             )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
+                                       stdin=subprocess.PIPE)
         except FileNotFoundError:
             raise M4ASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
@@ -90,7 +88,11 @@ class M4ASink(Sink):
                 "Popen failed: {0.__class__.__name__}: {0}".format(exc)
             ) from exc
 
-        process.wait()
+        process.communicate(audio.file.read())
 
-        os.remove(audio.file)
+        with open(m4a_file, "rb") as f:
+            audio.file = io.BytesIO(f.read())
+            audio.file.seek(0)
+        os.remove(m4a_file)
+
         audio.on_format(self.encoding)
