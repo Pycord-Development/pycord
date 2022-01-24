@@ -120,10 +120,10 @@ class ThreadChannel(_BaseChannel, _ThreadChannelOptional):
     type: Literal[10, 11, 12]
     guild_id: Snowflake
     parent_id: Snowflake
-    owner_id: Snowflake
+    owner_id: Snowflake  # type: ignore # Overwriting TypedDict field
     nsfw: bool
-    last_message_id: Optional[Snowflake]
-    rate_limit_per_user: int
+    last_message_id: Optional[Snowflake]  # type: ignore # Overwriting TypedDict field
+    rate_limit_per_user: int  # type: ignore # Overwriting TypedDict field
     message_count: int
     member_count: int
     thread_metadata: ThreadMetadata
