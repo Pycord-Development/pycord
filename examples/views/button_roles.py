@@ -34,7 +34,6 @@ class RoleButton(discord.ui.Button):
         interaction : discord.Interaction
             The interaction object that was created when a user clicks on a button.
         """
-
         # Figure out who clicked the button.
         user = interaction.user
         # Get the role this button is for (stored in the custom ID).
