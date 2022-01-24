@@ -70,7 +70,12 @@ class ExponentialBackoff(Generic[T]):
         rand = random.Random()
         rand.seed()
 
-        self._randfunc: Callable[..., Union[int, float]] = rand.randrange if integral else rand.uniform   # type: ignore
+        # Note: This redundant type check is needed to avoid mypy bug (mypy#10740).
+        # Refer to <https://github.com/python/mypy/issues/10740#issuecomment-878622464>
+        T2 = Callable[..., Union[int, float]]
+        f1: T2 = rand.randrange
+        f2: T2 = rand.uniform
+        self._randfunc: T2 = f1 if integral else f2
 
     @overload
     def delay(self: ExponentialBackoff[Literal[False]]) -> float:
