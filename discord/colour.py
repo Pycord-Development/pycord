@@ -159,8 +159,7 @@ class Colour:
 
             .. versionadded:: 1.7
         """
-        rand = random if seed is None else random.Random(seed)
-        return cls.from_hsv(rand.random(), 1, 1)
+        return cls.from_hsv(random.Random(seed).random(), 1, 1)
 
     @classmethod
     def teal(cls: Type[CT]) -> CT:
