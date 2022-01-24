@@ -75,11 +75,13 @@ class WaveSinkError(SinkException):
     .. versionadded:: 2.1
     """
 
+
 class M4ASinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`M4ASink`
     
     .. versionadded:: 2.1
     """
+
 
 class MKASinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`MKAsSink`

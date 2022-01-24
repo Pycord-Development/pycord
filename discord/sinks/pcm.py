@@ -31,11 +31,6 @@ class PCMSink(Sink):
     
     .. versionadded:: 2.1
     
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-    
     Raises
     ------
     ClientException
@@ -43,14 +38,13 @@ class PCMSink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "ogg"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 

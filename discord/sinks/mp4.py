@@ -21,8 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import subprocess
+import time
 
 from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
 from .errors import MP4SinkError
@@ -35,11 +37,6 @@ class MP4Sink(Sink):
     
     .. versionadded:: 2.1
     
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-    
     Raises
     ------
     ClientException
@@ -47,14 +44,13 @@ class MP4Sink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "mp4"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -63,7 +59,7 @@ class MP4Sink(Sink):
             raise MP4SinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        mp4_file = audio.file.split(".")[0] + ".mp4"
+        mp4_file = f"{time.time()}.tmp"
         args = [
             "ffmpeg",
             "-f",
@@ -73,16 +69,18 @@ class MP4Sink(Sink):
             "-ac",
             "2",
             "-i",
-            audio.file,
+            "-",
+            "-f",
+            "mp4",
             mp4_file,
         ]
-        process = None
         if os.path.exists(mp4_file):
             os.remove(
                 mp4_file
             )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
+                                       stdin=subprocess.PIPE)
         except FileNotFoundError:
             raise MP4SinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
@@ -90,7 +88,11 @@ class MP4Sink(Sink):
                 "Popen failed: {0.__class__.__name__}: {0}".format(exc)
             ) from exc
 
-        process.wait()
+        process.communicate(audio.file.read())
 
-        os.remove(audio.file)
+        with open(mp4_file, "rb") as f:
+            audio.file = io.BytesIO(f.read())
+            audio.file.seek(0)
+        os.remove(mp4_file)
+
         audio.on_format(self.encoding)

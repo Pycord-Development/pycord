@@ -21,8 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import subprocess
+import threading
+from typing import Optional, IO
 
 from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
 from .errors import MP3SinkError
@@ -47,14 +50,13 @@ class MP3Sink(Sink):
         Audio may only be formatted after recording is finished.
     """
 
-    def __init__(self, *, output_path="", filters=None):
+    def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
         self.encoding = "mp3"
-        self.file_path = output_path
         self.vc = None
         self.audio_data = {}
 
@@ -63,7 +65,6 @@ class MP3Sink(Sink):
             raise MP3SinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        mp3_file = audio.file.split(".")[0] + ".mp3"
         args = [
             "ffmpeg",
             "-f",
@@ -73,16 +74,14 @@ class MP3Sink(Sink):
             "-ac",
             "2",
             "-i",
-            audio.file,
-            mp3_file,
+            "-",
+            "-f",
+            "mp3",
+            "pipe:1"
         ]
-        process = None
-        if os.path.exists(mp3_file):
-            os.remove(
-                mp3_file
-            )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW)
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
+                                       stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         except FileNotFoundError:
             raise MP3SinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
@@ -90,7 +89,8 @@ class MP3Sink(Sink):
                 "Popen failed: {0.__class__.__name__}: {0}".format(exc)
             ) from exc
 
-        process.wait()
-
-        os.remove(audio.file)
+        out = process.communicate(audio.file.read())[0]
+        out = io.BytesIO(out)
+        out.seek(0)
+        audio.file = out
         audio.on_format(self.encoding)
