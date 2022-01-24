@@ -58,7 +58,7 @@ class ExponentialBackoff(Generic[T]):
         number in between may be returned.
     """
 
-    def __init__(self, base: int = 1, *, integral: T = False):
+    def __init__(self, base: int = 1, *, integral: bool = False):
         self._base: int = base
 
         self._exp: int = 0
