@@ -648,7 +648,7 @@ class SlashCommandOptionType(Enum):
     attachment = 11
 
     @classmethod
-    def from_datatype(cls, datatype: Any) -> SlashCommandOptionType:
+    def from_datatype(cls, datatype: Any) -> "SlashCommandOptionType":  # PEP 484: forward reference
         if isinstance(datatype, tuple): # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
