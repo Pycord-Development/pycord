@@ -31,6 +31,8 @@ import io
 from os import PathLike
 from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
 
+import discord
+
 from . import utils
 from .reaction import Reaction
 from .emoji import Emoji
@@ -536,6 +538,9 @@ class Message(Hashable):
     channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
+    thread: Optional[:class:`Thread`]
+        The thread created from a message, if any.
+        .. versionadded:: 2.0
     reference: Optional[:class:`~discord.MessageReference`]
         The message that this message references. This is only applicable to messages of
         type :attr:`MessageType.pins_add`, crossposted messages created by a
@@ -647,6 +652,7 @@ class Message(Hashable):
         'components',
         'guild',
         'interaction',
+        'thread',
     )
 
     if TYPE_CHECKING:
@@ -720,6 +726,12 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data['interaction'], state=state)
         except KeyError:
             self.interaction = None
+
+        self.thread: Optional[Thread]
+        try:
+            self.thread = Thread(guild=self.guild, state=state, data=data['thread'])
+        except KeyError:
+            self.thread = None
 
         for handler in ('author', 'member', 'mentions', 'mention_roles'):
             try:
@@ -1614,7 +1626,8 @@ class Message(Hashable):
             name=name,
             auto_archive_duration=auto_archive_duration or default_auto_archive_duration,
         )
-        return Thread(guild=self.guild, state=self._state, data=data)
+        self.thread = Thread(guild=self.guild, state=self._state, data=data)
+        return self.thread
 
     async def reply(self, content: Optional[str] = None, **kwargs) -> Message:
         """|coro|

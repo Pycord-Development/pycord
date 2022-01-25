@@ -32,6 +32,7 @@ from .user import User
 from .emoji import PartialEmoji
 from .embed import Embed
 from .channel import ChannelType
+from .threads import Thread
 from .components import Component
 from .interactions import MessageInteraction
 from .sticker import StickerItem
@@ -127,6 +128,7 @@ class Message(_MessageOptional):
     embeds: List[Embed]
     pinned: bool
     type: MessageType
+    thread: Thread
 
 
 AllowedMentionType = Literal['roles', 'users', 'everyone']
