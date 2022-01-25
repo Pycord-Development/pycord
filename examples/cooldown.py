@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands
 
-
 bot = commands.Bot()
 
 
 # an application command with cooldown
 @bot.slash_command()
-@commands.cooldown(1, 5, commands.BucketType.user)  # the command can only be used once in 5 seconds
+@commands.cooldown(
+    1, 5, commands.BucketType.user
+)  # the command can only be used once in 5 seconds
 async def slash(ctx):
     await ctx.respond("You can't use this command again in 5 seconds.")
 

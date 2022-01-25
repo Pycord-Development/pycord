@@ -144,9 +144,7 @@ class PageTest(commands.Cog):
     async def pagetest_emoji_buttons(self, ctx: discord.ApplicationContext):
         """Demonstrates using emojis for the paginator buttons instead of labels."""
         page_buttons = [
-            pages.PaginatorButton(
-                "first", emoji="⏪", style=discord.ButtonStyle.green
-            ),
+            pages.PaginatorButton("first", emoji="⏪", style=discord.ButtonStyle.green),
             pages.PaginatorButton("prev", emoji="⬅", style=discord.ButtonStyle.green),
             pages.PaginatorButton(
                 "page_indicator", style=discord.ButtonStyle.gray, disabled=True
