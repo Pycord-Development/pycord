@@ -31,8 +31,6 @@ import io
 from os import PathLike
 from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
 
-import discord
-
 from . import utils
 from .reaction import Reaction
 from .emoji import Emoji
