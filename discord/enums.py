@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import types
 from collections import namedtuple
@@ -648,7 +649,7 @@ class SlashCommandOptionType(Enum):
     attachment = 11
 
     @classmethod
-    def from_datatype(cls, datatype: Any) -> "SlashCommandOptionType":  # PEP 484: forward reference
+    def from_datatype(cls, datatype: Any) -> SlashCommandOptionType:
         if isinstance(datatype, tuple): # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
