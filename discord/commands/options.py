@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional, Type, Tuple, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, Tuple, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
 
@@ -28,12 +28,12 @@ class ThreadOption:
         self._type = type_map[thread_type]
 
     @property
-    def __name__(self):
+    def __name__(self) -> str:
         return "ThreadOption"
 
 
 class Option:
-    def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
+    def __init__(self, input_type: Any, /, description: Optional[str] = None, **kwargs: Any) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
@@ -96,7 +96,7 @@ class Option:
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -114,7 +114,7 @@ class Option:
 
         return as_dict
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 
@@ -126,13 +126,14 @@ class OptionChoice:
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
         return {"name": self.name, "value": self.value}
 
+AnyFunc = Callable[..., Any]
 
-def option(name, type=None, **kwargs):
+def option(name: Any, type: Optional[Any] = None, **kwargs: Any) -> Callable[[AnyFunc], AnyFunc]:
     """A decorator that can be used instead of typehinting Option"""
 
-    def decorator(func):
+    def decorator(func: AnyFunc) -> AnyFunc:
         nonlocal type
-        type = type or func.__annotations__.get(name, str)
+        type = type or getattr(func, "__annotations__").get(name, str)
         func.__annotations__[name] = Option(type, **kwargs)
         return func
 
