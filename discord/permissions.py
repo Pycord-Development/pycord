@@ -578,7 +578,7 @@ class Permissions(BaseFlags):
 
 PO = TypeVar('PO', bound='PermissionOverwrite')
 
-def _augment_from_permissions(cls):
+def _augment_from_permissions(cls: Type[PO]) -> Type[PO]:
     cls.VALID_NAMES = set(Permissions.VALID_FLAGS)
     aliases = set()
 
@@ -593,10 +593,10 @@ def _augment_from_permissions(cls):
             continue
 
         # god bless Python
-        def getter(self, x=key):
+        def getter(self: PO, x: str = key) -> Optional[bool]:
             return self._values.get(x)
 
-        def setter(self, value, x=key):
+        def setter(self: PO, value: Optional[bool], x: str = key) -> None:
             self._set(x, value)
 
         prop = property(getter, setter)
