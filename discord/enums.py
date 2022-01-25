@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import Any, ClassVar, Dict, Generator, List, NamedTuple, Optional, TYPE_CHECKING, Type, TypeVar, Tuple
+from typing import Any, ClassVar, Dict, Generator, List, Mapping, NamedTuple, Optional, TYPE_CHECKING, Type, TypeVar, Tuple
 
 __all__ = (
     'Enum',
@@ -149,7 +149,7 @@ class EnumMeta(type):
         return f'<enum {cls.__name__}>'
 
     @property
-    def __members__(cls) -> types.MappingProxyType[str, Any]:
+    def __members__(cls) -> Mapping[str, Any]:  # mypy#5220
         return types.MappingProxyType(cls._enum_member_map_)
 
     def __call__(cls, value: Any) -> ValCls: # type: ignore # mypy#6721
