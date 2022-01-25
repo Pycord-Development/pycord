@@ -888,8 +888,14 @@ class Client:
         for guild in self.guilds:
             yield from guild.channels
 
-    def get_all_members(self) -> Generator[Member, None, None]:
+    def get_all_members(self, include_bots: Optional[bool]=True) -> Generator[Member, None, None]:
         """Returns a generator with every :class:`.Member` the client can see.
+
+        Parameters
+        ----------
+        Optional[:class:`bool`]
+            Determine wheter the client shall add yield only members or
+            both members and bots. By default it is `True`
 
         This is equivalent to: ::
 
@@ -902,8 +908,15 @@ class Client:
         :class:`.Member`
             A member the client can see.
         """
+        members: List[Member] = []
         for guild in self.guilds:
-            yield from guild.members
+            if include_bots == False:
+                for member in guild.members:
+                    if not member.bot:
+                        members.append(member)
+                yield from members
+            else:
+                yield from guild.members
 
     async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
         """Looks up a user in the user cache or fetches if not found.

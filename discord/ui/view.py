@@ -298,6 +298,11 @@ class View:
         self.children.clear()
         self.__weights.clear()
 
+    def disable_all_items(self) -> None:
+        """Disables all items from the view."""
+        for child in self.children:
+            child.disabled = True
+
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
 
