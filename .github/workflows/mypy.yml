@@ -10,4 +10,4 @@ jobs:
       - run: pip install mypy
       - run: pip install -r requirements.txt
       - run: mkdir --parents --verbose .mypy_cache
-      - run: mypy --ignore-missing-imports --install-types --non-interactive .
+      - run: mypy --ignore-missing-imports --install-types --non-interactive ./discord
