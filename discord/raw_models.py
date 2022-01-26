@@ -50,7 +50,6 @@ if TYPE_CHECKING:
     from .guild import Guild
 
 
-
 __all__ = (
     'RawMessageDeleteEvent',
     'RawBulkMessageDeleteEvent',
@@ -92,10 +91,11 @@ class RawMessageDeleteEvent(_RawReprMixin):
         self.message_id: int = int(data['id'])
         self.channel_id: int = int(data['channel_id'])
         self.cached_message: Optional[Message] = None
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawBulkMessageDeleteEvent(_RawReprMixin):
@@ -120,10 +120,11 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
         self.channel_id: int = int(data['channel_id'])
         self.cached_messages: List[Message] = []
 
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawMessageUpdateEvent(_RawReprMixin):
@@ -157,10 +158,11 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.data: MessageUpdateEvent = data
         self.cached_message: Optional[Message] = None
 
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -203,10 +205,11 @@ class RawReactionActionEvent(_RawReprMixin):
         self.event_type: str = event_type
         self.member: Optional[Member] = None
 
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawReactionClearEvent(_RawReprMixin):
@@ -228,10 +231,11 @@ class RawReactionClearEvent(_RawReprMixin):
         self.message_id: int = int(data['message_id'])
         self.channel_id: int = int(data['channel_id'])
 
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawReactionClearEmojiEvent(_RawReprMixin):
@@ -258,10 +262,11 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.message_id: int = int(data['message_id'])
         self.channel_id: int = int(data['channel_id'])
 
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 
 class RawIntegrationDeleteEvent(_RawReprMixin):
@@ -285,11 +290,13 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
         self.integration_id: int = int(data['id'])
         self.guild_id: int = int(data['guild_id'])
 
+        self.application_id: Optional[int]
         try:
-            self.application_id: Optional[int] = int(data['application_id'])
+            self.application_id = int(data['application_id'])
         except KeyError:
-            self.application_id: Optional[int] = None
-              
+            self.application_id = None
+
+
 class RawThreadDeleteEvent(_RawReprMixin):
     """Represents the payload for :func:`on_raw_thread_delete` event.
 
@@ -312,12 +319,13 @@ class RawThreadDeleteEvent(_RawReprMixin):
     __slots__ = ('thread_id', 'thread_type', 'guild_id', 'parent_id', 'thread')
 
     def __init__(self, data: ThreadDeleteEvent) -> None:
-        self.thread_id: int = int(data['id'])
-        self.thread_type: ChannelType = try_enum(ChannelType, int(data['type']))
+        self.thread_id: int = int(data['id'])  # type: ignore # TODO: not "thread_id"?
+        self.thread_type: ChannelType = try_enum(ChannelType, int(data['type']))  # type: ignore # TODO: not "type_id" ?
         self.guild_id: int = int(data['guild_id'])
         self.parent_id: int = int(data['parent_id'])
         self.thread: Optional[Thread] = None
-          
+
+
 class RawTypingEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_typing` event.
 
@@ -342,13 +350,16 @@ class RawTypingEvent(_RawReprMixin):
     def __init__(self, data: TypingEvent) -> None:
         self.channel_id: int = int(data['channel_id'])
         self.user_id: int = int(data['user_id'])
-        self.when: datetime.datetime = datetime.datetime.fromtimestamp(data.get('timestamp'), tz=datetime.timezone.utc)
+        self.when: datetime.datetime = datetime.datetime.fromtimestamp(
+            data.get('timestamp', 0.0), tz=datetime.timezone.utc
+        )
         self.member: Optional[Member] = None
-        
+
+        self.guild_id: Optional[int]
         try:
-            self.guild_id: Optional[int] = int(data['guild_id'])
+            self.guild_id = int(data['guild_id'])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id = None
 
 class RawScheduledEventSubscription(_RawReprMixin):
     """Represents the payload for a :func:`raw_scheduled_event_user_add` or
@@ -372,7 +383,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
     __slots__ = ("event_id", "guild", "user_id", "event_type")
 
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
-        self.event_id: int = int(data['guild_scheduled_event_id'])
+        self.event_id: int = int(data['guild_scheduled_event_id'])  # type: ignore # TODO: not "event_id"?
         self.user_id: int = int(data['user_id'])
-        self.guild: Guild = None
+        self.guild: Optional[Guild] = None
         self.event_type: str = event_type
