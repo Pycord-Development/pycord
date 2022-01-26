@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import array
 import asyncio
-import collections.abc
 import datetime
 import functools
 import itertools
@@ -44,6 +43,7 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
+    cast,
     Coroutine,
     Dict,
     ForwardRef,
@@ -96,13 +96,13 @@ DISCORD_EPOCH = 1420070400000
 
 
 class _MissingSentinel:
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> Literal[False]:
         return False
 
-    def __bool__(self):
+    def __bool__(self) -> Literal[False]:
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '...'
 
 
@@ -110,11 +110,11 @@ MISSING: Any = _MissingSentinel()
 
 
 class _cached_property:
-    def __init__(self, function):
+    def __init__(self, function: Callable[..., Any]):
         self.function = function
         self.__doc__ = getattr(function, '__doc__')
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance: Optional[Any], owner: Any) -> Any:
         if instance is None:
             return self
 
@@ -184,7 +184,7 @@ class classproperty(Generic[T_co]):
     def __get__(self, instance: Optional[Any], owner: Type[Any]) -> T_co:
         return self.fget(owner)
 
-    def __set__(self, instance, value) -> None:
+    def __set__(self, instance: Any, value: Any) -> None:
         raise AttributeError('cannot set attribute')
 
 
@@ -195,13 +195,18 @@ def cached_slot_property(name: str) -> Callable[[Callable[[T], T_co]], CachedSlo
     return decorator
 
 
-class SequenceProxy(Generic[T_co], collections.abc.Sequence):
+class SequenceProxy(Generic[T_co], Sequence[T_co]):
     """Read-only proxy of a Sequence."""
 
     def __init__(self, proxied: Sequence[T_co]):
         self.__proxied = proxied
 
-    def __getitem__(self, idx: int) -> T_co:
+    @overload
+    def __getitem__(self, idx: int) -> T_co: ...
+    @overload
+    def __getitem__(self, idx: slice) -> Sequence[T_co]: ...
+
+    def __getitem__(self, idx: Union[int, slice]) -> Union[T_co, Sequence[T_co]]:
         return self.__proxied[idx]
 
     def __len__(self) -> int:
@@ -216,15 +221,15 @@ class SequenceProxy(Generic[T_co], collections.abc.Sequence):
     def __reversed__(self) -> Iterator[T_co]:
         return reversed(self.__proxied)
 
-    def index(self, value: Any, *args, **kwargs) -> int:
+    def index(self, value: Any, *args: Any, **kwargs: Any) -> int:
         return self.__proxied.index(value, *args, **kwargs)
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
 
 
-def delay_task(delay: float, func: Coroutine):
-    async def inner_call():
+def delay_task(delay: float, func: Coroutine[Any, Any, Any]) -> None:
+    async def inner_call() -> Any:
         await asyncio.sleep(delay)
         try:
             await func
@@ -255,7 +260,7 @@ def parse_time(timestamp: Optional[str]) -> Optional[datetime.datetime]:
     return None
 
 
-def copy_doc(original: Callable) -> Callable[[T], T]:
+def copy_doc(original: Callable[..., Any]) -> Callable[[T], T]:
     def decorator(overridden: T) -> T:
         overridden.__doc__ = original.__doc__
         overridden.__signature__ = _signature(original)  # type: ignore
@@ -467,7 +472,8 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
             return elem
     return None
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
+
+async def get_or_fetch(obj: Any, attr: str, id: int, *, default: Any = MISSING) -> Any:
     # TODO: Document this
     getter = getattr(obj, f'get_{attr}')(id)
     if getter is None:
@@ -493,7 +499,7 @@ def _get_as_snowflake(data: Any, key: str) -> Optional[int]:
         return value and int(value)
 
 
-def _get_mime_type_for_image(data: bytes):
+def _get_mime_type_for_image(data: bytes) -> str:
     if data.startswith(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'):
         return 'image/png'
     elif data[0:3] == b'\xff\xd8\xff' or data[6:10] in (b'JFIF', b'Exif'):
@@ -515,10 +521,10 @@ def _bytes_to_base64_data(data: bytes) -> str:
 
 if HAS_ORJSON:
 
-    def _to_json(obj: Any) -> str:  # type: ignore
+    def _to_json(obj: Any) -> str:
         return orjson.dumps(obj).decode('utf-8')
 
-    _from_json = orjson.loads  # type: ignore
+    _from_json = orjson.loads
 
 else:
 
@@ -539,7 +545,7 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
         return float(reset_after)
 
 
-async def maybe_coroutine(f, *args, **kwargs):
+async def maybe_coroutine(f: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
     value = f(*args, **kwargs)
     if _isawaitable(value):
         return await value
@@ -547,7 +553,7 @@ async def maybe_coroutine(f, *args, **kwargs):
         return value
 
 
-async def async_all(gen, *, check=_isawaitable):
+async def async_all(gen: Iterable[Any], *, check: Callable[[Any], bool] = _isawaitable) -> bool:
     for elem in gen:
         if check(elem):
             elem = await elem
@@ -556,7 +562,7 @@ async def async_all(gen, *, check=_isawaitable):
     return True
 
 
-async def sane_wait_for(futures, *, timeout):
+async def sane_wait_for(futures: "Iterable[asyncio.Future[Any]]", *, timeout: float) -> Any:
     ensured = [asyncio.ensure_future(fut) for fut in futures]
     done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
@@ -574,7 +580,7 @@ def get_slots(cls: Type[Any]) -> Iterator[str]:
             continue
 
 
-def compute_timedelta(dt: datetime.datetime):
+def compute_timedelta(dt: datetime.datetime) -> float:
     if dt.tzinfo is None:
         dt = dt.astimezone()
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -623,7 +629,7 @@ def valid_icon_size(size: int) -> bool:
     return not size & (size - 1) and 4096 >= size >= 16
 
 
-class SnowflakeList(array.array):
+class SnowflakeList(array.array[int]):
     """Internal data storage class to efficiently store a list of snowflakes.
 
     This should have the following characteristics:
@@ -642,8 +648,8 @@ class SnowflakeList(array.array):
         def __init__(self, data: Iterable[int], *, is_sorted: bool = False):
             ...
 
-    def __new__(cls, data: Iterable[int], *, is_sorted: bool = False):
-        return array.array.__new__(cls, 'Q', data if is_sorted else sorted(data))  # type: ignore
+    def __new__(cls, data: Iterable[int], *, is_sorted: bool = False) -> SnowflakeList:
+        return array.array.__new__(cls, 'Q', data if is_sorted else sorted(data))  # type: ignore # can't detect __new__
 
     def add(self, element: int) -> None:
         i = bisect_left(self, element)
@@ -661,7 +667,7 @@ class SnowflakeList(array.array):
 _IS_ASCII = re.compile(r'^[\x00-\x7f]+$')
 
 
-def _string_width(string: str, *, _IS_ASCII=_IS_ASCII) -> int:
+def _string_width(string: str, *, _IS_ASCII: re.Pattern[Any] = _IS_ASCII) -> int:
     """Returns string's width."""
     match = _IS_ASCII.match(string)
     if match:
@@ -774,7 +780,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
         The text with the markdown special characters removed.
     """
 
-    def replacement(match):
+    def replacement(match: re.Match[str]) -> str:
         groupdict = match.groupdict()
         return groupdict.get('url', '')
 
@@ -811,7 +817,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
 
     if not as_needed:
 
-        def replacement(match):
+        def replacement(match: re.Match[str]) -> str:
             groupdict = match.groupdict()
             is_url = groupdict.get('url')
             if is_url:
@@ -929,7 +935,7 @@ def flatten_literal_params(parameters: Iterable[Any]) -> Tuple[Any, ...]:
     literal_cls = type(Literal[0])
     for p in parameters:
         if isinstance(p, literal_cls):
-            params.extend(p.__args__)
+            params.extend(p.__args__)  # type: ignore
         else:
             params.append(p)
     return tuple(params)
@@ -947,7 +953,7 @@ def evaluate_annotation(
     cache: Dict[str, Any],
     *,
     implicit_str: bool = True,
-):
+) -> Any:
     if isinstance(tp, ForwardRef):
         tp = tp.__forward_arg__
         # ForwardRefs always evaluate their internals
@@ -1062,7 +1068,7 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
 
-    
+
 def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
     """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
     If dt is not passed, it makes one from the current time using utcnow.
@@ -1129,18 +1135,20 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         A wrapped callback for the autocomplete.
     """
     async def autocomplete_callback(ctx: AutocompleteContext) -> V:
-        _values = values  # since we reassign later, python considers it local if we don't do this
+        _values: Values = values  # since we reassign later, python considers it local if we don't do this
 
         if callable(_values):
             _values = _values(ctx)
         if asyncio.iscoroutine(_values):
             _values = await _values
 
-        def check(item: Any) -> bool:
+        def check(item: Union[str, int, float]) -> bool:
             item = getattr(item, "name", item)
             return str(item).lower().startswith(str(ctx.value or "").lower())
-        
+
+        if TYPE_CHECKING:
+            _values = cast(V, _values)
         gen = (val for val in _values if check(val))
-        return iter(itertools.islice(gen, 25))
+        return cast(V, iter(itertools.islice(gen, 25)))
 
     return autocomplete_callback
