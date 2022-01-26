@@ -537,7 +537,7 @@ class Message(Hashable):
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
     thread: Optional[:class:`Thread`]
-        The thread created from a message, if any.
+        The thread created from this message, if any.
         .. versionadded:: 2.0
     reference: Optional[:class:`~discord.MessageReference`]
         The message that this message references. This is only applicable to messages of
