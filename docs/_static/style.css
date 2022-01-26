@@ -28,10 +28,10 @@ Historically however, thanks to:
   --grey-2: #ededf0;
   --grey-3: #d7d7db;
   --grey-4: #b1b1b3;
-  --grey-5: #737373;
+  --grey-5: #2a2a2b;
   --grey-6: #4a4a4f;
-  --grey-7: #38383d;
-  --grey-8: #2a2a2e;
+  --grey-7: #2a2a2b;
+  --grey-8: #1e1e1f;
   --black: #0c0c0d;
 
   --blue-1: #3399ff;
@@ -40,6 +40,7 @@ Historically however, thanks to:
   --blue-4: #003eaa;
   --blue-5: #002275;
   --blue-6: #000f40;
+  --blurple: #7289DA;
 
   --settings: var(--grey-1);
   --settings-hover: var(--grey-1-8);
@@ -56,7 +57,7 @@ Historically however, thanks to:
   --nav-hover-text: var(--grey-6);
   --nav-header-text: var(--black);
   --sub-header-background: var(--grey-6);
-  --search-border: var(--grey-4);
+  --search-border: var(--grey-7);
   --search-text: var(--white);
   --search-focus: var(--blue-1);
   --search-button: var(--grey-1);
@@ -65,7 +66,7 @@ Historically however, thanks to:
   --footer-link: var(--grey-6);
   --hr-border: var(--grey-2);
   --main-big-headers-text: var(--black);
-  --main-big-headers-border: var(--grey-4);
+  --main-big-headers-border: var(--grey-7);
   --main-h5-header-text: var(--black);
   --main-h6-header-text: var(--grey-4);
   --main-h4-header-border: var(--grey-4);
@@ -118,7 +119,7 @@ Historically however, thanks to:
   --link-text: var(--blue-1);
   --link-hover-text: var(--blue-2);
   --main-text: var(--white);
-  --sub-header-background: var(--grey-8);
+  --sub-header-background: var(--grey-7);
   --search-border: var(--grey-5);
   --nav-background: var(--main-background);
   --nav-text: var(--grey-1);

@@ -18,7 +18,7 @@ class Confirm(discord.ui.View):
         self.value = None
 
     # When the confirm button is pressed, set the inner value to `True` and
-    # stop the View from listening to more input.
+    # Stop the View from listening to more input.
     # We also send the user an ephemeral message that we're confirming their choice.
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green)
     async def confirm(

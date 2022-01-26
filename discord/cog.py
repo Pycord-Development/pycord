@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -23,20 +24,15 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import inspect
 import importlib
+import inspect
 import sys
-import discord.utils
 import types
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, Tuple, TypeVar, Type
+
+import discord.utils
 from . import errors
-from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand, SlashCommandGroup
-
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
-
-from .commands.commands import _BaseCommand
-
-if TYPE_CHECKING:
-    from .commands import ApplicationContext, ApplicationCommand
+from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
 
 __all__ = (
     'CogMeta',
