@@ -67,8 +67,9 @@ class EnumValCls(NamedTuple):
     name: str
     value: Any
 
-    # Enum class are stored
-    _actual_enum_cls_: "EnumMeta" = None  # type: ignore # tuple start with an underscore
+    if TYPE_CHECKING:  # type: ignore # Not NmaeTuple format
+        # Enum class are stored
+        _actual_enum_cls_: "EnumMeta"
 
     def __repr__(cls) -> str:
         ...
