@@ -629,7 +629,7 @@ def valid_icon_size(size: int) -> bool:
     return not size & (size - 1) and 4096 >= size >= 16
 
 
-class SnowflakeList(array.array[int]):
+class SnowflakeList(array.array):  # type: ignore # array.array[int]
     """Internal data storage class to efficiently store a list of snowflakes.
 
     This should have the following characteristics:
