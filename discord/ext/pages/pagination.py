@@ -604,7 +604,7 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         self.update_buttons()
-        page = self.pages[self.current_page]
+        page = self.pages[0]
         page = self.get_page_content(page)
 
         self.user = ctx.author
@@ -657,7 +657,7 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
 
-        page = self.pages[self.current_page]
+        page = self.pages[0]
         page = self.get_page_content(page)
 
         self.user = interaction.user
