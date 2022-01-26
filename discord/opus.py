@@ -67,7 +67,6 @@ c_int_ptr   = ctypes.POINTER(ctypes.c_int)
 c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
 c_float_ptr = ctypes.POINTER(ctypes.c_float)
 
-_lib = None
 
 class EncoderStruct(ctypes.Structure):
     pass
@@ -112,13 +111,13 @@ signal_ctl: SignalCtl = {
     'music': 3002,
 }
 
-def _err_lt(result: int, func: Callable, args: List) -> int:
+def _err_lt(result: int, func: Callable[..., Any], args: List[Any]) -> int:
     if result < OK:
         _log.info('error has happened in %s', func.__name__)
         raise OpusError(result)
     return result
 
-def _err_ne(result: T, func: Callable, args: List) -> T:
+def _err_ne(result: T, func: Callable[..., Any], args: List[Any]) -> T:
     ret = args[-1]._obj
     if ret.value != OK:
         _log.info('error has happened in %s', func.__name__)
@@ -204,6 +203,48 @@ def libopus_loader(name: str) -> Any:
 
     return lib
 
+
+if TYPE_CHECKING:
+    class OpusLib:
+
+        # Generic
+        def opus_get_version_string(self) -> bytes: ...
+
+        def opus_strerror(self, *args: Any) -> bytes: ...
+
+        # Encoder functions
+        def opus_encoder_get_size(self, *args: Any) -> int: ...
+
+        def opus_encoder_create(self, *args: Any) -> EncoderStruct:
+            # x3: c_int_ptr
+            # return EncoderStructPtr
+            ...
+
+        def opus_encode(self, *args: Any) -> int: ...
+
+        def opus_encode_float(self, *args: Any) -> int: ...
+        def opus_encoder_ctl(self, *args: Any) -> int: ...
+        def opus_encoder_destroy(self, *args: Any) -> None: ...
+
+        # Decoder functions
+        def opus_decoder_get_size(self, *args: Any) -> int: ...
+        def opus_decoder_create(self, *args: Any) -> DecoderStruct: ...
+        def opus_decode(self, *args: Any) -> int: ...
+        def opus_decode_float(self, *args: Any) -> int: ...
+        def opus_decoder_ctl(self, *args: Any) -> int: ...
+        def opus_decoder_destroy(self, *args: Any) -> None: ...
+        def opus_decoder_get_nb_samples(self, *args: Any) -> int: ...
+
+        # Packet functions
+        def opus_packet_get_bandwidth(self, *args: Any) -> int: ...
+        def opus_packet_get_nb_channels(self, *args: Any) -> int: ...
+        def opus_packet_get_nb_frames(self, *args: Any) -> int: ...
+        def opus_packet_get_samples_per_frame(self, *args: Any) -> int: ...
+
+
+_lib: Optional[OpusLib] = None
+
+
 def _load_default() -> bool:
     global _lib
     try:
@@ -214,7 +255,9 @@ def _load_default() -> bool:
             _filename = os.path.join(_basedir, 'bin', f'libopus-0.{_target}.dll')
             _lib = libopus_loader(_filename)
         else:
-            _lib = libopus_loader(ctypes.util.find_library('opus'))
+            name: Optional[str] = ctypes.util.find_library('opus')
+            if name is not None:
+                _lib = libopus_loader(name)
     except Exception:
         _lib = None
 
@@ -283,6 +326,8 @@ class OpusError(DiscordException):
 
     def __init__(self, code: int):
         self.code: int = code
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         msg = _lib.opus_strerror(self.code).decode('utf-8')
         _log.info('"%s" has happened', msg)
         super().__init__(msg)
@@ -305,14 +350,17 @@ class _OpusStruct:
         if not is_loaded() and not _load_default():
             raise OpusNotLoaded()
 
-        return _lib.opus_get_version_string().decode('utf-8')
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
+
+        return f"{_lib.opus_get_version_string().decode('utf-8')}"
 
 class Encoder(_OpusStruct):
     def __init__(self, application: int = APPLICATION_AUDIO):
         _OpusStruct.get_opus_version()
 
         self.application: int = application
-        self._state: EncoderStruct = self._create_state()
+        self._state: Optional[EncoderStruct] = self._create_state()
         self.set_bitrate(128)
         self.set_fec(True)
         self.set_expected_packet_loss_percent(0.15)
@@ -320,18 +368,22 @@ class Encoder(_OpusStruct):
         self.set_signal_type('auto')
 
     def __del__(self) -> None:
-        if hasattr(self, '_state'):
+        if hasattr(self, '_state') and _lib is not None:
             _lib.opus_encoder_destroy(self._state)
             # This is a destructor, so it's okay to assign None
-            self._state = None # type: ignore
+            self._state = None
 
     def _create_state(self) -> EncoderStruct:
         ret = ctypes.c_int()
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_encoder_create(self.SAMPLING_RATE, self.CHANNELS, self.application, ctypes.byref(ret))
 
     def set_bitrate(self, kbps: int) -> int:
         kbps = min(512, max(16, int(kbps)))
 
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         _lib.opus_encoder_ctl(self._state, CTL_SET_BITRATE, kbps * 1024)
         return kbps
 
@@ -340,6 +392,8 @@ class Encoder(_OpusStruct):
             raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(band_ctl)}')
 
         k = band_ctl[req]
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         _lib.opus_encoder_ctl(self._state, CTL_SET_BANDWIDTH, k)
 
     def set_signal_type(self, req: SIGNAL_CTL) -> None:
@@ -347,54 +401,70 @@ class Encoder(_OpusStruct):
             raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(signal_ctl)}')
 
         k = signal_ctl[req]
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         _lib.opus_encoder_ctl(self._state, CTL_SET_SIGNAL, k)
 
     def set_fec(self, enabled: bool = True) -> None:
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         _lib.opus_encoder_ctl(self._state, CTL_SET_FEC, 1 if enabled else 0)
 
     def set_expected_packet_loss_percent(self, percentage: float) -> None:
-        _lib.opus_encoder_ctl(self._state, CTL_SET_PLP, min(100, max(0, int(percentage * 100)))) # type: ignore
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
+        _lib.opus_encoder_ctl(self._state, CTL_SET_PLP, min(100, max(0, int(percentage * 100))))
 
     def encode(self, pcm: bytes, frame_size: int) -> bytes:
         max_data_bytes = len(pcm)
         # bytes can be used to reference pointer
-        pcm_ptr = ctypes.cast(pcm, c_int16_ptr) # type: ignore
+        pcm_ptr = ctypes.cast(pcm, c_int16_ptr)  # type: ignore
         data = (ctypes.c_char * max_data_bytes)()
 
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         ret = _lib.opus_encode(self._state, pcm_ptr, frame_size, data, max_data_bytes)
 
         # array can be initialized with bytes but mypy doesn't know
-        return array.array('b', data[:ret]).tobytes() # type: ignore
+        return array.array('b', data[:ret]).tobytes()  # type: ignore
 
 class Decoder(_OpusStruct):
-    def __init__(self):
+    def __init__(self) -> None:
         _OpusStruct.get_opus_version()
 
         self._state: DecoderStruct = self._create_state()
 
     def __del__(self) -> None:
-        if hasattr(self, '_state'):
+        if hasattr(self, '_state') and _lib is not None:
             _lib.opus_decoder_destroy(self._state)
             # This is a destructor, so it's okay to assign None
-            self._state = None # type: ignore
+            self._state = None  # type: ignore
 
     def _create_state(self) -> DecoderStruct:
         ret = ctypes.c_int()
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_decoder_create(self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret))
 
     @staticmethod
     def packet_get_nb_frames(data: bytes) -> int:
         """Gets the number of frames in an Opus packet"""
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_packet_get_nb_frames(data, len(data))
 
     @staticmethod
     def packet_get_nb_channels(data: bytes) -> int:
         """Gets the number of channels in an Opus packet"""
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_packet_get_nb_channels(data)
 
     @classmethod
     def packet_get_samples_per_frame(cls, data: bytes) -> int:
         """Gets the number of samples per frame from an Opus packet"""
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_packet_get_samples_per_frame(data, cls.SAMPLING_RATE)
 
     def _set_gain(self, adjustment: int) -> int:
@@ -407,22 +477,26 @@ class Decoder(_OpusStruct):
         gain = 10**x/(20.0*256)
         (from opus_defines.h)
         """
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         return _lib.opus_decoder_ctl(self._state, CTL_SET_GAIN, adjustment)
 
     def set_gain(self, dB: float) -> int:
         """Sets the decoder gain in dB, from -128 to 128."""
 
-        dB_Q8 = max(-32768, min(32767, round(dB * 256))) # dB * 2^n where n is 8 (Q8)
+        dB_Q8 = max(-32768, min(32767, round(dB * 256)))  # dB * 2^n where n is 8 (Q8)
         return self._set_gain(dB_Q8)
 
     def set_volume(self, mult: float) -> int:
         """Sets the output volume as a float percent, i.e. 0.5 for 50%, 1.75 for 175%, etc."""
-        return self.set_gain(20 * math.log10(mult)) # amplitude ratio
+        return self.set_gain(20 * math.log10(mult))  # amplitude ratio
 
     def _get_last_packet_duration(self) -> int:
         """Gets the duration (in samples) of the last packet successfully decoded or concealed."""
 
         ret = ctypes.c_int32()
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         _lib.opus_decoder_ctl(self._state, CTL_LAST_PACKET_DURATION, ctypes.byref(ret))
         return ret.value
 
@@ -450,6 +524,8 @@ class Decoder(_OpusStruct):
         pcm = (ctypes.c_int16 * (frame_size * channel_count))()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
+        if _lib is None:
+            raise RuntimeError('Library is not loaded.')
         ret = _lib.opus_decode(self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec)
 
         return array.array('h', pcm[:ret * channel_count]).tobytes()
