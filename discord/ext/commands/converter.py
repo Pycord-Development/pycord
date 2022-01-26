@@ -911,17 +911,17 @@ class clean_content(Converter[str]):
         if ctx.guild:
 
             def resolve_member(id: int) -> str:
-                m = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_member(id)
+                m = (None if msg is None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_member(id)
                 return f'@{m.display_name if self.use_nicknames else m.name}' if m else '@deleted-user'
 
             def resolve_role(id: int) -> str:
-                r = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_role(id)
+                r = (None if msg is None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_role(id)
                 return f'@{r.name}' if r else '@deleted-role'
 
         else:
 
             def resolve_member(id: int) -> str:
-                m = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.bot.get_user(id)
+                m = (None if msg is None else _utils_get(msg.mentions, id=id)) or ctx.bot.get_user(id)
                 return f'@{m.name}' if m else '@deleted-user'
 
             def resolve_role(id: int) -> str:
