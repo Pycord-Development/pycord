@@ -25,8 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import types
-from collections import namedtuple
-from typing import Any, ClassVar, Dict, Generator, List, Mapping, NamedTuple, Optional, TYPE_CHECKING, Type, TypeVar, Tuple
+from typing import Any, cast, ClassVar, Dict, Generator, List, Mapping, NamedTuple, Optional, TYPE_CHECKING, Type, TypeVar, Union
 
 __all__ = (
     'Enum',
@@ -63,9 +62,13 @@ __all__ = (
     'ScheduledEventLocationType',
 )
 
-class ValCls(NamedTuple):
+
+class EnumValCls(NamedTuple):
     name: str
     value: Any
+
+    # Enum class are stored
+    _actual_enum_cls_: "EnumMeta" = None  # type: ignore # tuple start with an underscore
 
     def __repr__(cls) -> str:
         ...
@@ -73,19 +76,22 @@ class ValCls(NamedTuple):
     def __str__(cls) -> str:
         ...
 
-def _create_value_cls(name: str, comparable: bool) -> Type[ValCls]:
-    class TgtCls(ValCls):
+
+def _create_value_cls(name: str, comparable: bool) -> Type[EnumValCls]:
+    class TgtCls(EnumValCls):
         def __repr__(cls) -> str:
             return f"<{name}.{cls.name}: {cls.value!r}>"
+
         def __str__(cls) -> str:
             return f"{name}.{cls.name}"
 
     if comparable:
         setattr(TgtCls, "__le__", lambda self, other: isinstance(other, self.__class__) and self.value <= other.value)
         setattr(TgtCls, "__ge__", lambda self, other: isinstance(other, self.__class__) and self.value >= other.value)
-        setattr(TgtCls, "__lt__", lambda self, other: isinstance(other, self.__class__) and self.value < other.value )
-        setattr(TgtCls, "__gt__", lambda self, other: isinstance(other, self.__class__) and self.value > other.value )
+        setattr(TgtCls, "__lt__", lambda self, other: isinstance(other, self.__class__) and self.value < other.value)
+        setattr(TgtCls, "__gt__", lambda self, other: isinstance(other, self.__class__) and self.value > other.value)
     return TgtCls
+
 
 def _is_descriptor(obj: Any) -> bool:
     return hasattr(obj, '__get__') or hasattr(obj, '__set__') or hasattr(obj, '__delete__')
@@ -93,17 +99,17 @@ def _is_descriptor(obj: Any) -> bool:
 
 class EnumMeta(type):
     if TYPE_CHECKING:
-        __name__: ClassVar[str]  # type: ignore # override instance variable
         _enum_member_names_: ClassVar[List[str]]
         _enum_member_map_: ClassVar[Dict[str, Any]]
-        _enum_value_map_: ClassVar[Dict[Any, ValCls]]
+        _enum_value_map_: ClassVar[Dict[Any, EnumValCls]]
+        _enum_value_cls_: ClassVar[Type[EnumValCls]]
 
     def __new__(cls, name: str, bases, attrs: Dict[str, Any], *, comparable: bool = False):  # type: ignore # TODO: bases
-        value_mapping: Dict[Any, ValCls] = {}
-        member_mapping: Dict[str, ValCls] = {}
+        value_mapping: Dict[Any, EnumValCls] = {}
+        member_mapping: Dict[str, EnumValCls] = {}
         member_names: List[str] = []
 
-        value_cls: Type[ValCls] = _create_value_cls(name, comparable)
+        value_cls: Type[EnumValCls] = _create_value_cls(name, comparable)
         for key, value in list(attrs.items()):
             is_descriptor = _is_descriptor(value)
             if key[0] == '_' and not is_descriptor:
@@ -118,7 +124,7 @@ class EnumMeta(type):
                 del attrs[key]
                 continue
 
-            new_value: ValCls
+            new_value: EnumValCls
             try:
                 new_value = value_mapping[value]
             except KeyError:
@@ -133,8 +139,8 @@ class EnumMeta(type):
         attrs['_enum_member_map_'] = member_mapping
         attrs['_enum_member_names_'] = member_names
         attrs['_enum_value_cls_'] = value_cls
-        actual_cls = super().__new__(cls, name, bases, attrs)
-        setattr(value_cls, "_actual_enum_cls_", actual_cls)
+        actual_cls: "EnumMeta" = super().__new__(cls, name, bases, attrs)
+        value_cls._actual_enum_cls_ = actual_cls
         return actual_cls
 
     def __iter__(cls) -> Generator[Any, None, None]:
@@ -153,9 +159,9 @@ class EnumMeta(type):
     def __members__(cls) -> Mapping[str, Any]:  # mypy#5220
         return types.MappingProxyType(cls._enum_member_map_)
 
-    def __call__(cls, value: Any) -> ValCls: # type: ignore # mypy#6721
+    def __call__(cls, value: Any) -> EnumValCls:  # type: ignore # mypy#6721
         try:
-            value_mapping: Dict[Any, ValCls] = getattr(cls, "_enum_value_map_")
+            value_mapping: Dict[Any, EnumValCls] = cls._enum_value_map_
             return value_mapping[value]
         except (KeyError, TypeError):
             raise ValueError(f"{value!r} is not a valid {cls.__name__}")
@@ -576,7 +582,7 @@ class InteractionResponseType(Enum):
     deferred_channel_message = 5  # (with source)
     deferred_message_update = 6  # for components
     message_update = 7  # for components
-    auto_complete_result = 8 # for autocomplete interactions
+    auto_complete_result = 8  # for autocomplete interactions
 
 
 class VideoQualityMode(Enum):
@@ -650,7 +656,7 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype: Any) -> SlashCommandOptionType:
-        if isinstance(datatype, tuple): # typing.Union has been used
+        if isinstance(datatype, tuple):  # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all([x == cls.channel for x in datatypes]):
                 return cls.channel
@@ -744,22 +750,23 @@ class ScheduledEventLocationType(Enum):
     external = 3
 
 
-T = TypeVar('T')
+T = TypeVar('T', bound=Enum)
 
-def create_unknown_value(cls: Type[T], val: Any) -> ValCls:
-    value_cls: Type[ValCls] = getattr(cls, "_enum_value_cls_")
+
+def create_unknown_value(cls: Type[T], val: Any) -> T:
+    value_cls: Type[EnumValCls] = getattr(cls, "_enum_value_cls_")
     name = f'unknown_{val}'
-    return value_cls(name, val)
+    return cast(T, value_cls(name, val))  # TODO: 'cast' is a good practice?
 
 
-def try_enum(cls: Type[T], val: Any) -> ValCls:
+def try_enum(cls: Type[T], val: Any) -> T:
     """A function that tries to turn the value into enum ``cls``.
 
     If it fails it returns a proxy invalid value instead.
     """
 
     try:
-        value_mapping: Dict[Any, ValCls] = getattr(cls, "_enum_value_map_")
-        return value_mapping[val]
+        value_mapping: Dict[Any, EnumValCls] = getattr(cls, "_enum_value_map_")
+        return cast(T, value_mapping[val])
     except (KeyError, TypeError, AttributeError):
         return create_unknown_value(cls, val)
