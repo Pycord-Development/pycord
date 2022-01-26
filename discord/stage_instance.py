@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from .utils import MISSING, cached_slot_property
 from .mixins import Hashable
@@ -94,7 +94,7 @@ class StageInstance(Hashable):
         self.guild = guild
         self._update(data)
 
-    def _update(self, data: StageInstancePayload):
+    def _update(self, data: StageInstancePayload) -> None:
         self.id: int = int(data['id'])
         self.channel_id: int = int(data['channel_id'])
         self.topic: str = data['topic']
@@ -108,7 +108,10 @@ class StageInstance(Hashable):
     def channel(self) -> Optional[StageChannel]:
         """Optional[:class:`StageChannel`]: The channel that stage instance is running in."""
         # the returned channel will always be a StageChannel or None
-        return self._state.get_channel(self.channel_id) # type: ignore
+        ch = self._state.get_channel(self.channel_id)
+        if isinstance(ch, StageChannel):
+            return ch
+        return None
 
     def is_public(self) -> bool:
         return self.privacy_level is StagePrivacyLevel.public
@@ -140,7 +143,7 @@ class StageInstance(Hashable):
             Editing a stage instance failed.
         """
 
-        payload = {}
+        payload: Dict[str, Any] = {}
 
         if topic is not MISSING:
             payload['topic'] = topic
