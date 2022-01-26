@@ -35,13 +35,14 @@ from .role import Role
 from .user import User
 
 if TYPE_CHECKING:
-    from .message import AllowedMentions, Message
+    from .message import AllowedMentions, Message  # type: ignore # circular import
 
 
 ApplicationCommandType = Literal[1, 2, 3]
 
+
 class _ApplicationCommandOptional(TypedDict, total=False):
-    options: List[ApplicationCommandOption]
+    options: List["ApplicationCommandOption"]  # type: ignore # cyclic definition
     type: ApplicationCommandType
 
 
@@ -54,7 +55,7 @@ class ApplicationCommand(_ApplicationCommandOptional):
 
 class _ApplicationCommandOptionOptional(TypedDict, total=False):
     choices: List[ApplicationCommandOptionChoice]
-    options: List[ApplicationCommandOption]
+    options: List["ApplicationCommandOption"]  # type: ignore # cyclic definition
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -103,7 +104,7 @@ class _ApplicationCommandInteractionDataOption(TypedDict):
 
 class _ApplicationCommandInteractionDataOptionSubcommand(_ApplicationCommandInteractionDataOption):
     type: Literal[1, 2]
-    options: List[ApplicationCommandInteractionDataOption]
+    options: List["ApplicationCommandInteractionDataOption"]  # type: ignore # cyclic definition
 
 
 class _ApplicationCommandInteractionDataOptionString(_ApplicationCommandInteractionDataOption):
@@ -131,7 +132,7 @@ class _ApplicationCommandInteractionDataOptionNumber(_ApplicationCommandInteract
     value: float
 
 
-ApplicationCommandInteractionDataOption = Union[
+ApplicationCommandInteractionDataOption = Union[  # type: ignore # cyclic definition
     _ApplicationCommandInteractionDataOptionString,
     _ApplicationCommandInteractionDataOptionInteger,
     _ApplicationCommandInteractionDataOptionSubcommand,
@@ -176,7 +177,7 @@ class ComponentInteractionData(_ComponentInteractionDataOptional):
     component_type: ComponentType
 
 
-InteractionData = Union[ApplicationCommandInteractionData, ComponentInteractionData]
+InteractionData = Union[ApplicationCommandInteractionData, ComponentInteractionData]  # type: ignore # cyclic definition
 
 
 class _InteractionOptional(TypedDict, total=False):

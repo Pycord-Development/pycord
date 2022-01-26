@@ -104,7 +104,7 @@ class _MessageOptional(TypedDict, total=False):
     message_reference: MessageReference
     flags: int
     sticker_items: List[StickerItem]
-    referenced_message: Optional[Message]
+    referenced_message: Optional["Message"]  # type: ignore # cyclic definition
     interaction: MessageInteraction
     components: List[Component]
 

@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, TypeVar, Optional, Type
+from typing import Any, TYPE_CHECKING, TypeVar, Optional, Type
 
 if TYPE_CHECKING:
     from .abc import Messageable
@@ -39,12 +39,14 @@ __all__ = (
     'Typing',
 )
 
-def _typing_done_callback(fut: asyncio.Future) -> None:
+
+def _typing_done_callback(fut: "asyncio.Future[Any]") -> None:
     # just retrieve any exception and call it a day
     try:
         fut.exception()
     except (asyncio.CancelledError, Exception):
         pass
+
 
 class Typing:
     def __init__(self, messageable: Messageable) -> None:
@@ -64,7 +66,7 @@ class Typing:
             await asyncio.sleep(5)
 
     def __enter__(self: TypingT) -> TypingT:
-        self.task: asyncio.Task = self.loop.create_task(self.do_typing())
+        self.task: "asyncio.Task[Any]" = self.loop.create_task(self.do_typing())
         self.task.add_done_callback(_typing_done_callback)
         return self
 

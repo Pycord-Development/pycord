@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
         _ResponseType = Union[ClientResponse, Response]
     except ModuleNotFoundError:
-        _ResponseType = ClientResponse
+        _ResponseType = ClientResponse  # type: ignore # assign multiple types
 
     from .interactions import Interaction
 
@@ -90,14 +90,16 @@ class NoMoreItems(DiscordException):
 class GatewayNotFound(DiscordException):
     """An exception that is raised when the gateway for Discord could not be found"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         message = 'The gateway to connect to discord was not found.'
         super().__init__(message)
+
 
 class ValidationError(DiscordException):
     """An Exception that is raised when there is a Validation Error."""
 
     pass
+
 
 def _flatten_error_dict(d: Dict[str, Any], key: str = '') -> Dict[str, str]:
     items: List[Tuple[str, str]] = []
@@ -288,6 +290,7 @@ class InteractionResponded(ClientException):
         self.interaction: Interaction = interaction
         super().__init__('This interaction has already been responded to before')
 
+
 class ExtensionError(DiscordException):
     """Base exception for extension related errors.
     
@@ -305,6 +308,7 @@ class ExtensionError(DiscordException):
         m = message.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
         super().__init__(m, *args)
 
+
 class ExtensionAlreadyLoaded(ExtensionError):
     """An exception raised when an extension has already been loaded.
 
@@ -312,6 +316,7 @@ class ExtensionAlreadyLoaded(ExtensionError):
     """
     def __init__(self, name: str) -> None:
         super().__init__(f'Extension {name!r} is already loaded.', name=name)
+
 
 class ExtensionNotLoaded(ExtensionError):
     """An exception raised when an extension was not loaded.
@@ -321,6 +326,7 @@ class ExtensionNotLoaded(ExtensionError):
     def __init__(self, name: str) -> None:
         super().__init__(f'Extension {name!r} has not been loaded.', name=name)
 
+
 class NoEntryPointError(ExtensionError):
     """An exception raised when an extension does not have a ``setup`` entry point function.
 
@@ -328,6 +334,7 @@ class NoEntryPointError(ExtensionError):
     """
     def __init__(self, name: str) -> None:
         super().__init__(f"Extension {name!r} has no 'setup' function.", name=name)
+
 
 class ExtensionFailed(ExtensionError):
     """An exception raised when an extension failed to load during execution of the module or ``setup`` entry point.
@@ -346,6 +353,7 @@ class ExtensionFailed(ExtensionError):
         self.original: Exception = original
         msg = f'Extension {name!r} raised an error: {original.__class__.__name__}: {original}'
         super().__init__(msg, name=name)
+
 
 class ExtensionNotFound(ExtensionError):
     """An exception raised when an extension is not found.
