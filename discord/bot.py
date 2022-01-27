@@ -40,7 +40,7 @@ from typing import (
     Optional,
     Type,
     TypeVar,
-    Union, )
+    Union, Dict, )
 
 from .client import Client
 from .cog import CogMixin
@@ -199,10 +199,30 @@ class ApplicationCommandMixin:
                     return
                 return command
 
-    async def get_desynced_commands(self, guild_id: Optional[int] = None):
+    async def get_desynced_commands(self, guild_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """|coro|
+
+        Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
+        guild commands that are desynced from said guild, else it will return global commands.
+
+        .. versionadded:: 2.0
+
+        .. note::
+            This function is meant to be used internally, and should only be used if you want to override the default
+            command registration behavior.
+
+        Parameters
+        ----------
+        guild_id: Optional[:class:`int`]
+            The guild id to get the desynced commands for, else global commands if unspecified.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            A list of the desynced commands. Each will come with at least the ``cmd`` and ``action`` keys, which
+            respectively contain the command and the action to perform. Other keys may also be present depending on
+            the action, including ``id``.
         """
-        # TODO: Write docstring
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
 
         return_value = []
