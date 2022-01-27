@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from ..enums import ChannelType, SlashCommandOptionType
+from ..enums import T, ChannelType, SlashCommandOptionType
 
 __all__ = (
     "ThreadOption",
@@ -55,12 +55,18 @@ class ThreadOption:
     def __name__(self):
         return "ThreadOption"
 
+def gettype(name: str):
+    return eval(f"{name}", globals())
 
 class Option:
     def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
+
+        if isinstance(input_type, str):
+            input_type = gettype(input_type)
+
         self._raw_type = input_type
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
