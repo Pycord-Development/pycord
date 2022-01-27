@@ -67,8 +67,9 @@ class Option:
         if isinstance(input_type, str):
             cls_name = self.__class__.__name__
 
-            if input_type.startswith(cls_name):
-                input_type = input_type[len(cls_name):]
+            input_type_parted = input_type.partition(cls_name)
+            input_type = input_type_parted[2]
+
             input_type = input_type.lstrip('(').rstrip(')')
             input_type = gettype(input_type)
 
