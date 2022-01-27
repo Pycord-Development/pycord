@@ -205,11 +205,12 @@ class ApplicationCommandMixin:
         Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
         guild commands that are desynced from said guild, else it will return global commands.
 
-        .. versionadded:: 2.0
-
         .. note::
             This function is meant to be used internally, and should only be used if you want to override the default
             command registration behavior.
+
+        .. versionadded:: 2.0
+
 
         Parameters
         ----------
@@ -343,7 +344,7 @@ class ApplicationCommandMixin:
     ):
         """|coro|
 
-        Register some commands.
+        Register a list of commands.  If ``commands``
 
         .. versionadded:: 2.0
 
@@ -351,10 +352,13 @@ class ApplicationCommandMixin:
         ----------
         commands: Optional[List[:class:`~.ApplicationCommand`]]
             A list of commands to register. If this is not set (None), then all commands will be registered.
+        guild_id: Optional[int]
+            If this is set, the commands will be registered as a guild command for the respective guild. If it is not
+            set, the commands will be registered according to their :attr:`~.ApplicationCommand.guild_ids` attribute.
         force: :class:`bool`
             Registers the commands regardless of the state of the command on discord, this can take up more API calls
-            but is sometimes a more foolproof method of registering commands. This also allows the bot to dynamically
-            remove stale commands. Defaults to False.
+            but is sometimes a more foolproof method of registering commands. This also sometimes causes minor bugs
+            where the command can temporarily appear as an invalid command on the user's side. Defaults to False.
         """
         if commands is None:
             commands = self.pending_application_commands
@@ -471,27 +475,27 @@ class ApplicationCommandMixin:
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
 
-    # TODO: Use get_desynced_commands to find which commands we need to register. Use rate-limits and command amounts
-    #       to determine if a bulk update should be done or if individual command updates are sufficient. Maybe only
-    #       bulk update if all commands need to be re-registered. Don't edit this function until #634 is merged though,
-    #       to avoid merge conflicts.
     async def sync_commands(
             self,
             commands: Optional[List[ApplicationCommand]] = None,
             force: bool = False,
             guild_ids: Optional[List[int]] = None,
-            register_guild_commands: bool = False,
+            register_guild_commands: bool = True,
     ) -> None:
         """|coro|
 
-        Registers all commands that have been added through :meth:`.add_application_command`.
-        This method cleans up all commands over the API and should sync them with the internal cache of commands.
-        This will only be rolled out to Discord if :meth:`~.http.get_global_commands` has certain keys that differ from
-        :attr:`~.pending_application_commands`
+        Registers all commands that have been added through :meth:`.add_application_command`. This method cleans up all
+        commands over the API and should sync them with the internal cache of commands. It attempts to register the
+        commands in the most efficient way possible, unless ``force`` is set to ``True``, in which case it will always
+        register all commands.
 
-        By default, this coroutine is called inside the :func:`.on_connect`
-        event. If you choose to override the :func:`.on_connect` event, then
-        you should invoke this coroutine as well.
+        By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the
+        :func:`.on_connect` event, then you should invoke this coroutine as well.
+
+        .. note::
+            If you remove all guild commands from a particular guild, the library may not be able to detect and update
+            the commands accordingly, as it would have to individually check for each guild. To force the library to
+            unregister a guild's commands, call this function with ``commands=[]`` and ``guild_ids=[guild_id]``.
 
         .. versionadded:: 2.0
 
@@ -506,6 +510,8 @@ class ApplicationCommandMixin:
         guild_ids: Optional[List[:class:`int`]]
             A list of guild ids to register the commands for. If this is not set, the commands'
             :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
+        register_guild_commands: :class:`bool`
+            Whether to register guild commands. Defaults to True.
         """
 
         if commands is None:
@@ -518,14 +524,17 @@ class ApplicationCommandMixin:
         await self.register_commands(commands, force=force)
         print("Registered global commands")  # DEBUG
 
-        ids = []
-        for cmd in commands:
-            if cmd.guild_ids is not None:
-                ids.extend(cmd.guild_ids)
-        for guild_id in set(ids):
-            await self.register_commands(commands, guild_id=guild_id, force=force)
-            print(f'Registered commands for guild {guild_id}')  # DEBUG
+        if register_guild_commands:
+            ids = []
+            for cmd in commands:
+                if cmd.guild_ids is not None:
+                    ids.extend(cmd.guild_ids)
+            for guild_id in set(ids):
+                await self.register_commands(commands, guild_id=guild_id, force=force)
+                print(f'Registered commands for guild {guild_id}')  # DEBUG
 
+        # TODO: Remove this code after using it to help write the permissions registration
+        #       Also remove the lines that have the "DEBUG" comment, they aren't needed.
         # Begin old code
         # commands_to_bulk = []
         #
