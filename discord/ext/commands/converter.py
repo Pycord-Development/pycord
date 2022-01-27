@@ -237,7 +237,9 @@ class MemberConverter(IDConverter[discord.Member]):
         else:
             user_id = int(match.group(1))
             if guild:
-                result = guild.get_member(user_id) or _utils_get(ctx.message.mentions, id=user_id)
+                result = guild.get_member(user_id)
+                if ctx.message is not None and result is None:
+                    result = _utils_get(ctx.message.mentions, id=user_id)
             else:
                 result = _get_from_guilds(bot, 'get_member', user_id)
 
@@ -283,7 +285,9 @@ class UserConverter(IDConverter[discord.User]):
 
         if match is not None:
             user_id = int(match.group(1))
-            result = ctx.bot.get_user(user_id) or _utils_get(ctx.message.mentions, id=user_id)
+            result = ctx.bot.get_user(user_id)
+            if ctx.message is not None and result is None:
+                result = _utils_get(ctx.message.mentions, id=user_id)
             if result is None:
                 try:
                     result = await ctx.bot.fetch_user(user_id)
@@ -907,17 +911,17 @@ class clean_content(Converter[str]):
         if ctx.guild:
 
             def resolve_member(id: int) -> str:
-                m = _utils_get(msg.mentions, id=id) or ctx.guild.get_member(id)
+                m = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_member(id)
                 return f'@{m.display_name if self.use_nicknames else m.name}' if m else '@deleted-user'
 
             def resolve_role(id: int) -> str:
-                r = _utils_get(msg.role_mentions, id=id) or ctx.guild.get_role(id)
+                r = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.guild.get_role(id)
                 return f'@{r.name}' if r else '@deleted-role'
 
         else:
 
             def resolve_member(id: int) -> str:
-                m = _utils_get(msg.mentions, id=id) or ctx.bot.get_user(id)
+                m = (None if msg == None else _utils_get(msg.mentions, id=id)) or ctx.bot.get_user(id)
                 return f'@{m.name}' if m else '@deleted-user'
 
             def resolve_role(id: int) -> str:
