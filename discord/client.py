@@ -910,7 +910,7 @@ class Client:
         """
         members: List[Member] = []
         for guild in self.guilds:
-            if include_bots == False:
+            if not include_bots:
                 for member in guild.members:
                     if not member.bot:
                         members.append(member)
