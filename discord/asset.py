@@ -385,7 +385,7 @@ class Asset(AssetMixin):
         Raises
         -------
         InvalidArgument
-            The asset had an invalid format.
+            The asset has an invalid format.
 
         Returns
         --------
