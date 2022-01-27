@@ -4058,6 +4058,14 @@ InteractionMessage
 .. autoclass:: InteractionMessage()
     :members:
 
+MessageInteraction
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageInteraction
+
+.. autoclass:: MessageInteraction()
+    :members:
+
 Member
 ~~~~~~
 
