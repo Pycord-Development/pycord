@@ -894,7 +894,7 @@ class Client:
         Parameters
         ----------
         Optional[:class:`bool`]
-            Determine wheter the client shall add yield only members or
+            Determine whether the client shall add yield only members or
             both members and bots. By default it is `True`
 
         This is equivalent to: ::
