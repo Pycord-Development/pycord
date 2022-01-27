@@ -32,7 +32,8 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING, \
+    Coroutine
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
@@ -60,13 +61,14 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING: 
-    from typing_extensions import ParamSpec
+if TYPE_CHECKING:
+    from typing_extensions import ParamSpec, Concatenate
 
     from ..cog import Cog
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound='Cog')
+Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
 
 if TYPE_CHECKING:
     P = ParamSpec('P')
@@ -105,6 +107,16 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
 
+def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
+    partial = functools.partial
+    while True:
+        if hasattr(function, '__wrapped__'):
+            function = function.__wrapped__
+        elif isinstance(function, partial):
+            function = function.func
+        else:
+            return function
+
 class _BaseCommand:
     __slots__ = ()
 
@@ -118,7 +130,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             cooldown = func.__commands_cooldown__
         except AttributeError:
             cooldown = kwargs.get('cooldown')
-        
+
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
         elif isinstance(cooldown, CooldownMapping):
@@ -133,6 +145,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             max_concurrency = kwargs.get('max_concurrency')
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
+
+        self._callback = None
+        self.module = None
 
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -160,6 +175,22 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         return await self.callback(ctx, *args, **kwargs)
+
+    @property
+    def callback(self) -> Union[
+            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        ]:
+        return self._callback
+
+    @callback.setter
+    def callback(self, function: Union[
+            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        ]) -> None:
+        self._callback = function
+        unwrap = unwrap_function(function)
+        self.module = unwrap.__module__
 
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
@@ -645,7 +676,7 @@ class SlashCommand(ApplicationCommand):
                 )
             p_obj = p_obj.annotation
 
-            if not any(c(o, p_obj) for c in check_annotations):       
+            if not any(c(o, p_obj) for c in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
 
@@ -748,7 +779,7 @@ class SlashCommand(ApplicationCommand):
 
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
-                    
+
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
@@ -995,7 +1026,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.subcommands != other.subcommands:
             other.subcommands = self.subcommands.copy()
-        
+
         if self.checks != other.checks:
             other.checks = self.checks.copy()
 
@@ -1173,7 +1204,7 @@ class UserCommand(ContextMenuCommand):
 
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:   
+        else:
             await self.callback(ctx, target)
 
     def copy(self):
