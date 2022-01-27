@@ -988,7 +988,7 @@ class Greedy(List[T]):
     def __init__(self, *, converter: T):
         self.converter = converter
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         converter = getattr(self.converter, '__name__', repr(self.converter))
         return f'Greedy[{converter}]'
 
