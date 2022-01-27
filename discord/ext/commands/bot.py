@@ -115,7 +115,7 @@ def _is_submodule(parent: str, child: str) -> bool:
     return parent == child or child.startswith(parent + ".")
 
 class _DefaultRepr:
-    def __repr__(self) -> str:
+    def __repr__(self):
         return '<default-help-command>'
 
 _default = _DefaultRepr()

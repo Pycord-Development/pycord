@@ -40,12 +40,9 @@ if TYPE_CHECKING:
 
 ApplicationCommandType = Literal[1, 2, 3]
 
-
 class _ApplicationCommandOptional(TypedDict, total=False):
-    type: ApplicationCommandType
-    guild_id: Snowflake
     options: List[ApplicationCommandOption]
-    default_permission: bool
+    type: ApplicationCommandType
 
 
 class ApplicationCommand(_ApplicationCommandOptional):
@@ -53,17 +50,11 @@ class ApplicationCommand(_ApplicationCommandOptional):
     application_id: Snowflake
     name: str
     description: str
-    version: Snowflake
 
 
 class _ApplicationCommandOptionOptional(TypedDict, total=False):
-    required: bool
     choices: List[ApplicationCommandOptionChoice]
     options: List[ApplicationCommandOption]
-    channel_types: List[ChannelType]
-    min_value: int
-    max_value: int
-    autocomplete: bool
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -73,11 +64,12 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
     type: ApplicationCommandOptionType
     name: str
     description: str
+    required: bool
 
 
 class ApplicationCommandOptionChoice(TypedDict):
     name: str
-    value: Union[str, int, float]
+    value: Union[str, int]
 
 
 ApplicationCommandPermissionType = Literal[1, 2]
@@ -102,7 +94,7 @@ class GuildApplicationCommandPermissions(PartialGuildApplicationCommandPermissio
     guild_id: Snowflake
 
 
-InteractionType = Literal[1, 2, 3, 4]
+InteractionType = Literal[1, 2, 3]
 
 
 class _ApplicationCommandInteractionDataOption(TypedDict):
@@ -233,25 +225,12 @@ class MessageInteraction(TypedDict):
     user: User
 
 
-class _CreateApplicationCommandOptional(TypedDict, total=False):
-    options: List[ApplicationCommandOption]
-    default_permission: bool
-    type: ApplicationCommandType
-
-
-class CreateApplicationCommand(_CreateApplicationCommandOptional):
-    name: str
-    description: str
-
-
 class _EditApplicationCommandOptional(TypedDict, total=False):
-    name: str
     description: str
-    options: List[ApplicationCommandOption]
+    options: Optional[List[ApplicationCommandOption]]
     type: ApplicationCommandType
-    default_permission: bool
 
 
 class EditApplicationCommand(_EditApplicationCommandOptional):
-    pass
-
+    name: str
+    default_permission: bool
