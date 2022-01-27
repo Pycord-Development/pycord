@@ -24,21 +24,26 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Optional, Union, TypeVar, Generic, Callable, List, Any, Dict
 
-import discord.abc
+import discord.utils
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
-
-    import discord
-    from discord import Bot
-    from discord.state import ConnectionState
-
-    from .core import ApplicationCommand, Option
+    from . import ApplicationCommand, Option
     from ..cog import Cog
-    from ..webhook import WebhookMessage
-    from typing import Callable
+    from ..embeds import Embed
+    from ..file import File
+    from ..guild import Guild
+    from ..interactions import Interaction, InteractionChannel, InteractionResponse, InteractionMessage
+    from ..member import Member
+    from ..mentions import AllowedMentions
+    from ..message import Message
+    from ..state import ConnectionState
+    from ..user import User
+    from ..ui import View
+    from ..voice_client import VoiceProtocol
+    from ..webhook import Webhook, WebhookMessage
+    from typing_extensions import ParamSpec
 
 from ..guild import Guild
 from ..interactions import Interaction, InteractionResponse
@@ -58,7 +63,18 @@ else:
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
 
-class ApplicationContext(discord.abc.Messageable):
+MISSING: Any = discord.utils.MISSING
+
+T = TypeVar("T")
+BotT = TypeVar("BotT", bound="Union[discord.Bot, discord.AutoShardedBot]")
+CogT = TypeVar("CogT", bound="Cog")
+
+if TYPE_CHECKING:
+    P = ParamSpec('P')
+else:
+    P = TypeVar('P')
+
+class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
@@ -76,9 +92,9 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: Bot, interaction: Interaction):
-        self.bot = bot
-        self.interaction = interaction
+    def __init__(self, bot: BotT, interaction: Interaction) -> None:
+        self.bot: BotT = bot
+        self.interaction: Interaction = interaction
 
         # below attributes will be set after initialization
         self.command: ApplicationCommand = None  # type: ignore
@@ -88,7 +104,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         self._state: ConnectionState = self.interaction._state
 
-    async def _get_channel(self) -> discord.abc.Messageable:
+    async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.channel
 
     async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
@@ -118,7 +134,7 @@ class ApplicationContext(discord.abc.Messageable):
         return await command(self, *args, **kwargs)
 
     @cached_property
-    def channel(self):
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
@@ -132,14 +148,6 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_id(self) -> Optional[int]:
         return self.interaction.guild_id
-
-    @cached_property
-    def locale(self) -> Optional[str]:
-        return self.interaction.locale
-
-    @cached_property
-    def guild_locale(self) -> Optional[str]:
-        return self.interaction.guild_locale
 
     @cached_property
     def me(self) -> Union[Member, User]:
@@ -169,6 +177,14 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response
 
     @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        if self.command is None:
+            return None
+
+        return self.command.cog
+      
+    @property
     def respond(self) -> Callable[..., Union[Interaction, WebhookMessage]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
@@ -195,15 +211,15 @@ class ApplicationContext(discord.abc.Messageable):
                 f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
             )
 
-    @property
-    def defer(self):
-        return self.interaction.response.defer
+    @discord.utils.copy_doc(InteractionResponse.defer)
+    async def defer(self, *, ephemeral: bool = False) -> None:
+        return await self.interaction.response.defer(ephemeral=ephemeral)
 
     @property
-    def followup(self):
+    def followup(self) -> Webhook:
         return self.interaction.followup
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Calls :attr:`~discord.commands.ApplicationContext.respond`.
         If the response is done, then calls :attr:`~discord.commands.ApplicationContext.respond` first."""
         if not self.response.is_done():
@@ -211,17 +227,26 @@ class ApplicationContext(discord.abc.Messageable):
 
         return await self.interaction.delete_original_message()
 
-    @property
-    def edit(self):
-        return self.interaction.edit_original_message
-
-    @property
-    def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        if self.command is None:
-            return None
-
-        return self.command.cog
+    async def edit(
+            self,
+            *,
+            content: Optional[str] = MISSING,
+            embeds: List[Embed] = MISSING,
+            embed: Optional[Embed] = MISSING,
+            file: File = MISSING,
+            files: List[File] = MISSING,
+            view: Optional[View] = MISSING,
+            allowed_mentions: Optional[AllowedMentions] = None,
+    ) -> InteractionMessage:
+        return await self.interaction.edit_original_message(
+            content=content,
+            embeds=embeds,
+            embed=embed,
+            file=file,
+            files=files,
+            view=view,
+            allowed_mentions=allowed_mentions,
+        )
 
 
 class AutocompleteContext:
@@ -248,18 +273,24 @@ class AutocompleteContext:
     """
 
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
-
-    def __init__(self, bot: Bot, interaction: Interaction) -> None:
-        self.bot = bot
-        self.interaction = interaction
-
-        self.command: ApplicationCommand = None  # type: ignore
-        self.focused: Option = None  # type: ignore
-        self.value: str = None  # type: ignore
-        self.options: dict = None  # type: ignore
+    
+    def __init__(
+        self,
+        interaction: Interaction,
+        *,
+        command: ApplicationCommand,
+        focused: Option,
+        value: str,
+        options: Dict[str, Any],
+    ) -> None:
+        self.interaction: Interaction = interaction
+        self.command: ApplicationCommand = command
+        self.focused: Option = focused
+        self.value: str = value
+        self.options: Dict[str, Any] = options
 
     @property
-    def cog(self) -> Optional[Cog]:
+    def cog(self) -> Optional[CogT]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
         if self.command is None:
             return None
