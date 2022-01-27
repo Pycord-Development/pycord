@@ -1693,9 +1693,7 @@ class HTTPClient:
         )
         return self.request(r)
 
-    def upsert_global_command(
-            self, application_id: Snowflake, payload: interactions.CreateApplicationCommand
-    ) -> Response[interactions.ApplicationCommand]:
+    def upsert_global_command(self, application_id: Snowflake, payload) -> Response[interactions.ApplicationCommand]:
         r = Route('POST', '/applications/{application_id}/commands', application_id=application_id)
         return self.request(r, json=payload)
 
@@ -1729,7 +1727,7 @@ class HTTPClient:
         return self.request(r)
 
     def bulk_upsert_global_commands(
-        self, application_id: Snowflake, payload: List[interactions.CreateApplicationCommand]
+        self, application_id: Snowflake, payload
     ) -> Response[List[interactions.ApplicationCommand]]:
         r = Route('PUT', '/applications/{application_id}/commands', application_id=application_id)
         return self.request(r, json=payload)
@@ -1766,7 +1764,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: interactions.CreateApplicationCommand,
+        payload: interactions.EditApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             'POST',
@@ -1817,7 +1815,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: List[interactions.CreateApplicationCommand],
+        payload: List[interactions.EditApplicationCommand],
     ) -> Response[List[interactions.ApplicationCommand]]:
         r = Route(
             'PUT',
@@ -1831,7 +1829,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: List[interactions.BaseGuildApplicationCommandPermissions],
+        payload: List[interactions.EditApplicationCommand],
     ) -> Response[List[interactions.ApplicationCommand]]:
         r = Route(
             'PUT',
