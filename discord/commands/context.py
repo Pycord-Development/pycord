@@ -74,7 +74,6 @@ if TYPE_CHECKING:
 else:
     P = TypeVar('P')
 
-
 class ApplicationContext(discord.abc.Messageable, Generic[BotT]):
     """Represents a Discord application command interaction context.
 
