@@ -908,8 +908,6 @@ class Client:
         :class:`.Member`
             A member the client can see.
         """
-
-        members: List[Member] = []
         for guild in self.guilds:
             if include_bots:
                 yield from guild.members
