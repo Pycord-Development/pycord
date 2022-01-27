@@ -176,7 +176,7 @@ class Paginator:
             self.close_page()
         return self._pages
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         fmt = '<Paginator prefix: {0.prefix!r} suffix: {0.suffix!r} linesep: {0.linesep!r} max_size: {0.max_size} count: {0._count}>'
         return fmt.format(self)
 
