@@ -911,13 +911,12 @@ class Client:
 
         members: List[Member] = []
         for guild in self.guilds:
-            if not include_bots:
+            if include_bots:
+                yield from guild.members
+            else:
                 for member in guild.members:
                     if not member.bot:
-                        members.append(member)
-                yield from members
-            else:
-                yield from guild.members
+                        yield member
 
     async def get_or_fetch_user(self, id: int, /) -> Optional[User]:
         """Looks up a user in the user cache or fetches if not found.
