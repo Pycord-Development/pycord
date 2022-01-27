@@ -69,6 +69,7 @@ class Option:
 
             input_type_parted = input_type.partition(cls_name)
             input_type = input_type_parted[2]
+            print(input_type_parted)
 
             input_type = input_type.lstrip('(').rstrip(')')
             input_type = gettype(input_type)
