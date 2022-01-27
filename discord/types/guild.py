@@ -24,6 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from typing import List, Literal, Optional, TypedDict
+
+from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
 from .channel import GuildChannel
 from .voice import GuildVoiceState
@@ -68,6 +70,7 @@ class _GuildOptional(TypedDict, total=False):
     premium_subscription_count: int
     premium_progress_bar_enabled: bool
     max_video_channel_users: int
+    guild_scheduled_events: List[ScheduledEvent]
 
 
 DefaultMessageNotificationLevel = Literal[0, 1]

@@ -132,10 +132,10 @@ class Permissions(BaseFlags):
         """Returns ``True`` if the permissions on other are a strict superset of those on self."""
         return self.is_superset(other) and self != other
 
-    __le__ = is_subset
-    __ge__ = is_superset
-    __lt__ = is_strict_subset
-    __gt__ = is_strict_superset
+    __le__: Callable[[Permissions], bool] = is_subset
+    __ge__: Callable[[Permissions], bool] = is_superset
+    __lt__: Callable[[Permissions], bool] = is_strict_subset
+    __gt__: Callable[[Permissions], bool] = is_strict_superset
 
     @classmethod
     def none(cls: Type[P]) -> P:
@@ -148,7 +148,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(-1)
+        return cls(0b11111111111111111111111111111111111111111)
 
     @classmethod
     def all_channel(cls: Type[P]) -> P:

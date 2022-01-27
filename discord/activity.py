@@ -43,7 +43,7 @@ __all__ = (
     'CustomActivity',
 )
 
-"""If curious, this is the current schema for an activity.
+"""If you're curious, this is the current schema for an activity.
 
 It's fairly long so I will document it here:
 

@@ -27,17 +27,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 from typing import Any, Dict, List, Optional, TYPE_CHECKING, Tuple, Union
-import asyncio
 
 from . import utils
 from .enums import try_enum, InteractionType, InteractionResponseType
-from .errors import InteractionResponded, HTTPException, ClientException, InvalidArgument
-from .channel import PartialMessageable, ChannelType
+from .errors import InteractionResponded, ClientException, InvalidArgument
+from .channel import ChannelType, PartialMessageable
 from .file import File
 from .user import User
 from .member import Member
 from .message import Message, Attachment
-from .mentions import AllowedMentions
 from .object import Object
 from .permissions import Permissions
 from .webhook.async_ import async_context, Webhook, handle_message_parameters
@@ -46,12 +44,14 @@ __all__ = (
     'Interaction',
     'InteractionMessage',
     'InteractionResponse',
+    'MessageInteraction',
 )
 
 if TYPE_CHECKING:
     from .types.interactions import (
         Interaction as InteractionPayload,
         InteractionData,
+        MessageInteraction as MessageInteractionPayload
     )
     from .guild import Guild
     from .state import ConnectionState
@@ -278,8 +278,10 @@ class Interaction:
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -305,12 +307,19 @@ class Interaction:
         files: List[:class:`File`]
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -334,6 +343,7 @@ class Interaction:
             content=content,
             file=file,
             files=files,
+            attachments=attachments,
             embed=embed,
             embeds=embeds,
             view=view,
@@ -354,15 +364,25 @@ class Interaction:
         message = InteractionMessage(state=self._state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             self._state.store_view(view, message.id)
+
+        if delete_after is not None:
+            await self.delete_original_message(delay=delete_after)
+
         return message
 
-    async def delete_original_message(self) -> None:
+    async def delete_original_message(self, *, delay: Optional[float] = None) -> None:
         """|coro|
 
         Deletes the original interaction response message.
 
         This is a lower level interface to :meth:`InteractionMessage.delete` in case
         you do not want to fetch the message and save an HTTP request.
+
+        Parameters
+        -----------
+        delay: Optional[:class:`float`]
+            If provided, the number of seconds to wait before deleting the message.
+            The waiting is done in the background and deletion failures are ignored.
 
         Raises
         -------
@@ -372,11 +392,16 @@ class Interaction:
             Deleted a message that is not yours.
         """
         adapter = async_context.get()
-        await adapter.delete_original_interaction_response(
+        func = adapter.delete_original_interaction_response(
             self.application_id,
             self.token,
             session=self._session,
         )
+
+        if delay is not None:
+            utils.delay_task(delay, func)
+        else:
+            await func
 
 
 class InteractionResponse:
@@ -402,7 +427,6 @@ class InteractionResponse:
         An interaction can only be responded to once.
         """
         return self._responded
-        
 
     async def defer(self, *, ephemeral: bool = False) -> None:
         """|coro|
@@ -542,7 +566,7 @@ class InteractionResponse:
         if embed is not MISSING and embeds is not MISSING:
             raise TypeError('cannot mix embed and embeds keyword arguments')
 
-        if embed is not MISSING:
+        if embed is not MISSING and embed is not None:
             embeds = [embed]
 
         if embeds:
@@ -556,7 +580,7 @@ class InteractionResponse:
         if ephemeral:
             payload['flags'] = 64
 
-        if view is not MISSING:
+        if view is not MISSING and view is not None:
             payload['components'] = view.to_components()
 
         state = self._parent._state
@@ -600,7 +624,7 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not MISSING:
+        if view is not MISSING and view is not None:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
@@ -608,10 +632,7 @@ class InteractionResponse:
 
         self._responded = True
         if delete_after is not None:
-            async def delete():
-                await asyncio.sleep(delete_after)
-                await self._parent.delete_original_message()
-            asyncio.ensure_future(delete(), loop=self._parent._state.loop)
+            await self._parent.delete_original_message(delay=delete_after)
         return self._parent
 
     async def edit_message(
@@ -622,6 +643,7 @@ class InteractionResponse:
         embeds: List[Embed] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
+        delete_after: Optional[float] = None
     ) -> None:
         """|coro|
 
@@ -643,6 +665,10 @@ class InteractionResponse:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -691,7 +717,6 @@ class InteractionResponse:
                 payload['components'] = []
             else:
                 payload['components'] = view.to_components()
-
         adapter = async_context.get()
         await adapter.create_interaction_response(
             parent.id,
@@ -705,6 +730,8 @@ class InteractionResponse:
             state.store_view(view, message_id)
 
         self._responded = True
+        if delete_after is not None:
+            await self._parent.delete_original_message(delay=delete_after)
 
     async def send_autocomplete_result(
         self,
@@ -795,8 +822,10 @@ class InteractionMessage(Message):
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
+        delete_after: Optional[float] = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -816,12 +845,19 @@ class InteractionMessage(Message):
         files: List[:class:`File`]
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        delete_after: Optional[:class:`float`]
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just edited. If the deletion fails,
+            then it is silently ignored.
 
         Raises
         -------
@@ -839,14 +875,18 @@ class InteractionMessage(Message):
         :class:`InteractionMessage`
             The newly edited message.
         """
+        if attachments is MISSING:
+            attachments = self.attachments or MISSING
         return await self._state._interaction.edit_original_message(
             content=content,
             embeds=embeds,
             embed=embed,
             file=file,
             files=files,
+            attachments=attachments,
             view=view,
             allowed_mentions=allowed_mentions,
+            delete_after=delete_after
         )
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
@@ -869,16 +909,47 @@ class InteractionMessage(Message):
         HTTPException
             Deleting the message failed.
         """
+        await self._state._interaction.delete_original_message(delay=delay)
 
-        if delay is not None:
 
-            async def inner_call(delay: float = delay):
-                await asyncio.sleep(delay)
-                try:
-                    await self._state._interaction.delete_original_message()
-                except HTTPException:
-                    pass
+class MessageInteraction:
+    """Represents a Discord message interaction.
 
-            asyncio.create_task(inner_call())
-        else:
-            await self._state._interaction.delete_original_message()
+    This is sent on the message object when the message is a response
+    to an interaction without an existing message e.g. application command.
+
+    .. versionadded:: 2.0
+
+    .. note::
+        Responses to message components do not include this property.
+
+    Attributes
+    -----------
+    id: :class:`int`
+        The interaction's ID.
+    type: :class:`InteractionType`
+        The interaction type.
+    name: :class:`str`
+        The name of the invoked application command.
+    user: :class:`User`
+        The user that sent the interaction.
+    data: :class:`dict`
+        The raw interaction data.
+    """
+
+    __slots__: Tuple[str, ...] = (
+        'id',
+        'type',
+        'name',
+        'user',
+        'data',
+        '_state'
+    )
+
+    def __init__(self, *, data: MessageInteractionPayload, state: ConnectionState):
+        self._state = state
+        self.data = data
+        self.id: int = int(data['id'])
+        self.type: InteractionType = data['type']
+        self.name: str = data['name']
+        self.user: User = self._state.store_user(data['user'])

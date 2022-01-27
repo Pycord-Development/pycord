@@ -28,13 +28,13 @@ from __future__ import annotations
 import asyncio
 import collections
 import inspect
+import sys
 import traceback
-from .commands.errors import CheckFailure
-
 from typing import (
     Any,
     Callable,
     Coroutine,
+    Generator,
     List,
     Optional,
     Type,
@@ -42,11 +42,8 @@ from typing import (
     Union,
 )
 
-import sys
-
 from .client import Client
-from .shard import AutoShardedClient
-from .utils import MISSING, get, find, async_all
+from .cog import CogMixin
 from .commands import (
     SlashCommand,
     SlashCommandGroup,
@@ -57,10 +54,11 @@ from .commands import (
     AutocompleteContext,
     command,
 )
-from .cog import CogMixin
-
+from .commands.errors import CheckFailure
 from .errors import Forbidden, DiscordException
 from .interactions import Interaction
+from .shard import AutoShardedClient
+from .utils import MISSING, get, find, async_all
 from .enums import InteractionType
 from .user import User
 
@@ -124,6 +122,12 @@ class ApplicationCommandMixin:
 
         if self.debug_guilds and command.guild_ids is None:
             command.guild_ids = self.debug_guilds
+
+        for cmd in self.pending_application_commands:
+            if cmd == command:
+                command.id = cmd.id
+                self._application_commands[command.id] = command
+                break
         self._pending_application_commands.append(command)
 
     def remove_application_command(
@@ -214,51 +218,101 @@ class ApplicationCommandMixin:
 
     async def register_commands(self) -> None:
         """|coro|
-
         Registers all commands that have been added through :meth:`.add_application_command`.
         This method cleans up all commands over the API and should sync them with the internal cache of commands.
-
+        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
         By default, this coroutine is called inside the :func:`.on_connect`
         event. If you choose to override the :func:`.on_connect` event, then
         you should invoke this coroutine as well.
-
         .. versionadded:: 2.0
         """
-        commands = []
+        commands_to_bulk = []
+
+        needs_bulk = False
 
         # Global Command Permissions
         global_permissions: List = []
 
         registered_commands = await self.http.get_global_commands(self.user.id)
+        # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
+        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
+        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+        global_pending_application_commands_dict = {}
+        
         for command in [
             cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
         ]:
             as_dict = command.to_dict()
-            if len(registered_commands) > 0:
-                matches = [
-                    x
-                    for x in registered_commands
-                    if x["name"] == command.name and x["type"] == command.type
-                ]
-                # TODO: rewrite this, it seems inefficient
-                if matches:
-                    as_dict["id"] = matches[0]["id"]
-            commands.append(as_dict)
+            
+            global_pending_application_commands_dict[command.name] = as_dict
+            if command.name in registered_commands_dict:
+                match = registered_commands_dict[command.name]
+            else:
+                match = None
+            # TODO: There is probably a far more efficient way of doing this
+            # We want to check if the registered global command on Discord servers matches the given global commands
+            if match:
+                as_dict["id"] = match["id"]
 
-        cmds = await self.http.bulk_upsert_global_commands(self.user.id, commands)
+                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
+                for key, more_keys in {
+                    key:more_keys
+                    for key, more_keys in keys_to_check.items()
+                    if key in as_dict.keys()
+                    if key in match.keys()
+                }.items():
+                    if key == "options":
+                        for i, option_dict in enumerate(as_dict[key]):
+                            if command.name == "recent":
+                                print(option_dict, "|||||", match[key][i])
+                            for key2 in more_keys:
+                                pendingVal = None
+                                if key2 in option_dict.keys():
+                                    pendingVal = option_dict[key2]
+                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        pendingVal = None
+                                matchVal = None
+                                if key2 in match[key][i].keys():
+                                    matchVal = match[key][i][key2]
+                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                        matchVal = None
 
-        for i in cmds:
+                                if pendingVal != matchVal:
+                                    # When a property in the options of a pending global command is changed
+                                    needs_bulk = True
+                    else:
+                        if as_dict[key] != match[key]:
+                            # When a property in a pending global command is changed
+                            needs_bulk = True
+            else:
+                # When a name of a pending global command is not registered in Discord
+                needs_bulk = True
+
+            commands_to_bulk.append(as_dict)
+        
+        for name, command in registered_commands_dict.items():
+            if not name in global_pending_application_commands_dict.keys():
+                # When a registered global command is not available in the pending global commands
+                needs_bulk = True
+    
+        if needs_bulk:
+            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+        else:
+            commands = registered_commands
+
+        for i in commands:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
                 guild_ids=None,
                 type=i["type"],
             )
-            cmd.id = i["id"]
-            self._application_commands[cmd.id] = cmd
+            if cmd:
+                cmd.id = i["id"]
+                self._application_commands[cmd.id] = cmd
 
-            # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-            global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
+                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
@@ -275,7 +329,7 @@ class ApplicationCommandMixin:
 
         for guild_id, guild_data in update_guild_commands.items():
             try:
-                cmds = await self.http.bulk_upsert_guild_commands(
+                commands = await self.http.bulk_upsert_guild_commands(
                     self.user.id, guild_id, update_guild_commands[guild_id]
                 )
 
@@ -287,7 +341,7 @@ class ApplicationCommandMixin:
                 print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
                 raise
             else:
-                for i in cmds:
+                for i in commands:
                     cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                     cmd.id = i["id"]
                     self._application_commands[cmd.id] = cmd
@@ -433,25 +487,32 @@ class ApplicationCommandMixin:
         try:
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
-            self.dispatch("unknown_command", interaction)
-        else:
-            if interaction.type is InteractionType.auto_complete:
-                ctx = await self.get_autocomplete_context(interaction)
-                ctx.command = command
-                return await command.invoke_autocomplete_callback(ctx)
-            
-            ctx = await self.get_application_context(interaction)
-            ctx.command = command
-            self.dispatch("application_command", ctx)
-            try:
-                if await self.can_run(ctx, call_once=True):
-                    await ctx.command.invoke(ctx)
-                else:
-                    raise CheckFailure("The global check once functions failed.")
-            except DiscordException as exc:
-                await ctx.command.dispatch_error(ctx, exc)
+            for cmd in self.application_commands:
+                if (
+                    cmd.name == interaction.data["name"]
+                    and interaction.data.get("guild_id", None) in cmd.guild_ids
+                ):
+                    command = cmd
+                    break
             else:
-                self.dispatch("application_command_completion", ctx)
+                return self.dispatch("unknown_command", interaction)
+        if interaction.type is InteractionType.auto_complete:
+            ctx = await self.get_autocomplete_context(interaction)
+            ctx.command = command
+            return await command.invoke_autocomplete_callback(ctx)
+        
+        ctx = await self.get_application_context(interaction)
+        ctx.command = command
+        self.dispatch("application_command", ctx)
+        try:
+            if await self.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self.dispatch("application_command_completion", ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -568,7 +629,7 @@ class ApplicationCommandMixin:
 
     def group(
         self,
-        name: str,
+        name: Optional[str] = None,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
@@ -579,8 +640,8 @@ class ApplicationCommandMixin:
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the group to create.
+        name: Optional[:class:`str`]
+            The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
         description: Optional[:class:`str`]
             The description of the group to create.
         guild_ids: Optional[List[:class:`int`]]
@@ -594,7 +655,7 @@ class ApplicationCommandMixin:
         """
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
-                name,
+                name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None else "No description provided"
@@ -606,6 +667,19 @@ class ApplicationCommandMixin:
         return inner
 
     slash_group = group
+
+    def walk_application_commands(self) -> Generator[ApplicationCommand, None, None]:
+        """An iterator that recursively walks through all application commands and subcommands.
+
+        Yields
+        ------
+        :class:`.ApplicationCommand`
+            An application command from the internal list of application commands.
+        """
+        for command in self.application_commands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
 
     async def get_application_context(
         self, interaction: Interaction, cls=None
@@ -687,9 +761,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.owner_id = options.get("owner_id")
         self.owner_ids = options.get("owner_ids", set())
 
-        self.debug_guild = options.pop(
-            "debug_guild", None
-        )  # TODO: remove or reimplement
         self.debug_guilds = options.pop("debug_guilds", None)
 
         if self.owner_id and self.owner_ids:
@@ -701,12 +772,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
-
-        if self.debug_guild:
-            if self.debug_guilds is None:
-                self.debug_guilds = [self.debug_guild]
-            else:
-                raise TypeError("Both debug_guild and debug_guilds are set.")
 
         self._checks = []
         self._check_once = []
@@ -751,17 +816,15 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO: Remove these from commands.Bot
 
     def check(self, func):
-        r"""A decorator that adds a global check to the bot.
-        A global check is similar to a :func:`.check` that is applied
-        on a per command basis except it is run before any command checks
-        have been verified and applies to every command the bot has.
+        """A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is
+        applied on a per command basis except it is run before any command checks have been verified and applies to
+        every command the bot has.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this
+           takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         ---------
@@ -777,17 +840,15 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         return func
 
     def add_check(self, func, *, call_once: bool = False) -> None:
-        """Adds a global check to the bot.
-        This is the non-decorator interface to :meth:`.check`
-        and :meth:`.check_once`.
+        """Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and
+        :meth:`.check_once`.
 
         Parameters
         -----------
         func
             The function that was used as a global check.
         call_once: :class:`bool`
-            If the function should only be called once per
-            :meth:`.invoke` call.
+            If the function should only be called once per :meth:`.Bot.invoke` call.
 
         """
 
@@ -818,26 +879,21 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             pass
 
     def check_once(self, func):
-        r"""A decorator that adds a "call once" global check to the bot.
-        Unlike regular global checks, this one is called only once
-        per :meth:`.invoke` call.
-        Regular global checks are called whenever a command is called
-        or :meth:`.Command.can_run` is called. This type of check
-        bypasses that and ensures that it's called only once, even inside
-        the default help command.
+        """A decorator that adds a "call once" global check to the bot. Unlike regular global checks, this one is called
+        only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or
+        :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once,
+        even inside the default help command.
 
         .. note::
 
-            When using this function the :class:`.Context` sent to a group subcommand
-            may only parse the parent command and not the subcommands due to it
-            being invoked once per :meth:`.Bot.invoke` call.
+           When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command
+           and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`,
+           this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         ---------
@@ -1086,17 +1142,10 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-    debug_guild: Optional[:class:`int`]
-        Guild ID of a guild to use for testing commands. Prevents setting global commands
-        in favor of guild commands, which update instantly.
-        .. note::
-
-            The bot will not create any global commands if a debug_guild is passed.
+           
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        .. note::
-
-            You cannot set both debug_guild and debug_guilds.
+        The bot will not create any global commands if a debug_guilds is passed.
     """
 
     pass

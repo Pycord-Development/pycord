@@ -20,7 +20,7 @@ ytdl_format_options = {
     "quiet": True,
     "no_warnings": True,
     "default_search": "auto",
-    "source_address": "0.0.0.0",  # bind to ipv4 since ipv6 addresses cause issues sometimes
+    "source_address": "0.0.0.0",  # Bind to ipv4 since ipv6 addresses cause issues at certain times
 }
 
 ffmpeg_options = {"options": "-vn"}
@@ -45,7 +45,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         )
 
         if "entries" in data:
-            # take first item from a playlist
+            # Takes the first item from a playlist
             data = data["entries"][0]
 
         filename = data["url"] if stream else ytdl.prepare_filename(data)

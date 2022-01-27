@@ -40,7 +40,7 @@ import aiohttp
 from .. import utils
 from ..object import Object
 from ..errors import InvalidArgument, HTTPException, Forbidden, NotFound, DiscordServerError
-from ..message import Message
+from ..message import Attachment, Message
 from ..enums import try_enum, WebhookType
 from ..user import BaseUser, User
 from ..asset import Asset
@@ -145,7 +145,7 @@ class AsyncWebhookAdapter:
                     file.reset(seek=attempt)
 
                 if multipart:
-                    form_data = aiohttp.FormData()
+                    form_data = aiohttp.FormData(quote_fields=False)
                     for p in multipart:
                         form_data.add_field(**p)
                     to_send = form_data
@@ -379,28 +379,21 @@ class AsyncWebhookAdapter:
 
         if data is not None:
             payload['data'] = data
-        form = [{'name': 'payload_json', 'value': utils._to_json(payload)}]
+        form = [{'name': 'payload_json'}]
+        attachments = []
         files = files or []
-        if len(files) == 1:
-            file = files[0]
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
+        payload['attachments'] = attachments
+        form[0]['value'] = utils._to_json(payload)
 
         route = Route(
             'POST',
@@ -475,6 +468,7 @@ def handle_message_parameters(
     ephemeral: bool = False,
     file: File = MISSING,
     files: List[File] = MISSING,
+    attachments: List[Attachment] = MISSING,
     embed: Optional[Embed] = MISSING,
     embeds: List[Embed] = MISSING,
     view: Optional[View] = MISSING,
@@ -504,6 +498,9 @@ def handle_message_parameters(
         else:
             payload['content'] = None
 
+    if attachments is not MISSING:
+        payload['attachments'] = [a.to_dict() for a in attachments]
+    
     if view is not MISSING:
         if view is not None:
             payload['components'] = view.to_components()
@@ -690,6 +687,7 @@ class WebhookMessage(Message):
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
     ) -> WebhookMessage:
@@ -719,6 +717,11 @@ class WebhookMessage(Message):
             A list of files to send with the content. This cannot be mixed with the
             ``file`` parameter.
 
+            .. versionadded:: 2.0
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
+            
             .. versionadded:: 2.0
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
@@ -753,6 +756,9 @@ class WebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
+        if attachments is MISSING:
+            attachments = self.attachments or MISSING
+
         return await self._state._webhook.edit_message(
             self.id,
             content=content,
@@ -760,6 +766,7 @@ class WebhookMessage(Message):
             embed=embed,
             file=file,
             files=files,
+            attachments=attachments,
             view=view,
             allowed_mentions=allowed_mentions,
             thread=thread
@@ -1205,7 +1212,7 @@ class Webhook(BaseWebhook):
             Whether to use the bot token over the webhook token
             if available. Defaults to ``True``.
 
-            .. versionadded:: 2.0
+      .. versionadded:: 2.0
 
         Raises
         -------
@@ -1534,6 +1541,7 @@ class Webhook(BaseWebhook):
         embed: Optional[Embed] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = None,
         thread: Optional[Snowflake] = MISSING
@@ -1561,6 +1569,9 @@ class Webhook(BaseWebhook):
         embed: Optional[:class:`Embed`]
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
+        attachments: List[:class:`Attachment`]
+            A list of attachments to keep in the message. If ``[]`` is passed
+            then all attachments are removed.
         file: :class:`File`
             The file to upload. This cannot be mixed with ``files`` parameter.
 
@@ -1616,6 +1627,7 @@ class Webhook(BaseWebhook):
             content=content,
             file=file,
             files=files,
+            attachments=attachments,
             embed=embed,
             embeds=embeds,
             view=view,

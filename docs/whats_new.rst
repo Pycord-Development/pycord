@@ -6,7 +6,7 @@
 .. _whats_new:
 
 Changelog
-============
+=========
 
 This page keeps a detailed human friendly rendering of what's new and changed
 in specific versions.
@@ -14,10 +14,10 @@ in specific versions.
 .. _vp1p7p3:
 
 v1.7.3
---------
+------
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix a crash involving guild uploaded stickers
 - Fix :meth:`DMChannel.permissions_for` not having :attr:`Permissions.read_messages` set.
@@ -28,7 +28,7 @@ v1.7.2
 -------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix ``fail_if_not_exists`` causing certain message references to not be usable within :meth:`abc.Messageable.send` and :meth:`Message.reply` (:issue:`6726`)
 - Fix :meth:`Guild.chunk` hanging when the user left the guild. (:issue:`6730`)
@@ -40,14 +40,14 @@ v1.7.1
 -------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - |commands| Fix :meth:`Cog.has_error_handler <ext.commands.Cog.has_error_handler>` not working as intended.
 
 .. _vp1p7p0:
 
 v1.7.0
---------
+------
 
 This version is mainly for improvements and bug fixes. This is more than likely the last major version in the 1.x series.
 Work after this will be spent on v2.0. As a result, **this is the last version to support Python 3.5**.
@@ -56,7 +56,7 @@ Likewise, **this is the last version to support user bots**.
 Development of v2.0 will have breaking changes and support for newer API features.
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add support for stage channels via :class:`StageChannel` (:issue:`6602`, :issue:`6608`)
 - Add support for :attr:`MessageReference.fail_if_not_exists` (:issue:`6484`)
@@ -99,7 +99,7 @@ New Features
 - |commands| Allow relative paths when loading extensions via a ``package`` keyword argument (:issue:`2465`, :issue:`6445`)
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix mentions not working if ``mention_author`` is passed in :meth:`abc.Messageable.send` without :attr:`Client.allowed_mentions` set (:issue:`6192`, :issue:`6458`)
 - Fix user created instances of :class:`CustomActivity` triggering an error (:issue:`4049`)
@@ -121,7 +121,7 @@ Bug Fixes
 - |commands| Group signatures now properly show up in :attr:`Command.signature <ext.commands.Command.signature>` (:issue:`6529`, :issue:`6530`)
 
 Miscellaneous
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - User endpoints and all userbot related functionality has been deprecated and will be removed in the next major version of the library.
 - :class:`Permission` class methods were updated to match the UI of the Discord client (:issue:`6476`)
@@ -130,12 +130,12 @@ Miscellaneous
 .. _vp1p6p0:
 
 v1.6.0
---------
+------
 
 This version comes with support for replies and stickers.
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - An entirely redesigned documentation. This was the cumulation of multiple months of effort.
     - There's now a dark theme, feel free to navigate to the cog on the screen to change your setting, though this should be automatic.
@@ -172,7 +172,7 @@ New Features
 
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Raise :exc:`DiscordServerError` when reaching 503s repeatedly (:issue:`6044`)
 - Fix :exc:`AttributeError` when :meth:`Client.fetch_template` is called (:issue:`5986`)
@@ -188,7 +188,7 @@ Bug Fixes
 - |commands| Properly cleanup lingering commands when a conflicting alias is found when adding commands (:issue:`6217`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - ``ffmpeg`` spawned processes no longer open a window in Windows (:issue:`6038`)
 - Update dependencies to allow the library to work on Python 3.9+ without requiring build tools. (:issue:`5984`, :issue:`5970`)
@@ -205,7 +205,7 @@ v1.5.1
 -------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix :func:`utils.escape_markdown` not escaping quotes properly (:issue:`5897`)
 - Fix :class:`Message` not being hashable (:issue:`5901`, :issue:`5866`)
@@ -217,7 +217,7 @@ Bug Fixes
 - Ensure that the bot's own member is not evicted from the cache (:issue:`5949`)
 
 Miscellaneous
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Members are now loaded during ``GUILD_MEMBER_UPDATE`` events if :attr:`MemberCacheFlags.joined` is set. (:issue:`5930`)
 - |commands| :class:`MemberConverter <ext.commands.MemberConverter>` now properly lazily fetches members if not available from cache.
@@ -227,18 +227,18 @@ Miscellaneous
 .. _vp1p5p0:
 
 v1.5.0
---------
+------
 
 This version came with forced breaking changes that Discord is requiring all bots to go through on October 7th. It is highly recommended to read the documentation on intents, :ref:`intents_primer`.
 
 API Changes
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 - Members and presences will no longer be retrieved due to an API change. See :ref:`privileged_intents` for more info.
 - As a consequence, fetching offline members is disabled if the members intent is not enabled.
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Support for gateway intents, passed via ``intents`` in :class:`Client` using :class:`Intents`.
 - Add :attr:`VoiceRegion.south_korea` (:issue:`5233`)
@@ -258,7 +258,7 @@ New Features
 - |commands| Add support for ``require_var_positional`` for :class:`Command` (:issue:`5793`)
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :meth:`Guild.by_category` not showing certain channels.
 - Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` (:issue:`5772`)
@@ -273,7 +273,7 @@ Bug Fixes
 - |tasks| Fix tasks extending the next iteration on handled exceptions (:issue:`5762`, :issue:`5763`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Webhook requests are now logged (:issue:`5798`)
 - Remove caching layer from :attr:`AutoShardedClient.shards`. This was causing issues if queried before launching shards.
@@ -287,12 +287,12 @@ Miscellaneous
 .. _vp1p4p2:
 
 v1.4.2
---------
+------
 
 This is a maintenance release with backports from :ref:`vp1p5p0`.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :meth:`Guild.by_category` not showing certain channels.
 - Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` (:issue:`5772`)
@@ -307,7 +307,7 @@ Bug Fixes
 - |tasks| Fix tasks extending the next iteration on handled exceptions (:issue:`5762`, :issue:`5763`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Remove caching layer from :attr:`AutoShardedClient.shards`. This was causing issues if queried before launching shards.
 - |tasks| Lazily fetch the event loop to prevent surprises when changing event loop policy (:issue:`5808`)
@@ -315,10 +315,10 @@ Miscellaneous
 .. _vp1p4p1:
 
 v1.4.1
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Properly terminate the connection when :meth:`Client.close` is called (:issue:`5207`)
 - Fix error being raised when clearing embed author or image when it was already cleared (:issue:`5210`, :issue:`5212`)
@@ -327,12 +327,12 @@ Bug Fixes
 .. _vp1p4p0:
 
 v1.4.0
---------
+------
 
 Another version with a long development time. Features like Intents are slated to be released in a v1.5 release. Thank you for your patience!
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add support for :class:`AllowedMentions` to have more control over what gets mentioned.
     - This can be set globally through :attr:`Client.allowed_mentions`
@@ -389,7 +389,7 @@ New Features
 
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :attr:`PartialEmoji.url` reads leading to a failure (:issue:`4015`, :issue:`4016`)
 - Allow :meth:`abc.Messageable.history` to take a limit of ``1`` even if ``around`` is passed (:issue:`4019`)
@@ -417,7 +417,7 @@ Bug Fixes
 
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - The :attr:`Member.roles` cache introduced in v1.3 was reverted due to issues caused (:issue:`4087`, :issue:`4157`)
 - :class:`Webhook` objects are now comparable and hashable (:issue:`4182`)
@@ -437,20 +437,20 @@ Miscellaneous
 .. _vp1p3p4:
 
 v1.3.4
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix an issue with channel overwrites causing multiple issues including crashes (:issue:`5109`)
 
 .. _vp1p3p3:
 
 v1.3.3
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Change default WS close to 4000 instead of 1000.
     - The previous close code caused sessions to be invalidated at a higher frequency than desired.
@@ -460,12 +460,12 @@ Bug Fixes
 .. _vp1p3p2:
 
 v1.3.2
----------
+------
 
 Another minor bug fix release.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Higher the wait time during the ``GUILD_CREATE`` stream before ``on_ready`` is fired for :class:`AutoShardedClient`.
 - :func:`on_voice_state_update` now uses the inner ``member`` payload which should make it more reliable.
@@ -478,18 +478,18 @@ Bug Fixes
 .. _vp1p3p1:
 
 v1.3.1
---------
+------
 
 Minor bug fix release.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix fetching invites in guilds that the user is not in.
 - Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:issue:`2531`)
 
 Miscellaneous
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Fix compatibility warnings when using the Python 3.9 alpha.
 - Change the unknown event logging from WARNING to DEBUG to reduce noise.
@@ -497,12 +497,12 @@ Miscellaneous
 .. _vp1p3p0:
 
 v1.3.0
---------
+------
 
 This version comes with a lot of bug fixes and new features. It's been in development for a lot longer than was anticipated!
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add :meth:`Guild.fetch_members` to fetch members from the HTTP API. (:issue:`2204`)
 - Add :meth:`Guild.fetch_roles` to fetch roles from the HTTP API. (:issue:`2208`)
@@ -568,7 +568,7 @@ New Features
 - |tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` property. (:issue:`2305`)
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with permission resolution sometimes failing for guilds with no owner.
 - Tokens are now stripped upon use. (:issue:`2135`)
@@ -592,7 +592,7 @@ Bug Fixes
 - |commands| :meth:`Context.send_help <.ext.commands.Context.send_help>` now properly propagates to the :meth:`HelpCommand.on_help_command_error <.ext.commands.HelpCommand.on_help_command_error>` handler.
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - The library now fully supports Python 3.8 without warnings.
 - Bump the dependency of ``websockets`` to 8.0 for those who can use it. (:issue:`2453`)
@@ -616,20 +616,20 @@ Miscellaneous
 .. _vp1p2p5:
 
 v1.2.5
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix a bug that caused crashes due to missing ``animated`` field in Emoji structures in reactions.
 
 .. _vp1p2p4:
 
 v1.2.4
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix a regression when :attr:`Message.channel` would be ``None``.
 - Fix a regression where :attr:`Message.edited_at` would not update during edits.
@@ -641,10 +641,10 @@ Bug Fixes
 .. _vp1p2p3:
 
 v1.2.3
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix an AttributeError when accessing :attr:`Member.premium_since` in :func:`on_member_update`. (:issue:`2213`)
 - Handle :exc:`asyncio.CancelledError` in :meth:`abc.Messageable.typing` context manager. (:issue:`2218`)
@@ -655,20 +655,20 @@ Bug Fixes
 .. _vp1p2p2:
 
 v1.2.2
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Audit log related attribute access have been fixed to not error out when they shouldn't have.
 
 .. _vp1p2p1:
 
 v1.2.1
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - :attr:`User.avatar_url` and related attributes no longer raise an error.
 - More compatibility shims with the ``enum.Enum`` code.
@@ -676,12 +676,12 @@ Bug Fixes
 .. _vp1p2p0:
 
 v1.2.0
---------
+------
 
 This update mainly brings performance improvements and various nitro boosting attributes (referred to in the API as "premium guilds").
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add :attr:`Guild.premium_tier` to query the guild's current nitro boost level.
 - Add :attr:`Guild.emoji_limit`, :attr:`Guild.bitrate_limit`, :attr:`Guild.filesize_limit` to query the new limits of a guild when taking into consideration boosting.
@@ -822,13 +822,11 @@ Bug Fixes
 - Fix some issues with loop cleanup that some users experienced on Linux machines.
 - Fix voice handshake race condition (:issue:`2056`, :issue:`2063`)
 
-.. _vp1p0p0:
-
 v1.0.0
 --------
 
 The changeset for this version are too big to be listed here, for more information please
-see :ref:`the migrating page <migrating_1_0>`.
+see :ref:`the migrating page <migrating_to_v1>`.
 
 
 .. _vp0p16p6:
@@ -1127,7 +1125,7 @@ For the command extension, the following bug fixes apply:
 v0.10.0
 -------
 
-For breaking changes, see :ref:`migrating-to-async`. The breaking changes listed there will not be enumerated below. Since this version is rather a big departure from v0.9.2, this change log will be non-exhaustive.
+For breaking changes, see `0.10.0 migration <https://discordpy.readthedocs.io/en/stable/migrating_to_async.html#migrating-to-async>`_. The breaking changes listed there will not be enumerated below. Since this version is rather a big departure from v0.9.2, this change log will be non-exhaustive.
 
 New Features
 ~~~~~~~~~~~~~
