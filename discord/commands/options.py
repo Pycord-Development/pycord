@@ -65,6 +65,11 @@ class Option:
         self.converter = None
 
         if isinstance(input_type, str):
+            cls_name = self.__class__.__name__
+
+            if input_type.startswith(cls_name):
+                input_type = input_type[len(cls_name):]
+            input_type = input_type.lstrip('(').rstrip(')')
             input_type = gettype(input_type)
 
         self._raw_type = input_type
