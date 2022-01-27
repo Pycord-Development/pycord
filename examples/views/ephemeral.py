@@ -17,7 +17,7 @@ class Counter(discord.ui.View):
     # Define the actual button
     # When pressed, this increments the number displayed until it hits 5.
     # When it hits 5, the counter button is disabled and it turns green.
-    # note: The name of the function does not matter to the library
+    # NOTE: The name of the function does not matter to the library
     @discord.ui.button(label="0", style=discord.ButtonStyle.red)
     async def count(self, button: discord.ui.Button, interaction: discord.Interaction):
         number = int(button.label) if button.label else 0

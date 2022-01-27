@@ -643,6 +643,20 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError('Invalid usage of typing.Union')
 
+        if datatype.__name__ in ["Member", "User"]:
+            return cls.user
+        if datatype.__name__ in [
+            "GuildChannel", "TextChannel",
+            "VoiceChannel", "StageChannel",
+            "CategoryChannel", "ThreadOption",
+            "Thread",
+        ]:
+            return cls.channel
+        if datatype.__name__ == "Role":
+            return cls.role
+        if datatype.__name__ == "Mentionable":
+            return cls.mentionable
+
         if issubclass(datatype, str):
             return cls.string
         if issubclass(datatype, bool):
@@ -651,19 +665,6 @@ class SlashCommandOptionType(Enum):
             return cls.integer
         if issubclass(datatype, float):
             return cls.number
-
-        if datatype.__name__ in ["Member", "User"]:
-            return cls.user
-        if datatype.__name__ in [
-            "GuildChannel", "TextChannel",
-            "VoiceChannel", "StageChannel",
-            "CategoryChannel"
-        ]:
-            return cls.channel
-        if datatype.__name__ == "Role":
-            return cls.role
-        if datatype.__name__ == "Mentionable":
-            return cls.mentionable
 
         # TODO: Improve the error message
         raise TypeError(f'Invalid class {datatype} used as an input type for an Option')

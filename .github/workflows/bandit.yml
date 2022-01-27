@@ -2,6 +2,7 @@ name: bandit
 on: [pull_request, push]
 jobs:
   bandit:
+    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
