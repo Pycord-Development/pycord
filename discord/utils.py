@@ -44,6 +44,7 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
+    Coroutine,
     Dict,
     ForwardRef,
     Generic,
@@ -95,13 +96,13 @@ DISCORD_EPOCH = 1420070400000
 
 
 class _MissingSentinel:
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return False
 
     def __bool__(self):
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '...'
 
 
@@ -220,6 +221,17 @@ class SequenceProxy(Generic[T_co], collections.abc.Sequence):
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
+
+
+def delay_task(delay: float, func: Coroutine):
+    async def inner_call():
+        await asyncio.sleep(delay)
+        try:
+            await func
+        except HTTPException:
+            pass
+
+    asyncio.create_task(inner_call())
 
 
 @overload
@@ -716,9 +728,22 @@ def resolve_template(code: Union[Template, str]) -> str:
 
 _MARKDOWN_ESCAPE_SUBREGEX = '|'.join(r'\{0}(?=([\s\S]*((?<!\{0})\{0})))'.format(c) for c in ('*', '`', '_', '~', '|'))
 
-_MARKDOWN_ESCAPE_COMMON = r'^>(?:>>)?\s|\[.+\]\(.+\)'
+# regular expression for finding and escaping links in markdown
+# note: technically, brackets are allowed in link text.
+# perhaps more concerningly, parentheses are also allowed in link destination.
+# this regular expression matches neither of those.
+# this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
+_MARKDOWN_ESCAPE_LINKS = r"""
+\[  # matches link text
+    [^\[\]]* # link text can contain anything but brackets 
+\]
+\(  # matches link destination
+    [^\(\)]+ # link destination cannot contain parentheses
+\)""" # note 2: make sure this regex is consumed in re.X (extended mode) since it has whitespace and comments
 
-_MARKDOWN_ESCAPE_REGEX = re.compile(fr'(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})', re.MULTILINE)
+_MARKDOWN_ESCAPE_COMMON = fr'^>(?:>>)?\s|{_MARKDOWN_ESCAPE_LINKS}'
+
+_MARKDOWN_ESCAPE_REGEX = re.compile(fr'(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})', re.MULTILINE | re.X)
 
 _URL_REGEX = r'(?P<url><[^: >]+:\/[^ >]+>|(?:https?|steam):\/\/[^\s<]+[^<.,:;\"\'\]\s])'
 
@@ -796,7 +821,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f'(?:{_URL_REGEX}|{regex})'
-        return re.sub(regex, replacement, text, 0, re.MULTILINE)
+        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
     else:
         text = re.sub(r'\\', r'\\\\', text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r'\\\1', text)
@@ -1094,13 +1119,13 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
     Parameters
     -----------
-    values: Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Union[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
-    Callable[[:class:`AutocompleteContext`], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`AutocompleteContext`], Awaitable[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
     """
     async def autocomplete_callback(ctx: AutocompleteContext) -> V:
@@ -1111,7 +1136,11 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         if asyncio.iscoroutine(_values):
             _values = await _values
 
-        gen = (val for val in _values if str(val).lower().startswith(str(ctx.value or "").lower()))
+        def check(item: Any) -> bool:
+            item = getattr(item, "name", item)
+            return str(item).lower().startswith(str(ctx.value or "").lower())
+        
+        gen = (val for val in _values if check(val))
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback

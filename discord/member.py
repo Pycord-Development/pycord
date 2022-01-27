@@ -30,19 +30,18 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union, overload
+from typing import Any, Dict, List, Literal, Optional, TYPE_CHECKING, Tuple, Type, TypeVar, Union
 
 import discord.abc
-
 from . import utils
-from .asset import Asset
-from .utils import MISSING
-from .user import BaseUser, User, _UserTag
 from .activity import create_activity, ActivityTypes
-from .permissions import Permissions
-from .enums import Status, try_enum
+from .asset import Asset
 from .colour import Colour
+from .enums import Status, try_enum
 from .object import Object
+from .permissions import Permissions
+from .user import BaseUser, User, _UserTag
+from .utils import MISSING
 
 __all__ = (
     'VoiceState',
@@ -50,7 +49,6 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from .asset import Asset
     from .channel import DMChannel, VoiceChannel, StageChannel
     from .flags import PublicUserFlags
     from .guild import Guild
@@ -252,6 +250,10 @@ class Member(discord.abc.Messageable, _UserTag):
     premium_since: Optional[:class:`datetime.datetime`]
         An aware datetime object that specifies the date and time in UTC when the member used their
         "Nitro boost" on the guild, if available. This could be ``None``.
+    communication_disabled_until: Optional[:class:`datetime.datetime`]
+        An aware datetime object that specifies the date and time in UTC when the member will be removed from timeout.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -266,6 +268,7 @@ class Member(discord.abc.Messageable, _UserTag):
         '_user',
         '_state',
         '_avatar',
+        'communication_disabled_until',
     )
 
     if TYPE_CHECKING:
@@ -284,6 +287,7 @@ class Member(discord.abc.Messageable, _UserTag):
         banner: Optional[Asset]
         accent_color: Optional[Colour]
         accent_colour: Optional[Colour]
+        communication_disabled_until: Optional[datetime.datetime]
 
     def __init__(self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState):
         self._state: ConnectionState = state
@@ -297,6 +301,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.nick: Optional[str] = data.get('nick', None)
         self.pending: bool = data.get('pending', False)
         self._avatar: Optional[str] = data.get('avatar')
+        self.communication_disabled_until: Optional[datetime.datetime] = utils.parse_time(data.get('communication_disabled_until'))
 
     def __str__(self) -> str:
         return str(self._user)
@@ -354,6 +359,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.activities = member.activities
         self._state = member._state
         self._avatar = member._avatar
+        self.communication_disabled_until = member.communication_disabled_until
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -380,6 +386,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.premium_since = utils.parse_time(data.get('premium_since'))
         self._roles = utils.SnowflakeList(map(int, data['roles']))
         self._avatar = data.get('avatar')
+        self.communication_disabled_until = utils.parse_time(data.get('communication_disabled_until'))
 
     def _presence_update(self, data: PartialPresenceUpdate, user: UserPayload) -> Optional[Tuple[User, User]]:
         self.activities = tuple(map(create_activity, data['activities']))
@@ -405,7 +412,9 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def status(self) -> Status:
-        """:class:`Status`: The member's overall status. If the value is unknown, then it will be a :class:`str` instead."""
+        """:class:`Status`: The member's overall status.
+        If the value is unknown, then it will be a :class:`str` instead.
+        """
         return try_enum(Status, self._client_status[None])
 
     @property
@@ -609,6 +618,15 @@ class Member(discord.abc.Messageable, _UserTag):
         """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
+    @property
+    def timed_out(self) -> bool:
+        """bool: Returns whether the member is timed out.
+
+        .. versionadded:: 2.0
+        """
+        return self.communication_disabled_until is not None and self.communication_disabled_until > datetime.datetime.now(datetime.timezone.utc)
+
+
     async def ban(
         self,
         *,
@@ -645,6 +663,7 @@ class Member(discord.abc.Messageable, _UserTag):
         roles: List[discord.abc.Snowflake] = MISSING,
         voice_channel: Optional[VocalGuildChannel] = MISSING,
         reason: Optional[str] = None,
+        communication_disabled_until: Optional[datetime.datetime] = MISSING,
     ) -> Optional[Member]:
         """|coro|
 
@@ -652,19 +671,21 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Depending on the parameter passed, this requires different permissions listed below:
 
-        +---------------+--------------------------------------+
-        |   Parameter   |              Permission              |
-        +---------------+--------------------------------------+
-        | nick          | :attr:`Permissions.manage_nicknames` |
-        +---------------+--------------------------------------+
-        | mute          | :attr:`Permissions.mute_members`     |
-        +---------------+--------------------------------------+
-        | deafen        | :attr:`Permissions.deafen_members`   |
-        +---------------+--------------------------------------+
-        | roles         | :attr:`Permissions.manage_roles`     |
-        +---------------+--------------------------------------+
-        | voice_channel | :attr:`Permissions.move_members`     |
-        +---------------+--------------------------------------+
+        +------------------------------+--------------------------------------+
+        |   Parameter                  |              Permission              |
+        +------------------------------+--------------------------------------+
+        | nick                         | :attr:`Permissions.manage_nicknames` |
+        +------------------------------+--------------------------------------+
+        | mute                         | :attr:`Permissions.mute_members`     |
+        +------------------------------+--------------------------------------+
+        | deafen                       | :attr:`Permissions.deafen_members`   |
+        +------------------------------+--------------------------------------+
+        | roles                        | :attr:`Permissions.manage_roles`     |
+        +------------------------------+--------------------------------------+
+        | voice_channel                | :attr:`Permissions.move_members`     |
+        +------------------------------+--------------------------------------+
+        | communication_disabled_until | :attr:`Permissions.moderate_members` |
+        +------------------------------+--------------------------------------+
 
         All parameters are optional.
 
@@ -694,7 +715,11 @@ class Member(discord.abc.Messageable, _UserTag):
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
             The reason for editing this member. Shows up on the audit log.
+        communication_disabled_until: Optional[:class:`datetime.datetime`]
+            Temporarily puts the member in timeout until this time. If the value is ``None``, then the user is removed
+            from timeout.
 
+            .. versionadded:: 2.0
         Raises
         -------
         Forbidden
@@ -748,9 +773,87 @@ class Member(discord.abc.Messageable, _UserTag):
         if roles is not MISSING:
             payload['roles'] = tuple(r.id for r in roles)
 
+        if communication_disabled_until is not MISSING:
+            if communication_disabled_until is not None:
+                payload['communication_disabled_until'] = communication_disabled_until.isoformat()
+            else:
+                payload['communication_disabled_until'] = communication_disabled_until
+
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
             return Member(data=data, guild=self.guild, state=self._state)
+
+    async def timeout(self, until: Optional[datetime.datetime], *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Applies a timeout to a member in the guild until a set datetime.
+
+        You must have the :attr:`~Permissions.moderate_members` permission to timeout a member.
+
+        Parameters
+        -----------
+        until: :class:`datetime.datetime`
+            The date and time to timeout the member for. If this is ``None`` then the member is removed from timeout.
+        reason: Optional[:class:`str`]
+            The reason for doing this action. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to timeout members.
+        HTTPException
+            An error occurred doing the request.
+        """
+        await self.edit(communication_disabled_until=until, reason=reason)
+
+    async def timeout_for(self, duration: datetime.timedelta, *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Applies a timeout to a member in the guild for a set duration. A shortcut method for :meth:`~.timeout`, and
+        equivalent to ``timeout(until=datetime.utcnow() + duration, reason=reason)``.
+
+        You must have the :attr:`~Permissions.moderate_members` permission to
+        timeout a member.
+
+        Parameters
+        -----------
+        duration: :class:`datetime.timedelta`
+            The duration to timeout the member for.
+        reason: Optional[:class:`str`]
+            The reason for doing this action. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to timeout members.
+        HTTPException
+            An error occurred doing the request.
+        """
+        await self.timeout(datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason)
+
+    async def remove_timeout(self, *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Removes the timeout from a member.
+
+        You must have the :attr:`~Permissions.moderate_members` permission to
+        remove the timeout.
+
+        This is equivalent to calling :meth:`~.timeout` and passing ``None`` to :param:`~.timeout.until`.
+
+        Parameters
+        -----------
+        reason: Optional[:class:`str`]
+            The reason for doing this action. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to remove the timeout.
+        HTTPException
+            An error occurred doing the request.
+        """
+        await self.edit(communication_disabled_until=None, reason=reason)
 
     async def request_to_speak(self) -> None:
         """|coro|

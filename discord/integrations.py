@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import Any, Dict, Optional, TYPE_CHECKING, overload, Type, Tuple
+from typing import Any, Dict, Optional, TYPE_CHECKING, Type, Tuple
 from .utils import _get_as_snowflake, parse_time, MISSING
 from .user import User
 from .errors import InvalidArgument
@@ -115,7 +115,7 @@ class Integration:
         self._state = guild._state
         self._from_data(data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{self.__class__.__name__} id={self.id} name={self.name!r}>"
 
     def _from_data(self, data: IntegrationPayload) -> None:

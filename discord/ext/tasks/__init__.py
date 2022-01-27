@@ -37,6 +37,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import aiohttp
@@ -120,6 +121,8 @@ class Loop(Generic[LF]):
 
         self._before_loop = None
         self._after_loop = None
+        self._before_loop_running = False
+        self._after_loop_running = False
         self._is_being_cancelled = False
         self._has_failed = False
         self._stop_next_iteration = False
@@ -140,10 +143,16 @@ class Loop(Generic[LF]):
         if coro is None:
             return
 
+        if name.endswith('_loop'):
+            setattr(self, f'_{name}_running', True)
+
         if self._injected is not None:
             await coro(self._injected, *args, **kwargs)
         else:
             await coro(*args, **kwargs)
+
+        if name.endswith('_loop'):
+            setattr(self, f'_{name}_running', False)
 
     def _try_sleep_until(self, dt: datetime.datetime):
         self._handle = SleepHandle(dt=dt, loop=self.loop)
@@ -679,7 +688,7 @@ class Loop(Generic[LF]):
             self._time = self._get_time_parameter(time)
             self._sleep = self._seconds = self._minutes = self._hours = MISSING
 
-        if self.is_running():
+        if self.is_running() and not (self._before_loop_running or self._after_loop_running):
             if self._time is not MISSING:
                 # prepare the next time index starting from after the last iteration
                 self._prepare_time_index(now=self._last_iteration)

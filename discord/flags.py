@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Dict, Generic, Iterator, List, Optional, Tuple, Type, TypeVar, overload
+from typing import Any, Callable, ClassVar, Dict, Iterator, List, Optional, Tuple, Type, TypeVar, overload
 
 from .enums import UserFlags
 
@@ -63,7 +63,7 @@ class flag_value:
     def __set__(self, instance: BF, value: bool) -> None:
         instance._set_flag(self.flag, value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<flag_value flag={self.flag!r}>'
 
 
@@ -306,7 +306,7 @@ class MessageFlags(BaseFlags):
 
     @flag_value
     def loading(self):
-        """:class:`bool`: Returns ``True`` if the source message an deferred.
+        """:class:`bool`: Returns ``True`` if the source message is deferred.
 
         The user sees a 'thinking' state
 
@@ -926,6 +926,27 @@ class Intents(BaseFlags):
         This does not correspond to any attributes or classes in the library in terms of cache.
         """
         return 1 << 14
+    
+    @flag_value
+    def scheduled_events(self):
+        """:class:`bool`: Whether "scheduled event" related events are enabled.
+
+        This corresponds to the following events:
+        
+        - :func:`on_scheduled_event_create`
+        - :func:`on_scheduled_event_update`
+        - :func:`on_scheduled_event_delete`
+        - :func:`on_scheduled_event_user_add`
+        - :func:`on_raw_scheduled_event_user_add`
+        - :func:`on_scheduled_event_user_remove`
+        - :func:`on_raw_scheduled_event_user_remove`
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :class:`ScheduledEvent`
+        - :meth:`Guild.get_scheduled_event`
+        """
+        return 1 << 16
 
 
 @fill_with_flags()

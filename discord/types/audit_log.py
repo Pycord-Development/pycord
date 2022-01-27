@@ -34,6 +34,7 @@ from .snowflake import Snowflake
 from .role import Role
 from .channel import ChannelType, VideoQualityMode, PermissionOverwrite
 from .threads import Thread
+from .scheduled_events import ScheduledEvent
 
 AuditLogEvent = Literal[
     1,
@@ -77,6 +78,9 @@ AuditLogEvent = Literal[
     90,
     91,
     92,
+    100,
+    101,
+    102,
     110,
     111,
     112,
@@ -256,3 +260,4 @@ class AuditLog(TypedDict):
     audit_log_entries: List[AuditLogEntry]
     integrations: List[PartialIntegration]
     threads: List[Thread]
+    scheduled_events: List[ScheduledEvent]

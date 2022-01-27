@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -23,25 +24,20 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import inspect
 import importlib
+import inspect
 import sys
-import discord.utils
 import types
+from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, Tuple, TypeVar, Type
+
+import discord.utils
 from . import errors
-from .commands import SlashCommand, UserCommand, MessageCommand, ApplicationCommand
-
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type
-
-from .commands.commands import _BaseCommand
-
-if TYPE_CHECKING:
-    from .commands import ApplicationContext, ApplicationCommand
+from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
 
 __all__ = (
     'CogMeta',
     'Cog',
-    'CogMixin'
+    'CogMixin',
 )
 
 CogT = TypeVar('CogT', bound='Cog')
@@ -145,6 +141,13 @@ class CogMeta(type):
                 if elem in listeners:
                     del listeners[elem]
 
+                try:
+                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
+                        # Skip commands if they are a part of a group
+                        continue
+                except AttributeError:
+                    pass
+
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
                     value = value.__func__
@@ -247,16 +250,7 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [
-            c for c in (
-                c for c in self.__cog_commands__
-                if not isinstance(c, (SlashCommand, MessageCommand, UserCommand))
-            ) if c.parent is None
-        ] + [
-            c for c in self.__cog_commands__
-            if isinstance(c, (SlashCommand, MessageCommand, UserCommand))
-        ]
-
+        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
     @property
     def qualified_name(self) -> str:
         """:class:`str`: Returns the cog's specified name, not the class name."""
@@ -445,7 +439,8 @@ class Cog(metaclass=CogMeta):
         # we've added so far for some form of atomic loading.
         
         for index, command in enumerate(self.__cog_commands__):
-            command.cog = self
+            command._set_cog(self)
+
             if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
                     try:

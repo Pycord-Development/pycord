@@ -25,19 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import datetime
 import re
 import io
 from os import PathLike
-from typing import Dict, TYPE_CHECKING, Union, List, Optional, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type
+from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
 
 from . import utils
 from .reaction import Reaction
 from .emoji import Emoji
 from .partial_emoji import PartialEmoji
 from .enums import MessageType, ChannelType, try_enum
-from .errors import InvalidArgument, HTTPException
+from .errors import InvalidArgument
 from .components import _component_factory
 from .embeds import Embed
 from .member import Member
@@ -71,7 +70,7 @@ if TYPE_CHECKING:
     from .abc import GuildChannel, PartialMessageableChannel, MessageableChannel
     from .components import Component
     from .state import ConnectionState
-    from .channel import TextChannel, GroupChannel, DMChannel, PartialMessageable
+    from .channel import TextChannel
     from .mentions import AllowedMentions
     from .user import User
     from .role import Role
@@ -154,9 +153,14 @@ class Attachment(Hashable):
         Whether the attachment is ephemeral or not.
 
         .. versionadded:: 1.7
+
+    description: Optional[:class:`str`]
+        The attachment's description. 
+
+        .. versionadded:: 2.0
     """
 
-    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral')
+    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral', 'description')
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
         self.id: int = int(data['id'])
@@ -169,6 +173,7 @@ class Attachment(Hashable):
         self._http = state.http
         self.content_type: Optional[str] = data.get('content_type')
         self.ephemeral: bool = data.get('ephemeral', False)
+        self.description: Optional[str] = data.get('description')
 
     def is_spoiler(self) -> bool:
         """:class:`bool`: Whether this attachment contains a spoiler."""
@@ -305,7 +310,7 @@ class Attachment(Hashable):
         """
 
         data = await self.read(use_cached=use_cached)
-        return File(io.BytesIO(data), filename=self.filename, spoiler=spoiler)
+        return File(io.BytesIO(data), filename=self.filename, spoiler=spoiler, description=self.description)
 
     def to_dict(self) -> AttachmentPayload:
         result: AttachmentPayload = {
@@ -322,6 +327,8 @@ class Attachment(Hashable):
             result['width'] = self.width
         if self.content_type:
             result['content_type'] = self.content_type
+        if self.description:
+            result['description'] = self.description
         return result
 
 
@@ -604,6 +611,8 @@ class Message(Hashable):
         .. versionadded:: 2.0
     guild: Optional[:class:`Guild`]
         The guild that the message belongs to, if applicable.
+    interaction: Optional[:class:`MessageInteraction`]
+        The interaction associated with the message, if applicable.
     """
 
     __slots__ = (
@@ -637,6 +646,7 @@ class Message(Hashable):
         'stickers',
         'components',
         'guild',
+        'interaction',
     )
 
     if TYPE_CHECKING:
@@ -703,6 +713,13 @@ class Message(Hashable):
 
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
+
+        from .interactions import MessageInteraction
+        self.interaction: Optional[MessageInteraction]
+        try:
+            self.interaction = MessageInteraction(data=data['interaction'], state=state)
+        except KeyError:
+            self.interaction = None
 
         for handler in ('author', 'member', 'mentions', 'mention_roles'):
             try:
@@ -1137,18 +1154,11 @@ class Message(Hashable):
         HTTPException
             Deleting the message failed.
         """
+        del_func = self._state.http.delete_message(self.channel.id, self.id)
         if delay is not None:
-
-            async def delete(delay: float):
-                await asyncio.sleep(delay)
-                try:
-                    await self._state.http.delete_message(self.channel.id, self.id)
-                except HTTPException:
-                    pass
-
-            asyncio.create_task(delete(delay))
+            utils.delay_task(delay, del_func)
         else:
-            await self._state.http.delete_message(self.channel.id, self.id)
+            await del_func
 
     @overload
     async def edit(
@@ -1319,6 +1329,9 @@ class Message(Hashable):
             raise InvalidArgument('cannot pass both file and files parameter to edit()')
 
         if file is not MISSING:
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
             if not isinstance(file, File):
                 raise InvalidArgument('file parameter must be File')
 
@@ -1337,6 +1350,9 @@ class Message(Hashable):
                 raise InvalidArgument('files parameter must be a list of up to 10 elements')
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument('files parameter must be a list of File')
+            if 'attachments' not in payload:
+                # don't want it to remove any attachments when we just add a new file
+                payload['attachments'] = [a.to_dict() for a in self.attachments]
 
             try:
                 data = await self._state.http.edit_files(

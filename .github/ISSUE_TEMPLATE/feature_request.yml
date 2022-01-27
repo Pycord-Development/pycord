@@ -17,6 +17,7 @@ body:
         - The core library
         - discord.ext.commands
         - discord.ext.tasks
+        - discord.ext.pages
         - The documentation
     validations:
       required: true

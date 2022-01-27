@@ -13,7 +13,7 @@ __title__ = 'discord'
 __author__ = 'Pycord Development'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development'
-__version__ = '2.0.0a'
+__version__ = '2.0.0-rc.1'
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
@@ -60,9 +60,10 @@ from .interactions import *
 from .components import *
 from .threads import *
 from .bot import *
-from .commands import *
+from .commands.__init__ import *
 from .cog import Cog
 from .welcome_screen import *
+from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 
 
 class VersionInfo(NamedTuple):
@@ -73,6 +74,6 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel='alpha', serial=0)
+version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel='candidate', serial=1)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

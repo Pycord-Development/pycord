@@ -6,7 +6,7 @@ bot = discord.Bot()
 # Note: If you want you can use commands.Bot instead of discord.Bot
 # Use discord.Bot if you don't want prefixed message commands
 
-# With discord.Bot you can use @bot.command as an alias 
+# With discord.Bot you can use @bot.command as an alias
 # of @bot.slash_command but this is overridden by commands.Bot
 
 
@@ -14,6 +14,9 @@ bot = discord.Bot()
 async def hello(ctx):
     """Say hello to the bot"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
+    # Please note that you MUST respond with ctx.respond(), ctx.defer(), or any other
+    # interaction response within 3 seconds in your slash command code, otherwise the
+    # interaction will fail.
 
 
 @bot.slash_command(
@@ -28,7 +31,9 @@ async def joined(
     ctx, member: discord.Member = None
 ):  # Passing a default value makes the argument optional
     user = member or ctx.author
-    await ctx.respond(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
+    await ctx.respond(
+        f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}"
+    )
 
 
 # To learn how to add descriptions and choices to options, check slash_options.py
