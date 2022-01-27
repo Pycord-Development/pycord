@@ -25,6 +25,11 @@ DEALINGS IN THE SOFTWARE.
 from typing import Any, Dict, List, Literal, Optional, Union
 
 from ..enums import T, ChannelType, SlashCommandOptionType
+# Needed for the gettype function
+from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel
+from ..member import Member
+from ..threads import Thread
+from ..user import User
 
 __all__ = (
     "ThreadOption",
@@ -56,7 +61,11 @@ class ThreadOption:
         return "ThreadOption"
 
 def gettype(name: str):
-    return eval(f"{name}", globals())
+    if "discord." in name:
+        # This one line of code requires blood sacrifice. 
+        name = name.replace("discord.", "")
+    
+    return eval(f"{name}", globals(), locals())
 
 class Option:
     def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
