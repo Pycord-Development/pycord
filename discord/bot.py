@@ -40,7 +40,6 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    Type,
 )
 
 from .client import Client
