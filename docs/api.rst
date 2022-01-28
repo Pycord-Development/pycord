@@ -2894,12 +2894,10 @@ of :class:`enum.Enum`.
 .. class:: StagePrivacyLevel
 
     Represents a stage instance's privacy level.
+    Stage event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
 
     .. versionadded:: 2.0
-
-    .. attribute:: public
-
-        The stage instance can be joined by external users.
 
     .. attribute:: closed
 
