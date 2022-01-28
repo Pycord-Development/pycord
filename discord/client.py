@@ -888,7 +888,7 @@ class Client:
         for guild in self.guilds:
             yield from guild.channels
 
-    def get_all_members(self, include_bots: Optional[bool]=True) -> Generator[Member, None, None]:
+    def get_all_members(self, *, include_bots: Optional[bool]=True) -> Generator[Member, None, None]:
         """Returns a generator with every :class:`.Member` the client can see.
 
         Parameters
