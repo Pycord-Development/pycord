@@ -82,11 +82,9 @@ class Option:
             if input_type.count('(') == 1 and input_type.count(')') == 1:
                 input_type = input_type.lstrip('(').rstrip(')')
             else:
-                input_type = input_type[1:]
-                input_type = input_type[:-1]
-                input_type.replace("(", "tuple[")
-                input_type.replace(")", "]")
-
+                input_type = input_type[2:]
+                input_type = input_type[:-2]
+            
             input_type = gettype(input_type)
 
         self._raw_type = input_type
