@@ -3551,9 +3551,9 @@ AuditLogDiff
 
     .. attribute:: privacy_level
 
-        The privacy level of the stage instance.
+        The privacy level of the stage instance or scheduled event.
 
-        :type: :class:`StagePrivacyLevel`
+        :type: :class:`StagePrivacyLevel` or :class:`ScheduledEventPrivacyLevel`
 
     .. attribute:: roles
 
