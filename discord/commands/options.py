@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from ..enums import T, ChannelType, SlashCommandOptionType
+from ..enums import ChannelType, SlashCommandOptionType
 # Needed for the gettype function
 from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel
 from ..member import Member
@@ -62,20 +62,18 @@ class ThreadOption:
 
 def gettype(name: str):
     if "discord." in name:
-        # This one line of code requires blood sacrifice. 
         name = name.replace("discord.", "")
-    
     return eval(f"{name}", globals(), locals())
 
-def rfind(input: str, sub: str) -> int:
-    r_input = input[::-1]
+def rfind(inp: str, sub: str) -> int:
+    r_input = inp[::-1]
     return r_input.find(sub)
 
-def find_tuple_pos(input: str) -> list:
+def find_tuple_pos(inp: str) -> list:
     tuple_pos = []
 
-    start_pos = input.find("(")
-    end_pos = rfind(input, ")")
+    start_pos = inp.find("(")
+    end_pos = rfind(inp, ")")
 
     if start_pos > -1 and end_pos > -1:
         tuple_pos.append(start_pos)
@@ -84,14 +82,14 @@ def find_tuple_pos(input: str) -> list:
 
     return tuple_pos
 
-def truncate_other_parameters(input: str):
-    output = input
+def truncate_other_parameters(inp: str):
+    output = inp
     num_of_commas = output.count(",")
 
     for i in range(num_of_commas):
         tuple_pos = find_tuple_pos(output)
         if len(tuple_pos) == 0:
-            raise ValueError("Failed to recognize the tuple positions") # might change this exception type to another one
+            raise ValueError("Failed to recognize the tuple positions")
 
         comma_pos = rfind(output, ",")
         if comma_pos > tuple_pos[0] and comma_pos < tuple_pos[1]:
@@ -122,7 +120,6 @@ class Option:
                 input_type = input_type[1:]
                 input_type = input_type[:-1]
                 input_type = truncate_other_parameters(input_type)
-            
             input_type = gettype(input_type)
 
         self._raw_type = input_type
