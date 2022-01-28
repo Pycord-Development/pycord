@@ -1381,6 +1381,10 @@ of :class:`enum.Enum`.
 
         A floating number.
 
+    .. attribute:: attachment
+
+        A attachment. Currently in beta.
+
 .. class:: ChannelType
 
     Specifies the type of channel.
