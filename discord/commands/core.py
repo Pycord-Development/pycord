@@ -32,7 +32,6 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing_extensions import ParamSpec, Concatenate
 from typing import (
     Any,
     Callable,
@@ -77,7 +76,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING: 
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec, Concatenate
 
     from ..cog import Cog
 
@@ -921,6 +920,10 @@ class SlashCommandGroup(ApplicationCommand):
         self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
+
+    @property
+    def module(self) -> Optional[str]:
+        return self.__module__
 
     def to_dict(self) -> Dict:
         as_dict = {
