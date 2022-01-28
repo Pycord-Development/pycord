@@ -461,6 +461,7 @@ class Role(Hashable):
                 payload['icon'] = None
             else:
                 payload['icon'] = _bytes_to_base64_data(icon)
+                payload['unicode_emoji'] = None
         
         if unicode_emoji is not MISSING:
             payload['unicode_emoji'] = unicode_emoji
