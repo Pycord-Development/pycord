@@ -350,7 +350,7 @@ class ApplicationCommandMixin:
     ):
         """|coro|
 
-        Register a list of commands.  If ``commands``
+        Register a list of commands.
 
         .. versionadded:: 2.0
 
