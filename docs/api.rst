@@ -2954,6 +2954,14 @@ of :class:`enum.Enum`.
 
     Represents an embedded activity application.
 
+    Some might be boost-only or gated.
+
+    .. warning::
+        
+        Discord said that they won't verify bots who gives access to embedded activities.
+
+        Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321.
+
     .. versionadded:: 2.0
 
     .. attribute:: awkword
