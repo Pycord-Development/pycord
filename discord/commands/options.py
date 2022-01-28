@@ -67,6 +67,39 @@ def gettype(name: str):
     
     return eval(f"{name}", globals(), locals())
 
+def rfind(input: str, sub: str) -> int:
+    r_input = input[::-1]
+    return r_input.find(sub)
+
+def find_tuple_pos(input: str) -> list:
+    tuple_pos = []
+
+    start_pos = input.find("(")
+    end_pos = rfind(input, ")")
+
+    if start_pos > -1 and end_pos > -1:
+        tuple_pos.append(start_pos)
+        tuple_pos.append(end_pos)
+        return tuple_pos
+
+    return tuple_pos
+
+def truncate_other_parameters(input: str):
+    output = input
+    num_of_commas = output.count(",")
+
+    for i in range(num_of_commas):
+        tuple_pos = find_tuple_pos(output)
+        if len(tuple_pos) == 0:
+            raise ValueError("Failed to recognize the tuple positions") # might change this exception type to another one
+
+        comma_pos = rfind(output, ",")
+        if comma_pos > tuple_pos[0] and comma_pos < tuple_pos[1]:
+            output = output[::-1][comma_pos+1:]
+            output = output[::-1]
+
+    return output
+
 class Option:
     def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
@@ -81,9 +114,14 @@ class Option:
 
             if input_type.count('(') == 1 and input_type.count(')') == 1:
                 input_type = input_type.lstrip('(').rstrip(')')
+
+                comma_pos = input_type.find(",")
+                if comma_pos != -1:
+                    input_type = input_type[:comma_pos]
             else:
-                input_type = input_type[2:]
-                input_type = input_type[:-2]
+                input_type = input_type[1:]
+                input_type = input_type[:-1]
+                input_type = truncate_other_parameters(input_type)
             
             input_type = gettype(input_type)
 
