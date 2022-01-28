@@ -87,7 +87,7 @@ Just as we remove a cog by its name, we can also retrieve it by its name as well
         def coinflip(self):
             return random.randint(0, 1)
 
-        @commands.command()
+        @discord.slash_command()
         async def gamble(self, ctx, money: int):
             """Gambles some money."""
             economy = self.bot.get_cog('Economy')
