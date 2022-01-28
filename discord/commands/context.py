@@ -148,7 +148,7 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.guild_locale
 
     @cached_property
-    def me(self) -> Union[Member, ClientUser, None]:
+    def me(self) -> Optional[Union[Member, ClientUser]]:
         return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
