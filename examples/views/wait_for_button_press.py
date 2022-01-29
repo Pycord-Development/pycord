@@ -5,8 +5,7 @@ import asyncio
 
 bot = commands.Bot(command_prefix="!")
 
-
-@bot.slash_command(name="button", guild_ids=[...], description="Wait for button press example from py-cord") ## Create a slash command for the supplied guilds.
+@bot.slash_command(name="button", guild_ids=[...], description="Wait for button press example from py-cord") # reate a slash command for the supplied guilds.
 async def button(ctx):
     await ctx.defer()
     
@@ -37,18 +36,15 @@ async def button(ctx):
         # Wait for the user to press the button.
 
         if f"{button.custom_id}" in str(interaction.data):
-            # Checks if the custom_id of the button we specified above is the same as the one the user pressed.
+            # Checks whether the custom_id of the button we specified above is the same as the one the user pressed.
             await msg.reply("Button pressed!")
     
 
-    # If after a certain time the key is not pressed...
+    # Executes if they button is not pressed after a certain time...
     except asyncio.TimeoutError:
         embed = discord.Embed(description=f'Wait for button press example failed (timeout)')
         embed.set_author(name=f'Pycord-Development')
         await msg.edit(embed=embed)
-    
-
-
 
 
 
