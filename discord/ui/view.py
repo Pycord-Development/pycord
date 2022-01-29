@@ -455,7 +455,7 @@ class View:
         Parameters
         -----------
         exceptions: Optional[List[:class:`int`]]
-            A list of item indexes to not disable from the view.
+            A list of item indexes in `self.children` to not disable from the view.
         """
         for i in range(len(self.children)):
             if exceptions is None or i not in exceptions:
