@@ -1,6 +1,3 @@
-# Warning: We have a feature freeze till release
-That means we won't accept new features for now. Only bug fixes.
-
 ## Summary
 
 <!-- What is this pull request for? Does it fix any issues? -->
