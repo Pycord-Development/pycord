@@ -2669,7 +2669,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.privacy_level`
         - :attr:`~AuditLogDiff.location`
         - :attr:`~AuditLogDiff.status`
-        - :attr:`~AuditLogDiff.entity_type`
+        - :attr:`~AuditLogDiff.location_type`
 
         .. versionadded:: 2.0
 
