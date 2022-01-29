@@ -36,10 +36,10 @@ if TYPE_CHECKING:
 
 
 class _FakeBool:
-    def __repr__(self) -> str:
+    def __repr__(self):
         return 'True'
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other):
         return other is True
 
     def __bool__(self):
