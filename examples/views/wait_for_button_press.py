@@ -35,7 +35,7 @@ async def button(ctx):
 
         if button.custom_id == interaction.data["custom_id"]:
             # Checks whether the custom_id of the button we specified above is the same as the one the user pressed.
-            await interaction.response("Button pressed!")
+            await interaction.response.send_message("Button pressed!")
 
     # Executes if they button is not pressed after a certain time...
     except asyncio.TimeoutError:
