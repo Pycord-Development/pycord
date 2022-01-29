@@ -334,7 +334,7 @@ class Permissions(BaseFlags):
 
     @flag_value
     def view_channel(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user view all or specific channels."""
+        """:class:`bool`: Returns ``True`` if a user can view all or specific channels."""
         return 1 << 10
 
     @make_permission_alias('view_channel')
