@@ -56,7 +56,7 @@ from .permissions import CommandPermission
 from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
 from ..member import Member
-from ..message import Message
+from ..message import Attachment, Message
 from ..user import User
 from ..utils import find, get_or_fetch, async_all, utcnow
 
@@ -751,6 +751,11 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif op.input_type == SlashCommandOptionType.attachment:
+                _data = ctx.interaction.data["resolved"]["attachments"][arg]
+                _data["id"] = int(arg)
+                arg = Attachment(state=ctx.interaction._state, data=_data)
 
             kwargs[op._parameter_name] = arg
 
