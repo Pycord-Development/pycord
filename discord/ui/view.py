@@ -448,6 +448,19 @@ class View:
         """
         return self.timeout is None and all(item.is_persistent() for item in self.children)
 
+    def disable_all_items(self, exceptions: Optional[List[int]]):
+        """
+        Disables all items in the view.
+
+        Parameters
+        -----------
+        exceptions: Optional[List[:class:`int`]]
+            A list of item indexes to not disable from the view.
+        """
+        for i in range(len(self.children)):
+            if exceptions is None or i not in exceptions:
+                self.children[i].disabled = True
+
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
 
