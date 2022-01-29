@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from typing import Any, Dict, List, Literal, Optional, Union
+from re import findall
 
 from ..enums import ChannelType, SlashCommandOptionType
 # Needed for the gettype function
@@ -65,37 +66,50 @@ def gettype(name: str):
         name = name.replace("discord.", "")
     return eval(f"{name}", globals(), locals())
 
-def rfind(inp: str, sub: str) -> int:
-    r_input = inp[::-1]
-    return r_input.find(sub)
+def num_of_tuples(inp: str) -> int:
+    quotes: list = []
+    cur_index = 0
 
-def find_tuple_pos(inp: str) -> list:
-    tuple_pos = []
+    for c in range(len(inp)):
+        if inp[c] == '"':
+            if len(quotes) == 0 or cur_index > len(quotes) - 1:
+                new_list = [c]
+                quotes.append(new_list)
+            elif cur_index == len(quotes) - 1:
+                quotes[cur_index].append(c)
+                cur_index += 1
+        elif inp[c] == "'":
+            if len(quotes) == 0 or cur_index > len(quotes) - 1:
+                new_list = [c]
+                quotes.append(new_list)
+            elif cur_index == len(quotes) - 1:
+                quotes[cur_index].append(c)
+                cur_index += 1
 
-    start_pos = inp.find("(")
-    end_pos = rfind(inp, ")")
+    possible_tuples: list = []
+    cur_index = 0
+    matches = findall('\([^)]*\)', inp)
 
-    if start_pos > -1 and end_pos > -1:
-        tuple_pos.append(start_pos)
-        tuple_pos.append(end_pos)
-        return tuple_pos
+    cur_quote_index = iter(quotes)
+    for i in range(len(matches)):
+        start_pos = inp.find(matches[i])
+        end_pos = start_pos + len(matches[i]) - 1
 
-    return tuple_pos
+        try:
+            cur_quote = next(cur_quote_index)
+            start_quote_pos = cur_quote[0]
+            end_quote_pos = cur_quote[1]
+        except StopIteration:
+            break
+
+        if not (start_quote_pos < start_pos and end_quote_pos > end_pos):
+            possible_tuples.append(matches[i])
+
+    return len(possible_tuples)
 
 def truncate_other_parameters(inp: str):
-    output = inp
-    num_of_commas = output.count(",")
-
-    for i in range(num_of_commas):
-        tuple_pos = find_tuple_pos(output)
-        if len(tuple_pos) == 0:
-            raise ValueError("Failed to recognize the tuple positions")
-
-        comma_pos = rfind(output, ",")
-        if comma_pos > tuple_pos[0] and comma_pos < tuple_pos[1]:
-            output = output[::-1][comma_pos+1:]
-            output = output[::-1]
-
+    matches = findall('\([^)]*\)', inp)
+    output = matches[0]
     return output
 
 class Option:
@@ -109,17 +123,17 @@ class Option:
 
             input_type_parted = input_type.partition(cls_name)
             input_type = input_type_parted[2]
+            input_type = input_type.replace(" ", "")
 
-            if input_type.count('(') == 1 and input_type.count(')') == 1:
-                input_type = input_type.lstrip('(').rstrip(')')
+            input_type = input_type[1:]
+            input_type = input_type[:-1]
 
+            if num_of_tuples(input_type) == 0:
                 comma_pos = input_type.find(",")
                 if comma_pos != -1:
                     input_type = input_type[:comma_pos]
             else:
-                input_type = input_type[1:]
-                input_type = input_type[:-1]
-                input_type = truncate_other_parameters(input_type)
+                input_type = truncate_other_parameters(input_type) 
             input_type = gettype(input_type)
 
         self._raw_type = input_type
