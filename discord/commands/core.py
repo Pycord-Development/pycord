@@ -941,12 +941,35 @@ class SlashCommandGroup(ApplicationCommand):
 
         return wrap
 
-    def create_subgroup(self, name, description) -> SlashCommandGroup:
+    def create_subgroup(
+        self, name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
+    ) -> SlashCommandGroup:
+        """
+        Creates a new subgroup for this SlashCommandGroup.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        SlashCommandGroup
+            The slash command group that was created.
+        """
+
         if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
 
-        sub_command_group = SlashCommandGroup(name, description, parent=self)
+        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
