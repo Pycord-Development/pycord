@@ -25,7 +25,7 @@ async def button(ctx):
     ###############
     
     ###############
-    # Check if the user who pressed the button is the ctx.author and the channel
+    # Check whether the user who pressed the button is the ctx.author and the channel
     def check(interaction):
         return interaction.channel.id == ctx.channel.id and interaction.user.id == ctx.author.id
     ###############
