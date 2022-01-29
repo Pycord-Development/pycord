@@ -5,7 +5,8 @@ import asyncio
 
 bot = commands.Bot(command_prefix="!")
 
-@bot.slash_command(name="button", guild_ids=[...], description="Wait for button press example from py-cord") # reate a slash command for the supplied guilds.
+# Create a slash command for the supplied guilds.
+@bot.slash_command(name="button", guild_ids=[...], description="Wait for button press example from py-cord") 
 async def button(ctx):
     await ctx.defer()
     
