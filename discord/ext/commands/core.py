@@ -1167,7 +1167,7 @@ class GroupMixin(Generic[CogT]):
     """
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         case_insensitive = kwargs.get('case_insensitive', False)
-        self.prefixed_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
+        self.prefixed_commands: Dict[str, Command[CogT, Any, Any]] = {}
         self.case_insensitive: bool = case_insensitive
         super().__init__(*args, **kwargs)
 
@@ -1175,8 +1175,8 @@ class GroupMixin(Generic[CogT]):
     def all_commands(self):
         # merge app and prefixed commands
         if hasattr(self, "_application_commands"):
-            return {**self._application_commands, **self.prefixed_commands}
-        return self.prefixed_commands
+            return _CaseInsensitiveDict({**self._application_commands, **self.prefixed_commands}) if self.case_insensitive else {**self._application_commands, **self.prefixed_commands}
+        return _CaseInsensitiveDict(self.prefixed_commands) if self.case_insensitive else self.prefixed_commands
 
     @property
     def commands(self) -> Set[Command[CogT, Any, Any]]:
