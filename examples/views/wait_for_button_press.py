@@ -1,14 +1,12 @@
 import asyncio
-
 import discord
-from discord.ext import commands
 from discord.ui import Button, View
 
 
-bot = commands.Bot(command_prefix="!")
+bot = discord.Bot()
 
-# Create a slash command for the supplied guilds.
-@bot.slash_command(name="button", guild_ids=[...], description="Wait for button press example from pycord") 
+
+@bot.slash_command(guild_ids=[...], description="Wait for button press example from pycord") 
 async def button(ctx):
     ###############
     # Create button and add it to View()
@@ -19,8 +17,8 @@ async def button(ctx):
     
     ###############
     # Create embed and send message with button and embed.
-    embed = discord.Embed(description=f'Wait for button press example')
-    embed.set_author(name=f'Pycord-Development')
+    embed = discord.Embed(description="Wait for button press example")
+    embed.set_author(name="Pycord-Development")
     
     await ctx.respond(embed=embed, view=view)
     msg = await ctx.interaction.original_message()
@@ -31,21 +29,18 @@ async def button(ctx):
     def check(interaction):
         return interaction.channel.id == ctx.channel.id and interaction.user.id == ctx.author.id
     ###############
-
-    
     try:
         interaction = await bot.wait_for('interaction', check=check, timeout=30)
         # Wait for the user to press the button.
 
         if button.custom_id == interaction.data["custom_id"]:
             # Checks whether the custom_id of the button we specified above is the same as the one the user pressed.
-            await msg.reply("Button pressed!")
-    
+            await interaction.response("Button pressed!")
 
     # Executes if they button is not pressed after a certain time...
     except asyncio.TimeoutError:
-        embed = discord.Embed(description=f'Wait for button press example failed (timeout)')
-        embed.set_author(name=f'Pycord-Development')
+        embed = discord.Embed(description="Wait for button press example failed (timeout)")
+        embed.set_author(name="Pycord-Development")
         await msg.edit(embed=embed)
 
 
