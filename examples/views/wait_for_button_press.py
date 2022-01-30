@@ -1,48 +1,44 @@
+# If you want a more intuitive way of using message components, check
+# out the other examples in this directory
 import asyncio
 import discord
-from discord.ui import Button, View
+from discord.ext import commands
+from discord import ui
 
+class ButtonBot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix=commands.when_mentioned_or("$"))
+    async def on_ready(self):
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
+        print("------")
+        
+bot = ButtonBot()
 
-bot = discord.Bot()
-
-
-@bot.slash_command(guild_ids=[...], description="Wait for button press example from pycord") 
+@bot.command(name="button", description="Wait for button press example from pycord")
 async def button(ctx):
-    ###############
-    # Create button and add it to View()
-    button = Button(style=discord.ButtonStyle.green, label="Click me!")
-    view = View()
+    """Waits for a button press"""
+    
+    button = ui.Button(style=discord.ButtonStyle.primary, label="Click me!")
+    view = ui.View()
     view.add_item(button)
-    ###############
-    
-    ###############
-    # Create embed and send message with button and embed.
-    embed = discord.Embed(description="Wait for button press example")
-    embed.set_author(name="Pycord-Development")
-    
-    await ctx.respond(embed=embed, view=view)
-    msg = await ctx.interaction.original_message()
-    ###############
-    
-    ###############
-    # Check whether the user who pressed the button is the ctx.author and the channel
+    await ctx.respond("Wait for button press example", view=view)
+    message = await ctx.interaction.original_message()
+    # ctx.respond doesn't return the message sent so we can get it
+    # ourselves
+    # Check for whether the interaction is related to this button or not
     def check(interaction):
-        return interaction.channel.id == ctx.channel.id and interaction.user.id == ctx.author.id
-    ###############
+        return (
+            interaction.is_component()
+            and button.custom_id == interaction.data["custom_id"]
+        )
+        # custom_id is a unique identifier for every message component
     try:
-        interaction = await bot.wait_for('interaction', check=check, timeout=30)
+        interaction = await bot.wait_for("interaction", check=check, timeout=30)
         # Wait for the user to press the button.
-
-        if button.custom_id == interaction.data["custom_id"]:
-            # Checks whether the custom_id of the button we specified above is the same as the one the user pressed.
-            await interaction.response.send_message("Button pressed!")
-
-    # Executes if they button is not pressed after a certain time...
+        await interaction.response.send_message("Button pressed!")
+    # TimeoutError will be raised by wait_for if an interaction that passes
+    # the check is not recieved within 30 seconds
     except asyncio.TimeoutError:
-        embed = discord.Embed(description="Wait for button press example failed (timeout)")
-        embed.set_author(name="Pycord-Development")
-        await msg.edit(embed=embed)
-
-
-
-bot.run("TOKEN")
+        await message.edit(content="You did not respond after 30 seconds...", view=None)
+        
+bot.run("token")
