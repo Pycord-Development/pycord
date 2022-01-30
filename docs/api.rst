@@ -2625,7 +2625,7 @@ of :class:`enum.Enum`.
 
         - :attr:`~AuditLogDiff.name`
         - :attr:`~AuditLogDiff.description`
-        - :attr:`~AuditLogDiff.channel_id`
+        - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
         - :attr:`~AuditLogDiff.location`
         - :attr:`~AuditLogDiff.status`
@@ -2645,7 +2645,7 @@ of :class:`enum.Enum`.
 
         - :attr:`~AuditLogDiff.name`
         - :attr:`~AuditLogDiff.description`
-        - :attr:`~AuditLogDiff.channel_id`
+        - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
         - :attr:`~AuditLogDiff.location`
         - :attr:`~AuditLogDiff.status`
@@ -2665,7 +2665,7 @@ of :class:`enum.Enum`.
 
         - :attr:`~AuditLogDiff.name`
         - :attr:`~AuditLogDiff.description`
-        - :attr:`~AuditLogDiff.channel_id`
+        - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
         - :attr:`~AuditLogDiff.location`
         - :attr:`~AuditLogDiff.status`
