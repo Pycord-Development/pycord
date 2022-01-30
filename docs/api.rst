@@ -1381,6 +1381,10 @@ of :class:`enum.Enum`.
 
         A floating number.
 
+    .. attribute:: attachment
+
+        An attachment. Currently in beta.
+
 .. class:: ChannelType
 
     Specifies the type of channel.
@@ -2613,17 +2617,59 @@ of :class:`enum.Enum`.
 
         A scheduled event was created.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
+
         .. versionadded:: 2.0
         
     .. attribute:: scheduled_event_update
 
         A scheduled event was updated.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
+
         .. versionadded:: 2.0
         
     .. attribute:: scheduled_event_delete
 
         A scheduled event was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
 
         .. versionadded:: 2.0
 
@@ -2641,6 +2687,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2658,6 +2705,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2675,6 +2723,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2845,12 +2894,10 @@ of :class:`enum.Enum`.
 .. class:: StagePrivacyLevel
 
     Represents a stage instance's privacy level.
+    Stage event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
 
     .. versionadded:: 2.0
-
-    .. attribute:: public
-
-        The stage instance can be joined by external users.
 
     .. attribute:: closed
 
@@ -2906,6 +2953,14 @@ of :class:`enum.Enum`.
 .. class:: EmbeddedActivity
 
     Represents an embedded activity application.
+
+    Some might be boost-only or gated.
+
+    .. warning::
+        
+        Discord said that they won't verify bots who gives access to embedded activities.
+
+        Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321.
 
     .. versionadded:: 2.0
 
@@ -3496,9 +3551,9 @@ AuditLogDiff
 
     .. attribute:: privacy_level
 
-        The privacy level of the stage instance.
+        The privacy level of the stage instance or scheduled event.
 
-        :type: :class:`StagePrivacyLevel`
+        :type: :class:`StagePrivacyLevel` or :class:`ScheduledEventPrivacyLevel`
 
     .. attribute:: roles
 
