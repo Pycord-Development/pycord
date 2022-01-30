@@ -419,7 +419,9 @@ class Paginator(discord.ui.View):
             The page content to show after canceling the paginator.
         """
         for item in self.children:
-            if item not in self.custom_view_items or include_custom:
+            if include_custom:
+                self.clear_items()
+            elif item not in self.custom_view_items:
                 self.remove_item(item)
         await self.message.edit(
             content=page if isinstance(page, str) else None,
