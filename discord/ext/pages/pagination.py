@@ -273,6 +273,7 @@ class Paginator(discord.ui.View):
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view = custom_view
+        self.custom_view_items = []
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
         if self.custom_buttons and not self.use_default_buttons:
@@ -382,7 +383,7 @@ class Paginator(discord.ui.View):
     async def disable(self) -> None:
         """Stops the paginator, disabling all of its components. Does not disable components added via custom views."""
         for item in self.children:
-            if isinstance(item, (PaginatorButton, PaginatorMenu)):
+            if item not in self.custom_view_items:
                 item.disabled = True
         await self.message.edit(view=self)
 
@@ -565,6 +566,7 @@ class Paginator(discord.ui.View):
         # The bot developer should handle row assignments for their view before passing it to Paginator
         if self.custom_view:
             for item in self.custom_view.children:
+                self.custom_view_items.append(item)
                 self.add_item(item)
 
         return self.buttons
