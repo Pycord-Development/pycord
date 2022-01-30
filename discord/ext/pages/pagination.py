@@ -380,12 +380,52 @@ class Paginator(discord.ui.View):
                 item.disabled = True
             await self.message.edit(view=self)
 
-    async def disable(self) -> None:
-        """Stops the paginator, disabling all of its components. Does not disable components added via custom views."""
+    async def disable(
+        self,
+        include_custom: bool = False,
+        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+    ) -> None:
+        """Stops the paginator, disabling all of its components.
+
+        Parameters
+        ----------
+        include_custom: :class:`bool`
+            Whether to disable components added via custom views.
+        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+            The page content to show after disabling the paginator.
+        """
         for item in self.children:
-            if item not in self.custom_view_items:
+            if item not in self.custom_view_items or include_custom:
                 item.disabled = True
-        await self.message.edit(view=self)
+
+        await self.message.edit(
+            content=page if isinstance(page, str) else None,
+            embeds=[] if isinstance(page, str) else page,
+            view=self,
+        )
+
+    async def cancel(
+        self,
+        include_custom: bool = False,
+        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+    ) -> None:
+        """Cancels the paginator, removing all of its components from the message.
+
+        Parameters
+        ----------
+        include_custom: :class:`bool`
+            Whether to remove components added via custom views.
+        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+            The page content to show after canceling the paginator.
+        """
+        for item in self.children:
+            if item not in self.custom_view_items or include_custom:
+                self.remove_item(item)
+        await self.message.edit(
+            content=page if isinstance(page, str) else None,
+            embeds=[] if isinstance(page, str) else page,
+            view=self,
+        )
 
     async def goto_page(self, page_number=0) -> discord.Message:
         """Updates the paginator message to show the specified page number.
