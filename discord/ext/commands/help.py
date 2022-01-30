@@ -44,6 +44,7 @@ __all__ = (
     'HelpCommand',
     'DefaultHelpCommand',
     'MinimalHelpCommand',
+    'EmbeddedHelpCommand',
 )
 
 # help -> shows info of bot on top/bottom and lists subcommands
@@ -1340,3 +1341,170 @@ class MinimalHelpCommand(HelpCommand):
         self.add_command_formatting(command)
         self.paginator.close_page()
         await self.send_pages()
+
+        
+class EmbeddedHelpCommand(commands.HelpCommand):
+    """The implementation of the embedded help command.
+    
+    This inherits from :class:`HelpCommand`
+    
+    It extends it by formatting prefixed command help data into a more attractive embeded form.
+    """
+
+    def __init__(self):
+        super().__init__()
+    
+    async def send_bot_help(self, mapping):
+        ctx = self.context
+        bot = self.context.bot
+        
+        # Sort commands by their parent cog
+        cog_command_mapping = {}
+        for cmd in bot.commands:
+            if cmd.hidden == True:
+                continue
+            if cmd.cog:
+                cog_name = cmd.cog.qualified_name if cmd.cog.qualified_name is not None else "Uncategorized Commands"
+            else:
+                cog_name = "Uncategorized Commands"
+            cog_command_mapping.setdefault(cog_name, [])
+            cog_command_mapping[cog_name].append(cmd)
+
+        # Generate the displayable str that will be shown to the user in the embed
+        def sort_uncategorized_first(c):
+            """Sorts the cogs by alphabetical order. Prioritizes uncategorized commands category.
+            
+            Parameters
+            -----------
+            c: :class:`str`
+                The name of the cog.
+            """
+            if c == "Uncategorized Commands":
+                return 0
+            else:
+                return ord(c[0])
+        em_desc = []
+        for cog_name in sorted(list(cog_command_mapping.keys()), key=sort_uncategorized_first):
+            cmd_disp = []
+            for cmd in cog_command_mapping[cog_name]:
+                indent = "\u200b " * 4
+                cmd_disp.append(
+                    f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
+                )
+            cmd_disp = "\n".join(cmd_disp)
+            em_desc.append(f'**{cog_name}:**\n{cmd_disp}')
+        
+        # Generate and send the embed and add the command help data
+        em = discord.Embed(
+            title=f"__**{ctx.bot.user.display_name}'s Command List**__",
+            description=""
+        )
+        em.description = "\n\n".join(em_desc)
+        em.description = f'{em.description}\n\n'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help <command>` for more info on a command.'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help <category>` for more info on a category.'
+        await ctx.send(embeds=[em])
+
+    async def send_command_help(self, command: commands.Command):
+        # Create the section of the embed showing the description
+        if command.description != "":
+            desc_text = command.description
+        elif command.short_doc != "":
+            desc_text = command.short_doc
+        else:
+            desc_text = "No description provided"
+
+        # Create the section of the embed showing the command usage
+        if command.usage is not None:
+            usage_text = f'Example Usage: `{self.context.prefix}{command.usage}`'
+        else:
+            usage_text = f'Example Usage: `{self.context.prefix}{command.qualified_name} {command.signature}`'
+
+        # Create the section of the embed showing the aliases
+        if command.aliases:
+            alias_text = f'Aliases: `{", ".join(command.aliases)}`'
+        else:
+            alias_text = ""
+
+        # Create and send the embed
+        em = discord.Embed(
+            title=f'__**Command: {command.name.title()}**__',
+            description=f"""
+            **Description:**
+            {desc_text} 
+
+            **More Info:**
+            {usage_text}
+            {alias_text}
+            """
+        )
+        await self.context.send(embeds=[em])
+    
+    async def send_cog_help(self, cog):
+        ctx = self.context
+        cog_cmds = cog.get_commands()
+
+        # Sort the commands and groups
+        cmds = ["**Commands:**"]
+        groups = ["**Command Groups:**"]
+        indent = "\u200b " * 4
+        for cmd in cog_cmds:
+            if not isinstance(cmd, commands.Command):
+                continue
+            if cmd.hidden == True:
+                continue
+            if isinstance(cmd, commands.Group):
+                groups.append(
+                    f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
+                )
+            else:
+                cmds.append(
+                    f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
+                )
+        
+        # Create and send the embed
+        em = discord.Embed(
+            title=f'{cog_cmds[0].cog.qualified_name.title()} Command List',
+            description=""
+        )
+        em_desc = []
+        em_desc = cmds + [""] + groups
+        em.description = "\n".join(em_desc)
+        em.description = f'{em.description}\n\n'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help <command>` for more info on a command.'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help <group>` for more info on a group.'
+        await self.context.send(embeds=[em])
+    
+    async def send_group_help(self, group):
+        ctx = self.context
+        
+        # Sort the subcommands and subgroups
+        cmds = [f'**Subcommands:**']
+        groups = [f'**Subgroups:**']
+        indent = "\u200b " * 4
+        for cmd in group.commands:
+            if isinstance(cmd, commands.Group):
+                groups.append(
+                    f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
+                )
+            else:
+                cmds.append(
+                    f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
+                )
+        if len(cmds) < 2:
+            cmds.append(f"{indent}None")
+        if len(groups) < 2:
+            groups.append(f"{indent}None")
+        
+        # Create and send the embed
+        em = discord.Embed(
+            title=f'__**Command Group: {group.name.title()}**__',
+            description=""
+        )
+        em_desc = []
+        em_desc = cmds + [""] + groups
+        em.description = "\n".join(em_desc)
+        em.description = f'{em.description}\n\n'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help {group.qualified_name} <subcommand>` for more info on a subcommand.'
+        em.description = f'{em.description}\nType `{ctx.clean_prefix}help {group.qualified_name} <subgroup>` for more info on a subgroup.'
+        await ctx.send(embeds=[em])        
