@@ -379,6 +379,13 @@ class Paginator(discord.ui.View):
                 item.disabled = True
             await self.message.edit(view=self)
 
+    async def stop(self) -> None:
+        """Stops the paginator, disabling all of its components. Does not disable components added via custom views."""
+        for item in self.children:
+            if isinstance(item, (PaginatorButton, PaginatorMenu)):
+                item.disabled = True
+        await self.message.edit(view=self)
+
     async def goto_page(self, page_number=0) -> discord.Message:
         """Updates the paginator message to show the specified page number.
 
