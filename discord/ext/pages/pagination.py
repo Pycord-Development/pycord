@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import copy
 from typing import Dict, List, Optional, Union
 
 import discord
@@ -397,12 +398,14 @@ class Paginator(discord.ui.View):
         for item in self.children:
             if item not in self.custom_view_items or include_custom:
                 item.disabled = True
-
-        await self.message.edit(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
-            view=self,
-        )
+        if page:
+            await self.message.edit(
+                content=page if isinstance(page, str) else None,
+                embeds=[] if isinstance(page, str) else page,
+                view=self,
+            )
+        else:
+            await self.message.edit(view=self)
 
     async def cancel(
         self,
@@ -418,16 +421,18 @@ class Paginator(discord.ui.View):
         page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
             The page content to show after canceling the paginator.
         """
-        for item in self.children:
-            if include_custom:
-                self.clear_items()
-            elif item not in self.custom_view_items:
+        items = copy.copy(self.children)
+        for item in items:
+            if item not in self.custom_view_items or include_custom:
                 self.remove_item(item)
-        await self.message.edit(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
-            view=self,
-        )
+        if page:
+            await self.message.edit(
+                content=page if isinstance(page, str) else None,
+                embeds=[] if isinstance(page, str) else page,
+                view=self,
+            )
+        else:
+            await self.message.edit(view=self)
 
     async def goto_page(self, page_number=0) -> discord.Message:
         """Updates the paginator message to show the specified page number.
