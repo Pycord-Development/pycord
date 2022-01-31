@@ -140,6 +140,28 @@ class PageTest(commands.Cog):
         )
         await paginator.respond(ctx.interaction, ephemeral=False)
 
+    @pagetest.command(name="emoji_buttons")
+    async def pagetest_emoji_buttons(self, ctx: discord.ApplicationContext):
+        """Demonstrates using emojis for the paginator buttons instead of labels."""
+        page_buttons = [
+            pages.PaginatorButton("first", emoji="⏪", style=discord.ButtonStyle.green),
+            pages.PaginatorButton("prev", emoji="⬅", style=discord.ButtonStyle.green),
+            pages.PaginatorButton(
+                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
+            ),
+            pages.PaginatorButton("next", emoji="➡", style=discord.ButtonStyle.green),
+            pages.PaginatorButton("last", emoji="⏩", style=discord.ButtonStyle.green),
+        ]
+        paginator = pages.Paginator(
+            pages=self.get_pages(),
+            show_disabled=True,
+            show_indicator=True,
+            use_default_buttons=False,
+            custom_buttons=page_buttons,
+            loop_pages=True,
+        )
+        await paginator.respond(ctx.interaction, ephemeral=False)
+
     @pagetest.command(name="custom_view")
     async def pagetest_custom_view(self, ctx: discord.ApplicationContext):
         """Demonstrates passing a custom view to the paginator."""

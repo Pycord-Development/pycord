@@ -3,7 +3,7 @@
 .. _discord-intro:
 
 Creating a Bot Account
-========================
+======================
 
 In order to work with the library and the Discord API in general, we must first create a Discord Bot account.
 
@@ -57,7 +57,7 @@ And that's it. You now have a bot account and you can login with that token.
 .. _discord_invite_bot:
 
 Inviting Your Bot
--------------------
+-----------------
 
 So you've made a Bot User but it's not actually in any server.
 

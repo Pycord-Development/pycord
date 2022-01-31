@@ -29,7 +29,7 @@ import datetime
 import re
 import io
 from os import PathLike
-from typing import Dict, TYPE_CHECKING, Union, List, Optional, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
+from typing import Dict, TYPE_CHECKING, Union, List, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type, Sequence
 
 from . import utils
 from .reaction import Reaction
@@ -611,6 +611,8 @@ class Message(Hashable):
         .. versionadded:: 2.0
     guild: Optional[:class:`Guild`]
         The guild that the message belongs to, if applicable.
+    interaction: Optional[:class:`MessageInteraction`]
+        The interaction associated with the message, if applicable.
     """
 
     __slots__ = (
@@ -644,6 +646,7 @@ class Message(Hashable):
         'stickers',
         'components',
         'guild',
+        'interaction',
     )
 
     if TYPE_CHECKING:
@@ -710,6 +713,13 @@ class Message(Hashable):
 
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
+
+        from .interactions import MessageInteraction
+        self.interaction: Optional[MessageInteraction]
+        try:
+            self.interaction = MessageInteraction(data=data['interaction'], state=state)
+        except KeyError:
+            self.interaction = None
 
         for handler in ('author', 'member', 'mentions', 'mention_roles'):
             try:

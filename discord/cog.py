@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-2021 Rapptz
+Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -250,6 +251,7 @@ class Cog(metaclass=CogMeta):
                 This does not include subcommands.
         """
         return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
+
     @property
     def qualified_name(self) -> str:
         """:class:`str`: Returns the cog's specified name, not the class name."""
@@ -610,11 +612,17 @@ class CogMixin:
                 self.remove_cog(cogname)
 
         # remove all the commands from the module
-        for cmd in self.all_commands.copy().values():
+        if self._supports_prefixed_commands:
+            for cmd in self.prefixed_commands.copy().values():
+                if cmd.module is not None and _is_submodule(name, cmd.module):
+                    # if isinstance(cmd, GroupMixin):
+                    #     cmd.recursively_remove_all_commands()
+                    self.remove_command(cmd.name)
+        for cmd in self._application_commands.copy().values():
             if cmd.module is not None and _is_submodule(name, cmd.module):
                 # if isinstance(cmd, GroupMixin):
                 #     cmd.recursively_remove_all_commands()
-                self.remove_command(cmd.name)
+                self.remove_application_command(cmd)
 
         # remove all the listeners from the module
         for event_list in self.extra_events.copy().values():

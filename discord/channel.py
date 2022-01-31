@@ -97,7 +97,7 @@ async def _single_delete_strategy(messages: Iterable[Message]):
 
 
 class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
-    """Represents a Discord guild text channel.
+    """Represents a Discord text channel.
 
     .. container:: operations
 
@@ -239,7 +239,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         return self.nsfw
 
     def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news channel."""
+        """:class:`bool`: Checks if the channel is a news/anouncements channel."""
         return self._type == ChannelType.news.value
 
     @property

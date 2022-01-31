@@ -250,7 +250,16 @@ class Asset(AssetMixin):
             state,
             url=f'{cls.BASE}/banners/{user_id}/{banner_hash}.{format}?size=512',
             key=banner_hash,
-            animated=animated
+            animated=animated,
+        )
+
+    @classmethod
+    def _from_scheduled_event_cover(cls, state, event_id: int, cover_hash: str) -> Asset:
+        return cls(
+            state,
+            url=f"{cls.BASE}/guild-events/{event_id}/{cover_hash}.png",
+            key=cover_hash,
+            animated=False,
         )
 
     def __str__(self) -> str:
@@ -376,7 +385,7 @@ class Asset(AssetMixin):
         Raises
         -------
         InvalidArgument
-            The asset had an invalid format.
+            The asset has an invalid format.
 
         Returns
         --------
