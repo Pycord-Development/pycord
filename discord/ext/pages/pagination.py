@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import copy
 from typing import Dict, List, Optional, Union
 
 import discord
@@ -274,7 +273,6 @@ class Paginator(discord.ui.View):
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view = custom_view
-        self.custom_view_items = []
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
         if self.custom_buttons and not self.use_default_buttons:
@@ -395,6 +393,7 @@ class Paginator(discord.ui.View):
         page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
             The page content to show after disabling the paginator.
         """
+        page = self.get_page_content(page)
         for item in self.children:
             if item not in self.custom_view_items or include_custom:
                 item.disabled = True
@@ -421,9 +420,10 @@ class Paginator(discord.ui.View):
         page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
             The page content to show after canceling the paginator.
         """
-        items = copy.copy(self.children)
+        items = self.children.copy()
+        page = self.get_page_content(page)
         for item in items:
-            if item not in self.custom_view_items or include_custom:
+            if item not in self.custom_view.children or include_custom:
                 self.remove_item(item)
         if page:
             await self.message.edit(
@@ -613,9 +613,7 @@ class Paginator(discord.ui.View):
         # The bot developer should handle row assignments for their view before passing it to Paginator
         if self.custom_view:
             for item in self.custom_view.children:
-                self.custom_view_items.append(item)
                 self.add_item(item)
-
         return self.buttons
 
     @staticmethod
