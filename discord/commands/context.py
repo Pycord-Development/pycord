@@ -27,25 +27,31 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, TypeVar, Union
 
 import discord.abc
+from discord.interactions import InteractionMessage
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     import discord
-    from discord import Bot
-    from discord.state import ConnectionState
+    from .. import Bot
+    from ..state import ConnectionState
+    from ..voice_client import VoiceProtocol
 
     from .core import ApplicationCommand, Option
+    from ..interactions import Interaction, InteractionResponse, InteractionChannel
+    from ..guild import Guild
+    from ..member import Member
+    from ..message import Message
+    from ..user import User
+    from ..client import ClientUser
+    from discord.webhook.async_ import Webhook
+
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    from typing import Callable
+    
+    from typing import Callable, Awaitable
 
-from ..guild import Guild
-from ..interactions import Interaction, InteractionResponse
-from ..member import Member
-from ..message import Message
-from ..user import User
-from ..utils import cached_property
+from ..utils import _cached_property as cached_property
 
 T = TypeVar('T')
 CogT = TypeVar('CogT', bound="Cog")
@@ -88,8 +94,8 @@ class ApplicationContext(discord.abc.Messageable):
 
         self._state: ConnectionState = self.interaction._state
 
-    async def _get_channel(self) -> discord.abc.Messageable:
-        return self.channel
+    async def _get_channel(self) -> Optional[InteractionChannel]:
+        return self.interaction.channel
 
     async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
@@ -118,7 +124,7 @@ class ApplicationContext(discord.abc.Messageable):
         return await command(self, *args, **kwargs)
 
     @cached_property
-    def channel(self):
+    def channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
     @cached_property
@@ -142,8 +148,8 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.guild_locale
 
     @cached_property
-    def me(self) -> Union[Member, User]:
-        return self.guild.me if self.guild is not None else self.bot.user
+    def me(self) -> Optional[Union[Member, ClientUser]]:
+        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Optional[Message]:
@@ -153,33 +159,31 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
-    @cached_property
-    def author(self) -> Optional[Union[Member, User]]:
-        return self.user
+    author = user
 
     @property
-    def voice_client(self):
-        if self.guild is None:
+    def voice_client(self) -> Optional[VoiceProtocol]:
+        if self.interaction.guild is None:
             return None
 
-        return self.guild.voice_client
+        return self.interaction.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
 
     @property
-    def respond(self) -> Callable[..., Union[Interaction, WebhookMessage]]:
+    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
-        if not self.response.is_done():
+        if not self.interaction.response.is_done():
             return self.interaction.response.send_message  # self.response
         else:
             return self.followup.send  # self.send_followup
 
     @property
-    def send_response(self):
-        if not self.response.is_done():
+    def send_response(self) -> Callable[..., Awaitable[Interaction]]:
+        if not self.interaction.response.is_done():
             return self.interaction.response.send_message
         else:
             raise RuntimeError(
@@ -187,8 +191,8 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    def send_followup(self):
-        if self.response.is_done():
+    def send_followup(self) -> Callable[..., Awaitable[WebhookMessage]]:
+        if self.interaction.response.is_done():
             return self.followup.send
         else:
             raise RuntimeError(
@@ -196,23 +200,23 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    def defer(self):
+    def defer(self) -> Callable[..., Awaitable[None]]:
         return self.interaction.response.defer
 
     @property
-    def followup(self):
+    def followup(self) -> Webhook:
         return self.interaction.followup
 
     async def delete(self):
         """Calls :attr:`~discord.commands.ApplicationContext.respond`.
         If the response is done, then calls :attr:`~discord.commands.ApplicationContext.respond` first."""
-        if not self.response.is_done():
+        if not self.interaction.response.is_done():
             await self.defer()
 
         return await self.interaction.delete_original_message()
 
     @property
-    def edit(self):
+    def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_message
 
     @property
@@ -249,7 +253,7 @@ class AutocompleteContext:
 
     __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
 
-    def __init__(self, bot: Bot, interaction: Interaction) -> None:
+    def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
 
