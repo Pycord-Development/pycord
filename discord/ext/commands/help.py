@@ -1343,7 +1343,7 @@ class MinimalHelpCommand(HelpCommand):
         await self.send_pages()
 
         
-class EmbeddedHelpCommand(commands.HelpCommand):
+class EmbeddedHelpCommand(HelpCommand):
     """The implementation of the embedded help command.
     
     This inherits from :class:`HelpCommand`
@@ -1405,7 +1405,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         em.description = f'{em.description}\nType `{ctx.clean_prefix}help <category>` for more info on a category.'
         await ctx.send(embeds=[em])
 
-    async def send_command_help(self, command: commands.Command):
+    async def send_command_help(self, command):
         # Create the section of the embed showing the description
         if command.description != "":
             desc_text = command.description
@@ -1449,11 +1449,11 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         groups = ["**Command Groups:**"]
         indent = "\u200b " * 4
         for cmd in cog_cmds:
-            if not isinstance(cmd, commands.Command):
+            if not isinstance(cmd, Command):
                 continue
             if cmd.hidden == True:
                 continue
-            if isinstance(cmd, commands.Group):
+            if isinstance(cmd, Group):
                 groups.append(
                     f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
                 )
@@ -1483,7 +1483,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         groups = [f'**Subgroups:**']
         indent = "\u200b " * 4
         for cmd in group.commands:
-            if isinstance(cmd, commands.Group):
+            if isinstance(cmd, Group):
                 groups.append(
                     f'{indent}__{cmd.name.title()}__{": " + cmd.short_doc if cmd.short_doc != "" else cmd.short_doc}'
                 )
