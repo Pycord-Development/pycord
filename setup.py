@@ -1,4 +1,5 @@
 import re
+
 from setuptools import setup
 
 # Requirements
@@ -93,7 +94,7 @@ setup(
     extras_require=extras_require,
     python_requires=">=3.8.0",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
