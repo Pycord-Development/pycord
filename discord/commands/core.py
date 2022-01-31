@@ -590,7 +590,10 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 #option = str
                 continue
-            type_hint_val = next(value_itr)
+            try:
+                type_hint_val = next(value_itr)
+            except StopIteration:
+                pass
             
             if not isinstance(option, Option):
                 #option = Option(option, "No description provided")
@@ -600,6 +603,9 @@ class SlashCommand(ApplicationCommand):
             
             if p_name.lower() == type_hint_val[0].lower():
                 p_type = type_hint_val[1]
+            else:
+                if not (p_name.lower() in actual_type_hints):
+                    p_type = str
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
