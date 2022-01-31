@@ -1348,7 +1348,7 @@ class EmbeddedHelpCommand(HelpCommand):
     
     This inherits from :class:`HelpCommand`
     
-    It extends it by formatting prefixed command help data into a more attractive embeded form.
+    It extends it by formatting prefixed command help data into a more attractive embedded form.
     """
 
     def __init__(self):
