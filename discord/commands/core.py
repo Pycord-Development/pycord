@@ -605,6 +605,7 @@ class SlashCommand(ApplicationCommand):
             self.default_permission = False
 
     def _parse_options(self, params) -> List[Option]:
+        # check for 'self' in the parameters
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -618,12 +619,22 @@ class SlashCommand(ApplicationCommand):
             raise ClientException(
                 f'Callback for {self.name} command is missing "ctx" parameter.'
             )
-
         actual_type_hints = get_type_hints(self.callback)
-        if list(actual_type_hints.items())[0][0] == "ctx":
-            temp = list(actual_type_hints.items())
-            temp.pop(0)
-            actual_type_hints = dict(temp)
+
+        # checks for 'self' parameter in type hints
+        if self.parent or self.cog:
+            parent_check: bool = list(actual_type_hints.items())[0][1] == self.parent
+            cog_check: bool = list(actual_type_hints.items())[0][1] == self.cog
+            if cog_check or parent_check:
+                temp = list(actual_type_hints.items())
+                temp.pop(0)
+                actual_type_hints = dict(temp)
+
+	# checks for 'ctx' parameter in type hints
+        if list(actual_type_hints.items())[0][1] == ApplicationContext:
+                temp = list(actual_type_hints.items())
+                temp.pop(0)
+                actual_type_hints = dict(temp)
         value_itr = iter(actual_type_hints.items())
 
         final_options = []
