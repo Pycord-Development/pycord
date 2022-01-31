@@ -45,31 +45,32 @@ from typing import (
 from .client import Client
 from .cog import CogMixin
 from .commands import (
-    SlashCommand,
-    SlashCommandGroup,
-    MessageCommand,
-    UserCommand,
     ApplicationCommand,
     ApplicationContext,
     AutocompleteContext,
+    MessageCommand,
+    SlashCommand,
+    SlashCommandGroup,
+    UserCommand,
     command,
 )
 from .commands.errors import CheckFailure
-from .errors import Forbidden, DiscordException
+from .enums import InteractionType
+from .errors import DiscordException, Forbidden
 from .interactions import Interaction
 from .shard import AutoShardedClient
-from .utils import MISSING, get, find, async_all
-from .enums import InteractionType
 from .user import User
+from .utils import MISSING, async_all, find, get
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
-CFT = TypeVar('CFT', bound=CoroFunc)
+CFT = TypeVar("CFT", bound=CoroFunc)
 
 __all__ = (
-    'ApplicationCommandMixin',
-    'Bot',
-    'AutoShardedBot',
+    "ApplicationCommandMixin",
+    "Bot",
+    "AutoShardedBot",
 )
+
 
 class ApplicationCommandMixin:
     """A mixin that implements common functionality for classes that need
@@ -165,10 +166,10 @@ class ApplicationCommandMixin:
     @property
     def get_command(self):
         """Shortcut for :meth:`.get_application_command`.
-        
+
         .. note::
             Overridden in :class:`ext.commands.Bot`.
-        
+
         .. versionadded:: 2.0
         """
         # TODO: Do something like we did in self.commands for this
@@ -201,10 +202,7 @@ class ApplicationCommandMixin:
         """
 
         for command in self._application_commands.values():
-            if (
-                command.name == name
-                and isinstance(command, type)
-            ):
+            if command.name == name and isinstance(command, type):
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
                 return command
@@ -247,14 +245,14 @@ class ApplicationCommandMixin:
         registered_commands = await self.http.get_global_commands(self.user.id)
         # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
         # We can therefore safely use the name of the command in our global slash commands as a unique identifier
-        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
+        registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
         global_pending_application_commands_dict = {}
-        
+
         for command in [
             cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
         ]:
             as_dict = command.to_dict()
-            
+
             global_pending_application_commands_dict[command.name] = as_dict
             if command.name in registered_commands_dict:
                 match = registered_commands_dict[command.name]
@@ -265,9 +263,20 @@ class ApplicationCommandMixin:
             if match:
                 as_dict["id"] = match["id"]
 
-                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
+                keys_to_check = {
+                    "default_permission": True,
+                    "name": True,
+                    "description": True,
+                    "options": [
+                        "type",
+                        "name",
+                        "description",
+                        "autocomplete",
+                        "choices",
+                    ],
+                }
                 for key, more_keys in {
-                    key:more_keys
+                    key: more_keys
                     for key, more_keys in keys_to_check.items()
                     if key in as_dict.keys()
                     if key in match.keys()
@@ -280,12 +289,16 @@ class ApplicationCommandMixin:
                                 pendingVal = None
                                 if key2 in option_dict.keys():
                                     pendingVal = option_dict[key2]
-                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                    if (
+                                        pendingVal == False or pendingVal == []
+                                    ):  # Registered commands are not available if choices is an empty array or if autocomplete is false
                                         pendingVal = None
                                 matchVal = None
                                 if key2 in match[key][i].keys():
                                     matchVal = match[key][i][key2]
-                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
+                                    if (
+                                        matchVal == False or matchVal == []
+                                    ):  # Registered commands are not available if choices is an empty array or if autocomplete is false
                                         matchVal = None
 
                                 if pendingVal != matchVal:
@@ -300,14 +313,16 @@ class ApplicationCommandMixin:
                 needs_bulk = True
 
             commands_to_bulk.append(as_dict)
-        
+
         for name, command in registered_commands_dict.items():
             if not name in global_pending_application_commands_dict.keys():
                 # When a registered global command is not available in the pending global commands
                 needs_bulk = True
-    
+
         if needs_bulk:
-            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+            commands = await self.http.bulk_upsert_global_commands(
+                self.user.id, commands_to_bulk
+            )
         else:
             commands = registered_commands
 
@@ -323,7 +338,9 @@ class ApplicationCommandMixin:
                 self._application_commands[cmd.id] = cmd
 
                 # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
+                global_permissions.append(
+                    {"id": i["id"], "permissions": cmd.permissions}
+                )
 
         update_guild_commands = {}
         async for guild in self.fetch_guilds(limit=None):
@@ -353,7 +370,12 @@ class ApplicationCommandMixin:
                 raise
             else:
                 for i in commands:
-                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+                    cmd = find(
+                        lambda cmd: cmd.name == i["name"]
+                        and cmd.type == i["type"]
+                        and int(i["guild_id"]) in cmd.guild_ids,
+                        self.pending_application_commands,
+                    )
                     cmd.id = i["id"]
                     self._application_commands[cmd.id] = cmd
 
@@ -446,7 +468,9 @@ class ApplicationCommandMixin:
                     if len(new_cmd_perm["permissions"]) > 10:
                         print(
                             "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self._application_commands[new_cmd_perm["id"]].name,
+                                name=self._application_commands[
+                                    new_cmd_perm["id"]
+                                ].name,
                                 guild_id=guild_id,
                             )
                         )
@@ -490,8 +514,8 @@ class ApplicationCommandMixin:
             The interaction to process
         """
         if interaction.type not in (
-            InteractionType.application_command, 
-            InteractionType.auto_complete
+            InteractionType.application_command,
+            InteractionType.auto_complete,
         ):
             return
 
@@ -511,7 +535,7 @@ class ApplicationCommandMixin:
             ctx = await self.get_autocomplete_context(interaction)
             ctx.command = command
             return await command.invoke_autocomplete_callback(ctx)
-        
+
         ctx = await self.get_application_context(interaction)
         ctx.command = command
         self.dispatch("application_command", ctx)
@@ -664,17 +688,20 @@ class ApplicationCommandMixin:
         Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
             The slash command group that was created.
         """
+
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
                 name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
-                    if cls.__doc__ is not None else "No description provided"
+                    if cls.__doc__ is not None
+                    else "No description provided"
                 ),
-                guild_ids=guild_ids
+                guild_ids=guild_ids,
             )
             self.add_application_command(group)
             return group
+
         return inner
 
     slash_group = group
@@ -753,7 +780,6 @@ class ApplicationCommandMixin:
         return cls(self, interaction)
 
 
-
 class BotBase(ApplicationCommandMixin, CogMixin):
     _supports_prefixed_commands = False
     # TODO I think
@@ -807,7 +833,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         This only fires if you do not specify any listeners for command error.
         """
-        if self.extra_events.get('on_application_command_error', None):
+        if self.extra_events.get("on_application_command_error", None):
             return
 
         command = context.command
@@ -955,7 +981,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         name = func.__name__ if name is MISSING else name
 
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Listeners must be coroutines')
+            raise TypeError("Listeners must be coroutines")
 
         if name in self.extra_events:
             self.extra_events[name].append(func)
@@ -1021,7 +1047,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     def dispatch(self, event_name: str, *args: Any, **kwargs: Any) -> None:
         # super() will resolve to Client
         super().dispatch(event_name, *args, **kwargs)  # type: ignore
-        ev = 'on_' + event_name
+        ev = f"on_{event_name}"
         for event in self.extra_events.get(ev, []):
             self._schedule_event(event, ev, *args, **kwargs)  # type: ignore
 
@@ -1153,7 +1179,7 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-           
+
     debug_guilds: Optional[List[:class:`int`]]
         Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
         The bot will not create any global commands if a debug_guilds is passed.

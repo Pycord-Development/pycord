@@ -9,18 +9,18 @@ A basic wrapper for the Discord API.
 
 """
 
-__title__ = 'discord'
-__author__ = 'Pycord Development'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development'
-__version__ = '2.0.0b'
+__title__ = "discord"
+__author__ = "Pycord Development"
+__license__ = "MIT"
+__copyright__ = "Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development"
+__version__ = "2.0.0b"
 
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+__path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
 import logging
-from typing import NamedTuple, Literal
+from typing import Literal, NamedTuple
 
-from . import utils, opus, abc, ui
+from . import abc, opus, ui, utils
 from .activity import *
 from .appinfo import *
 from .asset import *
@@ -74,6 +74,8 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel='beta', serial=1)
+version_info: VersionInfo = VersionInfo(
+    major=2, minor=0, micro=0, releaselevel="beta", serial=1
+)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

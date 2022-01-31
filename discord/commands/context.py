@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    
+
     from typing import Callable, Awaitable
 
 from ..utils import _cached_property as cached_property
@@ -155,7 +155,11 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
-        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
+        return (
+            self.interaction.guild.me
+            if self.interaction.guild is not None
+            else self.bot.user
+        )
 
     @cached_property
     def message(self) -> Optional[Message]:
