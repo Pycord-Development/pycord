@@ -61,6 +61,7 @@ class ThreadOption:
     def __name__(self):
         return "ThreadOption"
 
+"""
 def gettype(name: str):
     if "discord." in name:
         name = name.replace("discord.", "")
@@ -111,13 +112,16 @@ def truncate_other_parameters(inp: str):
     matches = findall('\([^)]*\)', inp)
     output = matches[0]
     return output
+"""
 
 class Option:
-    def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
+    #input_type: Any
+    def __init__(self, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
 
+        """
         if isinstance(input_type, str):
             cls_name = self.__class__.__name__
 
@@ -135,11 +139,14 @@ class Option:
             else:
                 input_type = truncate_other_parameters(input_type) 
             input_type = gettype(input_type)
+        """
 
-        self._raw_type = input_type
+        #self._raw_type = input_type
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
+        
+        """
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
@@ -160,6 +167,8 @@ class Option:
                         self.channel_types.append(channel_type)
                 input_type = _type
         self.input_type = input_type
+        """
+
         self.default = kwargs.pop("default", None)
         self.required: bool = (
             kwargs.pop("required", True) if self.default is None else False
@@ -168,7 +177,11 @@ class Option:
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
         ]
+        
+        self._raw_min_value = kwargs.pop("min_value", None)
+        self._raw_max_value = kwargs.pop("max_value", None)
 
+        """
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
         elif self.input_type == SlashCommandOptionType.number:
@@ -191,6 +204,7 @@ class Option:
             raise TypeError(
                 f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"'
             )
+        """
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
