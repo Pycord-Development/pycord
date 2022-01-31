@@ -171,7 +171,9 @@ class PageGroup:
         self.label = label
         self.description = description
         self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
-        self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
+        self.pages: Union[
+            List[str], List[Union[List[discord.Embed], discord.Embed]]
+        ] = pages
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.author_check = author_check
@@ -263,7 +265,9 @@ class Paginator(discord.ui.View):
 
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
-            self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = self.page_groups[0].pages
+            self.pages: Union[
+                List[str], List[Union[List[discord.Embed], discord.Embed]]
+            ] = self.page_groups[0].pages
 
         self.page_count = len(self.pages) - 1
         self.buttons = {}
@@ -337,7 +341,7 @@ class Paginator(discord.ui.View):
         # Update pages and reset current_page to 0 (default)
         self.pages: Union[
             List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
-        ] = pages if pages is not None else self.pages
+        ] = (pages if pages is not None else self.pages)
         self.page_count = len(self.pages) - 1
         self.current_page = 0
         # Apply config changes, if specified
