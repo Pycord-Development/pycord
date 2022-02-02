@@ -61,113 +61,16 @@ class ThreadOption:
     def __name__(self):
         return "ThreadOption"
 
-"""
-def gettype(name: str):
-    if "discord." in name:
-        name = name.replace("discord.", "")
-    return eval(f"{name}", globals(), locals())
-
-def num_of_tuples(inp: str) -> int:
-    quotes: list = []
-    cur_index = 0
-
-    for c in range(len(inp)):
-        if inp[c] == '"':
-            if len(quotes) == 0 or cur_index > len(quotes) - 1:
-                new_list = [c]
-                quotes.append(new_list)
-            elif cur_index == len(quotes) - 1:
-                quotes[cur_index].append(c)
-                cur_index += 1
-        elif inp[c] == "'":
-            if len(quotes) == 0 or cur_index > len(quotes) - 1:
-                new_list = [c]
-                quotes.append(new_list)
-            elif cur_index == len(quotes) - 1:
-                quotes[cur_index].append(c)
-                cur_index += 1
-
-    possible_tuples: list = []
-    cur_index = 0
-    matches = findall('\([^)]*\)', inp)
-
-    cur_quote_index = iter(quotes)
-    for i in range(len(matches)):
-        start_pos = inp.find(matches[i])
-        end_pos = start_pos + len(matches[i]) - 1
-
-        try:
-            cur_quote = next(cur_quote_index)
-            start_quote_pos = cur_quote[0]
-            end_quote_pos = cur_quote[1]
-        except StopIteration:
-            break
-
-        if not (start_quote_pos < start_pos and end_quote_pos > end_pos):
-            possible_tuples.append(matches[i])
-
-    return len(possible_tuples)
-
-def truncate_other_parameters(inp: str):
-    matches = findall('\([^)]*\)', inp)
-    output = matches[0]
-    return output
-"""
-
 class Option:
-    #input_type: Any
     def __init__(self, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
 
-        """
-        if isinstance(input_type, str):
-            cls_name = self.__class__.__name__
-
-            input_type_parted = input_type.partition(cls_name)
-            input_type = input_type_parted[2]
-            input_type = input_type.replace(" ", "")
-
-            input_type = input_type[1:]
-            input_type = input_type[:-1]
-
-            if num_of_tuples(input_type) == 0:
-                comma_pos = input_type.find(",")
-                if comma_pos != -1:
-                    input_type = input_type[:comma_pos]
-            else:
-                input_type = truncate_other_parameters(input_type) 
-            input_type = gettype(input_type)
-        """
-
         #self._raw_type = input_type
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
-        
-        """
-        if not isinstance(input_type, SlashCommandOptionType):
-            if hasattr(input_type, "convert"):
-                self.converter = input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == "GuildChannel":
-                            continue
-                        if isinstance(i, ThreadOption):
-                            self.channel_types.append(i._type)
-                            continue
-
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
-        self.input_type = input_type
-        """
 
         self.default = kwargs.pop("default", None)
         self.required: bool = (
@@ -180,31 +83,6 @@ class Option:
         
         self._raw_min_value = kwargs.pop("min_value", None)
         self._raw_max_value = kwargs.pop("max_value", None)
-
-        """
-        if self.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int, type(None))
-        elif self.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float, type(None))
-        else:
-            minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
-
-        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
-        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-
-        if (
-            not isinstance(self.min_value, minmax_types)
-            and self.min_value is not None
-        ):
-            raise TypeError(
-                f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"'
-            )
-        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
-            raise TypeError(
-                f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"'
-            )
-        """
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
