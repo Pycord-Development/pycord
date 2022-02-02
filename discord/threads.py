@@ -25,15 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Callable, Dict, Iterable, List, Optional, Union, TYPE_CHECKING
-import time
 import asyncio
+import time
+from typing import TYPE_CHECKING, Callable, Dict, Iterable, List, Optional, Union
 
-from .mixins import Hashable
 from .abc import Messageable
 from .enums import ChannelType, try_enum
 from .errors import ClientException
-from .utils import MISSING, parse_time, _get_as_snowflake
+from .mixins import Hashable
+from .utils import MISSING, _get_as_snowflake, parse_time
 
 __all__ = (
     'Thread',
@@ -41,21 +41,19 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from .types.threads import (
-        Thread as ThreadPayload,
-        ThreadMember as ThreadMemberPayload,
-        ThreadMetadata,
-        ThreadArchiveDuration,
-    )
-    from .types.snowflake import SnowflakeList
+    from .abc import Snowflake, SnowflakeTime
+    from .channel import CategoryChannel, TextChannel
     from .guild import Guild
-    from .channel import TextChannel, CategoryChannel
     from .member import Member
     from .message import Message, PartialMessage
-    from .abc import Snowflake, SnowflakeTime
-    from .role import Role
     from .permissions import Permissions
+    from .role import Role
     from .state import ConnectionState
+    from .types.snowflake import SnowflakeList
+    from .types.threads import Thread as ThreadPayload
+    from .types.threads import ThreadArchiveDuration
+    from .types.threads import ThreadMember as ThreadMemberPayload
+    from .types.threads import ThreadMetadata
 
 
 class Thread(Messageable, Hashable):
@@ -270,7 +268,7 @@ class Thread(Messageable, Hashable):
         if parent is None:
             raise ClientException('Parent channel not found')
         return parent.category
-    
+
     @property
     def category_id(self) -> Optional[int]:
         """The category channel ID the parent channel belongs to, if applicable.
@@ -588,7 +586,7 @@ class Thread(Messageable, Hashable):
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
-    
+
     async def archive(self, locked: bool = MISSING) -> Thread:
         """|coro|
 
@@ -598,7 +596,7 @@ class Thread(Messageable, Hashable):
         ------------
         locked: :class:`bool`
             Whether to lock the thread on archive, Defaults to ``False``.
-        
+
 
         Returns
         --------
@@ -606,7 +604,7 @@ class Thread(Messageable, Hashable):
             The updated thread.
         """
         return await self.edit(archived=True, locked=locked)
-    
+
     async def unarchive(self) -> Thread:
         """|coro|
 

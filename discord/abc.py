@@ -25,15 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import copy
 import asyncio
+import copy
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
     List,
     Optional,
-    TYPE_CHECKING,
     Protocol,
     Sequence,
     Tuple,
@@ -43,19 +43,19 @@ from typing import (
     runtime_checkable,
 )
 
-from .scheduled_events import ScheduledEvent
-from .iterators import HistoryIterator
+from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
-from .errors import InvalidArgument, ClientException
+from .errors import ClientException, InvalidArgument
+from .file import File
+from .invite import Invite
+from .iterators import HistoryIterator
 from .mentions import AllowedMentions
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
-from .invite import Invite
-from .file import File
-from .voice_client import VoiceClient, VoiceProtocol
+from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
-from . import utils
+from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
     'Snowflake',
@@ -72,25 +72,28 @@ T = TypeVar('T', bound=VoiceProtocol)
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from .client import Client
-    from .user import ClientUser
     from .asset import Asset
-    from .state import ConnectionState
+    from .channel import (
+        CategoryChannel,
+        DMChannel,
+        GroupChannel,
+        PartialMessageable,
+        TextChannel,
+    )
+    from .client import Client
+    from .embeds import Embed
+    from .enums import InviteTarget
     from .guild import Guild
     from .member import Member
-    from .channel import CategoryChannel
-    from .embeds import Embed
     from .message import Message, MessageReference, PartialMessage
-    from .channel import TextChannel, DMChannel, GroupChannel, PartialMessageable
+    from .state import ConnectionState
     from .threads import Thread
-    from .enums import InviteTarget
+    from .types.channel import Channel as ChannelPayload
+    from .types.channel import GuildChannel as GuildChannelPayload
+    from .types.channel import OverwriteType
+    from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
-    from .types.channel import (
-        PermissionOverwrite as PermissionOverwritePayload,
-        Channel as ChannelPayload,
-        GuildChannel as GuildChannelPayload,
-        OverwriteType,
-    )
+    from .user import ClientUser
 
     PartialMessageableChannel = Union[TextChannel, Thread, DMChannel, PartialMessageable]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
@@ -1544,7 +1547,7 @@ class Messageable:
         state = self._state
         data = await state.http.pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
-    
+
     def can_send(self, *objects) -> bool:
         """Returns a :class:`bool` indicating whether you have the permissions to send the object(s).
 
@@ -1573,7 +1576,7 @@ class Messageable:
         else:
             return True # Permissions don't exist for User DMs
 
-        
+
         objects = (None, ) + objects # Makes sure we check for send_messages first
 
         for obj in objects:
@@ -1582,7 +1585,7 @@ class Messageable:
                     permission = mapping['Message']
                 else:
                     permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
-                
+
                 if type(obj).__name__ == 'Emoji':
                     if obj._to_partial().is_unicode_emoji or obj.guild_id == channel.guild.id:
                         continue
@@ -1596,7 +1599,7 @@ class Messageable:
             if not getattr(channel.permissions_for(channel.guild.me), permission):
                 return False
 
-        return True 
+        return True
 
     def history(
         self,

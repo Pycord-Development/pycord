@@ -1,6 +1,6 @@
 """
 This init file will be called in bot.py before or after of cog import.
-client: <discord.Bot> or <commands.Bot> should be present for the last method defined here 
+client: <discord.Bot> or <commands.Bot> should be present for the last method defined here
 for <client.add_application_command> method.
 
 do note that the client.add_application_command should only be called in only one method and that method

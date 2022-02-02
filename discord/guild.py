@@ -28,58 +28,57 @@ from __future__ import annotations
 import copy
 import unicodedata
 from typing import (
+    TYPE_CHECKING,
     Any,
     ClassVar,
     Dict,
     List,
+    Literal,
     NamedTuple,
+    Optional,
     Sequence,
     Set,
-    Literal,
-    Optional,
-    TYPE_CHECKING,
     Tuple,
     Union,
     overload,
 )
 
-from . import utils, abc
-from .role import Role
-from .member import Member, VoiceState
-from .emoji import Emoji
-from .errors import InvalidData
-from .permissions import PermissionOverwrite
-from .colour import Colour
-from .errors import InvalidArgument, ClientException
+from . import abc, utils
+from .asset import Asset
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
+from .colour import Colour
+from .emoji import Emoji
 from .enums import (
     AuditLogAction,
-    VideoQualityMode,
-    VoiceRegion,
     ChannelType,
-    try_enum,
-    VerificationLevel,
     ContentFilter,
     NotificationLevel,
     NSFWLevel,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
+    VerificationLevel,
+    VideoQualityMode,
+    VoiceRegion,
+    try_enum,
 )
-from .mixins import Hashable
-from .user import User
-from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator
-from .widget import Widget
-from .asset import Asset
+from .errors import ClientException, InvalidArgument, InvalidData
+from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
-from .stage_instance import StageInstance
-from .threads import Thread, ThreadMember
-from .sticker import GuildSticker
-from .file import File
-from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+from .invite import Invite
+from .iterators import AuditLogIterator, MemberIterator
+from .member import Member, VoiceState
+from .mixins import Hashable
+from .permissions import PermissionOverwrite
+from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .stage_instance import StageInstance
+from .sticker import GuildSticker
+from .threads import Thread, ThreadMember
+from .user import User
+from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
+from .widget import Widget
 
 __all__ = (
     'Guild',
@@ -88,20 +87,26 @@ __all__ = (
 MISSING = utils.MISSING
 
 if TYPE_CHECKING:
-    from .abc import Snowflake, SnowflakeTime
-    from .types.guild import Ban as BanPayload, Guild as GuildPayload, MFALevel, GuildFeature
-    from .types.threads import (
-        Thread as ThreadPayload,
-    )
-    from .types.voice import GuildVoiceState
-    from .permissions import Permissions
-    from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel
-    from .template import Template
-    from .webhook import Webhook
-    from .state import ConnectionState
-    from .voice_client import VoiceProtocol
-
     import datetime
+
+    from .abc import Snowflake, SnowflakeTime
+    from .channel import (
+        CategoryChannel,
+        StageChannel,
+        StoreChannel,
+        TextChannel,
+        VoiceChannel,
+    )
+    from .permissions import Permissions
+    from .state import ConnectionState
+    from .template import Template
+    from .types.guild import Ban as BanPayload
+    from .types.guild import Guild as GuildPayload
+    from .types.guild import GuildFeature, MFALevel
+    from .types.threads import Thread as ThreadPayload
+    from .types.voice import GuildVoiceState
+    from .voice_client import VoiceProtocol
+    from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
     GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel]
@@ -245,7 +250,7 @@ class Guild(Hashable):
         The number of "boosts" this guild currently has.
     premium_progress_bar_enabled: :class:`bool`
         Indicates if the guild has premium progress bar enabled.
-        
+
         .. versionadded:: 2.0
     preferred_locale: Optional[:class:`str`]
         The preferred locale for the guild. Used when filtering Server Discovery
@@ -1501,7 +1506,7 @@ class Guild(Hashable):
             guilds that contain ``PUBLIC`` in :attr:`Guild.features`. Could be ``None`` for no
             public updates channel.
         premium_progress_bar_enabled: :class:`bool`
-            Whether the guild should have premium progress bar enabled. 
+            Whether the guild should have premium progress bar enabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1632,7 +1637,7 @@ class Guild(Hashable):
                     )
 
             fields['features'] = features
-        
+
         if premium_progress_bar_enabled is not MISSING:
             fields['premium_progress_bar_enabled'] = premium_progress_bar_enabled
 
@@ -3017,13 +3022,13 @@ class Guild(Hashable):
 
     async def welcome_screen(self):
         """|coro|
-        
+
         Returns the :class:`WelcomeScreen` of the guild.
-       
+
         The guild must have ``COMMUNITY`` in :attr:`~Guild.features`.
-       
+
         You must have the :attr:`~Permissions.manage_guild` permission in order to get this.
-        
+
         .. versionadded:: 2.0
 
         Raises
@@ -3034,8 +3039,8 @@ class Guild(Hashable):
             Retrieving the welcome screen failed somehow.
         NotFound
             The guild doesn't has a welcome screen or community feature is disabled.
-        
-        
+
+
         Returns
         --------
         :class:`WelcomeScreen`
@@ -3057,22 +3062,22 @@ class Guild(Hashable):
 
     @overload
     async def edit_welcome_screen(self) -> None:
-        ...        
-    
-    
+        ...
+
+
     async def edit_welcome_screen(self, **options):
         """|coro|
-        
+
         A shorthand for :attr:`WelcomeScreen.edit` without fetching the welcome screen.
-        
+
         You must have the :attr:`~Permissions.manage_guild` permission in the
         guild to do this.
-        
+
         The guild must have ``COMMUNITY`` in :attr:`Guild.features`
-        
+
         Parameters
         -----------
-        
+
         description: Optional[:class:`str`]
             The new description of welcome screen.
         welcome_channels: Optional[List[:class:`WelcomeChannel`]]
@@ -3084,30 +3089,30 @@ class Guild(Hashable):
 
         Raises
         -------
-        
+
         HTTPException
             Editing the welcome screen failed somehow.
         Forbidden
             You don't have permissions to edit the welcome screen.
         NotFound
             This welcome screen does not exist.
-        
+
         Returns
         --------
-        
+
         :class:`WelcomeScreen`
             The edited welcome screen.
         """
-        
+
         welcome_channels = options.get('welcome_channels', [])
         welcome_channels_data = []
-       
+
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
                 raise TypeError('welcome_channels parameter must be a list of WelcomeScreenChannel.')
-                
+
             welcome_channels_data.append(channel.to_dict())
-            
+
         options['welcome_channels'] = welcome_channels_data
 
         if options:
@@ -3116,7 +3121,7 @@ class Guild(Hashable):
 
     async def fetch_scheduled_events(self, *, with_user_count: bool = True) -> List[ScheduledEvent]:
         """|coro|
-        
+
         Returns a list of :class:`ScheduledEvent` in the guild.
 
         .. note::

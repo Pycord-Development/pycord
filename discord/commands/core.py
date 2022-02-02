@@ -33,32 +33,32 @@ import re
 import types
 from collections import OrderedDict
 from typing import (
+    TYPE_CHECKING,
     Any,
+    Awaitable,
     Callable,
+    Coroutine,
     Dict,
+    Generator,
+    Generic,
     List,
     Optional,
-    Union,
-    TYPE_CHECKING,
-    Awaitable,
-    overload,
-    TypeVar,
-    Generic,
     Type,
-    Generator,
-    Coroutine,
+    TypeVar,
+    Union,
+    overload,
 )
 
-from .context import ApplicationContext, AutocompleteContext
-from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .options import Option, OptionChoice
-from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType, ChannelType
-from ..errors import ValidationError, ClientException
+from ..enums import ChannelType, SlashCommandOptionType
+from ..errors import ClientException, ValidationError
 from ..member import Member
 from ..message import Message
 from ..user import User
-from ..utils import find, get_or_fetch, async_all, utcnow
+from ..utils import async_all, find, get_or_fetch, utcnow
+from .context import ApplicationContext, AutocompleteContext
+from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
+from .options import Option, OptionChoice
+from .permissions import CommandPermission
 
 __all__ = (
     "_BaseCommand",
@@ -75,8 +75,8 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING: 
-    from typing_extensions import ParamSpec, Concatenate
+if TYPE_CHECKING:
+    from typing_extensions import Concatenate, ParamSpec
 
     from ..cog import Cog
 
@@ -138,7 +138,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import CooldownMapping, BucketType, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
         try:
             cooldown = func.__commands_cooldown__

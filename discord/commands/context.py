@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    
+
     from typing import Callable, Awaitable
 
 from ..utils import _cached_property as cached_property

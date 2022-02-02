@@ -38,11 +38,14 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
-from inspect import isawaitable as _isawaitable, signature as _signature
+from inspect import isawaitable as _isawaitable
+from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
+    TYPE_CHECKING,
     Any,
     AsyncIterator,
+    Awaitable,
     Callable,
     Coroutine,
     Dict,
@@ -61,11 +64,9 @@ from typing import (
     TypeVar,
     Union,
     overload,
-    TYPE_CHECKING,
-    Awaitable,
 )
 
-from .errors import InvalidArgument, HTTPException
+from .errors import HTTPException, InvalidArgument
 
 try:
     import orjson
@@ -128,11 +129,11 @@ if TYPE_CHECKING:
 
     from typing_extensions import ParamSpec
 
-    from .permissions import Permissions
     from .abc import Snowflake
-    from .invite import Invite
-    from .template import Template
     from .commands.context import AutocompleteContext
+    from .invite import Invite
+    from .permissions import Permissions
+    from .template import Template
 
 
     class _RequestLike(Protocol):
@@ -735,7 +736,7 @@ _MARKDOWN_ESCAPE_SUBREGEX = '|'.join(r'\{0}(?=([\s\S]*((?<!\{0})\{0})))'.format(
 # this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
 _MARKDOWN_ESCAPE_LINKS = r"""
 \[  # matches link text
-    [^\[\]]* # link text can contain anything but brackets 
+    [^\[\]]* # link text can contain anything but brackets
 \]
 \(  # matches link destination
     [^\(\)]+ # link destination cannot contain parentheses
@@ -1062,7 +1063,7 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
         return f'<t:{int(dt.timestamp())}>'
     return f'<t:{int(dt.timestamp())}:{style}>'
 
-    
+
 def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
     """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
     If dt is not passed, it makes one from the current time using utcnow.
@@ -1139,7 +1140,7 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         def check(item: Any) -> bool:
             item = getattr(item, "name", item)
             return str(item).lower().startswith(str(ctx.value or "").lower())
-        
+
         gen = (val for val in _values if check(val))
         return iter(itertools.islice(gen, 25))
 
