@@ -374,7 +374,7 @@ class Role(Hashable):
         position: int = MISSING,
         reason: Optional[str] = MISSING,
         icon: Optional[bytes] = MISSING,
-        unicode_emoji: str = MISSING
+        unicode_emoji: Optional[str] = MISSING
     ) -> Optional[Role]:
         """|coro|
 
@@ -409,7 +409,7 @@ class Role(Hashable):
         reason: Optional[:class:`str`]
             The reason for editing this role. Shows up on the audit log.
         icon: Optional[:class:`bytes`]
-            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported. If this argument is passed, ``unicode_emoji`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
             Could be ``None`` to denote removal of the icon.
         unicode_emoji: Optional[:class:`str`]
@@ -461,6 +461,7 @@ class Role(Hashable):
                 payload['icon'] = None
             else:
                 payload['icon'] = _bytes_to_base64_data(icon)
+                payload['unicode_emoji'] = None
         
         if unicode_emoji is not MISSING:
             payload['unicode_emoji'] = unicode_emoji

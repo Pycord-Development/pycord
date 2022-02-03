@@ -40,7 +40,6 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    Type,
 )
 
 from .client import Client
@@ -89,6 +88,10 @@ class ApplicationCommandMixin:
         super().__init__(*args, **kwargs)
         self._pending_application_commands = []
         self._application_commands = {}
+
+    @property
+    def all_commands(self):
+        return self._application_commands
 
     @property
     def pending_application_commands(self):
@@ -150,7 +153,14 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self._application_commands.pop(command.id)
+        if command.id is None:
+            try:
+                index = self._pending_application_commands.index(command)
+            except ValueError:
+                return None
+            return self._pending_application_commands.pop(index)
+
+        return self._application_commands.pop(int(command.id), None)
 
     @property
     def get_command(self):

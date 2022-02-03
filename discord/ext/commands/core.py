@@ -1167,17 +1167,24 @@ class GroupMixin(Generic[CogT]):
     """
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         case_insensitive = kwargs.get('case_insensitive', False)
-        self.all_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
+        self.prefixed_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
         self.case_insensitive: bool = case_insensitive
         super().__init__(*args, **kwargs)
 
     @property
+    def all_commands(self):
+        # merge app and prefixed commands
+        if hasattr(self, "_application_commands"):
+            return {**self._application_commands, **self.prefixed_commands}
+        return self.prefixed_commands
+
+    @property
     def commands(self) -> Set[Command[CogT, Any, Any]]:
         """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
-        return set(self.all_commands.values())
+        return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:
-        for command in self.all_commands.copy().values():
+        for command in self.prefixed_commands.copy().values():
             if isinstance(command, GroupMixin):
                 command.recursively_remove_all_commands()
             self.remove_command(command.name)
@@ -1210,15 +1217,15 @@ class GroupMixin(Generic[CogT]):
         if isinstance(self, Command):
             command.parent = self
 
-        if command.name in self.all_commands:
+        if command.name in self.prefixed_commands:
             raise CommandRegistrationError(command.name)
 
-        self.all_commands[command.name] = command
+        self.prefixed_commands[command.name] = command
         for alias in command.aliases:
-            if alias in self.all_commands:
+            if alias in self.prefixed_commands:
                 self.remove_command(command.name)
                 raise CommandRegistrationError(alias, alias_conflict=True)
-            self.all_commands[alias] = command
+            self.prefixed_commands[alias] = command
 
     def remove_command(self, name: str) -> Optional[Command[CogT, Any, Any]]:
         """Remove a :class:`.Command` from the internal list
@@ -1237,7 +1244,7 @@ class GroupMixin(Generic[CogT]):
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        command = self.all_commands.pop(name, None)
+        command = self.prefixed_commands.pop(name, None)
 
         # does not exist
         if command is None:
@@ -1249,12 +1256,12 @@ class GroupMixin(Generic[CogT]):
 
         # we're not removing the alias so let's delete the rest of them.
         for alias in command.aliases:
-            cmd = self.all_commands.pop(alias, None)
+            cmd = self.prefixed_commands.pop(alias, None)
             # in the case of a CommandRegistrationError, an alias might conflict
             # with an already existing command. If this is the case, we want to
             # make sure the pre-existing command is not removed.
             if cmd is not None and cmd != command:
-                self.all_commands[alias] = cmd
+                self.prefixed_commands[alias] = cmd
         return command
 
     def walk_commands(self) -> Generator[Command[CogT, Any, Any], None, None]:
@@ -1296,18 +1303,18 @@ class GroupMixin(Generic[CogT]):
 
         # fast path, no space in name.
         if ' ' not in name:
-            return self.all_commands.get(name)
+            return self.prefixed_commands.get(name)
 
         names = name.split()
         if not names:
             return None
-        obj = self.all_commands.get(names[0])
+        obj = self.prefixed_commands.get(names[0])
         if not isinstance(obj, GroupMixin):
             return obj
 
         for name in names[1:]:
             try:
-                obj = obj.all_commands[name]  # type: ignore
+                obj = obj.prefixed_commands[name]  # type: ignore
             except (AttributeError, KeyError):
                 return None
 
@@ -1463,7 +1470,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             injected = hooked_wrapped_callback(self, ctx, self.callback)
@@ -1497,7 +1504,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             try:
