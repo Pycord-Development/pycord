@@ -85,10 +85,10 @@ class Option:
                         self.channel_types.append(channel_type)
                 input_type = _type
         self.input_type = input_type
-        self.default = kwargs.pop("default", None)
         self.required: bool = (
-            kwargs.pop("required", True) if self.default is None else False
+            kwargs.pop("required", True) if "default" not in kwargs else False
         )
+        self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
