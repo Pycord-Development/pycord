@@ -572,11 +572,12 @@ class ApplicationCommandMixin:
                 # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
                 global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
-        for guild_id, guild_data in registered_guild_commands.items():
-            commands = registered_guild_commands[guild_id]
+        for guild_id, commands in registered_guild_commands.items():
             guild_permissions: List = []
 
             for i in commands:
+                if not i:
+                    continue
                 cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and cmd.guild_ids is not None
                                        and (i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                 cmd.id = i["id"]
