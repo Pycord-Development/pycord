@@ -339,7 +339,7 @@ class ApplicationCommandMixin:
             The command that was registered
         """
         # TODO: Write this
-        return
+        raise NotImplementedError("This function has not been implemented yet")
 
     async def register_commands(
             self,
@@ -1023,7 +1023,8 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = None
 
     async def on_connect(self):
-        await self.sync_commands()
+        if self.auto_sync_commands:
+            await self.sync_commands()
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
