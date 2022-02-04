@@ -1,6 +1,9 @@
 import re
 
-from setuptools import setup
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
 
 # Requirements
 requirements = []
