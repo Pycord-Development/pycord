@@ -577,8 +577,8 @@ class ApplicationCommandMixin:
             guild_permissions: List = []
 
             for i in commands:
-                cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in
-                                       cmd.guild_ids, self.pending_application_commands)
+                cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and cmd.guild_ids is not None
+                                       and (i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
@@ -588,7 +588,8 @@ class ApplicationCommandMixin:
                     for perm in cmd.permissions
                     if perm.guild_id is None
                        or (
-                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                               perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in
+                               cmd.guild_ids
                        )
                 ]
                 guild_permissions.append(
@@ -601,7 +602,8 @@ class ApplicationCommandMixin:
                     for perm in global_command["permissions"]
                     if perm.guild_id is None
                        or (
-                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                               perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in
+                               cmd.guild_ids
                        )
                 ]
                 guild_permissions.append(
