@@ -29,6 +29,7 @@ import threading
 import time
 import io
 from ..types import snowflake
+from ..channel import VoiceChannel
 
 from .errors import SinkException
 
@@ -179,11 +180,11 @@ class Sink(Filters):
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-        self.vc = None
+        self.vc: VoiceChannel = None
         self.audio_data = {}
 
     def init(self, vc):  # called under listen
-        self.vc = vc
+        self.vc: VoiceChannel = vc
         super().init()
 
     @Filters.container
