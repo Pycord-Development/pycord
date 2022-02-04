@@ -28,15 +28,10 @@ import sys
 import threading
 import time
 import io
-import typing
 from typing import TYPE_CHECKING
 from .errors import SinkException
 
 if TYPE_CHECKING:
-    from ..channel import VoiceChannel
-
-
-if typing.TYPE_CHECKING:
     from ..channel import VoiceChannel
 
 __all__ = (
