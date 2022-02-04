@@ -38,7 +38,7 @@ async def modal_slash(ctx):
     await ctx.interaction.response.send_modal(modal)
 
 
-@bot.message_command(name="messagemodal", guild_ids=[907533384081879040])
+@bot.message_command(name="messagemodal", guild_ids=[...])
 async def modal_message(ctx, message):
     """Shows an example of a modal dialog being invoked from a message command."""
     modal = MyModal()
