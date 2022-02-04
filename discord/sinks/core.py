@@ -28,10 +28,13 @@ import sys
 import threading
 import time
 import io
+import typing
 from ..types import snowflake
-from ..channel import VoiceChannel
 
 from .errors import SinkException
+
+if typing.TYPE_CHECKING:
+    from ..channel import VoiceChannel
 
 __all__ = (
     "Filters",
