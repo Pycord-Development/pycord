@@ -577,8 +577,8 @@ class ApplicationCommandMixin:
             guild_permissions: List = []
 
             for i in commands:
-                cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and cmd.guild_ids is not None
-                                       and (i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+                cmd = find(lambda cmd: cmd.name == i["name"] and str(cmd.type) == str(i["type"]) and cmd.guild_ids is not None
+                                       and (int(i["guild_id"])) in cmd.guild_ids, self.pending_application_commands)
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
