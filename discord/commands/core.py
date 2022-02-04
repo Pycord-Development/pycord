@@ -40,8 +40,6 @@ from typing import (
     Optional,
     Union,
     TYPE_CHECKING,
-    Awaitable,
-    overload,
     TypeVar,
     Generic,
     get_type_hints,
@@ -52,7 +50,14 @@ from typing import (
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .options import Option, OptionChoice, ThreadOption, channel_type_map
+from .options import (
+    _minmax_setting_for_option, 
+    Option, 
+    OptionChoice, 
+    ThreadOption, 
+    _type_checking_for_option, 
+    channel_type_map
+)
 from .permissions import CommandPermission
 from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
@@ -584,8 +589,8 @@ class SlashCommand(ApplicationCommand):
             self.options: List[Option] = self._parse_options(params)
 
         for o in self.options:
-            o = self._type_checking_for_option(o)
-            o = self._minmax_setting_for_option(o)
+            o = _type_checking_for_option(o)
+            o = _minmax_setting_for_option(o)
 
         try:
             checks = func.__commands_checks__
@@ -622,7 +627,7 @@ class SlashCommand(ApplicationCommand):
         actual_type_hints = get_type_hints(self.callback)
 
         # checks for 'self' parameter in type hints
-        if self.parent or self.cog:
+        if self.attached_to_group or self.cog:
             parent_check: bool = list(actual_type_hints.items())[0][1] == self.parent
             cog_check: bool = list(actual_type_hints.items())[0][1] == self.cog
             if cog_check or parent_check:
@@ -630,7 +635,7 @@ class SlashCommand(ApplicationCommand):
                 temp.pop(0)
                 actual_type_hints = dict(temp)
 
-	# checks for 'ctx' parameter in type hints
+	    # checks for 'ctx' parameter in type hints
         if list(actual_type_hints.items())[0][1] == ApplicationContext:
                 temp = list(actual_type_hints.items())
                 temp.pop(0)
@@ -639,55 +644,73 @@ class SlashCommand(ApplicationCommand):
 
         final_options = []
         for p_name, p_obj in params:
-
+            _defined_from_option_deco = False
             option = p_obj.default
 
-            if option == inspect.Parameter.empty:
-                #option = str
-                continue
             try:
                 type_hint_val = next(value_itr)
             except StopIteration:
                 pass
             
-            if not isinstance(option, Option):
-                #option = Option(option, "No description provided")
-                #if p_obj.default != inspect.Parameter.empty:
-                #    option.required = False
-                continue
-            
-            if p_name.lower() == type_hint_val[0].lower():
-                p_type = type_hint_val[1]
-            else:
-                if not (p_name.lower() in actual_type_hints):
-                    p_type = str
-
-            if self._is_typing_union(option):
-                if self._is_typing_optional(option):
-                    option = Option(
-                        "No description provided", required=False
-                    )
-                    option.input_type = p_type[0]
+            # we can assume that the option class is instead defined 
+            # in the annotations instead
+            if option == inspect.Parameter.empty:
+                option = p_obj.annotation
+                if isinstance(option, Option):
+                    _defined_from_option_deco = True
                 else:
                     option = Option(
                         "No description provided"
                     )
-                    option.input_type = p_type
-            else:
-                option.input_type = p_type
+                    if p_name.lower() == type_hint_val[0].lower():
+                        option.input_type = type_hint_val[1]
+                    else:
+                        if not (p_name.lower() in actual_type_hints):
+                            option.input_type = str
 
-            option.default = option.default if option.default is not None else p_type
+                    option.name = p_name
+                    option._parameter_name = p_name
+                    # it techincally isn't, but this skips the checks below
+                    _defined_from_option_deco = True
 
-            if option.default is None:
-                if p_obj.default == inspect.Parameter.empty:
-                    option.default = None
+                #continue
+
+            if not isinstance(option, Option):
+                continue
+            
+            if not _defined_from_option_deco:
+                if p_name.lower() == type_hint_val[0].lower():
+                    p_type = type_hint_val[1]
                 else:
-                    option.default = p_obj.default
-                    option.required = False
+                    if not (p_name.lower() in actual_type_hints):
+                        p_type = str
 
-            if option.name is None:
-                option.name = p_name
-            option._parameter_name = p_name
+                if self._is_typing_union(option):
+                    if self._is_typing_optional(option):
+                        option = Option(
+                            "No description provided", required=False
+                        )
+                        option.input_type = p_type[0]
+                    else:
+                        option = Option(
+                            "No description provided"
+                        )
+                        option.input_type = p_type
+                else:
+                    option.input_type = p_type
+
+                option.default = option.default if option.default is not None else p_type
+
+                if option.default is None:
+                    if p_obj.default == inspect.Parameter.empty:
+                        option.default = None
+                    else:
+                        option.default = p_obj.default
+                        option.required = False
+
+                if option.name is None:
+                    option.name = p_name
+                option._parameter_name = p_name
 
             validate_chat_input_name(option.name)
             validate_chat_input_description(option.description)
@@ -749,57 +772,6 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
-
-    def _type_checking_for_option(self, option):
-        option._raw_type = option.input_type
-        if not isinstance(option.input_type, SlashCommandOptionType):
-            if hasattr(option.input_type, "convert"):
-                self.converter = option.input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                _type = SlashCommandOptionType.from_datatype(option.input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(option.input_type, tuple):
-                        input_type = (option.input_type,)
-                    for i in input_type:
-                        if i.__name__ == "GuildChannel":
-                            continue
-                        if isinstance(i, ThreadOption):
-                            option.channel_types.append(i._type)
-                            continue
-
-                        channel_type = channel_type_map[i.__name__]
-                        option.channel_types.append(channel_type)
-                input_type = _type
-        option.input_type = input_type
-
-        return option
-
-    def _minmax_setting_for_option(self, option):
-        if option.input_type == SlashCommandOptionType.integer:
-            minmax_types = (int, type(None))
-        elif option.input_type == SlashCommandOptionType.number:
-            minmax_types = (int, float, type(None))
-        else:
-            minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
-
-        option.min_value: minmax_typehint = option._raw_min_value
-        option.max_value: minmax_typehint = option._raw_max_value
-
-        if (
-            not isinstance(option.min_value, minmax_types)
-            and option.min_value is not None
-        ):
-            raise TypeError(
-                f'Expected {minmax_typehint} for min_value, got "{type(option.min_value).__name__}"'
-            )
-        if not (isinstance(option.max_value, minmax_types) or option.min_value is None):
-            raise TypeError(
-                f'Expected {minmax_typehint} for max_value, got "{type(option.max_value).__name__}"'
-            )
-
-        return option
 
     @property
     def is_subcommand(self) -> bool:

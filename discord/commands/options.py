@@ -22,15 +22,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Any, Dict, List, Literal, Optional, Union
-from re import findall
+import inspect
+from collections import OrderedDict
+from types import MappingProxyType
+from typing import Dict, get_type_hints, List, Literal, Optional, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
-# Needed for the gettype function
-from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel
-from ..member import Member
-from ..threads import Thread
-from ..user import User
 
 __all__ = (
     "ThreadOption",
@@ -67,30 +64,9 @@ class Option:
         self.description = description or "No description provided"
         self.converter = None
 
-        #self._raw_type = input_type
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
-        if not isinstance(input_type, SlashCommandOptionType):
-            if hasattr(input_type, "convert"):
-                self.converter = input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == "GuildChannel":
-                            continue
-                        if isinstance(i, ThreadOption):
-                            self.channel_types.append(i._type)
-                            continue
-
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
-        self.input_type = input_type
         self.required: bool = (
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
@@ -126,6 +102,56 @@ class Option:
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
+def _type_checking_for_option(option):
+    option._raw_type = option.input_type
+    if not isinstance(option.input_type, SlashCommandOptionType):
+        if hasattr(option.input_type, "convert"):
+            option.converter = option.input_type
+            input_type = SlashCommandOptionType.string
+        else:
+            _type = SlashCommandOptionType.from_datatype(option.input_type)
+            if _type == SlashCommandOptionType.channel:
+                if not isinstance(option.input_type, tuple):
+                    input_type = (option.input_type,)
+                for i in input_type:
+                    if i.__name__ == "GuildChannel":
+                        continue
+                    if isinstance(i, ThreadOption):
+                        option.channel_types.append(i._type)
+                        continue
+
+                    channel_type = channel_type_map[i.__name__]
+                    option.channel_types.append(channel_type)
+            input_type = _type
+    option.input_type = input_type
+
+    return option
+
+def _minmax_setting_for_option(option):
+    if option.input_type == SlashCommandOptionType.integer:
+        minmax_types = (int, type(None))
+    elif option.input_type == SlashCommandOptionType.number:
+        minmax_types = (int, float, type(None))
+    else:
+        minmax_types = (type(None),)
+    minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
+
+    option.min_value: minmax_typehint = option._raw_min_value
+    option.max_value: minmax_typehint = option._raw_max_value
+
+    if (
+        not isinstance(option.min_value, minmax_types)
+        and option.min_value is not None
+    ):
+        raise TypeError(
+            f'Expected {minmax_typehint} for min_value, got "{type(option.min_value).__name__}"'
+        )
+    if not (isinstance(option.max_value, minmax_types) or option.min_value is None):
+        raise TypeError(
+            f'Expected {minmax_typehint} for max_value, got "{type(option.max_value).__name__}"'
+        )
+
+    return option
 
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
@@ -141,8 +167,25 @@ def option(name, type=None, **kwargs):
 
     def decorator(func):
         nonlocal type
-        type = type or func.__annotations__.get(name, str)
-        func.__annotations__[name] = Option(type, **kwargs)
+        # first we check if the provided name is actually in the parameters
+        parameters = OrderedDict(inspect.signature(func).parameters)
+
+        # this means that there is a parameter with the same name
+        if parameters.get(name):
+            type_hints = get_type_hints(func)
+            type = type or type_hints.get(name, str)
+
+            opt = Option(**kwargs)
+            opt.name = name
+            opt._parameter_name = name
+            opt.input_type = type
+            
+            func.__annotations__[name] = opt
+        else:
+            raise RuntimeError(
+                f"Unknown parameter with name {name} from option decorator"
+            )
+
         return func
 
     return decorator
