@@ -31,7 +31,7 @@ class MyModal(Modal):
         await interaction.response.send_message(embeds=[embed])
 
 
-@bot.slash_command(name="modaltest", guild_ids=[907533384081879040])
+@bot.slash_command(name="modaltest", guild_ids=[...])
 async def modal_slash(ctx):
     """Shows an example of a modal dialog being invoked from a slash command."""
     modal = MyModal()
