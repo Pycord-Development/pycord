@@ -30,9 +30,9 @@ import time
 import io
 from typing import TYPE_CHECKING
 from .errors import SinkException
+from ..types import snowflake
 
 if TYPE_CHECKING:
-    from ..types import snowflake
     from ..channel import VoiceChannel
 
 __all__ = (
