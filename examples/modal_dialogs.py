@@ -46,7 +46,7 @@ async def modal_message(ctx, message):
     await ctx.interaction.response.send_modal(modal)
 
 
-@bot.user_command(name="usermodal", guild_ids=[907533384081879040])
+@bot.user_command(name="usermodal", guild_ids=[...])
 async def modal_user(ctx, member):
     """Shows an example of a modal dialog being invoked from a user command."""
     modal = MyModal()
