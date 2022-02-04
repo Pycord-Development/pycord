@@ -71,11 +71,30 @@ class Option:
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
+        if not isinstance(input_type, SlashCommandOptionType):
+            if hasattr(input_type, "convert"):
+                self.converter = input_type
+                input_type = SlashCommandOptionType.string
+            else:
+                _type = SlashCommandOptionType.from_datatype(input_type)
+                if _type == SlashCommandOptionType.channel:
+                    if not isinstance(input_type, tuple):
+                        input_type = (input_type,)
+                    for i in input_type:
+                        if i.__name__ == "GuildChannel":
+                            continue
+                        if isinstance(i, ThreadOption):
+                            self.channel_types.append(i._type)
+                            continue
 
-        self.default = kwargs.pop("default", None)
+                        channel_type = channel_type_map[i.__name__]
+                        self.channel_types.append(channel_type)
+                input_type = _type
+        self.input_type = input_type
         self.required: bool = (
-            kwargs.pop("required", True) if self.default is None else False
+            kwargs.pop("required", True) if "default" not in kwargs else False
         )
+        self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
