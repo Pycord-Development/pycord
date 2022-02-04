@@ -29,9 +29,12 @@ import threading
 import time
 import io
 import typing
-from ..types import snowflake
-
+from typing import TYPE_CHECKING
 from .errors import SinkException
+
+if TYPE_CHECKING:
+    from ..channel import VoiceChannel
+
 
 if typing.TYPE_CHECKING:
     from ..channel import VoiceChannel
