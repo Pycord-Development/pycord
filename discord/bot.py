@@ -243,7 +243,7 @@ class ApplicationCommandMixin:
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
 
         return_value = []
-        cmds = copy.deepcopy(self.pending_application_commands)
+        cmds = self.pending_application_commands.copy()
 
         if guild_id is None:
             registered_commands = await self.http.get_global_commands(self.user.id)
@@ -379,7 +379,7 @@ class ApplicationCommandMixin:
         if commands is None:
             commands = self.pending_application_commands
 
-        commands = copy.deepcopy(commands)
+        commands = [copy.copy(cmd) for cmd in commands]
 
         for cmd in commands:
             to_rep_with = [guild_id] if guild_id is not None else guild_id
