@@ -34,7 +34,9 @@ from typing import (
     Generic,
     List,
     Optional,
+    Tuple,
     Type,
+    TYPE_CHECKING,
     TypeVar,
     Union,
     cast,
@@ -110,8 +112,8 @@ class Loop(Generic[LF]):
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
         self._task: asyncio.Task[None] = MISSING
-        self._injected = None
-        self._valid_exception = (
+        self._injected: Optional[Any] = None
+        self._valid_exception: Tuple[Type[BaseException], ...] = (
             OSError,
             discord.GatewayNotFound,
             discord.ConnectionClosed,
@@ -119,8 +121,8 @@ class Loop(Generic[LF]):
             asyncio.TimeoutError,
         )
 
-        self._before_loop = None
-        self._after_loop = None
+        self._before_loop: Optional[Any] = None
+        self._after_loop: Optional[Any] = None
         self._before_loop_running = False
         self._after_loop_running = False
         self._is_being_cancelled = False
@@ -133,10 +135,13 @@ class Loop(Generic[LF]):
         self.change_interval(seconds=seconds, minutes=minutes, hours=hours, time=time)
         self._last_iteration_failed = False
         self._last_iteration: datetime.datetime = MISSING
-        self._next_iteration = None
+        self._next_iteration: Optional[datetime.datetime] = None
 
         if not inspect.iscoroutinefunction(self.coro):
             raise TypeError(f'Expected coroutine function, not {type(self.coro).__name__!r}.')
+
+        if TYPE_CHECKING:
+            self._time_index: int
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, '_' + name)
@@ -230,7 +235,7 @@ class Loop(Generic[LF]):
         copy._injected = obj
         copy._before_loop = self._before_loop
         copy._after_loop = self._after_loop
-        copy._error = self._error
+        copy._error = self._error  # type: ignore # mypy (#2427)
         setattr(obj, self.coro.__name__, copy)
         return copy
 
@@ -243,6 +248,7 @@ class Loop(Generic[LF]):
         """
         if self._seconds is not MISSING:
             return self._seconds
+        return None
 
     @property
     def minutes(self) -> Optional[float]:
@@ -253,6 +259,7 @@ class Loop(Generic[LF]):
         """
         if self._minutes is not MISSING:
             return self._minutes
+        return None
 
     @property
     def hours(self) -> Optional[float]:
@@ -263,6 +270,7 @@ class Loop(Generic[LF]):
         """
         if self._hours is not MISSING:
             return self._hours
+        return None
 
     @property
     def time(self) -> Optional[List[datetime.time]]:
@@ -273,6 +281,7 @@ class Loop(Generic[LF]):
         """
         if self._time is not MISSING:
             return self._time.copy()
+        return None
 
     @property
     def current_loop(self) -> int:
@@ -555,7 +564,7 @@ class Loop(Generic[LF]):
         if not inspect.iscoroutinefunction(coro):
             raise TypeError(f'Expected coroutine function, received {coro.__class__.__name__!r}.')
 
-        self._error = coro  # type: ignore
+        self._error = coro  # type: ignore # mypy (#708)
         return coro
 
     def _get_next_sleep_time(self) -> datetime.datetime:
