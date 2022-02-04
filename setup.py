@@ -65,6 +65,7 @@ extras_require = {
 packages = [
     "discord",
     "discord.types",
+    "discord.sinks",
     "discord.ui",
     "discord.webhook",
     "discord.commands",

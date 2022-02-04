@@ -269,7 +269,6 @@ class PrivilegedIntentsRequired(ClientException):
         )
         super().__init__(msg % shard_id)
 
-
 class InteractionResponded(ClientException):
     """Exception that's raised when sending another interaction response using
     :class:`InteractionResponse` when one has already been done before.
