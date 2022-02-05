@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Optional, TypeVar, Union, Dict, List
 
 import discord.abc
 from discord.interactions import InteractionMessage
@@ -171,6 +171,26 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
+
+    @property
+    def selected_options(self) -> Optional[List[Dict]]:
+        """Returns a dictionary containing the options and values that were selected by the user, if applicable."""
+        if "options" in self.interaction.data:
+            return self.interaction.data["options"]
+        return None
+
+    @property
+    def unselected_options(self) -> Optional[List[Dict]]:
+        """Returns a dictionary containing the options that were not selected by the user, if applicable."""
+        if self.command.options is not None:  # type: ignore
+            selected = [opt["name"] for opt in self.selected_options]
+            return [
+                {"name": option.to_dict()["name"]}
+                for option in self.command.options  # type: ignore
+                if option.to_dict()["name"] not in selected
+            ]
+
+        return None
 
     @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
