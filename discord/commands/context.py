@@ -159,7 +159,7 @@ class ApplicationContext(discord.abc.Messageable):
     def user(self) -> Optional[Union[Member, User]]:
         return self.interaction.user
 
-    author = user
+    author: Optional[Union[Member, User]] = user
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
