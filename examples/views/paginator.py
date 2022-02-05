@@ -140,6 +140,28 @@ class PageTest(commands.Cog):
         )
         await paginator.respond(ctx.interaction, ephemeral=False)
 
+    @pagetest.command(name="emoji_buttons")
+    async def pagetest_emoji_buttons(self, ctx: discord.ApplicationContext):
+        """Demonstrates using emojis for the paginator buttons instead of labels."""
+        page_buttons = [
+            pages.PaginatorButton("first", emoji="⏪", style=discord.ButtonStyle.green),
+            pages.PaginatorButton("prev", emoji="⬅", style=discord.ButtonStyle.green),
+            pages.PaginatorButton(
+                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
+            ),
+            pages.PaginatorButton("next", emoji="➡", style=discord.ButtonStyle.green),
+            pages.PaginatorButton("last", emoji="⏩", style=discord.ButtonStyle.green),
+        ]
+        paginator = pages.Paginator(
+            pages=self.get_pages(),
+            show_disabled=True,
+            show_indicator=True,
+            use_default_buttons=False,
+            custom_buttons=page_buttons,
+            loop_pages=True,
+        )
+        await paginator.respond(ctx.interaction, ephemeral=False)
+
     @pagetest.command(name="custom_view")
     async def pagetest_custom_view(self, ctx: discord.ApplicationContext):
         """Demonstrates passing a custom view to the paginator."""
@@ -159,6 +181,26 @@ class PageTest(commands.Cog):
         )
         paginator = pages.Paginator(pages=self.get_pages(), custom_view=view)
         await paginator.respond(ctx.interaction, ephemeral=False)
+
+    @pagetest.command(name="disable")
+    async def pagetest_disable(self, ctx: discord.ApplicationContext):
+        """Demonstrates disabling the paginator buttons and showing a custom page when disabled."""
+        paginator = pages.Paginator(pages=self.get_pages())
+        await paginator.respond(ctx.interaction, ephemeral=False)
+        await ctx.respond("Disabling paginator in 5 seconds...")
+        await asyncio.sleep(5)
+        disable_page = discord.Embed(title="Paginator Disabled!", description="This page is only shown when the paginator is disabled.")
+        await paginator.disable(page=disable_page)
+
+    @pagetest.command(name="cancel")
+    async def pagetest_cancel(self, ctx: discord.ApplicationContext):
+        """Demonstrates canceling (stopping) the paginator and showing a custom page when cancelled."""
+        paginator = pages.Paginator(pages=self.get_pages())
+        await paginator.respond(ctx.interaction, ephemeral=False)
+        await ctx.respond("Canceling paginator in 5 seconds...")
+        await asyncio.sleep(5)
+        cancel_page = discord.Embed(title="Paginator Cancelled!", description="This page is only shown when the paginator is cancelled.")
+        await paginator.cancel(page=cancel_page)
 
     @pagetest.command(name="groups")
     async def pagetest_groups(self, ctx: discord.ApplicationContext):

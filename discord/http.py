@@ -1649,6 +1649,7 @@ class HTTPClient:
             'entity_type',
             'status',
             'entity_metadata',
+            'image',
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
@@ -1666,9 +1667,13 @@ class HTTPClient:
         params = {
             'limit': int(limit),
             'with_member': int(with_member),
-            'before': int(before),
-            'after': int(after),
         }
+
+        if before is not None:
+            params["before"] = int(before)
+
+        if after is not None:
+            params["after"] = int(after)
         
         return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}/users', guild_id=guild_id, event_id=event_id), params=params)
 
