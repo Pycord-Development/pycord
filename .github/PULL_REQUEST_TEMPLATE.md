@@ -1,5 +1,4 @@
-# Warning: We have a feature freeze till release
-That means we won't accept new features for now. Only bug fixes.
+<!-- Warning: No new features will be merged until the next stable release. -->
 
 ## Summary
 
