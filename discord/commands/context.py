@@ -185,7 +185,7 @@ class ApplicationContext(discord.abc.Messageable):
         if self.command.options is not None:  # type: ignore
             selected = [opt["name"] for opt in self.selected_options]
             return [
-                {"name": option.to_dict()["name"]}
+                option.to_dict()
                 for option in self.command.options  # type: ignore
                 if option.to_dict()["name"] not in selected
             ]
