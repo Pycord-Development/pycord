@@ -99,15 +99,19 @@ class ApplicationContext(discord.abc.Messageable):
 
     async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
+
         Calls a command with the arguments given.
         This is useful if you want to just call the callback that a
         :class:`.ApplicationCommand` holds internally.
+
         .. note::
+
             This does not handle converters, checks, cooldowns, pre-invoke,
             or after-invoke hooks in any matter. It calls the internal callback
             directly as-if it was a regular function.
             You must take care in passing the proper arguments when
             using this function.
+
         Parameters
         -----------
         command: :class:`.ApplicationCommand`
