@@ -31,11 +31,11 @@ from .errors import OGGSinkError
 
 class OGGSink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .ogg files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -70,11 +70,15 @@ class OGGSink(Sink):
             "-",
             "-f",
             "ogg",
-            "pipe:1"
+            "pipe:1",
         ]
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,
+                creationflags=CREATE_NO_WINDOW,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+            )
         except FileNotFoundError:
             raise OGGSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:

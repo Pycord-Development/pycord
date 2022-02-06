@@ -32,11 +32,11 @@ from .errors import M4ASinkError
 
 class M4ASink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .m4a files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -79,8 +79,9 @@ class M4ASink(Sink):
                 m4a_file
             )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
+            )
         except FileNotFoundError:
             raise M4ASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
