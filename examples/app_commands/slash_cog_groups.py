@@ -2,7 +2,7 @@ import discord
 from discord.commands import CommandPermission, SlashCommandGroup
 from discord.ext import commands
 
-bot = discord.Bot(debug_guild=..., owner_id=...)  # main file
+bot = discord.Bot(debug_guilds=[...], owner_id=...)  # main file
 
 
 class Example(commands.Cog):

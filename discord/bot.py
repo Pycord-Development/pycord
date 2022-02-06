@@ -1403,15 +1403,15 @@ class Bot(BotBase, Client):
 
         .. versionadded:: 1.3
     debug_guilds: Optional[List[:class:`int`]]
-        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        The bot will not create any global commands if a debug_guilds is passed.
+        Guild IDs of guilds to use for testing commands.
+        The bot will not create any global commands if debug guild IDs are passed.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     auto_sync_commands: :class:`bool`
         Whether or not to automatically sync slash commands. This will call sync_commands in on_connect, and in
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     """
 
     pass
