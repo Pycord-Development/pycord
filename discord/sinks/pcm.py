@@ -26,11 +26,11 @@ from .core import Filters, Sink, default_filters
 
 class PCMSink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .pcm files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException

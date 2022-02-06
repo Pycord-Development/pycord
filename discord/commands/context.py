@@ -48,18 +48,18 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    
+
     from typing import Callable, Awaitable
 
 from ..utils import _cached_property as cached_property
 
-T = TypeVar('T')
-CogT = TypeVar('CogT', bound="Cog")
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
 
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
@@ -97,7 +97,13 @@ class ApplicationContext(discord.abc.Messageable):
     async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
-    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(
+        self,
+        command: ApplicationCommand[CogT, P, T],
+        /,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
@@ -153,7 +159,11 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
-        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
+        return (
+            self.interaction.guild.me
+            if self.interaction.guild is not None
+            else self.bot.user
+        )
 
     @cached_property
     def message(self) -> Optional[Message]:

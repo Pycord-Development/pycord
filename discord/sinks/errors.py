@@ -26,7 +26,7 @@ from discord.errors import DiscordException
 
 class SinkException(DiscordException):
     """Raised when a Sink error occurs.
-    
+
     .. versionadded:: 2.1
     """
 
@@ -34,7 +34,7 @@ class SinkException(DiscordException):
 class RecordingException(SinkException):
     """Exception that's thrown when there is an error while trying to record
     audio from a voice channel.
-    
+
     .. versionadded:: 2.1
     """
 
@@ -43,48 +43,48 @@ class RecordingException(SinkException):
 
 class MP3SinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`MP3Sink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class MP4SinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`MP4Sink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class OGGSinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`OGGSink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class MKVSinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`MKVSink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class WaveSinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`WaveSink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class M4ASinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`M4ASink`
-    
+
     .. versionadded:: 2.1
     """
 
 
 class MKASinkError(SinkException):
     """Exception thrown when a exception occurs with :class:`MKAsSink`
-    
+
     .. versionadded:: 2.1
     """
