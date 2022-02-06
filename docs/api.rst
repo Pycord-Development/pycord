@@ -4760,6 +4760,80 @@ Select
 
 .. autofunction:: discord.ui.select
 
+Sink Core
+---------
+
+.. autoclass:: discord.sinks.Filters
+    :members:
+
+.. autoclass:: discord.sinks.Sink
+    :members:
+
+.. autoclass:: discord.sinks.AudioData
+    :members:
+
+.. autoclass:: discord.sinks.RawData
+    :members:
+
+
+Sinks
+-----
+
+.. autoclass:: discord.sinks.WaveSink
+    :members:
+
+.. autoclass:: discord.sinks.MP3Sink
+    :members:
+
+.. autoclass:: discord.sinks.MP4Sink
+    :members:
+
+.. autoclass:: discord.sinks.M4ASink
+    :members:
+
+.. autoclass:: discord.sinks.MKVSink
+    :members:
+
+.. autoclass:: discord.sinks.MKASink
+    :members:
+
+.. autoclass:: discord.sinks.OGGSink
+    :members:
+
+
+Sink Error Reference
+--------------------
+
+.. autoexception:: discord.sinks.WaveSinkError
+
+.. autoexception:: discord.sinks.MP3SinkError
+
+.. autoexception:: discord.sinks.MP4SinkError
+
+.. autoexception:: discord.sinks.M4ASinkError
+
+.. autoexception:: discord.sinks.MKVSinkError
+
+.. autoexception:: discord.sinks.MKASinkError
+
+.. autoexception:: discord.sinks.OGGSinkError
+
+Sink Exception Hierarchy
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. exception_hierarchy::
+
+    - :exc:`DiscordException`
+        - :exc:`SinkException`
+            - :exc:`RecordingException`
+            - :exc:`WaveSinkError`
+            - :exc:`MP3SinkError`
+            - :exc:`MP4SinkError`
+            - :exc:`M4ASinkError`
+            - :exc:`MKVSinkError`
+            - :exc:`MKASinkError`
+            - :exc:`OGGSinkError`
+
 
 Exceptions
 ------------
@@ -4807,6 +4881,7 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
+                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
