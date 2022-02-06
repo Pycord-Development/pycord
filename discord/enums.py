@@ -607,7 +607,7 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
-    public = 1
+    # public = 1 Deprecated
     closed = 2
     guild_only = 2
 

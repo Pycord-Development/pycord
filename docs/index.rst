@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Pycord
-===========================
+=================
 
 .. image:: /images/snake.svg
 .. image:: /images/snake_dark.svg
@@ -25,7 +25,7 @@ Getting started
 
 Is this your first time using the library? This is the place to get started!
 
-- **First steps:** :doc:`intro` | :doc:`quickstart` | :doc:`logging`
+- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging`
 - **Working with Discord:** :doc:`discord` | :doc:`intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 

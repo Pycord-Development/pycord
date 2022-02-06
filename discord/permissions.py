@@ -333,13 +333,13 @@ class Permissions(BaseFlags):
         return 1 << 9
 
     @flag_value
-    def read_messages(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can read messages from all or specific text channels."""
+    def view_channel(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can view all or specific channels."""
         return 1 << 10
 
-    @make_permission_alias('read_messages')
-    def view_channel(self) -> int:
-        """:class:`bool`: An alias for :attr:`read_messages`.
+    @make_permission_alias('view_channel')
+    def read_messages(self) -> int:
+        """:class:`bool`: An alias for :attr:`view_channel`.
 
         .. versionadded:: 1.3
         """

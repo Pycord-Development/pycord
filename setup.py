@@ -2,10 +2,12 @@ import re
 
 from setuptools import setup
 
+# Requirements
 requirements = []
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
+# Version Info
 version = ""
 with open("discord/__init__.py") as f:
 
@@ -36,16 +38,20 @@ if version.endswith(("a", "b", "rc")):
     except Exception:
         pass
 
+# README
 readme = ""
 with open("README.rst") as f:
     readme = f.read()
 
+# Extra Requirements 
+# Ex: pip install py-cord[voice] or [speed]
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
         "sphinx==4.4.0",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
+        "myst-parser",
     ],
     "speed": [
         "orjson>=3.5.4",
@@ -55,9 +61,11 @@ extras_require = {
     ],
 }
 
+# Folders And Such Included
 packages = [
     "discord",
     "discord.types",
+    "discord.sinks",
     "discord.ui",
     "discord.webhook",
     "discord.commands",
@@ -70,9 +78,10 @@ packages = [
 setup(
     name="py-cord",
     author="Pycord Development",
-    url="https://github.com/Pycord-Development/pycord",
+    url="https://pycord.dev/github",
     project_urls={
-        "Documentation": "https://pycord.readthedocs.io/en/latest/",
+        "Website": "https://pycord.dev",
+        "Documentation": "https://docs.pycord.dev/en/master/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
     },
     version=version,
@@ -86,7 +95,7 @@ setup(
     extras_require=extras_require,
     python_requires=">=3.8.0",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
@@ -100,5 +109,5 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
     ],
-    test_suite="tests",
+    test_suite="tests", # Test Folder For Workflows
 )

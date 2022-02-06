@@ -32,13 +32,28 @@ import inspect
 import re
 import types
 from collections import OrderedDict
-from typing import Any, Callable, Dict, Generator, Generic, List, Optional, Type, TypeVar, Union, TYPE_CHECKING
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Union,
+    TYPE_CHECKING,
+    Awaitable,
+    overload,
+    TypeVar,
+    Generic,
+    Type,
+    Generator,
+    Coroutine,
+)
 
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .options import Option, OptionChoice
 from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType
+from ..enums import SlashCommandOptionType, ChannelType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
@@ -61,12 +76,13 @@ __all__ = (
 )
 
 if TYPE_CHECKING: 
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec, Concatenate
 
     from ..cog import Cog
 
 T = TypeVar('T')
-CogT = TypeVar('CogT', bound='Cog')
+CogT = TypeVar("CogT", bound="Cog")
+Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
 
 if TYPE_CHECKING:
     P = ParamSpec('P')
@@ -105,6 +121,16 @@ def hooked_wrapped_callback(command, ctx, coro):
         return ret
     return wrapped
 
+def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
+    partial = functools.partial
+    while True:
+        if hasattr(function, '__wrapped__'):
+            function = function.__wrapped__
+        elif isinstance(function, partial):
+            function = function.func
+        else:
+            return function
+
 class _BaseCommand:
     __slots__ = ()
 
@@ -118,7 +144,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             cooldown = func.__commands_cooldown__
         except AttributeError:
             cooldown = kwargs.get('cooldown')
-        
+
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
         elif isinstance(cooldown, CooldownMapping):
@@ -134,7 +160,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
 
-    def __repr__(self):
+        self._callback = None
+        self.module = None
+
+    def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
@@ -160,6 +189,22 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         return await self.callback(ctx, *args, **kwargs)
+
+    @property
+    def callback(self) -> Union[
+            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        ]:
+        return self._callback
+
+    @callback.setter
+    def callback(self, function: Union[
+            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        ]) -> None:
+        self._callback = function
+        unwrap = unwrap_function(function)
+        self.module = unwrap.__module__
 
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
@@ -554,10 +599,7 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-
     def _parse_options(self, params) -> List[Option]:
-        final_options = []
-
         if list(params.items())[0][0] == "self":
             temp = list(params.items())
             temp.pop(0)
@@ -573,7 +615,6 @@ class SlashCommand(ApplicationCommand):
             )
 
         final_options = []
-
         for p_name, p_obj in params:
 
             option = p_obj.annotation
@@ -592,13 +633,13 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
-                if p_obj.default != inspect.Parameter.empty:
+
+            if option.default is None:
+                if p_obj.default == inspect.Parameter.empty:
+                    option.default = None
+                else:
+                    option.default = p_obj.default
                     option.required = False
-
-            option.default = option.default if option.default is not None else p_obj.default
-
-            if option.default == inspect.Parameter.empty:
-                option.default = None
 
             if option.name is None:
                 option.name = p_name
@@ -610,7 +651,6 @@ class SlashCommand(ApplicationCommand):
             final_options.append(option)
 
         return final_options
-
 
     def _match_option_param_names(self, params, options):
         if list(params.items())[0][0] == "self":
@@ -645,7 +685,7 @@ class SlashCommand(ApplicationCommand):
                 )
             p_obj = p_obj.annotation
 
-            if not any(c(o, p_obj) for c in check_annotations):       
+            if not any(c(o, p_obj) for c in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
 
@@ -748,7 +788,7 @@ class SlashCommand(ApplicationCommand):
 
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
-                    
+
                 choices = [
                     o if isinstance(o, OptionChoice) else OptionChoice(o)
                     for o in result
@@ -868,12 +908,17 @@ class SlashCommandGroup(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
         self.cog = None
+        self.id = None
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
         self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
+
+    @property
+    def module(self) -> Optional[str]:
+        return self.__module__
 
     def to_dict(self) -> Dict:
         as_dict = {
@@ -896,12 +941,35 @@ class SlashCommandGroup(ApplicationCommand):
 
         return wrap
 
-    def create_subgroup(self, name, description) -> SlashCommandGroup:
+    def create_subgroup(
+        self, name: str,
+        description: Optional[str] = None,
+        guild_ids: Optional[List[int]] = None,
+    ) -> SlashCommandGroup:
+        """
+        Creates a new subgroup for this SlashCommandGroup.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the group to create.
+        description: Optional[:class:`str`]
+            The description of the group to create.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of the IDs of each guild this group should be added to, making it a guild command.
+            This will be a global command if ``None`` is passed.
+
+        Returns
+        --------
+        SlashCommandGroup
+            The slash command group that was created.
+        """
+
         if self.parent is not None:
             # TODO: Improve this error message
             raise Exception("Subcommands can only be nested once")
 
-        sub_command_group = SlashCommandGroup(name, description, parent=self)
+        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
@@ -994,7 +1062,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.subcommands != other.subcommands:
             other.subcommands = self.subcommands.copy()
-        
+
         if self.checks != other.checks:
             other.checks = self.checks.copy()
 
@@ -1074,6 +1142,7 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Name of a command must be a string.")
 
         self.cog = None
+        self.id = None
 
         try:
             checks = func.__commands_checks__
@@ -1138,6 +1207,29 @@ class ContextMenuCommand(ApplicationCommand):
 
 
 class UserCommand(ContextMenuCommand):
+    r"""A class that implements the protocol for user context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -1171,7 +1263,7 @@ class UserCommand(ContextMenuCommand):
 
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
-        else:   
+        else:
             await self.callback(ctx, target)
 
     def copy(self):
@@ -1213,6 +1305,29 @@ class UserCommand(ContextMenuCommand):
 
 
 class MessageCommand(ContextMenuCommand):
+    r"""A class that implements the protocol for message context menu commands.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    guild_ids: Optional[List[:class:`int`]]
+        The ids of the guilds where this command will be registered.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    """
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:

@@ -314,7 +314,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         ctx.invoked_with = invoker
         # type-checker fails to narrow invoked_prefix type.
         ctx.prefix = invoked_prefix  # type: ignore
-        ctx.command = self.all_commands.get(invoker)
+        ctx.command = self.prefixed_commands.get(invoker)
         return ctx
 
     async def invoke(self, ctx: Context) -> None:
