@@ -282,7 +282,7 @@ class ApplicationCommandMixin:
                 if type(to_check[check]) == list:
                     for opt in to_check[check]:
 
-                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check] if check in as_dict]
+                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                         for i, val in enumerate(cmd_vals):
                             # We need to do some falsy conversion here
                             # The API considers False (autocomplete) and [] (choices) to be falsy values
