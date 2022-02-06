@@ -1,5 +1,3 @@
-<!-- Warning: No new features will be merged until the next stable release. -->
-
 ## Summary
 
 <!-- What is this pull request for? Does it fix any issues? -->
