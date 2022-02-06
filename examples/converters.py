@@ -119,7 +119,7 @@ async def multiply(ctx: commands.Context, number: int, maybe: bool):
     # `bool` is a slightly special case, as shown here:
     # See: https://docs.pycord.dev/en/latest/ext/commands/commands.html#bool
 
-    if maybe is True:
+    if maybe:
         return await ctx.send(number * 2)
     await ctx.send(number * 5)
 

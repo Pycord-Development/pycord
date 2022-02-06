@@ -453,11 +453,7 @@ class Role(Hashable):
             colour = color
 
         if colour is not MISSING:
-            if isinstance(colour, int):
-                payload["color"] = colour
-            else:
-                payload["color"] = colour.value
-
+            payload["color"] = colour if isinstance(colour, int) else colour.value
         if name is not MISSING:
             payload["name"] = name
 

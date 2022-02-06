@@ -611,18 +611,17 @@ class InteractionResponse:
 
         state = self._parent._state
 
-        if allowed_mentions is not None:
-            if state.allowed_mentions is not None:
-                payload["allowed_mentions"] = state.allowed_mentions.merge(
-                    allowed_mentions
-                ).to_dict()
-            else:
-                payload["allowed_mentions"] = allowed_mentions.to_dict()
-        else:
+        if allowed_mentions is None:
             payload["allowed_mentions"] = (
                 state.allowed_mentions and state.allowed_mentions.to_dict()
             )
 
+        elif state.allowed_mentions is not None:
+            payload["allowed_mentions"] = state.allowed_mentions.merge(
+                allowed_mentions
+            ).to_dict()
+        else:
+            payload["allowed_mentions"] = allowed_mentions.to_dict()
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
@@ -723,20 +722,12 @@ class InteractionResponse:
 
         payload = {}
         if content is not MISSING:
-            if content is None:
-                payload["content"] = None
-            else:
-                payload["content"] = str(content)
-
+            payload["content"] = None if content is None else str(content)
         if embed is not MISSING and embeds is not MISSING:
             raise TypeError("cannot mix both embed and embeds keyword arguments")
 
         if embed is not MISSING:
-            if embed is None:
-                embeds = []
-            else:
-                embeds = [embed]
-
+            embeds = [] if embed is None else [embed]
         if embeds is not MISSING:
             payload["embeds"] = [e.to_dict() for e in embeds]
 
@@ -745,10 +736,7 @@ class InteractionResponse:
 
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
-            if view is None:
-                payload["components"] = []
-            else:
-                payload["components"] = view.to_components()
+            payload["components"] = [] if view is None else view.to_components()
         adapter = async_context.get()
         await adapter.create_interaction_response(
             parent.id,

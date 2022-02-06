@@ -763,7 +763,7 @@ class Client:
 
         .. versionadded: 2.0
         """
-        if self._connection._status in set(state.value for state in Status):
+        if self._connection._status in {state.value for state in Status}:
             return Status(self._connection._status)
         return Status.online
 
@@ -1187,11 +1187,7 @@ class Client:
             if me is None:
                 continue
 
-            if activity is not None:
-                me.activities = (activity,)
-            else:
-                me.activities = ()
-
+            me.activities = (activity,) if activity is not None else ()
             me.status = status
 
     # Guild stuff
@@ -1619,15 +1615,12 @@ class Client:
 
         if ch_type in (ChannelType.group, ChannelType.private):
             # the factory will be a DMChannel or GroupChannel here
-            channel = factory(me=self.user, data=data, state=self._connection)  # type: ignore
-        else:
-            # the factory can't be a DMChannel or GroupChannel here
-            guild_id = int(data["guild_id"])  # type: ignore
-            guild = self.get_guild(guild_id) or Object(id=guild_id)
-            # GuildChannels expect a Guild, we may be passing an Object
-            channel = factory(guild=guild, state=self._connection, data=data)  # type: ignore
-
-        return channel
+            return factory(me=self.user, data=data, state=self._connection)
+        # the factory can't be a DMChannel or GroupChannel here
+        guild_id = int(data["guild_id"])  # type: ignore
+        guild = self.get_guild(guild_id) or Object(id=guild_id)
+        # GuildChannels expect a Guild, we may be passing an Object
+        return factory(guild=guild, state=self._connection, data=data)
 
     async def fetch_webhook(self, webhook_id: int, /) -> Webhook:
         """|coro|

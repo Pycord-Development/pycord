@@ -1097,12 +1097,14 @@ class Guild(Hashable):
                 )
 
             allow, deny = perm.pair()
-            payload = {"allow": allow.value, "deny": deny.value, "id": target.id}
-
-            if isinstance(target, Role):
-                payload["type"] = abc._Overwrites.ROLE
-            else:
-                payload["type"] = abc._Overwrites.MEMBER
+            payload = {
+                "allow": allow.value,
+                "deny": deny.value,
+                "id": target.id,
+                "type": abc._Overwrites.ROLE
+                if isinstance(target, Role)
+                else abc._Overwrites.MEMBER,
+            }
 
             perms.append(payload)
 
@@ -1623,11 +1625,7 @@ class Guild(Hashable):
             fields["afk_timeout"] = afk_timeout
 
         if icon is not MISSING:
-            if icon is None:
-                fields["icon"] = icon
-            else:
-                fields["icon"] = utils._bytes_to_base64_data(icon)
-
+            fields["icon"] = icon if icon is None else utils._bytes_to_base64_data(icon)
         if banner is not MISSING:
             if banner is None:
                 fields["banner"] = banner
@@ -2057,11 +2055,7 @@ class Guild(Hashable):
                 f"Expected int for ``days``, received {days.__class__.__name__} instead."
             )
 
-        if roles:
-            role_ids = [str(role.id) for role in roles]
-        else:
-            role_ids = []
-
+        role_ids = [str(role.id) for role in roles] if roles else []
         data = await self._state.http.prune_members(
             self.id,
             days,
@@ -2157,11 +2151,7 @@ class Guild(Hashable):
                 f"Expected int for ``days``, received {days.__class__.__name__} instead."
             )
 
-        if roles:
-            role_ids = [str(role.id) for role in roles]
-        else:
-            role_ids = []
-
+        role_ids = [str(role.id) for role in roles] if roles else []
         data = await self._state.http.estimate_pruned_members(self.id, days, role_ids)
         return data["pruned"]
 
@@ -2532,11 +2522,7 @@ class Guild(Hashable):
         """
 
         img = utils._bytes_to_base64_data(image)
-        if roles:
-            role_ids = [role.id for role in roles]
-        else:
-            role_ids = []
-
+        role_ids = [role.id for role in roles] if roles else []
         data = await self._state.http.create_custom_emoji(
             self.id, name, img, roles=role_ids, reason=reason
         )
@@ -2961,11 +2947,7 @@ class Guild(Hashable):
         :class:`AuditLogEntry`
             The audit log entry.
         """
-        if user is not None:
-            user_id = user.id
-        else:
-            user_id = None
-
+        user_id = user.id if user is not None else None
         if action:
             action = action.value
 

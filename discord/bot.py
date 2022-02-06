@@ -272,9 +272,12 @@ class ApplicationCommandMixin:
 
             as_dict = cmd.to_dict()
 
-            for check in to_check:
+            for check, value in to_check.items():
                 if type(to_check[check]) == list:
-                    for opt in to_check[check]:
+                    # We need to do some falsy conversion here
+                    # The API considers False (autocomplete) and [] (choices) to be falsy values
+                    falsy_vals = (False, [])
+                    for opt in value:
 
                         cmd_vals = (
                             [val.get(opt, MISSING) for val in as_dict[check]]
@@ -282,12 +285,9 @@ class ApplicationCommandMixin:
                             else []
                         )
                         for i, val in enumerate(cmd_vals):
-                            # We need to do some falsy conversion here
-                            # The API considers False (autocomplete) and [] (choices) to be falsy values
-                            falsy_vals = (False, [])
                             if val in falsy_vals:
                                 cmd_vals[i] = MISSING
-                        if (not match.get(check, MISSING) is MISSING) and cmd_vals != [
+                        if match.get(check, MISSING) is not MISSING and cmd_vals != [
                             val.get(opt, MISSING) for val in match[check]
                         ]:
                             # We have a difference
@@ -299,30 +299,30 @@ class ApplicationCommandMixin:
                                 }
                             )
                             break
-                else:
-                    if getattr(cmd, check) != match[check]:
-                        # We have a difference
-                        return_value.append(
-                            {
-                                "command": cmd,
-                                "action": "edit",
-                                "id": int(registered_commands_dict[cmd.name]["id"]),
-                            }
-                        )
-                        break
+                elif getattr(cmd, check) != match[check]:
+                    # We have a difference
+                    return_value.append(
+                        {
+                            "command": cmd,
+                            "action": "edit",
+                            "id": int(registered_commands_dict[cmd.name]["id"]),
+                        }
+                    )
+                    break
 
         # Now let's see if there are any commands on discord that we need to delete
-        for cmd in registered_commands_dict:
+        for cmd, value_ in registered_commands_dict.items():
             match = get(pending, name=registered_commands_dict[cmd]["name"])
             if match is None:
                 # We have this command registered but not in our list
                 return_value.append(
                     {
                         "command": registered_commands_dict[cmd]["name"],
-                        "id": int(registered_commands_dict[cmd]["id"]),
+                        "id": int(value_["id"]),
                         "action": "delete",
                     }
                 )
+
                 continue
 
         return return_value
@@ -565,10 +565,10 @@ class ApplicationCommandMixin:
 
         registered_commands = await self.register_commands(commands, force=force)
 
-        cmd_guild_ids = []
         registered_guild_commands = {}
 
         if register_guild_commands:
+            cmd_guild_ids = []
             for cmd in commands:
                 if cmd.guild_ids is not None:
                     cmd_guild_ids.extend(cmd.guild_ids)

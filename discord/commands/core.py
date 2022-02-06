@@ -703,9 +703,7 @@ class SlashCommand(ApplicationCommand):
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException(
-                    f"Too many arguments passed to the options kwarg."
-                )
+                raise ClientException("Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
             if not any(c(o, p_obj) for c in check_annotations):
@@ -1543,7 +1541,7 @@ def validate_chat_input_name(name: Any):
             f"Chat input command names and options must be 1-32 characters long. Received {name}"
         )
     if (
-        not name.lower() == name
+        name.lower() != name
     ):  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         raise ValidationError(
             f"Chat input command names and options must be lowercase. Received {name}"

@@ -603,9 +603,10 @@ class FFmpegOpusAudio(FFmpegAudio):
     ) -> Tuple[Optional[str], Optional[int]]:
         exe = (
             f"{executable[:2]}probe"
-            if executable in ("ffmpeg", "avconv")
+            if executable in {"ffmpeg", "avconv"}
             else executable
         )
+
         args = [
             exe,
             "-v",
