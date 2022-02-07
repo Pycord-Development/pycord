@@ -184,10 +184,9 @@ class ApplicationContext(discord.abc.Messageable):
         -------
         Optional[List[Dict]]
             A dictionary containing the options and values that were selected by the user when the command was processed, if applicable.
+            Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command.
         """
-        if "options" in self.interaction.data:
-            return self.interaction.data["options"]
-        return None
+        return self.interaction.data.get("options", None)
 
     @property
     def unselected_options(self) -> Optional[List[Option]]:
@@ -197,6 +196,7 @@ class ApplicationContext(discord.abc.Messageable):
         -------
         Optional[List[:class:`.Option`]]
             A list of Option objects (if any) that were not selected by the user when the command was processed.
+            Returns ``None`` if there are no options defined for that command.
         """
         if self.command.options is not None:  # type: ignore
             return [
