@@ -40,8 +40,6 @@ from typing import (
     Optional,
     Union,
     TYPE_CHECKING,
-    Awaitable,
-    overload,
     TypeVar,
     Generic,
     Type,
@@ -53,7 +51,7 @@ from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
 from .options import Option, OptionChoice
 from .permissions import CommandPermission
-from ..enums import SlashCommandOptionType, ChannelType
+from ..enums import SlashCommandOptionType
 from ..errors import ValidationError, ClientException
 from ..member import Member
 from ..message import Message
