@@ -199,11 +199,14 @@ class ApplicationContext(discord.abc.Messageable):
             Returns ``None`` if there are no options defined for that command.
         """
         if self.command.options is not None:  # type: ignore
-            return [
-                option
-                for option in self.command.options  # type: ignore
-                if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
-            ]
+            if self.selected_options:
+                return [
+                    option
+                    for option in self.command.options  # type: ignore
+                    if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
+                ]
+            else:
+                return self.command.options  # type: ignore
         return None
 
     @property
