@@ -381,7 +381,7 @@ class ApplicationCommandMixin:
 
         commands = [copy.copy(cmd) for cmd in commands]
 
-        if guild_id is not None:
+        if guild_id is not MISSING:
             for cmd in commands:
                 to_rep_with = [guild_id]
                 cmd.guild_ids = to_rep_with
