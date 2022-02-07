@@ -383,7 +383,7 @@ class ApplicationCommandMixin:
 
         if guild_id is not None:
             for cmd in commands:
-                to_rep_with = [guild_id] if guild_id is not None else guild_id
+                to_rep_with = [guild_id]
                 cmd.guild_ids = to_rep_with
 
         is_global = guild_id is None
