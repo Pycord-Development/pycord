@@ -7,9 +7,8 @@ do note that the client.add_application_command should only be called in only on
 should be called in the very last in the bot.py
 """
 
-import discord
-from discord.commands.commands import Option, SlashCommandGroup
-from discord.ext.commands.context import Context
+from discord.commands import Option, SlashCommandGroup
+from discord.ext.commands import Context
 
 MathGroup = SlashCommandGroup("math", "maths!.", guild_ids=[...])
 
