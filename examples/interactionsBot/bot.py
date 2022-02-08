@@ -5,11 +5,10 @@ with slash commands user permission it's better to check with <ctx.author.guild_
 import os
 
 import discord
-from discord.ext import commands
 from discord.ui.view import View
 
 
-# inherits commands.Bot
+# inherits discord.Bot
 class BotClass(discord.Bot):
     def __init__(self):
         super().__init__()
