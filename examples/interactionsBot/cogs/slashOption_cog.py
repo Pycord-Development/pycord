@@ -1,10 +1,7 @@
 import discord
-from discord.commands import Option, slash_command
-from discord.ext import commands
-from discord.ext.commands.context import Context
+from discord.commands import Option, slash_command, ApplicationContext
 
-
-class SlashOptionExample(commands.Cog):
+class SlashOptionExample(discord.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,7 +26,7 @@ class SlashOptionExample(commands.Cog):
         )
 
     @av.error
-    async def av_error(self, ctx: Context, error):
+    async def av_error(self, ctx: ApplicationContext, error):
         return await ctx.respond(
             error, ephemeral=True
         )  # ephemeral makes "Only you can see this" message
