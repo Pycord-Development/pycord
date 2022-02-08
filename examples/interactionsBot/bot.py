@@ -3,10 +3,12 @@ with slash commands user permission it's better to check with <ctx.author.guild_
 """
 
 import os
+import re
 
 import discord
 from discord.ui.view import View
 
+PY_FILE_REGEX = re.compile(r"(?P<filename>[a-zA-Z0-9_-.,]+)\.py")
 
 # inherits discord.Bot
 class BotClass(discord.Bot):
@@ -28,9 +30,9 @@ class BotClass(discord.Bot):
 
 bot = BotClass()
 
-for filename in os.listdir("./cogs"):
-    if filename.endswith(".py"):
-        bot.load_extension(f"cogs.{filename[:-3]}")
+py_files = list(file.group(1) if PY_FILE_REGEX.match(file) for file in oa.listdir("./cogs"))
+for file in py_files:
+    bot.load_extension(f"cogs.{file}")
 
 # using SlashCommandGroup
 import cog_group
