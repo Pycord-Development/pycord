@@ -1,17 +1,14 @@
 import discord
-from discord.commands import Option, slash_command
-from discord.ext import commands
-from discord.ext.commands.context import Context
+from discord.commands import slash_command, ApplicationContext
 
-
-class SlashExample(commands.Cog):
+class SlashExample(discord.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @slash_command(
         guild_ids=[...], name="ping", description="check the latency of the bot!"
     )
-    async def ping(self, ctx):
+    async def ping(self, actx: ApplicationContext):
         """
         ephemeral makes "Only you can see this" message
 
@@ -20,7 +17,7 @@ class SlashExample(commands.Cog):
         return await ctx.respond(f"{round(self.client.latency * 1000)}ms")
 
     @ping.error
-    async def ping_error(self, ctx: Context, error):
+    async def ping_error(self, actx: ApplicationContext, error):
         return await ctx.respond(
             error, ephemeral=True
         )  # ephemeral makes "Only you can see this" message
