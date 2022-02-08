@@ -8,7 +8,7 @@ import re
 import discord
 from discord.ui.view import View
 
-PY_FILE_REGEX = re.compile(r"(?P<filename>[a-zA-Z0-9_-.,]+)\.py")
+PY_FILE_REGEX = re.compile(r"(?P<filename>[a-zA-Z0-9\_\-\.]+)\.py")
 
 # inherits discord.Bot
 class BotClass(discord.Bot):
