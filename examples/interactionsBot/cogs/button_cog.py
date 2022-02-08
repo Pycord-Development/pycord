@@ -1,8 +1,5 @@
 import discord
-from discord.commands import slash_command
-from discord.ext import commands
-from discord.ext.commands.context import Context
-
+from discord.commands import slash_command, ApplicationContext
 
 class ButtonView(discord.ui.View):
     def __init__(self):
@@ -19,7 +16,7 @@ class ButtonView(discord.ui.View):
         await interaction.response.edit_message("button was pressed!")
 
 
-class ButtonExample(commands.Cog):
+class ButtonExample(discord.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -32,7 +29,7 @@ class ButtonExample(commands.Cog):
 
     # for error handling
     @CommandName.error
-    async def CommandName_error(self, ctx: Context, error):
+    async def CommandName_error(self, ctx: ApplicationContext, error):
         return await ctx.respond(
             error, ephemeral=True
         )  # ephemeral makes "Only you can see this" message
