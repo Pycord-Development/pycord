@@ -30,7 +30,7 @@ class BotClass(discord.Bot):
 
 bot = BotClass()
 
-py_files = list(file.group(1) if PY_FILE_REGEX.match(file) for file in oa.listdir("./cogs"))
+py_files = list(file.group(1) if PY_FILE_REGEX.match(file) for file in os.listdir("./cogs"))
 for file in py_files:
     bot.load_extension(f"cogs.{file}")
 
