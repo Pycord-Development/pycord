@@ -1,7 +1,5 @@
 import discord
-from discord.commands import slash_command
-from discord.ext import commands
-from discord.ext.commands.context import Context
+from discord.commands import slash_command, ApplicationContext
 
 
 # Defines a custom Select containing colour options
@@ -51,7 +49,7 @@ class DropdownView(discord.ui.View):
         self.add_item(Dropdown())
 
 
-class DropdownExample(commands.Cog):
+class DropdownExample(discord.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -67,7 +65,7 @@ class DropdownExample(commands.Cog):
         """
 
     @whatcolor.error
-    async def color_error(self, ctx: Context, error):
+    async def color_error(self, ctx: ApplicationContext, error):
         return await ctx.respond(
             error, ephemeral=True
         )  # ephemeral makes "Only you can see this" message
