@@ -8,7 +8,7 @@ class SlashExample(discord.Cog):
     @slash_command(
         guild_ids=[...], name="ping", description="check the latency of the bot!"
     )
-    async def ping(self, actx: ApplicationContext):
+    async def ping(self, ctx: ApplicationContext):
         """
         ephemeral makes "Only you can see this" message
 
@@ -17,7 +17,7 @@ class SlashExample(discord.Cog):
         return await ctx.respond(f"{round(self.client.latency * 1000)}ms")
 
     @ping.error
-    async def ping_error(self, actx: ApplicationContext, error):
+    async def ping_error(self, ctx: ApplicationContext, error):
         return await ctx.respond(
             error, ephemeral=True
         )  # ephemeral makes "Only you can see this" message
