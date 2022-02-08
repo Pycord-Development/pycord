@@ -282,7 +282,7 @@ class ApplicationCommandMixin:
                 if type(to_check[check]) == list:
                     for opt in to_check[check]:
 
-                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check] if check in as_dict]
+                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                         for i, val in enumerate(cmd_vals):
                             # We need to do some falsy conversion here
                             # The API considers False (autocomplete) and [] (choices) to be falsy values
@@ -381,9 +381,10 @@ class ApplicationCommandMixin:
 
         commands = [copy.copy(cmd) for cmd in commands]
 
-        for cmd in commands:
-            to_rep_with = [guild_id] if guild_id is not None else guild_id
-            cmd.guild_ids = to_rep_with
+        if guild_id is not None:
+            for cmd in commands:
+                to_rep_with = [guild_id]
+                cmd.guild_ids = to_rep_with
 
         is_global = guild_id is None
 
@@ -537,7 +538,8 @@ class ApplicationCommandMixin:
             for cmd in commands:
                 cmd.guild_ids = guild_ids
 
-        registered_commands = await self.register_commands(commands, force=force)
+        global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
+        registered_commands = await self.register_commands(global_commands, force=force)
 
         cmd_guild_ids = []
         registered_guild_commands = {}
@@ -549,10 +551,12 @@ class ApplicationCommandMixin:
             if unregister_guilds is not None:
                 cmd_guild_ids.extend(unregister_guilds)
             for guild_id in set(cmd_guild_ids):
+                guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    commands,
+                    guild_commands,
                     guild_id=guild_id,
-                    force=force)
+                    force=force
+                )
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
@@ -572,13 +576,15 @@ class ApplicationCommandMixin:
                 # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
                 global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
-        for guild_id, guild_data in registered_guild_commands.items():
-            commands = registered_guild_commands[guild_id]
+        for guild_id, commands in registered_guild_commands.items():
             guild_permissions: List = []
 
             for i in commands:
                 cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and cmd.guild_ids is not None
-                                       and (i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+                                       and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+                if not cmd:
+                    # command has not been added yet
+                    continue
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
@@ -1410,15 +1416,15 @@ class Bot(BotBase, Client):
 
         .. versionadded:: 1.3
     debug_guilds: Optional[List[:class:`int`]]
-        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        The bot will not create any global commands if a debug_guilds is passed.
+        Guild IDs of guilds to use for testing commands.
+        The bot will not create any global commands if debug guild IDs are passed.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     auto_sync_commands: :class:`bool`
         Whether or not to automatically sync slash commands. This will call sync_commands in on_connect, and in
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     """
 
     pass

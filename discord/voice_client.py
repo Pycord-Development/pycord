@@ -757,10 +757,10 @@ class VoiceClient(VoiceProtocol):
     def stop_recording(self):
         """Stops the recording.
         Must be already recording.
-        Raises
 
         .. versionadded:: 2.1
 
+        Raises
         ------
         RecordingException
             Not currently recording.
