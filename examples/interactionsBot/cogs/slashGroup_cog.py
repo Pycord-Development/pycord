@@ -1,10 +1,7 @@
 import discord
-from discord.commands.commands import Option, SlashCommandGroup
-from discord.ext import commands
-from discord.ext.commands.context import Context
+from discord.commands import Option, SlashCommandGroup, ApplicationContext
 
-
-class SlashGroupExample(commands.Cog):
+class SlashGroupExample(discord.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -14,7 +11,7 @@ class SlashGroupExample(commands.Cog):
         @moderation.command(guild_ids=[...], description="kick some people")
         async def kick(
             self,
-            ctx: Context,
+            ctx: ApplicationContext,
             member: Option(discord.Member),
             reason: Option(str, description="reason"),
         ):
@@ -33,7 +30,7 @@ class SlashGroupExample(commands.Cog):
         @moderation.command(guild_ids=[...], description="ban some people")
         async def ban(
             self,
-            ctx: Context,
+            ctx: ApplicationContext,
             member: Option(discord.Member),
             reason: Option(str, description="reason"),
         ):
