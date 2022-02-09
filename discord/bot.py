@@ -732,17 +732,8 @@ class ApplicationCommandMixin:
         if interaction.type not in (
             InteractionType.application_command,
             InteractionType.auto_complete,
-            InteractionType.modal_submit,
         ):
             return
-
-        if interaction.type == InteractionType.modal_submit:
-            state: ConnectionState = self._connection  # type: ignore
-            user_id, custom_id = (
-                interaction.user.id,
-                interaction.data["custom_id"],
-            )
-            return await state._modal_store.dispatch(user_id, custom_id, interaction)
 
         try:
             command = self._application_commands[interaction.data["id"]]

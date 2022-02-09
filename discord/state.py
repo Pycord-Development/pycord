@@ -47,7 +47,7 @@ from .channel import _channel_factory
 from .raw_models import *
 from .member import Member
 from .role import Role
-from .enums import ChannelType, try_enum, Status, ScheduledEventStatus
+from .enums import ChannelType, try_enum, Status, ScheduledEventStatus, InteractionType
 from . import utils
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .object import Object
@@ -709,6 +709,12 @@ class ConnectionState:
             custom_id = interaction.data['custom_id']  # type: ignore
             component_type = interaction.data['component_type']  # type: ignore
             self._view_store.dispatch(component_type, custom_id, interaction)
+        if data['type'] == InteractionType.modal_submit:
+            user_id, custom_id = (
+                interaction.user.id,
+                interaction.data["custom_id"],
+            )
+            asyncio.create_task(self._modal_store.dispatch(user_id, custom_id, interaction))
 
         self.dispatch('interaction', interaction)
 
