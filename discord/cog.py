@@ -276,12 +276,7 @@ class Cog(metaclass=CogMeta):
         """
         for command in self.__cog_commands__:
             if isinstance(command, SlashCommandGroup):
-                for subcommand in command.subcommands:
-                    if subcommand.parent is not None:
-                        for sub_subcommand in subcommand.subcommands:
-                            yield sub_subcommand
-                    else:
-                        yield subcommand
+                yield from command.walk_commands()
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.

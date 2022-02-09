@@ -59,7 +59,6 @@ class Cog(Cog):
             A command or group from the cog.
         """
         from .core import GroupMixin
-        print(self.__cog_commands__)
         for command in self.__cog_commands__:
             if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
@@ -67,15 +66,7 @@ class Cog(Cog):
                     if isinstance(command, GroupMixin):
                         yield from command.walk_commands()
             elif isinstance(command, SlashCommandGroup):
-                for subcommand in command.subcommands:
-                    print(subcommand)
-                    print(subcommand.parent)
-                    if subcommand.parent is not None and isinstance(subcommand, SlashCommandGroup):
-                        print("reach")
-                        for sub_subcommand in subcommand.subcommands:
-                            yield sub_subcommand
-                    else:
-                        yield subcommand
+                yield from command.walk_commands()
             else:
                 yield command
 
