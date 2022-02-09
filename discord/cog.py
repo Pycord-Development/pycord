@@ -32,7 +32,7 @@ from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Opti
 
 import discord.utils
 from . import errors
-from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
+from .commands import _BaseCommand, ApplicationCommand, ApplicationContext, SlashCommandGroup
 
 __all__ = (
     'CogMeta',
@@ -275,8 +275,13 @@ class Cog(metaclass=CogMeta):
             A command or group from the cog.
         """
         for command in self.__cog_commands__:
-            if command.parent is None:
-                yield command
+            if isinstance(command, SlashCommandGroup):
+                for subcommand in command.subcommands:
+                    if subcommand.parent is not None:
+                        for sub_subcommand in subcommand.subcommands:
+                            yield sub_subcommand
+                    else:
+                        yield subcommand
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.

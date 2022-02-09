@@ -29,7 +29,7 @@ from ...cog import Cog
 
 from typing import Any, Callable, Generator, TYPE_CHECKING, List, TypeVar, Type, Union
 
-from ...commands import ApplicationCommand
+from ...commands import ApplicationCommand, SlashCommandGroup
 
 if TYPE_CHECKING:
     from .core import Command
@@ -59,14 +59,25 @@ class Cog(Cog):
             A command or group from the cog.
         """
         from .core import GroupMixin
+        print(self.__cog_commands__)
         for command in self.__cog_commands__:
-            if isinstance(command, ApplicationCommand):
-                yield command
-            else:
+            if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
                     yield command
                     if isinstance(command, GroupMixin):
                         yield from command.walk_commands()
+            elif isinstance(command, SlashCommandGroup):
+                for subcommand in command.subcommands:
+                    print(subcommand)
+                    print(subcommand.parent)
+                    if subcommand.parent is not None and isinstance(subcommand, SlashCommandGroup):
+                        print("reach")
+                        for sub_subcommand in subcommand.subcommands:
+                            yield sub_subcommand
+                    else:
+                        yield subcommand
+            else:
+                yield command
 
     def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
         r"""
