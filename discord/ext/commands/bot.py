@@ -26,15 +26,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 
-import asyncio
+
 import collections
 import collections.abc
-import inspect
-import importlib.util
 import sys
 import traceback
 import types
-from typing import Any, Callable, Mapping, List, Dict, TYPE_CHECKING, Optional, TypeVar, Type, Union
+from typing import Any, Callable, TYPE_CHECKING, Optional, TypeVar, Type, Union
 
 import discord
 
@@ -46,8 +44,6 @@ from .help import HelpCommand, DefaultHelpCommand
 from .cog import Cog
 
 if TYPE_CHECKING:
-    import importlib.machinery
-
     from discord.message import Message
     from ._types import (
         Check,
