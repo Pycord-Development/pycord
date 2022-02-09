@@ -665,6 +665,8 @@ class SlashCommandOptionType(Enum):
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
+        if datatype.__name__ == "Attachment":
+            return cls.attachment
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
 
