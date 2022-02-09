@@ -210,6 +210,10 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    def send_modal(self):
+        return self.interaction.response.send_modal
+
+    @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
