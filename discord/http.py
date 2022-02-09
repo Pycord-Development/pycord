@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import sys
 from typing import (
@@ -86,6 +85,7 @@ if TYPE_CHECKING:
         voice,
         sticker,
         welcome_screen,
+        scheduled_events,
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.message import Attachment
@@ -267,7 +267,7 @@ class HTTPClient:
                         f.reset(seek=tries)
 
                 if form:
-                    form_data = aiohttp.FormData()
+                    form_data = aiohttp.FormData(quote_fields=False)
                     for params in form:
                         form_data.add_field(**params)
                     kwargs['data'] = form_data
@@ -497,28 +497,20 @@ class HTTPClient:
         if stickers:
             payload['sticker_ids'] = stickers
 
-        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
-        if len(files) == 1:
-            file = files[0]
+        attachments = []
+        form.append({'name': 'payload_json'})
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
-
+        payload['attachments'] = attachments
+        form[0]['value'] = utils._to_json(payload)
         return self.request(route, form=form, files=files)
 
     def send_files(
@@ -559,27 +551,23 @@ class HTTPClient:
     ) -> Response[message.Message]:
         form = []
 
-        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
-        if len(files) == 1:
-            file = files[0]
+        attachments = []
+        form.append({'name': 'payload_json'})
+        for index, file in enumerate(files):
+            attachments.append({'id': index, 'filename': file.filename, 'description': file.description})
             form.append(
                 {
-                    'name': 'file',
+                    'name': f'files[{index}]',
                     'value': file.fp,
                     'filename': file.filename,
                     'content_type': 'application/octet-stream',
                 }
             )
+        if 'attachments' not in payload:
+            payload['attachments'] = attachments
         else:
-            for index, file in enumerate(files):
-                form.append(
-                    {
-                        'name': f'file{index}',
-                        'value': file.fp,
-                        'filename': file.filename,
-                        'content_type': 'application/octet-stream',
-                    }
-                )
+            payload['attachments'].extend(attachments)
+        form[0]['value'] = utils._to_json(payload)
 
         return self.request(route, form=form, files=files)
     
@@ -1453,12 +1441,16 @@ class HTTPClient:
         return self.request(r, reason=reason, json=payload)
 
     def get_invite(
-        self, invite_id: str, *, with_counts: bool = True, with_expiration: bool = True
+        self, invite_id: str, *, with_counts: bool = True, with_expiration: bool = True, guild_scheduled_event_id: Optional[int] = None
     ) -> Response[invite.Invite]:
         params = {
             'with_counts': int(with_counts),
             'with_expiration': int(with_expiration),
         }
+
+        if guild_scheduled_event_id is not None:
+            params['guild_scheduled_event_id'] = int(guild_scheduled_event_id)
+
         return self.request(Route('GET', '/invites/{invite_id}', invite_id=invite_id), params=params)
 
     def invites_from(self, guild_id: Snowflake) -> Response[List[invite.Invite]]:
@@ -1611,6 +1603,79 @@ class HTTPClient:
 
     def delete_stage_instance(self, channel_id: Snowflake, *, reason: Optional[str] = None) -> Response[None]:
         return self.request(Route('DELETE', '/stage-instances/{channel_id}', channel_id=channel_id), reason=reason)
+    
+    # Guild scheduled events management
+
+    def get_scheduled_events(self, guild_id: Snowflake, with_user_count: bool = True) -> Response[List[scheduled_events.ScheduledEvent]]:
+        params = {
+            'with_user_count': int(with_user_count),
+        }
+
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events', guild_id=guild_id), params=params)
+
+    def get_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, with_user_count: bool = True) -> Response[scheduled_events.ScheduledEvent]:
+        params = {
+            'with_user_count': int(with_user_count),
+        }
+
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), params=params)
+
+    def create_scheduled_event(self, guild_id: Snowflake, reason: Optional[str] = None, **payload: Any) -> Response[scheduled_events.ScheduledEvent]:
+        valid_keys = (
+            'channel_id',
+            'name',
+            'privacy_level',
+            'scheduled_start_time',
+            'scheduled_end_time',
+            'description',
+            'entity_type',
+            'entity_metadata',
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(Route('POST', '/guilds/{guild_id}/scheduled-events', guild_id=guild_id), json=payload, reason=reason)
+
+    def delete_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake) -> Response[None]:
+        return self.request(Route('DELETE', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id))
+
+    def edit_scheduled_event(self, guild_id: Snowflake, event_id: Snowflake, reason: Optional[str] = None, **payload: Any) -> Response[scheduled_events.ScheduledEvent]:
+        valid_keys = (
+            'channel_id',
+            'name',
+            'privacy_level',
+            'scheduled_start_time',
+            'scheduled_end_time',
+            'description',
+            'entity_type',
+            'status',
+            'entity_metadata',
+            'image',
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(Route('PATCH', '/guilds/{guild_id}/scheduled-events/{event_id}', guild_id=guild_id, event_id=event_id), json=payload, reason=reason)
+
+    def get_scheduled_event_users(
+        self,
+        guild_id: Snowflake,
+        event_id: Snowflake,
+        limit: int,
+        with_member: bool = False,
+        before: Snowflake = None,
+        after: Snowflake = None
+    ) -> Response[List[scheduled_events.ScheduledEventSubscriber]]:
+        params = {
+            'limit': int(limit),
+            'with_member': int(with_member),
+        }
+
+        if before is not None:
+            params["before"] = int(before)
+
+        if after is not None:
+            params["after"] = int(after)
+        
+        return self.request(Route('GET', '/guilds/{guild_id}/scheduled-events/{event_id}/users', guild_id=guild_id, event_id=event_id), params=params)
 
     # Application commands (global)
 

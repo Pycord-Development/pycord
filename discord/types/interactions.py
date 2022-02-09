@@ -189,6 +189,8 @@ class _InteractionOptional(TypedDict, total=False):
     member: Member
     user: User
     message: Message
+    locale: str
+    guild_locale: str
 
 
 class Interaction(_InteractionOptional):
@@ -224,9 +226,6 @@ class MessageInteraction(TypedDict):
     type: InteractionType
     name: str
     user: User
-
-
-
 
 
 class _EditApplicationCommandOptional(TypedDict, total=False):

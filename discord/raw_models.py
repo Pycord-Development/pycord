@@ -40,12 +40,14 @@ if TYPE_CHECKING:
         ReactionClearEmojiEvent,
         IntegrationDeleteEvent,
         ThreadDeleteEvent,
-        TypingEvent
+        TypingEvent,
+        ScheduledEventSubscription,
     )
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .member import Member
     from .threads import Thread
+    from .guild import Guild
 
 
 
@@ -59,6 +61,7 @@ __all__ = (
     'RawIntegrationDeleteEvent',
     'RawThreadDeleteEvent',
     'RawTypingEvent',
+    'RawScheduledEventSubscription',
 )
 
 
@@ -346,4 +349,30 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: Optional[int] = int(data['guild_id'])
         except KeyError:
             self.guild_id: Optional[int] = None
- 
+
+class RawScheduledEventSubscription(_RawReprMixin):
+    """Represents the payload for a :func:`raw_scheduled_event_user_add` or
+    :func:`raw_scheduled_event_user_remove` event.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    event_id: :class:`int`
+        The event ID where the typing originated from.
+    user_id: :class:`int`
+        The ID of the user that subscribed/unsubscribed.
+    guild: Optional[:class:`Guild`]
+        The guild where the subscription/unsubscription happened.
+    event_type: :class:`str`
+        Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
+        the event called.
+    """
+
+    __slots__ = ("event_id", "guild", "user_id", "event_type")
+
+    def __init__(self, data: ScheduledEventSubscription, event_type: str):
+        self.event_id: int = int(data['guild_scheduled_event_id'])
+        self.user_id: int = int(data['user_id'])
+        self.guild: Guild = None
+        self.event_type: str = event_type

@@ -53,7 +53,13 @@ from .errors import *
 from ...errors import *
 from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
 from .converter import run_converters, get_converter, Greedy
-from ...commands import _BaseCommand, slash_command, user_command, message_command
+from ...commands import (
+    ApplicationCommand,
+    _BaseCommand,
+    slash_command,
+    user_command,
+    message_command,
+)
 from .cog import Cog
 from .context import Context
 
@@ -1144,6 +1150,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         finally:
             ctx.command = original
 
+    def _set_cog(self, cog):
+        self.cog = cog
+
 class GroupMixin(Generic[CogT]):
     """A mixin that implements common functionality for classes that behave
     similar to :class:`.Group` and are allowed to register commands.
@@ -1158,17 +1167,24 @@ class GroupMixin(Generic[CogT]):
     """
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         case_insensitive = kwargs.get('case_insensitive', False)
-        self.all_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
+        self.prefixed_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
         self.case_insensitive: bool = case_insensitive
         super().__init__(*args, **kwargs)
 
     @property
+    def all_commands(self):
+        # merge app and prefixed commands
+        if hasattr(self, "_application_commands"):
+            return {**self._application_commands, **self.prefixed_commands}
+        return self.prefixed_commands
+
+    @property
     def commands(self) -> Set[Command[CogT, Any, Any]]:
         """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
-        return set(self.all_commands.values())
+        return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:
-        for command in self.all_commands.copy().values():
+        for command in self.prefixed_commands.copy().values():
             if isinstance(command, GroupMixin):
                 command.recursively_remove_all_commands()
             self.remove_command(command.name)
@@ -1201,15 +1217,15 @@ class GroupMixin(Generic[CogT]):
         if isinstance(self, Command):
             command.parent = self
 
-        if command.name in self.all_commands:
+        if command.name in self.prefixed_commands:
             raise CommandRegistrationError(command.name)
 
-        self.all_commands[command.name] = command
+        self.prefixed_commands[command.name] = command
         for alias in command.aliases:
-            if alias in self.all_commands:
+            if alias in self.prefixed_commands:
                 self.remove_command(command.name)
                 raise CommandRegistrationError(alias, alias_conflict=True)
-            self.all_commands[alias] = command
+            self.prefixed_commands[alias] = command
 
     def remove_command(self, name: str) -> Optional[Command[CogT, Any, Any]]:
         """Remove a :class:`.Command` from the internal list
@@ -1228,7 +1244,7 @@ class GroupMixin(Generic[CogT]):
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        command = self.all_commands.pop(name, None)
+        command = self.prefixed_commands.pop(name, None)
 
         # does not exist
         if command is None:
@@ -1240,12 +1256,12 @@ class GroupMixin(Generic[CogT]):
 
         # we're not removing the alias so let's delete the rest of them.
         for alias in command.aliases:
-            cmd = self.all_commands.pop(alias, None)
+            cmd = self.prefixed_commands.pop(alias, None)
             # in the case of a CommandRegistrationError, an alias might conflict
             # with an already existing command. If this is the case, we want to
             # make sure the pre-existing command is not removed.
             if cmd is not None and cmd != command:
-                self.all_commands[alias] = cmd
+                self.prefixed_commands[alias] = cmd
         return command
 
     def walk_commands(self) -> Generator[Command[CogT, Any, Any], None, None]:
@@ -1287,18 +1303,18 @@ class GroupMixin(Generic[CogT]):
 
         # fast path, no space in name.
         if ' ' not in name:
-            return self.all_commands.get(name)
+            return self.prefixed_commands.get(name)
 
         names = name.split()
         if not names:
             return None
-        obj = self.all_commands.get(names[0])
+        obj = self.prefixed_commands.get(names[0])
         if not isinstance(obj, GroupMixin):
             return obj
 
         for name in names[1:]:
             try:
-                obj = obj.all_commands[name]  # type: ignore
+                obj = obj.prefixed_commands[name]  # type: ignore
             except (AttributeError, KeyError):
                 return None
 
@@ -1454,7 +1470,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             injected = hooked_wrapped_callback(self, ctx, self.callback)
@@ -1488,7 +1504,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             try:
@@ -2144,7 +2160,7 @@ def is_nsfw() -> Callable[[T], T]:
     return check(pred)
 
 def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], Any]] = BucketType.default) -> Callable[[T], T]:
-    """A decorator that adds a cooldown to a :class:`.Command`
+    """A decorator that adds a cooldown to a command
 
     A cooldown allows a command to only be used a specific amount
     of times in a specific time frame. These cooldowns can be based
@@ -2171,7 +2187,7 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
     """
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
-        if isinstance(func, Command):
+        if isinstance(func, (Command, ApplicationCommand)):
             func._buckets = CooldownMapping(Cooldown(rate, per), type)
         else:
             func.__commands_cooldown__ = CooldownMapping(Cooldown(rate, per), type)
@@ -2179,7 +2195,7 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
     return decorator  # type: ignore
 
 def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type: BucketType = BucketType.default) -> Callable[[T], T]:
-    """A decorator that adds a dynamic cooldown to a :class:`.Command`
+    """A decorator that adds a dynamic cooldown to a command
 
     This differs from :func:`.cooldown` in that it takes a function that
     accepts a single parameter of type :class:`.discord.Message` and must
@@ -2219,7 +2235,7 @@ def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type
     return decorator  # type: ignore
 
 def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: bool = False) -> Callable[[T], T]:
-    """A decorator that adds a maximum concurrency to a :class:`.Command` or its subclasses.
+    """A decorator that adds a maximum concurrency to a command
 
     This enables you to only allow a certain number of command invocations at the same time,
     for example if a command takes too long or if only one user can use it at a time. This
@@ -2244,7 +2260,7 @@ def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: 
 
     def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
         value = MaxConcurrency(number, per=per, wait=wait)
-        if isinstance(func, Command):
+        if isinstance(func, (Command, ApplicationCommand)):
             func._max_concurrency = value
         else:
             func.__commands_max_concurrency__ = value

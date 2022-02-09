@@ -59,7 +59,7 @@ __all__ = (
     'ExtensionNotLoaded',
     'NoEntryPointError',
     'ExtensionFailed',
-    'ExtensionNotFound'
+    'ExtensionNotFound',
 )
 
 

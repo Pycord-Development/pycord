@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Pycord
-===========================
+=================
 
 .. image:: /images/snake.svg
 .. image:: /images/snake_dark.svg
@@ -25,7 +25,7 @@ Getting started
 
 Is this your first time using the library? This is the place to get started!
 
-- **First steps:** :doc:`intro` | :doc:`quickstart` | :doc:`logging`
+- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging`
 - **Working with Discord:** :doc:`discord` | :doc:`intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
@@ -50,6 +50,7 @@ These extensions help you during development when it comes to common tasks.
 
   ext/commands/index.rst
   ext/tasks/index.rst
+  ext/pages/index.rst
 
 Manuals
 ---------
@@ -62,6 +63,7 @@ These pages go into great detail about everything the API can do.
   api
   discord.ext.commands API Reference <ext/commands/api.rst>
   discord.ext.tasks API Reference <ext/tasks/index.rst>
+  discord.ext.pages API Reference <ext/pages/index.rst>
 
 Meta
 ------
