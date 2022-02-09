@@ -18,7 +18,7 @@ async def start(ctx: ApplicationContext,
     if not voice:
         return await ctx.respond("You're not in a vc right now")
     if ctx.guild.id in bot.connections:
-        return await ctx.respond("I am already recording voice in {}".format(bot.connections.get(ctx.guild.id).mention))
+        return await ctx.respond("I am already recording voice in this guild.")
     try:
         vc = await voice.channel.connect()
     except discord.ClientException:
