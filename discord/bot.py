@@ -730,8 +730,8 @@ class ApplicationCommandMixin:
         if auto_sync is None:
             auto_sync = self.auto_sync_commands
         if interaction.type not in (
-                InteractionType.application_command,
-                InteractionType.auto_complete
+            InteractionType.application_command,
+            InteractionType.auto_complete,
         ):
             return
 
