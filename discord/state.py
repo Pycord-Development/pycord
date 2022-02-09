@@ -709,7 +709,7 @@ class ConnectionState:
             custom_id = interaction.data['custom_id']  # type: ignore
             component_type = interaction.data['component_type']  # type: ignore
             self._view_store.dispatch(component_type, custom_id, interaction)
-        if data['type'] == InteractionType.modal_submit:
+        if interaction.type == InteractionType.modal_submit:
             user_id, custom_id = (
                 interaction.user.id,
                 interaction.data["custom_id"],
