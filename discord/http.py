@@ -1406,6 +1406,48 @@ class HTTPClient:
     def edit_widget(self, guild_id: Snowflake, payload) -> Response[widget.WidgetSettings]:
         return self.request(Route('PATCH', '/guilds/{guild_id}/widget', guild_id=guild_id), json=payload)
 
+    # TODO: typehint responses
+
+    def get_guild_discovery_metadata(self, guild_id: Snowflake):
+        return self.request(Route('GET', '/guilds/{guild_id}/discovery-metadata', guild_id=guild_id))
+
+    def edit_guild_discovery_metadata(
+        self,
+        guild_id: Snowflake,
+        primary_category_id: int = None,
+        keywords: List[str] = None,
+        emoji_discoverability_enabled: bool = None,
+    ):
+        payload: Dict[str, Any] = {}
+        if primary_category_id:
+            payload['primary_category_id'] = primary_category_id
+
+        if keywords:
+            payload['keywords'] = keywords
+
+        if emoji_discoverability_enabled:
+            payload['emoji_discoverability_enabled'] = emoji_discoverability_enabled
+
+        return self.request(Route('PATCH', '/guilds/{guild_id}/discovery-metadata', guild_id=guild_id), json=payload)
+
+    def add_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int):
+        r = Route('POST', '/guilds/{guild_id}/discovery-categories/{discovery_category_id}', guild_id=guild_id, discovery_category_id=discovery_category_id)
+        return self.request(r)
+
+    def remove_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int):
+        r = Route('DELETE', '/guilds/{guild_id}/discovery-categories/{discovery_category_id}', guild_id=guild_id, discovery_category_id=discovery_category_id)
+        return self.request(r)
+
+    def get_discovery_categories(self) -> Response[None]:
+        return self.request(Route('GET', '/discovery/categories'))
+
+    def validate_discovery_search_term(self, term: str) -> Response[None]:
+        params = {
+            "term": term,
+        }
+
+        return self.request(Route('GET', 'discovery/valid-term'), params=params)
+
     # Invite management
 
     def create_invite(
