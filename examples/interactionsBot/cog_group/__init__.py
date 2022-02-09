@@ -7,8 +7,7 @@ do note that the client.add_application_command should only be called in only on
 should be called in the very last in the bot.py
 """
 
-from discord.commands import Option, SlashCommandGroup
-from discord.ext.commands import Context
+from discord.commands import Option, SlashCommandGroup, ApplicationContext
 
 MathGroup = SlashCommandGroup("math", "maths!.", guild_ids=[...])
 
@@ -17,7 +16,7 @@ def addition():  # you can use whatever parameters needed for you command.
     # the main decorator will be called inside the method.
     @MathGroup.command(name="add", guild_ids=[...], description="addition!")
     async def add(
-        ctx: Context,
+        ctx: ApplicationContext,
         number1: Option(int, "first integer"),  # refer to slashOption.py
         number2: Option(int, "second integer"),  # refer to slashOption.py
     ):
@@ -27,7 +26,7 @@ def addition():  # you can use whatever parameters needed for you command.
 def subtraction(client):
     @MathGroup.command(name="subtract", guild_ids=[...], description="subtraction!")
     async def sub(
-        ctx: Context,
+        ctx: ApplicationContext,
         number1: Option(int, "first integer"),  # refer to slashOption.py
         number2: Option(int, "second integer"),  # refer to slashOption.py
     ):
