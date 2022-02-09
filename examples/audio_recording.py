@@ -17,8 +17,13 @@ async def start(ctx: ApplicationContext,
 
     if not voice:
         return await ctx.respond("You're not in a vc right now")
-
-    vc = await voice.channel.connect()
+    if ctx.guild.id in bot.connections:
+        return await ctx.respond("I am already recording voice in {}".format(bot.connections.get(ctx.guild.id).mention))
+    try:
+        vc = await voice.channel.connect()
+    except discord.ClientException:
+        return await ctx.respond("I am connected to a voice channel already.")
+      
     bot.connections.update({ctx.guild.id: vc})
 
     if encoding == "mp3":
