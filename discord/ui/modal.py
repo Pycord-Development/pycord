@@ -4,10 +4,13 @@ import os
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
-from .item import Item
+from .input_text import InputText
 from .view import _ViewWeights
 
-__all__ = ("Modal",)
+__all__ = (
+    "Modal",
+    "ModalStore",
+)
 
 
 if TYPE_CHECKING:
@@ -24,7 +27,7 @@ class Modal:
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
-        self.children: List[Item] = []
+        self.children: List[InputText] = []
         self.__weights = _ViewWeights(self.children)
 
     async def callback(self, interaction: Interaction):
@@ -40,7 +43,7 @@ class Modal:
         pass
 
     def to_components(self) -> List[Dict[str, Any]]:
-        def key(item: Item) -> int:
+        def key(item: InputText) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
@@ -59,30 +62,30 @@ class Modal:
 
         return components
 
-    def add_item(self, item: Item):
-        """Adds an item to the modal dialog.
+    def add_item(self, item: InputText):
+        """Adds an InputText component to the modal dialog.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`InputText`
             The item to add to the modal dialog
         """
 
         if len(self.children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, InputText):
+            raise TypeError(f"expected InputText not {item.__class__!r}")
 
         self.__weights.add_item(item)
         self.children.append(item)
 
-    def remove_item(self, item: Item):
-        """Removes an item from the modal dialog.
+    def remove_item(self, item: InputText):
+        """Removes an InputText component from the modal dialog.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`InputText`
             The item to remove from the modal dialog.
         """
         try:
