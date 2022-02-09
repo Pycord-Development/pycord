@@ -47,7 +47,7 @@ from .channel import _channel_factory
 from .raw_models import *
 from .member import Member
 from .role import Role
-from .enums import ChannelType, try_enum, Status, ScheduledEventStatus
+from .enums import ChannelType, try_enum, Status, ScheduledEventStatus, InteractionType
 from . import utils
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .object import Object
@@ -55,6 +55,7 @@ from .invite import Invite
 from .integrations import _integration_factory
 from .interactions import Interaction
 from .ui.view import ViewStore, View
+from .ui.modal import Modal, ModalStore
 from .stage_instance import StageInstance
 from .threads import Thread, ThreadMember
 from .sticker import GuildSticker
@@ -256,7 +257,7 @@ class ConnectionState:
         self._guilds: Dict[int, Guild] = {}
         if views:
             self._view_store: ViewStore = ViewStore(self)
-
+        self._modal_store: ModalStore = ModalStore(self)
         self._voice_clients: Dict[int, VoiceProtocol] = {}
 
         # LRU of max size 128
@@ -362,6 +363,9 @@ class ConnectionState:
 
     def store_view(self, view: View, message_id: Optional[int] = None) -> None:
         self._view_store.add_view(view, message_id)
+
+    def store_modal(self, modal: Modal, message_id: int) -> None:
+        self._modal_store.add_modal(modal, message_id)
 
     def prevent_view_updates_for(self, message_id: int) -> Optional[View]:
         return self._view_store.remove_message_tracking(message_id)
@@ -705,6 +709,12 @@ class ConnectionState:
             custom_id = interaction.data['custom_id']  # type: ignore
             component_type = interaction.data['component_type']  # type: ignore
             self._view_store.dispatch(component_type, custom_id, interaction)
+        if interaction.type == InteractionType.modal_submit:
+            user_id, custom_id = (
+                interaction.user.id,
+                interaction.data["custom_id"],
+            )
+            asyncio.create_task(self._modal_store.dispatch(user_id, custom_id, interaction))
 
         self.dispatch('interaction', interaction)
 

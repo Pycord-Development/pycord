@@ -26,6 +26,7 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
 
+
 __all__ = (
     "ThreadOption",
     "Option",
@@ -70,20 +71,30 @@ class Option:
                 self.converter = input_type
                 input_type = SlashCommandOptionType.string
             else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == "GuildChannel":
-                            continue
-                        if isinstance(i, ThreadOption):
-                            self.channel_types.append(i._type)
-                            continue
+                try:
+                    _type = SlashCommandOptionType.from_datatype(input_type)
+                except TypeError as exc:
+                    from ..ext.commands.converter import CONVERTER_MAPPING
 
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
+                    if input_type in CONVERTER_MAPPING:
+                        self.converter = CONVERTER_MAPPING[input_type]
+                        input_type = SlashCommandOptionType.string
+                    else:
+                        raise exc
+                else:
+                    if _type == SlashCommandOptionType.channel:
+                        if not isinstance(input_type, tuple):
+                            input_type = (input_type,)
+                        for i in input_type:
+                            if i.__name__ == "GuildChannel":
+                                continue
+                            if isinstance(i, ThreadOption):
+                                self.channel_types.append(i._type)
+                                continue
+
+                            channel_type = channel_type_map[i.__name__]
+                            self.channel_types.append(channel_type)
+                    input_type = _type
         self.input_type = input_type
         self.required: bool = (
             kwargs.pop("required", True) if "default" not in kwargs else False
