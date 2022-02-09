@@ -62,7 +62,6 @@ __all__ = (
     'ScheduledEventLocationType',
     'InputTextStyle',
     'SlashCommandOptionType',
-
 )
 
 
