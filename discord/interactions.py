@@ -59,6 +59,7 @@ if TYPE_CHECKING:
     from aiohttp import ClientSession
     from .embeds import Embed
     from .ui.view import View
+    from .ui.modal import Modal
     from .channel import VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel, PartialMessageable
     from .threads import Thread
     from .commands import OptionChoice
@@ -502,9 +503,9 @@ class InteractionResponse:
         self,
         content: Optional[Any] = None,
         *,
-        embed: Embed = MISSING,
-        embeds: List[Embed] = MISSING,
-        view: View = MISSING,
+        embed: Embed = None,
+        embeds: List[Embed] = None,
+        view: View = None,
         tts: bool = False,
         ephemeral: bool = False,
         allowed_mentions: AllowedMentions = None,
@@ -563,10 +564,10 @@ class InteractionResponse:
             'tts': tts,
         }
 
-        if embed is not MISSING and embeds is not MISSING:
+        if embed is not None and embeds is not None:
             raise TypeError('cannot mix embed and embeds keyword arguments')
 
-        if embed is not MISSING and embed is not None:
+        if embed is not None:
             embeds = [embed]
 
         if embeds:
@@ -580,7 +581,7 @@ class InteractionResponse:
         if ephemeral:
             payload['flags'] = 64
 
-        if view is not MISSING and view is not None:
+        if view is not None:
             payload['components'] = view.to_components()
 
         state = self._parent._state
@@ -624,7 +625,7 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not MISSING and view is not None:
+        if view is not None:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
@@ -775,7 +776,24 @@ class InteractionResponse:
         )
 
         self._responded = True
-        
+
+    async def send_modal(self, modal: Modal):
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        payload = modal.to_dict()
+        adapter = async_context.get()
+        await adapter.create_interaction_response(
+            self._parent.id,
+            self._parent.token,
+            session=self._parent._session,
+            type=InteractionResponseType.modal.value,
+            data=payload,
+        )
+        self._responded = True
+        self._parent._state.store_modal(modal, self._parent.user.id)
+
+
 class _InteractionMessageState:
     __slots__ = ('_parent', '_interaction')
 

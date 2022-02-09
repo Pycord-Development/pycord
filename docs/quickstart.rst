@@ -111,7 +111,7 @@ Let's look at the differences compared to the previous example, step-by-step:
    If you omit it, the command will be globally available, and may take up to an hour to register.
 4. Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that
    all slash commands must have some form of response, otherwise they will fail.
-6. Finally, we, once again, run the bot with our login token.
+5. Finally, we, once again, run the bot with our login token.
 
 
 Congratulations! Now you have created your first slash command!

@@ -1,6 +1,31 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from typing import Any, Dict, List, Literal, Optional, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
+
 
 __all__ = (
     "ThreadOption",
@@ -46,25 +71,35 @@ class Option:
                 self.converter = input_type
                 input_type = SlashCommandOptionType.string
             else:
-                _type = SlashCommandOptionType.from_datatype(input_type)
-                if _type == SlashCommandOptionType.channel:
-                    if not isinstance(input_type, tuple):
-                        input_type = (input_type,)
-                    for i in input_type:
-                        if i.__name__ == "GuildChannel":
-                            continue
-                        if isinstance(i, ThreadOption):
-                            self.channel_types.append(i._type)
-                            continue
+                try:
+                    _type = SlashCommandOptionType.from_datatype(input_type)
+                except TypeError as exc:
+                    from ..ext.commands.converter import CONVERTER_MAPPING
 
-                        channel_type = channel_type_map[i.__name__]
-                        self.channel_types.append(channel_type)
-                input_type = _type
+                    if input_type in CONVERTER_MAPPING:
+                        self.converter = CONVERTER_MAPPING[input_type]
+                        input_type = SlashCommandOptionType.string
+                    else:
+                        raise exc
+                else:
+                    if _type == SlashCommandOptionType.channel:
+                        if not isinstance(input_type, tuple):
+                            input_type = (input_type,)
+                        for i in input_type:
+                            if i.__name__ == "GuildChannel":
+                                continue
+                            if isinstance(i, ThreadOption):
+                                self.channel_types.append(i._type)
+                                continue
+
+                            channel_type = channel_type_map[i.__name__]
+                            self.channel_types.append(channel_type)
+                    input_type = _type
         self.input_type = input_type
-        self.default = kwargs.pop("default", None)
         self.required: bool = (
-            kwargs.pop("required", True) if self.default is None else False
+            kwargs.pop("required", True) if "default" not in kwargs else False
         )
+        self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
             for o in kwargs.pop("choices", list())
