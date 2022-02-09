@@ -27,7 +27,6 @@ import itertools
 import copy
 import functools
 import re
-
 from typing import Optional, TYPE_CHECKING
 
 import discord.utils
