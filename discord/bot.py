@@ -381,9 +381,10 @@ class ApplicationCommandMixin:
 
         commands = [copy.copy(cmd) for cmd in commands]
 
-        for cmd in commands:
-            to_rep_with = [guild_id] if guild_id is not None else guild_id
-            cmd.guild_ids = to_rep_with
+        if guild_id is not None:
+            for cmd in commands:
+                to_rep_with = [guild_id]
+                cmd.guild_ids = to_rep_with
 
         is_global = guild_id is None
 
@@ -537,7 +538,8 @@ class ApplicationCommandMixin:
             for cmd in commands:
                 cmd.guild_ids = guild_ids
 
-        registered_commands = await self.register_commands(commands, force=force)
+        global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
+        registered_commands = await self.register_commands(global_commands, force=force)
 
         cmd_guild_ids = []
         registered_guild_commands = {}
@@ -549,10 +551,12 @@ class ApplicationCommandMixin:
             if unregister_guilds is not None:
                 cmd_guild_ids.extend(unregister_guilds)
             for guild_id in set(cmd_guild_ids):
+                guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    commands,
+                    guild_commands,
                     guild_id=guild_id,
-                    force=force)
+                    force=force
+                )
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
@@ -726,8 +730,8 @@ class ApplicationCommandMixin:
         if auto_sync is None:
             auto_sync = self.auto_sync_commands
         if interaction.type not in (
-                InteractionType.application_command,
-                InteractionType.auto_complete
+            InteractionType.application_command,
+            InteractionType.auto_complete,
         ):
             return
 
