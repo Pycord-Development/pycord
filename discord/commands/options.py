@@ -60,7 +60,7 @@ class ThreadOption:
         return "ThreadOption"
 
 class Option:
-    def __init__(self, /, description: str = None, **kwargs) -> None:
+    def __init__(self, input_type = None, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
@@ -68,6 +68,11 @@ class Option:
         self.channel_types: List[ChannelType] = kwargs.pop(
             "channel_types", []
         )
+
+        if input_type is not None:
+            option.input_type = input_type
+            _type_checking_for_option(self)
+
         self.required: bool = (
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
@@ -79,6 +84,9 @@ class Option:
         
         self._raw_min_value = kwargs.pop("min_value", None)
         self._raw_max_value = kwargs.pop("max_value", None)
+
+        if input_type is not None:
+            _minmax_setting_for_option(self)
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
@@ -104,29 +112,6 @@ class Option:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
 def _type_checking_for_option(option):
-    """
-    option._raw_type = option.input_type
-    if not isinstance(option.input_type, SlashCommandOptionType):
-        if hasattr(option.input_type, "convert"):
-            option.converter = option.input_type
-            input_type = SlashCommandOptionType.string
-        else:
-            _type = SlashCommandOptionType.from_datatype(option.input_type)
-            if _type == SlashCommandOptionType.channel:
-                if not isinstance(option.input_type, tuple):
-                    input_type = (option.input_type,)
-                for i in input_type:
-                    if i.__name__ == "GuildChannel":
-                        continue
-                    if isinstance(i, ThreadOption):
-                        option.channel_types.append(i._type)
-                        continue
-
-                    channel_type = channel_type_map[i.__name__]
-                    option.channel_types.append(channel_type)
-            input_type = _type
-    option.input_type = input_type
-    """
     option._raw_type = option.input_type
     input_type = option.input_type
     if not isinstance(option.input_type, SlashCommandOptionType):

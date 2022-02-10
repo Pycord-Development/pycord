@@ -664,7 +664,7 @@ class SlashCommand(ApplicationCommand):
                     _defined_from_option_deco = True
                 else:
                     option = Option(
-                        "No description provided"
+                        description="No description provided"
                     )
                     if p_name.lower() == type_hint_val[0].lower():
                         option.input_type = type_hint_val[1]
@@ -692,12 +692,12 @@ class SlashCommand(ApplicationCommand):
                 if self._is_typing_union(option):
                     if self._is_typing_optional(option):
                         option = Option(
-                            "No description provided", required=False
+                            description="No description provided", required=False
                         )
                         option.input_type = p_type[0]
                     else:
                         option = Option(
-                            "No description provided"
+                            description="No description provided"
                         )
                         option.input_type = p_type
                 else:
