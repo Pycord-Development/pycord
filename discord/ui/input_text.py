@@ -181,6 +181,7 @@ class InputText(Item):
 
 
 def input_text(
+    *,
     style: InputTextStyle = InputTextStyle.short,
     custom_id: str = MISSING,
     label: Optional[str] = None,
