@@ -1,6 +1,5 @@
 import discord
 from discord.commands import Option
-from discord.enums import SlashCommandOptionType
 
 bot = discord.Bot()
 # If you use commands.Bot, @bot.slash_command should be used for
@@ -35,7 +34,7 @@ async def channel(
 async def say(
     ctx: discord.ApplicationContext,
     attachment: Option(
-        SlashCommandOptionType.attachment,
+        discord.Attachment,
         "File to attach to the message?",
         required=False,
     ),
