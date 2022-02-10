@@ -120,6 +120,9 @@ class Thread(Messageable, Hashable):
         Usually a value of 60, 1440, 4320 and 10080.
     archive_timestamp: :class:`datetime.datetime`
         An aware timestamp of when the thread's archived status was last updated in UTC.
+    created_at: Optional[:class:`datetime.datetime`]
+        An aware timestamp of when the thread was created.
+        Only available for threads created after 2022-01-09.
     """
 
     __slots__ = (
@@ -141,6 +144,7 @@ class Thread(Messageable, Hashable):
         'invitable',
         'auto_archive_duration',
         'archive_timestamp',
+        'created_at',
     )
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: ThreadPayload):
@@ -186,6 +190,7 @@ class Thread(Messageable, Hashable):
         self.archive_timestamp = parse_time(data['archive_timestamp'])
         self.locked = data.get('locked', False)
         self.invitable = data.get('invitable', True)
+        self.created_at = parse_time(data.get('create_timestamp'))
 
     def _update(self, data):
         try:

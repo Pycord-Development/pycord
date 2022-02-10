@@ -22,7 +22,7 @@ async def start(ctx: ApplicationContext,
     bot.connections.update({ctx.guild.id: vc})
 
     if encoding == "mp3":
-        sink = discord.sinks.MP4Sink()
+        sink = discord.sinks.MP3Sink()
     elif encoding == "wav":
         sink = discord.sinks.WaveSink()
     elif encoding == "pcm":
