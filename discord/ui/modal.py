@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import os
 from itertools import groupby
-from functools import partial
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, ClassVar
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
-from .item import ItemCallbackType
 from .input_text import InputText
 
 __all__ = (
@@ -24,27 +22,10 @@ class Modal:
 
     This object must be inherited to create a UI within Discord.
     """
-    __discord_ui_modal__: ClassVar[bool] = True
-    __modal_children_items__: ClassVar[List[ItemCallbackType]] = []
-
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
-        for func in self.__modal_children_items__:
-            item: InputText = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
-            item.callback = partial(func, self, item)
-            setattr(self, func.__name__, item)
-            self.children.append(item)
-
-    def __init_subclass__(cls) -> None:
-        children: List[ItemCallbackType] = []
-        for base in reversed(cls.__mro__):
-            for member in base.__dict__.values():
-                if hasattr(member, '__discord_ui_model_type__'):
-                    children.append(member)
-
-        cls.__modal_children_items__ = children
 
     async def callback(self, interaction: Interaction):
         """|coro|
