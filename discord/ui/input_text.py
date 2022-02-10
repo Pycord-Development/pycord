@@ -63,6 +63,7 @@ class InputText(Item):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
         self._underlying = InputTextComponent._raw_construct(
+            type=ComponentType.input_text,
             style=style,
             custom_id=custom_id,
             label=label,
@@ -201,8 +202,6 @@ def input_text(
     In order to get the provided text that the user has input within the callback
     use :attr:`InputText.value`.
 
-    Parameters
-    ------------
     Parameters
     ----------
     style: :class:`discord.InputTextStyle`
