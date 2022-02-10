@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from discord.ui import InputText, Modal
+import pycord
+from pycord.ext import commands
+from pycord.ui import InputText, Modal
 
 
 class Bot(commands.Bot):
@@ -20,12 +20,12 @@ class MyModal(Modal):
             InputText(
                 label="Longer Input",
                 value="Longer Value\nSuper Long Value",
-                style=discord.InputTextStyle.long,
+                style=pycord.InputTextStyle.long,
             )
         )
 
-    async def callback(self, interaction: discord.Interaction):
-        embed = discord.Embed(title="Your Modal Results", color=discord.Color.random())
+    async def callback(self, interaction: pycord.Interaction):
+        embed = pycord.Embed(title="Your Modal Results", color=pycord.Color.random())
         embed.add_field(name="First Input", value=self.children[0].value, inline=False)
         embed.add_field(name="Second Input", value=self.children[1].value, inline=False)
         await interaction.response.send_message(embeds=[embed])
@@ -58,21 +58,21 @@ async def modal_user(ctx, member):
 async def modaltest(ctx):
     """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)"""
 
-    class MyView(discord.ui.View):
-        @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
+    class MyView(pycord.ui.View):
+        @pycord.ui.button(label="Modal Test", style=pycord.ButtonStyle.primary)
         async def button_callback(self, button, interaction):
             modal = MyModal()
             await interaction.response.send_modal(modal)
 
-        @discord.ui.select(
+        @pycord.ui.select(
             placeholder="Pick Your Modal",
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(
+                pycord.SelectOption(
                     label="First Modal", description="Shows the first modal"
                 ),
-                discord.SelectOption(
+                pycord.SelectOption(
                     label="Second Modal", description="Shows the second modal"
                 ),
             ],

@@ -1,7 +1,7 @@
 import random
 
-import discord
-from discord.ext import commands
+import pycord
+from pycord.ext import commands
 
 
 class MyContext(commands.Context):  # custom context
@@ -14,7 +14,7 @@ class MyContext(commands.Context):  # custom context
         try:
             # This will react to the command author's message
             await self.message.add_reaction(emoji)
-        except discord.HTTPException:
+        except pycord.HTTPException:
             # Sometimes errors occur during this, for example
             # Maybe you don't have permission to do that
             # We don't mind, so we can just ignore them
@@ -22,15 +22,15 @@ class MyContext(commands.Context):  # custom context
 
 
 # you can subclass discord.ApplicationContext to create custom application context if needed
-class MyApplicationContext(discord.ApplicationContext):  # custom application context
+class MyApplicationContext(pycord.ApplicationContext):  # custom application context
     async def success(self, message):
         try:
-            await self.respond(embed=discord.Embed(  # respond with a green embed with "Success" title
+            await self.respond(embed=pycord.Embed(  # respond with a green embed with "Success" title
                 title="Success",
                 description=message,
-                colour=discord.Colour.green()
+                colour=pycord.Colour.green()
             ))
-        except discord.HTTPException:  # ignore exceptions
+        except pycord.HTTPException:  # ignore exceptions
             pass
 
 

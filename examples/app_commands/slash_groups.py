@@ -1,6 +1,6 @@
-import discord
+import pycord
 
-bot = discord.Bot()
+bot = pycord.Bot()
 
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well
@@ -18,7 +18,7 @@ async def add(ctx, num1: int, num2: int):
 
 # another way, creating the class manually
 
-from discord.commands import SlashCommandGroup
+from pycord.commands import SlashCommandGroup
 
 math = SlashCommandGroup("math", "Commands related to mathematics.")
 

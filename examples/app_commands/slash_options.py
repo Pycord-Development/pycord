@@ -1,14 +1,14 @@
-import discord
-from discord.commands import Option
+import pycord
+from pycord.commands import Option
 
-bot = discord.Bot()
+bot = pycord.Bot()
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well
 
 
 @bot.slash_command(guild_ids=[...])
 async def hello(
-    ctx: discord.ApplicationContext,
+    ctx: pycord.ApplicationContext,
     name: Option(str, "Enter your name"),
     gender: Option(str, "Choose your gender", choices=["Male", "Female", "Other"]),
     age: Option(int, "Enter your age", min_value=1, max_value=99, default=18)
@@ -23,8 +23,8 @@ async def hello(
 
 @bot.slash_command(guild_ids=[...])
 async def channel(
-    ctx: discord.ApplicationContext,
-    channel: Option([discord.TextChannel, discord.VoiceChannel], "Select a channel")
+    ctx: pycord.ApplicationContext,
+    channel: Option([pycord.TextChannel, pycord.VoiceChannel], "Select a channel")
     # you can specify allowed channel types by passing a list of them like: [discord.TextChannel, discord.VoiceChannel]
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
@@ -32,9 +32,9 @@ async def channel(
 
 @bot.slash_command(name="attach_file")
 async def say(
-    ctx: discord.ApplicationContext,
+    ctx: pycord.ApplicationContext,
     attachment: Option(
-        discord.Attachment,
+        pycord.Attachment,
         "A file to attach to the message",
         required=False,
     ),

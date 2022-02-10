@@ -1,8 +1,8 @@
-import discord
+import pycord
 # Imports permissions from discord.commands
-from discord.commands import permissions
+from pycord.commands import permissions
 
-bot = discord.Bot()
+bot = pycord.Bot()
 
 # Note: If you want you can use commands.Bot instead of discord.Bot
 # Use discord.Bot if you don't want prefixed message commands

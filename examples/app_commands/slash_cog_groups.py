@@ -1,8 +1,8 @@
-import discord
-from discord.commands import CommandPermission, SlashCommandGroup
-from discord.ext import commands
+import pycord
+from pycord.commands import CommandPermission, SlashCommandGroup
+from pycord.ext import commands
 
-bot = discord.Bot(debug_guilds=[...], owner_id=...)  # main file
+bot = pycord.Bot(debug_guilds=[...], owner_id=...)  # main file
 
 
 class Example(commands.Cog):
@@ -34,7 +34,7 @@ class Example(commands.Cog):
         await ctx.respond("Aloha, a Hawaiian greeting")
 
     @secret_greetings.command()
-    async def secret_handshake(self, ctx, member: discord.Member):
+    async def secret_handshake(self, ctx, member: pycord.Member):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
 

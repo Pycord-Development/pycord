@@ -26,13 +26,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, TypeVar, Union, Dict, List
 
-import discord.abc
-from discord.interactions import InteractionMessage
+import pycord.abc
+from pycord.interactions import InteractionMessage
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
-    import discord
+    import pycord
     from .. import Bot
     from ..state import ConnectionState
     from ..voice_client import VoiceProtocol
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
     from ..message import Message
     from ..user import User
     from ..client import ClientUser
-    from discord.webhook.async_ import Webhook
+    from pycord.webhook.async_ import Webhook
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
@@ -64,7 +64,7 @@ else:
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
 
-class ApplicationContext(discord.abc.Messageable):
+class ApplicationContext(pycord.abc.Messageable):
     """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application

@@ -33,11 +33,11 @@ from .errors import (
     MissingRequiredFlag,
 )
 
-from discord.utils import resolve_annotation
+from pycord.utils import resolve_annotation
 from .view import StringView
 from .converter import run_converters
 
-from discord.utils import maybe_coroutine, MISSING
+from pycord.utils import maybe_coroutine, MISSING
 from dataclasses import dataclass, field
 from typing import (
     Dict,

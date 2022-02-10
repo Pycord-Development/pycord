@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import discord
+import pycord
 from ...cog import Cog
 
 from typing import Any, Callable, Generator, TYPE_CHECKING, List, TypeVar, Type, Union
@@ -39,7 +39,7 @@ __all__ = ('Cog',)
 CogT = TypeVar('CogT', bound='Cog')
 FuncT = TypeVar('FuncT', bound=Callable[..., Any])
 
-MISSING: Any = discord.utils.MISSING
+MISSING: Any = pycord.utils.MISSING
 
 class Cog(Cog):
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:

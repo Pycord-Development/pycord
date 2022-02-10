@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import pycord
+from pycord.ext import commands
 
 bot = commands.Bot()
 

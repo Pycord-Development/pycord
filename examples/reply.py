@@ -1,7 +1,7 @@
-import discord
+import pycord
 
 
-class MyClient(discord.Client):
+class MyClient(pycord.Client):
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")

@@ -1,6 +1,6 @@
-import discord
+import pycord
 
-bot = discord.Bot()
+bot = pycord.Bot()
 
 
 # Note: If you want you can use commands.Bot instead of discord.Bot
@@ -28,11 +28,11 @@ async def global_command(ctx, num: int):  # Takes one integer parameter
 
 @bot.slash_command(guild_ids=[...])
 async def joined(
-    ctx, member: discord.Member = None
+    ctx, member: pycord.Member = None
 ):  # Passing a default value makes the argument optional
     user = member or ctx.author
     await ctx.respond(
-        f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}"
+        f"{user.name} joined at {pycord.utils.format_dt(user.joined_at)}"
     )
 
 

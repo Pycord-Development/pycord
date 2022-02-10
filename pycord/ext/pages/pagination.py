@@ -23,8 +23,8 @@ DEALINGS IN THE SOFTWARE.
 """
 from typing import Dict, List, Optional, Union
 
-import discord
-from discord.ext.commands import Context
+import pycord
+from pycord.ext.commands import Context
 
 __all__ = (
     "PaginatorButton",
@@ -34,7 +34,7 @@ __all__ = (
 )
 
 
-class PaginatorButton(discord.ui.Button):
+class PaginatorButton(pycord.ui.Button):
     """Creates a button used to navigate the paginator.
 
     Parameters
@@ -63,8 +63,8 @@ class PaginatorButton(discord.ui.Button):
         self,
         button_type: str,
         label: str = None,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
-        style: discord.ButtonStyle = discord.ButtonStyle.green,
+        emoji: Union[str, pycord.Emoji, pycord.PartialEmoji] = None,
+        style: pycord.ButtonStyle = pycord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
         row: int = 0,
@@ -80,13 +80,13 @@ class PaginatorButton(discord.ui.Button):
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
-        self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
+        self.emoji: Union[str, pycord.Emoji, pycord.PartialEmoji] = emoji
         self.style = style
         self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
         self.paginator = None
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: pycord.Interaction):
         if self.button_type == "first":
             self.paginator.current_page = 0
         elif self.button_type == "prev":
@@ -153,10 +153,10 @@ class PageGroup:
 
     def __init__(
         self,
-        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: Union[List[str], List[Union[List[pycord.Embed], pycord.Embed]]],
         label: str,
         description: str,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        emoji: Union[str, pycord.Emoji, pycord.PartialEmoji] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
@@ -164,15 +164,15 @@ class PageGroup:
         use_default_buttons: Optional[bool] = None,
         default_button_row: int = 0,
         loop_pages: Optional[bool] = None,
-        custom_view: Optional[discord.ui.View] = None,
+        custom_view: Optional[pycord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
     ):
         self.label = label
         self.description = description
-        self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
+        self.emoji: Union[str, pycord.Emoji, pycord.PartialEmoji] = emoji
         self.pages: Union[
-            List[str], List[Union[List[discord.Embed], discord.Embed]]
+            List[str], List[Union[List[pycord.Embed], pycord.Embed]]
         ] = pages
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
@@ -181,12 +181,12 @@ class PageGroup:
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
-        self.custom_view: discord.ui.View = custom_view
+        self.custom_view: pycord.ui.View = custom_view
         self.timeout: float = timeout
         self.custom_buttons: List = custom_buttons
 
 
-class Paginator(discord.ui.View):
+class Paginator(pycord.ui.View):
     """Creates a paginator which can be sent as a message and uses buttons for navigation.
 
     Parameters
@@ -239,7 +239,7 @@ class Paginator(discord.ui.View):
     def __init__(
         self,
         pages: Union[
-            List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
+            List[PageGroup], List[str], List[Union[List[pycord.Embed], pycord.Embed]]
         ],
         show_disabled: bool = True,
         show_indicator=True,
@@ -249,14 +249,14 @@ class Paginator(discord.ui.View):
         use_default_buttons=True,
         default_button_row: int = 0,
         loop_pages=False,
-        custom_view: Optional[discord.ui.View] = None,
+        custom_view: Optional[pycord.ui.View] = None,
         timeout: Optional[float] = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
         self.pages: Union[
-            List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
+            List[PageGroup], List[str], List[Union[List[pycord.Embed], pycord.Embed]]
         ] = pages
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
@@ -266,7 +266,7 @@ class Paginator(discord.ui.View):
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
             self.pages: Union[
-                List[str], List[Union[List[discord.Embed], discord.Embed]]
+                List[str], List[Union[List[pycord.Embed], pycord.Embed]]
             ] = self.page_groups[0].pages
 
         self.page_count = len(self.pages) - 1
@@ -278,8 +278,8 @@ class Paginator(discord.ui.View):
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
-        self.custom_view: discord.ui.View = custom_view
-        self.message: Union[discord.Message, discord.WebhookMessage, None] = None
+        self.custom_view: pycord.ui.View = custom_view
+        self.message: Union[pycord.Message, pycord.WebhookMessage, None] = None
 
         if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
@@ -296,7 +296,7 @@ class Paginator(discord.ui.View):
     async def update(
         self,
         pages: Optional[
-            Union[List[str], List[Union[List[discord.Embed], discord.Embed]]]
+            Union[List[str], List[Union[List[pycord.Embed], pycord.Embed]]]
         ] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
@@ -305,7 +305,7 @@ class Paginator(discord.ui.View):
         use_default_buttons: Optional[bool] = None,
         default_button_row: Optional[int] = None,
         loop_pages: Optional[bool] = None,
-        custom_view: Optional[discord.ui.View] = None,
+        custom_view: Optional[pycord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
     ):
@@ -340,7 +340,7 @@ class Paginator(discord.ui.View):
 
         # Update pages and reset current_page to 0 (default)
         self.pages: Union[
-            List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
+            List[PageGroup], List[str], List[Union[List[pycord.Embed], pycord.Embed]]
         ] = (pages if pages is not None else self.pages)
         self.page_count = len(self.pages) - 1
         self.current_page = 0
@@ -368,7 +368,7 @@ class Paginator(discord.ui.View):
             else self.default_button_row
         )
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
-        self.custom_view: discord.ui.View = None if custom_view is None else custom_view
+        self.custom_view: pycord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
@@ -390,7 +390,7 @@ class Paginator(discord.ui.View):
     async def disable(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Union[List[pycord.Embed], pycord.Embed]]] = None,
     ) -> None:
         """Stops the paginator, disabling all of its components.
 
@@ -417,7 +417,7 @@ class Paginator(discord.ui.View):
     async def cancel(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Union[List[pycord.Embed], pycord.Embed]]] = None,
     ) -> None:
         """Cancels the paginator, removing all of its components from the message.
 
@@ -442,7 +442,7 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
-    async def goto_page(self, page_number=0) -> discord.Message:
+    async def goto_page(self, page_number=0) -> pycord.Message:
         """Updates the paginator message to show the specified page number.
 
         Parameters
@@ -475,7 +475,7 @@ class Paginator(discord.ui.View):
             view=self,
         )
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+    async def interaction_check(self, interaction: pycord.Interaction) -> bool:
         if self.usercheck:
             return self.user == interaction.user
         return True
@@ -493,33 +493,33 @@ class Paginator(discord.ui.View):
             PaginatorButton(
                 "first",
                 label="<<",
-                style=discord.ButtonStyle.blurple,
+                style=pycord.ButtonStyle.blurple,
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "prev",
                 label="<",
-                style=discord.ButtonStyle.red,
+                style=pycord.ButtonStyle.red,
                 loop_label="↪",
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "page_indicator",
-                style=discord.ButtonStyle.gray,
+                style=pycord.ButtonStyle.gray,
                 disabled=True,
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "next",
                 label=">",
-                style=discord.ButtonStyle.green,
+                style=pycord.ButtonStyle.green,
                 loop_label="↩",
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "last",
                 label=">>",
-                style=discord.ButtonStyle.blurple,
+                style=pycord.ButtonStyle.blurple,
                 row=self.default_button_row,
             ),
         ]
@@ -529,7 +529,7 @@ class Paginator(discord.ui.View):
     def add_button(self, button: PaginatorButton):
         """Adds a :class:`PaginatorButton` to the paginator."""
         self.buttons[button.button_type] = {
-            "object": discord.ui.Button(
+            "object": pycord.ui.Button(
                 style=button.style,
                 label=button.label
                 if button.label or button.emoji
@@ -625,12 +625,12 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     @staticmethod
-    def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]):
+    def get_page_content(page: Union[str, pycord.Embed, List[pycord.Embed]]):
         """Returns the correct content type for a page based on its content."""
-        if isinstance(page, discord.Embed):
+        if isinstance(page, pycord.Embed):
             return [page]
         elif isinstance(page, List):
-            if all(isinstance(x, discord.Embed) for x in page):
+            if all(isinstance(x, pycord.Embed) for x in page):
                 return page
             else:
                 raise TypeError("All list items must be embeds.")
@@ -640,9 +640,9 @@ class Paginator(discord.ui.View):
     async def send(
         self,
         ctx: Context,
-        target: Optional[discord.abc.Messageable] = None,
+        target: Optional[pycord.abc.Messageable] = None,
         target_message: Optional[str] = None,
-    ) -> discord.Message:
+    ) -> pycord.Message:
         """Sends a message with the paginated items.
 
         Parameters
@@ -662,7 +662,7 @@ class Paginator(discord.ui.View):
         if not isinstance(ctx, Context):
             raise TypeError(f"expected Context not {ctx.__class__!r}")
 
-        if target is not None and not isinstance(target, discord.abc.Messageable):
+        if target is not None and not isinstance(target, pycord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         self.update_buttons()
@@ -686,11 +686,11 @@ class Paginator(discord.ui.View):
 
     async def respond(
         self,
-        interaction: discord.Interaction,
+        interaction: pycord.Interaction,
         ephemeral: bool = False,
-        target: Optional[discord.abc.Messageable] = None,
+        target: Optional[pycord.abc.Messageable] = None,
         target_message: str = "Paginator sent!",
-    ) -> Union[discord.Message, discord.WebhookMessage]:
+    ) -> Union[pycord.Message, pycord.WebhookMessage]:
         """Sends an interaction response or followup with the paginated items.
 
         Parameters
@@ -711,10 +711,10 @@ class Paginator(discord.ui.View):
             The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
-        if not isinstance(interaction, discord.Interaction):
+        if not isinstance(interaction, pycord.Interaction):
             raise TypeError(f"expected Interaction not {interaction.__class__!r}")
 
-        if target is not None and not isinstance(target, discord.abc.Messageable):
+        if target is not None and not isinstance(target, pycord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         self.update_buttons()
@@ -746,15 +746,15 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-            if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            if isinstance(msg, (pycord.WebhookMessage, pycord.Message)):
                 self.message = msg
-            elif isinstance(msg, discord.Interaction):
+            elif isinstance(msg, pycord.Interaction):
                 self.message = await msg.original_message()
 
         return self.message
 
 
-class PaginatorMenu(discord.ui.Select):
+class PaginatorMenu(pycord.ui.Select):
     """Creates a select menu used to switch between page groups, which can each have their own set of buttons.
 
     Parameters
@@ -777,7 +777,7 @@ class PaginatorMenu(discord.ui.Select):
         self.page_groups = page_groups
         self.paginator: Optional[Paginator] = None
         opts = [
-            discord.SelectOption(
+            pycord.SelectOption(
                 label=page_group.label,
                 value=page_group.label,
                 description=page_group.description,
@@ -789,7 +789,7 @@ class PaginatorMenu(discord.ui.Select):
             placeholder=placeholder, max_values=1, min_values=1, options=opts
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: pycord.Interaction):
         selection = self.values[0]
         for page_group in self.page_groups:
             if selection == page_group.label:

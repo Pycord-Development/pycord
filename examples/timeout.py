@@ -1,12 +1,12 @@
 import datetime
 
-import discord
+import pycord
 
-bot = discord.Bot()
+bot = pycord.Bot()
 
 
 @bot.command()
-async def timeout(ctx, member: discord.Member, minutes: int):
+async def timeout(ctx, member: pycord.Member, minutes: int):
     """Apply a timeout to a member"""
 
     duration = datetime.timedelta(minutes=minutes)

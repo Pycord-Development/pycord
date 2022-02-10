@@ -2,17 +2,17 @@
 
 import typing
 
-import discord
-from discord.ext import commands
+import pycord
+from pycord.ext import commands
 
-intents = discord.Intents.default()
+intents = pycord.Intents.default()
 intents.members = True
 
 bot = commands.Bot("!", intents=intents)
 
 
 @bot.command()
-async def userinfo(ctx: commands.Context, user: discord.User):
+async def userinfo(ctx: commands.Context, user: pycord.User):
     # In the command signature above, you can see that the `user`
     # Parameter is typehinted to `discord.User`. This means that
     # During command invocation we will attempt to convert
@@ -89,7 +89,7 @@ async def notify(ctx: commands.Context, target: ChannelOrMemberConverter):
 
 @bot.command()
 async def ignore(
-    ctx: commands.Context, target: typing.Union[discord.Member, discord.TextChannel]
+    ctx: commands.Context, target: typing.Union[pycord.Member, pycord.TextChannel]
 ):
     # This command signature utilises the `typing.Union` typehint.
     # The `commands` framework attempts a conversion of each type in this Union *in order*.
@@ -100,12 +100,12 @@ async def ignore(
     # Instead of `commands.BadArgument`.
 
     # To check the resulting type, `isinstance` is used
-    if isinstance(target, discord.Member):
+    if isinstance(target, pycord.Member):
         await ctx.send(
             f"Member found: {target.mention}, adding them to the ignore list."
         )
     elif isinstance(
-        target, discord.TextChannel
+        target, pycord.TextChannel
     ):  # This could be an `else` but for completeness' sake.
         await ctx.send(
             f"Channel found: {target.mention}, adding it to the ignore list."

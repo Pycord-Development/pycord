@@ -9,7 +9,7 @@ with open("requirements.txt") as f:
 
 # Version Info
 version = ""
-with open("discord/__init__.py") as f:
+with open("pycord/__init__.py") as f:
 
     search = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE)
 
@@ -63,15 +63,15 @@ extras_require = {
 
 # Folders And Such Included
 packages = [
-    "discord",
-    "discord.types",
-    "discord.sinks",
-    "discord.ui",
-    "discord.webhook",
-    "discord.commands",
-    "discord.ext.commands",
-    "discord.ext.tasks",
-    "discord.ext.pages",
+    "pycord",
+    "pycord.types",
+    "pycord.sinks",
+    "pycord.ui",
+    "pycord.webhook",
+    "pycord.commands",
+    "pycord.ext.commands",
+    "pycord.ext.tasks",
+    "pycord.ext.pages",
 ]
 
 
