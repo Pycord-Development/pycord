@@ -50,6 +50,7 @@ class InputText(Item):
 
     def __init__(
         self,
+        *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str = MISSING,
         label: Optional[str] = None,
