@@ -495,6 +495,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         else:
             return self.name
 
+    def __str__(self) -> str:
+        return self.qualified_name
+
     def _set_cog(self, cog):
         self.cog = cog
 

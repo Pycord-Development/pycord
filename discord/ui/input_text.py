@@ -108,6 +108,7 @@ class InputText(Item):
     def label(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"label should be None or str not {value.__class__}")
+        self._underlying.label = value
 
     @property
     def placeholder(self) -> Optional[str]:
@@ -151,6 +152,7 @@ class InputText(Item):
     def required(self, value: Optional[bool]):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__}")  # type: ignore
+        self._underlying.required = bool(value)
 
     @property
     def value(self) -> Optional[str]:
