@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Callable, Optional
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
 from ..utils import MISSING
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType
 
 __all__ = (
     "InputText",
