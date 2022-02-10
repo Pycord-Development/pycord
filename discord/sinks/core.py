@@ -28,9 +28,12 @@ import sys
 import threading
 import time
 import io
+from typing import TYPE_CHECKING
+from .errors import SinkException
 from ..types import snowflake
 
-from .errors import SinkException
+if TYPE_CHECKING:
+    from ..channel import VoiceChannel
 
 __all__ = (
     "Filters",
@@ -179,11 +182,11 @@ class Sink(Filters):
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-        self.vc = None
+        self.vc: VoiceChannel = None
         self.audio_data = {}
 
     def init(self, vc):  # called under listen
-        self.vc = vc
+        self.vc: VoiceChannel = vc
         super().init()
 
     @Filters.container

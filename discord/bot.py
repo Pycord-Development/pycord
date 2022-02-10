@@ -243,7 +243,7 @@ class ApplicationCommandMixin:
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
 
         return_value = []
-        cmds = copy.deepcopy(self.pending_application_commands)
+        cmds = self.pending_application_commands.copy()
 
         if guild_id is None:
             registered_commands = await self.http.get_global_commands(self.user.id)
@@ -282,7 +282,7 @@ class ApplicationCommandMixin:
                 if type(to_check[check]) == list:
                     for opt in to_check[check]:
 
-                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]]
+                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                         for i, val in enumerate(cmd_vals):
                             # We need to do some falsy conversion here
                             # The API considers False (autocomplete) and [] (choices) to be falsy values
@@ -379,11 +379,12 @@ class ApplicationCommandMixin:
         if commands is None:
             commands = self.pending_application_commands
 
-        commands = copy.deepcopy(commands)
+        commands = [copy.copy(cmd) for cmd in commands]
 
-        for cmd in commands:
-            to_rep_with = [guild_id] if guild_id is not None else guild_id
-            cmd.guild_ids = to_rep_with
+        if guild_id is not None:
+            for cmd in commands:
+                to_rep_with = [guild_id]
+                cmd.guild_ids = to_rep_with
 
         is_global = guild_id is None
 
@@ -537,7 +538,8 @@ class ApplicationCommandMixin:
             for cmd in commands:
                 cmd.guild_ids = guild_ids
 
-        registered_commands = await self.register_commands(commands, force=force)
+        global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
+        registered_commands = await self.register_commands(global_commands, force=force)
 
         cmd_guild_ids = []
         registered_guild_commands = {}
@@ -549,10 +551,12 @@ class ApplicationCommandMixin:
             if unregister_guilds is not None:
                 cmd_guild_ids.extend(unregister_guilds)
             for guild_id in set(cmd_guild_ids):
+                guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    commands,
+                    guild_commands,
                     guild_id=guild_id,
-                    force=force)
+                    force=force
+                )
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
@@ -572,13 +576,15 @@ class ApplicationCommandMixin:
                 # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
                 global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
-        for guild_id, guild_data in registered_guild_commands.items():
-            commands = registered_guild_commands[guild_id]
+        for guild_id, commands in registered_guild_commands.items():
             guild_permissions: List = []
 
             for i in commands:
-                cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in
-                                       cmd.guild_ids, self.pending_application_commands)
+                cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and cmd.guild_ids is not None
+                                       and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+                if not cmd:
+                    # command has not been added yet
+                    continue
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
@@ -588,7 +594,8 @@ class ApplicationCommandMixin:
                     for perm in cmd.permissions
                     if perm.guild_id is None
                        or (
-                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                               perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in
+                               cmd.guild_ids
                        )
                 ]
                 guild_permissions.append(
@@ -601,7 +608,8 @@ class ApplicationCommandMixin:
                     for perm in global_command["permissions"]
                     if perm.guild_id is None
                        or (
-                               perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
+                               perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in
+                               cmd.guild_ids
                        )
                 ]
                 guild_permissions.append(
@@ -636,7 +644,7 @@ class ApplicationCommandMixin:
                                     }
                                 )
                             else:
-                                print(
+                                raise RuntimeError(
                                     "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
                                         guild_id=guild_id, role=permission["id"]
                                     )
@@ -669,9 +677,8 @@ class ApplicationCommandMixin:
 
                 # Make sure we don't have over 10 overwrites
                 if len(new_cmd_perm["permissions"]) > 10:
-                    print(
-                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use "
-                        "the first 10 permission overrides.".format(
+                    raise RuntimeError(
+                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).".format(
                             name=self._application_commands[new_cmd_perm["id"]].name,
                             guild_id=guild_id,
                         )
@@ -687,7 +694,7 @@ class ApplicationCommandMixin:
                     self.user.id, guild_id, guild_cmd_perms
                 )
             except Forbidden:
-                print(
+                raise RuntimeError(
                     f"Failed to add command permissions to guild {guild_id}",
                     file=sys.stderr,
                 )
@@ -722,8 +729,8 @@ class ApplicationCommandMixin:
         if auto_sync is None:
             auto_sync = self.auto_sync_commands
         if interaction.type not in (
-                InteractionType.application_command,
-                InteractionType.auto_complete
+            InteractionType.application_command,
+            InteractionType.auto_complete,
         ):
             return
 
@@ -1399,15 +1406,15 @@ class Bot(BotBase, Client):
 
         .. versionadded:: 1.3
     debug_guilds: Optional[List[:class:`int`]]
-        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        The bot will not create any global commands if a debug_guilds is passed.
+        Guild IDs of guilds to use for testing commands.
+        The bot will not create any global commands if debug guild IDs are passed.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     auto_sync_commands: :class:`bool`
         Whether or not to automatically sync slash commands. This will call sync_commands in on_connect, and in
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
-        ..versionadded:: 2.0
+        .. versionadded:: 2.0
     """
 
     pass
