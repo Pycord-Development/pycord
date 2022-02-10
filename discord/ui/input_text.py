@@ -72,6 +72,10 @@ class InputText(Item):
         self.row = row
 
     @property
+    def type(self) -> ComponentType:
+        return self._underlying.type
+        
+    @property
     def style(self) -> InputTextStyle:
         """:class:`discord.InputTextStyle`: The style of the input text field."""
         return self._underlying.style

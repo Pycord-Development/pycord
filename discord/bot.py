@@ -644,7 +644,7 @@ class ApplicationCommandMixin:
                                     }
                                 )
                             else:
-                                print(
+                                raise RuntimeError(
                                     "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
                                         guild_id=guild_id, role=permission["id"]
                                     )
@@ -677,9 +677,8 @@ class ApplicationCommandMixin:
 
                 # Make sure we don't have over 10 overwrites
                 if len(new_cmd_perm["permissions"]) > 10:
-                    print(
-                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use "
-                        "the first 10 permission overrides.".format(
+                    raise RuntimeError(
+                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).".format(
                             name=self._application_commands[new_cmd_perm["id"]].name,
                             guild_id=guild_id,
                         )
@@ -695,7 +694,7 @@ class ApplicationCommandMixin:
                     self.user.id, guild_id, guild_cmd_perms
                 )
             except Forbidden:
-                print(
+                raise RuntimeError(
                     f"Failed to add command permissions to guild {guild_id}",
                     file=sys.stderr,
                 )
