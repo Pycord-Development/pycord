@@ -627,6 +627,7 @@ class SlashCommand(ApplicationCommand):
             raise ClientException(
                 f'Callback for {self.name} command is missing "ctx" parameter.'
             )
+        
         actual_type_hints = get_type_hints(self.callback)
 
         # checks for 'self' parameter in type hints
@@ -673,7 +674,7 @@ class SlashCommand(ApplicationCommand):
 
                     option.name = p_name
                     option._parameter_name = p_name
-                    # it techincally isn't, but this skips the checks below
+                    # it technically isn't, but this skips the checks below
                     _defined_from_option_deco = True
 
                 #continue
@@ -737,6 +738,26 @@ class SlashCommand(ApplicationCommand):
                 f'Callback for {self.name} command is missing "ctx" parameter.'
             )
 
+        actual_type_hints = get_type_hints(self.callback)
+
+        # checks for 'self' parameter in type hints
+        if self.attached_to_group or self.cog:
+            parent_check: bool = list(actual_type_hints.items())[0][1] == self.parent
+            cog_check: bool = list(actual_type_hints.items())[0][1] == self.cog
+            if cog_check or parent_check:
+                temp = list(actual_type_hints.items())
+                temp.pop(0)
+                actual_type_hints = dict(temp)
+
+	    # checks for 'ctx' parameter in type hints
+        if list(actual_type_hints.items())[0][1] == ApplicationContext:
+                temp = list(actual_type_hints.items())
+                temp.pop(0)
+                actual_type_hints = dict(temp)
+        value_itr = iter(actual_type_hints.items())
+
+        # TODO: Map type to option before matching option to parameter names
+
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
@@ -753,7 +774,18 @@ class SlashCommand(ApplicationCommand):
                 raise ClientException(
                     f"Too many arguments passed to the options kwarg."
                 )
+
+            try:
+                type_hint_val = next(value_itr)
+            except StopIteration:
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
+
             p_obj = p_obj.default
+            o.input_type = type_hint_val[1]
+            o = _type_checking_for_option(o)
+            o = _minmax_setting_for_option(o)
 
             if not any(c(o, p_obj) for c in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")

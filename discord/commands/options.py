@@ -128,35 +128,36 @@ def _type_checking_for_option(option):
     option.input_type = input_type
     """
     option._raw_type = option.input_type
+    input_type = option.input_type
     if not isinstance(option.input_type, SlashCommandOptionType):
-            if hasattr(option.input_type, "convert"):
-                self.converter = option.input_type
-                input_type = SlashCommandOptionType.string
-            else:
-                try:
-                    _type = SlashCommandOptionType.from_datatype(option.input_type)
-                except TypeError as exc:
-                    from ..ext.commands.converter import CONVERTER_MAPPING
+        if hasattr(option.input_type, "convert"):
+            option.converter = option.input_type
+            input_type = SlashCommandOptionType.string
+        else:
+            try:
+                _type = SlashCommandOptionType.from_datatype(option.input_type)
+            except TypeError as exc:
+                from ..ext.commands.converter import CONVERTER_MAPPING
 
-                    if option.input_type in CONVERTER_MAPPING:
-                        self.converter = CONVERTER_MAPPING[option.input_type]
-                        input_type = SlashCommandOptionType.string
-                    else:
-                        raise exc
+                if option.input_type in CONVERTER_MAPPING:
+                    option.converter = CONVERTER_MAPPING[option.input_type]
+                    input_type = SlashCommandOptionType.string
                 else:
-                    if _type == SlashCommandOptionType.channel:
-                        if not isinstance(option.input_type, tuple):
-                            input_type = (option.input_type,)
-                        for i in input_type:
-                            if i.__name__ == "GuildChannel":
-                                continue
-                            if isinstance(i, ThreadOption):
-                                self.channel_types.append(i._type)
-                                continue
+                    raise exc
+            else:
+                if _type == SlashCommandOptionType.channel:
+                    if not isinstance(option.input_type, tuple):
+                        input_type = (option.input_type,)
+                    for i in input_type:
+                        if i.__name__ == "GuildChannel":
+                            continue
+                        if isinstance(i, ThreadOption):
+                            option.channel_types.append(i._type)
+                            continue
 
-                            channel_type = channel_type_map[i.__name__]
-                            self.channel_types.append(channel_type)
-                    input_type = _type
+                        channel_type = channel_type_map[i.__name__]
+                        option.channel_types.append(channel_type)
+                input_type = _type
     option.input_type = input_type
 
     return option
