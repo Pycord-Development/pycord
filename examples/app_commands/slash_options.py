@@ -35,7 +35,7 @@ async def say(
     ctx: discord.ApplicationContext,
     attachment: Option(
         discord.Attachment,
-        "File to attach to the message?",
+        "A file to attach to the message",
         required=False,
     ),
 ):
