@@ -5,7 +5,7 @@ from itertools import groupby
 from functools import partial
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, ClassVar
 
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType
 from .input_text import InputText
 
 __all__ = (

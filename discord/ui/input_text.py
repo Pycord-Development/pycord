@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText(Item):
+class InputText:
     """Represents a UI text input field.
 
     Parameters
