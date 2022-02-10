@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+import inspect
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from ..components import InputText as InputTextComponent
-from ..enums import InputTextStyle
+from ..enums import ComponentType, InputTextStyle
 from ..utils import MISSING
-from .item import Item
+from .item import Item, ItemCallbackType
 
-__all__ = ("InputText",)
+__all__ = (
+    "InputText",
+    "input_text",
+)
 
 if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
@@ -74,7 +78,7 @@ class InputText(Item):
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
-        
+
     @property
     def style(self) -> InputTextStyle:
         """:class:`discord.InputTextStyle`: The style of the input text field."""
@@ -174,3 +178,73 @@ class InputText(Item):
 
     def refresh_state(self, data) -> None:
         self._input_value = data["value"]
+
+
+def input_text(
+    style: InputTextStyle = InputTextStyle.short,
+    custom_id: str = MISSING,
+    label: Optional[str] = None,
+    placeholder: Optional[str] = None,
+    min_length: Optional[int] = None,
+    max_length: Optional[int] = None,
+    required: Optional[bool] = True,
+    value: Optional[str] = None,
+    row: Optional[int] = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A decorator that attaches an input text field to a component.
+
+    The function being decorated should have three parameters, ``self`` representing
+    the :class:`discord.ui.View`, the :class:`discord.ui.InputText` being pressed and
+    the :class:`discord.Interaction` you receive.
+
+    In order to get the provided text that the user has input within the callback
+    use :attr:`InputText.value`.
+
+    Parameters
+    ------------
+    Parameters
+    ----------
+    style: :class:`discord.InputTextStyle`
+        The style of the input text field.
+    custom_id: Optional[:class:`str`]
+        The ID of the input text field that gets received during an interaction.
+    label: Optional[:class:`str`]
+        The label for the input text field, if any.
+    placeholder: Optional[:class:`str`]
+        The placeholder text that is shown if nothing is selected, if any.
+    min_length: Optional[:class:`int`]
+        The minimum number of characters that must be entered.
+        Defaults to 0.
+    max_length: Optional[:class:`int`]
+        The maximum number of characters that can be entered.
+    required: Optional[:class:`bool`]
+        Whether the input text field is required or not. Defaults to `True`.
+    value: Optional[:class:`str`]
+        Pre-fills the input text field with this value.
+    row: Optional[:class:`int`]
+        The relative row this button belongs to. A Discord component can only have 5
+        rows. By default, items are arranged automatically into those 5 rows. If you'd
+        like to control the relative positioning of the row then passing an index is advised.
+        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
+        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    """
+
+    def decorator(func: ItemCallbackType) -> ItemCallbackType:
+        if not inspect.iscoroutinefunction(func):
+            raise TypeError("input_text function must be a coroutine function")
+
+        func.__discord_ui_model_type__ = InputText
+        func.__discord_ui_model_kwargs__ = {
+            "style": style,
+            "custom_id": custom_id,
+            "label": label,
+            "placeholder": placeholder,
+            "min_length": min_length,
+            "max_length": max_length,
+            "required": required,
+            "value": value,
+            "row": row,
+        }
+        return func
+
+    return decorator
