@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import os
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from functools import partial
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, ClassVar
 
+from .item import Item, ItemCallbackType
 from .input_text import InputText
-from .view import _ViewWeights
 
 __all__ = (
     "Modal",
@@ -23,12 +24,27 @@ class Modal:
 
     This object must be inherited to create a UI within Discord.
     """
+    __discord_ui_modal__: ClassVar[bool] = True
+    __modal_children_items__: ClassVar[List[ItemCallbackType]] = []
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
-        self.__weights = _ViewWeights(self.children)
+        for func in self.__modal_children_items__:
+            item: InputText = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
+            item.callback = partial(func, self, item)
+            setattr(self, func.__name__, item)
+            self.children.append(item)
+
+    def __init_subclass__(cls) -> None:
+        children: List[ItemCallbackType] = []
+        for base in reversed(cls.__mro__):
+            for member in base.__dict__.values():
+                if hasattr(member, '__discord_ui_model_type__'):
+                    children.append(member)
+
+        cls.__modal_children_items__ = children
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -77,7 +93,6 @@ class Modal:
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
-        self.__weights.add_item(item)
         self.children.append(item)
 
     def remove_item(self, item: InputText):
@@ -92,8 +107,6 @@ class Modal:
             self.children.remove(item)
         except ValueError:
             pass
-        else:
-            self.__weights.remove_item(item)
 
     def to_dict(self):
         return {
