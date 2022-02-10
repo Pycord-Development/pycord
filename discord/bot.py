@@ -44,6 +44,8 @@ from typing import (
     Dict,
 )
 
+import discord
+
 from .client import Client
 from .cog import CogMixin
 from .commands import (
@@ -181,10 +183,10 @@ class ApplicationCommandMixin:
         return self.get_application_command
 
     def get_application_command(
-            self,
-            name: str,
-            guild_ids: Optional[List[int]] = None,
-            type: Type[ApplicationCommand] = SlashCommand,
+        self,
+        name: str,
+        guild_ids: Optional[List[int]] = None,
+        type: Type[ApplicationCommand] = SlashCommand
     ) -> Optional[ApplicationCommand]:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
@@ -208,8 +210,8 @@ class ApplicationCommandMixin:
 
         for command in self._application_commands.values():
             if (
-                    command.name == name
-                    and isinstance(command, type)
+                command.name == name
+                and isinstance(command, type)
             ):
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
@@ -241,6 +243,35 @@ class ApplicationCommandMixin:
             the action, including ``id``.
         """
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
+
+        def _check_command(cmd, match) -> bool:
+            if isinstance(cmd, SlashCommandGroup):
+                if len(cmd.subcommands) != len(match["options"]):
+                    return True
+                for i, subcommand in enumerate(cmd.subcommands):
+                    match_ = next((data for data in match["options"] if data["name"] == subcommand.name), None)
+                    if match_ is not None and _check_command(subcommand, match_):
+                        return True
+            else:
+                as_dict = cmd.to_dict()
+                for check in to_check:
+                    if isinstance(to_check[check], list):
+                        for opt in to_check[check]:
+                            cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
+                            for i, val in enumerate(cmd_vals):
+                                # We need to do some falsy conversion here
+                                # The API considers False (autocomplete) and [] (choices) to be falsy values
+                                if val in (False, []):
+                                    cmd_vals[i] = MISSING
+                            if (
+                                match.get(check, MISSING) is not MISSING
+                                and cmd_vals != [val.get(opt, MISSING) for val in match[check]]
+                            ):
+                                return True  # We have a difference
+                    else:
+                        if check in match and getattr(cmd, check) != match[check]:
+                            return True  # We have a difference
+            return False
 
         return_value = []
         cmds = self.pending_application_commands.copy()
@@ -274,39 +305,12 @@ class ApplicationCommandMixin:
                     "command": cmd,
                     "action": "upsert"
                 })
-                continue
-
-            as_dict = cmd.to_dict()
-
-            for check in to_check:
-                if type(to_check[check]) == list:
-                    for opt in to_check[check]:
-
-                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
-                        for i, val in enumerate(cmd_vals):
-                            # We need to do some falsy conversion here
-                            # The API considers False (autocomplete) and [] (choices) to be falsy values
-                            falsy_vals = (False, [])
-                            if val in falsy_vals:
-                                cmd_vals[i] = MISSING
-                        if ((not match.get(check, MISSING) is MISSING)
-                                and cmd_vals != [val.get(opt, MISSING) for val in match[check]]):
-                            # We have a difference
-                            return_value.append({
-                                "command": cmd,
-                                "action": "edit",
-                                "id": int(registered_commands_dict[cmd.name]["id"])
-                            })
-                            break
-                else:
-                    if getattr(cmd, check) != match[check]:
-                        # We have a difference
-                        return_value.append({
-                            "command": cmd,
-                            "action": "edit",
-                            "id": int(registered_commands_dict[cmd.name]["id"])
-                        })
-                        break
+            elif _check_command(cmd, match):
+                return_value.append({
+                    "command": cmd,
+                    "action": "edit",
+                    "id": int(registered_commands_dict[cmd.name]["id"])
+                })
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd in registered_commands_dict:
@@ -318,15 +322,13 @@ class ApplicationCommandMixin:
                     "id": int(registered_commands_dict[cmd]["id"]),
                     "action": "delete"
                 })
-                continue
-
         return return_value
 
     async def register_command(
-            self,
-            command: ApplicationCommand,
-            force: bool = True,
-            guild_ids: List[int] = None
+        self,
+        command: ApplicationCommand,
+        force: bool = True,
+        guild_ids: List[int] = None
     ) -> None:
         """|coro|
 
@@ -353,10 +355,10 @@ class ApplicationCommandMixin:
         raise NotImplementedError("This function has not been implemented yet")
 
     async def register_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            guild_id: Optional[int] = None,
-            force: bool = False
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        guild_id: Optional[int] = None,
+        force: bool = False
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -487,12 +489,12 @@ class ApplicationCommandMixin:
         return registered
 
     async def sync_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            force: bool = False,
-            guild_ids: Optional[List[int]] = None,
-            register_guild_commands: bool = True,
-            unregister_guilds: Optional[List[int]] = None,
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        force: bool = False,
+        guild_ids: Optional[List[int]] = None,
+        register_guild_commands: bool = True,
+        unregister_guilds: Optional[List[int]] = None
     ) -> None:
         """|coro|
 
