@@ -60,7 +60,7 @@ class Modal:
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
-            return item._rendered_row or 0
+            return item.row or 0
 
         children = sorted(self.children, key=key)
         components: List[Dict[str, Any]] = []
