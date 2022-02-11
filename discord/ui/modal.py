@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
@@ -27,6 +28,7 @@ class Modal:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
+        self.__weights = _ModalWeights(self.children)
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -42,7 +44,7 @@ class Modal:
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
-            return item.row or 0
+            return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
         components: List[Dict[str, Any]] = []
@@ -75,6 +77,7 @@ class Modal:
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
+        self.__weights.add_item(item)
         self.children.append(item)
 
     def remove_item(self, item: InputText):
@@ -96,6 +99,48 @@ class Modal:
             "custom_id": self.custom_id,
             "components": self.to_components(),
         }
+
+
+class _ModalWeights:
+    __slots__ = ("weights",)
+
+    def __init__(self, children: List[InputText]):
+        self.weights: List[int] = [0, 0, 0, 0, 0]
+
+        key = lambda i: sys.maxsize if i.row is None else i.row
+        children = sorted(children, key=key)
+        for row, group in groupby(children, key=key):
+            for item in group:
+                self.add_item(item)
+
+    def find_open_space(self, item: InputText) -> int:
+        for index, weight in enumerate(self.weights):
+            if weight + item.width <= 5:
+                return index
+
+        raise ValueError("could not find open space for item")
+
+    def add_item(self, item: InputText) -> None:
+        if item.row is not None:
+            total = self.weights[item.row] + item.width
+            if total > 5:
+                raise ValueError(
+                    f"item would not fit at row {item.row} ({total} > 5 width)"
+                )
+            self.weights[item.row] = total
+            item._rendered_row = item.row
+        else:
+            index = self.find_open_space(item)
+            self.weights[index] += item.width
+            item._rendered_row = index
+
+    def remove_item(self, item: InputText) -> None:
+        if item._rendered_row is not None:
+            self.weights[item._rendered_row] -= item.width
+            item._rendered_row = None
+
+    def clear(self) -> None:
+        self.weights = [0, 0, 0, 0, 0]
 
 
 class ModalStore:
