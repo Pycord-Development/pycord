@@ -5,7 +5,6 @@ from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from .input_text import InputText
-from .view import _ViewWeights
 
 __all__ = (
     "Modal",
@@ -23,12 +22,10 @@ class Modal:
 
     This object must be inherited to create a UI within Discord.
     """
-
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
-        self.__weights = _ViewWeights(self.children)
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -44,7 +41,7 @@ class Modal:
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
-            return item._rendered_row or 0
+            return item.row or 0
 
         children = sorted(self.children, key=key)
         components: List[Dict[str, Any]] = []
@@ -77,7 +74,6 @@ class Modal:
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
-        self.__weights.add_item(item)
         self.children.append(item)
 
     def remove_item(self, item: InputText):
@@ -92,8 +88,6 @@ class Modal:
             self.children.remove(item)
         except ValueError:
             pass
-        else:
-            self.__weights.remove_item(item)
 
     def to_dict(self):
         return {
