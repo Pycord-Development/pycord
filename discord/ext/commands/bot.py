@@ -25,8 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-
-
 import collections
 import collections.abc
 import sys
