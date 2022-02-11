@@ -210,7 +210,7 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
         from .user import User
 
         if self.limit > 0:
-            retrieve = self.limit if self.limit <= 100 else 100
+            retrieve = min(self.limit, 100)
 
             after = self.after.id if self.after else None
             data: List[PartialUserPayload] = await self.getter(
@@ -221,11 +221,10 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
                 self.limit -= retrieve
                 self.after = Object(id=int(data[-1]["id"]))
 
-            if self.guild is None or isinstance(self.guild, Object):
-                for element in reversed(data):
+            for element in reversed(data):
+                if self.guild is None or isinstance(self.guild, Object):
                     await self.users.put(User(state=self.state, data=element))
-            else:
-                for element in reversed(data):
+                else:
                     member_id = int(element["id"])
                     member = self.guild.get_member(member_id)
                     if member is not None:
@@ -284,11 +283,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
         if isinstance(around, datetime.datetime):
             around = Object(id=time_snowflake(around))
 
-        if oldest_first is None:
-            self.reverse = after is not None
-        else:
-            self.reverse = oldest_first
-
+        self.reverse = after is not None if oldest_first is None else oldest_first
         self.messageable = messageable
         self.limit = limit
         self.before = before
@@ -318,15 +313,14 @@ class HistoryIterator(_AsyncIterator["Message"]):
                 self._filter = lambda m: int(m["id"]) < self.before.id
             elif self.after:
                 self._filter = lambda m: self.after.id < int(m["id"])
+        elif self.reverse:
+            self._retrieve_messages = self._retrieve_messages_after_strategy  # type: ignore
+            if self.before:
+                self._filter = lambda m: int(m["id"]) < self.before.id
         else:
-            if self.reverse:
-                self._retrieve_messages = self._retrieve_messages_after_strategy  # type: ignore
-                if self.before:
-                    self._filter = lambda m: int(m["id"]) < self.before.id
-            else:
-                self._retrieve_messages = self._retrieve_messages_before_strategy  # type: ignore
-                if self.after and self.after != OLDEST_OBJECT:
-                    self._filter = lambda m: int(m["id"]) > self.after.id
+            self._retrieve_messages = self._retrieve_messages_before_strategy  # type: ignore
+            if self.after and self.after != OLDEST_OBJECT:
+                self._filter = lambda m: int(m["id"]) > self.after.id
 
     async def next(self) -> Message:
         if self.messages.empty():
@@ -424,11 +418,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
 
-        if oldest_first is None:
-            self.reverse = after is not None
-        else:
-            self.reverse = oldest_first
-
+        self.reverse = after is not None if oldest_first is None else oldest_first
         self.guild = guild
         self.loop = guild._state.loop
         self.request = guild._state.http.get_audit_logs
@@ -678,20 +668,21 @@ class MemberIterator(_AsyncIterator["Member"]):
         return r > 0
 
     async def fill_members(self):
-        if self._get_retrieve():
-            after = self.after.id if self.after else None
-            data = await self.get_members(self.guild.id, self.retrieve, after)
-            if not data:
-                # no data, terminate
-                return
+        if not self._get_retrieve():
+            return
+        after = self.after.id if self.after else None
+        data = await self.get_members(self.guild.id, self.retrieve, after)
+        if not data:
+            # no data, terminate
+            return
 
-            if len(data) < 1000:
-                self.limit = 0  # terminate loop
+        if len(data) < 1000:
+            self.limit = 0  # terminate loop
 
-            self.after = Object(id=int(data[-1]["user"]["id"]))
+        self.after = Object(id=int(data[-1]["user"]["id"]))
 
-            for element in reversed(data):
-                await self.members.put(self.create_member(element))
+        for element in reversed(data):
+            await self.members.put(self.create_member(element))
 
     def create_member(self, data):
         from .member import Member
@@ -849,22 +840,23 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         return User(state=self.event._state, data=user)
 
     async def fill_subs(self):
-        if self._get_retrieve():
-            before = self.before.id if self.before else None
-            after = self.after.id if self.after else None
-            data = await self.get_subscribers(
-                guild_id=self.event.guild.id,
-                event_id=self.event.id,
-                limit=self.retrieve,
-                with_member=self.with_member,
-                before=before,
-                after=after,
-            )
-            if data:
-                self.limit -= self.retrieve
+        if not self._get_retrieve():
+            return
+        before = self.before.id if self.before else None
+        after = self.after.id if self.after else None
+        data = await self.get_subscribers(
+            guild_id=self.event.guild.id,
+            event_id=self.event.id,
+            limit=self.retrieve,
+            with_member=self.with_member,
+            before=before,
+            after=after,
+        )
+        if data:
+            self.limit -= self.retrieve
 
-            for element in reversed(data):
-                if "member" in element:
-                    await self.subscribers.put(self.member_from_payload(element))
-                else:
-                    await self.subscribers.put(self.user_from_payload(element))
+        for element in reversed(data):
+            if "member" in element:
+                await self.subscribers.put(self.member_from_payload(element))
+            else:
+                await self.subscribers.put(self.user_from_payload(element))

@@ -575,11 +575,10 @@ class DecodeManager(threading.Thread, _OpusStruct):
 
     def get_decoder(self, ssrc):
         d = self.decoder.get(ssrc)
-        if d is None:
-            self.decoder[ssrc] = Decoder()
-            return self.decoder[ssrc]
-        else:
+        if d is not None:
             return d
+        self.decoder[ssrc] = Decoder()
+        return self.decoder[ssrc]
 
     @property
     def decoding(self):

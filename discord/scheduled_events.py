@@ -220,12 +220,12 @@ class ScheduledEvent(Hashable):
 
         entity_metadata = data.get("entity_metadata")
         channel_id = data.get("channel_id", None)
-        if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
-        else:
+        if channel_id is None:
             self.location = ScheduledEventLocation(
                 state=state, value=entity_metadata["location"]
             )
+        else:
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
     def __str__(self) -> str:
         return self.name

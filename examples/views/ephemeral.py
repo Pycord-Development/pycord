@@ -21,7 +21,7 @@ class Counter(discord.ui.View):
     @discord.ui.button(label="0", style=discord.ButtonStyle.red)
     async def count(self, button: discord.ui.Button, interaction: discord.Interaction):
         number = int(button.label) if button.label else 0
-        if number + 1 >= 5:
+        if number >= 4:
             button.style = discord.ButtonStyle.green
             button.disabled = True
         button.label = str(number + 1)

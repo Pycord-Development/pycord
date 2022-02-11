@@ -47,9 +47,7 @@ class Cog(Cog):
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
-        self = super().__new__(cls)
-
-        return self
+        return super().__new__(cls)
 
     def walk_commands(self) -> Generator[Command, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.

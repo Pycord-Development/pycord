@@ -73,11 +73,10 @@ class Option:
                 except TypeError as exc:
                     from ..ext.commands.converter import CONVERTER_MAPPING
 
-                    if input_type in CONVERTER_MAPPING:
-                        self.converter = CONVERTER_MAPPING[input_type]
-                        input_type = SlashCommandOptionType.string
-                    else:
+                    if input_type not in CONVERTER_MAPPING:
                         raise exc
+                    self.converter = CONVERTER_MAPPING[input_type]
+                    input_type = SlashCommandOptionType.string
                 else:
                     if _type == SlashCommandOptionType.channel:
                         if not isinstance(input_type, tuple):

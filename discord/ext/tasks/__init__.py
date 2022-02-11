@@ -655,8 +655,7 @@ class Loop(Generic[LF]):
                 )
             ret.append(t if t.tzinfo is not None else t.replace(tzinfo=utc))
 
-        ret = sorted(set(ret))  # de-dupe and sort times
-        return ret
+        return sorted(set(ret))  # de-dupe and sort times
 
     def change_interval(
         self,
