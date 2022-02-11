@@ -4762,6 +4762,24 @@ Select
 
 .. autofunction:: discord.ui.select
 
+Modal
+~~~~~
+
+.. attributetable:: discord.ui.Modal
+
+.. autoclass:: discord.ui.Modal
+    :members:
+    :inherited-members:
+
+InputText
+~~~~~~~~~
+
+.. attributetable:: discord.ui.InputText
+
+.. autoclass:: discord.ui.InputText
+    :members:
+    :inherited-members:
+
 Sink Core
 ---------
 
