@@ -415,9 +415,7 @@ class View:
     def refresh(self, components: List[Component]):
         # This is pretty hacky at the moment
         old_state: Dict[Tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item  # type: ignore
-            for item in self.children
-            if item.is_dispatchable()
+            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
         children: List[Item] = [
             item for item in self.children if not item.is_dispatchable()

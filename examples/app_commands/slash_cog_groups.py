@@ -19,10 +19,8 @@ class Example(commands.Cog):
         "secret_greetings",
         "Secret greetings",
         permissions=[
-            CommandPermission(
-                "owner", 2, True
-            )  # Ensures the owner_id user can access this, and no one else
-        ],
+            CommandPermission("owner", 2, True)
+        ],  # Ensures the owner_id user can access this, and no one else
     )
 
     @greetings.command()

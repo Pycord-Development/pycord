@@ -9,4 +9,4 @@ enable=bad-indentation,line-too-long
 
 indent-string='    '
 
-max-line-length=88
+max-line-length=120
