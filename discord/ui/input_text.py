@@ -46,6 +46,7 @@ class InputText(Item):
 
     def __init__(
         self,
+        *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str = MISSING,
         label: Optional[str] = None,
@@ -74,7 +75,7 @@ class InputText(Item):
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
-        
+
     @property
     def style(self) -> InputTextStyle:
         """:class:`discord.InputTextStyle`: The style of the input text field."""
