@@ -25,11 +25,11 @@ class MyContext(commands.Context):  # custom context
 class MyApplicationContext(discord.ApplicationContext):  # custom application context
     async def success(self, message):
         try:
-            await self.respond(embed=discord.Embed(  # respond with a green embed with "Success" title
-                title="Success",
-                description=message,
-                colour=discord.Colour.green()
-            ))
+            await self.respond(
+                embed=discord.Embed(  # respond with a green embed with "Success" title
+                    title="Success", description=message, colour=discord.Colour.green()
+                )
+            )
         except discord.HTTPException:  # ignore exceptions
             pass
 
@@ -66,7 +66,9 @@ async def slash_guess(ctx, number: int):
     """Guess a random number from 1 to 6."""
     value = random.randint(1, 6)
     if number == value:
-        await ctx.success("Congratulations! You guessed the number.")  # use the new helper function
+        await ctx.success(
+            "Congratulations! You guessed the number."
+        )  # use the new helper function
     else:
         await ctx.respond("You are wrong! Try again.")
 

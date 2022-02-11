@@ -32,11 +32,11 @@ from .errors import MP4SinkError
 
 class MP4Sink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .mp4 files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -79,8 +79,9 @@ class MP4Sink(Sink):
                 mp4_file
             )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
+            )
         except FileNotFoundError:
             raise MP4SinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
