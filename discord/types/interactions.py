@@ -31,6 +31,7 @@ from .channel import ChannelType
 from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
+from .message import Attachment
 from .role import Role
 from .snowflake import Snowflake
 from .user import User
@@ -59,7 +60,7 @@ class _ApplicationCommandOptionOptional(TypedDict, total=False):
     options: List[ApplicationCommandOption]
 
 
-ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class ApplicationCommandOption(_ApplicationCommandOptionOptional):
@@ -134,7 +135,7 @@ class _ApplicationCommandInteractionDataOptionBoolean(
 class _ApplicationCommandInteractionDataOptionSnowflake(
     _ApplicationCommandInteractionDataOption
 ):
-    type: Literal[6, 7, 8, 9]
+    type: Literal[6, 7, 8, 9, 11]
     value: Snowflake
 
 
@@ -167,6 +168,7 @@ class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
     members: Dict[Snowflake, Member]
     roles: Dict[Snowflake, Role]
     channels: Dict[Snowflake, ApplicationCommandResolvedPartialChannel]
+    attachments: Dict[Snowflake, Attachment]
 
 
 class _ApplicationCommandInteractionDataOptional(TypedDict, total=False):

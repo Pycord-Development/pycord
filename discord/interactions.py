@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
     from .types.interactions import MessageInteraction as MessageInteractionPayload
+    from .ui.modal import Modal
     from .ui.view import View
 
     InteractionChannel = Union[
@@ -793,6 +794,22 @@ class InteractionResponse:
         )
 
         self._responded = True
+
+    async def send_modal(self, modal: Modal):
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        payload = modal.to_dict()
+        adapter = async_context.get()
+        await adapter.create_interaction_response(
+            self._parent.id,
+            self._parent.token,
+            session=self._parent._session,
+            type=InteractionResponseType.modal.value,
+            data=payload,
+        )
+        self._responded = True
+        self._parent._state.store_modal(modal, self._parent.user.id)
 
 
 class _InteractionMessageState:

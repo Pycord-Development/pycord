@@ -38,7 +38,7 @@ from typing import (
     Union,
 )
 
-from .enums import ButtonStyle, ComponentType, try_enum
+from .enums import ButtonStyle, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -47,6 +47,7 @@ if TYPE_CHECKING:
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
+    from .types.components import InputText as InputTextComponentPayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
 
@@ -138,6 +139,82 @@ class ActionRow(Component):
             "type": int(self.type),
             "components": [child.to_dict() for child in self.children],
         }  # type: ignore
+
+
+class InputText(Component):
+    """Represents an Input Text field from the Discord Bot UI Kit.
+    This inherits from :class:`Component`.
+    Attributes
+    ----------
+    style: :class:`.InputTextStyle`
+        The style of the input text field.
+    custom_id: Optional[:class:`str`]
+        The ID of the input text field that gets received during an interaction.
+    label: Optional[:class:`str`]
+        The label for the input text field, if any.
+    placeholder: Optional[:class:`str`]
+        The placeholder text that is shown if nothing is selected, if any.
+    min_length: Optional[:class:`int`]
+        The minimum number of characters that must be entered
+        Defaults to 0
+    max_length: Optional[:class:`int`]
+        The maximum number of characters that can be entered
+    required: Optional[:class:`bool`]
+        Whether the input text field is required or not. Defaults to `True`.
+    value: Optional[:class:`str`]
+        The value that has been entered in the input text field.
+    """
+
+    __slots__: Tuple[str, ...] = (
+        "type",
+        "style",
+        "custom_id",
+        "label",
+        "placeholder",
+        "min_length",
+        "max_length",
+        "required",
+        "value",
+    )
+
+    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+
+    def __init__(self, data: InputTextComponentPayload):
+        self.type = ComponentType.input_text
+        self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
+        self.custom_id = data["custom_id"]
+        self.label: Optional[str] = data.get("label", None)
+        self.placeholder: Optional[str] = data.get("placeholder", None)
+        self.min_length: Optional[int] = data.get("min_length", None)
+        self.max_length: Optional[int] = data.get("max_length", None)
+        self.required: bool = data.get("required", True)
+        self.value: Optional[str] = data.get("value", None)
+
+    def to_dict(self) -> InputTextComponentPayload:
+        payload = {
+            "type": 4,
+            "style": self.style.value,
+            "label": self.label,
+        }
+        if self.custom_id:
+            payload["custom_id"] = self.custom_id
+
+        if self.placeholder:
+            payload["placeholder"] = self.placeholder
+
+        if self.min_length:
+            payload["min_length"] = self.min_length
+
+        if self.max_length:
+            payload["max_length"] = self.max_length
+
+        if not self.required:
+            payload["required"] = self.required
+
+        if self.value:
+            payload["value"] = self.value
+
+        return payload  # type: ignore
 
 
 class Button(Component):

@@ -307,9 +307,10 @@ class FlagsMeta(type):
             if frame is None:
                 local_ns = {}
             else:
-                local_ns = (
-                    frame.f_locals if frame.f_back is None else frame.f_back.f_locals
-                )
+                if frame.f_back is None:
+                    local_ns = frame.f_locals
+                else:
+                    local_ns = frame.f_back.f_locals
         finally:
             del frame
 
@@ -361,7 +362,7 @@ class FlagsMeta(type):
             }
             regex_flags = re.IGNORECASE
 
-        keys = [re.escape(k) for k in flags]
+        keys = list(re.escape(k) for k in flags)
         keys.extend(re.escape(a) for a in aliases)
         keys = sorted(keys, key=lambda t: len(t), reverse=True)
 
@@ -533,10 +534,11 @@ class FlagConverter(metaclass=FlagsMeta):
 
     def __repr__(self) -> str:
         pairs = " ".join(
-            f"{flag.attribute}={getattr(self, flag.attribute)!r}"
-            for flag in self.get_flags().values()
+            [
+                f"{flag.attribute}={getattr(self, flag.attribute)!r}"
+                for flag in self.get_flags().values()
+            ]
         )
-
         return f"<{self.__class__.__name__} {pairs}>"
 
     @classmethod
@@ -626,12 +628,13 @@ class FlagConverter(metaclass=FlagsMeta):
             except KeyError:
                 if flag.required:
                     raise MissingRequiredFlag(flag)
-                if callable(flag.default):
-                    default = await maybe_coroutine(flag.default, ctx)
-                    setattr(self, flag.attribute, default)
                 else:
-                    setattr(self, flag.attribute, flag.default)
-                continue
+                    if callable(flag.default):
+                        default = await maybe_coroutine(flag.default, ctx)
+                        setattr(self, flag.attribute, default)
+                    else:
+                        setattr(self, flag.attribute, flag.default)
+                    continue
 
             if flag.max_args > 0 and len(values) > flag.max_args:
                 if flag.override:

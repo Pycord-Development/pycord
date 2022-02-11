@@ -52,7 +52,7 @@ from typing import (
 from ..enums import ChannelType, SlashCommandOptionType
 from ..errors import ClientException, ValidationError
 from ..member import Member
-from ..message import Message
+from ..message import Attachment, Message
 from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
@@ -511,6 +511,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         else:
             return self.name
 
+    def __str__(self) -> str:
+        return self.qualified_name
+
     def _set_cog(self, cog):
         self.cog = cog
 
@@ -703,7 +706,9 @@ class SlashCommand(ApplicationCommand):
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException("Too many arguments passed to the options kwarg.")
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
             p_obj = p_obj.annotation
 
             if not any(c(o, p_obj) for c in check_annotations):
@@ -782,6 +787,11 @@ class SlashCommand(ApplicationCommand):
                 and (converter := op.converter) is not None
             ):
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif op.input_type == SlashCommandOptionType.attachment:
+                _data = ctx.interaction.data["resolved"]["attachments"][arg]
+                _data["id"] = int(arg)
+                arg = Attachment(state=ctx.interaction._state, data=_data)
 
             kwargs[op._parameter_name] = arg
 
@@ -1541,7 +1551,7 @@ def validate_chat_input_name(name: Any):
             f"Chat input command names and options must be 1-32 characters long. Received {name}"
         )
     if (
-        name.lower() != name
+        not name.lower() == name
     ):  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         raise ValidationError(
             f"Chat input command names and options must be lowercase. Received {name}"

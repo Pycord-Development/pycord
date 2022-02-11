@@ -280,19 +280,18 @@ class AuditLogChanges:
                 if transformer:
                     before = transformer(entry, before)
 
-            if attr == "location":
-                if hasattr(self.before, "location_type"):
-                    from .scheduled_events import ScheduledEventLocation
+            if attr == "location" and hasattr(self.before, "location_type"):
+                from .scheduled_events import ScheduledEventLocation
 
-                    if (
-                        self.before.location_type
-                        is enums.ScheduledEventLocationType.external
-                    ):
-                        before = ScheduledEventLocation(state=state, value=before)
-                    elif hasattr(self.before, "channel"):
-                        before = ScheduledEventLocation(
-                            state=state, value=self.before.channel
-                        )
+                if (
+                    self.before.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
+                    before = ScheduledEventLocation(state=state, value=before)
+                elif hasattr(self.before, "channel"):
+                    before = ScheduledEventLocation(
+                        state=state, value=self.before.channel
+                    )
 
             setattr(self.before, attr, before)
 
@@ -304,19 +303,18 @@ class AuditLogChanges:
                 if transformer:
                     after = transformer(entry, after)
 
-            if attr == "location":
-                if hasattr(self.after, "location_type"):
-                    from .scheduled_events import ScheduledEventLocation
+            if attr == "location" and hasattr(self.after, "location_type"):
+                from .scheduled_events import ScheduledEventLocation
 
-                    if (
-                        self.after.location_type
-                        is enums.ScheduledEventLocationType.external
-                    ):
-                        after = ScheduledEventLocation(state=state, value=after)
-                    elif hasattr(self.after, "channel"):
-                        after = ScheduledEventLocation(
-                            state=state, value=self.after.channel
-                        )
+                if (
+                    self.after.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
+                    after = ScheduledEventLocation(state=state, value=after)
+                elif hasattr(self.after, "channel"):
+                    after = ScheduledEventLocation(
+                        state=state, value=self.after.channel
+                    )
 
             setattr(self.after, attr, after)
 

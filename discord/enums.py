@@ -60,6 +60,8 @@ __all__ = (
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
     "ScheduledEventLocationType",
+    "InputTextStyle",
+    "SlashCommandOptionType",
 )
 
 
@@ -567,6 +569,7 @@ class InteractionType(Enum):
     application_command = 2
     component = 3
     auto_complete = 4
+    modal_submit = 5
 
 
 class InteractionResponseType(Enum):
@@ -578,6 +581,7 @@ class InteractionResponseType(Enum):
     deferred_message_update = 6  # for components
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
+    modal = 9  # for modal dialogs
 
 
 class VideoQualityMode(Enum):
@@ -592,6 +596,7 @@ class ComponentType(Enum):
     action_row = 1
     button = 2
     select = 3
+    input_text = 4
 
     def __int__(self):
         return self.value
@@ -614,6 +619,14 @@ class ButtonStyle(Enum):
 
     def __int__(self):
         return self.value
+
+
+class InputTextStyle(Enum):
+    short = 1
+    singleline = 1
+    paragraph = 2
+    multiline = 2
+    long = 2
 
 
 class ApplicationType(Enum):
@@ -674,6 +687,8 @@ class SlashCommandOptionType(Enum):
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
+        if datatype.__name__ == "Attachment":
+            return cls.attachment
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
 

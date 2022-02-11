@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, Callable, Generator, List, Type, TypeVar,
 import discord
 
 from ...cog import Cog
-from ...commands import ApplicationCommand
+from ...commands import ApplicationCommand, SlashCommandGroup
 
 if TYPE_CHECKING:
     from .core import Command
@@ -47,7 +47,6 @@ class Cog(Cog):
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
-
         return super().__new__(cls)
 
     def walk_commands(self) -> Generator[Command, None, None]:
@@ -61,12 +60,15 @@ class Cog(Cog):
         from .core import GroupMixin
 
         for command in self.__cog_commands__:
-            if isinstance(command, ApplicationCommand):
+            if not isinstance(command, ApplicationCommand):
+                if command.parent is None:
+                    yield command
+                    if isinstance(command, GroupMixin):
+                        yield from command.walk_commands()
+            elif isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            else:
                 yield command
-            elif command.parent is None:
-                yield command
-                if isinstance(command, GroupMixin):
-                    yield from command.walk_commands()
 
     def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
         r"""

@@ -45,7 +45,12 @@ from typing import (
 import discord.utils
 
 from . import errors
-from .commands import ApplicationCommand, ApplicationContext, _BaseCommand
+from .commands import (
+    ApplicationCommand,
+    ApplicationContext,
+    SlashCommandGroup,
+    _BaseCommand,
+)
 
 __all__ = (
     "CogMeta",
@@ -302,8 +307,8 @@ class Cog(metaclass=CogMeta):
             A command or group from the cog.
         """
         for command in self.__cog_commands__:
-            if command.parent is None:
-                yield command
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.

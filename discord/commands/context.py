@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
 from discord.interactions import InteractionMessage
@@ -185,6 +185,40 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def response(self) -> InteractionResponse:
         return self.interaction.response
+
+    @property
+    def selected_options(self) -> Optional[List[Dict]]:
+        """The options and values that were selected by the user when sending the command.
+
+        Returns
+        -------
+        Optional[List[Dict]]
+            A dictionary containing the options and values that were selected by the user when the command was processed, if applicable.
+            Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command.
+        """
+        return self.interaction.data.get("options", None)
+
+    @property
+    def unselected_options(self) -> Optional[List[Option]]:
+        """The options that were not provided by the user when sending the command.
+
+        Returns
+        -------
+        Optional[List[:class:`.Option`]]
+            A list of Option objects (if any) that were not selected by the user when the command was processed.
+            Returns ``None`` if there are no options defined for that command.
+        """
+        if self.command.options is not None:  # type: ignore
+            if self.selected_options:
+                return [
+                    option
+                    for option in self.command.options  # type: ignore
+                    if option.to_dict()["name"]
+                    not in [opt["name"] for opt in self.selected_options]
+                ]
+            else:
+                return self.command.options  # type: ignore
+        return None
 
     @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
