@@ -31,11 +31,11 @@ from .errors import WaveSinkError
 
 class WaveSink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .wav(wave) files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException

@@ -33,9 +33,9 @@ class MKASink(Sink):
     """A Sink "stores" all the audio data.
 
     Used for .mka files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -70,11 +70,15 @@ class MKASink(Sink):
             "-",
             "-f",
             "matroska",
-            "pipe:1"
+            "pipe:1",
         ]
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,
+                creationflags=CREATE_NO_WINDOW,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+            )
         except FileNotFoundError:
             raise MKASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
