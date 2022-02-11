@@ -60,6 +60,36 @@ class ThreadOption:
         return "ThreadOption"
 
 class Option:
+    r"""
+    A class that implements Slash Command arguments which are called "Options".
+
+    This should only be implemented when defining a slash command with the options 
+    decorator, options kwarg in the slash_command decorator, or just defining it 
+    directly in the function parameters.
+
+    Attributes
+    ----------
+    input_type: :class:`Any`
+        The input type for this Option. This attribute is set to None by default.
+    description: :class:`str`
+        The description of this Option. This attribute is set to None by default.
+    name: :class:`str`
+        The name of this Option.
+    required: :class:`bool`
+        If this Option is required or not. If the default attribute is set and 
+        this isn't set, then this is set to False. Otherwise, it's set to true.
+    default: :class:`Any`
+        The default value for this Option if no value is set.
+    min_value: :class:`Union[int, float]`
+        The minimum value for this Option if it's a number type.
+    max_value: :class:`Union[int, float]`
+        The maximum value for this Option if it's a number type.
+    choices: :class:`OptionChoice`
+        Instead of the user typing in a value, this allows the user to select 
+        between pre-defined values.
+    channel_types: :class:`List[ChannelType]`
+    """
+
     def __init__(self, input_type = None, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
@@ -70,7 +100,7 @@ class Option:
         )
 
         if input_type is not None:
-            option.input_type = input_type
+            self.input_type = input_type
             _type_checking_for_option(self)
 
         self.required: bool = (
