@@ -41,36 +41,32 @@ Some documentation to refer to:
 from __future__ import annotations
 
 import asyncio
-import socket
 import logging
+import select
+import socket
 import struct
 import threading
-import select
 import time
-from typing import Any, Callable, List, Optional, TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple
 
 from . import opus, utils
 from .backoff import ExponentialBackoff
-from .gateway import *
 from .errors import ClientException, ConnectionClosed
+from .gateway import *
 from .player import AudioPlayer, AudioSource
-from .sinks import Sink, RawData, RecordingException
-
+from .sinks import RawData, RecordingException, Sink
 from .utils import MISSING
 
 if TYPE_CHECKING:
+    from . import abc
     from .client import Client
     from .guild import Guild
-    from .state import ConnectionState
-    from .user import ClientUser
     from .opus import Encoder
-    from . import abc
-
-    from .types.voice import (
-        GuildVoiceState as GuildVoiceStatePayload,
-        VoiceServerUpdate as VoiceServerUpdatePayload,
-        SupportedModes,
-    )
+    from .state import ConnectionState
+    from .types.voice import GuildVoiceState as GuildVoiceStatePayload
+    from .types.voice import SupportedModes
+    from .types.voice import VoiceServerUpdate as VoiceServerUpdatePayload
+    from .user import ClientUser
 
 
 has_nacl: bool
@@ -488,15 +484,14 @@ class VoiceClient(VoiceProtocol):
                             "Disconnected from voice by force... potentially reconnecting."
                         )
                         successful = await self.potential_reconnect()
-                        if not successful:
-                            _log.info(
-                                "Reconnect was unsuccessful, disconnecting from voice normally..."
-                            )
-                            await self.disconnect()
-                            break
-                        else:
+                        if successful:
                             continue
 
+                        _log.info(
+                            "Reconnect was unsuccessful, disconnecting from voice normally..."
+                        )
+                        await self.disconnect()
+                        break
                 if not reconnect:
                     await self.disconnect()
                     raise
@@ -564,7 +559,7 @@ class VoiceClient(VoiceProtocol):
         struct.pack_into(">I", header, 4, self.timestamp)
         struct.pack_into(">I", header, 8, self.ssrc)
 
-        encrypt_packet = getattr(self, "_encrypt_" + self.mode)
+        encrypt_packet = getattr(self, f"_encrypt_{self.mode}")
         return encrypt_packet(header, data)
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data) -> bytes:
@@ -835,7 +830,10 @@ class VoiceClient(VoiceProtocol):
             silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
             self.user_timestamps[data.ssrc] = data.timestamp
 
-        data.decoded_data = struct.pack('<h', 0) * silence * opus._OpusStruct.CHANNELS + data.decoded_data
+        data.decoded_data = (
+            struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
+            + data.decoded_data
+        )
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])

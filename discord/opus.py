@@ -25,31 +25,30 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    List,
-    Tuple,
-    TypedDict,
-    Any,
-    TYPE_CHECKING,
-    Callable,
-    TypeVar,
-    Literal,
-    Optional,
-    overload,
-)
-
 import array
 import ctypes
 import ctypes.util
+import gc
 import logging
 import math
 import os.path
 import struct
 import sys
-import gc
 import threading
-import traceback
 import time
+import traceback
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypedDict,
+    TypeVar,
+    overload,
+)
 
 from .errors import DiscordException, InvalidArgument
 from .sinks import RawData
@@ -84,7 +83,7 @@ __all__ = (
 
 _log = logging.getLogger(__name__)
 
-c_int_ptr   = ctypes.POINTER(ctypes.c_int)
+c_int_ptr = ctypes.POINTER(ctypes.c_int)
 c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
 c_float_ptr = ctypes.POINTER(ctypes.c_float)
 
@@ -108,15 +107,15 @@ OK = 0
 BAD_ARG = -1
 
 # Encoder CTLs
-APPLICATION_AUDIO       = 2049
-APPLICATION_VOIP        = 2048
-APPLICATION_LOWDELAY    = 2051
+APPLICATION_AUDIO = 2049
+APPLICATION_VOIP = 2048
+APPLICATION_LOWDELAY = 2051
 
-CTL_SET_BITRATE     = 4002
-CTL_SET_BANDWIDTH   = 4008
-CTL_SET_FEC         = 4012
-CTL_SET_PLP         = 4014
-CTL_SET_SIGNAL      = 4024
+CTL_SET_BITRATE = 4002
+CTL_SET_BANDWIDTH = 4008
+CTL_SET_FEC = 4012
+CTL_SET_PLP = 4014
+CTL_SET_SIGNAL = 4024
 
 # Decoder CTLs
 CTL_SET_GAIN = 4034
@@ -557,7 +556,9 @@ class DecodeManager(threading.Thread, _OpusStruct):
                 if data.decrypted_data is None:
                     continue
                 else:
-                    data.decoded_data = self.get_decoder(data.ssrc).decode(data.decrypted_data)
+                    data.decoded_data = self.get_decoder(data.ssrc).decode(
+                        data.decrypted_data
+                    )
             except OpusError:
                 print("Error occurred while decoding opus frame.")
                 continue
@@ -571,17 +572,14 @@ class DecodeManager(threading.Thread, _OpusStruct):
             gc.collect()
             print("Decoder Process Killed")
         self._end_thread.set()
-    
 
     def get_decoder(self, ssrc):
         d = self.decoder.get(ssrc)
-        if d is None:
-            self.decoder[ssrc] = Decoder()
-            return self.decoder[ssrc]
-        else:
+        if d is not None:
             return d
+        self.decoder[ssrc] = Decoder()
+        return self.decoder[ssrc]
 
     @property
     def decoding(self):
         return bool(self.decode_queue)
-

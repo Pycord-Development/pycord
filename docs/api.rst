@@ -475,7 +475,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_raw_typing(payload)
 
-    Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
+    Called when someone begins typing a message. Unlike :func:`on_typing`, this is
     called regardless if the user can be found in the bot's cache or not.
 
     If the typing event is occurring in a guild,
@@ -835,7 +835,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_thread_delete(thread)
 
-    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache 
+    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache
     then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
 
 
@@ -849,7 +849,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type thread: :class:`Thread`
 
 .. function:: on_raw_thread_delete(payload)
-    
+
     Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called
     regardless of the state of the internal cache.
 
@@ -2634,7 +2634,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.location_type`
 
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_update
 
         A scheduled event was updated.
@@ -2654,7 +2654,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.location_type`
 
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_delete
 
         A scheduled event was deleted.
@@ -2959,7 +2959,7 @@ of :class:`enum.Enum`.
     Some might be boost-only or gated.
 
     .. warning::
-        
+
         Discord said that they won't verify bots who gives access to embedded activities.
 
         Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321.
@@ -2967,29 +2967,29 @@ of :class:`enum.Enum`.
     .. versionadded:: 2.0
 
     .. attribute:: awkword
-        
+
         Represents the embedded application Awkword.
 
     .. attribute:: betrayal
 
         Represents the embedded application Betrayal.io
-    
+
     .. attribute:: checkers_in_the_park
 
         Represents the embedded application Checkers in the Park Prod.
-    
+
     .. attribute:: checkers_in_the_park_dev
 
         Represents the embedded application Checkers in the Park Development.
-    
+
     .. attribute:: checkers_in_the_park_staging
-        
+
         Represents the embedded application Checkers in the Park Staging.
-    
+
     .. attribute:: checkers_in_the_park_qa
-        
+
         Represents the embedded application Checkers in the Park QA.
-    
+
     .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
@@ -2999,13 +2999,13 @@ of :class:`enum.Enum`.
         Represents the embedded application Chess in the Park Development.
 
     .. attribute:: chest_in_the_park_staging
-        
+
         Represents the embedded application Chess in the Park Staging.
 
     .. attribute:: chest_in_the_park_qa
-        
+
         Represents the embedded application Chess in the Park QA.
-    
+
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
@@ -3017,9 +3017,9 @@ of :class:`enum.Enum`.
     .. attribute:: letter_tile
 
         Represents the embedded application Letter Tile.
-    
+
     .. attribute:: ocho
-    
+
         Represents the embedded application Ocho.
 
     .. attribute:: ocho_dev
@@ -3027,13 +3027,13 @@ of :class:`enum.Enum`.
         Represents the embedded application Ocho Development.
 
     .. attribute:: ocho_staging
-        
+
         Represents the embedded application Ocho Staging.
-    
+
     .. attribute:: ocho_qa
-        
+
         Represents the embedded application Ocho QA.
-    
+
     .. attribute:: poker_night_staging
 
         Represents the embedded application Poker Night Staging.
@@ -3041,23 +3041,23 @@ of :class:`enum.Enum`.
     .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
-     
+
     .. attribute:: poker_night_qa
 
         Represents the embedded application Poker QA.
-    
+
     .. attribute:: putts
-        
+
         Represents the embedded application Putts.
 
-    .. attribute:: sketchy_artist 
-        
+    .. attribute:: sketchy_artist
+
         Represents the embedded application Sketchy Artist.
-    
+
     .. attribute:: sketchy_artist_dev
-        
+
         Represents the embedded application Sketchy Artist development version.
-    
+
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
@@ -3065,19 +3065,19 @@ of :class:`enum.Enum`.
     .. attribute:: watch_together
 
         Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
-        
+
     .. attribute:: watch_together_dev
 
         Development version of :attr:`.watch_together`.
 
     .. attribute:: word_snacks
-        
+
         Represents the embedded application word snacks.
-    
+
     .. attribute:: word_snacks_dev
-        
+
         Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
-        
+
     .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
@@ -4346,7 +4346,7 @@ Template
 
 .. autoclass:: Template()
     :members:
-        
+
 WelcomeScreen
 ~~~~~~~~~~~~~~~
 
