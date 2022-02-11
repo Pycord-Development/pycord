@@ -379,7 +379,7 @@ def time_snowflake(dt: datetime.datetime, high: bool = False) -> int:
         The snowflake representing the time given.
     """
     discord_millis = int(dt.timestamp() * 1000 - DISCORD_EPOCH)
-    return (discord_millis << 22) + (2 ** 22 - 1 if high else 0)
+    return (discord_millis << 22) + (2**22 - 1 if high else 0)
 
 
 def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> Optional[T]:
@@ -749,22 +749,22 @@ _MARKDOWN_ESCAPE_SUBREGEX = "|".join(
 # this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
 _MARKDOWN_ESCAPE_LINKS = r"""
 \[  # matches link text
-    [^\[\]]* # link text can contain anything but brackets 
+    [^\[\]]* # link text can contain anything but brackets
 \]
 \(  # matches link destination
     [^\(\)]+ # link destination cannot contain parentheses
 \)"""  # note 2: make sure this regex is consumed in re.X (extended mode) since it has whitespace and comments
 
-_MARKDOWN_ESCAPE_COMMON = fr"^>(?:>>)?\s|{_MARKDOWN_ESCAPE_LINKS}"
+_MARKDOWN_ESCAPE_COMMON = rf"^>(?:>>)?\s|{_MARKDOWN_ESCAPE_LINKS}"
 
 _MARKDOWN_ESCAPE_REGEX = re.compile(
-    fr"(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})",
+    rf"(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})",
     re.MULTILINE | re.X,
 )
 
 _URL_REGEX = r"(?P<url><[^: >]+:\/[^ >]+>|(?:https?|steam):\/\/[^\s<]+[^<.,:;\"\'\]\s])"
 
-_MARKDOWN_STOCK_REGEX = fr"(?P<markdown>[_\\~|\*`]|{_MARKDOWN_ESCAPE_COMMON})"
+_MARKDOWN_STOCK_REGEX = rf"(?P<markdown>[_\\~|\*`]|{_MARKDOWN_ESCAPE_COMMON})"
 
 
 def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
