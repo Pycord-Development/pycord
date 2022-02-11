@@ -120,7 +120,7 @@ Slash Command Groups
 Slash command groups allows grouping multiple subcommands under the same parent.
 
 .. code-block:: python3
-    
+
     my_group = bot.create_group("name", "description")
 
 To create a subcommand, use the :meth:`.SlashCommandGroup.command` decorator.

@@ -85,17 +85,15 @@ class alias_flag_value(flag_value):
 
 def fill_with_flags(*, inverted: bool = False):
     def decorator(cls: Type[BF]):
-        # fmt: off
         cls.VALID_FLAGS = {
             name: value.flag
             for name, value in cls.__dict__.items()
             if isinstance(value, flag_value)
         }
-        # fmt: on
 
         if inverted:
             max_bits = max(cls.VALID_FLAGS.values()).bit_length()
-            cls.DEFAULT_VALUE = -1 + (2 ** max_bits)
+            cls.DEFAULT_VALUE = -1 + (2**max_bits)
         else:
             cls.DEFAULT_VALUE = 0
 
