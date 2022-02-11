@@ -31,11 +31,11 @@ from .errors import MKVSinkError
 
 class MKVSink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .mkv files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -70,11 +70,14 @@ class MKVSink(Sink):
             "-",
             "-f",
             "matroska",
-            "pipe:1"
+            "pipe:1",
         ]
         try:
-            process = subprocess.Popen(args, #creationflags=CREATE_NO_WINDOW,
-                                       stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,  # creationflags=CREATE_NO_WINDOW,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+            )
         except FileNotFoundError:
             raise MKVSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:

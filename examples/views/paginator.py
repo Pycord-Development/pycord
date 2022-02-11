@@ -189,7 +189,10 @@ class PageTest(commands.Cog):
         await paginator.respond(ctx.interaction, ephemeral=False)
         await ctx.respond("Disabling paginator in 5 seconds...")
         await asyncio.sleep(5)
-        disable_page = discord.Embed(title="Paginator Disabled!", description="This page is only shown when the paginator is disabled.")
+        disable_page = discord.Embed(
+            title="Paginator Disabled!",
+            description="This page is only shown when the paginator is disabled.",
+        )
         await paginator.disable(page=disable_page)
 
     @pagetest.command(name="cancel")
@@ -199,7 +202,10 @@ class PageTest(commands.Cog):
         await paginator.respond(ctx.interaction, ephemeral=False)
         await ctx.respond("Canceling paginator in 5 seconds...")
         await asyncio.sleep(5)
-        cancel_page = discord.Embed(title="Paginator Cancelled!", description="This page is only shown when the paginator is cancelled.")
+        cancel_page = discord.Embed(
+            title="Paginator Cancelled!",
+            description="This page is only shown when the paginator is cancelled.",
+        )
         await paginator.cancel(page=cancel_page)
 
     @pagetest.command(name="groups")

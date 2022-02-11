@@ -23,10 +23,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TypedDict, List
-from .snowflake import Snowflake
-from .member import Member
+from typing import List, TypedDict
+
 from .emoji import PartialEmoji
+from .member import Member
+from .snowflake import Snowflake
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -87,19 +88,19 @@ class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
     id: Snowflake
     guild_id: Snowflake
 
-      
+
 class ThreadDeleteEvent(TypedDict, total=False):
     thread_id: Snowflake
     thread_type: int
     guild_id: Snowflake
     parent_id: Snowflake
 
-      
+
 class _TypingEventOptional(TypedDict, total=False):
     guild_id: Snowflake
     member: Member
 
-      
+
 class TypingEvent(_TypingEventOptional):
     channel_id: Snowflake
     user_id: Snowflake
