@@ -29,7 +29,6 @@ from typing import Dict, get_type_hints, List, Literal, Optional, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
 
-
 __all__ = (
     "ThreadOption",
     "Option",

@@ -25,17 +25,17 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import List, Literal, Optional, TypedDict
 
+from .activity import PartialPresenceUpdate
+from .channel import GuildChannel
+from .emoji import Emoji
+from .member import Member
+from .role import Role
 from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
-from .channel import GuildChannel
+from .threads import Thread
+from .user import User
 from .voice import GuildVoiceState
 from .welcome_screen import WelcomeScreen
-from .activity import PartialPresenceUpdate
-from .role import Role
-from .member import Member
-from .emoji import Emoji
-from .user import User
-from .threads import Thread
 
 
 class Ban(TypedDict):
@@ -80,40 +80,40 @@ VerificationLevel = Literal[0, 1, 2, 3, 4]
 NSFWLevel = Literal[0, 1, 2, 3]
 PremiumTier = Literal[0, 1, 2, 3]
 GuildFeature = Literal[
-    'ANIMATED_BANNER',
-    'ANIMATED_ICON',
-    'BANNER',
-    'COMMERCE',
-    'COMMUNITY',
-    'DISCOVERABLE',
-    'FEATURABLE',
-    'HAS_DIRECTORY_ENTRY',
-    'HUB',
-    'INVITE_SPLASH',
-    'LINKED_TO_HUB',
-    'MEMBER_PROFILES',
-    'MEMBER_VERIFICATION_GATE_ENABLED',
-    'MONETIZATION_ENABLED',
-    'MORE_EMOJI',
-    'MORE_STICKERS',
-    'NEWS',
-    'NEW_THREAD_PERMISSIONS',
-    'PARTNERED',
-    'PREMIUM_TIER_3_OVERRIDE',
-    'PREVIEW_ENABLED',
-    'PRIVATE_THREADS',
-    'ROLE_ICONS',
-    'ROLE_SUBSCRIPTIONS_ENABLED',
-    'SEVEN_DAY_THREAD_ARCHIVE',
-    'TEXT_IN_VOICE_ENABLED',
-    'THREAD_DEFAULT_AUTO_ARCHIVE_DURATION',
-    'THREADS_ENABLED_TESTING',
-    'THREE_DAY_THREAD_ARCHIVE',
-    'TICKETED_EVENTS_ENABLED',
-    'VANITY_URL',
-    'VERIFIED',
-    'VIP_REGIONS',
-    'WELCOME_SCREEN_ENABLED',
+    "ANIMATED_BANNER",
+    "ANIMATED_ICON",
+    "BANNER",
+    "COMMERCE",
+    "COMMUNITY",
+    "DISCOVERABLE",
+    "FEATURABLE",
+    "HAS_DIRECTORY_ENTRY",
+    "HUB",
+    "INVITE_SPLASH",
+    "LINKED_TO_HUB",
+    "MEMBER_PROFILES",
+    "MEMBER_VERIFICATION_GATE_ENABLED",
+    "MONETIZATION_ENABLED",
+    "MORE_EMOJI",
+    "MORE_STICKERS",
+    "NEWS",
+    "NEW_THREAD_PERMISSIONS",
+    "PARTNERED",
+    "PREMIUM_TIER_3_OVERRIDE",
+    "PREVIEW_ENABLED",
+    "PRIVATE_THREADS",
+    "ROLE_ICONS",
+    "ROLE_SUBSCRIPTIONS_ENABLED",
+    "SEVEN_DAY_THREAD_ARCHIVE",
+    "TEXT_IN_VOICE_ENABLED",
+    "THREAD_DEFAULT_AUTO_ARCHIVE_DURATION",
+    "THREADS_ENABLED_TESTING",
+    "THREE_DAY_THREAD_ARCHIVE",
+    "TICKETED_EVENTS_ENABLED",
+    "VANITY_URL",
+    "VERIFIED",
+    "VIP_REGIONS",
+    "WELCOME_SCREEN_ENABLED",
 ]
 
 
