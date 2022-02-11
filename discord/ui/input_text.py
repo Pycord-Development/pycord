@@ -71,6 +71,7 @@ class InputText:
         )
         self._input_value = None
         self.row = row
+        self._rendered_row: Optional[int] = None
 
     @property
     def type(self) -> ComponentType:
