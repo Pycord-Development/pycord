@@ -243,7 +243,7 @@ class ApplicationCommandMixin:
 
         def _check_command(cmd: ApplicationCommand, match: Dict) -> bool:
             if isinstance(cmd, SlashCommandGroup):
-                if len(cmd.subcommands) != len(match["options"]):
+                if len(cmd.subcommands) != len(match.get("options", [])):
                     return True
                 for i, subcommand in enumerate(cmd.subcommands):
                     match_ = next(
@@ -271,10 +271,8 @@ class ApplicationCommandMixin:
                                 # The API considers False (autocomplete) and [] (choices) to be falsy values
                                 if val in (False, []):
                                     cmd_vals[i] = MISSING
-                            if match.get(
-                                check, MISSING
-                            ) is not MISSING and cmd_vals != [
-                                val.get(opt, MISSING) for val in match[check]
+                            if cmd_vals != [
+                                val.get(opt, MISSING) for val in match.get(check, [])
                             ]:
                                 return True  # We have a difference
                     else:
