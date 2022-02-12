@@ -3,7 +3,7 @@
 API Reference
 =============
 
-The following section outlines Pycord's `ipc` extension module.
+The following section outlines the api of Pycord's `ipc` extension module.
 
 Server
 ------
