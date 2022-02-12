@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, TypeVar, Union, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
 from discord.interactions import InteractionMessage
@@ -48,18 +48,18 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    
+
     from typing import Callable, Awaitable
 
 from ..utils import _cached_property as cached_property
 
-T = TypeVar('T')
-CogT = TypeVar('CogT', bound="Cog")
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
 
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
@@ -97,7 +97,13 @@ class ApplicationContext(discord.abc.Messageable):
     async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
-    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(
+        self,
+        command: ApplicationCommand[CogT, P, T],
+        /,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
@@ -153,7 +159,11 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
-        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
+        return (
+            self.interaction.guild.me
+            if self.interaction.guild is not None
+            else self.bot.user
+        )
 
     @cached_property
     def message(self) -> Optional[Message]:
@@ -184,10 +194,9 @@ class ApplicationContext(discord.abc.Messageable):
         -------
         Optional[List[Dict]]
             A dictionary containing the options and values that were selected by the user when the command was processed, if applicable.
+            Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command.
         """
-        if "options" in self.interaction.data:
-            return self.interaction.data["options"]
-        return None
+        return self.interaction.data.get("options", None)
 
     @property
     def unselected_options(self) -> Optional[List[Option]]:
@@ -197,13 +206,18 @@ class ApplicationContext(discord.abc.Messageable):
         -------
         Optional[List[:class:`.Option`]]
             A list of Option objects (if any) that were not selected by the user when the command was processed.
+            Returns ``None`` if there are no options defined for that command.
         """
         if self.command.options is not None:  # type: ignore
-            return [
-                option
-                for option in self.command.options  # type: ignore
-                if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
-            ]
+            if self.selected_options:
+                return [
+                    option
+                    for option in self.command.options  # type: ignore
+                    if option.to_dict()["name"]
+                    not in [opt["name"] for opt in self.selected_options]
+                ]
+            else:
+                return self.command.options  # type: ignore
         return None
 
     @property

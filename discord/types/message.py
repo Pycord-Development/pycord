@@ -25,16 +25,19 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, Optional, TypedDict, Union
-from .snowflake import Snowflake, SnowflakeList
-from .member import Member, UserWithMember
-from .user import User
-from .emoji import PartialEmoji
-from .embed import Embed
+from typing import TYPE_CHECKING, List, Literal, Optional, TypedDict, Union
+
 from .channel import ChannelType
 from .components import Component
-from .interactions import MessageInteraction
+from .embed import Embed
+from .emoji import PartialEmoji
+from .member import Member, UserWithMember
+from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
+from .user import User
+
+if TYPE_CHECKING:
+    from .interactions import MessageInteraction
 
 
 class ChannelMention(TypedDict):
@@ -129,7 +132,7 @@ class Message(_MessageOptional):
     type: MessageType
 
 
-AllowedMentionType = Literal['roles', 'users', 'everyone']
+AllowedMentionType = Literal["roles", "users", "everyone"]
 
 
 class AllowedMentions(TypedDict):

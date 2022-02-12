@@ -25,11 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict, List, Optional
+from typing import List, Optional, TypedDict
 
-from .user import User
-from .team import Team
 from .snowflake import Snowflake
+from .team import Team
+from .user import User
+
 
 class BaseAppInfo(TypedDict):
     id: Snowflake
@@ -38,6 +39,7 @@ class BaseAppInfo(TypedDict):
     icon: Optional[str]
     summary: str
     description: str
+
 
 class _AppInfoOptional(TypedDict, total=False):
     team: Team
@@ -49,11 +51,13 @@ class _AppInfoOptional(TypedDict, total=False):
     hook: bool
     max_participants: int
 
+
 class AppInfo(BaseAppInfo, _AppInfoOptional):
     rpc_origins: List[str]
     owner: User
     bot_public: bool
     bot_require_code_grant: bool
+
 
 class _PartialAppInfoOptional(TypedDict, total=False):
     rpc_origins: List[str]
@@ -63,6 +67,7 @@ class _PartialAppInfoOptional(TypedDict, total=False):
     privacy_policy_url: str
     max_participants: int
     flags: int
+
 
 class PartialAppInfo(_PartialAppInfoOptional, BaseAppInfo):
     pass

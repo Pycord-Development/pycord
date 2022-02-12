@@ -1,7 +1,6 @@
 import discord
 from discord.commands import Option
 
-
 bot = discord.Bot()
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well
@@ -17,7 +16,9 @@ async def hello(
     # you also can create optional argument using:
     # age: Option(int, "Enter your age") = 18
 ):
-    await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
+    await ctx.respond(
+        f"Hello {name}! Your gender is {gender} and you are {age} years old."
+    )
 
 
 @bot.slash_command(guild_ids=[...])
@@ -28,6 +29,19 @@ async def channel(
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 
+
+@bot.slash_command(name="attach_file")
+async def say(
+    ctx: discord.ApplicationContext,
+    attachment: Option(
+        discord.Attachment,
+        "A file to attach to the message",
+        required=False,
+    ),
+):
+    """This demonstrates how to attach a file with a slash command."""
+    file = await attachment.to_file()
+    await ctx.respond("Here's your file!", file=file)
 
 
 bot.run("TOKEN")

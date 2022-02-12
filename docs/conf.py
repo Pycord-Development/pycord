@@ -11,9 +11,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
 import re
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -72,8 +72,8 @@ templates_path = ["_templates"]
 
 # The suffix of source filenames.
 source_suffix = {
-    '.rst': 'restructuredtext', # Used For The Other Docs
-    '.md': 'markdown', # Used ONLY In the Guide For Faster Making Time
+    ".rst": "restructuredtext",  # Used For The Other Docs
+    ".md": "markdown",  # Used ONLY In the Guide For Faster Making Time
 }
 
 # The encoding of source files.
@@ -272,7 +272,7 @@ html_search_scorer = "_static/scorer.js"
 html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pycorddoc'
+htmlhelp_basename = "pycorddoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 

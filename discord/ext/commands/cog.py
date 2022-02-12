@@ -24,31 +24,30 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any, Callable, Generator, List, Type, TypeVar, Union
+
 import discord
+
 from ...cog import Cog
-
-from typing import Any, Callable, Generator, TYPE_CHECKING, List, TypeVar, Type, Union
-
-from ...commands import ApplicationCommand
+from ...commands import ApplicationCommand, SlashCommandGroup
 
 if TYPE_CHECKING:
     from .core import Command
 
-__all__ = ('Cog',)
+__all__ = ("Cog",)
 
-CogT = TypeVar('CogT', bound='Cog')
-FuncT = TypeVar('FuncT', bound=Callable[..., Any])
+CogT = TypeVar("CogT", bound="Cog")
+FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 
 MISSING: Any = discord.utils.MISSING
+
 
 class Cog(Cog):
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
-        self = super().__new__(cls)
-
-        return self
+        return super().__new__(cls)
 
     def walk_commands(self) -> Generator[Command, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
@@ -59,14 +58,17 @@ class Cog(Cog):
             A command or group from the cog.
         """
         from .core import GroupMixin
+
         for command in self.__cog_commands__:
-            if isinstance(command, ApplicationCommand):
-                yield command
-            else:
+            if not isinstance(command, ApplicationCommand):
                 if command.parent is None:
                     yield command
                     if isinstance(command, GroupMixin):
                         yield from command.walk_commands()
+            elif isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            else:
+                yield command
 
     def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
         r"""
