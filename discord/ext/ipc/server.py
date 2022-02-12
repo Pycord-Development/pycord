@@ -179,11 +179,11 @@ class Server(ServerBase):
             from discord.ext.ipc import Server
 
             server = web.Application()
-            
+
             server.router.add_route("GET", "/", Server.handle_request)
-            
+
             bot.loop.run_forever(self._start(server, "your_port"))
-        
+
         with support for multicasting just changing one line, like so: ::
 
             # Instead of this
@@ -209,4 +209,3 @@ class Server(ServerBase):
 
             self.loop.run_until_complete(self._start(self._mc_server, self.mc_port))
         self.loop.run_until_complete(self._start(self.__server, self.port))
-        

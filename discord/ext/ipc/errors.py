@@ -34,4 +34,3 @@ class JSONEncodeError(DiscordException):
     """Raised when encoding JSON failed."""
 
     ...
-    

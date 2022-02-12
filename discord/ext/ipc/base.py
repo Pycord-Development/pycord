@@ -57,7 +57,7 @@ class ServerBase(abc.ABC):
 
         def decorator(func):
             """The decorator class allowing use of the function name.
-            
+
             .. versionadded:: 2.1
             """
             if not name:
@@ -70,7 +70,7 @@ class ServerBase(abc.ABC):
 
     def update_endpoints(self):
         """Updates the current endpoints
-        
+
         .. versionadded:: 2.1
         """
         self.endpoints = {**self.endpoints, **self.routes}
@@ -94,4 +94,3 @@ class IPCServerResponseBase(abc.ABC):
 
         for key, value in data["data"].items():
             setattr(self, key, value)
-            
