@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import asyncio
 import logging
 
 from aiohttp import web
@@ -81,7 +82,7 @@ class Server(ServerBase):
         self.endpoints = {}
         self.__mc_connect = multicast_connection
         self.mc_port = multicast_port
-        self.loop = self.bot.loop
+        self.loop: asyncio.AbstractEventLoop = self.bot.loop
         self.port = port
         super().__init__(host)
 
@@ -206,6 +207,6 @@ class Server(ServerBase):
             self._mc_server = web.Application()
             self._mc_server.router.add_route("GET", "/", self.handle_multicast_request)
 
-            self.loop.run_forever(self._start(self._mc_server, self.mc_port))
-        self.loop.run_forever(self._start(self.__server, self.port))
+            self.loop.run_until_complete(self._start(self._mc_server, self.mc_port))
+        self.loop.run_until_complete(self._start(self.__server, self.port))
         
