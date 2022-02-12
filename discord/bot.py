@@ -184,7 +184,7 @@ class ApplicationCommandMixin:
         self,
         name: str,
         guild_ids: Optional[List[int]] = None,
-        type: Type[ApplicationCommand] = SlashCommand
+        type: Type[ApplicationCommand] = SlashCommand,
     ) -> Optional[ApplicationCommand]:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
@@ -246,7 +246,14 @@ class ApplicationCommandMixin:
                 if len(cmd.subcommands) != len(match["options"]):
                     return True
                 for i, subcommand in enumerate(cmd.subcommands):
-                    match_ = next((data for data in match["options"] if data["name"] == subcommand.name), None)
+                    match_ = next(
+                        (
+                            data
+                            for data in match["options"]
+                            if data["name"] == subcommand.name
+                        ),
+                        None,
+                    )
                     if match_ is not None and _check_command(subcommand, match_):
                         return True
             else:
@@ -254,16 +261,21 @@ class ApplicationCommandMixin:
                 for check in to_check:
                     if isinstance(to_check[check], list):
                         for opt in to_check[check]:
-                            cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
+                            cmd_vals = (
+                                [val.get(opt, MISSING) for val in as_dict[check]]
+                                if check in as_dict
+                                else []
+                            )
                             for i, val in enumerate(cmd_vals):
                                 # We need to do some falsy conversion here
                                 # The API considers False (autocomplete) and [] (choices) to be falsy values
                                 if val in (False, []):
                                     cmd_vals[i] = MISSING
-                            if (
-                                match.get(check, MISSING) is not MISSING
-                                and cmd_vals != [val.get(opt, MISSING) for val in match[check]]
-                            ):
+                            if match.get(
+                                check, MISSING
+                            ) is not MISSING and cmd_vals != [
+                                val.get(opt, MISSING) for val in match[check]
+                            ]:
                                 return True  # We have a difference
                     else:
                         if check in match and getattr(cmd, check) != match[check]:
@@ -298,18 +310,13 @@ class ApplicationCommandMixin:
             match = registered_commands_dict.get(cmd.name)
             if match is None:
                 # We don't have this command registered
-                return_value.append(
-                    {
-                        "command": cmd,
-                        "action": "upsert"
-                    }
-                )
+                return_value.append({"command": cmd, "action": "upsert"})
             elif _check_command(cmd, match):
                 return_value.append(
                     {
                         "command": cmd,
                         "action": "edit",
-                        "id": int(registered_commands_dict[cmd.name]["id"])
+                        "id": int(registered_commands_dict[cmd.name]["id"]),
                     }
                 )
 
@@ -326,15 +333,13 @@ class ApplicationCommandMixin:
                     }
                 )
 
-                continue
-
         return return_value
 
     async def register_command(
         self,
         command: ApplicationCommand,
         force: bool = True,
-        guild_ids: List[int] = None
+        guild_ids: List[int] = None,
     ) -> None:
         """|coro|
 
@@ -364,7 +369,7 @@ class ApplicationCommandMixin:
         self,
         commands: Optional[List[ApplicationCommand]] = None,
         guild_id: Optional[int] = None,
-        force: bool = False
+        force: bool = False,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -474,7 +479,7 @@ class ApplicationCommandMixin:
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
                 registered = await register("bulk", data)
             else:
-                if len(pending_actions) == 0:
+                if not pending_actions:
                     registered = []
                 for cmd in pending_actions:
                     if cmd["action"] == "delete":
@@ -521,7 +526,7 @@ class ApplicationCommandMixin:
         force: bool = False,
         guild_ids: Optional[List[int]] = None,
         register_guild_commands: bool = True,
-        unregister_guilds: Optional[List[int]] = None
+        unregister_guilds: Optional[List[int]] = None,
     ) -> None:
         """|coro|
 
@@ -1212,7 +1217,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     ) -> bool:
         data = self._check_once if call_once else self._checks
 
-        if len(data) == 0:
+        if not data:
             return True
 
         # type-checker doesn't distinguish between functions and methods
