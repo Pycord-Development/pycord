@@ -4,9 +4,8 @@ import os
 from typing import TYPE_CHECKING, Optional
 
 from ..components import InputText as InputTextComponent
-from ..enums import InputTextStyle
+from ..enums import ComponentType, InputTextStyle
 from ..utils import MISSING
-from .item import Item
 
 __all__ = ("InputText",)
 
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText(Item):
+class InputText:
     """Represents a UI text input field.
 
     Parameters
@@ -46,6 +45,7 @@ class InputText(Item):
 
     def __init__(
         self,
+        *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str = MISSING,
         label: Optional[str] = None,
@@ -59,6 +59,7 @@ class InputText(Item):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
         self._underlying = InputTextComponent._raw_construct(
+            type=ComponentType.input_text,
             style=style,
             custom_id=custom_id,
             label=label,
@@ -70,11 +71,12 @@ class InputText(Item):
         )
         self._input_value = None
         self.row = row
+        self._rendered_row: Optional[int] = None
 
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
-        
+
     @property
     def style(self) -> InputTextStyle:
         """:class:`discord.InputTextStyle`: The style of the input text field."""

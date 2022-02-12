@@ -26,7 +26,6 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 from ..enums import ChannelType, SlashCommandOptionType
 
-
 __all__ = (
     "ThreadOption",
     "Option",
@@ -63,9 +62,7 @@ class Option:
         self.description = description or "No description provided"
         self.converter = None
         self._raw_type = input_type
-        self.channel_types: List[ChannelType] = kwargs.pop(
-            "channel_types", []
-        )
+        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
@@ -76,11 +73,10 @@ class Option:
                 except TypeError as exc:
                     from ..ext.commands.converter import CONVERTER_MAPPING
 
-                    if input_type in CONVERTER_MAPPING:
-                        self.converter = CONVERTER_MAPPING[input_type]
-                        input_type = SlashCommandOptionType.string
-                    else:
+                    if input_type not in CONVERTER_MAPPING:
                         raise exc
+                    self.converter = CONVERTER_MAPPING[input_type]
+                    input_type = SlashCommandOptionType.string
                 else:
                     if _type == SlashCommandOptionType.channel:
                         if not isinstance(input_type, tuple):
@@ -116,10 +112,7 @@ class Option:
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
 
-        if (
-            not isinstance(self.min_value, minmax_types)
-            and self.min_value is not None
-        ):
+        if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
             raise TypeError(
                 f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"'
             )
