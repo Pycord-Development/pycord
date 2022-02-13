@@ -1063,7 +1063,9 @@ class SlashCommandGroup(ApplicationCommand):
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
+        resolved = ctx.interaction.data.get("resolved", None)
         command = find(lambda x: x.name == option["name"], self.subcommands)
+        option["resolved"] = resolved
         ctx.interaction.data = option
         await command.invoke(ctx)
 
