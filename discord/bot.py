@@ -679,7 +679,7 @@ class ApplicationCommandMixin:
                                     }
                                 )
                             else:
-                                raise RuntimeError(
+                                print(
                                     "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
                                         guild_id=guild_id, role=permission["id"]
                                     )
