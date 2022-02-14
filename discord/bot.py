@@ -44,8 +44,6 @@ from typing import (
     Union,
 )
 
-import discord
-
 from .client import Client
 from .cog import CogMixin
 from .commands import (
