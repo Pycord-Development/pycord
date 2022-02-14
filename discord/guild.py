@@ -45,7 +45,6 @@ from typing import (
 
 from . import abc, utils
 from .asset import Asset
-from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
 from .emoji import Emoji
