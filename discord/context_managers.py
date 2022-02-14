@@ -26,18 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, TYPE_CHECKING, TypeVar, Optional, Type
+from typing import Any, TYPE_CHECKING, Optional, Type, TypeVar
 
 if TYPE_CHECKING:
-    from .abc import Messageable
-
     from types import TracebackType
 
-    TypingT = TypeVar('TypingT', bound='Typing')
+    from .abc import Messageable
 
-__all__ = (
-    'Typing',
-)
+    TypingT = TypeVar("TypingT", bound="Typing")
+
+__all__ = ("Typing",)
 
 
 def _typing_done_callback(fut: "asyncio.Future[Any]") -> None:
@@ -70,7 +68,8 @@ class Typing:
         self.task.add_done_callback(_typing_done_callback)
         return self
 
-    def __exit__(self,
+    def __exit__(
+        self,
         exc_type: Optional[Type[BaseException]],
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
@@ -82,7 +81,8 @@ class Typing:
         await channel._state.http.send_typing(channel.id)
         return self.__enter__()
 
-    async def __aexit__(self,
+    async def __aexit__(
+        self,
         exc_type: Optional[Type[BaseException]],
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],

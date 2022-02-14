@@ -1,4 +1,5 @@
 import re
+
 from setuptools import setup
 
 # Requirements
@@ -10,7 +11,9 @@ with open("requirements.txt") as f:
 version = ""
 with open("discord/__init__.py") as f:
 
-    search = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE)
+    search = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
+    )
 
     if search is not None:
         version = search.group(1)
@@ -26,11 +29,19 @@ if version.endswith(("a", "b", "rc")):
     try:
         import subprocess
 
-        p = subprocess.Popen(["git", "rev-list", "--count", "HEAD"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            ["git", "rev-list", "--count", "HEAD"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         out, err = p.communicate()
         if out:
             version += out.decode("utf-8").strip()
-        p = subprocess.Popen(["git", "rev-parse", "--short", "HEAD"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            ["git", "rev-parse", "--short", "HEAD"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         out, err = p.communicate()
         if out:
             version += "+g" + out.decode("utf-8").strip()
@@ -42,7 +53,7 @@ readme = ""
 with open("README.rst") as f:
     readme = f.read()
 
-# Extra Requirements 
+# Extra Requirements
 # Ex: pip install py-cord[voice] or [speed]
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.6"],
@@ -64,6 +75,7 @@ extras_require = {
 packages = [
     "discord",
     "discord.types",
+    "discord.sinks",
     "discord.ui",
     "discord.webhook",
     "discord.commands",
@@ -93,7 +105,7 @@ setup(
     extras_require=extras_require,
     python_requires=">=3.8.0",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
@@ -107,5 +119,5 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
     ],
-    test_suite="tests", # Test Folder For Workflows
+    test_suite="tests",  # Test Folder For Workflows
 )

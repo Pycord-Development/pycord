@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Dict, List, Optional, TYPE_CHECKING, Any, Tuple, Union
+
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse, ClientWebSocketResponse
@@ -39,27 +40,27 @@ if TYPE_CHECKING:
     from .interactions import Interaction
 
 __all__ = (
-    'DiscordException',
-    'ClientException',
-    'NoMoreItems',
-    'GatewayNotFound',
-    'ValidationError',
-    'HTTPException',
-    'Forbidden',
-    'NotFound',
-    'DiscordServerError',
-    'InvalidData',
-    'InvalidArgument',
-    'LoginFailure',
-    'ConnectionClosed',
-    'PrivilegedIntentsRequired',
-    'InteractionResponded',
-    'ExtensionError',
-    'ExtensionAlreadyLoaded',
-    'ExtensionNotLoaded',
-    'NoEntryPointError',
-    'ExtensionFailed',
-    'ExtensionNotFound',
+    "DiscordException",
+    "ClientException",
+    "NoMoreItems",
+    "GatewayNotFound",
+    "ValidationError",
+    "HTTPException",
+    "Forbidden",
+    "NotFound",
+    "DiscordServerError",
+    "InvalidData",
+    "InvalidArgument",
+    "LoginFailure",
+    "ConnectionClosed",
+    "PrivilegedIntentsRequired",
+    "InteractionResponded",
+    "ExtensionError",
+    "ExtensionAlreadyLoaded",
+    "ExtensionNotLoaded",
+    "NoEntryPointError",
+    "ExtensionFailed",
+    "ExtensionNotFound",
 )
 
 
@@ -91,7 +92,7 @@ class GatewayNotFound(DiscordException):
     """An exception that is raised when the gateway for Discord could not be found"""
 
     def __init__(self) -> None:
-        message = 'The gateway to connect to discord was not found.'
+        message = "The gateway to connect to discord was not found."
         super().__init__(message)
 
 
@@ -101,18 +102,18 @@ class ValidationError(DiscordException):
     pass
 
 
-def _flatten_error_dict(d: Dict[str, Any], key: str = '') -> Dict[str, str]:
+def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
     items: List[Tuple[str, str]] = []
     for k, v in d.items():
-        new_key = key + '.' + k if key else k
+        new_key = f"{key}.{k}" if key else k
 
         if isinstance(v, dict):
             try:
-                _errors: List[Dict[str, Any]] = v['_errors']
+                _errors: List[Dict[str, Any]] = v["_errors"]
             except KeyError:
                 items.extend(_flatten_error_dict(v, new_key).items())
             else:
-                items.append((new_key, ' '.join(x.get('message', '') for x in _errors)))
+                items.append((new_key, " ".join(x.get("message", "") for x in _errors)))
         else:
             items.append((new_key, v))
 
@@ -137,28 +138,30 @@ class HTTPException(DiscordException):
         The Discord specific error code for the failure.
     """
 
-    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(
+        self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]
+    ):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
         self.text: str
         if isinstance(message, dict):
-            self.code = message.get('code', 0)
-            base = message.get('message', '')
-            errors = message.get('errors')
+            self.code = message.get("code", 0)
+            base = message.get("message", "")
+            errors = message.get("errors")
             if errors:
                 errors = _flatten_error_dict(errors)
-                helpful = '\n'.join('In %s: %s' % t for t in errors.items())
-                self.text = base + '\n' + helpful
+                helpful = "\n".join("In %s: %s" % t for t in errors.items())
+                self.text = f"{base}\n{helpful}"
             else:
                 self.text = base
         else:
-            self.text = message or ''
+            self.text = message or ""
             self.code = 0
 
-        fmt = '{0.status} {0.reason} (error code: {1})'
+        fmt = "{0.status} {0.reason} (error code: {1})"
         if len(self.text):
-            fmt += ': {2}'
+            fmt += ": {2}"
 
         super().__init__(fmt.format(self.response, self.code, self.text))
 
@@ -235,14 +238,20 @@ class ConnectionClosed(ClientException):
         The shard ID that got closed if applicable.
     """
 
-    def __init__(self, socket: ClientWebSocketResponse, *, shard_id: Optional[int], code: Optional[int] = None):
+    def __init__(
+        self,
+        socket: ClientWebSocketResponse,
+        *,
+        shard_id: Optional[int],
+        code: Optional[int] = None,
+    ):
         # This exception is just the same exception except
         # reconfigured to subclass ClientException for users
         self.code: int = code or socket.close_code or -1
         # aiohttp doesn't seem to consistently provide close reason
-        self.reason: str = ''
+        self.reason: str = ""
         self.shard_id: Optional[int] = shard_id
-        super().__init__(f'Shard ID {self.shard_id} WebSocket closed with {self.code}')
+        super().__init__(f"Shard ID {self.shard_id} WebSocket closed with {self.code}")
 
 
 class PrivilegedIntentsRequired(ClientException):
@@ -264,10 +273,10 @@ class PrivilegedIntentsRequired(ClientException):
     def __init__(self, shard_id: Optional[int]):
         self.shard_id: Optional[int] = shard_id
         msg = (
-            'Shard ID %s is requesting privileged intents that have not been explicitly enabled in the '
-            'developer portal. It is recommended to go to https://discord.com/developers/applications/ '
-            'and explicitly enable the privileged intents within your application\'s page. If this is not '
-            'possible, then consider disabling the privileged intents instead.'
+            "Shard ID %s is requesting privileged intents that have not been explicitly enabled in the "
+            "developer portal. It is recommended to go to https://discord.com/developers/applications/ "
+            "and explicitly enable the privileged intents within your application's page. If this is not "
+            "possible, then consider disabling the privileged intents instead."
         )
         super().__init__(msg % shard_id)
 
@@ -288,12 +297,13 @@ class InteractionResponded(ClientException):
 
     def __init__(self, interaction: Interaction):
         self.interaction: Interaction = interaction
-        super().__init__('This interaction has already been responded to before')
+        super().__init__("This interaction has already been responded to before")
+
 
 
 class ExtensionError(DiscordException):
     """Base exception for extension related errors.
-    
+
     This inherits from :exc:`~discord.DiscordException`.
 
     Attributes
@@ -301,11 +311,14 @@ class ExtensionError(DiscordException):
     name: :class:`str`
         The extension that had an error.
     """
+
     def __init__(self, message: Optional[str] = None, *args: Any, name: str) -> None:
         self.name: str = name
-        message = message or f'Extension {name!r} had an error.'
+        message = message or f"Extension {name!r} had an error."
         # clean-up @everyone and @here mentions
-        m = message.replace('@everyone', '@\u200beveryone').replace('@here', '@\u200bhere')
+        m = message.replace("@everyone", "@\u200beveryone").replace(
+            "@here", "@\u200bhere"
+        )
         super().__init__(m, *args)
 
 
@@ -314,8 +327,10 @@ class ExtensionAlreadyLoaded(ExtensionError):
 
     This inherits from :exc:`ExtensionError`
     """
+
     def __init__(self, name: str) -> None:
-        super().__init__(f'Extension {name!r} is already loaded.', name=name)
+        super().__init__(f"Extension {name!r} is already loaded.", name=name)
+
 
 
 class ExtensionNotLoaded(ExtensionError):
@@ -323,8 +338,10 @@ class ExtensionNotLoaded(ExtensionError):
 
     This inherits from :exc:`ExtensionError`
     """
+
     def __init__(self, name: str) -> None:
-        super().__init__(f'Extension {name!r} has not been loaded.', name=name)
+        super().__init__(f"Extension {name!r} has not been loaded.", name=name)
+
 
 
 class NoEntryPointError(ExtensionError):
@@ -332,6 +349,7 @@ class NoEntryPointError(ExtensionError):
 
     This inherits from :exc:`ExtensionError`
     """
+
     def __init__(self, name: str) -> None:
         super().__init__(f"Extension {name!r} has no 'setup' function.", name=name)
 
@@ -349,9 +367,10 @@ class ExtensionFailed(ExtensionError):
         The original exception that was raised. You can also get this via
         the ``__cause__`` attribute.
     """
+
     def __init__(self, name: str, original: Exception) -> None:
         self.original: Exception = original
-        msg = f'Extension {name!r} raised an error: {original.__class__.__name__}: {original}'
+        msg = f"Extension {name!r} raised an error: {original.__class__.__name__}: {original}"
         super().__init__(msg, name=name)
 
 
@@ -368,6 +387,7 @@ class ExtensionNotFound(ExtensionError):
     name: :class:`str`
         The extension that had the error.
     """
+
     def __init__(self, name: str) -> None:
-        msg = f'Extension {name!r} could not be found.'
+        msg = f"Extension {name!r} could not be found."
         super().__init__(msg, name=name)

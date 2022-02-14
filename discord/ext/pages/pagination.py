@@ -79,10 +79,6 @@ class PaginatorButton(discord.ui.Button):
             row=row,
         )
         self.button_type = button_type
-        self.label: Optional[str] = label if label or emoji else button_type.capitalize()
-        self.emoji: Optional[discord.PartialEmoji] = emoji  # type: ignore # mypy bug #3004
-        self.style = style
-        self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
         self.paginator: Optional["Paginator"] = None
 
@@ -172,8 +168,10 @@ class PageGroup:
     ):
         self.label = label
         self.description = description
-        self.emoji = emoji
-        self.pages = pages
+        self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
+        self.pages: Union[
+            List[str], List[Union[List[discord.Embed], discord.Embed]]
+        ] = pages
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.author_check = author_check
@@ -181,9 +179,9 @@ class PageGroup:
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
-        self.custom_view = custom_view
-        self.timeout = timeout
-        self.custom_buttons = custom_buttons
+        self.custom_view: discord.ui.View = custom_view
+        self.timeout: float = timeout
+        self.custom_buttons: List = custom_buttons
 
 
 class PaginatorButtonType(TypedDict):
@@ -257,27 +255,26 @@ class Paginator(discord.ui.View):
         default_button_row: int = 0,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
-        timeout: Optional[float] = 180.0,
+        timeout: float = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
     ) -> None:
         super().__init__(timeout=timeout)
-        self.timeout = timeout
+        self.timeout: float = timeout
+        T_page_groups = List[PageGroup]
+        self.pages: Union[
+            T_page_groups, List[str], List[Union[List[discord.Embed], discord.Embed]]
+        ] = pages
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
-        T_page_groups = List[PageGroup]
         self.page_groups: Optional[T_page_groups] = None
 
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = cast(T_page_groups, pages) if show_menu else None
-            if self.page_groups is None:
+            if not self.page_groups:
                 raise RuntimeError("Cannot show menu if all pages are PageGroups")
             pages = self.page_groups[0].pages
-        self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = cast(
-            Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
-            pages
-        )
-        # self.pages = cast(Union[List[str], List[Union[List[discord.Embed], discord.Embed]]], self.pages)
+        self.pages = cast(Union[List[str], List[Union[List[discord.Embed], discord.Embed]]], pages)
 
         self.page_count = len(self.pages) - 1
         self.buttons: Dict[str, PaginatorButtonType] = {}
@@ -288,7 +285,7 @@ class Paginator(discord.ui.View):
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
-        self.custom_view = custom_view
+        self.custom_view: discord.ui.View = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
         if self.custom_buttons is not None and len(self.custom_buttons) > 0 and not self.use_default_buttons:
@@ -349,7 +346,9 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages = pages if pages is not None else self.pages
+        self.pages: Union[
+            List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]
+        ] = (pages if pages is not None else self.pages)
         self.page_count = len(self.pages) - 1
         self.current_page = 0
         # Apply config changes, if specified
@@ -376,8 +375,8 @@ class Paginator(discord.ui.View):
             else self.default_button_row
         )
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
-        self.custom_view = None if custom_view is None else custom_view
-        self.timeout = timeout if timeout is not None else self.timeout
+        self.custom_view: discord.ui.View = None if custom_view is None else custom_view
+        self.timeout: float = timeout if timeout is not None else self.timeout
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
             for button in custom_buttons:
@@ -395,6 +394,61 @@ class Paginator(discord.ui.View):
                 setattr(item, "disabled", True)  # add instance variable
             if self.message is None:
                 raise RuntimeError("Cannot disable buttons if message is None")
+            await self.message.edit(view=self)
+
+    async def disable(
+        self,
+        include_custom: bool = False,
+        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+    ) -> None:
+        """Stops the paginator, disabling all of its components.
+
+        Parameters
+        ----------
+        include_custom: :class:`bool`
+            Whether to disable components added via custom views.
+        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+            The page content to show after disabling the paginator.
+        """
+        page = self.get_page_content(page)
+        for item in self.children:
+            if item not in self.custom_view.children or include_custom:
+                item.disabled = True
+        if page:
+            await self.message.edit(
+                content=page if isinstance(page, str) else None,
+                embeds=[] if isinstance(page, str) else page,
+                view=self,
+            )
+        else:
+            await self.message.edit(view=self)
+
+    async def cancel(
+        self,
+        include_custom: bool = False,
+        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+    ) -> None:
+        """Cancels the paginator, removing all of its components from the message.
+
+        Parameters
+        ----------
+        include_custom: :class:`bool`
+            Whether to remove components added via custom views.
+        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+            The page content to show after canceling the paginator.
+        """
+        items = self.children.copy()
+        page = self.get_page_content(page)
+        for item in items:
+            if item not in self.custom_view.children or include_custom:
+                self.remove_item(item)
+        if page:
+            await self.message.edit(
+                content=page if isinstance(page, str) else None,
+                embeds=[] if isinstance(page, str) else page,
+                view=self,
+            )
+        else:
             await self.message.edit(view=self)
 
     async def goto_page(self, page_number=0) -> discord.Message:
@@ -580,7 +634,6 @@ class Paginator(discord.ui.View):
         if self.custom_view:
             for item in self.custom_view.children:
                 self.add_item(item)
-
         return self.buttons
 
     @staticmethod
@@ -625,7 +678,7 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         self.update_buttons()
-        page = self.pages[0]
+        page = self.pages[self.current_page]
         page = self.get_page_content(page)
 
         self.user = ctx.author
@@ -678,7 +731,7 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
 
-        page = self.pages[0]
+        page = self.pages[self.current_page]
         page = self.get_page_content(page)
 
         self.user = interaction.user

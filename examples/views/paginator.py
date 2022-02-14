@@ -182,6 +182,32 @@ class PageTest(commands.Cog):
         paginator = pages.Paginator(pages=self.get_pages(), custom_view=view)
         await paginator.respond(ctx.interaction, ephemeral=False)
 
+    @pagetest.command(name="disable")
+    async def pagetest_disable(self, ctx: discord.ApplicationContext):
+        """Demonstrates disabling the paginator buttons and showing a custom page when disabled."""
+        paginator = pages.Paginator(pages=self.get_pages())
+        await paginator.respond(ctx.interaction, ephemeral=False)
+        await ctx.respond("Disabling paginator in 5 seconds...")
+        await asyncio.sleep(5)
+        disable_page = discord.Embed(
+            title="Paginator Disabled!",
+            description="This page is only shown when the paginator is disabled.",
+        )
+        await paginator.disable(page=disable_page)
+
+    @pagetest.command(name="cancel")
+    async def pagetest_cancel(self, ctx: discord.ApplicationContext):
+        """Demonstrates canceling (stopping) the paginator and showing a custom page when cancelled."""
+        paginator = pages.Paginator(pages=self.get_pages())
+        await paginator.respond(ctx.interaction, ephemeral=False)
+        await ctx.respond("Canceling paginator in 5 seconds...")
+        await asyncio.sleep(5)
+        cancel_page = discord.Embed(
+            title="Paginator Cancelled!",
+            description="This page is only shown when the paginator is cancelled.",
+        )
+        await paginator.cancel(page=cancel_page)
+
     @pagetest.command(name="groups")
     async def pagetest_groups(self, ctx: discord.ApplicationContext):
         """Demonstrates using page groups to switch between different sets of pages."""

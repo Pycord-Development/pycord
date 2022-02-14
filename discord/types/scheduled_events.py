@@ -24,17 +24,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypedDict, Optional, Literal, Union
+from typing import Literal, Optional, TYPE_CHECKING, TypedDict, Union
 from datetime import datetime
 
 from .user import User
 
 if TYPE_CHECKING:
-    from .guild import Guild  # type: ignore # circular import
-    from .snowflake import Snowflake
     from .channel import StageChannel, VoiceChannel
+    from .guild import Guild  # type: ignore # circular import
     from .member import Member
-
+    from .snowflake import Snowflake
 
 ScheduledEventStatus = Literal[1, 2, 3, 4]
 ScheduledEventLocationType = Literal[1, 2, 3]

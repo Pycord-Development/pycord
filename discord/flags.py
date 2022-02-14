@@ -25,21 +25,33 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Dict, Iterator, List, Optional, Tuple, Type, TypeVar, overload
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    overload,
+)
 
 from .enums import UserFlags
 
 __all__ = (
-    'SystemChannelFlags',
-    'MessageFlags',
-    'PublicUserFlags',
-    'Intents',
-    'MemberCacheFlags',
-    'ApplicationFlags',
+    "SystemChannelFlags",
+    "MessageFlags",
+    "PublicUserFlags",
+    "Intents",
+    "MemberCacheFlags",
+    "ApplicationFlags",
 )
 
-FV = TypeVar('FV', bound='flag_value')
-BF = TypeVar('BF', bound='BaseFlags')
+FV = TypeVar("FV", bound="flag_value")
+BF = TypeVar("BF", bound="BaseFlags")
 
 
 class flag_value:
@@ -64,7 +76,7 @@ class flag_value:
         instance._set_flag(self.flag, value)
 
     def __repr__(self) -> str:
-        return f'<flag_value flag={self.flag!r}>'
+        return f"<flag_value flag={self.flag!r}>"
 
 
 class alias_flag_value(flag_value):
@@ -73,17 +85,15 @@ class alias_flag_value(flag_value):
 
 def fill_with_flags(*, inverted: bool = False) -> Callable[[Type[BF]], Type[BF]]:
     def decorator(cls: Type[BF]) -> Type[BF]:
-        # fmt: off
         cls.VALID_FLAGS = {
             name: value.flag
             for name, value in cls.__dict__.items()
             if isinstance(value, flag_value)
         }
-        # fmt: on
 
         if inverted:
             max_bits = max(cls.VALID_FLAGS.values()).bit_length()
-            cls.DEFAULT_VALUE = -1 + (2 ** max_bits)
+            cls.DEFAULT_VALUE = -1 + (2**max_bits)
         else:
             cls.DEFAULT_VALUE = 0
 
@@ -99,13 +109,13 @@ class BaseFlags:
 
     value: int
 
-    __slots__ = ('value',)
+    __slots__ = ("value",)
 
     def __init__(self, **kwargs: bool):
         self.value = self.DEFAULT_VALUE
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
-                raise TypeError(f'{key!r} is not a valid flag name.')
+                raise TypeError(f"{key!r} is not a valid flag name.")
             setattr(self, key, value)
 
     @classmethod
@@ -124,7 +134,7 @@ class BaseFlags:
         return hash(self.value)
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} value={self.value}>'
+        return f"<{self.__class__.__name__} value={self.value}>"
 
     def __iter__(self) -> Iterator[Tuple[str, bool]]:
         for name, value in self.__class__.__dict__.items():
@@ -138,12 +148,10 @@ class BaseFlags:
         return (self.value & o) == o
 
     def _set_flag(self, o: int, toggle: bool) -> None:
-        if toggle is True:
+        if toggle:
             self.value |= o
-        elif toggle is False:
-            self.value &= ~o
         else:
-            raise TypeError(f'Value to set for {self.__class__.__name__} must be a bool.')
+            self.value &= ~o
 
 
 @fill_with_flags(inverted=True)
@@ -192,12 +200,10 @@ class SystemChannelFlags(BaseFlags):
         return (self.value & o) != o
 
     def _set_flag(self, o: int, toggle: bool) -> None:
-        if toggle is True:
+        if toggle:
             self.value &= ~o
-        elif toggle is False:
-            self.value |= o
         else:
-            raise TypeError('Value to set for SystemChannelFlags must be a bool.')
+            self.value |= o
 
     @flag_value
     def join_notifications(self) -> int:
@@ -452,7 +458,11 @@ class PublicUserFlags(BaseFlags):
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
-        return [public_flag for public_flag in UserFlags if self._has_flag(public_flag.value)]
+        return [
+            public_flag
+            for public_flag in UserFlags
+            if self._has_flag(public_flag.value)
+        ]
 
 
 @fill_with_flags()
@@ -501,7 +511,7 @@ class Intents(BaseFlags):
         self.value = self.DEFAULT_VALUE
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
-                raise TypeError(f'{key!r} is not a valid flag name.')
+                raise TypeError(f"{key!r} is not a valid flag name.")
             setattr(self, key, value)
 
     @classmethod
@@ -926,13 +936,13 @@ class Intents(BaseFlags):
         This does not correspond to any attributes or classes in the library in terms of cache.
         """
         return 1 << 14
-    
+
     @flag_value
     def scheduled_events(self) -> int:
         """:class:`bool`: Whether "scheduled event" related events are enabled.
 
         This corresponds to the following events:
-        
+
         - :func:`on_scheduled_event_create`
         - :func:`on_scheduled_event_update`
         - :func:`on_scheduled_event_delete`
@@ -999,7 +1009,7 @@ class MemberCacheFlags(BaseFlags):
         self.value = (1 << bits) - 1
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
-                raise TypeError(f'{key!r} is not a valid flag name.')
+                raise TypeError(f"{key!r} is not a valid flag name.")
             setattr(self, key, value)
 
     @classmethod
@@ -1069,10 +1079,10 @@ class MemberCacheFlags(BaseFlags):
 
     def _verify_intents(self, intents: Intents) -> None:
         if self.voice and not intents.voice_states:
-            raise ValueError('MemberCacheFlags.voice requires Intents.voice_states')
+            raise ValueError("MemberCacheFlags.voice requires Intents.voice_states")
 
         if self.joined and not intents.members:
-            raise ValueError('MemberCacheFlags.joined requires Intents.members')
+            raise ValueError("MemberCacheFlags.joined requires Intents.members")
 
     @property
     def _voice_only(self) -> bool:
@@ -1111,20 +1121,17 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def managed_emoji(self) -> int:
-        """:class:`bool`: Returns ``True`` if the application is a managed emoji.
-        """
+        """:class:`bool`: Returns ``True`` if the application is a managed emoji."""
         return 1 << 2
 
     @flag_value
     def group_dm_create(self) -> int:
-        """:class:`bool`: Returns ``True`` if the application can create group DMs.
-        """
+        """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
 
     @flag_value
     def rpc_has_connected(self) -> int:
-        """:class:`bool`: Returns ``True`` if the application has connected to RPC.
-        """
+        """:class:`bool`: Returns ``True`` if the application has connected to RPC."""
         return 1 << 11
 
     @flag_value
@@ -1169,8 +1176,7 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def gateway_message_content(self) -> int:
-        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds.
-        """
+        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds."""
         return 1 << 18
 
     @flag_value

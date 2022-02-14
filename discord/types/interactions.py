@@ -25,13 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, Dict, TypedDict, Union, List, Literal
-from .snowflake import Snowflake
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, TypedDict, Union
+
+from .channel import ChannelType
 from .components import Component, ComponentType
 from .embed import Embed
-from .channel import ChannelType
 from .member import Member
+from .message import Attachment
 from .role import Role
+from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
@@ -58,7 +60,7 @@ class _ApplicationCommandOptionOptional(TypedDict, total=False):
     options: List["ApplicationCommandOption"]  # type: ignore # cyclic definition
 
 
-ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class ApplicationCommandOption(_ApplicationCommandOptionOptional):
@@ -102,32 +104,44 @@ class _ApplicationCommandInteractionDataOption(TypedDict):
     name: str
 
 
-class _ApplicationCommandInteractionDataOptionSubcommand(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionSubcommand(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[1, 2]
     options: List["ApplicationCommandInteractionDataOption"]  # type: ignore # cyclic definition
 
 
-class _ApplicationCommandInteractionDataOptionString(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionString(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[3]
     value: str
 
 
-class _ApplicationCommandInteractionDataOptionInteger(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionInteger(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[4]
     value: int
 
 
-class _ApplicationCommandInteractionDataOptionBoolean(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionBoolean(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[5]
     value: bool
 
 
-class _ApplicationCommandInteractionDataOptionSnowflake(_ApplicationCommandInteractionDataOption):
-    type: Literal[6, 7, 8, 9]
+class _ApplicationCommandInteractionDataOptionSnowflake(
+    _ApplicationCommandInteractionDataOption
+):
+    type: Literal[6, 7, 8, 9, 11]
     value: Snowflake
 
 
-class _ApplicationCommandInteractionDataOptionNumber(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionNumber(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[10]
     value: float
 
@@ -154,6 +168,7 @@ class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
     members: Dict[Snowflake, Member]
     roles: Dict[Snowflake, Role]
     channels: Dict[Snowflake, ApplicationCommandResolvedPartialChannel]
+    attachments: Dict[Snowflake, Attachment]
 
 
 class _ApplicationCommandInteractionDataOptional(TypedDict, total=False):

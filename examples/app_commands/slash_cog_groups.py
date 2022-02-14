@@ -2,7 +2,7 @@ import discord
 from discord.commands import CommandPermission, SlashCommandGroup
 from discord.ext import commands
 
-bot = discord.Bot(debug_guild=..., owner_id=...)  # main file
+bot = discord.Bot(debug_guilds=[...], owner_id=...)  # main file
 
 
 class Example(commands.Cog):
@@ -19,10 +19,8 @@ class Example(commands.Cog):
         "secret_greetings",
         "Secret greetings",
         permissions=[
-            CommandPermission(
-                "owner", 2, True
-            )  # Ensures the owner_id user can access this, and no one else
-        ],
+            CommandPermission("owner", 2, True)
+        ],  # Ensures the owner_id user can access this, and no one else
     )
 
     @greetings.command()
