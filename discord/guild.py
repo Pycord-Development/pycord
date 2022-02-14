@@ -74,7 +74,7 @@ from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
-from .threads import Thread
+from .threads import Thread, ThreadMember
 from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
@@ -1768,6 +1768,38 @@ class Guild(Hashable):
             return channel
 
         return [convert(d) for d in data]
+
+    async def active_threads(self) -> List[Thread]:
+        """|coro|
+
+        Returns a list of active :class:`Thread` that the client can access.
+
+        This includes both private and public threads.
+
+        .. versionadded:: 2.0
+
+        Raises
+        ------
+        HTTPException
+            The request to get the active threads failed.
+
+        Returns
+        --------
+        List[:class:`Thread`]
+            The active threads
+        """
+        data = await self._state.http.get_active_threads(self.id)
+        threads = [
+            Thread(guild=self, state=self._state, data=d)
+            for d in data.get("threads", [])
+        ]
+        thread_lookup: Dict[int, Thread] = {thread.id: thread for thread in threads}
+        for member in data.get("members", []):
+            thread = thread_lookup.get(int(member["id"]))
+            if thread is not None:
+                thread._add_member(ThreadMember(parent=thread, data=member))
+
+        return threads
 
     # TODO: Remove Optional typing here when async iterators are refactored
     def fetch_members(
