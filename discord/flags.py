@@ -758,7 +758,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            :attr:`message_content` is required to recieve the actual content of guild messages.
+            :attr:`message_content` is required to receive the actual content of guild messages.
         """
         return (1 << 9) | (1 << 12)
 
@@ -798,7 +798,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            :attr:`message_content` is required to recieve the actual content of guild messages.
+            :attr:`message_content` is required to receive the actual content of guild messages.
         """
         return 1 << 9
 
@@ -936,7 +936,7 @@ class Intents(BaseFlags):
 
     @flag_value
     def message_content(self):
-        """:class:`bool`: Whether the bot will recieve message content in guild messages.
+        """:class:`bool`: Whether the bot will receive message content in guild messages.
 
         This corresponds to the following attributes:
 
@@ -945,7 +945,7 @@ class Intents(BaseFlags):
         - :attr:`Message.attachments`
         - :attr:`Message.components`
         
-        These attributes will still be available for messages recieved from interactions, 
+        These attributes will still be available for messages received from interactions, 
         the bot's own messages, messages the bot was mentioned in, and DMs.
         
         .. versionadded:: 2.0
