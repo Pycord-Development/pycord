@@ -508,12 +508,7 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """:class:`str`: A property that retrieves the invite URL."""
-        return (
-            self.BASE
-            + "/"
-            + self.code
-            + (f"?event={self.scheduled_event.id}" if self.scheduled_event else "")
-        )
+        return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     async def delete(self, *, reason: Optional[str] = None):
         """|coro|
