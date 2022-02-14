@@ -32,11 +32,11 @@ import time
 import asyncio
 from collections import deque
 
-from ...abc import PrivateChannel
+from discord.abc import PrivateChannel
 from .errors import MaxConcurrencyReached
 
 if TYPE_CHECKING:
-    from ...message import Message
+    from discord.message import Message
 
 __all__ = (
     'BucketType',
@@ -174,6 +174,8 @@ class Cooldown:
 
         # we're not so decrement our tokens
         self._tokens -= 1
+
+        return None
 
     def reset(self) -> None:
         """Reset the cooldown to its initial state."""

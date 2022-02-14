@@ -21,10 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Dict, List, Optional, Union
+from typing import cast, Dict, List, Optional, TypedDict, Union
 
 import discord
-from discord.ext.commands import Context
+from discord.ext.commands.context import Context
 
 __all__ = (
     "PaginatorButton",
@@ -62,8 +62,8 @@ class PaginatorButton(discord.ui.Button):
     def __init__(
         self,
         button_type: str,
-        label: str = None,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        label: Optional[str] = None,
+        emoji: Optional[Union[str, discord.Emoji, discord.PartialEmoji]] = None,
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
@@ -79,14 +79,16 @@ class PaginatorButton(discord.ui.Button):
             row=row,
         )
         self.button_type = button_type
-        self.label = label if label or emoji else button_type.capitalize()
-        self.emoji = emoji
+        self.label: Optional[str] = label if label or emoji else button_type.capitalize()
+        self.emoji: Optional[discord.PartialEmoji] = emoji  # type: ignore # mypy bug #3004
         self.style = style
         self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
-        self.paginator = None
+        self.paginator: Optional["Paginator"] = None
 
     async def callback(self, interaction: discord.Interaction):
+        if self.paginator is None:
+            raise RuntimeError(f"{self.__class__.__name__}.paginator is not set.")
         if self.button_type == "first":
             self.paginator.current_page = 0
         elif self.button_type == "prev":
@@ -184,6 +186,13 @@ class PageGroup:
         self.custom_buttons = custom_buttons
 
 
+class PaginatorButtonType(TypedDict):
+    object: Union[discord.ui.Button, PaginatorButton]
+    label: Optional[str]
+    loop_label: Optional[str]
+    hidden: bool
+
+
 class Paginator(discord.ui.View):
     """Creates a paginator which can be sent as a message and uses buttons for navigation.
 
@@ -253,18 +262,25 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout = timeout
-        self.pages = pages
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
-        self.page_groups: Optional[List[PageGroup]] = None
+        T_page_groups = List[PageGroup]
+        self.page_groups: Optional[T_page_groups] = None
 
         if all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if show_menu else None
-            self.pages = self.page_groups[0].pages
+            self.page_groups = cast(T_page_groups, pages) if show_menu else None
+            if self.page_groups is None:
+                raise RuntimeError("Cannot show menu if all pages are PageGroups")
+            pages = self.page_groups[0].pages
+        self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = cast(
+            Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+            pages
+        )
+        # self.pages = cast(Union[List[str], List[Union[List[discord.Embed], discord.Embed]]], self.pages)
 
         self.page_count = len(self.pages) - 1
-        self.buttons = {}
+        self.buttons: Dict[str, PaginatorButtonType] = {}
         self.custom_buttons = custom_buttons
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
@@ -275,17 +291,17 @@ class Paginator(discord.ui.View):
         self.custom_view = custom_view
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
-        if self.custom_buttons and not self.use_default_buttons:
-            for button in custom_buttons:
+        if self.custom_buttons is not None and len(self.custom_buttons) > 0 and not self.use_default_buttons:
+            for button in self.custom_buttons:
                 self.add_button(button)
-        elif not self.custom_buttons and self.use_default_buttons:
+        elif not custom_buttons and self.use_default_buttons:
             self.add_default_buttons()
 
         if self.show_menu:
             self.add_menu()
 
         self.usercheck = author_check
-        self.user = None
+        self.user: Optional[Union[discord.User, discord.Member]] = None
 
     async def update(
         self,
@@ -376,7 +392,9 @@ class Paginator(discord.ui.View):
         """Disables all buttons when the view times out."""
         if self.disable_on_timeout:
             for item in self.children:
-                item.disabled = True
+                setattr(item, "disabled", True)  # add instance variable
+            if self.message is None:
+                raise RuntimeError("Cannot disable buttons if message is None")
             await self.message.edit(view=self)
 
     async def goto_page(self, page_number=0) -> discord.Message:
@@ -399,18 +417,21 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         self.current_page = page_number
         if self.show_indicator:
-            self.buttons["page_indicator"][
-                "object"
-            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            if isinstance(self.buttons["page_indicator"]["object"], PaginatorButton):
+                self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            else:
+                raise RuntimeError("Cannot update page indicator if it is not a PaginatorButton")
 
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
-        return await self.message.edit(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
-            view=self,
-        )
+        if self.message is not None:
+            return await self.message.edit(
+                content=page if isinstance(page, str) else None,
+                embeds=[] if isinstance(page, str) else page,
+                view=self,
+            )
+        raise RuntimeError("Cannot update page if message is None")
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if self.usercheck:
@@ -484,7 +505,7 @@ class Paginator(discord.ui.View):
             if button.button_type != "page_indicator"
             else not self.show_indicator,
         }
-        self.buttons[button.button_type]["object"].callback = button.callback
+        self.buttons[button.button_type]["object"].callback = button.callback  # type: ignore # mypy #2427
         button.paginator = self
 
     def remove_button(self, button_type: str):
@@ -518,9 +539,9 @@ class Paginator(discord.ui.View):
                 if self.current_page == self.page_count:
                     if not self.loop_pages:
                         button["hidden"] = True
-                        button["object"].label = button["label"]
+                        button["object"].label = button["label"]  # type: ignore # has no attribute
                     else:
-                        button["object"].label = button["loop_label"]
+                        button["object"].label = button["loop_label"]  # type: ignore # has no attribute
                 elif self.current_page < self.page_count:
                     button["hidden"] = False
                     button["object"].label = button["label"]
@@ -563,7 +584,7 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     @staticmethod
-    def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]):
+    def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]) -> Union[str, List[discord.Embed]]:
         """Returns the correct content type for a page based on its content."""
         if isinstance(page, discord.Embed):
             return [page]
@@ -620,7 +641,7 @@ class Paginator(discord.ui.View):
             view=self,
         )
 
-        return self.message
+        return cast(discord.Message, self.message)
 
     async def respond(
         self,
@@ -671,7 +692,7 @@ class Paginator(discord.ui.View):
         else:
             if interaction.response.is_done():
                 msg = await interaction.followup.send(
-                    content=page if isinstance(page, str) else None,
+                    content=page if isinstance(page, str) else None,  # type: ignore # expected "str" TODO: need to fix?
                     embeds=[] if isinstance(page, str) else page,
                     view=self,
                     ephemeral=ephemeral,
@@ -688,6 +709,9 @@ class Paginator(discord.ui.View):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
                 self.message = await msg.original_message()
+
+        if self.message is None:
+            raise RuntimeError("Message is None.")
 
         return self.message
 
@@ -730,7 +754,7 @@ class PaginatorMenu(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         selection = self.values[0]
         for page_group in self.page_groups:
-            if selection == page_group.label:
+            if selection == page_group.label and self.paginator is not None:
                 return await self.paginator.update(
                     pages=page_group.pages,
                     show_disabled=page_group.show_disabled,

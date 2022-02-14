@@ -30,7 +30,7 @@ from collections import deque, OrderedDict
 import copy
 import itertools
 import logging
-from typing import Dict, Optional, TYPE_CHECKING, Union, Callable, Any, List, TypeVar, Coroutine, Sequence, Tuple, Deque
+from typing import Awaitable, Dict, Optional, TYPE_CHECKING, Union, Callable, Any, List, TypeVar, Coroutine, Sequence, Tuple, Deque
 import inspect
 
 import os
@@ -43,8 +43,10 @@ from .mentions import AllowedMentions
 from .partial_emoji import PartialEmoji
 from .message import Message
 from .channel import *
+from .channel import PartialMessageable
 from .channel import _channel_factory
 from .raw_models import *
+from .raw_models import RawThreadDeleteEvent, RawReactionActionEvent, RawTypingEvent
 from .member import Member
 from .role import Role
 from .enums import ChannelType, try_enum, Status, ScheduledEventStatus
@@ -62,7 +64,7 @@ from .scheduled_events import ScheduledEvent
 
 if TYPE_CHECKING:
     from .abc import PrivateChannel
-    from .message import MessageableChannel
+    from .message import MessageableChannel  # type: ignore # circular import
     from .guild import GuildChannel, VocalGuildChannel
     from .http import HTTPClient
     from .voice_client import VoiceProtocol
@@ -149,9 +151,9 @@ class ConnectionState:
     def __init__(
         self,
         *,
-        dispatch: Callable,
-        handlers: Dict[str, Callable],
-        hooks: Dict[str, Callable],
+        dispatch: Callable[..., Any],
+        handlers: Dict[str, Callable[..., Any]],
+        hooks: Dict[str, Callable[..., Any]],
         http: HTTPClient,
         loop: asyncio.AbstractEventLoop,
         **options: Any,
@@ -162,11 +164,11 @@ class ConnectionState:
         if self.max_messages is not None and self.max_messages <= 0:
             self.max_messages = 1000
 
-        self.dispatch: Callable = dispatch
-        self.handlers: Dict[str, Callable] = handlers
-        self.hooks: Dict[str, Callable] = hooks
+        self.dispatch: Callable[..., Any] = dispatch
+        self.handlers: Dict[str, Callable[..., Any]] = handlers
+        self.hooks: Dict[str, Callable[..., Any]] = hooks
         self.shard_count: Optional[int] = None
-        self._ready_task: Optional[asyncio.Task] = None
+        self._ready_task: Optional[Awaitable[Callable[..., Any]]] = None  # asyncio.Task
         self.application_id: Optional[int] = utils._get_as_snowflake(options, 'application_id')
         self.heartbeat_timeout: float = options.get('heartbeat_timeout', 60.0)
         self.guild_ready_timeout: float = options.get('guild_ready_timeout', 2.0)
