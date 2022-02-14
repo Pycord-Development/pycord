@@ -1218,12 +1218,6 @@ class HTTPClient:
         params["limit"] = limit
         return self.request(route, params=params)
 
-    def get_active_threads(
-        self, guild_id: Snowflake
-    ) -> Response[threads.ThreadPaginationPayload]:
-        route = Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id)
-        return self.request(route)
-
     def get_thread_members(
         self, channel_id: Snowflake
     ) -> Response[List[threads.ThreadMember]]:
