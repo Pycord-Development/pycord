@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
 from discord.interactions import InteractionMessage
+from discord.utils import deprecated
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -221,13 +222,27 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    @deprecated('ApplicationContext.send')
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending if the interaction has been responded to yet or not.
+        
+        .. deprecated:: 2.0.0b5
+        """
+        if not self.interaction.response.is_done():
+            return self.interaction.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
+    
+    @property
+    def send(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message  # self.response
         else:
             return self.followup.send  # self.send_followup
+
 
     @property
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
