@@ -102,7 +102,7 @@ class Modal:
             self._stopped.set_result(True)
 
     async def wait(self) -> bool:
-        """Waits for the modal dialog to be closed."""
+        """Waits for the modal dialog to be submitted."""
         return await self._stopped
 
     def to_dict(self):
