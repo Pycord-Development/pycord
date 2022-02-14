@@ -533,11 +533,12 @@ class Intents(BaseFlags):
     @classmethod
     def default(cls: Type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled
-        except :attr:`presences` and :attr:`members`.
+        except :attr:`presences`, :attr:`members`, and :attr:`message_content`.
         """
         self = cls.all()
         self.presences = False
         self.members = False
+        self.message_content = False
         return self
 
     @flag_value
@@ -757,9 +758,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
-            Bots in over 100 guilds will need to apply to Discord for verification.
-            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
+            :attr:`message_content` is required to recieve the actual content of guild messages.
         """
         return (1 << 9) | (1 << 12)
 
@@ -799,9 +798,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the messages.
-            Bots in over 100 guilds will need to apply to Discord for verification.
-            See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots for more information.
+            :attr:`message_content` is required to recieve the actual content of guild messages.
         """
         return 1 << 9
 
@@ -937,6 +934,31 @@ class Intents(BaseFlags):
         """
         return 1 << 14
 
+    @flag_value
+    def message_content(self):
+        """:class:`bool`: Whether the bot will recieve message content in guild messages.
+
+        This corresponds to the following attributes:
+
+        - :attr:`Message.content`
+        - :attr:`Message.embeds`
+        - :attr:`Message.attachments`
+        - :attr:`Message.components`
+        
+        These attributes will still be available for messages recieved from interactions, 
+        the bot's own messages, messages the bot was mentioned in, and DMs.
+        
+        .. versionadded:: 2.0
+        
+        .. note::
+
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
+            Bots in over 100 guilds will need to apply to Discord for verification.
+            See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
+            
+        """
+        return 1 << 15
+    
     @flag_value
     def scheduled_events(self):
         """:class:`bool`: Whether "scheduled event" related events are enabled.
