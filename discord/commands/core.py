@@ -320,7 +320,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if self.parent is not None:
             # parent checks should be ran first
             predicates = self.parent.checks + predicates
-            
+
         if not predicates:
             # since we have no checks, then we just return True.
             return True
