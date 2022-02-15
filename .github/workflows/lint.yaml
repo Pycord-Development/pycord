@@ -24,4 +24,3 @@ jobs:
       run: black ./ --line-length=120
     - name: Flynt
       run: flynt ./ -tc
-    - name: Push To Git
