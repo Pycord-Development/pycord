@@ -124,9 +124,7 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:

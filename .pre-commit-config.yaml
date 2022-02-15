@@ -8,7 +8,7 @@ repos:
     hooks:
     -   id: black
         args: # arguments to configure black
-          - --line-length=88
+          - --line-length=120
 -   repo: https://github.com/ikamensh/flynt/
     rev: '0.76'
     hooks:

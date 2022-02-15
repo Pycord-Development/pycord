@@ -85,11 +85,7 @@ class alias_flag_value(flag_value):
 
 def fill_with_flags(*, inverted: bool = False):
     def decorator(cls: Type[BF]):
-        cls.VALID_FLAGS = {
-            name: value.flag
-            for name, value in cls.__dict__.items()
-            if isinstance(value, flag_value)
-        }
+        cls.VALID_FLAGS = {name: value.flag for name, value in cls.__dict__.items() if isinstance(value, flag_value)}
 
         if inverted:
             max_bits = max(cls.VALID_FLAGS.values()).bit_length()
@@ -458,11 +454,7 @@ class PublicUserFlags(BaseFlags):
 
     def all(self) -> List[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
-        return [
-            public_flag
-            for public_flag in UserFlags
-            if self._has_flag(public_flag.value)
-        ]
+        return [public_flag for public_flag in UserFlags if self._has_flag(public_flag.value)]
 
 
 @fill_with_flags()
