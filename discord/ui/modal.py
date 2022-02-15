@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import os
 import sys
 from itertools import groupby
@@ -29,6 +30,8 @@ class Modal:
         self.title = title
         self.children: List[InputText] = []
         self.__weights = _ModalWeights(self.children)
+        loop = asyncio.get_running_loop()
+        self._stopped: asyncio.Future[bool] = loop.create_future()
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -40,7 +43,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that submitted the modal dialog.
         """
-        pass
+        self.stop()
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
@@ -92,6 +95,15 @@ class Modal:
             self.children.remove(item)
         except ValueError:
             pass
+
+    def stop(self) -> None:
+        """Stops listening to interaction events from the modal dialog."""
+        if not self._stopped.done():
+            self._stopped.set_result(True)
+
+    async def wait(self) -> bool:
+        """Waits for the modal dialog to be submitted."""
+        return await self._stopped
 
     def to_dict(self):
         return {
