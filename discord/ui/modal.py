@@ -24,7 +24,6 @@ class Modal:
     This object must be inherited to create a UI within Discord.
     """
 
-
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
