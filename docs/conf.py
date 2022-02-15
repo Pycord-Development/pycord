@@ -161,13 +161,13 @@ html_experimental_html5_writer = True
 html_theme = "basic"
 
 html_context = {
-  'discord_invite': 'https://pycord.dev/discord',
-  'discord_extensions': [
-    ('discord.ext.commands', 'ext/commands'),
-    ('discord.ext.tasks', 'ext/tasks'),
-    ('discord.ext.pages', 'ext/pages'),
-    ('discord.ext.ipc', 'ext/ipc'),
-  ],
+    "discord_invite": "https://pycord.dev/discord",
+    "discord_extensions": [
+        ("discord.ext.commands", "ext/commands"),
+        ("discord.ext.tasks", "ext/tasks"),
+        ("discord.ext.pages", "ext/pages"),
+        ("discord.ext.ipc", "ext/ipc"),
+    ],
 }
 
 resource_links = {

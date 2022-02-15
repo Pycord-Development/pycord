@@ -44,7 +44,7 @@ class IPCServerResponse(IPCServerResponseBase):
         return self._json
 
     def __repr__(self):
-        return "<IPCServerResponse length={0.length}>".format(self)
+        return f"<IPCServerResponse length={self.length}>"
 
     def __str__(self):
         return self.__repr__()
@@ -115,9 +115,7 @@ class Server(ServerBase):
                 else:
                     s_r = IPCServerResponse(request)
                     try:
-                        a_cls = self.bot.cogs.get(
-                            self.endpoints[endpoint].__qualname__.split(".")[0]
-                        )
+                        a_cls = self.bot.cogs.get(self.endpoints[endpoint].__qualname__.split(".")[0])
                         if a_cls:
                             args = (a_cls, s_r)
                         else:
@@ -134,9 +132,7 @@ class Server(ServerBase):
                 await ws.send_json(response, dumps=utils._from_json)
                 _log.debug(f"< {response}")
             except TypeError as exc:
-                if str(exc).startswith("Object of type") and str(exc).endswith(
-                    "is not JSON serializable"
-                ):
+                if str(exc).startswith("Object of type") and str(exc).endswith("is not JSON serializable"):
                     _log.critical("Data sent is not able to be sent via sockets.")
                     await ws.send_json(
                         {
@@ -144,9 +140,7 @@ class Server(ServerBase):
                             "code": 500,
                         }
                     )
-                    raise JSONEncodeError(
-                        "Data sent is not able to be sent via sockets."
-                    )
+                    raise JSONEncodeError("Data sent is not able to be sent via sockets.")
 
     async def handle_multicast_request(self, request):
         """Handles a multicast request.

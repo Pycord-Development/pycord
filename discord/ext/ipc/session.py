@@ -85,9 +85,7 @@ class Session(SessionBase):
 
             port_d = received.json(loads=utils._from_json)
             self.port = port_d["port"]
-        self.reqr = await self.__session.ws_connect(
-            self.url, autoclose=False, autoping=False
-        )
+        self.reqr = await self.__session.ws_connect(self.url, autoclose=False, autoping=False)
         _log.debug(f"Initialized connection with {self.url}")
 
         return self.reqr
