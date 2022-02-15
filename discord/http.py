@@ -86,6 +86,7 @@ if TYPE_CHECKING:
         sticker,
         welcome_screen,
         scheduled_events,
+        discovery,
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.message import Attachment
@@ -1408,7 +1409,7 @@ class HTTPClient:
 
     # TODO: typehint responses
 
-    def get_guild_discovery_metadata(self, guild_id: Snowflake):
+    def get_guild_discovery_metadata(self, guild_id: Snowflake) -> Response[discovery.DiscoveryMetadata]:
         return self.request(Route('GET', '/guilds/{guild_id}/discovery-metadata', guild_id=guild_id))
 
     def edit_guild_discovery_metadata(
@@ -1417,7 +1418,7 @@ class HTTPClient:
         primary_category_id: int = None,
         keywords: List[str] = None,
         emoji_discoverability_enabled: bool = None,
-    ):
+    ) -> Response[discovery.DiscoveryMetadata]:
         payload: Dict[str, Any] = {}
         if primary_category_id:
             payload['primary_category_id'] = primary_category_id
@@ -1430,18 +1431,18 @@ class HTTPClient:
 
         return self.request(Route('PATCH', '/guilds/{guild_id}/discovery-metadata', guild_id=guild_id), json=payload)
 
-    def add_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int):
+    def add_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int) -> Response[discovery.DiscoverySubcategory]:
         r = Route('POST', '/guilds/{guild_id}/discovery-categories/{discovery_category_id}', guild_id=guild_id, discovery_category_id=discovery_category_id)
         return self.request(r)
 
-    def remove_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int):
+    def remove_guild_discovery_subcategory(self, guild_id: int, discovery_category_id: int) -> Response[None]:
         r = Route('DELETE', '/guilds/{guild_id}/discovery-categories/{discovery_category_id}', guild_id=guild_id, discovery_category_id=discovery_category_id)
         return self.request(r)
 
-    def get_discovery_categories(self) -> Response[None]:
+    def get_discovery_categories(self) -> Response[List[discovery.DiscoveryCategory]]:
         return self.request(Route('GET', '/discovery/categories'))
 
-    def validate_discovery_search_term(self, term: str) -> Response[None]:
+    def validate_discovery_search_term(self, term: str) -> Response[Dict[str, bool]]:
         params = {
             "term": term,
         }

@@ -25,11 +25,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 from typing import TypedDict, List
 
-from .guild import Guild
-
 
 class DiscoveryMetadata(TypedDict):
-    guild: Guild
+    guild_id: int
     primary_category_id: int
     keywords: List[str]
     emoji_discoverability_enabled: bool
@@ -47,3 +45,8 @@ class DiscoveryCategory(TypedDict):
     id: int
     name: DiscoveryName
     is_primary: bool
+
+
+class DiscoverySubcategory(TypedDict):
+    guild_id: int
+    category_id: int
