@@ -23,7 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import TypedDict, List # , Optional, Literal, Union
+from typing import TypedDict, List
 
 from .guild import Guild
 
