@@ -32,5 +32,5 @@ jobs:
       run: |
           git pull origin master
           git add .
-          git commit --reuse-message=HEAD
+          git diff-index --quiet HEAD || git commit --reuse-message=HEAD
           git push
