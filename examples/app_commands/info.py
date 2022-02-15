@@ -1,7 +1,6 @@
+# Imports
 import discord
 from discord.ext import commands
-
-# imports
 
 intents = discord.Intents(
     guilds=True,
@@ -9,37 +8,36 @@ intents = discord.Intents(
     messages=True,
 )
 
-bot = commands.Bot(
-    command_prefix="/",
-    description="An example to showcase how to extract info about users",
-    intents=intents,
-)
+bot = discord.Bot(intents=intents)
 
-
-@bot.slash_command(name="userinfo", description="gets the info of a user")
-async def info(ctx, user: discord.Member = None):
-    user = user or ctx.author  # if no user is provided it'll use the the author of the message
-    e = discord.Embed()
-    e.set_author(name=user.name)
-    e.add_field(name="ID", value=user.id, inline=False)  # user ID
-    e.add_field(
+@bot.command(name="userinfo", description="Gets information about an user.", guild_ids=[...])
+async def userinfo(ctx, *, user: discord.Member = None):
+    user = (
+        user or ctx.author
+    )  # If the user is not provided, it will default to the message author.
+    embed = discord.Embed(
+        title=f"User Info of {user}"
+    )
+    embed.set_author(name=user.name)
+    embed.add_field(name="ID", value=user.id, inline=False) # ID of the user.
+    embed.add_field(
         name="Joined",
         value=discord.utils.format_dt(round(user.joined_at.timestamp()), "F"),
         inline=False,
-    )  # When the user joined the server
-    e.add_field(
+    )  # The timestamp of the user joining the server.
+    embed.add_field(
         name="Created",
         value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"),
         inline=False,
-    )  # When the user's account was created
+    )  # The timestamp of the user creating their account.
     colour = user.colour
     if colour.value:  # if user has a role with a color
-        e.colour = colour
+        embed.colour = colour
 
     if isinstance(user, discord.User):  # checks if the user in the server
-        e.set_footer(text="This member is not in this server.")
+        embed.set_footer(text="This member is not in this server.")
 
-    await ctx.respond(embed=e)  # sends the embed
+    await ctx.respond(embed=embed)  # Sends the embed
 
 
 bot.run("your token")
