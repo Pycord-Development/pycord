@@ -28,4 +28,5 @@ jobs:
       run: |
           git pull
           git add .
+          git commit -m "Linted code"
           git push
