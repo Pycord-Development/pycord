@@ -30,7 +30,7 @@ jobs:
           git config pull.rebase false
     - name: Push To Git
       run: |
-          git pull origin master
+          git pull origin master --allow-unrelated-histories
           git add .
           git diff-index --quiet HEAD || git commit --reuse-message=HEAD
           git push
