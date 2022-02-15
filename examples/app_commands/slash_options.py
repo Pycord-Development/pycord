@@ -16,9 +16,7 @@ async def hello(
     # you also can create optional argument using:
     # age: Option(int, "Enter your age") = 18
 ):
-    await ctx.respond(
-        f"Hello {name}! Your gender is {gender} and you are {age} years old."
-    )
+    await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
 
 @bot.slash_command(guild_ids=[...])

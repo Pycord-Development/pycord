@@ -209,14 +209,8 @@ class Interaction:
         channel = guild and guild._resolve_channel(self.channel_id)
         if channel is None:
             if self.channel_id is not None:
-                type = (
-                    ChannelType.text
-                    if self.guild_id is not None
-                    else ChannelType.private
-                )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=type
-                )
+                type = ChannelType.text if self.guild_id is not None else ChannelType.private
+                return PartialMessageable(state=self._state, id=self.channel_id, type=type)
             return None
         return channel
 
@@ -613,14 +607,10 @@ class InteractionResponse:
         state = self._parent._state
 
         if allowed_mentions is None:
-            payload["allowed_mentions"] = (
-                state.allowed_mentions and state.allowed_mentions.to_dict()
-            )
+            payload["allowed_mentions"] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
         elif state.allowed_mentions is not None:
-            payload["allowed_mentions"] = state.allowed_mentions.merge(
-                allowed_mentions
-            ).to_dict()
+            payload["allowed_mentions"] = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             payload["allowed_mentions"] = allowed_mentions.to_dict()
         if file is not None and files is not None:
@@ -634,9 +624,7 @@ class InteractionResponse:
 
         if files is not None:
             if len(files) > 10:
-                raise InvalidArgument(
-                    "files parameter must be a list of up to 10 elements"
-                )
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 

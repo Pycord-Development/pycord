@@ -138,9 +138,7 @@ class ApplicationCommandMixin:
                 break
         self._pending_application_commands.append(command)
 
-    def remove_application_command(
-        self, command: ApplicationCommand
-    ) -> Optional[ApplicationCommand]:
+    def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -210,9 +208,7 @@ class ApplicationCommandMixin:
                     return
                 return command
 
-    async def get_desynced_commands(
-        self, guild_id: Optional[int] = None
-    ) -> List[Dict[str, Any]]:
+    async def get_desynced_commands(self, guild_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """|coro|
 
         Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
@@ -246,14 +242,8 @@ class ApplicationCommandMixin:
             registered_commands = await self.http.get_global_commands(self.user.id)
             pending = [cmd for cmd in cmds if cmd.guild_ids is None]
         else:
-            registered_commands = await self.http.get_guild_commands(
-                self.user.id, guild_id
-            )
-            pending = [
-                cmd
-                for cmd in cmds
-                if cmd.guild_ids is not None and guild_id in cmd.guild_ids
-            ]
+            registered_commands = await self.http.get_guild_commands(self.user.id, guild_id)
+            pending = [cmd for cmd in cmds if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
 
         registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
         to_check = {
@@ -279,11 +269,7 @@ class ApplicationCommandMixin:
                     falsy_vals = (False, [])
                     for opt in value:
 
-                        cmd_vals = (
-                            [val.get(opt, MISSING) for val in as_dict[check]]
-                            if check in as_dict
-                            else []
-                        )
+                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                         for i, val in enumerate(cmd_vals):
                             if val in falsy_vals:
                                 cmd_vals[i] = MISSING
@@ -422,9 +408,7 @@ class ApplicationCommandMixin:
             }
 
             def register(method: str, *args, **kwargs):
-                return registration_methods[method](
-                    self.user.id, guild_id, *args, **kwargs
-                )
+                return registration_methods[method](self.user.id, guild_id, *args, **kwargs)
 
         pending_actions = []
 
@@ -463,9 +447,7 @@ class ApplicationCommandMixin:
                 else:
                     raise ValueError(f"Unknown action: {cmd['action']}")
 
-            filtered_deleted = list(
-                filter(lambda a: a["action"] != "delete", pending_actions)
-            )
+            filtered_deleted = list(filter(lambda a: a["action"] != "delete", pending_actions))
             if len(filtered_deleted) == len(pending):
                 # It appears that all the commands need to be modified, so we can just do a bulk upsert
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
@@ -478,13 +460,9 @@ class ApplicationCommandMixin:
                         await register("delete", cmd["command"])
                         continue
                     if cmd["action"] == "edit":
-                        registered.append(
-                            await register("edit", cmd["id"], cmd["command"].to_dict())
-                        )
+                        registered.append(await register("edit", cmd["id"], cmd["command"].to_dict()))
                     elif cmd["action"] == "upsert":
-                        registered.append(
-                            await register("upsert", cmd["command"].to_dict())
-                        )
+                        registered.append(await register("upsert", cmd["command"].to_dict()))
                     else:
                         raise ValueError(f"Unknown action: {cmd['action']}")
         else:
@@ -504,9 +482,7 @@ class ApplicationCommandMixin:
                 type=i["type"],
             )
             if not cmd:
-                raise ValueError(
-                    f"Registered command {i['name']}, type {i['type']} not found in pending commands"
-                )
+                raise ValueError(f"Registered command {i['name']}, type {i['type']} not found in pending commands")
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
 
@@ -577,11 +553,7 @@ class ApplicationCommandMixin:
             if unregister_guilds is not None:
                 cmd_guild_ids.extend(unregister_guilds)
             for guild_id in set(cmd_guild_ids):
-                guild_commands = [
-                    cmd
-                    for cmd in commands
-                    if cmd.guild_ids is not None and guild_id in cmd.guild_ids
-                ]
+                guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
                     guild_commands, guild_id=guild_id, force=force
                 )
@@ -602,9 +574,7 @@ class ApplicationCommandMixin:
                 self._application_commands[cmd.id] = cmd
 
                 # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append(
-                    {"id": i["id"], "permissions": cmd.permissions}
-                )
+                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
 
         for guild_id, commands in registered_guild_commands.items():
             guild_permissions: List = []
@@ -628,11 +598,7 @@ class ApplicationCommandMixin:
                     perm.to_dict()
                     for perm in cmd.permissions
                     if perm.guild_id is None
-                    or (
-                        perm.guild_id == guild_id
-                        and cmd.guild_ids is not None
-                        and perm.guild_id in cmd.guild_ids
-                    )
+                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
                 ]
                 guild_permissions.append({"id": i["id"], "permissions": permissions})
 
@@ -641,15 +607,9 @@ class ApplicationCommandMixin:
                     perm.to_dict()
                     for perm in global_command["permissions"]
                     if perm.guild_id is None
-                    or (
-                        perm.guild_id == guild_id
-                        and cmd.guild_ids is not None
-                        and perm.guild_id in cmd.guild_ids
-                    )
+                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
                 ]
-                guild_permissions.append(
-                    {"id": global_command["id"], "permissions": permissions}
-                )
+                guild_permissions.append({"id": global_command["id"], "permissions": permissions})
 
             # Collect & Upsert Permissions for Each Guild
             # Command Permissions for this Guild
@@ -721,18 +681,14 @@ class ApplicationCommandMixin:
 
             # Upsert
             try:
-                await self.http.bulk_upsert_command_permissions(
-                    self.user.id, guild_id, guild_cmd_perms
-                )
+                await self.http.bulk_upsert_command_permissions(self.user.id, guild_id, guild_cmd_perms)
             except Forbidden:
                 raise RuntimeError(
                     f"Failed to add command permissions to guild {guild_id}",
                     file=sys.stderr,
                 )
 
-    async def process_application_commands(
-        self, interaction: Interaction, auto_sync: bool = None
-    ) -> None:
+    async def process_application_commands(self, interaction: Interaction, auto_sync: bool = None) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -772,10 +728,7 @@ class ApplicationCommandMixin:
             for cmd in self.application_commands:
                 if cmd.name == interaction.data["name"] and (
                     interaction.data.get("guild_id") == cmd.guild_ids
-                    or (
-                        isinstance(cmd.guild_ids, list)
-                        and interaction.data.get("guild_id") in cmd.guild_ids
-                    )
+                    or (isinstance(cmd.guild_ids, list) and interaction.data.get("guild_id") in cmd.guild_ids)
                 ):
                     command = cmd
                     break
@@ -976,9 +929,7 @@ class ApplicationCommandMixin:
                 yield from command.walk_commands()
             yield command
 
-    async def get_application_context(
-        self, interaction: Interaction, cls=None
-    ) -> ApplicationContext:
+    async def get_application_context(self, interaction: Interaction, cls=None) -> ApplicationContext:
         r"""|coro|
 
         Returns the invocation context from the interaction.
@@ -1006,9 +957,7 @@ class ApplicationCommandMixin:
             cls = ApplicationContext
         return cls(self, interaction)
 
-    async def get_autocomplete_context(
-        self, interaction: Interaction, cls=None
-    ) -> AutocompleteContext:
+    async def get_autocomplete_context(self, interaction: Interaction, cls=None) -> AutocompleteContext:
         r"""|coro|
 
         Returns the autocomplete context from the interaction.
@@ -1062,12 +1011,8 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
 
-        if self.owner_ids and not isinstance(
-            self.owner_ids, collections.abc.Collection
-        ):
-            raise TypeError(
-                f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
-            )
+        if self.owner_ids and not isinstance(self.owner_ids, collections.abc.Collection):
+            raise TypeError(f"owner_ids must be a collection not {self.owner_ids.__class__!r}")
 
         self._checks = []
         self._check_once = []
@@ -1081,9 +1026,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
 
-    async def on_application_command_error(
-        self, context: ApplicationContext, exception: DiscordException
-    ) -> None:
+    async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -1105,9 +1048,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             return
 
         print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     # global check registration
     # TODO: Remove these from commands.Bot
@@ -1204,9 +1145,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.add_check(func, call_once=True)
         return func
 
-    async def can_run(
-        self, ctx: ApplicationContext, *, call_once: bool = False
-    ) -> bool:
+    async def can_run(self, ctx: ApplicationContext, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
 
         if len(data) == 0:
