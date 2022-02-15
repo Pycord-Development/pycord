@@ -162,9 +162,7 @@ class BaseUser(_UserTag):
     @property
     def default_avatar(self) -> Asset:
         """:class:`Asset`: Returns the default avatar for a given user. This is calculated by the user's discriminator."""
-        return Asset._from_default_avatar(
-            self._state, int(self.discriminator) % len(DefaultAvatar)
-        )
+        return Asset._from_default_avatar(self._state, int(self.discriminator) % len(DefaultAvatar))
 
     @property
     def display_avatar(self) -> Asset:
@@ -350,9 +348,7 @@ class ClientUser(BaseUser):
         self._flags = data.get("flags", 0)
         self.mfa_enabled = data.get("mfa_enabled", False)
 
-    async def edit(
-        self, *, username: str = MISSING, avatar: bytes = MISSING
-    ) -> ClientUser:
+    async def edit(self, *, username: str = MISSING, avatar: bytes = MISSING) -> ClientUser:
         """|coro|
 
         Edits the current profile of the client.
@@ -480,9 +476,7 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. versionadded:: 1.7
         """
-        return [
-            guild for guild in self._state._guilds.values() if guild.get_member(self.id)
-        ]
+        return [guild for guild in self._state._guilds.values() if guild.get_member(self.id)]
 
     async def create_dm(self) -> DMChannel:
         """|coro|

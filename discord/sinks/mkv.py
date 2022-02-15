@@ -55,9 +55,7 @@ class MKVSink(Sink):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise MKVSinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise MKVSinkError("Audio may only be formatted after recording is finished.")
         args = [
             "ffmpeg",
             "-f",
@@ -81,9 +79,7 @@ class MKVSink(Sink):
         except FileNotFoundError:
             raise MKVSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise MKVSinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise MKVSinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         out = process.communicate(audio.file.read())[0]
         out = io.BytesIO(out)

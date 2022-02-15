@@ -138,9 +138,7 @@ class HTTPException(DiscordException):
         The Discord specific error code for the failure.
     """
 
-    def __init__(
-        self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]
-    ):
+    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
@@ -315,9 +313,7 @@ class ExtensionError(DiscordException):
         self.name: str = name
         message = message or f"Extension {name!r} had an error."
         # clean-up @everyone and @here mentions
-        m = message.replace("@everyone", "@\u200beveryone").replace(
-            "@here", "@\u200bhere"
-        )
+        m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
         super().__init__(m, *args)
 
 

@@ -94,21 +94,16 @@ class Option:
         self.description = description or "No description provided"
         self.converter = None
 
-        self.channel_types: List[ChannelType] = kwargs.pop(
-            "channel_types", []
-        )
+        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
         if input_type is not None:
             self.input_type = input_type
             _type_checking_for_option(self)
 
-        self.required: bool = (
-            kwargs.pop("required", True) if "default" not in kwargs else False
-        )
+        self.required: bool = kwargs.pop("required", True) if "default" not in kwargs else False
         self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
+            o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", list())
         ]
         
         self._raw_min_value = kwargs.pop("min_value", None)
