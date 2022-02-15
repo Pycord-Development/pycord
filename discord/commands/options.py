@@ -92,13 +92,10 @@ class Option:
                             self.channel_types.append(channel_type)
                     input_type = _type
         self.input_type = input_type
-        self.required: bool = (
-            kwargs.pop("required", True) if "default" not in kwargs else False
-        )
+        self.required: bool = kwargs.pop("required", True) if "default" not in kwargs else False
         self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
+            o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", list())
         ]
 
         if self.input_type == SlashCommandOptionType.integer:
@@ -113,13 +110,9 @@ class Option:
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
 
         if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
-            raise TypeError(
-                f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"'
-            )
+            raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
-            raise TypeError(
-                f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"'
-            )
+            raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 

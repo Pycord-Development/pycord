@@ -95,9 +95,7 @@ class WelcomeScreenChannel:
         return dict_
 
     @classmethod
-    def _from_dict(
-        cls, data: WelcomeScreenChannelPayload, guild: Guild
-    ) -> WelcomeScreenChannel:
+    def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeScreenChannel:
         channel_id = _get_as_snowflake(data, "channel_id")
         channel = guild.get_channel(channel_id)
         description = data.get("description")
@@ -132,8 +130,7 @@ class WelcomeScreen:
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get("description")
         self.welcome_channels: List[WelcomeScreenChannel] = [
-            WelcomeScreenChannel._from_dict(channel, self._guild)
-            for channel in data.get("welcome_channels", [])
+            WelcomeScreenChannel._from_dict(channel, self._guild) for channel in data.get("welcome_channels", [])
         ]
 
     @property
@@ -216,9 +213,7 @@ class WelcomeScreen:
 
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise TypeError(
-                    "welcome_channels parameter must be a list of WelcomeScreenChannel."
-                )
+                raise TypeError("welcome_channels parameter must be a list of WelcomeScreenChannel.")
 
             welcome_channels_data.append(channel.to_dict())
 

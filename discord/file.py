@@ -115,16 +115,10 @@ class File:
         else:
             self.filename = filename
 
-        if (
-            spoiler
-            and self.filename is not None
-            and not self.filename.startswith("SPOILER_")
-        ):
+        if spoiler and self.filename is not None and not self.filename.startswith("SPOILER_"):
             self.filename = f"SPOILER_{self.filename}"
 
-        self.spoiler = spoiler or (
-            self.filename is not None and self.filename.startswith("SPOILER_")
-        )
+        self.spoiler = spoiler or (self.filename is not None and self.filename.startswith("SPOILER_"))
         self.description = description
 
     def reset(self, *, seek: Union[int, bool] = True) -> None:

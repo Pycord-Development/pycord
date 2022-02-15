@@ -87,9 +87,7 @@ class StageInstance(Hashable):
         "_cs_channel",
     )
 
-    def __init__(
-        self, *, state: ConnectionState, guild: Guild, data: StageInstancePayload
-    ) -> None:
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: StageInstancePayload) -> None:
         self._state = state
         self.guild = guild
         self._update(data)
@@ -98,9 +96,7 @@ class StageInstance(Hashable):
         self.id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.topic: str = data["topic"]
-        self.privacy_level: StagePrivacyLevel = try_enum(
-            StagePrivacyLevel, data["privacy_level"]
-        )
+        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data["privacy_level"])
         self.discoverable_disabled: bool = data.get("discoverable_disabled", False)
 
     def __repr__(self) -> str:
@@ -155,16 +151,12 @@ class StageInstance(Hashable):
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):
-                raise InvalidArgument(
-                    "privacy_level field must be of type PrivacyLevel"
-                )
+                raise InvalidArgument("privacy_level field must be of type PrivacyLevel")
 
             payload["privacy_level"] = privacy_level.value
 
         if payload:
-            await self._state.http.edit_stage_instance(
-                self.channel_id, **payload, reason=reason
-            )
+            await self._state.http.edit_stage_instance(self.channel_id, **payload, reason=reason)
 
     async def delete(self, *, reason: Optional[str] = None) -> None:
         """|coro|

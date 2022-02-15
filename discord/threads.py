@@ -252,11 +252,7 @@ class Thread(Messageable, Hashable):
         Optional[:class:`Message`]
             The last message in this channel or ``None`` if not found.
         """
-        return (
-            self._state._get_message(self.last_message_id)
-            if self.last_message_id
-            else None
-        )
+        return self._state._get_message(self.last_message_id) if self.last_message_id else None
 
     @property
     def category(self) -> Optional[CategoryChannel]:
@@ -487,9 +483,7 @@ class Thread(Messageable, Hashable):
         ret: List[Message] = []
         count = 0
 
-        minimum_time = (
-            int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
-        )
+        minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
 
         async def _single_delete_strategy(messages: Iterable[Message]):
             for m in messages:

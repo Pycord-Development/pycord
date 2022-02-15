@@ -67,9 +67,7 @@ class EmbedProxy:
         return len(self.__dict__)
 
     def __repr__(self) -> str:
-        inner = ", ".join(
-            (f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_"))
-        )
+        inner = ", ".join((f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_")))
         return f"EmbedProxy({inner})"
 
     def __getattr__(self, attr: str) -> _EmptyEmbed:
@@ -355,9 +353,7 @@ class Embed:
         elif isinstance(value, _EmptyEmbed):
             self._timestamp = value
         else:
-            raise TypeError(
-                f"Expected datetime.datetime or Embed.Empty received {value.__class__.__name__} instead"
-            )
+            raise TypeError(f"Expected datetime.datetime or Embed.Empty received {value.__class__.__name__} instead")
 
     @property
     def footer(self) -> _EmbedFooterProxy:
@@ -648,9 +644,7 @@ class Embed:
 
         return self
 
-    def insert_field_at(
-        self: E, index: int, *, name: Any, value: Any, inline: bool = True
-    ) -> E:
+    def insert_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Inserts a field before a specified index to the embed.
 
         This function returns the class instance to allow for fluent-style
@@ -711,9 +705,7 @@ class Embed:
         except (AttributeError, IndexError):
             pass
 
-    def set_field_at(
-        self: E, index: int, *, name: Any, value: Any, inline: bool = True
-    ) -> E:
+    def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Modifies a field to the embed object.
 
         The index must point to a valid pre-existing field.
@@ -752,11 +744,7 @@ class Embed:
         """Converts this embed object into a dict."""
 
         # add in the raw data into the dict
-        result = {
-            key[1:]: getattr(self, key)
-            for key in self.__slots__
-            if key[0] == "_" and hasattr(self, key)
-        }
+        result = {key[1:]: getattr(self, key) for key in self.__slots__ if key[0] == "_" and hasattr(self, key)}
 
         # deal with basic convenience wrappers
 
@@ -775,13 +763,9 @@ class Embed:
         else:
             if timestamp:
                 if timestamp.tzinfo:
-                    result["timestamp"] = timestamp.astimezone(
-                        tz=datetime.timezone.utc
-                    ).isoformat()
+                    result["timestamp"] = timestamp.astimezone(tz=datetime.timezone.utc).isoformat()
                 else:
-                    result["timestamp"] = timestamp.replace(
-                        tzinfo=datetime.timezone.utc
-                    ).isoformat()
+                    result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
 
         # add in the non raw attribute ones
         if self.type:
