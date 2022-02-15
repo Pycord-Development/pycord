@@ -66,9 +66,7 @@ async def slash_guess(ctx, number: int):
     """Guess a random number from 1 to 6."""
     value = random.randint(1, 6)
     if number == value:
-        await ctx.success(
-            "Congratulations! You guessed the number."
-        )  # use the new helper function
+        await ctx.success("Congratulations! You guessed the number.")  # use the new helper function
     else:
         await ctx.respond("You are wrong! Try again.")
 
