@@ -26,8 +26,7 @@ jobs:
       run: flynt ./ -tc
     - name: Setup Git
       run: |
-          git config user.name "Pycord Linter"
-          git config user.email "linter@pycord.dev"
+          git config user.name "Pycord Automated Linter"
     - name: Push To Git
       run: |
           git pull
