@@ -85,9 +85,7 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
         self._underlying.style = value
 
     @property

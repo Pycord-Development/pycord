@@ -150,8 +150,7 @@ class CogMeta(type):
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
         valid_commands = [
-            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand))
-            for j in reversed(new_cls.__mro__)
+            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)
         ]
         if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
             not isinstance(i, _BaseCommand) for i in valid_commands
@@ -168,9 +167,7 @@ class CogMeta(type):
                     del listeners[elem]
 
                 try:
-                    if getattr(value, "parent") is not None and isinstance(
-                        value, ApplicationCommand
-                    ):
+                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
                         # Skip commands if they are a part of a group
                         continue
                 except AttributeError:
@@ -181,9 +178,7 @@ class CogMeta(type):
                     value = value.__func__
                 if isinstance(value, _filter):
                     if is_static_method:
-                        raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
-                        )
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
@@ -278,11 +273,7 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [
-            c
-            for c in self.__cog_commands__
-            if isinstance(c, ApplicationCommand) and c.parent is None
-        ]
+        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
 
     @property
     def qualified_name(self) -> str:
@@ -318,17 +309,12 @@ class Cog(metaclass=CogMeta):
         List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]
             The listeners defined in this cog.
         """
-        return [
-            (name, getattr(self, method_name))
-            for name, method_name in self.__cog_listeners__
-        ]
+        return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
         """Return None if the method is not overridden. Otherwise returns the overridden method."""
-        return getattr(
-            getattr(method, "__func__", method), "__cog_special_method__", method
-        )
+        return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
     def listener(cls, name: str = MISSING) -> Callable[[FuncT], FuncT]:
@@ -350,9 +336,7 @@ class Cog(metaclass=CogMeta):
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(
-                f"Cog.listener expected str but received {name.__class__.__name__!r} instead."
-            )
+            raise TypeError(f"Cog.listener expected str but received {name.__class__.__name__!r} instead.")
 
         def decorator(func: FuncT) -> FuncT:
             actual = func
@@ -423,9 +407,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    async def cog_command_error(
-        self, ctx: ApplicationContext, error: Exception
-    ) -> None:
+    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -670,8 +652,7 @@ class CogMixin:
             remove = [
                 index
                 for index, event in enumerate(event_list)
-                if event.__module__ is not None
-                and _is_submodule(name, event.__module__)
+                if event.__module__ is not None and _is_submodule(name, event.__module__)
             ]
 
             for index in reversed(remove):
@@ -695,9 +676,7 @@ class CogMixin:
                 if _is_submodule(name, module):
                     del sys.modules[module]
 
-    def _load_from_module_spec(
-        self, spec: importlib.machinery.ModuleSpec, key: str
-    ) -> None:
+    def _load_from_module_spec(self, spec: importlib.machinery.ModuleSpec, key: str) -> None:
         # precondition: key not in self.__extensions
         lib = importlib.util.module_from_spec(spec)
         sys.modules[key] = lib
@@ -858,11 +837,7 @@ class CogMixin:
             raise errors.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
-        modules = {
-            name: module
-            for name, module in sys.modules.items()
-            if _is_submodule(lib.__name__, name)
-        }
+        modules = {name: module for name, module in sys.modules.items() if _is_submodule(lib.__name__, name)}
 
         try:
             # Unload and then load the module...

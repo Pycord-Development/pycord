@@ -206,9 +206,7 @@ class StickerItem(_StickerTag):
         self._state: ConnectionState = state
         self.name: str = data["name"]
         self.id: int = int(data["id"])
-        self.format: StickerFormatType = try_enum(
-            StickerFormatType, data["format_type"]
-        )
+        self.format: StickerFormatType = try_enum(StickerFormatType, data["format_type"])
         self.url: str = f"{Asset.BASE}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
@@ -282,9 +280,7 @@ class Sticker(_StickerTag):
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self.description: str = data["description"]
-        self.format: StickerFormatType = try_enum(
-            StickerFormatType, data["format_type"]
-        )
+        self.format: StickerFormatType = try_enum(StickerFormatType, data["format_type"])
         self.url: str = f"{Asset.BASE}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
@@ -350,9 +346,7 @@ class StandardSticker(Sticker):
             self.tags = []
 
     def __repr__(self) -> str:
-        return (
-            f"<StandardSticker id={self.id} name={self.name!r} pack_id={self.pack_id}>"
-        )
+        return f"<StandardSticker id={self.id} name={self.name!r} pack_id={self.pack_id}>"
 
     async def pack(self) -> StickerPack:
         """|coro|
@@ -371,9 +365,7 @@ class StandardSticker(Sticker):
         :class:`StickerPack`
             The retrieved sticker pack.
         """
-        data: ListPremiumStickerPacksPayload = (
-            await self._state.http.list_premium_sticker_packs()
-        )
+        data: ListPremiumStickerPacksPayload = await self._state.http.list_premium_sticker_packs()
         packs = data["sticker_packs"]
         pack = find(lambda d: int(d["id"]) == self.pack_id, packs)
 
@@ -498,9 +490,7 @@ class GuildSticker(Sticker):
 
             payload["tags"] = emoji
 
-        data: GuildStickerPayload = await self._state.http.modify_guild_sticker(
-            self.guild_id, self.id, payload, reason
-        )
+        data: GuildStickerPayload = await self._state.http.modify_guild_sticker(self.guild_id, self.id, payload, reason)
         return GuildSticker(state=self._state, data=data)
 
     async def delete(self, *, reason: Optional[str] = None) -> None:

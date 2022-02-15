@@ -69,12 +69,8 @@ async def modaltest(ctx):
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(
-                    label="First Modal", description="Shows the first modal"
-                ),
-                discord.SelectOption(
-                    label="Second Modal", description="Shows the second modal"
-                ),
+                discord.SelectOption(label="First Modal", description="Shows the first modal"),
+                discord.SelectOption(label="Second Modal", description="Shows the second modal"),
             ],
         )
         async def select_callback(self, select, interaction):
