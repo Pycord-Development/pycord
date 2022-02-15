@@ -1,6 +1,6 @@
 name: Lint
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -27,10 +27,9 @@ jobs:
     - name: Setup Git
       run: |
           git config user.name "Pycord Automated Linter"
-          git config pull.rebase false
     - name: Push To Git
       run: |
-          git pull origin master --allow-unrelated-histories
+          git pull
           git add .
-          git diff-index --quiet HEAD || git commit --reuse-message=HEAD
+          git commit --reuse-message=HEAD
           git push
