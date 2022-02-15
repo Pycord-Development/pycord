@@ -24,34 +24,42 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Any, Callable, ClassVar, Dict, Iterator, List, Optional, Sequence, TYPE_CHECKING, Tuple
-from functools import partial
-from itertools import groupby
 
-import traceback
 import asyncio
+import os
 import sys
 import time
-import os
-from .item import Item, ItemCallbackType
-from ..components import (
-    Component,
-    ActionRow as ActionRowComponent,
-    _component_factory,
-    Button as ButtonComponent,
-    SelectMenu as SelectComponent,
+import traceback
+from functools import partial
+from itertools import groupby
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
 )
 
-__all__ = (
-    'View',
-)
+from ..components import ActionRow as ActionRowComponent
+from ..components import Button as ButtonComponent
+from ..components import Component
+from ..components import SelectMenu as SelectComponent
+from ..components import _component_factory
+from .item import Item, ItemCallbackType
+
+__all__ = ("View",)
 
 
 if TYPE_CHECKING:
     from ..interactions import Interaction
     from ..message import Message
-    from ..types.components import Component as ComponentPayload
     from ..state import ConnectionState
+    from ..types.components import Component as ComponentPayload
 
 
 def _walk_all_components(components: List[Component]) -> Iterator[Component]:
@@ -75,9 +83,7 @@ def _component_to_item(component: Component) -> Item:
 
 
 class _ViewWeights:
-    __slots__ = (
-        'weights',
-    )
+    __slots__ = ("weights",)
 
     def __init__(self, children: List[Item]):
         self.weights: List[int] = [0, 0, 0, 0, 0]
@@ -93,13 +99,13 @@ class _ViewWeights:
             if weight + item.width <= 5:
                 return index
 
-        raise ValueError('could not find open space for item')
+        raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(f'item would not fit at row {item.row} ({total} > 5 width)')
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:
@@ -147,11 +153,11 @@ class View:
         children: List[ItemCallbackType] = []
         for base in reversed(cls.__mro__):
             for member in base.__dict__.values():
-                if hasattr(member, '__discord_ui_model_type__'):
+                if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
         if len(children) > 25:
-            raise TypeError('View cannot have more than 25 children')
+            raise TypeError("View cannot have more than 25 children")
 
         cls.__view_children_items__ = children
 
@@ -177,7 +183,7 @@ class View:
         self.__stopped: asyncio.Future[bool] = loop.create_future()
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>'
+        return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
 
     async def __timeout_task_impl(self) -> None:
         while True:
@@ -209,8 +215,8 @@ class View:
 
             components.append(
                 {
-                    'type': 1,
-                    'components': children,
+                    "type": 1,
+                    "components": children,
                 }
             )
 
@@ -267,10 +273,10 @@ class View:
         """
 
         if len(self.children) > 25:
-            raise ValueError('maximum number of children exceeded')
+            raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, Item):
-            raise TypeError(f'expected Item not {item.__class__!r}')
+            raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.__weights.add_item(item)
 
@@ -350,7 +356,7 @@ class View:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f'Ignoring exception in view {self} for item {item}:', file=sys.stderr)
+        print(f"Ignoring exception in view {self} for item {item}:", file=sys.stderr)
         traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     async def _scheduled_task(self, item: Item, interaction: Interaction):
@@ -383,23 +389,22 @@ class View:
             return
 
         self.__stopped.set_result(True)
-        asyncio.create_task(self.on_timeout(), name=f'discord-ui-view-timeout-{self.id}')
+        asyncio.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}")
 
     def _dispatch_item(self, item: Item, interaction: Interaction):
         if self.__stopped.done():
             return
 
-        asyncio.create_task(self._scheduled_task(item, interaction), name=f'discord-ui-view-dispatch-{self.id}')
+        asyncio.create_task(
+            self._scheduled_task(item, interaction),
+            name=f"discord-ui-view-dispatch-{self.id}",
+        )
 
     def refresh(self, components: List[Component]):
         # This is pretty hacky at the moment
-        # fmt: off
         old_state: Dict[Tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item  # type: ignore
-            for item in self.children
-            if item.is_dispatchable()
+            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
-        # fmt: on
         children: List[Item] = [item for item in self.children if not item.is_dispatchable()]
         for component in _walk_all_components(components):
             try:
@@ -473,13 +478,7 @@ class ViewStore:
 
     @property
     def persistent_views(self) -> Sequence[View]:
-        # fmt: off
-        views = {
-            view.id: view
-            for (_, (view, _)) in self._views.items()
-            if view.is_persistent()
-        }
-        # fmt: on
+        views = {view.id: view for (_, (view, _)) in self._views.items() if view.is_persistent()}
         return list(views.values())
 
     def __verify_integrity(self):

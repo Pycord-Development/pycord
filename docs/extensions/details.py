@@ -1,7 +1,6 @@
-from docutils.parsers.rst import Directive
-from docutils.parsers.rst import states, directives
-from docutils.parsers.rst.roles import set_classes
 from docutils import nodes
+from docutils.parsers.rst import Directive, directives, states
+from docutils.parsers.rst.roles import set_classes
 
 
 class details(nodes.General, nodes.Element):
@@ -13,15 +12,11 @@ class summary(nodes.General, nodes.Element):
 
 
 def visit_details_node(self, node):
-    self.body.append(
-        self.starttag(node, "details", CLASS=node.attributes.get("class", ""))
-    )
+    self.body.append(self.starttag(node, "details", CLASS=node.attributes.get("class", "")))
 
 
 def visit_summary_node(self, node):
-    self.body.append(
-        self.starttag(node, "summary", CLASS=node.attributes.get("summary-class", ""))
-    )
+    self.body.append(self.starttag(node, "summary", CLASS=node.attributes.get("summary-class", "")))
     self.body.append(node.rawsource)
 
 
