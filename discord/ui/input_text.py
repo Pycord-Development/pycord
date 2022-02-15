@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
@@ -58,6 +58,10 @@ class InputText:
     ):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
+
+        if not isinstance(custom_id, Union[str, None]):
+            raise TypeError(f"expected custom_id to be str, not {type(custom_id).__name__}")
+
         self._underlying = InputTextComponent._raw_construct(
             type=ComponentType.input_text,
             style=style,
@@ -85,9 +89,7 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
         self._underlying.style = value
 
     @property

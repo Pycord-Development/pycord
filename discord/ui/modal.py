@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import sys
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from .input_text import InputText
 
@@ -25,6 +25,10 @@ class Modal:
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+
+        if not isinstance(custom_id, Union[str, None]):
+            raise TypeError(f"expected custom_id to be str, not {type(custom_id).__name__}")
+
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
@@ -124,9 +128,7 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:

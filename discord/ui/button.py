@@ -99,6 +99,9 @@ class Button(Item[V]):
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
 
+        if not isinstance(custom_id, Union[str, None]):
+            raise TypeError(f"expected custom_id to be str, not {type(custom_id).__name__}")
+
         self._provided_custom_id = custom_id is not None
         if url is None and custom_id is None:
             custom_id = os.urandom(16).hex()
@@ -112,9 +115,7 @@ class Button(Item[V]):
             elif isinstance(emoji, _EmojiTag):
                 emoji = emoji._to_partial()
             else:
-                raise TypeError(
-                    f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}"
-                )
+                raise TypeError(f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}")
 
         self._underlying = ButtonComponent._raw_construct(
             type=ComponentType.button,
@@ -194,9 +195,7 @@ class Button(Item[V]):
         elif isinstance(value, _EmojiTag):
             self._underlying.emoji = value._to_partial()
         else:
-            raise TypeError(
-                f"expected str, Emoji, or PartialEmoji, received {value.__class__} instead"
-            )
+            raise TypeError(f"expected str, Emoji, or PartialEmoji, received {value.__class__} instead")
 
     @classmethod
     def from_component(cls: Type[B], button: ButtonComponent) -> B:
