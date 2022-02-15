@@ -641,26 +641,33 @@ class SlashCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-
             raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
         
         actual_type_hints = get_type_hints(self.callback)
 
         # checks for 'self' parameter in type hints
         if self.attached_to_group or self.cog:
-            parent_check: bool = list(actual_type_hints.items())[0][1] == self.parent
-            cog_check: bool = list(actual_type_hints.items())[0][1] == self.cog
-            if cog_check or parent_check:
-                temp = list(actual_type_hints.items())
-                temp.pop(0)
-                actual_type_hints = dict(temp)
+            if len(actual_type_hints) > 0:
+                parent_check: bool = list(actual_type_hints.items())[0][1] == self.parent
+                cog_check: bool = list(actual_type_hints.items())[0][1] == self.cog
+                if cog_check or parent_check:
+                    temp = list(actual_type_hints.items())
+                    temp.pop(0)
+                    actual_type_hints = dict(temp)
+            else:
+                # Then it's safe to say that there are no options defined
+                return
 
 	    # checks for 'ctx' parameter in type hints
-        if list(actual_type_hints.items())[0][1] == ApplicationContext:
-                temp = list(actual_type_hints.items())
-                temp.pop(0)
-                actual_type_hints = dict(temp)
-        value_itr = iter(actual_type_hints.items())
+        if len(actual_type_hints) > 0:
+            if list(actual_type_hints.items())[0][1] == ApplicationContext:
+                    temp = list(actual_type_hints.items())
+                    temp.pop(0)
+                    actual_type_hints = dict(temp)
+            value_itr = iter(actual_type_hints.items())
+        else:
+            # Then it's safe to say that there are no options defined
+            return
 
         final_options = []
         for p_name, p_obj in params:

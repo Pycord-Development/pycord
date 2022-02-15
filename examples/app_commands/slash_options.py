@@ -9,12 +9,12 @@ bot = discord.Bot()
 @bot.slash_command(guild_ids=[...])
 async def hello(
     ctx: discord.ApplicationContext,
-    name: Option(str, "Enter your name"),
-    gender: Option(str, "Choose your gender", choices=["Male", "Female", "Other"]),
-    age: Option(int, "Enter your age", min_value=1, max_value=99, default=18)
+    name: str = Option(description="Enter your name"),
+    gender: str = Option(description="Choose your gender", choices=["Male", "Female", "Other"]),
+    age: int = Option(description="Enter your age", min_value=1, max_value=99, default=18)
     # passing the default value makes an argument optional
     # you also can create optional argument using:
-    # age: Option(int, "Enter your age") = 18
+    # age: int = Option("Enter your age", default=18)
 ):
     await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
@@ -22,8 +22,7 @@ async def hello(
 @bot.slash_command(guild_ids=[...])
 async def channel(
     ctx: discord.ApplicationContext,
-    channel: Option([discord.TextChannel, discord.VoiceChannel], "Select a channel")
-    # you can specify allowed channel types by passing a list of them like: [discord.TextChannel, discord.VoiceChannel]
+    channel: discord.enums.SlashCommandOptionType.channel = Option(description="Select a channel")
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 
@@ -31,9 +30,8 @@ async def channel(
 @bot.slash_command(name="attach_file")
 async def say(
     ctx: discord.ApplicationContext,
-    attachment: Option(
-        discord.Attachment,
-        "A file to attach to the message",
+    attachment: discord.Attachment = Option(
+        description="A file to attach to the message",
         required=False,
     ),
 ):
