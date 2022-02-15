@@ -27,6 +27,7 @@ jobs:
     - name: Setup Git
       run: |
           git config user.name "Pycord Automated Linter"
+          git config pull.rebase false
     - name: Push To Git
       run: |
           git pull origin master
