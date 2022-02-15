@@ -347,7 +347,7 @@ class ApplicationCommandMixin:
         self,
         commands: Optional[List[ApplicationCommand]] = None,
         guild_id: Optional[int] = None,
-        force: bool = False,
+        force: bool = True,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -363,9 +363,10 @@ class ApplicationCommandMixin:
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`~.ApplicationCommand.guild_ids` attribute.
         force: :class:`bool`
-            Registers the commands regardless of the state of the command on discord, this can take up more API calls
-            but is sometimes a more foolproof method of registering commands. This also sometimes causes minor bugs
-            where the command can temporarily appear as an invalid command on the user's side. Defaults to False.
+            Registers the commands regardless of the state of the command on discord, this can sometimes cause commands
+            to be re-registred without changes (The command can temporarily appear as an invalid command on the user's
+            side) due to a bug in the API, but is a more foolproof method of registering
+            commands. Defaults to True.
         """
         if commands is None:
             commands = self.pending_application_commands
@@ -491,7 +492,7 @@ class ApplicationCommandMixin:
     async def sync_commands(
         self,
         commands: Optional[List[ApplicationCommand]] = None,
-        force: bool = False,
+        force: bool = True,
         guild_ids: Optional[List[int]] = None,
         register_guild_commands: bool = True,
         unregister_guilds: Optional[List[int]] = None,
@@ -518,9 +519,9 @@ class ApplicationCommandMixin:
         commands: Optional[List[:class:`~.ApplicationCommand`]]
             A list of commands to register. If this is not set (None), then all commands will be registered.
         force: :class:`bool`
-            Registers the commands regardless of the state of the command on discord, this can take up more API calls
-            but is sometimes a more foolproof method of registering commands. This also allows the bot to dynamically
-            remove stale commands. Defaults to False.
+            Registers the commands regardless of the state of the command on discord, this can sometimes cause commands
+            to be re-registred without changes due to a bug in the API, but is sometimes a more foolproof method of
+            registering commands. Defaults to True.
         guild_ids: Optional[List[:class:`int`]]
             A list of guild ids to register the commands for. If this is not set, the commands'
             :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
