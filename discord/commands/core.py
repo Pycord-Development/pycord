@@ -317,6 +317,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
         predicates = self.checks
+        if self.parent is not None:
+            # parent checks should be ran first
+            predicates = self.parent.checks + predicates
+            
         if not predicates:
             # since we have no checks, then we just return True.
             return True
