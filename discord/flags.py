@@ -787,7 +787,7 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
 
-        Without the :attr:`ApplicationFlags.gateway_message_content` intent enabled, the following fields are either an empty string or empty array:
+        Without the :attr:`message_content` intent enabled, the following fields are either an empty string or empty array:
 
         - :attr:`Message.content`
         - :attr:`Message.embeds`
@@ -795,10 +795,6 @@ class Intents(BaseFlags):
         - :attr:`Message.components`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
-
-        .. note::
-
-            :attr:`message_content` is required to receive the actual content of guild messages.
         """
         return 1 << 9
 
