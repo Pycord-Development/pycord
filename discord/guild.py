@@ -207,7 +207,7 @@ class Guild(Hashable):
         - ``COMMERCE``: Guild can sell things using store channels.
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
-        - ``DISCOVERABLE_DISABLED``: Guild is disabled from being discoverable.
+        - ``DISCOVERABLE_DISABLED``: Guild cannot be discoverable.
         - ``FEATURABLE``: Guild is able to be featured in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
         - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
