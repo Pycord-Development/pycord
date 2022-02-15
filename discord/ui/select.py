@@ -107,7 +107,7 @@ class Select(Item[V]):
         super().__init__()
         self._selected_values: List[str] = []
 
-        if not isinstance(custom_id, Union[str, None]):
+        if not (isinstance(custom_id, str) or custom_id is None):
             raise TypeError(f"expected custom_id to be str, not {type(custom_id).__name__}")
 
         self._provided_custom_id = custom_id is not MISSING
