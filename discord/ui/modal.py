@@ -94,8 +94,6 @@ class Modal:
         except ValueError:
             pass
 
-
-
     def to_dict(self):
         return {
             "title": self.title,
