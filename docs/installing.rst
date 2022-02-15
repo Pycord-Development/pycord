@@ -22,15 +22,15 @@ is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is no
 Installing
 -----------
 
-**!!! IMPORTANT !!!**
+.. note::
 
-For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release on Jan 28th, 2022. ::
+    For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release on Jan 28th, 2022. ::
 
-    python3 -m pip install -U py-cord --pre
+        python3 -m pip install -U py-cord --pre
 
-For Windows users, this command should be used to install the pre-release: ::
+    For Windows users, this command should be used to install the pre-release: ::
 
-    py -3 -m pip install -U py-cord --pre
+        py -3 -m pip install -U py-cord --pre
 
 You can get the library directly from PyPI: ::
 
