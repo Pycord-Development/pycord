@@ -7,8 +7,8 @@
 Quickstart
 ==========
 
-This page gives a brief introduction to the library. It assumes you have the library installed,
-if you don't check the :ref:`installing` portion.
+This page gives a brief introduction to the library. It assumes you have the library installed.
+If you don't, check the :ref:`installing` portion.
 
 A Minimal Bot
 -------------
