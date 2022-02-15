@@ -24,7 +24,7 @@ Installing
 
 .. note::
 
-    For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release on Jan 28th, 2022. ::
+    For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release. ::
 
         python3 -m pip install -U py-cord --pre
 
