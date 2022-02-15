@@ -26,11 +26,11 @@ jobs:
       run: flynt ./ -tc
     - name: Setup Git
       run: |
-          git config user.name "linter"
+          git config user.name "Pycord Linter"
           git config user.email "linter@pycord.dev"
     - name: Push To Git
       run: |
           git pull
           git add .
-          git commit -m "Linted code"
+          git commit --reuse-message=HEAD
           git push
