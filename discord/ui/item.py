@@ -52,7 +52,6 @@ V = TypeVar("V", bound="View", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 
-
 class Item(Generic[V]):
     """Represents the base UI item that all UI components inherit from.
 
