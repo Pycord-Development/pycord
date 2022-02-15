@@ -25,12 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-
-from typing import Any, Callable, Deque, Dict, Optional, Type, TypeVar, TYPE_CHECKING
-from discord.enums import Enum
-import time
 import asyncio
+import time
 from collections import deque
+from typing import TYPE_CHECKING, Any, Callable, Deque, Dict, Optional, Type, TypeVar
+
+from discord.enums import Enum
 
 from ...abc import PrivateChannel
 from .errors import MaxConcurrencyReached
@@ -39,24 +39,25 @@ if TYPE_CHECKING:
     from ...message import Message
 
 __all__ = (
-    'BucketType',
-    'Cooldown',
-    'CooldownMapping',
-    'DynamicCooldownMapping',
-    'MaxConcurrency',
+    "BucketType",
+    "Cooldown",
+    "CooldownMapping",
+    "DynamicCooldownMapping",
+    "MaxConcurrency",
 )
 
-C = TypeVar('C', bound='CooldownMapping')
-MC = TypeVar('MC', bound='MaxConcurrency')
+C = TypeVar("C", bound="CooldownMapping")
+MC = TypeVar("MC", bound="MaxConcurrency")
+
 
 class BucketType(Enum):
-    default  = 0
-    user     = 1
-    guild    = 2
-    channel  = 3
-    member   = 4
+    default = 0
+    user = 1
+    guild = 2
+    channel = 3
+    member = 4
     category = 5
-    role     = 6
+    role = 6
 
     def get_key(self, msg: Message) -> Any:
         if self is BucketType.user:
@@ -91,7 +92,7 @@ class Cooldown:
         The length of the cooldown period in seconds.
     """
 
-    __slots__ = ('rate', 'per', '_window', '_tokens', '_last')
+    __slots__ = ("rate", "per", "_window", "_tokens", "_last")
 
     def __init__(self, rate: float, per: float) -> None:
         self.rate: int = int(rate)
@@ -191,7 +192,8 @@ class Cooldown:
         return Cooldown(self.rate, self.per)
 
     def __repr__(self) -> str:
-        return f'<Cooldown rate: {self.rate} per: {self.per} window: {self._window} tokens: {self._tokens}>'
+        return f"<Cooldown rate: {self.rate} per: {self.per} window: {self._window} tokens: {self._tokens}>"
+
 
 class CooldownMapping:
     def __init__(
@@ -200,7 +202,7 @@ class CooldownMapping:
         type: Callable[[Message], Any],
     ) -> None:
         if not callable(type):
-            raise TypeError('Cooldown type must be a BucketType or callable')
+            raise TypeError("Cooldown type must be a BucketType or callable")
 
         self._cache: Dict[Any, Cooldown] = {}
         self._cooldown: Optional[Cooldown] = original
@@ -257,13 +259,9 @@ class CooldownMapping:
         bucket = self.get_bucket(message, current)
         return bucket.update_rate_limit(current)
 
-class DynamicCooldownMapping(CooldownMapping):
 
-    def __init__(
-        self,
-        factory: Callable[[Message], Cooldown],
-        type: Callable[[Message], Any]
-    ) -> None:
+class DynamicCooldownMapping(CooldownMapping):
+    def __init__(self, factory: Callable[[Message], Cooldown], type: Callable[[Message], Any]) -> None:
         super().__init__(None, type)
         self._factory: Callable[[Message], Cooldown] = factory
 
@@ -279,6 +277,7 @@ class DynamicCooldownMapping(CooldownMapping):
     def create_bucket(self, message: Message) -> Cooldown:
         return self._factory(message)
 
+
 class _Semaphore:
     """This class is a version of a semaphore.
 
@@ -292,7 +291,7 @@ class _Semaphore:
     overkill for what is basically a counter.
     """
 
-    __slots__ = ('value', 'loop', '_waiters')
+    __slots__ = ("value", "loop", "_waiters")
 
     def __init__(self, number: int) -> None:
         self.value: int = number
@@ -300,7 +299,7 @@ class _Semaphore:
         self._waiters: Deque[asyncio.Future] = deque()
 
     def __repr__(self) -> str:
-        return f'<_Semaphore value={self.value} waiters={len(self._waiters)}>'
+        return f"<_Semaphore value={self.value} waiters={len(self._waiters)}>"
 
     def locked(self) -> bool:
         return self.value == 0
@@ -338,8 +337,9 @@ class _Semaphore:
         self.value += 1
         self.wake_up()
 
+
 class MaxConcurrency:
-    __slots__ = ('number', 'per', 'wait', '_mapping')
+    __slots__ = ("number", "per", "wait", "_mapping")
 
     def __init__(self, number: int, *, per: BucketType, wait: bool) -> None:
         self._mapping: Dict[Any, _Semaphore] = {}
@@ -348,16 +348,16 @@ class MaxConcurrency:
         self.wait: bool = wait
 
         if number <= 0:
-            raise ValueError('max_concurrency \'number\' cannot be less than 1')
+            raise ValueError("max_concurrency 'number' cannot be less than 1")
 
         if not isinstance(per, BucketType):
-            raise TypeError(f'max_concurrency \'per\' must be of type BucketType not {type(per)!r}')
+            raise TypeError(f"max_concurrency 'per' must be of type BucketType not {type(per)!r}")
 
     def copy(self: MC) -> MC:
         return self.__class__(self.number, per=self.per, wait=self.wait)
 
     def __repr__(self) -> str:
-        return f'<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>'
+        return f"<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>"
 
     def get_key(self, message: Message) -> Any:
         return self.per.get_key(message)

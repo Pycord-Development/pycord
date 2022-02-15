@@ -8,8 +8,7 @@ The following is a set of guidelines for contributing to the repository. These a
 
 Generally speaking questions are better suited in our resources below.
 
-- The official support server: https://discord.gg/UCXwPR7Pew
-- The Discord API server under #python_discord-py: https://discord.gg/discord-api
+- The official support server: https://pycord.dev/discord
 - [The FAQ in the documentation](https://docs.pycord.dev/en/master/faq.html)
 - [StackOverflow's `pycord` tag](https://stackoverflow.com/questions/tagged/pycord)
 
@@ -47,7 +46,7 @@ By submitting a pull request, you agree that; 1) You hold the copyright on all s
 
 Not following this guideline could lead to your pull being squashed for a cleaner commit history
 
-Some style guides we would recommed using in your pulls:
+Some style guides we would recommend using in your pulls:
 
 The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style is a very widely used style and a good style to start with.
 

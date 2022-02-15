@@ -26,31 +26,32 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import Any, Dict, Optional, TYPE_CHECKING, overload, Type, Tuple
-from .utils import _get_as_snowflake, parse_time, MISSING
-from .user import User
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Type
+
+from .enums import ExpireBehaviour, try_enum
 from .errors import InvalidArgument
-from .enums import try_enum, ExpireBehaviour
+from .user import User
+from .utils import MISSING, _get_as_snowflake, parse_time
 
 __all__ = (
-    'IntegrationAccount',
-    'IntegrationApplication',
-    'Integration',
-    'StreamIntegration',
-    'BotIntegration',
+    "IntegrationAccount",
+    "IntegrationApplication",
+    "Integration",
+    "StreamIntegration",
+    "BotIntegration",
 )
 
 if TYPE_CHECKING:
-    from .types.integration import (
-        IntegrationAccount as IntegrationAccountPayload,
-        Integration as IntegrationPayload,
-        StreamIntegration as StreamIntegrationPayload,
-        BotIntegration as BotIntegrationPayload,
-        IntegrationType,
-        IntegrationApplication as IntegrationApplicationPayload,
-    )
     from .guild import Guild
     from .role import Role
+    from .types.integration import BotIntegration as BotIntegrationPayload
+    from .types.integration import Integration as IntegrationPayload
+    from .types.integration import IntegrationAccount as IntegrationAccountPayload
+    from .types.integration import (
+        IntegrationApplication as IntegrationApplicationPayload,
+    )
+    from .types.integration import IntegrationType
+    from .types.integration import StreamIntegration as StreamIntegrationPayload
 
 
 class IntegrationAccount:
@@ -66,14 +67,14 @@ class IntegrationAccount:
         The account name.
     """
 
-    __slots__ = ('id', 'name')
+    __slots__ = ("id", "name")
 
     def __init__(self, data: IntegrationAccountPayload) -> None:
-        self.id: str = data['id']
-        self.name: str = data['name']
+        self.id: str = data["id"]
+        self.name: str = data["name"]
 
     def __repr__(self) -> str:
-        return f'<IntegrationAccount id={self.id} name={self.name!r}>'
+        return f"<IntegrationAccount id={self.id} name={self.name!r}>"
 
 
 class Integration:
@@ -100,14 +101,14 @@ class Integration:
     """
 
     __slots__ = (
-        'guild',
-        'id',
-        '_state',
-        'type',
-        'name',
-        'account',
-        'user',
-        'enabled',
+        "guild",
+        "id",
+        "_state",
+        "type",
+        "name",
+        "account",
+        "user",
+        "enabled",
     )
 
     def __init__(self, *, data: IntegrationPayload, guild: Guild) -> None:
@@ -119,14 +120,14 @@ class Integration:
         return f"<{self.__class__.__name__} id={self.id} name={self.name!r}>"
 
     def _from_data(self, data: IntegrationPayload) -> None:
-        self.id: int = int(data['id'])
-        self.type: IntegrationType = data['type']
-        self.name: str = data['name']
-        self.account: IntegrationAccount = IntegrationAccount(data['account'])
+        self.id: int = int(data["id"])
+        self.type: IntegrationType = data["type"]
+        self.name: str = data["name"]
+        self.account: IntegrationAccount = IntegrationAccount(data["account"])
 
-        user = data.get('user')
+        user = data.get("user")
         self.user = User(state=self._state, data=user) if user else None
-        self.enabled: bool = data['enabled']
+        self.enabled: bool = data["enabled"]
 
     async def delete(self, *, reason: Optional[str] = None) -> None:
         """|coro|
@@ -187,26 +188,26 @@ class StreamIntegration(Integration):
     """
 
     __slots__ = (
-        'revoked',
-        'expire_behaviour',
-        'expire_grace_period',
-        'synced_at',
-        '_role_id',
-        'syncing',
-        'enable_emoticons',
-        'subscriber_count',
+        "revoked",
+        "expire_behaviour",
+        "expire_grace_period",
+        "synced_at",
+        "_role_id",
+        "syncing",
+        "enable_emoticons",
+        "subscriber_count",
     )
 
     def _from_data(self, data: StreamIntegrationPayload) -> None:
         super()._from_data(data)
-        self.revoked: bool = data['revoked']
-        self.expire_behaviour: ExpireBehaviour = try_enum(ExpireBehaviour, data['expire_behavior'])
-        self.expire_grace_period: int = data['expire_grace_period']
-        self.synced_at: datetime.datetime = parse_time(data['synced_at'])
-        self._role_id: Optional[int] = _get_as_snowflake(data, 'role_id')
-        self.syncing: bool = data['syncing']
-        self.enable_emoticons: bool = data['enable_emoticons']
-        self.subscriber_count: int = data['subscriber_count']
+        self.revoked: bool = data["revoked"]
+        self.expire_behaviour: ExpireBehaviour = try_enum(ExpireBehaviour, data["expire_behavior"])
+        self.expire_grace_period: int = data["expire_grace_period"]
+        self.synced_at: datetime.datetime = parse_time(data["synced_at"])
+        self._role_id: Optional[int] = _get_as_snowflake(data, "role_id")
+        self.syncing: bool = data["syncing"]
+        self.enable_emoticons: bool = data["enable_emoticons"]
+        self.subscriber_count: int = data["subscriber_count"]
 
     @property
     def expire_behavior(self) -> ExpireBehaviour:
@@ -253,15 +254,15 @@ class StreamIntegration(Integration):
         payload: Dict[str, Any] = {}
         if expire_behaviour is not MISSING:
             if not isinstance(expire_behaviour, ExpireBehaviour):
-                raise InvalidArgument('expire_behaviour field must be of type ExpireBehaviour')
+                raise InvalidArgument("expire_behaviour field must be of type ExpireBehaviour")
 
-            payload['expire_behavior'] = expire_behaviour.value
+            payload["expire_behavior"] = expire_behaviour.value
 
         if expire_grace_period is not MISSING:
-            payload['expire_grace_period'] = expire_grace_period
+            payload["expire_grace_period"] = expire_grace_period
 
         if enable_emoticons is not MISSING:
-            payload['enable_emoticons'] = enable_emoticons
+            payload["enable_emoticons"] = enable_emoticons
 
         # This endpoint is undocumented.
         # Unsure if it returns the data or not as a result
@@ -308,21 +309,21 @@ class IntegrationApplication:
     """
 
     __slots__ = (
-        'id',
-        'name',
-        'icon',
-        'description',
-        'summary',
-        'user',
+        "id",
+        "name",
+        "icon",
+        "description",
+        "summary",
+        "user",
     )
 
     def __init__(self, *, data: IntegrationApplicationPayload, state):
-        self.id: int = int(data['id'])
-        self.name: str = data['name']
-        self.icon: Optional[str] = data['icon']
-        self.description: str = data['description']
-        self.summary: str = data['summary']
-        user = data.get('bot')
+        self.id: int = int(data["id"])
+        self.name: str = data["name"]
+        self.icon: Optional[str] = data["icon"]
+        self.description: str = data["description"]
+        self.summary: str = data["summary"]
+        user = data.get("bot")
         self.user: Optional[User] = User(state=state, data=user) if user else None
 
 
@@ -351,17 +352,17 @@ class BotIntegration(Integration):
         The application tied to this integration.
     """
 
-    __slots__ = ('application',)
+    __slots__ = ("application",)
 
     def _from_data(self, data: BotIntegrationPayload) -> None:
         super()._from_data(data)
-        self.application = IntegrationApplication(data=data['application'], state=self._state)
+        self.application = IntegrationApplication(data=data["application"], state=self._state)
 
 
 def _integration_factory(value: str) -> Tuple[Type[Integration], str]:
-    if value == 'discord':
+    if value == "discord":
         return BotIntegration, value
-    elif value in ('twitch', 'youtube'):
+    elif value in {"twitch", "youtube"}:
         return StreamIntegration, value
     else:
         return Integration, value

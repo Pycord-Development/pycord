@@ -20,7 +20,7 @@ ytdl_format_options = {
     "quiet": True,
     "no_warnings": True,
     "default_search": "auto",
-    "source_address": "0.0.0.0",  # bind to ipv4 since ipv6 addresses cause issues sometimes
+    "source_address": "0.0.0.0",  # Bind to ipv4 since ipv6 addresses cause issues at certain times
 }
 
 ffmpeg_options = {"options": "-vn"}
@@ -45,7 +45,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         )
 
         if "entries" in data:
-            # take first item from a playlist
+            # Takes the first item from a playlist
             data = data["entries"][0]
 
         filename = data["url"] if stream else ytdl.prepare_filename(data)
@@ -70,9 +70,7 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(
-            source, after=lambda e: print(f"Player error: {e}") if e else None
-        )
+        ctx.voice_client.play(source, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {query}")
 
@@ -82,9 +80,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
-            )
+            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {player.title}")
 
@@ -94,9 +90,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
-            )
+            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {player.title}")
 
