@@ -25,15 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, Dict, TypedDict, Union, List, Literal
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, TypedDict, Union
 
-from .message import Attachment
-from .snowflake import Snowflake
+from .channel import ChannelType
 from .components import Component, ComponentType
 from .embed import Embed
-from .channel import ChannelType
 from .member import Member
+from .message import Attachment
 from .role import Role
+from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
@@ -41,6 +41,7 @@ if TYPE_CHECKING:
 
 
 ApplicationCommandType = Literal[1, 2, 3]
+
 
 class _ApplicationCommandOptional(TypedDict, total=False):
     options: List[ApplicationCommandOption]

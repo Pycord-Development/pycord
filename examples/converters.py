@@ -72,9 +72,7 @@ class ChannelOrMemberConverter(commands.Converter):
         # If the value could not be converted we can raise an error
         # So our error handlers can deal with it in one place.
         # The error has to be CommandError derived, so BadArgument works fine here.
-        raise commands.BadArgument(
-            f'No Member or TextChannel could be converted from "{argument}"'
-        )
+        raise commands.BadArgument(f'No Member or TextChannel could be converted from "{argument}"')
 
 
 @bot.command()
@@ -88,9 +86,7 @@ async def notify(ctx: commands.Context, target: ChannelOrMemberConverter):
 
 
 @bot.command()
-async def ignore(
-    ctx: commands.Context, target: typing.Union[discord.Member, discord.TextChannel]
-):
+async def ignore(ctx: commands.Context, target: typing.Union[discord.Member, discord.TextChannel]):
     # This command signature utilises the `typing.Union` typehint.
     # The `commands` framework attempts a conversion of each type in this Union *in order*.
     # So, it will attempt to convert whatever is passed to `target` to a `discord.Member` instance.
@@ -101,15 +97,9 @@ async def ignore(
 
     # To check the resulting type, `isinstance` is used
     if isinstance(target, discord.Member):
-        await ctx.send(
-            f"Member found: {target.mention}, adding them to the ignore list."
-        )
-    elif isinstance(
-        target, discord.TextChannel
-    ):  # This could be an `else` but for completeness' sake.
-        await ctx.send(
-            f"Channel found: {target.mention}, adding it to the ignore list."
-        )
+        await ctx.send(f"Member found: {target.mention}, adding them to the ignore list.")
+    elif isinstance(target, discord.TextChannel):  # This could be an `else` but for completeness' sake.
+        await ctx.send(f"Channel found: {target.mention}, adding it to the ignore list.")
 
 
 # Built-in type converters.
@@ -119,7 +109,7 @@ async def multiply(ctx: commands.Context, number: int, maybe: bool):
     # `bool` is a slightly special case, as shown here:
     # See: https://docs.pycord.dev/en/latest/ext/commands/commands.html#bool
 
-    if maybe is True:
+    if maybe:
         return await ctx.send(number * 2)
     await ctx.send(number * 5)
 

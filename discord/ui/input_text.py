@@ -4,9 +4,8 @@ import os
 from typing import TYPE_CHECKING, Optional
 
 from ..components import InputText as InputTextComponent
-from ..enums import InputTextStyle
+from ..enums import ComponentType, InputTextStyle
 from ..utils import MISSING
-from .item import Item
 
 __all__ = ("InputText",)
 
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText(Item):
+class InputText:
     """Represents a UI text input field.
 
     Parameters
@@ -46,6 +45,7 @@ class InputText(Item):
 
     def __init__(
         self,
+        *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str = MISSING,
         label: Optional[str] = None,
@@ -59,6 +59,7 @@ class InputText(Item):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
         self._underlying = InputTextComponent._raw_construct(
+            type=ComponentType.input_text,
             style=style,
             custom_id=custom_id,
             label=label,
@@ -70,6 +71,11 @@ class InputText(Item):
         )
         self._input_value = None
         self.row = row
+        self._rendered_row: Optional[int] = None
+
+    @property
+    def type(self) -> ComponentType:
+        return self._underlying.type
 
     @property
     def style(self) -> InputTextStyle:
@@ -79,9 +85,7 @@ class InputText(Item):
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
         self._underlying.style = value
 
     @property
@@ -104,6 +108,7 @@ class InputText(Item):
     def label(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"label should be None or str not {value.__class__}")
+        self._underlying.label = value
 
     @property
     def placeholder(self) -> Optional[str]:
@@ -147,6 +152,7 @@ class InputText(Item):
     def required(self, value: Optional[bool]):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__}")  # type: ignore
+        self._underlying.required = bool(value)
 
     @property
     def value(self) -> Optional[str]:

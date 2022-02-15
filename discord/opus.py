@@ -25,31 +25,30 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    List,
-    Tuple,
-    TypedDict,
-    Any,
-    TYPE_CHECKING,
-    Callable,
-    TypeVar,
-    Literal,
-    Optional,
-    overload,
-)
-
 import array
 import ctypes
 import ctypes.util
+import gc
 import logging
 import math
 import os.path
 import struct
 import sys
-import gc
 import threading
-import traceback
 import time
+import traceback
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypedDict,
+    TypeVar,
+    overload,
+)
 
 from .errors import DiscordException, InvalidArgument
 from .sinks import RawData
@@ -84,7 +83,7 @@ __all__ = (
 
 _log = logging.getLogger(__name__)
 
-c_int_ptr   = ctypes.POINTER(ctypes.c_int)
+c_int_ptr = ctypes.POINTER(ctypes.c_int)
 c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
 c_float_ptr = ctypes.POINTER(ctypes.c_float)
 
@@ -108,15 +107,15 @@ OK = 0
 BAD_ARG = -1
 
 # Encoder CTLs
-APPLICATION_AUDIO       = 2049
-APPLICATION_VOIP        = 2048
-APPLICATION_LOWDELAY    = 2051
+APPLICATION_AUDIO = 2049
+APPLICATION_VOIP = 2048
+APPLICATION_LOWDELAY = 2051
 
-CTL_SET_BITRATE     = 4002
-CTL_SET_BANDWIDTH   = 4008
-CTL_SET_FEC         = 4012
-CTL_SET_PLP         = 4014
-CTL_SET_SIGNAL      = 4024
+CTL_SET_BITRATE = 4002
+CTL_SET_BANDWIDTH = 4008
+CTL_SET_FEC = 4012
+CTL_SET_PLP = 4014
+CTL_SET_SIGNAL = 4024
 
 # Decoder CTLs
 CTL_SET_GAIN = 4034
@@ -398,9 +397,7 @@ class Encoder(_OpusStruct):
 
     def _create_state(self) -> EncoderStruct:
         ret = ctypes.c_int()
-        return _lib.opus_encoder_create(
-            self.SAMPLING_RATE, self.CHANNELS, self.application, ctypes.byref(ret)
-        )
+        return _lib.opus_encoder_create(self.SAMPLING_RATE, self.CHANNELS, self.application, ctypes.byref(ret))
 
     def set_bitrate(self, kbps: int) -> int:
         kbps = min(512, max(16, int(kbps)))
@@ -410,18 +407,14 @@ class Encoder(_OpusStruct):
 
     def set_bandwidth(self, req: BAND_CTL) -> None:
         if req not in band_ctl:
-            raise KeyError(
-                f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(band_ctl)}'
-            )
+            raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(band_ctl)}')
 
         k = band_ctl[req]
         _lib.opus_encoder_ctl(self._state, CTL_SET_BANDWIDTH, k)
 
     def set_signal_type(self, req: SIGNAL_CTL) -> None:
         if req not in signal_ctl:
-            raise KeyError(
-                f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(signal_ctl)}'
-            )
+            raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(signal_ctl)}')
 
         k = signal_ctl[req]
         _lib.opus_encoder_ctl(self._state, CTL_SET_SIGNAL, k)
@@ -457,9 +450,7 @@ class Decoder(_OpusStruct):
 
     def _create_state(self):
         ret = ctypes.c_int()
-        return _lib.opus_decoder_create(
-            self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret)
-        )
+        return _lib.opus_decoder_create(self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret))
 
     @staticmethod
     def packet_get_nb_frames(data):
@@ -517,15 +508,10 @@ class Decoder(_OpusStruct):
             samples_per_frame = self.packet_get_samples_per_frame(data)
             frame_size = frames * samples_per_frame
 
-        pcm = (
-            ctypes.c_int16
-            * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
-        )()
+        pcm = (ctypes.c_int16 * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16)))()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
-        ret = _lib.opus_decode(
-            self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec
-        )
+        ret = _lib.opus_decode(self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec)
 
         return array.array("h", pcm[: ret * channel_count]).tobytes()
 
@@ -571,17 +557,14 @@ class DecodeManager(threading.Thread, _OpusStruct):
             gc.collect()
             print("Decoder Process Killed")
         self._end_thread.set()
-    
 
     def get_decoder(self, ssrc):
         d = self.decoder.get(ssrc)
-        if d is None:
-            self.decoder[ssrc] = Decoder()
-            return self.decoder[ssrc]
-        else:
+        if d is not None:
             return d
+        self.decoder[ssrc] = Decoder()
+        return self.decoder[ssrc]
 
     @property
     def decoding(self):
         return bool(self.decode_queue)
-

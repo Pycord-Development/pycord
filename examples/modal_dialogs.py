@@ -12,8 +12,8 @@ bot = Bot()
 
 
 class MyModal(Modal):
-    def __init__(self) -> None:
-        super().__init__("Test Modal Dialog")
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.add_item(InputText(label="Short Input", placeholder="Placeholder Test"))
 
         self.add_item(
@@ -34,14 +34,14 @@ class MyModal(Modal):
 @bot.slash_command(name="modaltest", guild_ids=[...])
 async def modal_slash(ctx):
     """Shows an example of a modal dialog being invoked from a slash command."""
-    modal = MyModal()
+    modal = MyModal(title="Slash Command Modal")
     await ctx.interaction.response.send_modal(modal)
 
 
 @bot.message_command(name="messagemodal", guild_ids=[...])
 async def modal_message(ctx, message):
     """Shows an example of a modal dialog being invoked from a message command."""
-    modal = MyModal()
+    modal = MyModal(title="Message Command Modal")
     modal.title = f"Modal for Message ID: {message.id}"
     await ctx.interaction.response.send_modal(modal)
 
@@ -49,7 +49,7 @@ async def modal_message(ctx, message):
 @bot.user_command(name="usermodal", guild_ids=[...])
 async def modal_user(ctx, member):
     """Shows an example of a modal dialog being invoked from a user command."""
-    modal = MyModal()
+    modal = MyModal(title="User Command Modal")
     modal.title = f"Modal for User: {member.display_name}"
     await ctx.interaction.response.send_modal(modal)
 
@@ -61,7 +61,7 @@ async def modaltest(ctx):
     class MyView(discord.ui.View):
         @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
         async def button_callback(self, button, interaction):
-            modal = MyModal()
+            modal = MyModal(title="Modal Triggered from Button")
             await interaction.response.send_modal(modal)
 
         @discord.ui.select(
@@ -69,16 +69,12 @@ async def modaltest(ctx):
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(
-                    label="First Modal", description="Shows the first modal"
-                ),
-                discord.SelectOption(
-                    label="Second Modal", description="Shows the second modal"
-                ),
+                discord.SelectOption(label="First Modal", description="Shows the first modal"),
+                discord.SelectOption(label="Second Modal", description="Shows the second modal"),
             ],
         )
         async def select_callback(self, select, interaction):
-            modal = MyModal()
+            modal = MyModal(title="Temporary Title")
             modal.title = select.values[0]
             await interaction.response.send_modal(modal)
 
