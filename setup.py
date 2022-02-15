@@ -11,9 +11,7 @@ with open("requirements.txt") as f:
 version = ""
 with open("discord/__init__.py") as f:
 
-    search = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
-    )
+    search = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE)
 
     if search is not None:
         version = search.group(1)
@@ -44,7 +42,7 @@ if version.endswith(("a", "b", "rc")):
         )
         out, err = p.communicate()
         if out:
-            version += "+g" + out.decode("utf-8").strip()
+            version += f"+g{out.decode('utf-8').strip()}"
     except Exception:
         pass
 
