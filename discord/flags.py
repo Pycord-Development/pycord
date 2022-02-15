@@ -932,21 +932,21 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
-        
-        These attributes will still be available for messages received from interactions, 
+
+        These attributes will still be available for messages received from interactions,
         the bot's own messages, messages the bot was mentioned in, and DMs.
-        
+
         .. versionadded:: 2.0
-        
+
         .. note::
 
             As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
             Bots in over 100 guilds will need to apply to Discord for verification.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
-            
+
         """
         return 1 << 15
-    
+
     @flag_value
     def scheduled_events(self):
         """:class:`bool`: Whether "scheduled event" related events are enabled.
