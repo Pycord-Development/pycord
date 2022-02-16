@@ -28,9 +28,9 @@ async def userinfo(ctx, *, user: discord.Member = None):
         value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"),
         inline=False,
     )  # The timestamp of when the user created their account.
-    colour = user.colour
+    colour = user.color
     if colour.value:  # if user has a role with a color
-        embed.colour = colour
+        embed.color = color
 
     if isinstance(user, discord.User):  # checks if the user in the server
         embed.set_footer(text="This user is not in this server.")
