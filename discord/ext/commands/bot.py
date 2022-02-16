@@ -409,6 +409,10 @@ class Bot(BotBase, discord.Bot):
 
     This class also subclasses :class:`.GroupMixin` to provide the functionality
     to manage commands.
+    
+    .. note::
+        
+        Using prefixed commands requires :attr:`discord.Intents.message_content` to be enabled.
 
     Attributes
     -----------
