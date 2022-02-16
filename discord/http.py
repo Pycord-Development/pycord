@@ -97,7 +97,7 @@ if TYPE_CHECKING:
     BE = TypeVar("BE", bound=BaseException)
     MU = TypeVar("MU", bound="MaybeUnlock")
     Response = Coroutine[Any, Any, T]
-    
+
 API_VERSION: int = 10
 
 
@@ -114,7 +114,6 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
 
 
 class Route:
-
     def __init__(self, method: str, path: str, **parameters: Any) -> None:
         self.path: str = path
         self.method: str = method
@@ -128,7 +127,7 @@ class Route:
         self.guild_id: Optional[Snowflake] = parameters.get("guild_id")
         self.webhook_id: Optional[Snowflake] = parameters.get("webhook_id")
         self.webhook_token: Optional[str] = parameters.get("webhook_token")
-            
+
     @property
     def base(self) -> str:
         return f"https://discord.com/api/v{API_VERSION}"
