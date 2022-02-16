@@ -24,7 +24,7 @@ async def userinfo(ctx, *, user: discord.Member = None):
         name="Joined",
         value=discord.utils.format_dt(round(user.joined_at.timestamp()), "F"),
         inline=False,
-    )  # The timestamp of the user joining the server.
+    )  # The timestamp of when the user joined the server.
     embed.add_field(
         name="Created",
         value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"),
