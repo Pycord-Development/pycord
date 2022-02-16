@@ -27,7 +27,7 @@ async def userinfo(ctx, *, user: discord.Member = None):
         name="Created",
         value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"),
         inline=False,
-    )  # The timestamp of the user creating their account.
+    )  # The timestamp of when the user created their account.
     colour = user.colour
     if colour.value:  # if user has a role with a color
         embed.colour = colour
