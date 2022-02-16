@@ -520,7 +520,7 @@ class ApplicationCommandMixin:
             A list of commands to register. If this is not set (None), then all commands will be registered.
         force: :class:`bool`
             Registers the commands regardless of the state of the command on discord, this can sometimes cause commands
-            to be re-registred without changes due to a bug in the API, but is sometimes a more foolproof method of
+            to be re-registered without changes due to a bug in the API, but is sometimes a more foolproof method of
             registering commands. Defaults to True.
         guild_ids: Optional[List[:class:`int`]]
             A list of guild ids to register the commands for. If this is not set, the commands'
