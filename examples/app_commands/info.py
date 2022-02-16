@@ -12,9 +12,9 @@ bot = discord.Bot(intents=intents)
 
 @bot.command(name="userinfo", description="Gets information about an user.", guild_ids=[...])
 async def userinfo(ctx, *, user: discord.Member = None):
-    user = (
-        user or ctx.author
-    )  # If the user is not provided, it will default to the message author.
+    # If the user is not provided, it will default to the message author.
+    user = user or ctx.author
+
     embed = discord.Embed(
         title=f"User Info of {user}"
     )
