@@ -31,5 +31,5 @@ jobs:
       run: |
           git pull
           git add .
-          git commit --reuse-message=HEAD
+          git commit --reuse-message=HEAD --allow-empty
           git push
