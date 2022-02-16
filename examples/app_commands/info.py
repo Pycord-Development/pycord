@@ -15,9 +15,7 @@ async def userinfo(ctx, *, user: discord.Member = None):
     # If the user is not provided, it will default to the message author.
     user = user or ctx.author
 
-    embed = discord.Embed(
-        title=f"User Info of {user}"
-    )
+    embed = discord.Embed(title=f"User Info for {user}")
     embed.set_author(name=user.name)
     embed.add_field(name="ID", value=user.id, inline=False) # ID of the user.
     embed.add_field(
