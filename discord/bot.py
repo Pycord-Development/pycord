@@ -363,7 +363,7 @@ class ApplicationCommandMixin:
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`~.ApplicationCommand.guild_ids` attribute.
         force: :class:`bool`
-            Registers the commands regardless of the state of the command on discord, this can sometimes cause commands
+            Registers the commands regardless of the state of the command on Discord. This can sometimes cause commands
             to be re-registered without changes (The command can temporarily appear as an invalid command on the user's
             side) due to a bug in the API, but is a more foolproof method of registering
             commands. Defaults to True.
