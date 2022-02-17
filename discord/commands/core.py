@@ -46,26 +46,9 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    TYPE_CHECKING,
-    TypeVar,
-    Generic,
     get_type_hints,
-    Type,
-    Generator,
-    Coroutine,
 )
 
-from .context import ApplicationContext, AutocompleteContext
-from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .options import (
-    _minmax_setting_for_option, 
-    Option, 
-    OptionChoice, 
-    ThreadOption, 
-    _type_checking_for_option, 
-    channel_type_map
-)
-from .permissions import CommandPermission
 from ..enums import ChannelType, SlashCommandOptionType
 from ..errors import ClientException, ValidationError
 from ..member import Member
@@ -74,7 +57,14 @@ from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
-from .options import Option, OptionChoice
+from .options import (
+    Option,
+    OptionChoice,
+    ThreadOption,
+    _minmax_setting_for_option,
+    _type_checking_for_option,
+    channel_type_map,
+)
 from .permissions import CommandPermission
 
 __all__ = (
@@ -642,7 +632,7 @@ class SlashCommand(ApplicationCommand):
             next(params)
         except StopIteration:
             raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
-        
+
         actual_type_hints = get_type_hints(self.callback)
 
         # checks for 'self' parameter in type hints
@@ -658,12 +648,12 @@ class SlashCommand(ApplicationCommand):
                 # Then it's safe to say that there are no options defined
                 return
 
-	    # checks for 'ctx' parameter in type hints
+        # checks for 'ctx' parameter in type hints
         if len(actual_type_hints) > 0:
             if list(actual_type_hints.items())[0][1] == ApplicationContext:
-                    temp = list(actual_type_hints.items())
-                    temp.pop(0)
-                    actual_type_hints = dict(temp)
+                temp = list(actual_type_hints.items())
+                temp.pop(0)
+                actual_type_hints = dict(temp)
             value_itr = iter(actual_type_hints.items())
         else:
             # Then it's safe to say that there are no options defined
@@ -678,8 +668,8 @@ class SlashCommand(ApplicationCommand):
                 type_hint_val = next(value_itr)
             except StopIteration:
                 pass
-            
-            # we can assume that the option class is instead defined 
+
+            # we can assume that the option class is instead defined
             # in the annotations instead
             if option == inspect.Parameter.empty:
                 option = p_obj.annotation
@@ -698,11 +688,11 @@ class SlashCommand(ApplicationCommand):
                     # it technically isn't, but this skips the checks below
                     _defined_from_option_deco = True
 
-                #continue
+                # continue
 
             if not isinstance(option, Option):
                 continue
-            
+
             if not _defined_from_option_deco:
                 if p_name.lower() == type_hint_val[0].lower():
                     p_type = type_hint_val[1]
@@ -712,14 +702,10 @@ class SlashCommand(ApplicationCommand):
 
                 if self._is_typing_union(option):
                     if self._is_typing_optional(option):
-                        option = Option(
-                            description="No description provided", required=False
-                        )
+                        option = Option(description="No description provided", required=False)
                         option.input_type = p_type[0]
                     else:
-                        option = Option(
-                            description="No description provided"
-                        )
+                        option = Option(description="No description provided")
                         option.input_type = p_type
                 else:
                     option.input_type = p_type
@@ -768,11 +754,11 @@ class SlashCommand(ApplicationCommand):
                 temp.pop(0)
                 actual_type_hints = dict(temp)
 
-	    # checks for 'ctx' parameter in type hints
+        # checks for 'ctx' parameter in type hints
         if list(actual_type_hints.items())[0][1] == ApplicationContext:
-                temp = list(actual_type_hints.items())
-                temp.pop(0)
-                actual_type_hints = dict(temp)
+            temp = list(actual_type_hints.items())
+            temp.pop(0)
+            actual_type_hints = dict(temp)
         value_itr = iter(actual_type_hints.items())
 
         # TODO: Map type to option before matching option to parameter names
@@ -796,9 +782,7 @@ class SlashCommand(ApplicationCommand):
             try:
                 type_hint_val = next(value_itr)
             except StopIteration:
-                raise ClientException(
-                    f"Too many arguments passed to the options kwarg."
-                )
+                raise ClientException(f"Too many arguments passed to the options kwarg.")
 
             p_obj = p_obj.default
             o.input_type = type_hint_val[1]
