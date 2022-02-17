@@ -9,7 +9,7 @@ A basic wrapper for the Discord API.
 
 """
 
-__title__ = "discord"
+__title__ = "pycord"
 __author__ = "Pycord Development"
 __license__ = "MIT"
 __copyright__ = "Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development"
@@ -39,6 +39,7 @@ from .errors import *
 from .file import *
 from .flags import *
 from .guild import *
+from .http import *
 from .integrations import *
 from .interactions import *
 from .invite import *

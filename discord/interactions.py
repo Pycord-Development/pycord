@@ -118,6 +118,8 @@ class Interaction:
         The users locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
+    custom_id: Optional[:class:`str`]
+        The custom ID for the interaction.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -133,6 +135,7 @@ class Interaction:
         "guild_locale",
         "token",
         "version",
+        "custom_id",
         "_permissions",
         "_state",
         "_session",
@@ -159,6 +162,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
+        self.custom_id: Optional[str] = data.get("custom_id")
 
         self.message: Optional[Message]
         try:
