@@ -52,7 +52,7 @@ from .player import *
 from .raw_models import *
 from .reaction import *
 from .role import *
-from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .scheduled_events import *
 from .shard import *
 from .stage_instance import *
 from .sticker import *
