@@ -127,6 +127,7 @@ intents.message_content = True
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or("!"),
     description="Relatively simple music bot example",
+    intents=intents,
 )
 
 
