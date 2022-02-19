@@ -656,7 +656,7 @@ class SlashCommand(ApplicationCommand):
                     actual_type_hints = dict(temp)
             else:
                 # Then it's safe to say that there are no options defined
-                return
+                return []
 
 	    # checks for 'ctx' parameter in type hints
         if len(actual_type_hints) > 0:
@@ -667,7 +667,7 @@ class SlashCommand(ApplicationCommand):
             value_itr = iter(actual_type_hints.items())
         else:
             # Then it's safe to say that there are no options defined
-            return
+            return []
 
         final_options = []
         for p_name, p_obj in params:
