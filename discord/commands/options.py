@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 import inspect
 from collections import OrderedDict
 from types import MappingProxyType
-from typing import Dict, get_type_hints, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union, get_type_hints
 
 from ..enums import ChannelType, SlashCommandOptionType
 
@@ -58,12 +58,13 @@ class ThreadOption:
     def __name__(self):
         return "ThreadOption"
 
+
 class Option:
     r"""
     A class that implements Slash Command arguments which are called "Options".
 
-    This should only be implemented when defining a slash command with the options 
-    decorator, options kwarg in the slash_command decorator, or just defining it 
+    This should only be implemented when defining a slash command with the options
+    decorator, options kwarg in the slash_command decorator, or just defining it
     directly in the function parameters.
 
     Attributes
@@ -75,7 +76,7 @@ class Option:
     name: :class:`str`
         The name of this Option.
     required: :class:`bool`
-        If this Option is required or not. If the default attribute is set and 
+        If this Option is required or not. If the default attribute is set and
         this isn't set, then this is set to False. Otherwise, it's set to true.
     default: :class:`Any`
         The default value for this Option if no value is set.
@@ -84,12 +85,12 @@ class Option:
     max_value: :class:`Union[int, float]`
         The maximum value for this Option if it's a number type.
     choices: :class:`OptionChoice`
-        Instead of the user typing in a value, this allows the user to select 
+        Instead of the user typing in a value, this allows the user to select
         between pre-defined values.
     channel_types: :class:`List[ChannelType]`
     """
 
-    def __init__(self, input_type = None, /, description: str = None, **kwargs) -> None:
+    def __init__(self, input_type=None, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
         self.converter = None
@@ -105,7 +106,7 @@ class Option:
         self.choices: List[OptionChoice] = [
             o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", list())
         ]
-        
+
         self._raw_min_value = kwargs.pop("min_value", None)
         self._raw_max_value = kwargs.pop("max_value", None)
 
@@ -134,6 +135,7 @@ class Option:
 
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
+
 
 def _type_checking_for_option(option):
     option._raw_type = option.input_type
@@ -171,6 +173,7 @@ def _type_checking_for_option(option):
 
     return option
 
+
 def _minmax_setting_for_option(option):
     if option.input_type == SlashCommandOptionType.integer:
         minmax_types = (int, type(None))
@@ -183,19 +186,13 @@ def _minmax_setting_for_option(option):
     option.min_value: minmax_typehint = option._raw_min_value
     option.max_value: minmax_typehint = option._raw_max_value
 
-    if (
-        not isinstance(option.min_value, minmax_types)
-        and option.min_value is not None
-    ):
-        raise TypeError(
-            f'Expected {minmax_typehint} for min_value, got "{type(option.min_value).__name__}"'
-        )
+    if not isinstance(option.min_value, minmax_types) and option.min_value is not None:
+        raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(option.min_value).__name__}"')
     if not (isinstance(option.max_value, minmax_types) or option.min_value is None):
-        raise TypeError(
-            f'Expected {minmax_typehint} for max_value, got "{type(option.max_value).__name__}"'
-        )
+        raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(option.max_value).__name__}"')
 
     return option
+
 
 class OptionChoice:
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
@@ -223,12 +220,10 @@ def option(name, type=None, **kwargs):
             opt.name = name
             opt._parameter_name = name
             opt.input_type = type
-            
+
             func.__annotations__[name] = opt
         else:
-            raise RuntimeError(
-                f"Unknown parameter with name {name} from option decorator"
-            )
+            raise RuntimeError(f"Unknown parameter with name {name} from option decorator")
 
         return func
 

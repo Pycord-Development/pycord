@@ -22,7 +22,7 @@ async def hello(
 @bot.slash_command(guild_ids=[...])
 async def channel(
     ctx: discord.ApplicationContext,
-    channel: discord.enums.SlashCommandOptionType.channel = Option(description="Select a channel")
+    channel: discord.enums.SlashCommandOptionType.channel = Option(description="Select a channel"),
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 
