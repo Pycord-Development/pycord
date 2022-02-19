@@ -26,7 +26,7 @@ jobs:
       run: flynt ./ -tc
     - name: Setup Git
       run: |
-          git config user.name "Pycord Automated Linter"
+          git config user.name "Automated Linter"
     - name: Push To Git
       run: |
           git pull
