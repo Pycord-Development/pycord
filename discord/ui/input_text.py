@@ -58,7 +58,6 @@ class InputText:
     ):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
-
         if not (isinstance(custom_id, str) or custom_id is None):
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
