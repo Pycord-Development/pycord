@@ -1,3 +1,5 @@
+# This example requires the 'message_content' privileged intent.
+
 import asyncio
 
 import youtube_dl
