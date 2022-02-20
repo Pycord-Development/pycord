@@ -23,9 +23,5 @@ class MyClient(discord.Client):
             await channel.send(counter)
             await asyncio.sleep(60)  # This asyncio task runs every 60 seconds
 
-
-intents = discord.Intents.default()
-intents.message_content = True
-
-client = MyClient(intents=intents)
+client = MyClient()
 client.run("token")
