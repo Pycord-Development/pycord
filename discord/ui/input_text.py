@@ -22,8 +22,8 @@ class InputText:
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
-    label: Optional[:class:`str`]
-        The label for the input text field, if any.
+    label: :class:`str`
+        The label for the input text field.
         Must be 45 characters or fewer.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
