@@ -787,7 +787,7 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal):
+    async def send_modal(self, modal: Modal) -> None:
         if self._responded:
             raise InteractionResponded(self._parent)
 
@@ -802,6 +802,7 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return None
 
 
 class _InteractionMessageState:
