@@ -788,6 +788,22 @@ class InteractionResponse:
         self._responded = True
 
     async def send_modal(self, modal: Modal):
+        """|coro|
+        Responds to this interaction by sending a modal dialog.
+        This cannot be used to respond to another modal dialog submission.
+
+        Parameters
+        ----------
+        modal: :class:`discord.ui.Modal`
+            The modal dialog to display to the user.
+
+        Raises
+        ------
+        HTTPException
+            Sending the modal failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
         if self._responded:
             raise InteractionResponded(self._parent)
 
