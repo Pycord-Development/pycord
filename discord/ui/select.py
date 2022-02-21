@@ -106,7 +106,12 @@ class Select(Item[V]):
     ) -> None:
         super().__init__()
         self._selected_values: List[str] = []
-
+        if min_values < 0 or min_values > 25:
+            raise ValueError("min_values must be between 0 and 25")
+        if max_values < 1 or max_values > 25:
+            raise ValueError("max_values must be between 1 and 25")
+        if len(placeholder) > 150:
+            raise ValueError("placeholder must be 150 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
@@ -143,6 +148,8 @@ class Select(Item[V]):
 
     @placeholder.setter
     def placeholder(self, value: Optional[str]):
+        if len(value) > 150:
+            raise ValueError("placeholder must be 150 characters or fewer")
         if value is not None and not isinstance(value, str):
             raise TypeError("placeholder must be None or str")
 
@@ -155,6 +162,8 @@ class Select(Item[V]):
 
     @min_values.setter
     def min_values(self, value: int):
+        if value < 0 or value > 25:
+            raise ValueError("min_values must be between 0 and 25")
         self._underlying.min_values = int(value)
 
     @property
@@ -164,6 +173,8 @@ class Select(Item[V]):
 
     @max_values.setter
     def max_values(self, value: int):
+        if value < 1 or value > 25:
+            raise ValueError("max_values must be between 1 and 25")
         self._underlying.max_values = int(value)
 
     @property

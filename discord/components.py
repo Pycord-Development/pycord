@@ -397,6 +397,12 @@ class SelectOption:
         emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
         default: bool = False,
     ) -> None:
+        if len(label) > 100:
+            raise ValueError("label must be 100 characters or fewer")
+        if value is not MISSING and len(value) > 100:
+            raise ValueError("value must be 100 characters or fewer")
+        if description is not None and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
         self.label = label
         self.value = label if value is MISSING else value
         self.description = description
