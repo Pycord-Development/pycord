@@ -33,7 +33,7 @@ async def userinfo(ctx, *, user: discord.Member = None):
     if isinstance(user, discord.User):  # checks if the user in the server
         embed.set_footer(text="This user is not in this server.")
 
-    await ctx.respond(embed=embed)  # Sends the embed
+    await ctx.respond(embeds=[embed])  # Sends the embed
 
 
 bot.run("your token")
