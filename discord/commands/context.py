@@ -217,7 +217,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def send_modal(self) -> None:
-        """Sends a modal dialog to the user."""
+        """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
     @property
