@@ -1,4 +1,3 @@
-# Imports
 import discord
 
 intents = discord.Intents(
