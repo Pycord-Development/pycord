@@ -28,13 +28,26 @@ class Modal:
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         if not (isinstance(custom_id, str) or custom_id is None):
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
-
         self.custom_id = custom_id or os.urandom(16).hex()
+        if len(title) > 45:
+            raise ValueError("title must be 45 characters or fewer")
         self.title = title
         self.children: List[InputText] = []
         self.__weights = _ModalWeights(self.children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
+
+    @property
+    def title(self) -> str:
+        """The title of the modal dialog."""
+        return self.title
+
+    @title.setter
+    def title(self, value: str):
+        if len(value) > 45:
+            raise ValueError("title must be 45 characters or fewer")
+        if not isinstance(value, str):
+            raise TypeError(f"expected title to be str, not {value.__class__.__name__}")
 
     async def callback(self, interaction: Interaction):
         """|coro|

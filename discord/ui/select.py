@@ -96,7 +96,7 @@ class Select(Item[V]):
     def __init__(
         self,
         *,
-        custom_id: str = None,
+        custom_id: Optional[str] = None,
         placeholder: Optional[str] = None,
         min_values: int = 1,
         max_values: int = 1,
@@ -107,7 +107,7 @@ class Select(Item[V]):
         super().__init__()
         self._selected_values: List[str] = []
 
-        if not (isinstance(custom_id, str) or custom_id is None):
+        if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         self._provided_custom_id = custom_id is not None
@@ -297,7 +297,7 @@ class Select(Item[V]):
 def select(
     *,
     placeholder: Optional[str] = None,
-    custom_id: str = None,
+    custom_id: Optional[str] = None,
     min_values: int = 1,
     max_values: int = 1,
     options: List[SelectOption] = MISSING,
