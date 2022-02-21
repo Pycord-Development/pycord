@@ -24,17 +24,21 @@ class InputText:
         The ID of the input text field that gets received during an interaction.
     label: Optional[:class:`str`]
         The label for the input text field, if any.
+        Must be 45 characters or fewer.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
+        Must be 100 characters or fewer.
     min_length: Optional[:class:`int`]
         The minimum number of characters that must be entered.
-        Defaults to 0.
+        Defaults to 0 and must be less than 4000.
     max_length: Optional[:class:`int`]
         The maximum number of characters that can be entered.
+        Must be between 1 and 4000.
     required: Optional[:class:`bool`]
         Whether the input text field is required or not. Defaults to `True`.
     value: Optional[:class:`str`]
         Pre-fills the input text field with this value.
+        Must be 4000 characters or fewer.
     row: Optional[:class:`int`]
         The relative row this button belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
