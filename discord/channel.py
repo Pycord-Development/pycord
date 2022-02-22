@@ -526,10 +526,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             if message.id < minimum_time:
                 # older than 14 days old
                 if count == 1:
-                    await ret[-1].delete()
+                    await ret[-1].delete(reason=reason)
                 elif count >= 2:
                     to_delete = ret[-count:]
-                    await strategy(to_delete)
+                    await strategy(to_delete, reason=reason)
 
                 count = 0
                 strategy = _single_delete_strategy
@@ -541,10 +541,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         if count >= 2:
             # more than 2 messages -> bulk delete
             to_delete = ret[-count:]
-            await strategy(to_delete)
+            await strategy(to_delete, reason=reason)
         elif count == 1:
             # delete a single message
-            await ret[-1].delete()
+            await ret[-1].delete(reason=reason)
 
         return ret
 
