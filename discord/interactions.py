@@ -162,7 +162,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
-        self.custom_id: Optional[str] = data.get("custom_id")
+        self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
         try:
