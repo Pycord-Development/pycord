@@ -1,4 +1,4 @@
-# This example requires the 'members' and 'message_content' privileged intent to use the Member converter.
+# This example requires the 'members' privileged intent to use the Member converter, and the 'message_content' privileged intent for prefixed commands.
 
 import typing
 
