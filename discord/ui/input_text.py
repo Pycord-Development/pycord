@@ -39,12 +39,6 @@ class InputText:
     value: Optional[:class:`str`]
         Pre-fills the input text field with this value.
         Must be 4000 characters or fewer.
-    row: Optional[:class:`int`]
-        The relative row this button belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
     def __init__(
@@ -58,7 +52,6 @@ class InputText:
         max_length: Optional[int] = None,
         required: Optional[bool] = True,
         value: Optional[str] = None,
-        row: Optional[int] = None,
     ):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
@@ -77,7 +70,6 @@ class InputText:
             value=value,
         )
         self._input_value = None
-        self.row = row
         self._rendered_row: Optional[int] = None
 
     @property
