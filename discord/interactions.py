@@ -162,7 +162,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
-        self.custom_id: Optional[str] = data.get("custom_id")
+        self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
         try:
@@ -788,6 +788,22 @@ class InteractionResponse:
         self._responded = True
 
     async def send_modal(self, modal: Modal) -> None:
+        """|coro|
+        Responds to this interaction by sending a modal dialog.
+        This cannot be used to respond to another modal dialog submission.
+
+        Parameters
+        ----------
+        modal: :class:`discord.ui.Modal`
+            The modal dialog to display to the user.
+
+        Raises
+        ------
+        HTTPException
+            Sending the modal failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
         if self._responded:
             raise InteractionResponded(self._parent)
 
