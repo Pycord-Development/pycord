@@ -712,10 +712,13 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-            if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            if isinstance(msg, discord.WebhookMessage):
+                self.message = await msg.channel.fetch_message(msg.id)
+            elif isinstance(msg, discord.Message):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
-                self.message = await msg.original_message()
+                msg = await msg.original_message()
+                self.message = await msg.channel.fetch_message(msg.id)
 
         return self.message
 
