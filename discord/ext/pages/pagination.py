@@ -402,7 +402,9 @@ class Paginator(discord.ui.View):
         items = self.children.copy()
         page = self.get_page_content(page)
         for item in items:
-            if item not in self.custom_view.children or include_custom:
+            if self.custom_view and (
+                item not in self.custom_view.children or include_custom
+            ):
                 self.remove_item(item)
         if page:
             await self.message.edit(
