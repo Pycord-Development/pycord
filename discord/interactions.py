@@ -787,7 +787,7 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal) -> None:
+    async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
@@ -818,7 +818,7 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
-        return None
+        return self._parent
 
 
 class _InteractionMessageState:
