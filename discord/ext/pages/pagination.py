@@ -374,7 +374,9 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.children:
-            if item not in self.custom_view.children or include_custom:
+            if self.custom_view and (
+                item not in self.custom_view.children or include_custom
+            ):
                 item.disabled = True
         if page:
             await self.message.edit(
