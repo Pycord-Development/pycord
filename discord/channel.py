@@ -1851,6 +1851,27 @@ class ForumChannel(discord.abc.GuildChannel, Hashable):
         """:class:`ChannelType`: The channel's Discord type."""
         return ChannelType.Forum
 
+    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
+    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+        base = super().permissions_for(obj)
+
+        # text channels do not have voice related permissions
+        denied = Permissions.voice()
+        base.value &= ~denied.value
+        return base
+
+    @property
+    def members(self) -> List[Member]:
+        """List[:class:`Member`]: Returns all members that can see this channel."""
+        return [m for m in self.guild.members if self.permissions_for(m).read_messages]
+
+    @property
+    def threads(self) -> List[Thread]:
+        """List[:class:`Thread`]: Returns all the threads that you can see.
+        .. versionadded:: 2.0
+        """
+        return [thread for thread in self.guild._threads.values() if thread.parent_id == self.id]
+
     def is_nsfw(self) -> bool:
         """:class:`bool`: Checks if the Forum is NSFW."""
         return self.nsfw
