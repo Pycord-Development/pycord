@@ -76,7 +76,7 @@ class InputText:
             required=required,
             value=value,
         )
-        self._input_value = None
+        self._input_value = False
         self.row = row
         self._rendered_row: Optional[int] = None
 
@@ -164,7 +164,10 @@ class InputText:
     @property
     def value(self) -> Optional[str]:
         """Optional[:class:`str`]: The value entered in the text field."""
-        return self._input_value or self._underlying.value
+        if self._input_value is not False:
+            # only False on init, otherwise the value was either set or cleared
+            return self._input_value  # type: ignore
+        return self._underlying.value
 
     @value.setter
     def value(self, value: Optional[str]):
