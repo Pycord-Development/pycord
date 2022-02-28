@@ -1823,12 +1823,16 @@ class ForumChannel(discord.abc.GuildChannel, Hashable):
         'nsfw',
         'category_id',
         'position',
+        'slowmode_delay',
         '_overwrites',
+        '_type',
+        'default_auto_archive_duration',
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
+        self._type: int = data['type']
         self._update(guild, data)
 
     def __repr__(self) -> str:
@@ -1840,16 +1844,19 @@ class ForumChannel(discord.abc.GuildChannel, Hashable):
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.nsfw: bool = data.get("nsfw", False)
         self.position: int = data["position"]
+        self.slowmode_delay: int = data.get('rate_limit_per_user', 0)
+        self.default_auto_archive_duration: ThreadArchiveDuration = data.get('default_auto_archive_duration', 1440)
+        self._type: int = data.get('type', self._type)
         self._fill_overwrites(data)
 
     @property
     def _sorting_bucket(self) -> int:
-        return ChannelType.Forum.value
+        return ChannelType.forum.value
 
     @property
     def type(self) -> ChannelType:
         """:class:`ChannelType`: The channel's Discord type."""
-        return ChannelType.Forum
+        return try_enum(ChannelType, self._type)
 
     @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
     def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
@@ -1875,6 +1882,127 @@ class ForumChannel(discord.abc.GuildChannel, Hashable):
     def is_nsfw(self) -> bool:
         """:class:`bool`: Checks if the Forum is NSFW."""
         return self.nsfw
+
+    def get_thread(self, thread_id: int, /) -> Optional[Thread]:
+        """Returns a thread with the given ID.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        thread_id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`Thread`]
+            The returned thread or ``None`` if not found.
+        """
+        return self.guild.get_thread(thread_id)
+
+    async def create_thread(
+            self,
+            *,
+            name: str,
+            # content: str,
+            message: Optional[Snowflake] = None,
+            auto_archive_duration: ThreadArchiveDuration = MISSING,
+            reason: Optional[str] = None,
+    ) -> Thread:
+        """|coro|
+
+        Creates a thread in this forum channel.
+
+        To create a public thread, you must have :attr:`~discord.Permissions.create_public_threads`.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the thread.
+        message: Optional[:class:`abc.Snowflake`]
+            A snowflake representing the message to create the thread with.
+            If ``None`` is passed then a private thread is created.
+            Defaults to ``None``.
+        auto_archive_duration: :class:`int`
+            The duration in minutes before a thread is automatically archived for inactivity.
+            If not provided, the channel's default auto archive duration is used.
+        reason: :class:`str`
+            The reason for creating a new thread. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to create a thread.
+        HTTPException
+            Starting the thread failed.
+
+        Returns
+        --------
+        :class:`Thread`
+            The created thread
+        """
+
+        type = ChannelType.public_thread
+
+        data = await self._state.http.start_thread_without_message(
+            self.id,
+            name=name,
+            auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
+            type=type.value,
+            reason=reason,
+        )
+
+        # Since this is a public thread, it requires a starting message. However, I'm not sure how to pass that in
+        # until Discord adds the API docs for forum channels. For now, this successfully creates the post in the
+        # forum channel, but it is a glitched thread with no starting message. Editing the thread somehow sends a
+        # system message into the thread, and that opens it for use, but until this command is fixed, it is not
+        # usable in practicality.
+        return Thread(guild=self.guild, state=self._state, data=data)
+
+    def archived_threads(
+            self,
+            *,
+            private: bool = False,
+            joined: bool = False,
+            limit: Optional[int] = 50,
+            before: Optional[Union[Snowflake, datetime.datetime]] = None,
+    ) -> ArchivedThreadIterator:
+        """Returns an :class:`~discord.AsyncIterator` that iterates over all archived threads in the guild.
+
+        You must have :attr:`~Permissions.read_message_history` to use this. If iterating over private threads
+        then :attr:`~Permissions.manage_threads` is also required.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        limit: Optional[:class:`bool`]
+            The number of threads to retrieve.
+            If ``None``, retrieves every archived thread in the channel. Note, however,
+            that this would make it a slow operation.
+        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve archived channels before the given date or ID.
+        private: :class:`bool`
+            Whether to retrieve private archived threads.
+        joined: :class:`bool`
+            Whether to retrieve private archived threads that you've joined.
+            You cannot set ``joined`` to ``True`` and ``private`` to ``False``.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to get archived threads.
+        HTTPException
+            The request to get the archived threads failed.
+
+        Yields
+        -------
+        :class:`Thread`
+            The archived threads.
+        """
+        return ArchivedThreadIterator(self.id, self.guild, limit=limit, joined=joined, private=private, before=before)
 
 
 DMC = TypeVar("DMC", bound="DMChannel")
