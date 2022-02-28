@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, Coroutine
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -245,7 +245,18 @@ class Interaction:
         }
         return Webhook.from_state(data=payload, state=self._state)
 
-    async def original_message(self) -> InteractionMessage:
+    def original_message(self) -> Coroutine[InteractionMessage]:
+        """
+        Alias for fetch_original_message to not break existing code.
+        Maybe throw deprecation warning in future versions.
+
+        Returns
+        --------
+        coro
+        """
+        return self.fetch_original_message()
+
+    async def fetch_original_message(self) -> InteractionMessage:
         """|coro|
 
         Fetches the original interaction response message associated with the interaction.
