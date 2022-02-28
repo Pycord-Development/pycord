@@ -76,6 +76,7 @@ __all__ = (
     "StoreChannel",
     "GroupChannel",
     "PartialMessageable",
+    "ForumChannel",
 )
 
 if TYPE_CHECKING:
@@ -93,6 +94,7 @@ if TYPE_CHECKING:
     from .types.channel import StoreChannel as StoreChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
+    from .types.channel import ForumChannel as ForumChannelPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
@@ -1808,6 +1810,50 @@ class StoreChannel(discord.abc.GuildChannel, Hashable):
         if payload is not None:
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
+        
+
+class ForumChannel(discord.abc.GuildChannel, Hashable):
+    """Represents a Discord channel forum."""
+
+    __slots__ = (
+        'name',
+        'id',
+        'guild',
+        '_state',
+        'nsfw',
+        'category_id',
+        'position',
+        '_overwrites',
+    )
+
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload):
+        self._state: ConnectionState = state
+        self.id: int = int(data["id"])
+        self._update(guild, data)
+
+    def __repr__(self) -> str:
+        return f"<ForumChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+
+    def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
+        self.guild: Guild = guild
+        self.name: str = data["name"]
+        self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
+        self.nsfw: bool = data.get("nsfw", False)
+        self.position: int = data["position"]
+        self._fill_overwrites(data)
+
+    @property
+    def _sorting_bucket(self) -> int:
+        return ChannelType.Forum.value
+
+    @property
+    def type(self) -> ChannelType:
+        """:class:`ChannelType`: The channel's Discord type."""
+        return ChannelType.Forum
+
+    def is_nsfw(self) -> bool:
+        """:class:`bool`: Checks if the Forum is NSFW."""
+        return self.nsfw
 
 
 DMC = TypeVar("DMC", bound="DMChannel")
@@ -2168,6 +2214,8 @@ def _guild_channel_factory(channel_type: int):
         return StoreChannel, value
     elif value is ChannelType.stage_voice:
         return StageChannel, value
+    elif value is ChannelType.forum:
+        return ForumChannel, value
     else:
         return None, value
 

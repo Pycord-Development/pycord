@@ -39,7 +39,7 @@ class PermissionOverwrite(TypedDict):
     deny: str
 
 
-ChannelType = Literal[0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13]
+ChannelType = Literal[0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 15]
 
 
 class _BaseChannel(TypedDict):
@@ -106,6 +106,10 @@ class StageChannel(_BaseGuildChannel, _StageChannelOptional):
     type: Literal[13]
     bitrate: int
     user_limit: int
+
+
+class ForumChannel(_BaseGuildChannel):
+    type: Literal[15]
 
 
 class _ThreadChannelOptional(TypedDict, total=False):
