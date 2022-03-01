@@ -10,6 +10,10 @@ docs/crowdin.py
 *.mp3
 *.m4a
 *.wav
+*.mp4
+*.ogg
+*.pcm
+*.png
 *.jpg
 *.flac
 *.mo
@@ -19,7 +23,11 @@ env/
 .DS_Store
 .python-version
 __pycache__
+.vs/*
+.vscode/*
+env/
+build/
+test.py
 build/
 node_modules/*
 test.py
-*.png

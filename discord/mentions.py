@@ -24,20 +24,19 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Type, TypeVar, Union, List, TYPE_CHECKING, Any, Union
 
-__all__ = (
-    'AllowedMentions',
-)
+from typing import TYPE_CHECKING, Any, List, Type, TypeVar, Union
+
+__all__ = ("AllowedMentions",)
 
 if TYPE_CHECKING:
-    from .types.message import AllowedMentions as AllowedMentionsPayload
     from .abc import Snowflake
+    from .types.message import AllowedMentions as AllowedMentionsPayload
 
 
 class _FakeBool:
     def __repr__(self):
-        return 'True'
+        return "True"
 
     def __eq__(self, other):
         return other is True
@@ -48,7 +47,7 @@ class _FakeBool:
 
 default: Any = _FakeBool()
 
-A = TypeVar('A', bound='AllowedMentions')
+A = TypeVar("A", bound="AllowedMentions")
 
 
 class AllowedMentions:
@@ -81,7 +80,7 @@ class AllowedMentions:
         .. versionadded:: 1.6
     """
 
-    __slots__ = ('everyone', 'users', 'roles', 'replied_user')
+    __slots__ = ("everyone", "users", "roles", "replied_user")
 
     def __init__(
         self,
@@ -117,22 +116,22 @@ class AllowedMentions:
         data = {}
 
         if self.everyone:
-            parse.append('everyone')
+            parse.append("everyone")
 
         if self.users == True:
-            parse.append('users')
+            parse.append("users")
         elif self.users != False:
-            data['users'] = [x.id for x in self.users]
+            data["users"] = [x.id for x in self.users]
 
         if self.roles == True:
-            parse.append('roles')
+            parse.append("roles")
         elif self.roles != False:
-            data['roles'] = [x.id for x in self.roles]
+            data["roles"] = [x.id for x in self.roles]
 
         if self.replied_user:
-            data['replied_user'] = True
+            data["replied_user"] = True
 
-        data['parse'] = parse
+        data["parse"] = parse
         return data  # type: ignore
 
     def merge(self, other: AllowedMentions) -> AllowedMentions:
@@ -147,6 +146,6 @@ class AllowedMentions:
 
     def __repr__(self) -> str:
         return (
-            f'{self.__class__.__name__}(everyone={self.everyone}, '
-            f'users={self.users}, roles={self.roles}, replied_user={self.replied_user})'
+            f"{self.__class__.__name__}(everyone={self.everyone}, "
+            f"users={self.users}, roles={self.roles}, replied_user={self.replied_user})"
         )
