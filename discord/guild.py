@@ -2474,6 +2474,38 @@ class Guild(Hashable):
         data = await self._state.http.get_roles(self.id)
         return [Role(guild=self, state=self._state, data=d) for d in data]
 
+    async def fetch_role(self, role_id: int) -> Role:
+        """|coro|
+
+        Retrieves a :class:`Role` that the guild has.
+
+        .. note::
+
+            This method is an API call. For general usage, consider iterating over :attr:`roles` instead.
+
+        .. versionadded:: 1.3
+
+        Parameters
+        -----------
+        role_id: :class:`int`
+            The role ID to fetch from the guild.
+
+        Raises
+        -------
+        HTTPException
+            Retrieving the role failed.
+
+        Returns
+        -------
+        Optional[:class:`Role`]
+            The role in the guild with the specified ID.
+            Returns ``None`` if not found.
+        """
+        roles = await self.fetch_roles()
+        for role in roles:
+            if role.id == role_id:
+                return role
+
     @overload
     async def create_role(
         self,
