@@ -2483,7 +2483,7 @@ class Guild(Hashable):
 
             This method is an API call. For general usage, consider iterating over :attr:`roles` instead.
 
-        .. versionadded:: 1.3
+        .. versionadded:: 2.0
 
         Parameters
         -----------
