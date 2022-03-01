@@ -59,6 +59,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
     from .guild import Guild
@@ -80,7 +81,6 @@ if TYPE_CHECKING:
         Thread,
         PartialMessageable,
     ]
-
 
 MISSING: Any = utils.MISSING
 
@@ -188,6 +188,11 @@ class Interaction:
                 self.user = User(state=self._state, data=data["user"])
             except KeyError:
                 pass
+
+    @property
+    def client(self) -> Client:
+        """Returns the client that sent the interaction."""
+        return self._state._get_client()
 
     @property
     def guild(self) -> Optional[Guild]:
