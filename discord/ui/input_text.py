@@ -16,6 +16,8 @@ if TYPE_CHECKING:
 class InputText:
     """Represents a UI text input field.
 
+    .. versionadded:: 2.0
+
     Parameters
     ----------
     style: :class:`discord.InputTextStyle`

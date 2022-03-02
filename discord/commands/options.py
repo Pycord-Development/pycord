@@ -74,6 +74,8 @@ class Option:
         ):
             await ctx.respond(f"Hello! Your name is {name} and you are {age} years old.")
 
+    .. versionadded:: 2.0
+
     Attributes
     ----------
     input_type: :class:`Any`
@@ -191,6 +193,8 @@ class Option:
 class OptionChoice:
     """
     Represents a name:value pairing for a selected :class:`Option`.
+
+    .. versionadded:: 2.0
 
     Attributes
     ----------
