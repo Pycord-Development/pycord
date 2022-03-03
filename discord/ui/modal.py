@@ -24,6 +24,8 @@ class Modal:
 
     This object must be inherited to create a UI within Discord.
 
+    .. versionadded:: 2.0
+
     Parameters
     ----------
     title: :class:`str`
