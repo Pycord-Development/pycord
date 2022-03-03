@@ -216,9 +216,14 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    def send_modal(self) -> Interaction:
+        """Sends a modal dialog to the user who invoked the interaction."""
+        return self.interaction.response.send_modal
+
+    @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
-        or a followup response depending if the interaction has been responded to yet or not."""
+        or a followup response depending on if the interaction has been responded to yet or not."""
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message  # self.response
         else:
