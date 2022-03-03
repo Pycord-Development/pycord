@@ -374,7 +374,7 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.children:
-            if item not in self.custom_view.children or include_custom:
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 item.disabled = True
         if page:
             await self.message.edit(
@@ -402,7 +402,7 @@ class Paginator(discord.ui.View):
         items = self.children.copy()
         page = self.get_page_content(page)
         for item in items:
-            if item not in self.custom_view.children or include_custom:
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 self.remove_item(item)
         if page:
             await self.message.edit(
@@ -737,7 +737,8 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-
+                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout
+                msg = msg.channel.get_partial_message(msg.id) or await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(
                     content=page if isinstance(page, str) else None,
@@ -745,10 +746,13 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-            if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            if isinstance(msg, discord.WebhookMessage):
+                self.message = await msg.channel.fetch_message(msg.id)
+            elif isinstance(msg, discord.Message):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
-                self.message = await msg.original_message()
+                msg = await msg.original_message()
+                self.message = await msg.channel.fetch_message(msg.id)
 
         return self.message
 
