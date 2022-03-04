@@ -11,7 +11,7 @@ In version 1.5 comes the introduction of :class:`Intents`. This is a radical cha
 
 These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument.
 
-If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.guild_messages`.
+If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.message_content`.
 
 What intents are needed?
 --------------------------
@@ -34,7 +34,7 @@ For example, if you want a bot that functions without spammy events like presenc
     # from discord.ext import commands
     # bot = commands.Bot(command_prefix='!', intents=intents)
 
-Note that this doesn't enable :attr:`Intents.members` or :attr:`Intents.guild_messages` since they are privileged intents.
+Note that this doesn't enable :attr:`Intents.members` or :attr:`Intents.message_content` since they are privileged intents.
 
 Another example showing a bot that only deals with messages and guild information:
 
@@ -57,7 +57,7 @@ Another example showing a bot that only deals with messages and guild informatio
 Privileged Intents
 ---------------------
 
-With the API change requiring bot authors to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**.
+With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**.
 
 A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:
 
@@ -84,14 +84,14 @@ A privileged intent is one that requires you to go to the developer portal and m
     through code as well.
 
 Do I need privileged intents?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a quick checklist to see if you need specific privileged intents.
 
 .. _need_presence_intent:
 
 Presence Intent
-+++++++++++++++++
++++++++++++++++
 
 - Whether you use :attr:`Member.status` at all to track member statuses.
 - Whether you use :attr:`Member.activity` or :attr:`Member.activities` to check member's activities.
@@ -99,7 +99,7 @@ Presence Intent
 .. _need_members_intent:
 
 Member Intent
-+++++++++++++++
++++++++++++++
 
 - Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events.
 - Whether you want to track member updates such as nickname or role changes.
@@ -110,15 +110,14 @@ Member Intent
 .. _need_message_content_intent:
 
 Message Content Intent
-++++++++++++++++
+++++++++++++++++++++++
 
 - Whether you have a message based command system using ext.commands
-- Whether you use the :func:`on_message` event for anything, such as auto-moderation.
-- Whether you track message edits or deletions using :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`.
-- Whether you use any reaction related events, such as :func:`on_reaction_add`, :func:`on_reaction_remove`, and :func:`on_reaction_clear`
+- Whether you use the :func:`on_message` event for anything using message content, such as auto-moderation.
+- Whether you use message content in :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`.
 
 .. note::
-    This only applies to :attr:`Intents.guild_messages`, not :attr:`Intents.dm_messages`. The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages.
+    The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages.
 
 .. _intents_member_cache:
 
@@ -143,7 +142,7 @@ Other events that take a :class:`Member` will require the use of the member cach
 .. _retrieving_members:
 
 Retrieving Members
---------------------
+------------------
 
 If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:
 
@@ -161,12 +160,12 @@ If the cache is disabled or you disable chunking guilds at startup, we might sti
 It should be noted that the gateway has a strict rate limit of 120 requests per 60 seconds.
 
 Troubleshooting
-------------------
+---------------
 
 Some common issues relating to the mandatory intent change.
 
 Where'd my members go?
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true.
 
@@ -186,7 +185,7 @@ For example:
     # bot = commands.Bot(command_prefix='!', intents=intents)
 
 Why does ``on_ready`` take so long to fire?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested.
 

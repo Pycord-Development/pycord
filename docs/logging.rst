@@ -4,7 +4,7 @@
 .. _logging_setup:
 
 Setting Up Logging
-===================
+==================
 
 *Pycord* logs errors and debug information via the :mod:`logging` python
 module. It is strongly recommended that the logging module is

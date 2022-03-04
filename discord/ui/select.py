@@ -24,35 +24,31 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Callable, Union
+
 import inspect
 import os
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Type, TypeVar, Union
 
-from .item import Item, ItemCallbackType
-from ..enums import ComponentType
-from ..partial_emoji import PartialEmoji
+from ..components import SelectMenu, SelectOption
 from ..emoji import Emoji
+from ..enums import ComponentType
 from ..interactions import Interaction
+from ..partial_emoji import PartialEmoji
 from ..utils import MISSING
-from ..components import (
-    SelectOption,
-    SelectMenu,
-)
+from .item import Item, ItemCallbackType
 
 __all__ = (
-    'Select',
-    'select',
+    "Select",
+    "select",
 )
 
 if TYPE_CHECKING:
-    from .view import View
     from ..types.components import SelectMenu as SelectMenuPayload
-    from ..types.interactions import (
-        ComponentInteractionData,
-    )
+    from ..types.interactions import ComponentInteractionData
+    from .view import View
 
-S = TypeVar('S', bound='Select')
-V = TypeVar('V', bound='View', covariant=True)
+S = TypeVar("S", bound="Select")
+V = TypeVar("V", bound="View", covariant=True)
 
 
 class Select(Item[V]):
@@ -90,17 +86,17 @@ class Select(Item[V]):
     """
 
     __item_repr_attributes__: Tuple[str, ...] = (
-        'placeholder',
-        'min_values',
-        'max_values',
-        'options',
-        'disabled',
+        "placeholder",
+        "min_values",
+        "max_values",
+        "options",
+        "disabled",
     )
 
     def __init__(
         self,
         *,
-        custom_id: str = MISSING,
+        custom_id: str = None,
         placeholder: Optional[str] = None,
         min_values: int = 1,
         max_values: int = 1,
@@ -110,8 +106,12 @@ class Select(Item[V]):
     ) -> None:
         super().__init__()
         self._selected_values: List[str] = []
-        self._provided_custom_id = custom_id is not MISSING
-        custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
+
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
+        self._provided_custom_id = custom_id is not None
+        custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         options = [] if options is MISSING else options
         self._underlying = SelectMenu._raw_construct(
             custom_id=custom_id,
@@ -132,7 +132,7 @@ class Select(Item[V]):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError('custom_id must be None or str')
+            raise TypeError("custom_id must be None or str")
 
         self._underlying.custom_id = value
 
@@ -144,7 +144,7 @@ class Select(Item[V]):
     @placeholder.setter
     def placeholder(self, value: Optional[str]):
         if value is not None and not isinstance(value, str):
-            raise TypeError('placeholder must be None or str')
+            raise TypeError("placeholder must be None or str")
 
         self._underlying.placeholder = value
 
@@ -174,9 +174,9 @@ class Select(Item[V]):
     @options.setter
     def options(self, value: List[SelectOption]):
         if not isinstance(value, list):
-            raise TypeError('options must be a list of SelectOption')
+            raise TypeError("options must be a list of SelectOption")
         if not all(isinstance(obj, SelectOption) for obj in value):
-            raise TypeError('all list items must subclass SelectOption')
+            raise TypeError("all list items must subclass SelectOption")
 
         self._underlying.options = value
 
@@ -225,7 +225,6 @@ class Select(Item[V]):
             default=default,
         )
 
-
         self.append_option(option)
 
     def append_option(self, option: SelectOption):
@@ -243,7 +242,7 @@ class Select(Item[V]):
         """
 
         if len(self._underlying.options) > 25:
-            raise ValueError('maximum number of options already provided')
+            raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
 
@@ -273,7 +272,7 @@ class Select(Item[V]):
 
     def refresh_state(self, interaction: Interaction) -> None:
         data: ComponentInteractionData = interaction.data  # type: ignore
-        self._selected_values = data.get('values', [])
+        self._selected_values = data.get("values", [])
 
     @classmethod
     def from_component(cls: Type[S], component: SelectMenu) -> S:
@@ -298,7 +297,7 @@ class Select(Item[V]):
 def select(
     *,
     placeholder: Optional[str] = None,
-    custom_id: str = MISSING,
+    custom_id: str = None,
     min_values: int = 1,
     max_values: int = 1,
     options: List[SelectOption] = MISSING,
@@ -341,17 +340,17 @@ def select(
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):
-            raise TypeError('select function must be a coroutine function')
+            raise TypeError("select function must be a coroutine function")
 
         func.__discord_ui_model_type__ = Select
         func.__discord_ui_model_kwargs__ = {
-            'placeholder': placeholder,
-            'custom_id': custom_id,
-            'row': row,
-            'min_values': min_values,
-            'max_values': max_values,
-            'options': options,
-            'disabled': disabled,
+            "placeholder": placeholder,
+            "custom_id": custom_id,
+            "row": row,
+            "min_values": min_values,
+            "max_values": max_values,
+            "options": options,
+            "disabled": disabled,
         }
         return func
 

@@ -27,13 +27,9 @@ async def global_command(ctx, num: int):  # Takes one integer parameter
 
 
 @bot.slash_command(guild_ids=[...])
-async def joined(
-    ctx, member: discord.Member = None
-):  # Passing a default value makes the argument optional
+async def joined(ctx, member: discord.Member = None):  # Passing a default value makes the argument optional
     user = member or ctx.author
-    await ctx.respond(
-        f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}"
-    )
+    await ctx.respond(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
 
 
 # To learn how to add descriptions and choices to options, check slash_options.py

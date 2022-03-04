@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import Literal, Optional, TypedDict, Union
+
 from .snowflake import Snowflake
 from .user import User
 
@@ -57,7 +58,7 @@ class PartialIntegration(TypedDict):
     account: IntegrationAccount
 
 
-IntegrationType = Literal['twitch', 'youtube', 'discord']
+IntegrationType = Literal["twitch", "youtube", "discord"]
 
 
 class BaseIntegration(PartialIntegration):

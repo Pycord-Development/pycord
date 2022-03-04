@@ -95,9 +95,77 @@ AutoShardedBot
 
 Application Commands
 ---------------------
-.. attributetable:: ApplicationCommandMixin
 
-.. autoclass:: ApplicationCommandMixin
+ApplicationCommand
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationCommand
+
+.. autoclass:: ApplicationCommand
+    :members:
+
+SlashCommand
+~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommand
+
+.. autoclass:: SlashCommand
+    :members:
+
+SlashCommandGroup
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommandGroup
+
+.. autoclass:: SlashCommandGroup
+    :members:
+
+Option
+~~~~~~~
+
+.. attributetable:: Option
+
+.. autoclass:: Option
+    :members:
+
+OptionChoice
+~~~~~~~~~~~~~
+
+.. attributetable:: OptionChoice
+
+.. autoclass:: OptionChoice
+    :members:
+
+UserCommand
+~~~~~~~~~~~~
+
+.. attributetable:: UserCommand
+
+.. autoclass:: UserCommand
+    :members:
+
+MessageCommand
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageCommand
+
+.. autoclass:: MessageCommand
+    :members:
+
+ApplicationContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationContext
+
+.. autoclass:: ApplicationContext
+    :members:
+
+AutocompleteContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutocompleteContext
+
+.. autoclass:: AutocompleteContext
     :members:
 
 Application Info
@@ -415,7 +483,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_raw_typing(payload)
 
-    Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
+    Called when someone begins typing a message. Unlike :func:`on_typing`, this is
     called regardless if the user can be found in the bot's cache or not.
 
     If the typing event is occurring in a guild,
@@ -685,6 +753,36 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param interaction: The interaction data.
     :type interaction: :class:`Interaction`
 
+.. function:: on_application_command(context)
+
+    Called when an application command is received.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command being received.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_completion(context)
+
+    Called when an application command is completed, after any checks have finished.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that was completed.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_error(context, exception)
+
+    Called when an application command has an error.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that has an error.
+    :type context: :class:`ApplicationContext`
+
+    :param exception: The DiscordException associated to the error.
+    :type exception: :class:`DiscordException`
+
 .. function:: on_private_channel_update(before, after)
 
     Called whenever a private group DM is updated. e.g. changed name or topic.
@@ -775,7 +873,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_thread_delete(thread)
 
-    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache 
+    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache
     then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
 
 
@@ -789,7 +887,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type thread: :class:`Thread`
 
 .. function:: on_raw_thread_delete(payload)
-    
+
     Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called
     regardless of the state of the internal cache.
 
@@ -895,6 +993,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     - nickname
     - roles
     - pending
+    - communication_disabled_until
+    - timed_out
 
     This requires :attr:`Intents.members` to be enabled.
 
@@ -1273,6 +1373,8 @@ Utility Functions
 
 .. autofunction:: discord.utils.generate_snowflake
 
+.. autofunction:: discord.utils.basic_autocomplete
+
 .. _discord-api-enums:
 
 Enumerations
@@ -1283,6 +1385,47 @@ from being stringly typed in case the strings change in the future.
 
 All enumerations are subclasses of an internal class which mimics the behaviour
 of :class:`enum.Enum`.
+
+.. class:: SlashCommandOptionType
+
+    Specifies the input type of an option.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: sub_command
+
+        A slash subcommand.
+    .. attribute:: sub_command_group
+
+        A slash command group.
+    .. attribute:: string
+
+        A string.
+    .. attribute:: integer
+
+        An integer.
+    .. attribute:: boolean
+
+        A boolean.
+    .. attribute:: user
+
+        A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`
+    .. attribute:: channel
+
+        A channel from the current guild.
+    .. attribute:: role
+
+        A role from the current guild.
+    .. attribute:: mentionable
+
+        A mentionable (user or role).
+    .. attribute:: number
+
+        A floating number.
+
+    .. attribute:: attachment
+
+        An attachment. Currently in beta.
 
 .. class:: ChannelType
 
@@ -2516,17 +2659,59 @@ of :class:`enum.Enum`.
 
         A scheduled event was created.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
+
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_update
 
         A scheduled event was updated.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
+
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_delete
 
         A scheduled event was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~AuditLogDiff.location`
+        - :attr:`~AuditLogDiff.status`
+        - :attr:`~AuditLogDiff.location_type`
 
         .. versionadded:: 2.0
 
@@ -2544,6 +2729,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2561,6 +2747,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2578,6 +2765,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2727,7 +2915,9 @@ of :class:`enum.Enum`.
 
     .. attribute:: embedded_application
 
-        A stream invite that targets an embedded application.
+        A invite that targets an embedded application.
+
+        Note that your bot won't be verified if you provide users access to this
 
 .. class:: VideoQualityMode
 
@@ -2746,12 +2936,10 @@ of :class:`enum.Enum`.
 .. class:: StagePrivacyLevel
 
     Represents a stage instance's privacy level.
+    Stage event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
 
     .. versionadded:: 2.0
-
-    .. attribute:: public
-
-        The stage instance can be joined by external users.
 
     .. attribute:: closed
 
@@ -2808,32 +2996,40 @@ of :class:`enum.Enum`.
 
     Represents an embedded activity application.
 
+    Some might be boost-only or gated.
+
+    .. warning::
+
+        Discord said that they won't verify bots who gives access to embedded activities.
+
+        Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321.
+
     .. versionadded:: 2.0
 
     .. attribute:: awkword
-        
+
         Represents the embedded application Awkword.
 
     .. attribute:: betrayal
 
         Represents the embedded application Betrayal.io
-    
+
     .. attribute:: checkers_in_the_park
 
         Represents the embedded application Checkers in the Park Prod.
-    
+
     .. attribute:: checkers_in_the_park_dev
 
         Represents the embedded application Checkers in the Park Development.
-    
+
     .. attribute:: checkers_in_the_park_staging
-        
+
         Represents the embedded application Checkers in the Park Staging.
-    
+
     .. attribute:: checkers_in_the_park_qa
-        
+
         Represents the embedded application Checkers in the Park QA.
-    
+
     .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
@@ -2843,13 +3039,13 @@ of :class:`enum.Enum`.
         Represents the embedded application Chess in the Park Development.
 
     .. attribute:: chest_in_the_park_staging
-        
+
         Represents the embedded application Chess in the Park Staging.
 
     .. attribute:: chest_in_the_park_qa
-        
+
         Represents the embedded application Chess in the Park QA.
-    
+
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
@@ -2861,9 +3057,9 @@ of :class:`enum.Enum`.
     .. attribute:: letter_tile
 
         Represents the embedded application Letter Tile.
-    
+
     .. attribute:: ocho
-    
+
         Represents the embedded application Ocho.
 
     .. attribute:: ocho_dev
@@ -2871,37 +3067,37 @@ of :class:`enum.Enum`.
         Represents the embedded application Ocho Development.
 
     .. attribute:: ocho_staging
-        
+
         Represents the embedded application Ocho Staging.
-    
+
     .. attribute:: ocho_qa
-        
+
         Represents the embedded application Ocho QA.
-    
-    .. attribute:: pn_stagging
+
+    .. attribute:: poker_night_staging
 
         Represents the embedded application Poker Night Staging.
 
     .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
-     
-    .. attribute:: poker_night
+
+    .. attribute:: poker_night_qa
 
         Represents the embedded application Poker QA.
-    
+
     .. attribute:: putts
-        
+
         Represents the embedded application Putts.
 
-    .. attribute:: sketchy_artist 
-        
+    .. attribute:: sketchy_artist
+
         Represents the embedded application Sketchy Artist.
-    
+
     .. attribute:: sketchy_artist_dev
-        
+
         Represents the embedded application Sketchy Artist development version.
-    
+
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
@@ -2909,19 +3105,19 @@ of :class:`enum.Enum`.
     .. attribute:: watch_together
 
         Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
-        
+
     .. attribute:: watch_together_dev
 
         Development version of :attr:`.watch_together`.
 
     .. attribute:: word_snacks
-        
+
         Represents the embedded application word snacks.
-    
+
     .. attribute:: word_snacks_dev
-        
+
         Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
-        
+
     .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
@@ -3397,9 +3593,9 @@ AuditLogDiff
 
     .. attribute:: privacy_level
 
-        The privacy level of the stage instance.
+        The privacy level of the stage instance or scheduled event.
 
-        :type: :class:`StagePrivacyLevel`
+        :type: :class:`StagePrivacyLevel` or :class:`ScheduledEventPrivacyLevel`
 
     .. attribute:: roles
 
@@ -3959,6 +4155,14 @@ InteractionMessage
 .. autoclass:: InteractionMessage()
     :members:
 
+MessageInteraction
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageInteraction
+
+.. autoclass:: MessageInteraction()
+    :members:
+
 Member
 ~~~~~~
 
@@ -4182,7 +4386,7 @@ Template
 
 .. autoclass:: Template()
     :members:
-        
+
 WelcomeScreen
 ~~~~~~~~~~~~~~~
 
@@ -4598,6 +4802,98 @@ Select
 
 .. autofunction:: discord.ui.select
 
+Modal
+~~~~~
+
+.. attributetable:: discord.ui.Modal
+
+.. autoclass:: discord.ui.Modal
+    :members:
+    :inherited-members:
+
+InputText
+~~~~~~~~~
+
+.. attributetable:: discord.ui.InputText
+
+.. autoclass:: discord.ui.InputText
+    :members:
+    :inherited-members:
+
+Sink Core
+---------
+
+.. autoclass:: discord.sinks.Filters
+    :members:
+
+.. autoclass:: discord.sinks.Sink
+    :members:
+
+.. autoclass:: discord.sinks.AudioData
+    :members:
+
+.. autoclass:: discord.sinks.RawData
+    :members:
+
+
+Sinks
+-----
+
+.. autoclass:: discord.sinks.WaveSink
+    :members:
+
+.. autoclass:: discord.sinks.MP3Sink
+    :members:
+
+.. autoclass:: discord.sinks.MP4Sink
+    :members:
+
+.. autoclass:: discord.sinks.M4ASink
+    :members:
+
+.. autoclass:: discord.sinks.MKVSink
+    :members:
+
+.. autoclass:: discord.sinks.MKASink
+    :members:
+
+.. autoclass:: discord.sinks.OGGSink
+    :members:
+
+
+Sink Error Reference
+--------------------
+
+.. autoexception:: discord.sinks.WaveSinkError
+
+.. autoexception:: discord.sinks.MP3SinkError
+
+.. autoexception:: discord.sinks.MP4SinkError
+
+.. autoexception:: discord.sinks.M4ASinkError
+
+.. autoexception:: discord.sinks.MKVSinkError
+
+.. autoexception:: discord.sinks.MKASinkError
+
+.. autoexception:: discord.sinks.OGGSinkError
+
+Sink Exception Hierarchy
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. exception_hierarchy::
+
+    - :exc:`DiscordException`
+        - :exc:`SinkException`
+            - :exc:`RecordingException`
+            - :exc:`WaveSinkError`
+            - :exc:`MP3SinkError`
+            - :exc:`MP4SinkError`
+            - :exc:`M4ASinkError`
+            - :exc:`MKVSinkError`
+            - :exc:`MKASinkError`
+            - :exc:`OGGSinkError`
+
 
 Exceptions
 ------------
@@ -4645,6 +4941,7 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
+                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
