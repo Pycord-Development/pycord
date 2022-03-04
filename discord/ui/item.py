@@ -25,21 +25,30 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Coroutine, Dict, Generic, Optional, TYPE_CHECKING, Tuple, Type, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    Generic,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+)
 
 from ..interactions import Interaction
 
-__all__ = (
-    'Item',
-)
+__all__ = ("Item",)
 
 if TYPE_CHECKING:
+    from ..components import Component
     from ..enums import ComponentType
     from .view import View
-    from ..components import Component
 
-I = TypeVar('I', bound='Item')
-V = TypeVar('V', bound='View', covariant=True)
+I = TypeVar("I", bound="Item")
+V = TypeVar("V", bound="View", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 
@@ -54,7 +63,7 @@ class Item(Generic[V]):
     .. versionadded:: 2.0
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = ('row',)
+    __item_repr_attributes__: Tuple[str, ...] = ("row",)
 
     def __init__(self):
         self._view: Optional[V] = None
@@ -92,8 +101,8 @@ class Item(Generic[V]):
         return self._provided_custom_id
 
     def __repr__(self) -> str:
-        attrs = ' '.join(f'{key}={getattr(self, key)!r}' for key in self.__item_repr_attributes__)
-        return f'<{self.__class__.__name__} {attrs}>'
+        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
+        return f"<{self.__class__.__name__} {attrs}>"
 
     @property
     def row(self) -> Optional[int]:
@@ -106,7 +115,7 @@ class Item(Generic[V]):
         elif 5 > value >= 0:
             self._row = value
         else:
-            raise ValueError('row cannot be negative or greater than or equal to 5')
+            raise ValueError("row cannot be negative or greater than or equal to 5")
 
     @property
     def width(self) -> int:

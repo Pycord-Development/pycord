@@ -26,14 +26,23 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import Any, Dict, Final, List, Mapping, Protocol, TYPE_CHECKING, Type, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Final,
+    List,
+    Mapping,
+    Protocol,
+    Type,
+    TypeVar,
+    Union,
+)
 
 from . import utils
 from .colour import Colour
 
-__all__ = (
-    'Embed',
-)
+__all__ = ("Embed",)
 
 
 class _EmptyEmbed:
@@ -41,7 +50,7 @@ class _EmptyEmbed:
         return False
 
     def __repr__(self) -> str:
-        return 'Embed.Empty'
+        return "Embed.Empty"
 
     def __len__(self) -> int:
         return 0
@@ -58,19 +67,20 @@ class EmbedProxy:
         return len(self.__dict__)
 
     def __repr__(self) -> str:
-        inner = ', '.join((f'{k}={v!r}' for k, v in self.__dict__.items() if not k.startswith('_')))
-        return f'EmbedProxy({inner})'
+        inner = ", ".join((f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_")))
+        return f"EmbedProxy({inner})"
 
     def __getattr__(self, attr: str) -> _EmptyEmbed:
         return EmptyEmbed
 
 
-E = TypeVar('E', bound='Embed')
+E = TypeVar("E", bound="Embed")
 
 if TYPE_CHECKING:
-    from discord.types.embed import Embed as EmbedData, EmbedType
+    from discord.types.embed import Embed as EmbedData
+    from discord.types.embed import EmbedType
 
-    T = TypeVar('T')
+    T = TypeVar("T")
     MaybeEmpty = Union[T, _EmptyEmbed]
 
     class _EmbedFooterProxy(Protocol):
@@ -158,19 +168,19 @@ class Embed:
     """
 
     __slots__ = (
-        'title',
-        'url',
-        'type',
-        '_timestamp',
-        '_colour',
-        '_footer',
-        '_image',
-        '_thumbnail',
-        '_video',
-        '_provider',
-        '_author',
-        '_fields',
-        'description',
+        "title",
+        "url",
+        "type",
+        "_timestamp",
+        "_colour",
+        "_footer",
+        "_image",
+        "_thumbnail",
+        "_video",
+        "_provider",
+        "_author",
+        "_fields",
+        "description",
     )
 
     Empty: Final = EmptyEmbed
@@ -181,7 +191,7 @@ class Embed:
         colour: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
         color: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
         title: MaybeEmpty[Any] = EmptyEmbed,
-        type: EmbedType = 'rich',
+        type: EmbedType = "rich",
         url: MaybeEmpty[Any] = EmptyEmbed,
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
@@ -226,10 +236,10 @@ class Embed:
 
         # fill in the basic fields
 
-        self.title = data.get('title', EmptyEmbed)
-        self.type = data.get('type', EmptyEmbed)
-        self.description = data.get('description', EmptyEmbed)
-        self.url = data.get('url', EmptyEmbed)
+        self.title = data.get("title", EmptyEmbed)
+        self.type = data.get("type", EmptyEmbed)
+        self.description = data.get("description", EmptyEmbed)
+        self.url = data.get("url", EmptyEmbed)
 
         if self.title is not EmptyEmbed:
             self.title = str(self.title)
@@ -243,22 +253,30 @@ class Embed:
         # try to fill in the more rich fields
 
         try:
-            self._colour = Colour(value=data['color'])
+            self._colour = Colour(value=data["color"])
         except KeyError:
             pass
 
         try:
-            self._timestamp = utils.parse_time(data['timestamp'])
+            self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
 
-        for attr in ('thumbnail', 'video', 'provider', 'author', 'fields', 'image', 'footer'):
+        for attr in (
+            "thumbnail",
+            "video",
+            "provider",
+            "author",
+            "fields",
+            "image",
+            "footer",
+        ):
             try:
                 value = data[attr]
             except KeyError:
                 continue
             else:
-                setattr(self, '_' + attr, value)
+                setattr(self, f"_{attr}", value)
 
         return self
 
@@ -268,11 +286,11 @@ class Embed:
 
     def __len__(self) -> int:
         total = len(self.title) + len(self.description)
-        for field in getattr(self, '_fields', []):
-            total += len(field['name']) + len(field['value'])
+        for field in getattr(self, "_fields", []):
+            total += len(field["name"]) + len(field["value"])
 
         try:
-            footer_text = self._footer['text']
+            footer_text = self._footer["text"]
         except (AttributeError, KeyError):
             pass
         else:
@@ -283,7 +301,7 @@ class Embed:
         except AttributeError:
             pass
         else:
-            total += len(author['name'])
+            total += len(author["name"])
 
         return total
 
@@ -307,7 +325,7 @@ class Embed:
 
     @property
     def colour(self) -> MaybeEmpty[Colour]:
-        return getattr(self, '_colour', EmptyEmbed)
+        return getattr(self, "_colour", EmptyEmbed)
 
     @colour.setter
     def colour(self, value: Union[int, Colour, _EmptyEmbed]):  # type: ignore
@@ -316,13 +334,15 @@ class Embed:
         elif isinstance(value, int):
             self._colour = Colour(value=value)
         else:
-            raise TypeError(f'Expected discord.Colour, int, or Embed.Empty but received {value.__class__.__name__} instead.')
+            raise TypeError(
+                f"Expected discord.Colour, int, or Embed.Empty but received {value.__class__.__name__} instead."
+            )
 
     color = colour
 
     @property
     def timestamp(self) -> MaybeEmpty[datetime.datetime]:
-        return getattr(self, '_timestamp', EmptyEmbed)
+        return getattr(self, "_timestamp", EmptyEmbed)
 
     @timestamp.setter
     def timestamp(self, value: MaybeEmpty[datetime.datetime]):
@@ -343,9 +363,14 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_footer', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_footer", {}))  # type: ignore
 
-    def set_footer(self: E, *, text: MaybeEmpty[Any] = EmptyEmbed, icon_url: MaybeEmpty[Any] = EmptyEmbed) -> E:
+    def set_footer(
+        self: E,
+        *,
+        text: MaybeEmpty[Any] = EmptyEmbed,
+        icon_url: MaybeEmpty[Any] = EmptyEmbed,
+    ) -> E:
         """Sets the footer for the embed content.
 
         This function returns the class instance to allow for fluent-style
@@ -361,13 +386,13 @@ class Embed:
 
         self._footer = {}
         if text is not EmptyEmbed:
-            self._footer['text'] = str(text)
+            self._footer["text"] = str(text)
 
         if icon_url is not EmptyEmbed:
-            self._footer['icon_url'] = str(icon_url)
+            self._footer["icon_url"] = str(icon_url)
 
         return self
-    
+
     def remove_footer(self: E) -> E:
         """Clears embed's footer information.
 
@@ -382,7 +407,7 @@ class Embed:
             pass
 
         return self
-    
+
     @property
     def image(self) -> _EmbedMediaProxy:
         """Returns an ``EmbedProxy`` denoting the image contents.
@@ -396,7 +421,7 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_image', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_image", {}))  # type: ignore
 
     def set_image(self: E, *, url: MaybeEmpty[Any]) -> E:
         """Sets the image for the embed content.
@@ -420,7 +445,7 @@ class Embed:
                 pass
         else:
             self._image = {
-                'url': str(url),
+                "url": str(url),
             }
 
         return self
@@ -437,9 +462,8 @@ class Embed:
             del self._image
         except AttributeError:
             pass
-        
-        return self
 
+        return self
 
     @property
     def thumbnail(self) -> _EmbedMediaProxy:
@@ -454,7 +478,7 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_thumbnail', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_thumbnail", {}))  # type: ignore
 
     def set_thumbnail(self: E, *, url: MaybeEmpty[Any]) -> E:
         """Sets the thumbnail for the embed content.
@@ -478,14 +502,14 @@ class Embed:
                 pass
         else:
             self._thumbnail = {
-                'url': str(url),
+                "url": str(url),
             }
 
         return self
 
     def remove_thumbnail(self: E) -> E:
         """Removes the embed's thumbnail.
-        
+
         This function returns the class instance to allow for fluent-style
         chaining.
 
@@ -495,7 +519,7 @@ class Embed:
             del self._thumbnail
         except AttributeError:
             pass
-        
+
         return self
 
     @property
@@ -510,7 +534,7 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_video', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_video", {}))  # type: ignore
 
     @property
     def provider(self) -> _EmbedProviderProxy:
@@ -520,7 +544,7 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_provider', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_provider", {}))  # type: ignore
 
     @property
     def author(self) -> _EmbedAuthorProxy:
@@ -530,9 +554,15 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, '_author', {}))  # type: ignore
+        return EmbedProxy(getattr(self, "_author", {}))  # type: ignore
 
-    def set_author(self: E, *, name: Any, url: MaybeEmpty[Any] = EmptyEmbed, icon_url: MaybeEmpty[Any] = EmptyEmbed) -> E:
+    def set_author(
+        self: E,
+        *,
+        name: Any,
+        url: MaybeEmpty[Any] = EmptyEmbed,
+        icon_url: MaybeEmpty[Any] = EmptyEmbed,
+    ) -> E:
         """Sets the author for the embed content.
 
         This function returns the class instance to allow for fluent-style
@@ -549,14 +579,14 @@ class Embed:
         """
 
         self._author = {
-            'name': str(name),
+            "name": str(name),
         }
 
         if url is not EmptyEmbed:
-            self._author['url'] = str(url)
+            self._author["url"] = str(url)
 
         if icon_url is not EmptyEmbed:
-            self._author['icon_url'] = str(icon_url)
+            self._author["icon_url"] = str(icon_url)
 
         return self
 
@@ -583,7 +613,7 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return [EmbedProxy(d) for d in getattr(self, '_fields', [])]  # type: ignore
+        return [EmbedProxy(d) for d in getattr(self, "_fields", [])]  # type: ignore
 
     def add_field(self: E, *, name: Any, value: Any, inline: bool = True) -> E:
         """Adds a field to the embed object.
@@ -602,9 +632,9 @@ class Embed:
         """
 
         field = {
-            'inline': inline,
-            'name': str(name),
-            'value': str(value),
+            "inline": inline,
+            "name": str(name),
+            "value": str(value),
         }
 
         try:
@@ -635,9 +665,9 @@ class Embed:
         """
 
         field = {
-            'inline': inline,
-            'name': str(name),
-            'value': str(value),
+            "inline": inline,
+            "name": str(name),
+            "value": str(value),
         }
 
         try:
@@ -703,57 +733,51 @@ class Embed:
         try:
             field = self._fields[index]
         except (TypeError, IndexError, AttributeError):
-            raise IndexError('field index out of range')
+            raise IndexError("field index out of range")
 
-        field['name'] = str(name)
-        field['value'] = str(value)
-        field['inline'] = inline
+        field["name"] = str(name)
+        field["value"] = str(value)
+        field["inline"] = inline
         return self
 
     def to_dict(self) -> EmbedData:
         """Converts this embed object into a dict."""
 
         # add in the raw data into the dict
-        # fmt: off
-        result = {
-            key[1:]: getattr(self, key)
-            for key in self.__slots__
-            if key[0] == '_' and hasattr(self, key)
-        }
-        # fmt: on
+        result = {key[1:]: getattr(self, key) for key in self.__slots__ if key[0] == "_" and hasattr(self, key)}
 
         # deal with basic convenience wrappers
 
         try:
-            colour = result.pop('colour')
+            colour = result.pop("colour")
         except KeyError:
             pass
         else:
             if colour:
-                result['color'] = colour.value
+                result["color"] = colour.value
 
         try:
-            timestamp = result.pop('timestamp')
+            timestamp = result.pop("timestamp")
         except KeyError:
             pass
         else:
             if timestamp:
                 if timestamp.tzinfo:
-                    result['timestamp'] = timestamp.astimezone(tz=datetime.timezone.utc).isoformat()
+                    result["timestamp"] = timestamp.astimezone(tz=datetime.timezone.utc).isoformat()
                 else:
-                    result['timestamp'] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
+                    result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
 
         # add in the non raw attribute ones
         if self.type:
-            result['type'] = self.type
+            result["type"] = self.type
 
         if self.description:
-            result['description'] = self.description
+            result["description"] = self.description
 
         if self.url:
-            result['url'] = self.url
+            result["url"] = self.url
 
         if self.title:
-            result['title'] = self.title
+            result["title"] = self.title
 
         return result  # type: ignore

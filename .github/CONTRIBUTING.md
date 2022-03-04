@@ -31,7 +31,7 @@ If the bug report is missing this information then it'll take us longer to fix t
 
 ## Submitting a Pull Request
 
-Submitting a pull request is fairly simple, just make sure it focuses on a single aspect and doesn't manage to have scope creep and it's probably good to go. It would be incredibly lovely if the style is consistent to that found in the project. This project follows PEP-8 guidelines (mostly) with a column limit of 125.
+Submitting a pull request is fairly simple, just make sure it focuses on a single aspect and doesn't manage to have scope creep and it's probably good to go. It would be incredibly lovely if the style is consistent to that found in the project. This project follows PEP-8 guidelines (mostly) with a column limit of 120.
 
 ## Use of "type: ignore" comments
 In some cases, it might be necessary to ignore type checker warnings for one reason or another.
@@ -46,7 +46,7 @@ By submitting a pull request, you agree that; 1) You hold the copyright on all s
 
 Not following this guideline could lead to your pull being squashed for a cleaner commit history
 
-Some style guides we would recommed using in your pulls:
+Some style guides we would recommend using in your pulls:
 
 The [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style is a very widely used style and a good style to start with.
 

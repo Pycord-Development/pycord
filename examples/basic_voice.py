@@ -1,3 +1,5 @@
+# This example requires the 'message_content' privileged intent.
+
 import asyncio
 
 import youtube_dl
@@ -40,9 +42,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(
-            None, lambda: ytdl.extract_info(url, download=not stream)
-        )
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
 
         if "entries" in data:
             # Takes the first item from a playlist
@@ -70,9 +70,7 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(
-            source, after=lambda e: print(f"Player error: {e}") if e else None
-        )
+        ctx.voice_client.play(source, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {query}")
 
@@ -82,9 +80,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
-            )
+            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {player.title}")
 
@@ -94,9 +90,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(
-                player, after=lambda e: print(f"Player error: {e}") if e else None
-            )
+            ctx.voice_client.play(player, after=lambda e: print(f"Player error: {e}") if e else None)
 
         await ctx.send(f"Now playing: {player.title}")
 
@@ -129,10 +123,13 @@ class Music(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
 
+intents = discord.Intents.default()
+intents.message_content = True
 
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or("!"),
     description="Relatively simple music bot example",
+    intents=intents,
 )
 
 
