@@ -23,9 +23,22 @@ class Modal:
     """Represents a UI Modal dialog.
 
     This object must be inherited to create a UI within Discord.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    title: :class:`str`
+        The title of the modal dialog.
+        Must be 45 characters or fewer.
+    custom_id: Optional[:class:`str`] = None
+        The ID of the modal dialog that gets received during an interaction.
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []

@@ -60,6 +60,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
     from .guild import Guild
@@ -81,7 +82,6 @@ if TYPE_CHECKING:
         Thread,
         PartialMessageable,
     ]
-
 
 MISSING: Any = utils.MISSING
 
@@ -119,6 +119,8 @@ class Interaction:
         The users locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
+    custom_id: Optional[:class:`str`]
+        The custom ID for the interaction.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -134,6 +136,7 @@ class Interaction:
         "guild_locale",
         "token",
         "version",
+        "custom_id",
         "_permissions",
         "_state",
         "_session",
@@ -160,6 +163,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
+        self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
         try:
@@ -185,6 +189,11 @@ class Interaction:
                 self.user = User(state=self._state, data=data["user"])
             except KeyError:
                 pass
+
+    @property
+    def client(self) -> Client:
+        """Returns the client that sent the interaction."""
+        return self._state._get_client()
 
     @property
     def guild(self) -> Optional[Guild]:
@@ -478,7 +487,7 @@ class InteractionResponse:
                 defer_type = InteractionResponseType.deferred_channel_message.value
             else:
                 defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type is InteractionType.application_command:
+        elif parent.type in (InteractionType.application_command, InteractionType.modal_submit):
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
                 data = {"flags": 64}
@@ -796,7 +805,23 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal):
+    async def send_modal(self, modal: Modal) -> Interaction:
+        """|coro|
+        Responds to this interaction by sending a modal dialog.
+        This cannot be used to respond to another modal dialog submission.
+
+        Parameters
+        ----------
+        modal: :class:`discord.ui.Modal`
+            The modal dialog to display to the user.
+
+        Raises
+        ------
+        HTTPException
+            Sending the modal failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
         if self._responded:
             raise InteractionResponded(self._parent)
 
@@ -813,6 +838,7 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return self._parent
 
     async def _locked_response(self, coro: Coroutine[Any]):
         """|coro|

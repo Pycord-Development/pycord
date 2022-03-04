@@ -216,6 +216,11 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    def send_modal(self) -> Interaction:
+        """Sends a modal dialog to the user who invoked the interaction."""
+        return self.interaction.response.send_modal
+
+    @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
         or a followup response depending if the interaction has been responded to yet or not."""
@@ -301,7 +306,7 @@ class AutocompleteContext:
         The option the user is currently typing.
     value: :class:`.str`
         The content of the focused option.
-    options :class:`.dict`
+    options: :class:`.dict`
         A name to value mapping of the options that the user has selected before this option.
     """
 
