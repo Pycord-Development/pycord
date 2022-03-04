@@ -38,6 +38,7 @@ from .enums import (
 from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
+from .object import Object
 
 __all__ = (
     "ScheduledEvent",
@@ -73,7 +74,7 @@ class ScheduledEventLocation:
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
@@ -91,9 +92,9 @@ class ScheduledEventLocation:
         value: Union[str, int, StageChannel, VoiceChannel],
     ):
         self._state = state
-        self.value: Union[str, StageChannel, VoiceChannel]
+        self.value: Union[str, StageChannel, VoiceChannel, Object]
         if isinstance(value, int):
-            self.value = self._state._get_guild_channel({"channel_id": int(value)})
+            self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
         else:
             self.value = value
 
