@@ -109,7 +109,7 @@ class StageInstance(Hashable):
         return self._state.get_channel(self.channel_id)  # type: ignore
 
     def is_public(self) -> bool:
-        return self.privacy_level is StagePrivacyLevel.public
+        return StagePrivacyLevel.guild_only
 
     async def edit(
         self,
