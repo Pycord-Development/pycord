@@ -776,6 +776,7 @@ class PaginatorMenu(discord.ui.Select):
         self,
         page_groups: List[PageGroup],
         placeholder: str = "Select Page Group",
+        custom_id: Optional[str] = None,
     ):
         self.page_groups = page_groups
         self.paginator: Optional[Paginator] = None
@@ -788,7 +789,7 @@ class PaginatorMenu(discord.ui.Select):
             )
             for page_group in self.page_groups
         ]
-        super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts)
+        super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts, custom_id=custom_id)
 
     async def callback(self, interaction: discord.Interaction):
         selection = self.values[0]
