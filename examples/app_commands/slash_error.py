@@ -2,7 +2,7 @@ import discord
 
 bot = discord.Bot()
 
-
+# note - You can use this in a cog using @commands.Cog.listiner(), but it will only see application errors also in that cog, unlike on_command_error
 
 # for more permissions, check slash_perms.py
 @bot.slash_command(guild_ids=[...])  # create a slash command that requires ban_members permission
