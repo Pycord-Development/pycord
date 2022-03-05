@@ -738,7 +738,7 @@ class Paginator(discord.ui.View):
                     ephemeral=ephemeral,
                 )
                 # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout
-                msg = msg.channel.get_partial_message(msg.id) or await msg.channel.fetch_message(msg.id)
+                msg = await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(
                     content=page if isinstance(page, str) else None,
