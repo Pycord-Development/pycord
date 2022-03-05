@@ -71,6 +71,9 @@ if TYPE_CHECKING:
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
     from .ui.view import View
+    from .webhook import WebhookMessage
+
+    from typing import Callable, Awaitable
 
     InteractionChannel = Union[
         VoiceChannel,
@@ -230,6 +233,15 @@ class Interaction:
         In a non-guild context where this doesn't apply, an empty permissions object is returned.
         """
         return Permissions(self._permissions)
+
+    @property
+    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
+        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+        or a followup response depending on if the interaction has been responded to yet or not."""
+        if not self.response.is_done():
+            return self.response.send_message  # self.response
+        else:
+            return self.followup.send  # self.send_followup
 
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
