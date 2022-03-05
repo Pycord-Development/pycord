@@ -96,7 +96,7 @@ class Select(Item[V]):
     def __init__(
         self,
         *,
-        custom_id: str = MISSING,
+        custom_id: str = None,
         placeholder: Optional[str] = None,
         min_values: int = 1,
         max_values: int = 1,
@@ -110,8 +110,8 @@ class Select(Item[V]):
         if not (isinstance(custom_id, str) or custom_id is None):
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
-        self._provided_custom_id = custom_id is not MISSING
-        custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
+        self._provided_custom_id = custom_id is not None
+        custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         options = [] if options is MISSING else options
         self._underlying = SelectMenu._raw_construct(
             custom_id=custom_id,
@@ -297,7 +297,7 @@ class Select(Item[V]):
 def select(
     *,
     placeholder: Optional[str] = None,
-    custom_id: str = MISSING,
+    custom_id: str = None,
     min_values: int = 1,
     max_values: int = 1,
     options: List[SelectOption] = MISSING,

@@ -60,36 +60,58 @@ class ThreadOption:
 
 
 class Option:
-    r"""
-    A class that implements Slash Command arguments which are called "Options".
+    """Represents a selectable option for a slash command.
 
-    This should only be implemented when defining a slash command with the options
-    decorator, options kwarg in the slash_command decorator, or just defining it
-    directly in the function parameters.
+    Examples
+    --------
+    Basic usage: ::
+
+        @bot.slash_command(guild_ids=[...])
+        async def hello(
+            ctx: discord.ApplicationContext,
+            name: Option(str, "Enter your name"),
+            age: Option(int, "Enter your age", min_value=1, max_value=99, default=18)
+            # passing the default value makes an argument optional
+            # you also can create optional argument using:
+            # age: Option(int, "Enter your age") = 18
+        ):
+            await ctx.respond(f"Hello! Your name is {name} and you are {age} years old.")
+
+    .. versionadded:: 2.0
 
     Attributes
     ----------
     input_type: :class:`Any`
-        The input type for this Option. This attribute is set to None by default.
+        The type of input that is expected for this option. 
+        This is automatically set to `None` by default.
     description: :class:`str`
-        The description of this Option. This attribute is set to None by default.
+        The description of this option.
+        Must be 100 characters or fewer.
     name: :class:`str`
-        The name of this Option.
-    required: :class:`bool`
-        If this Option is required or not. If the default attribute is set and
-        this isn't set, then this is set to False. Otherwise, it's set to true.
-    default: :class:`Any`
-        The default value for this Option if no value is set.
-    min_value: :class:`Union[int, float]`
-        The minimum value for this Option if it's a number type.
-    max_value: :class:`Union[int, float]`
-        The maximum value for this Option if it's a number type.
-    choices: :class:`OptionChoice`
-        Instead of the user typing in a value, this allows the user to select
-        between pre-defined values.
-    channel_types: :class:`List[ChannelType]`
-    """
+        The name of this option visible in the UI.
+        Inherits from the variable name if not provided as a parameter.
+    choices: Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]
+        The list of available choices for this option.
+        Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
+        If provided, the input from the user must match one of the choices in the list.
+    required: Optional[:class:`bool`]
+        Whether this option is required.
+    default: Optional[:class:`Any`]
+        The default value for this option. If provided, ``required`` will be considered ``False``.
+    min_value: Optional[:class:`int`]
+        The minimum value that can be entered.
+        Only applies to Options with an input_type of ``int`` or ``float``.
+    max_value: Optional[:class:`int`]
+        The maximum value that can be entered.
+        Only applies to Options with an input_type of ``int`` or ``float``.
+    autocomplete: Optional[:class:`Any`]
+        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
+        single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
+        .. note::
+
+            Does not validate the input value against the autocomplete results.
+    """
     def __init__(self, input_type=None, /, description: str = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         self.description = description or "No description provided"
@@ -195,6 +217,19 @@ def _minmax_setting_for_option(option):
 
 
 class OptionChoice:
+    """
+    Represents a name:value pairing for a selected :class:`Option`.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the choice. Shown in the UI when selecting an option.
+    value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
+        The value of the choice. If not provided, will use the value of ``name``.
+    """
+
     def __init__(self, name: str, value: Optional[Union[str, int, float]] = None):
         self.name = name
         self.value = value if value is not None else name
