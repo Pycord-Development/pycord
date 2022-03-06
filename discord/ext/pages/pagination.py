@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import discord
 from discord.ext.commands import Context
@@ -627,17 +627,19 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     @staticmethod
-    def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]):
+    def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
         """Returns the correct content type for a page based on its content."""
-        if isinstance(page, discord.Embed):
-            return [page]
+        if isinstance(page, Page):
+            return page
+        elif isinstance(page, str):
+            return Page(content=page, embeds=[])
+        elif isinstance(page, discord.Embed):
+            return Page(content=None, embeds=[page])
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
-                return page
+                return Page(content=None, embeds=page)
             else:
                 raise TypeError("All list items must be embeds.")
-        elif isinstance(page, str):
-            return page
 
     async def send(
         self,
@@ -696,8 +698,8 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected bool not {mention_author.__class__!r}")
 
         self.update_buttons()
-        page = self.pages[self.current_page]
-        page = self.get_page_content(page)
+        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page_content: Page = self.get_page_content(page)
 
         self.user = ctx.author
 
@@ -712,8 +714,8 @@ class Paginator(discord.ui.View):
             ctx = target
 
         self.message = await ctx.send(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
+            content=page_content.content,
+            embeds=page_content.embeds,
             view=self,
             reference=reference,
             allowed_mentions=allowed_mentions,
@@ -757,22 +759,22 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
 
-        page = self.pages[self.current_page]
-        page = self.get_page_content(page)
+        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page_content: Page = self.get_page_content(page)
 
         self.user = interaction.user
         if target:
             await interaction.response.send_message(target_message, ephemeral=ephemeral)
             self.message = await target.send(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page_content.content,
+                embeds=page_content.embeds,
                 view=self,
             )
         else:
             if interaction.response.is_done():
                 msg = await interaction.followup.send(
-                    content=page if isinstance(page, str) else None,
-                    embeds=[] if isinstance(page, str) else page,
+                    content=page_content.content,
+                    embeds=page_content.embeds,
                     view=self,
                     ephemeral=ephemeral,
                 )
@@ -780,8 +782,8 @@ class Paginator(discord.ui.View):
                 msg = await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(
-                    content=page if isinstance(page, str) else None,
-                    embeds=[] if isinstance(page, str) else page,
+                    content=page_content.content,
+                    embeds=page_content.embeds,
                     view=self,
                     ephemeral=ephemeral,
                 )
