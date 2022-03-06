@@ -155,8 +155,8 @@ class PageGroup:
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
-        The list of strings, embeds, or list of embeds to include in the page group.
+    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+        The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
         Also used as the SelectOption value.
@@ -189,7 +189,7 @@ class PageGroup:
 
     def __init__(
         self,
-        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
         label: str,
         description: str,
         emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
@@ -225,8 +225,8 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
-        The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
+    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
@@ -272,7 +272,7 @@ class Paginator(discord.ui.View):
 
     def __init__(
         self,
-        pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]],
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
@@ -287,7 +287,9 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
-        self.pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
+        self.pages: Union[
+            List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
+        ] = pages
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
@@ -295,7 +297,9 @@ class Paginator(discord.ui.View):
 
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
-            self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = self.page_groups[0].pages
+            self.pages: Union[
+                List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
+            ] = self.page_groups[0].pages
 
         self.page_count = len(self.pages) - 1
         self.buttons = {}
@@ -323,7 +327,7 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: Optional[Union[List[str], List[Union[List[discord.Embed], discord.Embed]]]] = None,
+        pages: Optional[Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]]] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
@@ -339,8 +343,8 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
-            The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
+            The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
@@ -365,7 +369,7 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]] = (
+        self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
         self.page_count = len(self.pages) - 1
@@ -400,7 +404,7 @@ class Paginator(discord.ui.View):
     async def disable(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
     ) -> None:
         """Stops the paginator, disabling all of its components.
 
@@ -417,8 +421,8 @@ class Paginator(discord.ui.View):
                 item.disabled = True
         if page:
             await self.message.edit(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page.content,
+                embeds=page.embeds,
                 view=self,
             )
         else:
@@ -427,7 +431,7 @@ class Paginator(discord.ui.View):
     async def cancel(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
     ) -> None:
         """Cancels the paginator, removing all of its components from the message.
 
@@ -445,8 +449,8 @@ class Paginator(discord.ui.View):
                 self.remove_item(item)
         if page:
             await self.message.edit(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page.content,
+                embeds=page.embeds,
                 view=self,
             )
         else:
@@ -478,8 +482,8 @@ class Paginator(discord.ui.View):
         page = self.get_page_content(page)
 
         return await self.message.edit(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
+            content=page.content,
+            embeds=page.embeds,
             view=self,
         )
 
@@ -698,8 +702,8 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected bool not {mention_author.__class__!r}")
 
         self.update_buttons()
-        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
-        page_content: Page = self.get_page_content(page)
+        page = self.pages[self.current_page]
+        page_content = self.get_page_content(page)
 
         self.user = ctx.author
 
