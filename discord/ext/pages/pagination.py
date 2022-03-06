@@ -31,6 +31,7 @@ __all__ = (
     "Paginator",
     "PageGroup",
     "PaginatorMenu",
+    "Page",
 )
 
 
@@ -102,6 +103,44 @@ class PaginatorButton(discord.ui.Button):
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
         await self.paginator.goto_page(page_number=self.paginator.current_page)
+
+
+class Page:
+    """Represents a page shown in the paginator. Allows for directly referencing and modifying each page as a class instance.
+
+    Parameters
+    ----------
+    content: :class:`str`
+        The content of the page. Corresponds to the :class:`discord.Message.content` attribute.
+    embeds: Optional[List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute.
+    """
+
+    def __init__(
+        self, content: Optional[str] = None, embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None
+    ):
+        self._content = content
+        self._embeds = embeds
+
+    @property
+    def content(self) -> Optional[str]:
+        """Gets the content for the page."""
+        return self._content
+
+    @content.setter
+    def content(self, value: Optional[str]):
+        """Sets the content for the page."""
+        self._content = value
+
+    @property
+    def embeds(self) -> Optional[List[Union[List[discord.Embed], discord.Embed]]]:
+        """Gets the embeds for the page."""
+        return self._embeds
+
+    @embeds.setter
+    def embeds(self, value: Optional[List[Union[List[discord.Embed], discord.Embed]]]):
+        """Sets the embeds for the page."""
+        self._embeds = value
 
 
 class PageGroup:
