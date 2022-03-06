@@ -159,7 +159,7 @@ class PageGroup:
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
+    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
@@ -347,7 +347,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
             The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
