@@ -22,15 +22,15 @@ is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is no
 Installing
 -----------
 
-**!!! IMPORTANT !!!** 
+.. note::
 
-For new features like options, buttons, and threads, you need to install from git until our v2.0 release on Jan 28th, 2022. ::
+    For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release. ::
 
-    python3 -m pip install -U git+https://github.com/Pycord-Development/pycord
-    
-For Windows users, this command should be used to install from git: ::
+        python3 -m pip install -U py-cord --pre
 
-    py -3 -m pip install -U git+https://github.com/Pycord-Development/pycord
+    For Windows users, this command should be used to install the pre-release: ::
+
+        py -3 -m pip install -U py-cord --pre
 
 You can get the library directly from PyPI: ::
 
@@ -41,13 +41,13 @@ If you are using Windows, then the following should be used instead: ::
     py -3 -m pip install -U py-cord
 
 
-To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g. ::
+To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g.
 
 .. code:: sh
 
     # Linux/macOS
     python3 -m pip install -U "py-cord[speed]"
-    
+
     # Windows
     py -3 -m pip install -U py-cord[speed]
 

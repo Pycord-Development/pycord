@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, TypeVar, Union, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
 from discord.interactions import InteractionMessage
@@ -48,18 +48,18 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
-    
+
     from typing import Callable, Awaitable
 
 from ..utils import _cached_property as cached_property
 
-T = TypeVar('T')
-CogT = TypeVar('CogT', bound="Cog")
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
 
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
@@ -97,7 +97,13 @@ class ApplicationContext(discord.abc.Messageable):
     async def _get_channel(self) -> Optional[InteractionChannel]:
         return self.interaction.channel
 
-    async def invoke(self, command: ApplicationCommand[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(
+        self,
+        command: ApplicationCommand[CogT, P, T],
+        /,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
@@ -210,9 +216,14 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    def send_modal(self) -> Interaction:
+        """Sends a modal dialog to the user who invoked the interaction."""
+        return self.interaction.response.send_modal
+
+    @property
     def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
         """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
-        or a followup response depending if the interaction has been responded to yet or not."""
+        or a followup response depending on if the interaction has been responded to yet or not."""
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message  # self.response
         else:
@@ -284,7 +295,7 @@ class AutocompleteContext:
         The option the user is currently typing.
     value: :class:`.str`
         The content of the focused option.
-    options :class:`.dict`
+    options: :class:`.dict`
         A name to value mapping of the options that the user has selected before this option.
     """
 

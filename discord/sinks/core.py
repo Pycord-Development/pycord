@@ -22,15 +22,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import io
 import os
 import struct
 import sys
 import threading
 import time
-import io
 from typing import TYPE_CHECKING
-from .errors import SinkException
+
 from ..types import snowflake
+from .errors import SinkException
 
 if TYPE_CHECKING:
     from ..channel import VoiceChannel
@@ -60,7 +61,7 @@ class Filters:
     """Filters for sink
 
     .. versionadded:: 2.1
-    
+
     Parameters
     ----------
     container
@@ -108,9 +109,7 @@ class RawData:
 
         unpacker = struct.Struct(">xxHII")
         self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.header)
-        self.decrypted_data = getattr(self.client, "_decrypt_" + self.client.mode)(
-            self.header, self.data
-        )
+        self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(self.header, self.data)
         self.decoded_data = None
 
         self.user_id = None
@@ -155,12 +154,12 @@ class Sink(Filters):
     """A Sink "stores" all the audio data.
 
     Can be subclassed for extra customizablilty,
-    
+
     .. warning::
         It is although recommended you use,
         the officially provided sink classes
         like :class:`~discord.sinks.WaveSink`
-    
+
     just replace the following like so: ::
         vc.start_recording(
             MySubClassedSink(),
@@ -169,7 +168,7 @@ class Sink(Filters):
         )
 
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException

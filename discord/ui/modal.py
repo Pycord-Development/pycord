@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import asyncio
 import os
+import sys
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from .input_text import InputText
-from .view import _ViewWeights
 
 __all__ = (
     "Modal",
@@ -22,13 +23,28 @@ class Modal:
     """Represents a UI Modal dialog.
 
     This object must be inherited to create a UI within Discord.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    title: :class:`str`
+        The title of the modal dialog.
+        Must be 45 characters or fewer.
+    custom_id: Optional[:class:`str`] = None
+        The ID of the modal dialog that gets received during an interaction.
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
-        self.__weights = _ViewWeights(self.children)
+        self.__weights = _ModalWeights(self.children)
+        loop = asyncio.get_running_loop()
+        self._stopped: asyncio.Future[bool] = loop.create_future()
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -40,7 +56,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that submitted the modal dialog.
         """
-        pass
+        self.stop()
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
@@ -92,8 +108,15 @@ class Modal:
             self.children.remove(item)
         except ValueError:
             pass
-        else:
-            self.__weights.remove_item(item)
+
+    def stop(self) -> None:
+        """Stops listening to interaction events from the modal dialog."""
+        if not self._stopped.done():
+            self._stopped.set_result(True)
+
+    async def wait(self) -> bool:
+        """Waits for the modal dialog to be submitted."""
+        return await self._stopped
 
     def to_dict(self):
         return {
@@ -101,6 +124,46 @@ class Modal:
             "custom_id": self.custom_id,
             "components": self.to_components(),
         }
+
+
+class _ModalWeights:
+    __slots__ = ("weights",)
+
+    def __init__(self, children: List[InputText]):
+        self.weights: List[int] = [0, 0, 0, 0, 0]
+
+        key = lambda i: sys.maxsize if i.row is None else i.row
+        children = sorted(children, key=key)
+        for row, group in groupby(children, key=key):
+            for item in group:
+                self.add_item(item)
+
+    def find_open_space(self, item: InputText) -> int:
+        for index, weight in enumerate(self.weights):
+            if weight + item.width <= 5:
+                return index
+
+        raise ValueError("could not find open space for item")
+
+    def add_item(self, item: InputText) -> None:
+        if item.row is not None:
+            total = self.weights[item.row] + item.width
+            if total > 5:
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
+            self.weights[item.row] = total
+            item._rendered_row = item.row
+        else:
+            index = self.find_open_space(item)
+            self.weights[index] += item.width
+            item._rendered_row = index
+
+    def remove_item(self, item: InputText) -> None:
+        if item._rendered_row is not None:
+            self.weights[item._rendered_row] -= item.width
+            item._rendered_row = None
+
+    def clear(self) -> None:
+        self.weights = [0, 0, 0, 0, 0]
 
 
 class ModalStore:

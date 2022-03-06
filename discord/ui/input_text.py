@@ -4,9 +4,8 @@ import os
 from typing import TYPE_CHECKING, Optional
 
 from ..components import InputText as InputTextComponent
-from ..enums import InputTextStyle
+from ..enums import ComponentType, InputTextStyle
 from ..utils import MISSING
-from .item import Item
 
 __all__ = ("InputText",)
 
@@ -14,8 +13,10 @@ if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText(Item):
+class InputText:
     """Represents a UI text input field.
+
+    .. versionadded:: 2.0
 
     Parameters
     ----------
@@ -23,21 +24,25 @@ class InputText(Item):
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
-    label: Optional[:class:`str`]
-        The label for the input text field, if any.
+    label: :class:`str`
+        The label for the input text field.
+        Must be 45 characters or fewer.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
+        Must be 100 characters or fewer.
     min_length: Optional[:class:`int`]
         The minimum number of characters that must be entered.
-        Defaults to 0.
+        Defaults to 0 and must be less than 4000.
     max_length: Optional[:class:`int`]
         The maximum number of characters that can be entered.
+        Must be between 1 and 4000.
     required: Optional[:class:`bool`]
         Whether the input text field is required or not. Defaults to `True`.
     value: Optional[:class:`str`]
         Pre-fills the input text field with this value.
+        Must be 4000 characters or fewer.
     row: Optional[:class:`int`]
-        The relative row this button belongs to. A Discord component can only have 5
+        The relative row this input text field belongs to. A modal dialog can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
@@ -46,9 +51,10 @@ class InputText(Item):
 
     def __init__(
         self,
+        *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str = MISSING,
-        label: Optional[str] = None,
+        label: str,
         placeholder: Optional[str] = None,
         min_length: Optional[int] = None,
         max_length: Optional[int] = None,
@@ -58,7 +64,11 @@ class InputText(Item):
     ):
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
         self._underlying = InputTextComponent._raw_construct(
+            type=ComponentType.input_text,
             style=style,
             custom_id=custom_id,
             label=label,
@@ -68,13 +78,14 @@ class InputText(Item):
             required=required,
             value=value,
         )
-        self._input_value = None
+        self._input_value = False
         self.row = row
+        self._rendered_row: Optional[int] = None
 
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
-        
+
     @property
     def style(self) -> InputTextStyle:
         """:class:`discord.InputTextStyle`: The style of the input text field."""
@@ -83,9 +94,7 @@ class InputText(Item):
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
         self._underlying.style = value
 
     @property
@@ -107,7 +116,8 @@ class InputText(Item):
     @label.setter
     def label(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(f"label should be None or str not {value.__class__}")
+            raise TypeError(f"label should be str not {value.__class__}")
+        self._underlying.label = value
 
     @property
     def placeholder(self) -> Optional[str]:
@@ -151,11 +161,15 @@ class InputText(Item):
     def required(self, value: Optional[bool]):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__}")  # type: ignore
+        self._underlying.required = bool(value)
 
     @property
     def value(self) -> Optional[str]:
         """Optional[:class:`str`]: The value entered in the text field."""
-        return self._input_value or self._underlying.value
+        if self._input_value is not False:
+            # only False on init, otherwise the value was either set or cleared
+            return self._input_value  # type: ignore
+        return self._underlying.value
 
     @value.setter
     def value(self, value: Optional[str]):

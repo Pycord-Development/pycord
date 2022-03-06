@@ -33,9 +33,9 @@ class MKASink(Sink):
     """A Sink "stores" all the audio data.
 
     Used for .mka files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -55,9 +55,7 @@ class MKASink(Sink):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise MKASinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise MKASinkError("Audio may only be formatted after recording is finished.")
         args = [
             "ffmpeg",
             "-f",
@@ -70,17 +68,19 @@ class MKASink(Sink):
             "-",
             "-f",
             "matroska",
-            "pipe:1"
+            "pipe:1",
         ]
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,
+                creationflags=CREATE_NO_WINDOW,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+            )
         except FileNotFoundError:
             raise MKASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise MKASinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise MKASinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         out = process.communicate(audio.file.read())[0]
         out = io.BytesIO(out)
