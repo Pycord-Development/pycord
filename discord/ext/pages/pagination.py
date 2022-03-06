@@ -106,7 +106,9 @@ class PaginatorButton(discord.ui.Button):
 
 
 class Page:
-    """Represents a page shown in the paginator. Allows for directly referencing and modifying each page as a class instance.
+    """Represents a page shown in the paginator.
+
+    Allows for directly referencing and modifying each page as a class instance.
 
     Parameters
     ----------
