@@ -5,7 +5,7 @@ import discord
 bot = discord.Bot()
 
 
-@bot.command(guild_ids=[709325388592971866])
+@bot.command(guild_ids=[GUILD_IDS])
 async def timeout(ctx, member: discord.Member, minutes: int):
     """Apply a timeout to a member"""
 
