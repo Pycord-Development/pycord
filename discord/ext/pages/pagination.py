@@ -121,6 +121,8 @@ class Page:
     def __init__(
         self, content: Optional[str] = None, embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None
     ):
+        if content is None and embeds is None:
+            raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
         self._content = content
         self._embeds = embeds
 
