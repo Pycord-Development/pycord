@@ -168,6 +168,24 @@ AutocompleteContext
 .. autoclass:: AutocompleteContext
     :members:
 
+CommandPermission
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: CommandPermission
+
+.. autoclass:: CommandPermission
+    :members:
+
+.. autofunction:: discord.commands.permissions.permission
+
+.. autofunction:: discord.commands.permissions.has_role
+
+.. autofunction:: discord.commands.permissions.has_any_role
+
+.. autofunction:: discord.commands.permissions.is_user
+
+.. autofunction:: discord.commands.permissions.is_owner
+
 Application Info
 ------------------
 
