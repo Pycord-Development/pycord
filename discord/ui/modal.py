@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import os
 import sys
 from itertools import groupby
@@ -22,13 +23,28 @@ class Modal:
     """Represents a UI Modal dialog.
 
     This object must be inherited to create a UI within Discord.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    title: :class:`str`
+        The title of the modal dialog.
+        Must be 45 characters or fewer.
+    custom_id: Optional[:class:`str`] = None
+        The ID of the modal dialog that gets received during an interaction.
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
         self.__weights = _ModalWeights(self.children)
+        loop = asyncio.get_running_loop()
+        self._stopped: asyncio.Future[bool] = loop.create_future()
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -40,7 +56,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that submitted the modal dialog.
         """
-        pass
+        self.stop()
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
@@ -92,6 +108,15 @@ class Modal:
             self.children.remove(item)
         except ValueError:
             pass
+
+    def stop(self) -> None:
+        """Stops listening to interaction events from the modal dialog."""
+        if not self._stopped.done():
+            self._stopped.set_result(True)
+
+    async def wait(self) -> bool:
+        """Waits for the modal dialog to be submitted."""
+        return await self._stopped
 
     def to_dict(self):
         return {
