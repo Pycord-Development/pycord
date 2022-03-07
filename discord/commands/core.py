@@ -886,7 +886,9 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        **kwargs,
+        *,
+        default_permissions: Optional[bool] = True,
+        permissions: Optional[List[CommandPermission]] = [],
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -904,8 +906,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
+        self.default_permission = default_permissions
+        self.permissions: List[CommandPermission] = permissions
         if self.permissions and self.default_permission:
             self.default_permission = False
 
