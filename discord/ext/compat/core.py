@@ -24,8 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 from typing import Union
 
-from ..commands import Bot as ExtBot, Command, AutoShardedBot as ExtAutoShardedBot
-from ...commands import SlashCommand
+from discord.commands import SlashCommand
+from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command
 
 __all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
 
