@@ -74,6 +74,6 @@ class Bot(BotBase, ExtBot):
 
 class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
-    :class:`commands.Bot` instead.
+    :class:`commands.AutoShardedBot` instead.
     """
     pass
