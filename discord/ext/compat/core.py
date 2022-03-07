@@ -22,10 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import Union
 
-from .context import CompatContext
-from ..commands import Bot as ExtBot, Command, Context
-from ...commands import SlashCommand, ApplicationContext
+from ..commands import Bot as ExtBot, Command, AutoShardedBot as ExtAutoShardedBot
+from ...commands import SlashCommand
 
 __all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
 
@@ -51,7 +51,7 @@ class CompatCommand:
         command = CompatSlashCommand(self.callback, **self.kwargs)
         return command
 
-    def add_to(self, bot: ExtBot):
+    def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
         bot.add_command(self.get_ext_command())
         bot.add_application_command(self.get_application_command())
 
