@@ -62,7 +62,7 @@ the name to something other than the function would be as simple as doing this:
         pass
 
 Parameters
-------------
+----------
 
 Since we define commands by making Python functions, we also define the argument passing behaviour by the function
 parameters.
