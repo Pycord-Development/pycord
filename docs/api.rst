@@ -3144,7 +3144,7 @@ of :class:`enum.Enum`.
 
     Represents the status of a scheduled event.
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: scheduled
 
@@ -3170,7 +3170,7 @@ of :class:`enum.Enum`.
 
     Represents a scheduled event location type (otherwise known as the entity type on the API).
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: stage_instance
 
@@ -4123,7 +4123,7 @@ Guild
 ScheduledEvent
 ~~~~~~~~~~~~~~~
 
-.. attributestable:: ScheduledEvent
+.. attributetable:: ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
@@ -4559,7 +4559,7 @@ RawThreadDeleteEvent
     :members:
 
 RawScheduledEventSubscription
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: RawScheduledEventSubscription
 
