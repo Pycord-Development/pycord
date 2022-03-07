@@ -797,7 +797,7 @@ class ApplicationCommandMixin:
         return self.application_command(cls=MessageCommand, **kwargs)
 
     def application_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.command` and adds it to
+        """A shortcut decorator that invokes :func:`.application_command` and adds it to
         the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
 
         .. versionadded:: 2.0
