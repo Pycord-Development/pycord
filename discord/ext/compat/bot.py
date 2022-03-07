@@ -23,14 +23,17 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from abc import ABC
+from typing import TYPE_CHECKING
 
-from .core import CompatCommand, compat_command
 from .context import CompatApplicationContext, CompatExtContext
+from .core import CompatCommand, compat_command
 from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot
 
-__all__ = ("Bot", "AutoShardedBot")
+if TYPE_CHECKING:
+    from discord.interactions import Interaction
+    from discord.message import Message
 
-from ... import Interaction, Message
+__all__ = ("Bot", "AutoShardedBot")
 
 
 class BotBase(ABC):

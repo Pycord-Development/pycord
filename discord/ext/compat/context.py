@@ -25,9 +25,13 @@ DEALINGS IN THE SOFTWARE.
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Union, Any
 
-from discord import ApplicationContext, Interaction, WebhookMessage, Message
-from discord.ext.commands import Context
+from ..commands import Context
 
+if TYPE_CHECKING:
+    from discord.commands import ApplicationContext
+    from discord.interactions import Interaction
+    from discord.webhook import WebhookMessage
+    from discord.message import Message
 
 __all__ = ("CompatContext", "CompatExtContext", "CompatApplicationContext")
 
