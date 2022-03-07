@@ -889,7 +889,6 @@ class SlashCommandGroup(ApplicationCommand):
         *,
         default_permissions: Optional[bool] = True,
         permissions: Optional[List[CommandPermission]] = [],
-        **kwargs,
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
