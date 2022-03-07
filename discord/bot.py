@@ -341,7 +341,7 @@ class ApplicationCommandMixin:
             The command that was registered
         """
         # TODO: Write this
-        raise NotImplementedError("This function has not been implemented yet")
+        raise RuntimeError("This function has not been implemented yet")
 
     async def register_commands(
         self,
