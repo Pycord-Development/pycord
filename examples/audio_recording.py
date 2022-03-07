@@ -1,14 +1,29 @@
 import os
+
 import discord
-from discord.commands import Option, ApplicationContext
+from discord.commands import ApplicationContext, Option
 
 bot = discord.Bot(debug_guilds=[...])
 bot.connections = {}
 
 
 @bot.command()
-async def start(ctx: ApplicationContext,
-                encoding: Option(str, choices=["mp3", "wav", "pcm", "ogg", "mka", "mkv", "mp4", "m4a", ])):
+async def start(
+    ctx: ApplicationContext,
+    encoding: Option(
+        str,
+        choices=[
+            "mp3",
+            "wav",
+            "pcm",
+            "ogg",
+            "mka",
+            "mkv",
+            "mp4",
+            "m4a",
+        ],
+    ),
+):
     """
     Record your voice!
     """
@@ -50,10 +65,7 @@ async def start(ctx: ApplicationContext,
 
 
 async def finished_callback(sink, channel: discord.TextChannel, *args):
-    recorded_users = [
-        f"<@{user_id}>"
-        for user_id, audio in sink.audio_data.items()
-    ]
+    recorded_users = [f"<@{user_id}>" for user_id, audio in sink.audio_data.items()]
     await sink.vc.disconnect()
     files = [discord.File(audio.file, f"{user_id}.{sink.encoding}") for user_id, audio in sink.audio_data.items()]
     await channel.send(f"Finished! Recorded audio for {', '.join(recorded_users)}.", files=files)

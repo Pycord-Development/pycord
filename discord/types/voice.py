@@ -23,12 +23,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Optional, TypedDict, List, Literal
-from .snowflake import Snowflake
+from typing import List, Literal, Optional, TypedDict
+
 from .member import MemberWithUser
+from .snowflake import Snowflake
 
-
-SupportedModes = Literal['xsalsa20_poly1305_lite', 'xsalsa20_poly1305_suffix', 'xsalsa20_poly1305']
+SupportedModes = Literal["xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"]
 
 
 class _PartialVoiceStateOptional(TypedDict, total=False):

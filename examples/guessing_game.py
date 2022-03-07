@@ -25,9 +25,7 @@ class MyClient(discord.Client):
             try:
                 guess = await self.wait_for("message", check=is_correct, timeout=5.0)
             except asyncio.TimeoutError:
-                return await message.channel.send(
-                    f"Sorry, you took too long it was {answer}."
-                )
+                return await message.channel.send(f"Sorry, you took too long it was {answer}.")
 
             if int(guess.content) == answer:
                 await message.channel.send("You are right!")

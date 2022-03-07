@@ -25,48 +25,50 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import Any, ClassVar, Dict, List, Optional, TYPE_CHECKING, Type, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, TypeVar
 
 __all__ = (
-    'Enum',
-    'ChannelType',
-    'MessageType',
-    'VoiceRegion',
-    'SpeakingState',
-    'VerificationLevel',
-    'ContentFilter',
-    'Status',
-    'DefaultAvatar',
-    'AuditLogAction',
-    'AuditLogActionCategory',
-    'UserFlags',
-    'ActivityType',
-    'NotificationLevel',
-    'TeamMembershipState',
-    'WebhookType',
-    'ExpireBehaviour',
-    'ExpireBehavior',
-    'StickerType',
-    'StickerFormatType',
-    'InviteTarget',
-    'VideoQualityMode',
-    'ComponentType',
-    'ButtonStyle',
-    'StagePrivacyLevel',
-    'InteractionType',
-    'InteractionResponseType',
-    'NSFWLevel',
-    'EmbeddedActivity',
-    'ScheduledEventStatus',
-    'ScheduledEventPrivacyLevel',
-    'ScheduledEventLocationType',
+    "Enum",
+    "ChannelType",
+    "MessageType",
+    "VoiceRegion",
+    "SpeakingState",
+    "VerificationLevel",
+    "ContentFilter",
+    "Status",
+    "DefaultAvatar",
+    "AuditLogAction",
+    "AuditLogActionCategory",
+    "UserFlags",
+    "ActivityType",
+    "NotificationLevel",
+    "TeamMembershipState",
+    "WebhookType",
+    "ExpireBehaviour",
+    "ExpireBehavior",
+    "StickerType",
+    "StickerFormatType",
+    "InviteTarget",
+    "VideoQualityMode",
+    "ComponentType",
+    "ButtonStyle",
+    "StagePrivacyLevel",
+    "InteractionType",
+    "InteractionResponseType",
+    "NSFWLevel",
+    "EmbeddedActivity",
+    "ScheduledEventStatus",
+    "ScheduledEventPrivacyLevel",
+    "ScheduledEventLocationType",
+    "InputTextStyle",
+    "SlashCommandOptionType",
 )
 
 
 def _create_value_cls(name, comparable):
-    cls = namedtuple('_EnumValue_' + name, 'name value')
-    cls.__repr__ = lambda self: f'<{name}.{self.name}: {self.value!r}>'
-    cls.__str__ = lambda self: f'{name}.{self.name}'
+    cls = namedtuple(f"_EnumValue_{name}", "name value")
+    cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
+    cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
         cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
         cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
@@ -74,8 +76,9 @@ def _create_value_cls(name, comparable):
         cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
     return cls
 
+
 def _is_descriptor(obj):
-    return hasattr(obj, '__get__') or hasattr(obj, '__set__') or hasattr(obj, '__delete__')
+    return hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
 
 
 class EnumMeta(type):
@@ -93,7 +96,7 @@ class EnumMeta(type):
         value_cls = _create_value_cls(name, comparable)
         for key, value in list(attrs.items()):
             is_descriptor = _is_descriptor(value)
-            if key[0] == '_' and not is_descriptor:
+            if key[0] == "_" and not is_descriptor:
                 continue
 
             # Special case classmethod to just pass through
@@ -115,10 +118,10 @@ class EnumMeta(type):
             member_mapping[key] = new_value
             attrs[key] = new_value
 
-        attrs['_enum_value_map_'] = value_mapping
-        attrs['_enum_member_map_'] = member_mapping
-        attrs['_enum_member_names_'] = member_names
-        attrs['_enum_value_cls_'] = value_cls
+        attrs["_enum_value_map_"] = value_mapping
+        attrs["_enum_member_map_"] = member_mapping
+        attrs["_enum_member_names_"] = member_names
+        attrs["_enum_value_cls_"] = value_cls
         actual_cls = super().__new__(cls, name, bases, attrs)
         value_cls._actual_enum_cls_ = actual_cls  # type: ignore
         return actual_cls
@@ -133,7 +136,7 @@ class EnumMeta(type):
         return len(cls._enum_member_names_)
 
     def __repr__(cls):
-        return f'<enum {cls.__name__}>'
+        return f"<enum {cls.__name__}>"
 
     @property
     def __members__(cls):
@@ -149,10 +152,10 @@ class EnumMeta(type):
         return cls._enum_member_map_[key]
 
     def __setattr__(cls, name, value):
-        raise TypeError('Enums are immutable.')
+        raise TypeError("Enums are immutable.")
 
     def __delattr__(cls, attr):
-        raise TypeError('Enums are immutable')
+        raise TypeError("Enums are immutable")
 
     def __instancecheck__(self, instance):
         # isinstance(x, Y)
@@ -223,29 +226,29 @@ class MessageType(Enum):
 
 
 class VoiceRegion(Enum):
-    us_west = 'us-west'
-    us_east = 'us-east'
-    us_south = 'us-south'
-    us_central = 'us-central'
-    eu_west = 'eu-west'
-    eu_central = 'eu-central'
-    singapore = 'singapore'
-    london = 'london'
-    sydney = 'sydney'
-    amsterdam = 'amsterdam'
-    frankfurt = 'frankfurt'
-    brazil = 'brazil'
-    hongkong = 'hongkong'
-    russia = 'russia'
-    japan = 'japan'
-    southafrica = 'southafrica'
-    south_korea = 'south-korea'
-    india = 'india'
-    europe = 'europe'
-    dubai = 'dubai'
-    vip_us_east = 'vip-us-east'
-    vip_us_west = 'vip-us-west'
-    vip_amsterdam = 'vip-amsterdam'
+    us_west = "us-west"
+    us_east = "us-east"
+    us_south = "us-south"
+    us_central = "us-central"
+    eu_west = "eu-west"
+    eu_central = "eu-central"
+    singapore = "singapore"
+    london = "london"
+    sydney = "sydney"
+    amsterdam = "amsterdam"
+    frankfurt = "frankfurt"
+    brazil = "brazil"
+    hongkong = "hongkong"
+    russia = "russia"
+    japan = "japan"
+    southafrica = "southafrica"
+    south_korea = "south-korea"
+    india = "india"
+    europe = "europe"
+    dubai = "dubai"
+    vip_us_east = "vip-us-east"
+    vip_us_west = "vip-us-west"
+    vip_amsterdam = "vip-amsterdam"
 
     def __str__(self):
         return self.value
@@ -285,13 +288,13 @@ class ContentFilter(Enum, comparable=True):
 
 
 class Status(Enum):
-    online = 'online'
-    offline = 'offline'
-    idle = 'idle'
-    dnd = 'dnd'
-    do_not_disturb = 'dnd'
-    invisible = 'invisible'
-    streaming = 'streaming'
+    online = "online"
+    offline = "offline"
+    idle = "idle"
+    dnd = "dnd"
+    do_not_disturb = "dnd"
+    invisible = "invisible"
+    streaming = "streaming"
 
     def __str__(self):
         return self.value
@@ -321,144 +324,140 @@ class AuditLogActionCategory(Enum):
 
 
 class AuditLogAction(Enum):
-    # fmt: off
-    guild_update             = 1
-    channel_create           = 10
-    channel_update           = 11
-    channel_delete           = 12
-    overwrite_create         = 13
-    overwrite_update         = 14
-    overwrite_delete         = 15
-    kick                     = 20
-    member_prune             = 21
-    ban                      = 22
-    unban                    = 23
-    member_update            = 24
-    member_role_update       = 25
-    member_move              = 26
-    member_disconnect        = 27
-    bot_add                  = 28
-    role_create              = 30
-    role_update              = 31
-    role_delete              = 32
-    invite_create            = 40
-    invite_update            = 41
-    invite_delete            = 42
-    webhook_create           = 50
-    webhook_update           = 51
-    webhook_delete           = 52
-    emoji_create             = 60
-    emoji_update             = 61
-    emoji_delete             = 62
-    message_delete           = 72
-    message_bulk_delete      = 73
-    message_pin              = 74
-    message_unpin            = 75
-    integration_create       = 80
-    integration_update       = 81
-    integration_delete       = 82
-    stage_instance_create    = 83
-    stage_instance_update    = 84
-    stage_instance_delete    = 85
-    sticker_create           = 90
-    sticker_update           = 91
-    sticker_delete           = 92
-    scheduled_event_create   = 100
-    scheduled_event_update   = 101
-    scheduled_event_delete   = 102
-    thread_create            = 110
-    thread_update            = 111
-    thread_delete            = 112
-    # fmt: on
+    guild_update = 1
+    channel_create = 10
+    channel_update = 11
+    channel_delete = 12
+    overwrite_create = 13
+    overwrite_update = 14
+    overwrite_delete = 15
+    kick = 20
+    member_prune = 21
+    ban = 22
+    unban = 23
+    member_update = 24
+    member_role_update = 25
+    member_move = 26
+    member_disconnect = 27
+    bot_add = 28
+    role_create = 30
+    role_update = 31
+    role_delete = 32
+    invite_create = 40
+    invite_update = 41
+    invite_delete = 42
+    webhook_create = 50
+    webhook_update = 51
+    webhook_delete = 52
+    emoji_create = 60
+    emoji_update = 61
+    emoji_delete = 62
+    message_delete = 72
+    message_bulk_delete = 73
+    message_pin = 74
+    message_unpin = 75
+    integration_create = 80
+    integration_update = 81
+    integration_delete = 82
+    stage_instance_create = 83
+    stage_instance_update = 84
+    stage_instance_delete = 85
+    sticker_create = 90
+    sticker_update = 91
+    sticker_delete = 92
+    scheduled_event_create = 100
+    scheduled_event_update = 101
+    scheduled_event_delete = 102
+    thread_create = 110
+    thread_update = 111
+    thread_delete = 112
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
-        # fmt: off
         lookup: Dict[AuditLogAction, Optional[AuditLogActionCategory]] = {
-            AuditLogAction.guild_update:           AuditLogActionCategory.update,
-            AuditLogAction.channel_create:         AuditLogActionCategory.create,
-            AuditLogAction.channel_update:         AuditLogActionCategory.update,
-            AuditLogAction.channel_delete:         AuditLogActionCategory.delete,
-            AuditLogAction.overwrite_create:       AuditLogActionCategory.create,
-            AuditLogAction.overwrite_update:       AuditLogActionCategory.update,
-            AuditLogAction.overwrite_delete:       AuditLogActionCategory.delete,
-            AuditLogAction.kick:                   None,
-            AuditLogAction.member_prune:           None,
-            AuditLogAction.ban:                    None,
-            AuditLogAction.unban:                  None,
-            AuditLogAction.member_update:          AuditLogActionCategory.update,
-            AuditLogAction.member_role_update:     AuditLogActionCategory.update,
-            AuditLogAction.member_move:            None,
-            AuditLogAction.member_disconnect:      None,
-            AuditLogAction.bot_add:                None,
-            AuditLogAction.role_create:            AuditLogActionCategory.create,
-            AuditLogAction.role_update:            AuditLogActionCategory.update,
-            AuditLogAction.role_delete:            AuditLogActionCategory.delete,
-            AuditLogAction.invite_create:          AuditLogActionCategory.create,
-            AuditLogAction.invite_update:          AuditLogActionCategory.update,
-            AuditLogAction.invite_delete:          AuditLogActionCategory.delete,
-            AuditLogAction.webhook_create:         AuditLogActionCategory.create,
-            AuditLogAction.webhook_update:         AuditLogActionCategory.update,
-            AuditLogAction.webhook_delete:         AuditLogActionCategory.delete,
-            AuditLogAction.emoji_create:           AuditLogActionCategory.create,
-            AuditLogAction.emoji_update:           AuditLogActionCategory.update,
-            AuditLogAction.emoji_delete:           AuditLogActionCategory.delete,
-            AuditLogAction.message_delete:         AuditLogActionCategory.delete,
-            AuditLogAction.message_bulk_delete:    AuditLogActionCategory.delete,
-            AuditLogAction.message_pin:            None,
-            AuditLogAction.message_unpin:          None,
-            AuditLogAction.integration_create:     AuditLogActionCategory.create,
-            AuditLogAction.integration_update:     AuditLogActionCategory.update,
-            AuditLogAction.integration_delete:     AuditLogActionCategory.delete,
-            AuditLogAction.stage_instance_create:  AuditLogActionCategory.create,
-            AuditLogAction.stage_instance_update:  AuditLogActionCategory.update,
-            AuditLogAction.stage_instance_delete:  AuditLogActionCategory.delete,
-            AuditLogAction.sticker_create:         AuditLogActionCategory.create,
-            AuditLogAction.sticker_update:         AuditLogActionCategory.update,
-            AuditLogAction.sticker_delete:         AuditLogActionCategory.delete,
+            AuditLogAction.guild_update: AuditLogActionCategory.update,
+            AuditLogAction.channel_create: AuditLogActionCategory.create,
+            AuditLogAction.channel_update: AuditLogActionCategory.update,
+            AuditLogAction.channel_delete: AuditLogActionCategory.delete,
+            AuditLogAction.overwrite_create: AuditLogActionCategory.create,
+            AuditLogAction.overwrite_update: AuditLogActionCategory.update,
+            AuditLogAction.overwrite_delete: AuditLogActionCategory.delete,
+            AuditLogAction.kick: None,
+            AuditLogAction.member_prune: None,
+            AuditLogAction.ban: None,
+            AuditLogAction.unban: None,
+            AuditLogAction.member_update: AuditLogActionCategory.update,
+            AuditLogAction.member_role_update: AuditLogActionCategory.update,
+            AuditLogAction.member_move: None,
+            AuditLogAction.member_disconnect: None,
+            AuditLogAction.bot_add: None,
+            AuditLogAction.role_create: AuditLogActionCategory.create,
+            AuditLogAction.role_update: AuditLogActionCategory.update,
+            AuditLogAction.role_delete: AuditLogActionCategory.delete,
+            AuditLogAction.invite_create: AuditLogActionCategory.create,
+            AuditLogAction.invite_update: AuditLogActionCategory.update,
+            AuditLogAction.invite_delete: AuditLogActionCategory.delete,
+            AuditLogAction.webhook_create: AuditLogActionCategory.create,
+            AuditLogAction.webhook_update: AuditLogActionCategory.update,
+            AuditLogAction.webhook_delete: AuditLogActionCategory.delete,
+            AuditLogAction.emoji_create: AuditLogActionCategory.create,
+            AuditLogAction.emoji_update: AuditLogActionCategory.update,
+            AuditLogAction.emoji_delete: AuditLogActionCategory.delete,
+            AuditLogAction.message_delete: AuditLogActionCategory.delete,
+            AuditLogAction.message_bulk_delete: AuditLogActionCategory.delete,
+            AuditLogAction.message_pin: None,
+            AuditLogAction.message_unpin: None,
+            AuditLogAction.integration_create: AuditLogActionCategory.create,
+            AuditLogAction.integration_update: AuditLogActionCategory.update,
+            AuditLogAction.integration_delete: AuditLogActionCategory.delete,
+            AuditLogAction.stage_instance_create: AuditLogActionCategory.create,
+            AuditLogAction.stage_instance_update: AuditLogActionCategory.update,
+            AuditLogAction.stage_instance_delete: AuditLogActionCategory.delete,
+            AuditLogAction.sticker_create: AuditLogActionCategory.create,
+            AuditLogAction.sticker_update: AuditLogActionCategory.update,
+            AuditLogAction.sticker_delete: AuditLogActionCategory.delete,
             AuditLogAction.scheduled_event_create: AuditLogActionCategory.create,
             AuditLogAction.scheduled_event_update: AuditLogActionCategory.update,
             AuditLogAction.scheduled_event_delete: AuditLogActionCategory.delete,
-            AuditLogAction.thread_create:          AuditLogActionCategory.create,
-            AuditLogAction.thread_update:          AuditLogActionCategory.update,
-            AuditLogAction.thread_delete:          AuditLogActionCategory.delete,
+            AuditLogAction.thread_create: AuditLogActionCategory.create,
+            AuditLogAction.thread_update: AuditLogActionCategory.update,
+            AuditLogAction.thread_delete: AuditLogActionCategory.delete,
         }
-        # fmt: on
         return lookup[self]
 
     @property
     def target_type(self) -> Optional[str]:
         v = self.value
         if v == -1:
-            return 'all'
+            return "all"
         elif v < 10:
-            return 'guild'
+            return "guild"
         elif v < 20:
-            return 'channel'
+            return "channel"
         elif v < 30:
-            return 'user'
+            return "user"
         elif v < 40:
-            return 'role'
+            return "role"
         elif v < 50:
-            return 'invite'
+            return "invite"
         elif v < 60:
-            return 'webhook'
+            return "webhook"
         elif v < 70:
-            return 'emoji'
+            return "emoji"
         elif v == 73:
-            return 'channel'
+            return "channel"
         elif v < 80:
-            return 'message'
+            return "message"
         elif v < 83:
-            return 'integration'
+            return "integration"
         elif v < 90:
-            return 'stage_instance'
+            return "stage_instance"
         elif v < 93:
-            return 'sticker'
+            return "sticker"
         elif v < 103:
-            return 'scheduled_event'
+            return "scheduled_event"
         elif v < 113:
-            return 'thread'
+            return "thread"
 
 
 class UserFlags(Enum):
@@ -529,13 +528,11 @@ class StickerFormatType(Enum):
 
     @property
     def file_extension(self) -> str:
-        # fmt: off
         lookup: Dict[StickerFormatType, str] = {
-            StickerFormatType.png: 'png',
-            StickerFormatType.apng: 'png',
-            StickerFormatType.lottie: 'json',
+            StickerFormatType.png: "png",
+            StickerFormatType.apng: "png",
+            StickerFormatType.lottie: "json",
         }
-        # fmt: on
         return lookup[self]
 
 
@@ -550,6 +547,7 @@ class InteractionType(Enum):
     application_command = 2
     component = 3
     auto_complete = 4
+    modal_submit = 5
 
 
 class InteractionResponseType(Enum):
@@ -560,7 +558,8 @@ class InteractionResponseType(Enum):
     deferred_channel_message = 5  # (with source)
     deferred_message_update = 6  # for components
     message_update = 7  # for components
-    auto_complete_result = 8 # for autocomplete interactions
+    auto_complete_result = 8  # for autocomplete interactions
+    modal = 9  # for modal dialogs
 
 
 class VideoQualityMode(Enum):
@@ -575,6 +574,7 @@ class ComponentType(Enum):
     action_row = 1
     button = 2
     select = 3
+    input_text = 4
 
     def __int__(self):
         return self.value
@@ -599,6 +599,14 @@ class ButtonStyle(Enum):
         return self.value
 
 
+class InputTextStyle(Enum):
+    short = 1
+    singleline = 1
+    paragraph = 2
+    multiline = 2
+    long = 2
+
+
 class ApplicationType(Enum):
     game = 1
     music = 2
@@ -607,7 +615,7 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
-    # public = 1 Deprecated
+    # public = 1 (deprecated)
     closed = 2
     guild_only = 2
 
@@ -634,26 +642,31 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
-        if isinstance(datatype, tuple): # typing.Union has been used
+        if isinstance(datatype, tuple):  # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
-            if all([x == cls.channel for x in datatypes]):
+            if all(x == cls.channel for x in datatypes):
                 return cls.channel
             elif set(datatypes) <= {cls.role, cls.user}:
                 return cls.mentionable
             else:
-                raise TypeError('Invalid usage of typing.Union')
+                raise TypeError("Invalid usage of typing.Union")
 
         if datatype.__name__ in ["Member", "User"]:
             return cls.user
         if datatype.__name__ in [
-            "GuildChannel", "TextChannel",
-            "VoiceChannel", "StageChannel",
-            "CategoryChannel", "ThreadOption",
+            "GuildChannel",
+            "TextChannel",
+            "VoiceChannel",
+            "StageChannel",
+            "CategoryChannel",
+            "ThreadOption",
             "Thread",
         ]:
             return cls.channel
         if datatype.__name__ == "Role":
             return cls.role
+        if datatype.__name__ == "Attachment":
+            return cls.attachment
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
 
@@ -667,7 +680,7 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         # TODO: Improve the error message
-        raise TypeError(f'Invalid class {datatype} used as an input type for an Option')
+        raise TypeError(f"Invalid class {datatype} used as an input type for an Option")
 
 
 class EmbeddedActivity(Enum):
@@ -701,7 +714,7 @@ class EmbeddedActivity(Enum):
     watch_together_dev = 880218832743055411
     word_snacks = 879863976006127627
     word_snacks_dev = 879864010126786570
-    youtube_together = 755600276941176913 
+    youtube_together = 755600276941176913
 
 
 class ScheduledEventStatus(Enum):
@@ -728,11 +741,12 @@ class ScheduledEventLocationType(Enum):
     external = 3
 
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 def create_unknown_value(cls: Type[T], val: Any) -> T:
     value_cls = cls._enum_value_cls_  # type: ignore
-    name = f'unknown_{val}'
+    name = f"unknown_{val}"
     return value_cls(name=name, value=val)
 
 

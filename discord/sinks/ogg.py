@@ -31,11 +31,11 @@ from .errors import OGGSinkError
 
 class OGGSink(Sink):
     """A Sink "stores" all the audio data.
-    
+
     Used for .ogg files.
-    
+
     .. versionadded:: 2.1
-    
+
     Raises
     ------
     ClientException
@@ -55,9 +55,7 @@ class OGGSink(Sink):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise OGGSinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise OGGSinkError("Audio may only be formatted after recording is finished.")
         args = [
             "ffmpeg",
             "-f",
@@ -70,17 +68,19 @@ class OGGSink(Sink):
             "-",
             "-f",
             "ogg",
-            "pipe:1"
+            "pipe:1",
         ]
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW,
-                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,
+                creationflags=CREATE_NO_WINDOW,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+            )
         except FileNotFoundError:
             raise OGGSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise OGGSinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise OGGSinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         out = process.communicate(audio.file.read())[0]
         out = io.BytesIO(out)

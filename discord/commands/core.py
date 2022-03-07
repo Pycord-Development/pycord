@@ -33,32 +33,31 @@ import re
 import types
 from collections import OrderedDict
 from typing import (
+    TYPE_CHECKING,
     Any,
+    Awaitable,
     Callable,
+    Coroutine,
     Dict,
+    Generator,
+    Generic,
     List,
     Optional,
-    Union,
-    TYPE_CHECKING,
-    Awaitable,
-    overload,
-    TypeVar,
-    Generic,
     Type,
-    Generator,
-    Coroutine,
+    TypeVar,
+    Union,
+    overload,
 )
 
-from .context import ApplicationContext, AutocompleteContext
-from .errors import ApplicationCommandError, CheckFailure, ApplicationCommandInvokeError
-from .options import Option, OptionChoice
-from ..enums import SlashCommandOptionType
-from ..errors import ValidationError, ClientException
+from ..enums import ChannelType, SlashCommandOptionType
+from ..errors import ClientException, ValidationError
 from ..member import Member
-from ..message import Message
-from ..permissions import Permissions
+from ..message import Attachment, Message
 from ..user import User
-from ..utils import find, get_or_fetch, async_all, utcnow
+from ..utils import async_all, find, get_or_fetch, utcnow
+from .context import ApplicationContext, AutocompleteContext
+from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
+from .options import Option, OptionChoice
 
 __all__ = (
     "_BaseCommand",
@@ -75,19 +74,20 @@ __all__ = (
     "MessageCommand",
 )
 
-if TYPE_CHECKING: 
-    from typing_extensions import ParamSpec, Concatenate
+if TYPE_CHECKING:
+    from typing_extensions import Concatenate, ParamSpec
 
     from ..cog import Cog
 
-T = TypeVar('T')
+T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar('Coro', bound=Callable[..., Coroutine[Any, Any, Any]])
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
+
 
 def wrap_callback(coro):
     @functools.wraps(coro)
@@ -101,7 +101,9 @@ def wrap_callback(coro):
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         return ret
+
     return wrapped
+
 
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
@@ -115,35 +117,39 @@ def hooked_wrapped_callback(command, ctx, coro):
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
-            if hasattr(command, '_max_concurrency') and command._max_concurrency is not None:
+            if hasattr(command, "_max_concurrency") and command._max_concurrency is not None:
                 await command._max_concurrency.release(ctx)
             await command.call_after_hooks(ctx)
         return ret
+
     return wrapped
+
 
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
     partial = functools.partial
     while True:
-        if hasattr(function, '__wrapped__'):
+        if hasattr(function, "__wrapped__"):
             function = function.__wrapped__
         elif isinstance(function, partial):
             function = function.func
         else:
             return function
 
+
 class _BaseCommand:
     __slots__ = ()
+
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import CooldownMapping, BucketType, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
         try:
             cooldown = func.__commands_cooldown__
         except AttributeError:
-            cooldown = kwargs.get('cooldown')
+            cooldown = kwargs.get("cooldown")
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
@@ -156,7 +162,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         try:
             max_concurrency = func.__commands_max_concurrency__
         except AttributeError:
-            max_concurrency = kwargs.get('max_concurrency')
+            max_concurrency = kwargs.get("max_concurrency")
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
 
@@ -170,15 +176,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if hasattr(self, "id") and hasattr(other, "id"):
             check = self.id == other.id
         else:
-            check = (
-                self.name == other.name
-                and self.guild_ids == self.guild_ids
-            )
-        return (
-            isinstance(other, self.__class__)
-            and self.parent == other.parent
-            and check
-        )
+            check = self.name == other.name and self.guild_ids == self.guild_ids
+        return isinstance(other, self.__class__) and self.parent == other.parent and check
 
     async def __call__(self, ctx, *args, **kwargs):
         """|coro|
@@ -191,17 +190,22 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return await self.callback(ctx, *args, **kwargs)
 
     @property
-    def callback(self) -> Union[
-            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-            Callable[Concatenate[ApplicationContext, P], Coro[T]],
-        ]:
+    def callback(
+        self,
+    ) -> Union[
+        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+        Callable[Concatenate[ApplicationContext, P], Coro[T]],
+    ]:
         return self._callback
 
     @callback.setter
-    def callback(self, function: Union[
+    def callback(
+        self,
+        function: Union[
             Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
             Callable[Concatenate[ApplicationContext, P], Coro[T]],
-        ]) -> None:
+        ],
+    ) -> None:
         self._callback = function
         unwrap = unwrap_function(function)
         self.module = unwrap.__module__
@@ -216,6 +220,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
                 if retry_after:
                     from ..ext.commands.errors import CommandOnCooldown
+
                     raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
 
     async def prepare(self, ctx: ApplicationContext) -> None:
@@ -223,7 +228,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(f'The check functions for the command {self.name} failed')
+            raise CheckFailure(f"The check functions for the command {self.name} failed")
 
         if hasattr(self, "_max_concurrency"):
             if self._max_concurrency is not None:
@@ -308,14 +313,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     async def can_run(self, ctx: ApplicationContext) -> bool:
 
         if not await ctx.bot.can_run(ctx):
-            raise CheckFailure(f'The global check functions for command {self.name} failed.')
+            raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
         predicates = self.checks
         if not predicates:
             # since we have no checks, then we just return True.
             return True
 
-        return await async_all(predicate(ctx) for predicate in predicates) # type: ignore
+        return await async_all(predicate(ctx) for predicate in predicates)  # type: ignore
 
     async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
         ctx.command_failed = True
@@ -338,7 +343,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                     wrapped = wrap_callback(local)
                     await wrapped(ctx, error)
         finally:
-            ctx.bot.dispatch('application_command_error', ctx, error)
+            ctx.bot.dispatch("application_command_error", ctx, error)
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
@@ -362,15 +367,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         """
 
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The error handler must be a coroutine.')
+            raise TypeError("The error handler must be a coroutine.")
 
         self.on_error = coro
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered.
-        """
-        return hasattr(self, 'on_error')
+        """:class:`bool`: Checks whether the command has an error handler registered."""
+        return hasattr(self, "on_error")
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.
@@ -389,7 +393,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The coroutine passed is not actually a coroutine.
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The pre-invoke hook must be a coroutine.')
+            raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
         return coro
@@ -411,7 +415,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The coroutine passed is not actually a coroutine.
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The post-invoke hook must be a coroutine.')
+            raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
         return coro
@@ -422,7 +426,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         cog = self.cog
         if self._before_invoke is not None:
             # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, '__self__', cog)
+            instance = getattr(self._before_invoke, "__self__", cog)
             # __self__ only exists for methods, not functions
             # however, if @command.before_invoke is used, it will be a function
             if instance:
@@ -444,7 +448,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     async def call_after_hooks(self, ctx: ApplicationContext) -> None:
         cog = self.cog
         if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, '__self__', cog)
+            instance = getattr(self._after_invoke, "__self__", cog)
             if instance:
                 await self._after_invoke(instance, ctx)  # type: ignore
             else:
@@ -477,7 +481,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             command = command.parent
             entries.append(command.name)
 
-        return ' '.join(reversed(entries))
+        return " ".join(reversed(entries))
 
     @property
     def qualified_name(self) -> str:
@@ -491,12 +495,16 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         parent = self.full_parent_name
 
         if parent:
-            return parent + ' ' + self.name
+            return f"{parent} {self.name}"
         else:
             return self.name
 
+    def __str__(self) -> str:
+        return self.qualified_name
+
     def _set_cog(self, cog):
         self.cog = cog
+
 
 class SlashCommand(ApplicationCommand):
     r"""A class that implements the protocol for a slash command.
@@ -560,19 +568,17 @@ class SlashCommand(ApplicationCommand):
         self.id = None
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__).splitlines()[0]
-            if func.__doc__ is not None
-            else "No description provided"
+            inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
         )
         validate_chat_input_description(description)
         self.description: str = description
-        self.parent = kwargs.get('parent')
+        self.parent = kwargs.get("parent")
         self.attached_to_group: bool = False
 
         self.cog = None
 
         params = self._get_signature_parameters()
-        if (kwop := kwargs.get('options', None)):
+        if kwop := kwargs.get("options", None):
             self.options: List[Option] = self._match_option_param_names(params, kwop)
         else:
             self.options: List[Option] = self._parse_options(params)
@@ -581,7 +587,7 @@ class SlashCommand(ApplicationCommand):
             checks = func.__commands_checks__
             checks.reverse()
         except AttributeError:
-            checks = kwargs.get('checks', [])
+            checks = kwargs.get("checks", [])
 
         self.checks = checks
 
@@ -605,9 +611,7 @@ class SlashCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(
-                f'Callback for {self.name} command is missing "ctx" parameter.'
-            )
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
 
         final_options = []
         for p_name, p_obj in params:
@@ -618,13 +622,9 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(
-                        option.__args__[0], "No description provided", required=False
-                    )
+                    option = Option(option.__args__[0], "No description provided", required=False)
                 else:
-                    option = Option(
-                        option.__args__, "No description provided"
-                    )
+                    option = Option(option.__args__, "No description provided")
 
             if not isinstance(option, Option):
                 option = Option(option, "No description provided")
@@ -658,16 +658,15 @@ class SlashCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(
-                f'Callback for {self.name} command is missing "ctx" parameter.'
-            )
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
 
         check_annotations = [
-            lambda o, a: o.input_type == SlashCommandOptionType.string and o.converter is not None,  # pass on converters
+            lambda o, a: o.input_type == SlashCommandOptionType.string
+            and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type)  # 'normal' types
+            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
             validate_chat_input_name(o.name)
@@ -675,9 +674,7 @@ class SlashCommand(ApplicationCommand):
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException(
-                    f"Too many arguments passed to the options kwarg."
-                )
+                raise ClientException(f"Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
             if not any(c(o, p_obj) for c in check_annotations):
@@ -685,7 +682,7 @@ class SlashCommand(ApplicationCommand):
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
-        left_out_params[''] = ''  # bypass first iter (ctx)
+        left_out_params[""] = ""  # bypass first iter (ctx)
         for k, v in params:
             left_out_params[k] = v
         options.extend(self._parse_options(left_out_params))
@@ -693,10 +690,9 @@ class SlashCommand(ApplicationCommand):
         return options
 
     def _is_typing_union(self, annotation):
-        return (
-            getattr(annotation, '__origin__', None) is Union
-            or type(annotation) is getattr(types, "UnionType", Union)
-        ) # type: ignore
+        return getattr(annotation, "__origin__", None) is Union or type(annotation) is getattr(
+            types, "UnionType", Union
+        )  # type: ignore
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
@@ -730,11 +726,7 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            if (
-                SlashCommandOptionType.user.value
-                <= op.input_type.value
-                <= SlashCommandOptionType.role.value
-            ):
+            if SlashCommandOptionType.user.value <= op.input_type.value <= SlashCommandOptionType.role.value:
                 if ctx.guild is None and op.input_type.name == "user":
                     _data = ctx.interaction.data["resolved"]["users"][arg]
                     _data["id"] = int(arg)
@@ -752,6 +744,11 @@ class SlashCommand(ApplicationCommand):
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
 
+            elif op.input_type == SlashCommandOptionType.attachment:
+                _data = ctx.interaction.data["resolved"]["attachments"][arg]
+                _data["id"] = int(arg)
+                arg = Attachment(state=ctx.interaction._state, data=_data)
+
             kwargs[op._parameter_name] = arg
 
         for o in self.options:
@@ -766,15 +763,12 @@ class SlashCommand(ApplicationCommand):
             await self.callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
-        values = { i.name: i.default for i in self.options }
+        values = {i.name: i.default for i in self.options}
 
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({
-                    i["name"]:i["value"]
-                    for i in ctx.interaction.data["options"]
-                })
+                values.update({i["name"]: i["value"] for i in ctx.interaction.data["options"]})
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
@@ -789,12 +783,8 @@ class SlashCommand(ApplicationCommand):
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
 
-                choices = [
-                    o if isinstance(o, OptionChoice) else OptionChoice(o)
-                    for o in result
-                ][:25]
+                choices = [o if isinstance(o, OptionChoice) else OptionChoice(o) for o in result][:25]
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
-
 
     def copy(self):
         """Creates a copy of this command.
@@ -812,9 +802,9 @@ class SlashCommand(ApplicationCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
+        # if self._buckets.valid and not other._buckets.valid:
         #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
+        # if self._max_concurrency != other._max_concurrency:
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
@@ -882,7 +872,7 @@ class SlashCommandGroup(ApplicationCommand):
                         inspect.cleandoc(cls.__doc__).splitlines()[0]
                         if cls.__doc__ is not None
                         else "No description provided"
-                    )
+                    ),
                 )
             if isinstance(c, (SlashCommand, SlashCommandGroup)):
                 c.parent = self
@@ -897,7 +887,9 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        **kwargs
+        *,
+        default_permissions: Optional[bool] = True,
+        permissions: Optional[List[CommandPermission]] = [],
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -949,7 +941,8 @@ class SlashCommandGroup(ApplicationCommand):
         return wrap
 
     def create_subgroup(
-        self, name: str,
+        self,
+        name: str,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
     ) -> SlashCommandGroup:
@@ -1006,10 +999,12 @@ class SlashCommandGroup(ApplicationCommand):
         Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
             The slash command group that was created.
         """
+
         def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
                 name or cls.__name__,
-                description or (
+                description
+                or (
                     inspect.cleandoc(cls.__doc__).splitlines()[0]
                     if cls.__doc__ is not None
                     else "No description provided"
@@ -1019,11 +1014,14 @@ class SlashCommandGroup(ApplicationCommand):
             )
             self.subcommands.append(group)
             return group
+
         return inner
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
+        resolved = ctx.interaction.data.get("resolved", None)
         command = find(lambda x: x.name == option["name"], self.subcommands)
+        option["resolved"] = resolved
         ctx.interaction.data = option
         await command.invoke(ctx)
 
@@ -1123,6 +1121,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         .. versionadded:: 2.0
     """
+
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
         self = super().__new__(cls)
 
@@ -1151,7 +1150,7 @@ class ContextMenuCommand(ApplicationCommand):
             checks = func.__commands_checks__
             checks.reverse()
         except AttributeError:
-            checks = kwargs.get('checks', [])
+            checks = kwargs.get("checks", [])
 
         self.checks = checks
         self._before_invoke = None
@@ -1180,25 +1179,19 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(
-                f'Callback for {self.name} command is missing "ctx" parameter.'
-            )
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
 
         # next we have the 'user/message' as the next parameter
         try:
             next(params)
         except StopIteration:
             cmd = "user" if type(self) == UserCommand else "message"
-            raise ClientException(
-                f'Callback for {self.name} command is missing "{cmd}" parameter.'
-            )
+            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
 
         # next there should be no more parameters
         try:
             next(params)
-            raise ClientException(
-                f"Callback for {self.name} command has too many parameters."
-            )
+            raise ClientException(f"Callback for {self.name} command has too many parameters.")
         except StopIteration:
             pass
 
@@ -1298,9 +1291,9 @@ class UserCommand(ContextMenuCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
+        # if self._buckets.valid and not other._buckets.valid:
         #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
+        # if self._max_concurrency != other._max_concurrency:
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
@@ -1359,9 +1352,7 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(
-                int(message["author"]["id"])
-            )
+            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
@@ -1387,9 +1378,9 @@ class MessageCommand(ContextMenuCommand):
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:
             other.checks = self.checks.copy()
-        #if self._buckets.valid and not other._buckets.valid:
+        # if self._buckets.valid and not other._buckets.valid:
         #    other._buckets = self._buckets.copy()
-        #if self._max_concurrency != other._max_concurrency:
+        # if self._max_concurrency != other._max_concurrency:
         #    # _max_concurrency won't be None at this point
         #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
@@ -1408,6 +1399,7 @@ class MessageCommand(ContextMenuCommand):
         else:
             return self.copy()
 
+
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -1417,6 +1409,7 @@ def slash_command(**kwargs):
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
+
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
@@ -1428,6 +1421,7 @@ def user_command(**kwargs):
     """
     return application_command(cls=UserCommand, **kwargs)
 
+
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
     .. versionadded:: 2.0
@@ -1437,6 +1431,7 @@ def message_command(**kwargs):
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
+
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
@@ -1466,12 +1461,11 @@ def application_command(cls=SlashCommand, **attrs):
         if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
-            raise TypeError(
-                "func needs to be a callable or a subclass of ApplicationCommand."
-            )
+            raise TypeError("func needs to be a callable or a subclass of ApplicationCommand.")
         return cls(func, **attrs)
 
     return decorator
+
 
 def command(**kwargs):
     """There is an alias for :meth:`application_command`.
@@ -1501,9 +1495,7 @@ def validate_chat_input_name(name: Any):
             f"{name}"
         )
     if not 1 <= len(name) <= 32:
-        raise ValidationError(
-            f"Chat input command names and options must be 1-32 characters long. Received {name}"
-        )
+        raise ValidationError(f"Chat input command names and options must be 1-32 characters long. Received {name}")
     if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
 
@@ -1512,6 +1504,4 @@ def validate_chat_input_description(description: Any):
     if not isinstance(description, str):
         raise TypeError(f"Command description must be of type str. Received {description}")
     if not 1 <= len(description) <= 100:
-        raise ValidationError(
-            f"Command description must be 1-100 characters long. Received {description}"
-        )
+        raise ValidationError(f"Command description must be 1-100 characters long. Received {description}")

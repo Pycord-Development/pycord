@@ -26,6 +26,5 @@ class MyClient(discord.Client):
     async def before_my_task(self):
         await self.wait_until_ready()  # Wait until the bot logs in
 
-
 client = MyClient()
 client.run("token")
