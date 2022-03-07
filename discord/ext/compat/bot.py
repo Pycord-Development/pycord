@@ -22,16 +22,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from abc import ABC
+
 from .core import CompatCommand, compat_command
 from .context import CompatApplicationContext, CompatExtContext
-from ..commands import Bot as ExtBot
+from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot
 
-__all__ = ("Bot",)
+__all__ = ("Bot", "AutoShardedBot")
 
 from ... import Interaction, Message
 
 
-class Bot(ExtBot):
+class BotBase(ABC):
     async def get_application_context(self, interaction: Interaction, cls=None) -> CompatApplicationContext:
         cls = cls if cls is not None else CompatApplicationContext
         # Ignore the type hinting error here. CompatApplicationContext is a subclass of ApplicationContext, and since
@@ -45,7 +47,8 @@ class Bot(ExtBot):
         return await super().get_context(message, cls=cls)  # type: ignore
 
     def add_compat_command(self, command: CompatCommand):
-        command.add_to(self)
+        # Ignore the type hinting error here. All subclasses of BotBase pass the type checks.
+        command.add_to(self)  # type: ignore
 
     def compat_command(self, **kwargs):
         def decorator(func) -> CompatCommand:
@@ -54,3 +57,20 @@ class Bot(ExtBot):
             return result
 
         return decorator
+
+
+class Bot(BotBase, ExtBot):
+    """Represents a discord bot, with support for cross-compatibility between command types.
+
+    This class is a subclass of :class:`commands.Bot` and as a result
+    anything that you can do with a :class:`commands.Bot` you can do with
+    this bot.
+    """
+    pass
+
+
+class AutoShardedBot(BotBase, ExtAutoShardedBot):
+    """This is similar to :class:`.Bot` except that it is inherited from
+    :class:`commands.Bot` instead.
+    """
+    pass
