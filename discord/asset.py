@@ -116,9 +116,8 @@ class AssetMixin:
             if seek_begin:
                 fp.seek(0)
             return written
-        else:
-            with open(fp, "wb") as f:
-                return f.write(data)
+        with open(fp, "wb") as f:
+            return f.write(data)
 
 
 class Asset(AssetMixin):
