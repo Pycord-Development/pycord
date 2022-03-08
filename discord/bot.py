@@ -112,7 +112,7 @@ class ApplicationCommandMixin:
     def application_commands(self) -> List[ApplicationCommand]:
         return list(self._application_commands.values())
 
-    def add_application_command(self, command: ApplicationCommand) -> None:
+    def add_application_command(self, cmd: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
 
         This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
@@ -125,18 +125,18 @@ class ApplicationCommandMixin:
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-        if isinstance(command, SlashCommand) and command.is_subcommand:
+        if isinstance(cmd, SlashCommand) and cmd.is_subcommand:
             raise TypeError("The provided command is a sub-command of group")
 
-        if self.debug_guilds and command.guild_ids is None:
-            command.guild_ids = self.debug_guilds
+        if self.debug_guilds and cmd.guild_ids is None:
+            cmd.guild_ids = self.debug_guilds
 
-        for cmd in self.pending_application_commands:
-            if cmd == command:
-                command.id = cmd.id
-                self._application_commands[command.id] = command
+        for pending_cmd in self.pending_application_commands:
+            if pending_cmd == cmd:
+                cmd.id = pending_cmd.id
+                self._application_commands[cmd.id] = cmd
                 break
-        self._pending_application_commands.append(command)
+        self._pending_application_commands.append(cmd)
 
     def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
