@@ -724,14 +724,14 @@ class ApplicationCommandMixin:
             return
 
         try:
-            command = self._application_commands[interaction.data["id"]]
+            _command = self._application_commands[interaction.data["id"]]
         except KeyError:
             for cmd in self.application_commands:
                 if cmd.name == interaction.data["name"] and (
                     interaction.data.get("guild_id") == cmd.guild_ids
                     or (isinstance(cmd.guild_ids, list) and interaction.data.get("guild_id") in cmd.guild_ids)
                 ):
-                    command = cmd
+                    _command = cmd
                     break
             else:
                 if auto_sync:
@@ -744,11 +744,11 @@ class ApplicationCommandMixin:
 
         if interaction.type is InteractionType.auto_complete:
             ctx = await self.get_autocomplete_context(interaction)
-            ctx.command = command
-            return await command.invoke_autocomplete_callback(ctx)
+            ctx.command = _command
+            return await _command.invoke_autocomplete_callback(ctx)
 
         ctx = await self.get_application_context(interaction)
-        ctx.command = command
+        ctx.command = _command
         self.dispatch("application_command", ctx)
         try:
             if await self.can_run(ctx, call_once=True):
