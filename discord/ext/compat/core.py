@@ -26,7 +26,6 @@ from typing import Union
 
 from discord.commands import SlashCommand
 from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command
-from .context import CompatContext
 
 __all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
 
