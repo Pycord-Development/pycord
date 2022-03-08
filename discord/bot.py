@@ -202,11 +202,11 @@ class ApplicationCommandMixin:
             The command that was requested. If not found, returns ``None``.
         """
 
-        for command in self._application_commands.values():
-            if command.name == name and isinstance(command, type):
-                if guild_ids is not None and command.guild_ids != guild_ids:
+        for cmd in self._application_commands.values():
+            if cmd.name == name and isinstance(cmd, type):
+                if guild_ids is not None and cmd.guild_ids != guild_ids:
                     return
-                return command
+                return cmd
 
     async def get_desynced_commands(self, guild_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """|coro|
