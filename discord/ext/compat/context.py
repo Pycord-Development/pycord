@@ -37,6 +37,28 @@ __all__ = ("CompatContext", "CompatExtContext", "CompatApplicationContext")
 
 
 class CompatContext(ABC):
+    """
+    The base context class for compatibility commands. This class is an :class:`ABC` (abstract base class), which is
+    subclassed by :class:`CompatExtContext` and :class:`CompatApplicationContext`. The methods in this class are meant
+    to give parity between the two contexts, while still allowing for all of their functionality.
+
+    When this is passed to a command, it will either be passed as :class:`CompatExtContext`, or
+    :class:`CompatApplicationContext`. Since they are two separate classes, it is quite simple to use :meth:`isinstance`
+    to make different functionality for each context. For example, if you want to respond to a command with the command
+    type that it was invoked with, you can do the following:
+
+    .. code-block:: python3
+
+        @bot.compat_command()
+        async def example(ctx: CompatContext):
+            if isinstance(ctx, CompatExtContext):
+                command_type = "Traditional (prefix-based) command"
+            elif isinstance(ctx, CompatApplicationContext):
+                command_type = "Application command"
+            await ctx.send(f"This command was invoked with a(n) {command_type}.")
+
+    .. versionadded:: 2.0
+    """
     @abstractmethod
     async def _respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         pass
@@ -46,15 +68,39 @@ class CompatContext(ABC):
         pass
 
     async def respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+        """|coro|
+
+        Responds to the command with the respective response type to the current context. In :class:`CompatExtContext`,
+        this will be :meth:`~.ExtContext.reply` while in :class:`CompatApplicationContext`, this will be
+        :meth:`~.ApplicationContext.respond`.
+        """
         return await self._respond(*args, **kwargs)
 
     async def reply(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+        """|coro|
+
+        Alias for :meth:`~.CompatContext.respond`.
+        """
         return await self.respond(*args, **kwargs)
 
     async def followup(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+        """|coro|
+
+        Alias for :meth:`~.CompatContext.respond`.
+        """
         return await self.respond(*args, **kwargs)
 
     async def defer(self, *args, **kwargs) -> None:
+        """|coro|
+
+        Defers the command with the respective approach to the current context. In :class:`CompatExtContext`, this will
+        be :meth:`~.ExtContext.trigger_typing` while in :class:`CompatApplicationContext`, this will be
+        :meth:`~.ApplicationContext.defer`.
+
+        .. note::
+            There is no ``trigger_typing`` alias for this method. ``trigger_typing`` will always provide the same
+            functionality across contexts.
+        """
         return await self._defer(*args, **kwargs)
 
     def _get_super(self, attr: str) -> Optional[Any]:
@@ -62,6 +108,12 @@ class CompatContext(ABC):
 
 
 class CompatApplicationContext(CompatContext, ApplicationContext):
+    """
+    The application context class for compatibility commands. This class is a subclass of :class:`CompatContext` and
+    :class:`ApplicationContext`. This class is meant to be used with :class:`CompatCommand`.
+
+    .. versionadded:: 2.0
+    """
     async def _respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
         return await self._get_super("respond")(*args, **kwargs)
 
@@ -70,6 +122,12 @@ class CompatApplicationContext(CompatContext, ApplicationContext):
 
 
 class CompatExtContext(CompatContext, Context):
+    """
+    The ext.commands context class for compatibility commands. This class is a subclass of :class:`CompatContext` and
+    :class:`Context`. This class is meant to be used with :class:`CompatCommand`.
+
+    .. versionadded:: 2.0
+    """
     async def _respond(self, *args, **kwargs) -> Message:
         return await self._get_super("reply")(*args, **kwargs)
 
@@ -78,5 +136,6 @@ class CompatExtContext(CompatContext, Context):
 
 
 if TYPE_CHECKING:
+    # This is a workaround for mypy not being able to resolve the type of CompatCommand.
     class CompatContext(ApplicationContext, Context):
         ...
