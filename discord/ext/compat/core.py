@@ -26,6 +26,7 @@ from typing import Union
 
 from discord.commands import SlashCommand
 from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command
+from .context import CompatContext
 
 __all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
 
@@ -40,23 +41,63 @@ class CompatExtCommand(Command):
 
 class CompatCommand:
     def __init__(self, callback, **kwargs):
+        """
+        This is the base class for commands that are compatible with both traditional (prefix-based) commands and slash
+        commands.
+
+        Parameters
+        ----------
+        callback: Callable[[CompatContext, ...], Awaitable[Any]]
+            The callback to invoke when the command is executed. The first argument will be a :class:`CompatContext`,
+            and any additional arguments will be passed to the callback. This callback must be a coroutine.
+        kwargs: Optional[Dict[str, Any]]
+            Keyword arguments that are directly passed to the respective command constructors.
+        """
         self.callback = callback
         self.kwargs = kwargs
 
     def get_ext_command(self):
+        """A method to get the ext.commands version of this command.
+
+        Returns
+        -------
+        :class:`CompatExtCommand`
+            The respective traditional (prefix-based) version of the command.
+        """
         command = CompatExtCommand(self.callback, **self.kwargs)
         return command
 
     def get_application_command(self):
+        """A method to get the discord.commands version of this command.
+
+        Returns
+        -------
+        :class:`CompatSlashCommand`
+            The respective slash command version of the command.
+        """
         command = CompatSlashCommand(self.callback, **self.kwargs)
         return command
 
     def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
+        """Adds the command to a bot.
+
+        Parameters
+        ----------
+        bot: Union[:class:`ExtBot`, :class:`ExtAutoShardedBot`]
+            The bot to add the command to.
+        """
         bot.add_command(self.get_ext_command())
         bot.add_application_command(self.get_application_command())
 
 
 def compat_command(**kwargs):
+    """A decorator that is used to wrap a function as a command.
+
+    Parameters
+    ----------
+    kwargs: Optional[Dict[str, Any]]
+        Keyword arguments that are directly passed to the respective command constructors.
+    """
     def decorator(callback):
         return CompatCommand(callback, **kwargs)
 

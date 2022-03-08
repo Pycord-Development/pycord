@@ -50,10 +50,22 @@ class BotBase(ABC):
         return await super().get_context(message, cls=cls)  # type: ignore
 
     def add_compat_command(self, command: CompatCommand):
+        """Takes a :class:`.CompatCommand` and adds both a slash and traditional (prefix-based) version of the command
+        to the bot.
+        """
         # Ignore the type hinting error here. All subclasses of BotBase pass the type checks.
         command.add_to(self)  # type: ignore
 
     def compat_command(self, **kwargs):
+        """A shortcut decorator that invokes :func:`.compat_command` and adds it to
+        the internal command list via :meth:`~.Bot.add_compat_command`.
+
+        Returns
+        --------
+        Callable[..., :class:`CompatCommand`]
+            A decorator that converts the provided method into an :class:`.CompatCommand`, adds both a slash and
+            traditional (prefix-based) version of the command to the bot, and returns the :class:`.CompatCommand`.
+        """
         def decorator(func) -> CompatCommand:
             result = compat_command(**kwargs)(func)
             self.add_compat_command(result)
@@ -68,6 +80,8 @@ class Bot(BotBase, ExtBot):
     This class is a subclass of :class:`commands.Bot` and as a result
     anything that you can do with a :class:`commands.Bot` you can do with
     this bot.
+
+    .. versionadded:: 2.0
     """
     pass
 
@@ -75,5 +89,7 @@ class Bot(BotBase, ExtBot):
 class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
     :class:`commands.AutoShardedBot` instead.
+
+    .. versionadded:: 2.0
     """
     pass
