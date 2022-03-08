@@ -174,10 +174,10 @@ class Asset(AssetMixin):
     @classmethod
     def _from_avatar(cls, state, user_id: int, avatar: str) -> Asset:
         animated = avatar.startswith("a_")
-        format = "gif" if animated else "png"
+        fmt = "gif" if animated else "png"
         return cls(
             state,
-            url=f"{cls.BASE}/avatars/{user_id}/{avatar}.{format}?size=1024",
+            url=f"{cls.BASE}/avatars/{user_id}/{avatar}.{fmt}?size=1024",
             key=avatar,
             animated=animated,
         )
