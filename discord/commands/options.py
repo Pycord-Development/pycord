@@ -102,9 +102,11 @@ class Option:
     max_value: Optional[:class:`int`]
         The maximum value that can be entered.
         Only applies to Options with an input_type of ``int`` or ``float``.
-    autocomplete: Optional[:class:`Any`]
-        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
-        single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+    autocomplete: Union[Iterable[:class:`str`], Callable[[:class:`AutocompleteContext`], Union[Iterable[:class:`str`], Awaitable[Iterable[:class:`str`]]]], Awaitable[Iterable[:class:`str`]], :class:`bool`]
+        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
+        that takes a single argument of :class:`AutocompleteContext`, a coroutine, or a :class:`bool`. Must resolve to
+        an iterable of :class:`str`. If ``True`` is passed, it will default to :meth:`~.utils.basic_autocomplete` on
+        :attr:`~.Option.choices`. If false, autocomplete is disabled
 
         .. note::
 
@@ -195,7 +197,11 @@ class Option:
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
             raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
 
-        self.autocomplete = kwargs.pop("autocomplete", None)
+        self.autocomplete = kwargs.pop("autocomplete", False)
+        if self.autocomplete is True:
+            async def callback(*args, **kwargs):
+                return utils.basic_autocomplete(self.choices)(*args, **kwargs)
+            self.autocomplete = callback
 
         self.name_localizations = kwargs.pop("name_localizations", None)
         self.description_localizations = kwargs.pop("description_localizations", None)
