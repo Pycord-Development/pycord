@@ -185,10 +185,10 @@ class Asset(AssetMixin):
     @classmethod
     def _from_guild_avatar(cls, state, guild_id: int, member_id: int, avatar: str) -> Asset:
         animated = avatar.startswith("a_")
-        format = "gif" if animated else "png"
+        fmt = "gif" if animated else "png"
         return cls(
             state,
-            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}.{format}?size=1024",
+            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}.{fmt}?size=1024",
             key=avatar,
             animated=animated,
         )
@@ -214,14 +214,14 @@ class Asset(AssetMixin):
     @classmethod
     def _from_guild_image(cls, state, guild_id: int, image: str, path: str) -> Asset:
         animated = False
-        format = "png"
+        fmt = "png"
         if path == "banners":
             animated = image.startswith("a_")
-            format = "gif" if animated else "png"
+            fmt = "gif" if animated else "png"
 
         return cls(
             state,
-            url=f"{cls.BASE}/{path}/{guild_id}/{image}.{format}?size=1024",
+            url=f"{cls.BASE}/{path}/{guild_id}/{image}.{fmt}?size=1024",
             key=image,
             animated=animated,
         )
@@ -229,10 +229,10 @@ class Asset(AssetMixin):
     @classmethod
     def _from_guild_icon(cls, state, guild_id: int, icon_hash: str) -> Asset:
         animated = icon_hash.startswith("a_")
-        format = "gif" if animated else "png"
+        fmt = "gif" if animated else "png"
         return cls(
             state,
-            url=f"{cls.BASE}/icons/{guild_id}/{icon_hash}.{format}?size=1024",
+            url=f"{cls.BASE}/icons/{guild_id}/{icon_hash}.{fmt}?size=1024",
             key=icon_hash,
             animated=animated,
         )
@@ -249,10 +249,10 @@ class Asset(AssetMixin):
     @classmethod
     def _from_user_banner(cls, state, user_id: int, banner_hash: str) -> Asset:
         animated = banner_hash.startswith("a_")
-        format = "gif" if animated else "png"
+        fmt = "gif" if animated else "png"
         return cls(
             state,
-            url=f"{cls.BASE}/banners/{user_id}/{banner_hash}.{format}?size=512",
+            url=f"{cls.BASE}/banners/{user_id}/{banner_hash}.{fmt}?size=512",
             key=banner_hash,
             animated=animated,
         )
