@@ -138,7 +138,7 @@ class ApplicationCommandMixin:
                 break
         self._pending_application_commands.append(cmd)
 
-    def remove_application_command(self, command: ApplicationCommand) -> Optional[ApplicationCommand]:
+    def remove_application_command(self, cmd: ApplicationCommand) -> Optional[ApplicationCommand]:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
@@ -155,14 +155,14 @@ class ApplicationCommandMixin:
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        if command.id is None:
+        if cmd.id is None:
             try:
-                index = self._pending_application_commands.index(command)
+                index = self._pending_application_commands.index(cmd)
             except ValueError:
                 return None
             return self._pending_application_commands.pop(index)
 
-        return self._application_commands.pop(int(command.id), None)
+        return self._application_commands.pop(int(cmd.id), None)
 
     @property
     def get_command(self):
