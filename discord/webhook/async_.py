@@ -776,7 +776,7 @@ class WebhookMessage(Message):
             .. versionadded:: 2.0
 
         Raises
-        -------
+        ------
         HTTPException
             Editing the message failed.
         Forbidden

@@ -168,6 +168,24 @@ AutocompleteContext
 .. autoclass:: AutocompleteContext
     :members:
 
+CommandPermission
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: CommandPermission
+
+.. autoclass:: CommandPermission
+    :members:
+
+.. autofunction:: discord.commands.permissions.permission
+
+.. autofunction:: discord.commands.permissions.has_role
+
+.. autofunction:: discord.commands.permissions.has_any_role
+
+.. autofunction:: discord.commands.permissions.is_user
+
+.. autofunction:: discord.commands.permissions.is_owner
+
 Application Info
 ------------------
 
@@ -3126,7 +3144,7 @@ of :class:`enum.Enum`.
 
     Represents the status of a scheduled event.
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: scheduled
 
@@ -3152,7 +3170,7 @@ of :class:`enum.Enum`.
 
     Represents a scheduled event location type (otherwise known as the entity type on the API).
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: stage_instance
 
@@ -4105,7 +4123,7 @@ Guild
 ScheduledEvent
 ~~~~~~~~~~~~~~~
 
-.. attributestable:: ScheduledEvent
+.. attributetable:: ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
@@ -4541,7 +4559,7 @@ RawThreadDeleteEvent
     :members:
 
 RawScheduledEventSubscription
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: RawScheduledEventSubscription
 
