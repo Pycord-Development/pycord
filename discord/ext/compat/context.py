@@ -82,13 +82,6 @@ class CompatContext(ABC):
         """
         return await self.respond(*args, **kwargs)
 
-    async def followup(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
-        """|coro|
-
-        Alias for :meth:`~.CompatContext.respond`.
-        """
-        return await self.respond(*args, **kwargs)
-
     async def defer(self, *args, **kwargs) -> None:
         """|coro|
 
