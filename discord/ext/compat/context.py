@@ -26,7 +26,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Union, Any
 
 from discord.commands import ApplicationContext
-from discord.interactions import Interaction
+from discord.interactions import Interaction, InteractionMessage
 from discord.message import Message
 from discord.webhook import WebhookMessage
 from ..commands import Context
