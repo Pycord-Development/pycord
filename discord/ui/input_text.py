@@ -65,7 +65,9 @@ class InputText:
         super().__init__()
         custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
         if not (isinstance(custom_id, str) or custom_id is None):
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
 
         self._underlying = InputTextComponent._raw_construct(
             type=ComponentType.input_text,
@@ -94,7 +96,9 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
+            raise TypeError(
+                f"style must be of type InputTextStyle not {value.__class__}"
+            )
         self._underlying.style = value
 
     @property

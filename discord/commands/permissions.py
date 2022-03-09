@@ -143,7 +143,9 @@ def has_role(item: Union[int, str], guild_id: int = None):
             func.__app_cmd_perms__ = []
 
         # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission(item, 1, True, guild_id)  # {"id": item, "type": 1, "permission": True}
+        app_cmd_perm = CommandPermission(
+            item, 1, True, guild_id
+        )  # {"id": item, "type": 1, "permission": True}
 
         # Append
         func.__app_cmd_perms__.append(app_cmd_perm)
@@ -178,7 +180,9 @@ def has_any_role(*items: Union[int, str], guild_id: int = None):
 
         # Permissions (Will Convert ID later in register_commands if needed)
         for item in items:
-            app_cmd_perm = CommandPermission(item, 1, True, guild_id)  # {"id": item, "type": 1, "permission": True}
+            app_cmd_perm = CommandPermission(
+                item, 1, True, guild_id
+            )  # {"id": item, "type": 1, "permission": True}
 
             # Append
             func.__app_cmd_perms__.append(app_cmd_perm)
@@ -210,7 +214,9 @@ def is_user(user: int, guild_id: int = None):
             func.__app_cmd_perms__ = []
 
         # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission(user, 2, True, guild_id)  # {"id": user, "type": 2, "permission": True}
+        app_cmd_perm = CommandPermission(
+            user, 2, True, guild_id
+        )  # {"id": user, "type": 2, "permission": True}
 
         # Append
         func.__app_cmd_perms__.append(app_cmd_perm)
@@ -241,7 +247,9 @@ def is_owner(guild_id: int = None):
             func.__app_cmd_perms__ = []
 
         # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission("owner", 2, True, guild_id)  # {"id": "owner", "type": 2, "permission": True}
+        app_cmd_perm = CommandPermission(
+            "owner", 2, True, guild_id
+        )  # {"id": "owner", "type": 2, "permission": True}
 
         # Append
         func.__app_cmd_perms__.append(app_cmd_perm)

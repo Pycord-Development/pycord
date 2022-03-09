@@ -93,7 +93,9 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     __slots__ = ("animated", "name", "id", "_state")
 
-    _CUSTOM_EMOJI_RE = re.compile(r"<?(?P<animated>a)?:?(?P<name>[A-Za-z0-9\_]+):(?P<id>[0-9]{13,20})>?")
+    _CUSTOM_EMOJI_RE = re.compile(
+        r"<?(?P<animated>a)?:?(?P<name>[A-Za-z0-9\_]+):(?P<id>[0-9]{13,20})>?"
+    )
 
     if TYPE_CHECKING:
         id: Optional[int]
@@ -105,7 +107,9 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         self._state: Optional[ConnectionState] = None
 
     @classmethod
-    def from_dict(cls: Type[PE], data: Union[PartialEmojiPayload, Dict[str, Any]]) -> PE:
+    def from_dict(
+        cls: Type[PE], data: Union[PartialEmojiPayload, Dict[str, Any]]
+    ) -> PE:
         return cls(
             animated=data.get("animated", False),
             id=utils._get_as_snowflake(data, "id"),

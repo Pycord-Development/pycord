@@ -66,4 +66,6 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
 
     def __init__(self, e: Exception) -> None:
         self.original: Exception = e
-        super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")
+        super().__init__(
+            f"Application Command raised an exception: {e.__class__.__name__}: {e}"
+        )

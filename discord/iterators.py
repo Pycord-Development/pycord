@@ -300,7 +300,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
             if self.limit is None:
                 raise ValueError("history does not support around with limit=None")
             if self.limit > 101:
-                raise ValueError("history max limit 101 when specifying around parameter")
+                raise ValueError(
+                    "history max limit 101 when specifying around parameter"
+                )
             elif self.limit == 101:
                 self.limit = 100  # Thanks discord
 
@@ -356,7 +358,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
 
             channel = self.channel
             for element in data:
-                await self.messages.put(self.state.create_message(channel=channel, data=element))
+                await self.messages.put(
+                    self.state.create_message(channel=channel, data=element)
+                )
 
     async def _retrieve_messages(self, retrieve) -> List[Message]:
         """Retrieve messages and update next parameters."""
@@ -365,7 +369,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
     async def _retrieve_messages_before_strategy(self, retrieve):
         """Retrieve messages using before parameter."""
         before = self.before.id if self.before else None
-        data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, before=before)
+        data: List[MessagePayload] = await self.logs_from(
+            self.channel.id, retrieve, before=before
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -375,7 +381,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
     async def _retrieve_messages_after_strategy(self, retrieve):
         """Retrieve messages using after parameter."""
         after = self.after.id if self.after else None
-        data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, after=after)
+        data: List[MessagePayload] = await self.logs_from(
+            self.channel.id, retrieve, after=after
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -386,7 +394,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
         """Retrieve messages using around parameter."""
         if self.around:
             around = self.around.id if self.around else None
-            data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, around=around)
+            data: List[MessagePayload] = await self.logs_from(
+                self.channel.id, retrieve, around=around
+            )
             self.around = None
             return data
         return []
@@ -506,7 +516,9 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 if element["action_type"] is None:
                     continue
 
-                await self.entries.put(AuditLogEntry(data=element, users=self._users, guild=self.guild))
+                await self.entries.put(
+                    AuditLogEntry(data=element, users=self._users, guild=self.guild)
+                )
 
 
 class GuildIterator(_AsyncIterator["Guild"]):

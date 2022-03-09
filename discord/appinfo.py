@@ -155,7 +155,9 @@ class AppInfo:
 
         self.guild_id: Optional[int] = utils._get_as_snowflake(data, "guild_id")
 
-        self.primary_sku_id: Optional[int] = utils._get_as_snowflake(data, "primary_sku_id")
+        self.primary_sku_id: Optional[int] = utils._get_as_snowflake(
+            data, "primary_sku_id"
+        )
         self.slug: Optional[str] = data.get("slug")
         self._cover_image: Optional[str] = data.get("cover_image")
         self.terms_of_service_url: Optional[str] = data.get("terms_of_service_url")

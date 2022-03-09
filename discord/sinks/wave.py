@@ -55,7 +55,9 @@ class WaveSink(Sink):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise WaveSinkError("Audio may only be formatted after recording is finished.")
+            raise WaveSinkError(
+                "Audio may only be formatted after recording is finished."
+            )
         data = audio.file
 
         with wave.open(data, "wb") as f:

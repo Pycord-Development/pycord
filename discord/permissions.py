@@ -119,7 +119,9 @@ class Permissions(BaseFlags):
 
     def __init__(self, permissions: int = 0, **kwargs: bool):
         if not isinstance(permissions, int):
-            raise TypeError(f"Expected int parameter, received {permissions.__class__.__name__} instead.")
+            raise TypeError(
+                f"Expected int parameter, received {permissions.__class__.__name__} instead."
+            )
 
         self.value = permissions
         for key, value in kwargs.items():
@@ -132,14 +134,18 @@ class Permissions(BaseFlags):
         if isinstance(other, Permissions):
             return (self.value & other.value) == self.value
         else:
-            raise TypeError(f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}")
+            raise TypeError(
+                f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}"
+            )
 
     def is_superset(self, other: Permissions) -> bool:
         """Returns ``True`` if self has the same or more permissions as other."""
         if isinstance(other, Permissions):
             return (self.value | other.value) == self.value
         else:
-            raise TypeError(f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}")
+            raise TypeError(
+                f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}"
+            )
 
     def is_strict_subset(self, other: Permissions) -> bool:
         """Returns ``True`` if the permissions on other are a strict subset of those on self."""
@@ -725,7 +731,9 @@ class PermissionOverwrite:
 
     def _set(self, key: str, value: Optional[bool]) -> None:
         if value not in (True, None, False):
-            raise TypeError(f"Expected bool or NoneType, received {value.__class__.__name__}")
+            raise TypeError(
+                f"Expected bool or NoneType, received {value.__class__.__name__}"
+            )
 
         if value is None:
             self._values.pop(key, None)

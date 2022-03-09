@@ -67,8 +67,13 @@ async def start(
 async def finished_callback(sink, channel: discord.TextChannel, *args):
     recorded_users = [f"<@{user_id}>" for user_id, audio in sink.audio_data.items()]
     await sink.vc.disconnect()
-    files = [discord.File(audio.file, f"{user_id}.{sink.encoding}") for user_id, audio in sink.audio_data.items()]
-    await channel.send(f"Finished! Recorded audio for {', '.join(recorded_users)}.", files=files)
+    files = [
+        discord.File(audio.file, f"{user_id}.{sink.encoding}")
+        for user_id, audio in sink.audio_data.items()
+    ]
+    await channel.send(
+        f"Finished! Recorded audio for {', '.join(recorded_users)}.", files=files
+    )
 
 
 @bot.command()

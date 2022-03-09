@@ -110,7 +110,9 @@ class CommandError(DiscordException):
     def __init__(self, message: Optional[str] = None, *args: Any) -> None:
         if message is not None:
             # clean-up @everyone and @here mentions
-            m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
+            m = message.replace("@everyone", "@\u200beveryone").replace(
+                "@here", "@\u200bhere"
+            )
             super().__init__(m, *args)
         else:
             super().__init__(*args)
@@ -219,7 +221,9 @@ class CheckAnyFailure(CheckFailure):
         A list of check predicates that failed.
     """
 
-    def __init__(self, checks: List[CheckFailure], errors: List[Callable[[Context], bool]]) -> None:
+    def __init__(
+        self, checks: List[CheckFailure], errors: List[Callable[[Context], bool]]
+    ) -> None:
         self.checks: List[CheckFailure] = checks
         self.errors: List[Callable[[Context], bool]] = errors
         super().__init__("You do not have permission to run this command.")
@@ -233,7 +237,9 @@ class PrivateMessageOnly(CheckFailure):
     """
 
     def __init__(self, message: Optional[str] = None) -> None:
-        super().__init__(message or "This command can only be used in private messages.")
+        super().__init__(
+            message or "This command can only be used in private messages."
+        )
 
 
 class NoPrivateMessage(CheckFailure):
@@ -571,7 +577,9 @@ class CommandOnCooldown(CommandError):
         The amount of seconds to wait before you can retry again.
     """
 
-    def __init__(self, cooldown: Cooldown, retry_after: float, type: BucketType) -> None:
+    def __init__(
+        self, cooldown: Cooldown, retry_after: float, type: BucketType
+    ) -> None:
         self.cooldown: Cooldown = cooldown
         self.retry_after: float = retry_after
         self.type: BucketType = type
@@ -598,7 +606,9 @@ class MaxConcurrencyReached(CommandError):
         suffix = f"per {name}" if per.name != "default" else "globally"
         plural = "%s times %s" if number > 1 else "%s time %s"
         fmt = plural % (number, suffix)
-        super().__init__(f"Too many people are using this command. It can only be used {fmt} concurrently.")
+        super().__init__(
+            f"Too many people are using this command. It can only be used {fmt} concurrently."
+        )
 
 
 class MissingRole(CheckFailure):
@@ -715,7 +725,9 @@ class NSFWChannelRequired(CheckFailure):
 
     def __init__(self, channel: Union[GuildChannel, Thread]) -> None:
         self.channel: Union[GuildChannel, Thread] = channel
-        super().__init__(f"Channel '{channel}' needs to be NSFW for this command to work.")
+        super().__init__(
+            f"Channel '{channel}' needs to be NSFW for this command to work."
+        )
 
 
 class MissingPermissions(CheckFailure):
@@ -733,7 +745,10 @@ class MissingPermissions(CheckFailure):
     def __init__(self, missing_permissions: List[str], *args: Any) -> None:
         self.missing_permissions: List[str] = missing_permissions
 
-        missing = [perm.replace("_", " ").replace("guild", "server").title() for perm in missing_permissions]
+        missing = [
+            perm.replace("_", " ").replace("guild", "server").title()
+            for perm in missing_permissions
+        ]
 
         if len(missing) > 2:
             fmt = f"{', '.join(missing[:-1])}, and {missing[-1]}"
@@ -758,7 +773,10 @@ class BotMissingPermissions(CheckFailure):
     def __init__(self, missing_permissions: List[str], *args: Any) -> None:
         self.missing_permissions: List[str] = missing_permissions
 
-        missing = [perm.replace("_", " ").replace("guild", "server").title() for perm in missing_permissions]
+        missing = [
+            perm.replace("_", " ").replace("guild", "server").title()
+            for perm in missing_permissions
+        ]
 
         if len(missing) > 2:
             fmt = f"{', '.join(missing[:-1])}, and {missing[-1]}"
@@ -784,7 +802,9 @@ class BadUnionArgument(UserInputError):
         A list of errors that were caught from failing the conversion.
     """
 
-    def __init__(self, param: Parameter, converters: Tuple[Type, ...], errors: List[CommandError]) -> None:
+    def __init__(
+        self, param: Parameter, converters: Tuple[Type, ...], errors: List[CommandError]
+    ) -> None:
         self.param: Parameter = param
         self.converters: Tuple[Type, ...] = converters
         self.errors: List[CommandError] = errors
@@ -824,7 +844,9 @@ class BadLiteralArgument(UserInputError):
         A list of errors that were caught from failing the conversion.
     """
 
-    def __init__(self, param: Parameter, literals: Tuple[Any, ...], errors: List[CommandError]) -> None:
+    def __init__(
+        self, param: Parameter, literals: Tuple[Any, ...], errors: List[CommandError]
+    ) -> None:
         self.param: Parameter = param
         self.literals: Tuple[Any, ...] = literals
         self.errors: List[CommandError] = errors
@@ -880,7 +902,9 @@ class InvalidEndOfQuotedStringError(ArgumentParsingError):
 
     def __init__(self, char: str) -> None:
         self.char: str = char
-        super().__init__(f"Expected space after closing quotation but received {char!r}")
+        super().__init__(
+            f"Expected space after closing quotation but received {char!r}"
+        )
 
 
 class ExpectedClosingQuoteError(ArgumentParsingError):
@@ -951,7 +975,9 @@ class TooManyFlags(FlagError):
     def __init__(self, flag: Flag, values: List[str]) -> None:
         self.flag: Flag = flag
         self.values: List[str] = values
-        super().__init__(f"Too many flag values, expected {flag.max_args} but received {len(values)}.")
+        super().__init__(
+            f"Too many flag values, expected {flag.max_args} but received {len(values)}."
+        )
 
 
 class BadFlagArgument(FlagError):

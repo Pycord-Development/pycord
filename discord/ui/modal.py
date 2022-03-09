@@ -37,7 +37,9 @@ class Modal:
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
         if not (isinstance(custom_id, str) or custom_id is None):
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
 
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
@@ -149,7 +151,9 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
+                raise ValueError(
+                    f"item would not fit at row {item.row} ({total} > 5 width)"
+                )
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:

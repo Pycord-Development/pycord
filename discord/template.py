@@ -141,10 +141,16 @@ class Template:
         self.name: str = data["name"]
         self.description: Optional[str] = data["description"]
         creator_data = data.get("creator")
-        self.creator: Optional[User] = None if creator_data is None else self._state.create_user(creator_data)
+        self.creator: Optional[User] = (
+            None if creator_data is None else self._state.create_user(creator_data)
+        )
 
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get("created_at"))
-        self.updated_at: Optional[datetime.datetime] = parse_time(data.get("updated_at"))
+        self.created_at: Optional[datetime.datetime] = parse_time(
+            data.get("created_at")
+        )
+        self.updated_at: Optional[datetime.datetime] = parse_time(
+            data.get("updated_at")
+        )
 
         guild_id = int(data["source_guild_id"])
         guild: Optional[Guild] = self._state._get_guild(guild_id)
@@ -167,7 +173,9 @@ class Template:
             f" creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>"
         )
 
-    async def create_guild(self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None) -> Guild:
+    async def create_guild(
+        self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None
+    ) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild` using the template.
@@ -204,7 +212,9 @@ class Template:
         region = region or VoiceRegion.us_west
         region_value = region.value
 
-        data = await self._state.http.create_from_template(self.code, name, region_value, icon)
+        data = await self._state.http.create_from_template(
+            self.code, name, region_value, icon
+        )
         return Guild(data=data, state=self._state)
 
     async def sync(self) -> Template:
@@ -284,7 +294,9 @@ class Template:
         if description is not MISSING:
             payload["description"] = description
 
-        data = await self._state.http.edit_template(self.source_guild.id, self.code, payload)
+        data = await self._state.http.edit_template(
+            self.source_guild.id, self.code, payload
+        )
         return Template(state=self._state, data=data)
 
     async def delete(self) -> None:

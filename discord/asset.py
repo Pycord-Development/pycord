@@ -183,7 +183,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_guild_avatar(cls, state, guild_id: int, member_id: int, avatar: str) -> Asset:
+    def _from_guild_avatar(
+        cls, state, guild_id: int, member_id: int, avatar: str
+    ) -> Asset:
         animated = avatar.startswith("a_")
         format = "gif" if animated else "png"
         return cls(
@@ -258,7 +260,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_scheduled_event_cover(cls, state, event_id: int, cover_hash: str) -> Asset:
+    def _from_scheduled_event_cover(
+        cls, state, event_id: int, cover_hash: str
+    ) -> Asset:
         return cls(
             state,
             url=f"{cls.BASE}/guild-events/{event_id}/{cover_hash}.png",
@@ -332,16 +336,22 @@ class Asset(AssetMixin):
         if format is not MISSING:
             if self._animated:
                 if format not in VALID_ASSET_FORMATS:
-                    raise InvalidArgument(f"format must be one of {VALID_ASSET_FORMATS}")
+                    raise InvalidArgument(
+                        f"format must be one of {VALID_ASSET_FORMATS}"
+                    )
                 url = url.with_path(f"{path}.{format}")
             elif static_format is MISSING:
                 if format not in VALID_STATIC_FORMATS:
-                    raise InvalidArgument(f"format must be one of {VALID_STATIC_FORMATS}")
+                    raise InvalidArgument(
+                        f"format must be one of {VALID_STATIC_FORMATS}"
+                    )
                 url = url.with_path(f"{path}.{format}")
 
         if static_format is not MISSING and not self._animated:
             if static_format not in VALID_STATIC_FORMATS:
-                raise InvalidArgument(f"static_format must be one of {VALID_STATIC_FORMATS}")
+                raise InvalidArgument(
+                    f"static_format must be one of {VALID_STATIC_FORMATS}"
+                )
             url = url.with_path(f"{path}.{static_format}")
 
         if size is not MISSING:

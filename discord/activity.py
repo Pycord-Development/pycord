@@ -132,7 +132,9 @@ class BaseActivity:
         .. versionadded:: 1.3
         """
         if self._created_at is not None:
-            return datetime.datetime.fromtimestamp(self._created_at / 1000, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(
+                self._created_at / 1000, tz=datetime.timezone.utc
+            )
 
     def to_dict(self) -> ActivityPayload:
         raise NotImplementedError
@@ -234,11 +236,15 @@ class Activity(BaseActivity):
 
         activity_type = kwargs.pop("type", -1)
         self.type: ActivityType = (
-            activity_type if isinstance(activity_type, ActivityType) else try_enum(ActivityType, activity_type)
+            activity_type
+            if isinstance(activity_type, ActivityType)
+            else try_enum(ActivityType, activity_type)
         )
 
         emoji = kwargs.pop("emoji", None)
-        self.emoji: Optional[PartialEmoji] = PartialEmoji.from_dict(emoji) if emoji is not None else None
+        self.emoji: Optional[PartialEmoji] = (
+            PartialEmoji.from_dict(emoji) if emoji is not None else None
+        )
 
     def __repr__(self) -> str:
         attrs = (
@@ -387,14 +393,18 @@ class Game(BaseActivity):
     def start(self) -> Optional[datetime.datetime]:
         """Optional[:class:`datetime.datetime`]: When the user started playing this game in UTC, if applicable."""
         if self._start:
-            return datetime.datetime.fromtimestamp(self._start / 1000, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(
+                self._start / 1000, tz=datetime.timezone.utc
+            )
         return None
 
     @property
     def end(self) -> Optional[datetime.datetime]:
         """Optional[:class:`datetime.datetime`]: When the user will stop playing this game in UTC, if applicable."""
         if self._end:
-            return datetime.datetime.fromtimestamp(self._end / 1000, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(
+                self._end / 1000, tz=datetime.timezone.utc
+            )
         return None
 
     def __str__(self) -> str:
@@ -524,7 +534,11 @@ class Streaming(BaseActivity):
         return ret
 
     def __eq__(self, other: Any) -> bool:
-        return isinstance(other, Streaming) and other.name == self.name and other.url == self.url
+        return (
+            isinstance(other, Streaming)
+            and other.name == self.name
+            and other.url == self.url
+        )
 
     def __ne__(self, other: Any) -> bool:
         return not self.__eq__(other)
@@ -592,7 +606,9 @@ class Spotify:
         .. versionadded:: 1.3
         """
         if self._created_at is not None:
-            return datetime.datetime.fromtimestamp(self._created_at / 1000, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(
+                self._created_at / 1000, tz=datetime.timezone.utc
+            )
 
     @property
     def colour(self) -> Colour:
@@ -695,12 +711,16 @@ class Spotify:
     @property
     def start(self) -> datetime.datetime:
         """:class:`datetime.datetime`: When the user started playing this song in UTC."""
-        return datetime.datetime.fromtimestamp(self._timestamps["start"] / 1000, tz=datetime.timezone.utc)
+        return datetime.datetime.fromtimestamp(
+            self._timestamps["start"] / 1000, tz=datetime.timezone.utc
+        )
 
     @property
     def end(self) -> datetime.datetime:
         """:class:`datetime.datetime`: When the user will stop playing this song in UTC."""
-        return datetime.datetime.fromtimestamp(self._timestamps["end"] / 1000, tz=datetime.timezone.utc)
+        return datetime.datetime.fromtimestamp(
+            self._timestamps["end"] / 1000, tz=datetime.timezone.utc
+        )
 
     @property
     def duration(self) -> datetime.timedelta:
@@ -746,7 +766,9 @@ class CustomActivity(BaseActivity):
 
     __slots__ = ("name", "emoji", "state")
 
-    def __init__(self, name: Optional[str], *, emoji: Optional[PartialEmoji] = None, **extra: Any):
+    def __init__(
+        self, name: Optional[str], *, emoji: Optional[PartialEmoji] = None, **extra: Any
+    ):
         super().__init__(**extra)
         self.name: Optional[str] = name
         self.state: Optional[str] = extra.pop("state", None)
@@ -763,7 +785,9 @@ class CustomActivity(BaseActivity):
         elif isinstance(emoji, PartialEmoji):
             self.emoji = emoji
         else:
-            raise TypeError(f"Expected str, PartialEmoji, or None, received {type(emoji)!r} instead.")
+            raise TypeError(
+                f"Expected str, PartialEmoji, or None, received {type(emoji)!r} instead."
+            )
 
     @property
     def type(self) -> ActivityType:
@@ -791,7 +815,11 @@ class CustomActivity(BaseActivity):
         return o
 
     def __eq__(self, other: Any) -> bool:
-        return isinstance(other, CustomActivity) and other.name == self.name and other.emoji == self.emoji
+        return (
+            isinstance(other, CustomActivity)
+            and other.name == self.name
+            and other.emoji == self.emoji
+        )
 
     def __ne__(self, other: Any) -> bool:
         return not self.__eq__(other)
@@ -845,6 +873,10 @@ def create_activity(data: Optional[ActivityPayload]) -> Optional[ActivityTypes]:
             # the url won't be None here
             return Streaming(**data)  # type: ignore
         return Activity(**data)
-    elif game_type is ActivityType.listening and "sync_id" in data and "session_id" in data:
+    elif (
+        game_type is ActivityType.listening
+        and "sync_id" in data
+        and "session_id" in data
+    ):
         return Spotify(**data)
     return Activity(**data)

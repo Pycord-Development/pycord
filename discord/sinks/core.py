@@ -109,7 +109,9 @@ class RawData:
 
         unpacker = struct.Struct(">xxHII")
         self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.header)
-        self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(self.header, self.data)
+        self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(
+            self.header, self.data
+        )
         self.decoded_data = None
 
         self.user_id = None

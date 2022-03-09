@@ -3,7 +3,9 @@ import typing
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=commands.when_mentioned, description="Nothing to see here!")
+bot = commands.Bot(
+    command_prefix=commands.when_mentioned, description="Nothing to see here!"
+)
 
 # the `hidden` keyword argument hides it from the help command.
 @bot.group(hidden=True)
@@ -27,11 +29,15 @@ def create_overwrites(ctx, *objects):
 
     # A dict comprehension is being utilised here to set the same permission overwrites
     # For each `discord.Role` or `discord.Member`.
-    overwrites = {obj: discord.PermissionOverwrite(view_channel=True) for obj in objects}
+    overwrites = {
+        obj: discord.PermissionOverwrite(view_channel=True) for obj in objects
+    }
 
     # Prevents the default role (@everyone) from viewing the channel
     # if it isn't already allowed to view the channel.
-    overwrites.setdefault(ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False))
+    overwrites.setdefault(
+        ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
+    )
 
     # Makes sure the client is always allowed to view the channel.
     overwrites[ctx.guild.me] = discord.PermissionOverwrite(view_channel=True)
@@ -75,12 +81,16 @@ async def voice(
 
     overwrites = create_overwrites(ctx, *objects)
 
-    await ctx.guild.create_voice_channel(name, overwrites=overwrites, reason="Very secret business.")
+    await ctx.guild.create_voice_channel(
+        name, overwrites=overwrites, reason="Very secret business."
+    )
 
 
 @secret.command()
 @commands.guild_only()
-async def emoji(ctx: commands.Context, emoji: discord.PartialEmoji, *roles: discord.Role):
+async def emoji(
+    ctx: commands.Context, emoji: discord.PartialEmoji, *roles: discord.Role
+):
     """This clones a specified emoji that only specified roles
     are allowed to use.
     """
@@ -90,7 +100,9 @@ async def emoji(ctx: commands.Context, emoji: discord.PartialEmoji, *roles: disc
 
     # The key parameter here is `roles`, which controls
     # What roles are able to use the emoji.
-    await ctx.guild.create_custom_emoji(name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business.")
+    await ctx.guild.create_custom_emoji(
+        name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business."
+    )
 
 
 bot.run("token")

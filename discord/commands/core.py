@@ -118,7 +118,10 @@ def hooked_wrapped_callback(command, ctx, coro):
         except Exception as exc:
             raise ApplicationCommandInvokeError(exc) from exc
         finally:
-            if hasattr(command, "_max_concurrency") and command._max_concurrency is not None:
+            if (
+                hasattr(command, "_max_concurrency")
+                and command._max_concurrency is not None
+            ):
                 await command._max_concurrency.release(ctx)
             await command.call_after_hooks(ctx)
         return ret
@@ -157,7 +160,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+            raise TypeError(
+                "Cooldown must be a an instance of CooldownMapping or None."
+            )
         self._buckets: CooldownMapping = buckets
 
         try:
@@ -178,7 +183,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == self.guild_ids
-        return isinstance(other, self.__class__) and self.parent == other.parent and check
+        return (
+            isinstance(other, self.__class__) and self.parent == other.parent and check
+        )
 
     async def __call__(self, ctx, *args, **kwargs):
         """|coro|
@@ -229,7 +236,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(f"The check functions for the command {self.name} failed")
+            raise CheckFailure(
+                f"The check functions for the command {self.name} failed"
+            )
 
         if hasattr(self, "_max_concurrency"):
             if self._max_concurrency is not None:
@@ -314,7 +323,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     async def can_run(self, ctx: ApplicationContext) -> bool:
 
         if not await ctx.bot.can_run(ctx):
-            raise CheckFailure(f"The global check functions for command {self.name} failed.")
+            raise CheckFailure(
+                f"The global check functions for command {self.name} failed."
+            )
 
         predicates = self.checks
         if not predicates:
@@ -574,7 +585,9 @@ class SlashCommand(ApplicationCommand):
         self.id = None
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
+            inspect.cleandoc(func.__doc__).splitlines()[0]
+            if func.__doc__ is not None
+            else "No description provided"
         )
         validate_chat_input_description(description)
         self.description: str = description
@@ -602,9 +615,9 @@ class SlashCommand(ApplicationCommand):
 
         # Permissions
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
+        self.permissions: List[CommandPermission] = getattr(
+            func, "__app_cmd_perms__", []
+        ) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -619,7 +632,9 @@ class SlashCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         final_options = []
         for p_name, p_obj in params:
@@ -630,7 +645,9 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)
+                    option = Option(
+                        option.__args__[0], "No description provided", required=False
+                    )
                 else:
                     option = Option(option.__args__, "No description provided")
 
@@ -666,15 +683,22 @@ class SlashCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
             and o.converter is not None,  # pass on converters
-            lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
+            lambda o, a: isinstance(
+                o.input_type, SlashCommandOptionType
+            ),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
-            lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: self._is_typing_optional(a)
+            and not o.required
+            and o._raw_type in a.__args__,  # optional
+            lambda o, a: inspect.isclass(a)
+            and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
             validate_chat_input_name(o.name)
@@ -682,11 +706,15 @@ class SlashCommand(ApplicationCommand):
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException(f"Too many arguments passed to the options kwarg.")
+                raise ClientException(
+                    f"Too many arguments passed to the options kwarg."
+                )
             p_obj = p_obj.annotation
 
             if not any(c(o, p_obj) for c in check_annotations):
-                raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
+                raise TypeError(
+                    f"Parameter {p_name} does not match input type of {o.name}."
+                )
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
@@ -698,7 +726,9 @@ class SlashCommand(ApplicationCommand):
         return options
 
     def _is_typing_union(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union or type(annotation) is getattr(
+        return getattr(annotation, "__origin__", None) is Union or type(
+            annotation
+        ) is getattr(
             types, "UnionType", Union
         )  # type: ignore
 
@@ -729,14 +759,22 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            if SlashCommandOptionType.user.value <= op.input_type.value <= SlashCommandOptionType.role.value:
+            if (
+                SlashCommandOptionType.user.value
+                <= op.input_type.value
+                <= SlashCommandOptionType.role.value
+            ):
                 if ctx.guild is None and op.input_type.name == "user":
                     _data = ctx.interaction.data["resolved"]["users"][arg]
                     _data["id"] = int(arg)
                     arg = User(state=ctx.interaction._state, data=_data)
                 else:
-                    name = "member" if op.input_type.name == "user" else op.input_type.name
-                    arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
+                    name = (
+                        "member" if op.input_type.name == "user" else op.input_type.name
+                    )
+                    arg = await get_or_fetch(
+                        ctx.guild, name, int(arg), default=int(arg)
+                    )
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
@@ -744,7 +782,10 @@ class SlashCommand(ApplicationCommand):
                 if arg is None:
                     arg = ctx.guild.get_role(arg_id) or arg_id
 
-            elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
+            elif (
+                op.input_type == SlashCommandOptionType.string
+                and (converter := op.converter) is not None
+            ):
                 arg = await converter.convert(converter, ctx, arg)
 
             elif op.input_type == SlashCommandOptionType.attachment:
@@ -771,7 +812,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({i["name"]: i["value"] for i in ctx.interaction.data["options"]})
+                values.update(
+                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
+                )
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
@@ -786,8 +829,13 @@ class SlashCommand(ApplicationCommand):
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
 
-                choices = [o if isinstance(o, OptionChoice) else OptionChoice(o) for o in result][:25]
-                return await ctx.interaction.response.send_autocomplete_result(choices=choices)
+                choices = [
+                    o if isinstance(o, OptionChoice) else OptionChoice(o)
+                    for o in result
+                ][:25]
+                return await ctx.interaction.response.send_autocomplete_result(
+                    choices=choices
+                )
 
     def copy(self):
         """Creates a copy of this command.
@@ -895,7 +943,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.name = name
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
+        self.subcommands: List[
+            Union[SlashCommand, SlashCommandGroup]
+        ] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
         self.checks = []
@@ -1159,9 +1209,9 @@ class ContextMenuCommand(ApplicationCommand):
         self.validate_parameters()
 
         self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
+        self.permissions: List[CommandPermission] = getattr(
+            func, "__app_cmd_perms__", []
+        ) + kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -1180,19 +1230,25 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         # next we have the 'user/message' as the next parameter
         try:
             next(params)
         except StopIteration:
             cmd = "user" if type(self) == UserCommand else "message"
-            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "{cmd}" parameter.'
+            )
 
         # next there should be no more parameters
         try:
             next(params)
-            raise ClientException(f"Callback for {self.name} command has too many parameters.")
+            raise ClientException(
+                f"Callback for {self.name} command has too many parameters."
+            )
         except StopIteration:
             pass
 
@@ -1346,7 +1402,9 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
+            data = await ctx.interaction._state.http.start_private_message(
+                int(message["author"]["id"])
+            )
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
@@ -1455,7 +1513,9 @@ def application_command(cls=SlashCommand, **attrs):
         if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
-            raise TypeError("func needs to be a callable or a subclass of ApplicationCommand.")
+            raise TypeError(
+                "func needs to be a callable or a subclass of ApplicationCommand."
+            )
         return cls(func, **attrs)
 
     return decorator
@@ -1481,7 +1541,9 @@ docs = "https://discord.com/developers/docs"
 def validate_chat_input_name(name: Any):
     # Must meet the regex ^[\w-]{1,32}$
     if not isinstance(name, str):
-        raise TypeError(f"Chat input command names and options must be of type str. Received {name}")
+        raise TypeError(
+            f"Chat input command names and options must be of type str. Received {name}"
+        )
     if not re.match(r"^[\w-]{1,32}$", name):
         raise ValidationError(
             r'Chat input command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
@@ -1489,13 +1551,23 @@ def validate_chat_input_name(name: Any):
             f"{name}"
         )
     if not 1 <= len(name) <= 32:
-        raise ValidationError(f"Chat input command names and options must be 1-32 characters long. Received {name}")
-    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
+        raise ValidationError(
+            f"Chat input command names and options must be 1-32 characters long. Received {name}"
+        )
+    if (
+        not name.lower() == name
+    ):  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+        raise ValidationError(
+            f"Chat input command names and options must be lowercase. Received {name}"
+        )
 
 
 def validate_chat_input_description(description: Any):
     if not isinstance(description, str):
-        raise TypeError(f"Command description must be of type str. Received {description}")
+        raise TypeError(
+            f"Command description must be of type str. Received {description}"
+        )
     if not 1 <= len(description) <= 100:
-        raise ValidationError(f"Command description must be 1-100 characters long. Received {description}")
+        raise ValidationError(
+            f"Command description must be 1-100 characters long. Received {description}"
+        )

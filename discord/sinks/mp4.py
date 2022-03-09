@@ -56,7 +56,9 @@ class MP4Sink(Sink):
 
     def format_audio(self, audio):
         if self.vc.recording:
-            raise MP4SinkError("Audio may only be formatted after recording is finished.")
+            raise MP4SinkError(
+                "Audio may only be formatted after recording is finished."
+            )
         mp4_file = f"{time.time()}.tmp"
         args = [
             "ffmpeg",
@@ -73,13 +75,19 @@ class MP4Sink(Sink):
             mp4_file,
         ]
         if os.path.exists(mp4_file):
-            os.remove(mp4_file)  # process will get stuck asking whether or not to overwrite, if file already exists.
+            os.remove(
+                mp4_file
+            )  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
+            )
         except FileNotFoundError:
             raise MP4SinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise MP4SinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
+            raise MP4SinkError(
+                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
+            ) from exc
 
         process.communicate(audio.file.read())
 

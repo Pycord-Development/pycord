@@ -88,19 +88,25 @@ def _transform_snowflake(entry: AuditLogEntry, data: Snowflake) -> int:
     return int(data)
 
 
-def _transform_channel(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Union[abc.GuildChannel, Object]]:
+def _transform_channel(
+    entry: AuditLogEntry, data: Optional[Snowflake]
+) -> Optional[Union[abc.GuildChannel, Object]]:
     if data is None:
         return None
     return entry.guild.get_channel(int(data)) or Object(id=data)
 
 
-def _transform_member_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Union[Member, User, None]:
+def _transform_member_id(
+    entry: AuditLogEntry, data: Optional[Snowflake]
+) -> Union[Member, User, None]:
     if data is None:
         return None
     return entry._get_member(int(data))
 
 
-def _transform_guild_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Guild]:
+def _transform_guild_id(
+    entry: AuditLogEntry, data: Optional[Snowflake]
+) -> Optional[Guild]:
     if data is None:
         return None
     return entry._state._get_guild(data)
@@ -164,7 +170,9 @@ def _enum_transformer(enum: Type[T]) -> Callable[[AuditLogEntry, int], T]:
     return _transform
 
 
-def _transform_type(entry: AuditLogEntry, data: int) -> Union[enums.ChannelType, enums.StickerType]:
+def _transform_type(
+    entry: AuditLogEntry, data: int
+) -> Union[enums.ChannelType, enums.StickerType]:
     if entry.action.name.startswith("sticker_"):
         return enums.try_enum(enums.StickerType, data)
     else:
@@ -282,10 +290,15 @@ class AuditLogChanges:
             if attr == "location" and hasattr(self.before, "location_type"):
                 from .scheduled_events import ScheduledEventLocation
 
-                if self.before.location_type is enums.ScheduledEventLocationType.external:
+                if (
+                    self.before.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
                     before = ScheduledEventLocation(state=state, value=before)
                 elif hasattr(self.before, "channel"):
-                    before = ScheduledEventLocation(state=state, value=self.before.channel)
+                    before = ScheduledEventLocation(
+                        state=state, value=self.before.channel
+                    )
 
             setattr(self.before, attr, before)
 
@@ -300,10 +313,15 @@ class AuditLogChanges:
             if attr == "location" and hasattr(self.after, "location_type"):
                 from .scheduled_events import ScheduledEventLocation
 
-                if self.after.location_type is enums.ScheduledEventLocationType.external:
+                if (
+                    self.after.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
                     after = ScheduledEventLocation(state=state, value=after)
                 elif hasattr(self.after, "channel"):
-                    after = ScheduledEventLocation(state=state, value=self.after.channel)
+                    after = ScheduledEventLocation(
+                        state=state, value=self.after.channel
+                    )
 
             setattr(self.after, attr, after)
 
@@ -410,7 +428,9 @@ class AuditLogEntry(Hashable):
         which actions have this field filled out.
     """
 
-    def __init__(self, *, users: Dict[int, User], data: AuditLogEntryPayload, guild: Guild):
+    def __init__(
+        self, *, users: Dict[int, User], data: AuditLogEntryPayload, guild: Guild
+    ):
         self._state = guild._state
         self.guild = guild
         self._users = users
@@ -430,27 +450,38 @@ class AuditLogEntry(Hashable):
                 self.extra: _AuditLogProxyMemberPrune = type(
                     "_AuditLogProxy", (), {k: int(v) for k, v in self.extra.items()}
                 )()
-            elif self.action is enums.AuditLogAction.member_move or self.action is enums.AuditLogAction.message_delete:
+            elif (
+                self.action is enums.AuditLogAction.member_move
+                or self.action is enums.AuditLogAction.message_delete
+            ):
                 channel_id = int(self.extra["channel_id"])
                 elems = {
                     "count": int(self.extra["count"]),
-                    "channel": self.guild.get_channel(channel_id) or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id),
                 }
-                self.extra: _AuditLogProxyMemberMoveOrMessageDelete = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyMemberMoveOrMessageDelete = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action is enums.AuditLogAction.member_disconnect:
                 # The member disconnect action has a dict with some information
                 elems = {
                     "count": int(self.extra["count"]),
                 }
-                self.extra: _AuditLogProxyMemberDisconnect = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyMemberDisconnect = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action.name.endswith("pin"):
                 # the pin actions have a dict with some information
                 channel_id = int(self.extra["channel_id"])
                 elems = {
-                    "channel": self.guild.get_channel(channel_id) or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id),
                     "message_id": int(self.extra["message_id"]),
                 }
-                self.extra: _AuditLogProxyPinAction = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyPinAction = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action.name.startswith("overwrite_"):
                 # the overwrite_ actions have a dict with some information
                 instance_id = int(self.extra["id"])
@@ -465,8 +496,13 @@ class AuditLogEntry(Hashable):
                     self.extra: Role = role
             elif self.action.name.startswith("stage_instance"):
                 channel_id = int(self.extra["channel_id"])
-                elems = {"channel": self.guild.get_channel(channel_id) or Object(id=channel_id)}
-                self.extra: _AuditLogProxyStageInstanceAction = type("_AuditLogProxy", (), elems)()
+                elems = {
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id)
+                }
+                self.extra: _AuditLogProxyStageInstanceAction = type(
+                    "_AuditLogProxy", (), elems
+                )()
 
         self.extra: Union[
             _AuditLogProxyMemberPrune,
@@ -550,7 +586,9 @@ class AuditLogEntry(Hashable):
     def _convert_target_guild(self, target_id: int) -> Guild:
         return self.guild
 
-    def _convert_target_channel(self, target_id: int) -> Union[abc.GuildChannel, Object]:
+    def _convert_target_channel(
+        self, target_id: int
+    ) -> Union[abc.GuildChannel, Object]:
         return self.guild.get_channel(target_id) or Object(id=target_id)
 
     def _convert_target_user(self, target_id: int) -> Union[Member, User, None]:
@@ -562,7 +600,11 @@ class AuditLogEntry(Hashable):
     def _convert_target_invite(self, target_id: int) -> Invite:
         # invites have target_id set to null
         # so figure out which change has the full invite data
-        changeset = self.before if self.action is enums.AuditLogAction.invite_delete else self.after
+        changeset = (
+            self.before
+            if self.action is enums.AuditLogAction.invite_delete
+            else self.after
+        )
 
         fake_payload = {
             "max_age": changeset.max_age,
@@ -585,7 +627,9 @@ class AuditLogEntry(Hashable):
     def _convert_target_message(self, target_id: int) -> Union[Member, User, None]:
         return self._get_member(target_id)
 
-    def _convert_target_stage_instance(self, target_id: int) -> Union[StageInstance, Object]:
+    def _convert_target_stage_instance(
+        self, target_id: int
+    ) -> Union[StageInstance, Object]:
         return self.guild.get_stage_instance(target_id) or Object(id=target_id)
 
     def _convert_target_sticker(self, target_id: int) -> Union[GuildSticker, Object]:
@@ -594,5 +638,7 @@ class AuditLogEntry(Hashable):
     def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
         return self.guild.get_thread(target_id) or Object(id=target_id)
 
-    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, None]:
+    def _convert_target_scheduled_event(
+        self, target_id: int
+    ) -> Union[ScheduledEvent, None]:
         return self.guild.get_scheduled_event(target_id) or Object(id=target_id)

@@ -211,7 +211,9 @@ class Emoji(_EmojiTag, AssetMixin):
             An error occurred deleting the emoji.
         """
 
-        await self._state.http.delete_custom_emoji(self.guild.id, self.id, reason=reason)
+        await self._state.http.delete_custom_emoji(
+            self.guild.id, self.id, reason=reason
+        )
 
     async def edit(
         self,
@@ -258,5 +260,7 @@ class Emoji(_EmojiTag, AssetMixin):
         if roles is not MISSING:
             payload["roles"] = [role.id for role in roles]
 
-        data = await self._state.http.edit_custom_emoji(self.guild.id, self.id, payload=payload, reason=reason)
+        data = await self._state.http.edit_custom_emoji(
+            self.guild.id, self.id, payload=payload, reason=reason
+        )
         return Emoji(guild=self.guild, data=data, state=self._state)

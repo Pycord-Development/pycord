@@ -108,7 +108,9 @@ class Select(Item[V]):
         self._selected_values: List[str] = []
 
         if not (isinstance(custom_id, str) or custom_id is None):
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id

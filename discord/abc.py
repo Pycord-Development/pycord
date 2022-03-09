@@ -95,7 +95,9 @@ if TYPE_CHECKING:
     from .ui.view import View
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[TextChannel, Thread, DMChannel, PartialMessageable]
+    PartialMessageableChannel = Union[
+        TextChannel, Thread, DMChannel, PartialMessageable
+    ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
 
@@ -260,7 +262,9 @@ class GuildChannel:
 
     if TYPE_CHECKING:
 
-        def __init__(self, *, state: ConnectionState, guild: Guild, data: Dict[str, Any]):
+        def __init__(
+            self, *, state: ConnectionState, guild: Guild, data: Dict[str, Any]
+        ):
             ...
 
     def __str__(self) -> str:
@@ -286,7 +290,9 @@ class GuildChannel:
 
         http = self._state.http
         bucket = self._sorting_bucket
-        channels: List[GuildChannel] = [c for c in self.guild.channels if c._sorting_bucket == bucket]
+        channels: List[GuildChannel] = [
+            c for c in self.guild.channels if c._sorting_bucket == bucket
+        ]
 
         channels.sort(key=lambda c: c.position)
 
@@ -313,7 +319,9 @@ class GuildChannel:
 
         await http.bulk_channel_update(self.guild.id, payload, reason=reason)
 
-    async def _edit(self, options: Dict[str, Any], reason: Optional[str]) -> Optional[ChannelPayload]:
+    async def _edit(
+        self, options: Dict[str, Any], reason: Optional[str]
+    ) -> Optional[ChannelPayload]:
         try:
             parent = options.pop("category")
         except KeyError:
@@ -349,14 +357,18 @@ class GuildChannel:
                 if lock_permissions:
                     category = self.guild.get_channel(parent_id)
                     if category:
-                        options["permission_overwrites"] = [c._asdict() for c in category._overwrites]
+                        options["permission_overwrites"] = [
+                            c._asdict() for c in category._overwrites
+                        ]
                 options["parent_id"] = parent_id
             elif lock_permissions and self.category_id is not None:
                 # if we're syncing permissions on a pre-existing channel category without changing it
                 # we need to update the permissions to point to the pre-existing category
                 category = self.guild.get_channel(self.category_id)
                 if category:
-                    options["permission_overwrites"] = [c._asdict() for c in category._overwrites]
+                    options["permission_overwrites"] = [
+                        c._asdict() for c in category._overwrites
+                    ]
         else:
             await self._move(
                 position,
@@ -370,14 +382,18 @@ class GuildChannel:
             perms = []
             for target, perm in overwrites.items():
                 if not isinstance(perm, PermissionOverwrite):
-                    raise InvalidArgument(f"Expected PermissionOverwrite received {perm.__class__.__name__}")
+                    raise InvalidArgument(
+                        f"Expected PermissionOverwrite received {perm.__class__.__name__}"
+                    )
 
                 allow, deny = perm.pair()
                 payload = {
                     "allow": allow.value,
                     "deny": deny.value,
                     "id": target.id,
-                    "type": _Overwrites.ROLE if isinstance(target, Role) else _Overwrites.MEMBER,
+                    "type": _Overwrites.ROLE
+                    if isinstance(target, Role)
+                    else _Overwrites.MEMBER,
                 }
 
                 perms.append(payload)
@@ -393,7 +409,9 @@ class GuildChannel:
             options["type"] = ch_type.value
 
         if options:
-            return await self._state.http.edit_channel(self.id, reason=reason, **options)
+            return await self._state.http.edit_channel(
+                self.id, reason=reason, **options
+            )
 
     def _fill_overwrites(self, data: GuildChannelPayload) -> None:
         self._overwrites = []
@@ -599,7 +617,9 @@ class GuildChannel:
             try:
                 maybe_everyone = self._overwrites[0]
                 if maybe_everyone.id == self.guild.id:
-                    base.handle_overwrite(allow=maybe_everyone.allow, deny=maybe_everyone.deny)
+                    base.handle_overwrite(
+                        allow=maybe_everyone.allow, deny=maybe_everyone.deny
+                    )
             except IndexError:
                 pass
 
@@ -630,7 +650,9 @@ class GuildChannel:
         try:
             maybe_everyone = self._overwrites[0]
             if maybe_everyone.id == self.guild.id:
-                base.handle_overwrite(allow=maybe_everyone.allow, deny=maybe_everyone.deny)
+                base.handle_overwrite(
+                    allow=maybe_everyone.allow, deny=maybe_everyone.deny
+                )
                 remaining_overwrites = self._overwrites[1:]
             else:
                 remaining_overwrites = self._overwrites
@@ -713,7 +735,9 @@ class GuildChannel:
     ) -> None:
         ...
 
-    async def set_permissions(self, target, *, overwrite=_undefined, reason=None, **permissions):
+    async def set_permissions(
+        self, target, *, overwrite=_undefined, reason=None, **permissions
+    ):
         r"""|coro|
 
         Sets the channel specific permission overwrites for a target in the
@@ -807,7 +831,9 @@ class GuildChannel:
             await http.delete_channel_permissions(self.id, target.id, reason=reason)
         elif isinstance(overwrite, PermissionOverwrite):
             (allow, deny) = overwrite.pair()
-            await http.edit_channel_permissions(self.id, target.id, allow.value, deny.value, perm_type, reason=reason)
+            await http.edit_channel_permissions(
+                self.id, target.id, allow.value, deny.value, perm_type, reason=reason
+            )
         else:
             raise InvalidArgument("Invalid overwrite type provided.")
 
@@ -823,14 +849,18 @@ class GuildChannel:
         base_attrs["name"] = name or self.name
         guild_id = self.guild.id
         cls = self.__class__
-        data = await self._state.http.create_channel(guild_id, self.type.value, reason=reason, **base_attrs)
+        data = await self._state.http.create_channel(
+            guild_id, self.type.value, reason=reason, **base_attrs
+        )
         obj = cls(state=self._state, guild=self.guild, data=data)
 
         # temporarily add it to the cache
         self.guild._channels[obj.id] = obj  # type: ignore
         return obj
 
-    async def clone(self: GCH, *, name: Optional[str] = None, reason: Optional[str] = None) -> GCH:
+    async def clone(
+        self: GCH, *, name: Optional[str] = None, reason: Optional[str] = None
+    ) -> GCH:
         """|coro|
 
         Clones this channel. This creates a channel with the same properties
@@ -977,7 +1007,9 @@ class GuildChannel:
         before, after = kwargs.get("before"), kwargs.get("after")
         offset = kwargs.get("offset", 0)
         if sum(bool(a) for a in (beginning, end, before, after)) > 1:
-            raise InvalidArgument("Only one of [before, after, end, beginning] can be used.")
+            raise InvalidArgument(
+                "Only one of [before, after, end, beginning] can be used."
+            )
 
         bucket = self._sorting_bucket
         parent_id = kwargs.get("category", MISSING)
@@ -985,11 +1017,15 @@ class GuildChannel:
         if parent_id not in (MISSING, None):
             parent_id = parent_id.id
             channels = [
-                ch for ch in self.guild.channels if ch._sorting_bucket == bucket and ch.category_id == parent_id
+                ch
+                for ch in self.guild.channels
+                if ch._sorting_bucket == bucket and ch.category_id == parent_id
             ]
         else:
             channels = [
-                ch for ch in self.guild.channels if ch._sorting_bucket == bucket and ch.category_id == self.category_id
+                ch
+                for ch in self.guild.channels
+                if ch._sorting_bucket == bucket and ch.category_id == self.category_id
             ]
 
         channels.sort(key=lambda c: (c.position, c.id))
@@ -1009,7 +1045,9 @@ class GuildChannel:
         elif before:
             index = next((i for i, c in enumerate(channels) if c.id == before.id), None)
         elif after:
-            index = next((i + 1 for i, c in enumerate(channels) if c.id == after.id), None)
+            index = next(
+                (i + 1 for i, c in enumerate(channels) if c.id == after.id), None
+            )
 
         if index is None:
             raise InvalidArgument("Could not resolve appropriate move position")
@@ -1024,7 +1062,9 @@ class GuildChannel:
                 d.update(parent_id=parent_id, lock_permissions=lock_permissions)
             payload.append(d)
 
-        await self._state.http.bulk_channel_update(self.guild.id, payload, reason=reason)
+        await self._state.http.bulk_channel_update(
+            self.guild.id, payload, reason=reason
+        )
 
     async def create_invite(
         self,
@@ -1140,7 +1180,10 @@ class GuildChannel:
         state = self._state
         data = await state.http.invites_from_channel(self.id)
         guild = self.guild
-        return [Invite(state=state, data=invite, channel=self, guild=guild) for invite in data]
+        return [
+            Invite(state=state, data=invite, channel=self, guild=guild)
+            for invite in data
+        ]
 
 
 class Messageable:
@@ -1347,21 +1390,27 @@ class Messageable:
         content = str(content) if content is not None else None
 
         if embed is not None and embeds is not None:
-            raise InvalidArgument("cannot pass both embed and embeds parameter to send()")
+            raise InvalidArgument(
+                "cannot pass both embed and embeds parameter to send()"
+            )
 
         if embed is not None:
             embed = embed.to_dict()
 
         elif embeds is not None:
             if len(embeds) > 10:
-                raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
+                raise InvalidArgument(
+                    "embeds parameter must be a list of up to 10 elements"
+                )
             embeds = [embed.to_dict() for embed in embeds]
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
 
         if allowed_mentions is None:
-            allowed_mentions = state.allowed_mentions and state.allowed_mentions.to_dict()
+            allowed_mentions = (
+                state.allowed_mentions and state.allowed_mentions.to_dict()
+            )
 
         elif state.allowed_mentions is not None:
             allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
@@ -1381,7 +1430,9 @@ class Messageable:
 
         if view:
             if not hasattr(view, "__discord_ui_view__"):
-                raise InvalidArgument(f"view parameter must be View not {view.__class__!r}")
+                raise InvalidArgument(
+                    f"view parameter must be View not {view.__class__!r}"
+                )
 
             components = view.to_components()
         else:
@@ -1413,7 +1464,9 @@ class Messageable:
 
         elif files is not None:
             if len(files) > 10:
-                raise InvalidArgument("files parameter must be a list of up to 10 elements")
+                raise InvalidArgument(
+                    "files parameter must be a list of up to 10 elements"
+                )
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
@@ -1582,10 +1635,15 @@ class Messageable:
                 if obj is None:
                     permission = mapping["Message"]
                 else:
-                    permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
+                    permission = (
+                        mapping.get(type(obj).__name__) or mapping[obj.__name__]
+                    )
 
                 if type(obj).__name__ == "Emoji":
-                    if obj._to_partial().is_unicode_emoji or obj.guild_id == channel.guild.id:
+                    if (
+                        obj._to_partial().is_unicode_emoji
+                        or obj.guild_id == channel.guild.id
+                    ):
                         continue
                 elif type(obj).__name__ == "GuildSticker":
                     if obj.guild_id == channel.guild.id:

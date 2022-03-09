@@ -159,7 +159,11 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
-        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
+        return (
+            self.interaction.guild.me
+            if self.interaction.guild is not None
+            else self.bot.user
+        )
 
     @cached_property
     def message(self) -> Optional[Message]:
@@ -209,7 +213,8 @@ class ApplicationContext(discord.abc.Messageable):
                 return [
                     option
                     for option in self.command.options  # type: ignore
-                    if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
+                    if option.to_dict()["name"]
+                    not in [opt["name"] for opt in self.selected_options]
                 ]
             else:
                 return self.command.options  # type: ignore

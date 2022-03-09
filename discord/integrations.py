@@ -201,7 +201,9 @@ class StreamIntegration(Integration):
     def _from_data(self, data: StreamIntegrationPayload) -> None:
         super()._from_data(data)
         self.revoked: bool = data["revoked"]
-        self.expire_behaviour: ExpireBehaviour = try_enum(ExpireBehaviour, data["expire_behavior"])
+        self.expire_behaviour: ExpireBehaviour = try_enum(
+            ExpireBehaviour, data["expire_behavior"]
+        )
         self.expire_grace_period: int = data["expire_grace_period"]
         self.synced_at: datetime.datetime = parse_time(data["synced_at"])
         self._role_id: Optional[int] = _get_as_snowflake(data, "role_id")
@@ -254,7 +256,9 @@ class StreamIntegration(Integration):
         payload: Dict[str, Any] = {}
         if expire_behaviour is not MISSING:
             if not isinstance(expire_behaviour, ExpireBehaviour):
-                raise InvalidArgument("expire_behaviour field must be of type ExpireBehaviour")
+                raise InvalidArgument(
+                    "expire_behaviour field must be of type ExpireBehaviour"
+                )
 
             payload["expire_behavior"] = expire_behaviour.value
 
@@ -356,7 +360,9 @@ class BotIntegration(Integration):
 
     def _from_data(self, data: BotIntegrationPayload) -> None:
         super()._from_data(data)
-        self.application = IntegrationApplication(data=data["application"], state=self._state)
+        self.application = IntegrationApplication(
+            data=data["application"], state=self._state
+        )
 
 
 def _integration_factory(value: str) -> Tuple[Type[Integration], str]:

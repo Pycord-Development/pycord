@@ -179,8 +179,12 @@ class WidgetMember(BaseUser):
         super().__init__(state=state, data=data)
         self.nick: Optional[str] = data.get("nick")
         self.status: Status = try_enum(Status, data.get("status"))
-        self.deafened: Optional[bool] = data.get("deaf", False) or data.get("self_deaf", False)
-        self.muted: Optional[bool] = data.get("mute", False) or data.get("self_mute", False)
+        self.deafened: Optional[bool] = data.get("deaf", False) or data.get(
+            "self_deaf", False
+        )
+        self.muted: Optional[bool] = data.get("mute", False) or data.get(
+            "self_mute", False
+        )
         self.suppress: Optional[bool] = data.get("suppress", False)
 
         try:
@@ -255,7 +259,11 @@ class Widget:
         self.channels: List[WidgetChannel] = []
         for channel in data.get("channels", []):
             _id = int(channel["id"])
-            self.channels.append(WidgetChannel(id=_id, name=channel["name"], position=channel["position"]))
+            self.channels.append(
+                WidgetChannel(
+                    id=_id, name=channel["name"], position=channel["position"]
+                )
+            )
 
         self.members: List[WidgetMember] = []
         channels = {channel.id: channel for channel in self.channels}
@@ -264,7 +272,9 @@ class Widget:
             if connected_channel in channels:
                 connected_channel = channels[connected_channel]  # type: ignore
             elif connected_channel:
-                connected_channel = WidgetChannel(id=connected_channel, name="", position=0)
+                connected_channel = WidgetChannel(
+                    id=connected_channel, name="", position=0
+                )
 
             self.members.append(WidgetMember(state=self._state, data=member, connected_channel=connected_channel))  # type: ignore
 
@@ -277,7 +287,9 @@ class Widget:
         return False
 
     def __repr__(self) -> str:
-        return f"<Widget id={self.id} name={self.name!r} invite_url={self.invite_url!r}>"
+        return (
+            f"<Widget id={self.id} name={self.name!r} invite_url={self.invite_url!r}>"
+        )
 
     @property
     def created_at(self) -> datetime.datetime:

@@ -255,13 +255,17 @@ class CooldownMapping:
 
         return bucket
 
-    def update_rate_limit(self, message: Message, current: Optional[float] = None) -> Optional[float]:
+    def update_rate_limit(
+        self, message: Message, current: Optional[float] = None
+    ) -> Optional[float]:
         bucket = self.get_bucket(message, current)
         return bucket.update_rate_limit(current)
 
 
 class DynamicCooldownMapping(CooldownMapping):
-    def __init__(self, factory: Callable[[Message], Cooldown], type: Callable[[Message], Any]) -> None:
+    def __init__(
+        self, factory: Callable[[Message], Cooldown], type: Callable[[Message], Any]
+    ) -> None:
         super().__init__(None, type)
         self._factory: Callable[[Message], Cooldown] = factory
 
@@ -351,13 +355,17 @@ class MaxConcurrency:
             raise ValueError("max_concurrency 'number' cannot be less than 1")
 
         if not isinstance(per, BucketType):
-            raise TypeError(f"max_concurrency 'per' must be of type BucketType not {type(per)!r}")
+            raise TypeError(
+                f"max_concurrency 'per' must be of type BucketType not {type(per)!r}"
+            )
 
     def copy(self: MC) -> MC:
         return self.__class__(self.number, per=self.per, wait=self.wait)
 
     def __repr__(self) -> str:
-        return f"<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>"
+        return (
+            f"<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>"
+        )
 
     def get_key(self, message: Message) -> Any:
         return self.per.get_key(message)
