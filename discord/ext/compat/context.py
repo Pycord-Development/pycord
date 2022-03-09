@@ -26,7 +26,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Union, Any
 
 from discord.commands import ApplicationContext
-from discord.interactions import Interaction
+from discord.interactions import Interaction, InteractionMessage
 from discord.message import Message
 from discord.webhook import WebhookMessage
 from ..commands import Context
@@ -60,11 +60,15 @@ class CompatContext(ABC):
 
     @abstractmethod
     async def _respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
-        pass
+        ...
 
     @abstractmethod
     async def _defer(self, *args, **kwargs) -> None:
-        pass
+        ...
+
+    @abstractmethod
+    async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
+        ...
 
     async def respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
@@ -76,13 +80,6 @@ class CompatContext(ABC):
         return await self._respond(*args, **kwargs)
 
     async def reply(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
-        """|coro|
-
-        Alias for :meth:`~.CompatContext.respond`.
-        """
-        return await self.respond(*args, **kwargs)
-
-    async def followup(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
 
         Alias for :meth:`~.CompatContext.respond`.
@@ -102,6 +99,15 @@ class CompatContext(ABC):
         """
         return await self._defer(*args, **kwargs)
 
+    async def edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
+        """|coro|
+
+        Edits the original response message with the respective approach to the current context. In
+        :class:`CompatExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be
+        edited here. In :class:`CompatApplicationContext`, this will be :meth:`~.ApplicationContext.edit`.
+        """
+        return await self._edit(*args, **kwargs)
+
     def _get_super(self, attr: str) -> Optional[Any]:
         return getattr(super(), attr)
 
@@ -120,6 +126,9 @@ class CompatApplicationContext(CompatContext, ApplicationContext):
     async def _defer(self, *args, **kwargs) -> None:
         return await self._get_super("defer")(*args, **kwargs)
 
+    async def _edit(self, *args, **kwargs) -> InteractionMessage:
+        return await self._get_super("edit")(*args, **kwargs)
+
 
 class CompatExtContext(CompatContext, Context):
     """
@@ -128,12 +137,21 @@ class CompatExtContext(CompatContext, Context):
 
     .. versionadded:: 2.0
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_response_message: Optional[Message] = None
 
     async def _respond(self, *args, **kwargs) -> Message:
-        return await self._get_super("reply")(*args, **kwargs)
+        message = await self._get_super("reply")(*args, **kwargs)
+        if self._original_response_message == None:
+            self._original_response_message = message
+        return message
 
     async def _defer(self, *args, **kwargs) -> None:
-        return await self._get_super("typing")(*args, **kwargs)
+        return await self._get_super("trigger_typing")(*args, **kwargs)
+
+    async def _edit(self, *args, **kwargs) -> Message:
+        return await self._original_response_message.edit(*args, **kwargs)
 
 
 if TYPE_CHECKING:

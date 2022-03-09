@@ -765,6 +765,11 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
+        if ephemeral and self.timeout >= 900 or self.timeout is None:
+            raise ValueError(
+                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
+            )
+
         self.update_buttons()
 
         page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
@@ -800,8 +805,7 @@ class Paginator(discord.ui.View):
             elif isinstance(msg, discord.Message):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
-                msg = await msg.original_message()
-                self.message = await msg.channel.fetch_message(msg.id)
+                self.message = await msg.original_message()
 
         return self.message
 
