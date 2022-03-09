@@ -126,7 +126,7 @@ class CompatExtContext(CompatContext, Context):
         return await self._get_super("reply")(*args, **kwargs)
 
     async def _defer(self, *args, **kwargs) -> None:
-        return await self._get_super("typing")(*args, **kwargs)
+        return await self._get_super("trigger_typing")(*args, **kwargs)
 
 
 if TYPE_CHECKING:
