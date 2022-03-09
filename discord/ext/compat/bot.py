@@ -23,15 +23,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from abc import ABC
-from typing import TYPE_CHECKING
 
+from discord.interactions import Interaction
+from discord.message import Message
 from .context import CompatApplicationContext, CompatExtContext
 from .core import CompatCommand, compat_command
 from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot
-
-if TYPE_CHECKING:
-    from discord.interactions import Interaction
-    from discord.message import Message
 
 __all__ = ("Bot", "AutoShardedBot")
 
@@ -66,6 +63,7 @@ class BotBase(ABC):
             A decorator that converts the provided method into an :class:`.CompatCommand`, adds both a slash and
             traditional (prefix-based) version of the command to the bot, and returns the :class:`.CompatCommand`.
         """
+
         def decorator(func) -> CompatCommand:
             result = compat_command(**kwargs)(func)
             self.add_compat_command(result)

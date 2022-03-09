@@ -24,14 +24,12 @@ DEALINGS IN THE SOFTWARE.
 """
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Union, Any
+
 from discord.commands import ApplicationContext
-
+from discord.interactions import Interaction
+from discord.message import Message
+from discord.webhook import WebhookMessage
 from ..commands import Context
-
-if TYPE_CHECKING:
-    from discord.interactions import Interaction
-    from discord.webhook import WebhookMessage
-    from discord.message import Message
 
 __all__ = ("CompatContext", "CompatExtContext", "CompatApplicationContext")
 
@@ -59,6 +57,7 @@ class CompatContext(ABC):
 
     .. versionadded:: 2.0
     """
+
     @abstractmethod
     async def _respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         pass
@@ -114,6 +113,7 @@ class CompatApplicationContext(CompatContext, ApplicationContext):
 
     .. versionadded:: 2.0
     """
+
     async def _respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
         return await self._get_super("respond")(*args, **kwargs)
 
@@ -128,6 +128,7 @@ class CompatExtContext(CompatContext, Context):
 
     .. versionadded:: 2.0
     """
+
     async def _respond(self, *args, **kwargs) -> Message:
         return await self._get_super("reply")(*args, **kwargs)
 
