@@ -66,7 +66,7 @@ class CompatContext(ABC):
     async def _defer(self, *args, **kwargs) -> None:
         ...
 
-    @abstactmethod
+    @abstractmethod
     async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
         ...
 
