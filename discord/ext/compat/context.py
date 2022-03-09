@@ -102,8 +102,8 @@ class CompatContext(ABC):
     async def edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
         """|coro|
         
-        Edits the orignal response message with the respective approach to the current context. In 
-        :class:`CompatExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be 
+        Edits the original response message with the respective approach to the current context. In
+        :class:`CompatExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be
         edited here. In :class:`CompatApplicationContext`, this will be :meth:`~.ApplicationContext.edit`.
         """
         return await self._edit(*args, **kwargs)
@@ -143,7 +143,7 @@ class CompatExtContext(CompatContext, Context):
 
     async def _respond(self, *args, **kwargs) -> Message:
         message = await self._get_super("reply")(*args, **kwargs)
-        if self._original_response_message = None:
+        if self._original_response_message == None:
             self._original_response_message = message
         return message
 
