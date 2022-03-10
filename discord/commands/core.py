@@ -50,7 +50,7 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError
+from ..errors import ClientException, ValidationError, NotFound
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
@@ -744,9 +744,16 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
-                arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                if arg is None:
-                    arg = ctx.guild.get_role(arg_id) or arg_id
+                try:
+                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
+                except NotFound:
+                    try:
+                        arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                    except NotFound:
+                        try:
+                            arg = await get_or_fetch(ctx.bot, "user", arg_id)
+                        except NotFound:
+                            arg = arg_id
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
