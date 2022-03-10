@@ -1849,6 +1849,26 @@ of :class:`enum.Enum`.
 
         An alias for :attr:`link`.
 
+.. class:: InputTextStyle
+    .. versionadded:: 2.0
+
+    .. attribute:: short
+
+        Represents a single-line input text field.
+    .. attribute:: long
+
+        Represents a multi-line input text field.
+    .. attribute:: singleline
+
+        An alias for :attr:`short`.
+    .. attribute:: multiline
+
+        An alias for :attr:`long`.
+    .. attribute:: paragraph
+
+        An alias for :attr:`long`.
+
+
 .. class:: VoiceRegion
 
     Specifies the region a voice server belongs to.
