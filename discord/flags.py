@@ -741,6 +741,7 @@ class Intents(BaseFlags):
 
         - :class:`Message`
         - :attr:`Client.cached_messages`
+        - :meth:`Client.get_message`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
