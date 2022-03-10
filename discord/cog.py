@@ -213,16 +213,15 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if not isinstance(command, ApplicationCommand):
-                setattr(new_cls, command.callback.__name__, command)
-                parent = command.parent
-                if parent is not None:
-                    # Get the latest parent reference
-                    parent = lookup[parent.qualified_name]  # type: ignore
+            setattr(new_cls, command.callback.__name__, command)
+            parent = command.parent
+            if parent is not None:
+                # Get the latest parent reference
+                parent = lookup[parent.qualified_name]  # type: ignore
 
-                    # Update our parent's reference to our self
-                    parent.remove_command(command.name)  # type: ignore
-                    parent.add_command(command)  # type: ignore
+                # Update our parent's reference to our self
+                parent.remove_command(command.name)  # type: ignore
+                parent.add_command(command)  # type: ignore
 
         return new_cls
 
