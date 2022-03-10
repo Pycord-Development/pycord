@@ -120,7 +120,7 @@ You can find more examples in the examples directory.
 
 Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
 
-Links
+Useful Links
 -----
 
 - `Documentation <https://docs.pycord.dev/en/master/index.html>`_
