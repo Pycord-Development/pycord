@@ -1810,7 +1810,6 @@ of :class:`enum.Enum`.
 
         Represents an input_text component.
 
-
 .. class:: ButtonStyle
 
     Represents the style of the button component.
@@ -1873,7 +1872,6 @@ of :class:`enum.Enum`.
     .. attribute:: paragraph
 
         An alias for :attr:`long`.
-
 
 .. class:: VoiceRegion
 
