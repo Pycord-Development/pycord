@@ -24,8 +24,11 @@ DEALINGS IN THE SOFTWARE.
 """
 from typing import Union
 
-from discord.commands import SlashCommand
-from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command
+import discord.commands.options
+from discord.enums import SlashCommandOptionType
+from discord.commands import SlashCommand, Option
+from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command, Converter, UserConverter, \
+    GuildChannelConverter, RoleConverter, BadArgument
 
 __all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
 
@@ -101,3 +104,46 @@ def compat_command(**kwargs):
         return CompatCommand(callback, **kwargs)
 
     return decorator
+
+
+class MentionableConverter(Converter):
+    """A converter that can convert a mention to a user or a role."""
+    async def convert(self, ctx, argument):
+        try:
+            return await RoleConverter().convert(ctx, argument)
+        except BadArgument:
+            return await UserConverter().convert(ctx, argument)
+
+
+def attachment_callback(*args):  # pylint: disable=unused-argument
+    raise ValueError("Attachments are not supported for compatibility commands.")
+
+
+class CompatOption(Option, Converter):
+    async def convert(self, ctx, argument):
+        if self.converter is not None:
+            converted = await self.converter.convert(ctx, argument)
+        else:
+            mapping = {
+                SlashCommandOptionType.string: str,
+                SlashCommandOptionType.integer: int,
+                SlashCommandOptionType.boolean: bool,
+                SlashCommandOptionType.user: UserConverter,
+                SlashCommandOptionType.channel: GuildChannelConverter,
+                SlashCommandOptionType.role: RoleConverter,
+                SlashCommandOptionType.mentionable: MentionableConverter,
+                SlashCommandOptionType.number: float,
+                SlashCommandOptionType.attachment: attachment_callback,
+            }
+            converter = mapping[self.input_type]
+            if issubclass(converter, Converter):
+                converted = await converter().convert(ctx, argument)
+            else:
+                converted = converter(argument)
+        if self.choices and converted not in self.choices:
+            raise ValueError(f"{argument} is not a valid choice.")
+
+        return converted
+
+
+discord.commands.options.Option = CompatOption
