@@ -1,7 +1,7 @@
 Pycord
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord?style=for-the-badge
+.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord&style=for-the-badge
    :target: https://pycord.dev/discord
    :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge
@@ -10,7 +10,7 @@ Pycord
 .. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue?style=for-the-badge
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue&style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
