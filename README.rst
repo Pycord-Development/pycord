@@ -10,7 +10,7 @@ Pycord
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=PyPi&color=yellowgreen
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue&style=for-the-badge&logo=git&logoColor=blue&color=informational
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=informational&logo=git&logoColor=blue&style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
