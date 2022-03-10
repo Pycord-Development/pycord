@@ -19,7 +19,7 @@ It looks something like this:
 
 .. note::
 
-    Because this example utilizes message content, it requires the :attr:`Intents.message_content` priviledged intent.
+    Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent.
 
 .. code-block:: python3
 
