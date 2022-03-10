@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Dict, List, Optional, Tuple, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -792,7 +792,7 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal) -> Interaction:
+    async def send_modal(self, modal: Modal) -> Coroutine[Any, Any, Interaction]:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
