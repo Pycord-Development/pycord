@@ -1487,9 +1487,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             The widget for this guild is disabled.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the widget failed.
 
         Returns
@@ -1508,7 +1508,7 @@ class Client:
 
         Raises
         -------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the information failed somehow.
 
         Returns
@@ -1539,9 +1539,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             A user with this ID does not exist.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Fetching the user failed.
 
         Returns
