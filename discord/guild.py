@@ -2481,7 +2481,7 @@ class Guild(Hashable):
 
         .. note::
 
-            This method is an API call. For general usage, consider iterating over :attr:`roles` instead.
+            This method is an API call. For general usage, consider using :attr:`get_role` instead.
 
         .. versionadded:: 2.0
 
