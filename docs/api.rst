@@ -160,6 +160,32 @@ ApplicationContext
 .. autoclass:: ApplicationContext
     :members:
 
+AutocompleteContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutocompleteContext
+
+.. autoclass:: AutocompleteContext
+    :members:
+
+CommandPermission
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: CommandPermission
+
+.. autoclass:: CommandPermission
+    :members:
+
+.. autofunction:: discord.commands.permissions.permission
+
+.. autofunction:: discord.commands.permissions.has_role
+
+.. autofunction:: discord.commands.permissions.has_any_role
+
+.. autofunction:: discord.commands.permissions.is_user
+
+.. autofunction:: discord.commands.permissions.is_owner
+
 Application Info
 ------------------
 
@@ -744,6 +770,36 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     :param interaction: The interaction data.
     :type interaction: :class:`Interaction`
+
+.. function:: on_application_command(context)
+
+    Called when an application command is received.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command being received.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_completion(context)
+
+    Called when an application command is completed, after any checks have finished.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that was completed.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_error(context, exception)
+
+    Called when an application command has an error.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that has an error.
+    :type context: :class:`ApplicationContext`
+
+    :param exception: The DiscordException associated to the error.
+    :type exception: :class:`DiscordException`
 
 .. function:: on_private_channel_update(before, after)
 
@@ -1334,6 +1390,8 @@ Utility Functions
 .. autofunction:: discord.utils.time_snowflake
 
 .. autofunction:: discord.utils.generate_snowflake
+
+.. autofunction:: discord.utils.basic_autocomplete
 
 .. _discord-api-enums:
 
@@ -3086,7 +3144,7 @@ of :class:`enum.Enum`.
 
     Represents the status of a scheduled event.
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: scheduled
 
@@ -3112,7 +3170,7 @@ of :class:`enum.Enum`.
 
     Represents a scheduled event location type (otherwise known as the entity type on the API).
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: stage_instance
 
@@ -4065,7 +4123,7 @@ Guild
 ScheduledEvent
 ~~~~~~~~~~~~~~~
 
-.. attributestable:: ScheduledEvent
+.. attributetable:: ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
@@ -4501,7 +4559,7 @@ RawThreadDeleteEvent
     :members:
 
 RawScheduledEventSubscription
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: RawScheduledEventSubscription
 

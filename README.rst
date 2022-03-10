@@ -1,27 +1,20 @@
 Pycord
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord
+.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord&style=for-the-badge&logo=discord&color=success
    :target: https://pycord.dev/discord
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/py-cord.svg
+.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=semantic-release&color=yellowgreen
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg
+.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blue
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=blue&style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
 A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
-
-What Happened to Discord.py?
-----------------------------
-Rapptz, also known as Danny, the maintainer and core developer of discord.py will no longer be updating it. Here's his `Full explanation <https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1>`__ and an `FAQ <https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1#FAQ>`__.
-
-
-Pycord v1.7.3 is the same as discord.py v1.7.3, however, Pycord v2.0 will support newer features of the API such as slash commands, context menus, scheduled events, timeouts, and others.
 
 Key Features
 ------------
@@ -127,8 +120,8 @@ You can find more examples in the examples directory.
 
 Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
 
-Links
------
+Useful Links
+------------
 
 - `Documentation <https://docs.pycord.dev/en/master/index.html>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_

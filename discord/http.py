@@ -833,11 +833,7 @@ class HTTPClient:
             guild_id=guild_id,
             user_id=user_id,
         )
-        if reason:
-            # thanks aiohttp
-            r.url = f"{r.url}?reason={_uriquote(reason)}"
-
-        return self.request(r)
+        return self.request(r, reason=reason)
 
     def ban(
         self,

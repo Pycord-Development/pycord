@@ -31,6 +31,7 @@ __all__ = (
     "Paginator",
     "PageGroup",
     "PaginatorMenu",
+    "Page",
 )
 
 
@@ -104,6 +105,48 @@ class PaginatorButton(discord.ui.Button):
         await self.paginator.goto_page(page_number=self.paginator.current_page)
 
 
+class Page:
+    """Represents a page shown in the paginator.
+
+    Allows for directly referencing and modifying each page as a class instance.
+
+    Parameters
+    ----------
+    content: :class:`str`
+        The content of the page. Corresponds to the :class:`discord.Message.content` attribute.
+    embeds: Optional[List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute.
+    """
+
+    def __init__(
+        self, content: Optional[str] = None, embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None
+    ):
+        if content is None and embeds is None:
+            raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
+        self._content = content
+        self._embeds = embeds
+
+    @property
+    def content(self) -> Optional[str]:
+        """Gets the content for the page."""
+        return self._content
+
+    @content.setter
+    def content(self, value: Optional[str]):
+        """Sets the content for the page."""
+        self._content = value
+
+    @property
+    def embeds(self) -> Optional[List[Union[List[discord.Embed], discord.Embed]]]:
+        """Gets the embeds for the page."""
+        return self._embeds
+
+    @embeds.setter
+    def embeds(self, value: Optional[List[Union[List[discord.Embed], discord.Embed]]]):
+        """Sets the embeds for the page."""
+        self._embeds = value
+
+
 class PageGroup:
     """Creates a group of pages which the user can switch between.
 
@@ -116,8 +159,8 @@ class PageGroup:
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]
-        The list of strings, embeds, or list of embeds to include in the page group.
+    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
         Also used as the SelectOption value.
@@ -150,7 +193,7 @@ class PageGroup:
 
     def __init__(
         self,
-        pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
         label: str,
         description: str,
         emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
@@ -186,8 +229,8 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
-        The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
+    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
@@ -233,7 +276,7 @@ class Paginator(discord.ui.View):
 
     def __init__(
         self,
-        pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]],
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
@@ -248,7 +291,9 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
-        self.pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
+        self.pages: Union[
+            List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
+        ] = pages
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
@@ -256,7 +301,9 @@ class Paginator(discord.ui.View):
 
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
-            self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = self.page_groups[0].pages
+            self.pages: Union[
+                List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
+            ] = self.page_groups[0].pages
 
         self.page_count = len(self.pages) - 1
         self.buttons = {}
@@ -284,7 +331,7 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: Optional[Union[List[str], List[Union[List[discord.Embed], discord.Embed]]]] = None,
+        pages: Optional[Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]]] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
@@ -300,8 +347,8 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed]]]]
-            The list of :class:`PageGroup` objects, strings, embeds, or list of embeds to paginate.
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
+            The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
@@ -326,7 +373,7 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages: Union[List[PageGroup], List[str], List[Union[List[discord.Embed], discord.Embed]]] = (
+        self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
         self.page_count = len(self.pages) - 1
@@ -361,7 +408,7 @@ class Paginator(discord.ui.View):
     async def disable(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
     ) -> None:
         """Stops the paginator, disabling all of its components.
 
@@ -374,12 +421,12 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.children:
-            if item not in self.custom_view.children or include_custom:
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 item.disabled = True
         if page:
             await self.message.edit(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page.content,
+                embeds=page.embeds,
                 view=self,
             )
         else:
@@ -388,7 +435,7 @@ class Paginator(discord.ui.View):
     async def cancel(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
     ) -> None:
         """Cancels the paginator, removing all of its components from the message.
 
@@ -402,12 +449,12 @@ class Paginator(discord.ui.View):
         items = self.children.copy()
         page = self.get_page_content(page)
         for item in items:
-            if item not in self.custom_view.children or include_custom:
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 self.remove_item(item)
         if page:
             await self.message.edit(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page.content,
+                embeds=page.embeds,
                 view=self,
             )
         else:
@@ -439,8 +486,8 @@ class Paginator(discord.ui.View):
         page = self.get_page_content(page)
 
         return await self.message.edit(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
+            content=page.content,
+            embeds=page.embeds,
             view=self,
         )
 
@@ -588,17 +635,19 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     @staticmethod
-    def get_page_content(page: Union[str, discord.Embed, List[discord.Embed]]):
+    def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
         """Returns the correct content type for a page based on its content."""
-        if isinstance(page, discord.Embed):
-            return [page]
+        if isinstance(page, Page):
+            return page
+        elif isinstance(page, str):
+            return Page(content=page, embeds=[])
+        elif isinstance(page, discord.Embed):
+            return Page(content=None, embeds=[page])
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
-                return page
+                return Page(content=None, embeds=page)
             else:
                 raise TypeError("All list items must be embeds.")
-        elif isinstance(page, str):
-            return page
 
     async def send(
         self,
@@ -658,7 +707,7 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
         page = self.pages[self.current_page]
-        page = self.get_page_content(page)
+        page_content = self.get_page_content(page)
 
         self.user = ctx.author
 
@@ -673,8 +722,8 @@ class Paginator(discord.ui.View):
             ctx = target
 
         self.message = await ctx.send(
-            content=page if isinstance(page, str) else None,
-            embeds=[] if isinstance(page, str) else page,
+            content=page_content.content,
+            embeds=page_content.embeds,
             view=self,
             reference=reference,
             allowed_mentions=allowed_mentions,
@@ -716,36 +765,44 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
+        if ephemeral and self.timeout >= 900 or self.timeout is None:
+            raise ValueError(
+                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
+            )
+
         self.update_buttons()
 
-        page = self.pages[self.current_page]
-        page = self.get_page_content(page)
+        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page_content: Page = self.get_page_content(page)
 
         self.user = interaction.user
         if target:
             await interaction.response.send_message(target_message, ephemeral=ephemeral)
             self.message = await target.send(
-                content=page if isinstance(page, str) else None,
-                embeds=[] if isinstance(page, str) else page,
+                content=page_content.content,
+                embeds=page_content.embeds,
                 view=self,
             )
         else:
             if interaction.response.is_done():
                 msg = await interaction.followup.send(
-                    content=page if isinstance(page, str) else None,
-                    embeds=[] if isinstance(page, str) else page,
+                    content=page_content.content,
+                    embeds=page_content.embeds,
                     view=self,
                     ephemeral=ephemeral,
                 )
-
+                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout
+                msg = await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(
-                    content=page if isinstance(page, str) else None,
-                    embeds=[] if isinstance(page, str) else page,
+                    content=page_content.content,
+                    embeds=page_content.embeds,
                     view=self,
                     ephemeral=ephemeral,
                 )
-            if isinstance(msg, (discord.WebhookMessage, discord.Message)):
+            if isinstance(msg, discord.WebhookMessage):
+                self.message = await msg.channel.fetch_message(msg.id)
+            elif isinstance(msg, discord.Message):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
                 self.message = await msg.original_message()
@@ -772,6 +829,7 @@ class PaginatorMenu(discord.ui.Select):
         self,
         page_groups: List[PageGroup],
         placeholder: str = "Select Page Group",
+        custom_id: Optional[str] = None,
     ):
         self.page_groups = page_groups
         self.paginator: Optional[Paginator] = None
@@ -784,7 +842,7 @@ class PaginatorMenu(discord.ui.Select):
             )
             for page_group in self.page_groups
         ]
-        super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts)
+        super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts, custom_id=custom_id)
 
     async def callback(self, interaction: discord.Interaction):
         selection = self.values[0]
