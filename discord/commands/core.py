@@ -317,6 +317,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
         predicates = self.checks
+        if self.parent is not None:
+            # parent checks should be ran first
+            predicates = self.parent.checks + predicates
+
         if not predicates:
             # since we have no checks, then we just return True.
             return True
@@ -898,7 +902,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
-        self.checks = []
+        self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
         self._after_invoke = None
