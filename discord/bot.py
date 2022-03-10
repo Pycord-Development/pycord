@@ -749,16 +749,7 @@ class ApplicationCommandMixin:
 
         ctx = await self.get_application_context(interaction)
         ctx.command = _command
-        self.dispatch("application_command", ctx)
-        try:
-            if await self.can_run(ctx, call_once=True):
-                await ctx.command.invoke(ctx)
-            else:
-                raise CheckFailure("The global check once functions failed.")
-        except DiscordException as exc:
-            await ctx.command.dispatch_error(ctx, exc)
-        else:
-            self.dispatch("application_command_completion", ctx)
+        await self.invoke_application_command(ctx)
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
@@ -985,6 +976,28 @@ class ApplicationCommandMixin:
         if cls is None:
             cls = AutocompleteContext
         return cls(self, interaction)
+
+    async def invoke_application_command(self, ctx: ApplicationContext) -> None:
+        """|coro|
+
+        Invokes the application command given under the invocation
+        context and handles all the internal event dispatch mechanisms.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationCommand`
+            The invocation context to invoke.
+        """
+        self.dispatch("application_command", ctx)
+        try:
+            if await self.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self.dispatch("application_command_completion", ctx)
 
 
 class BotBase(ApplicationCommandMixin, CogMixin):
