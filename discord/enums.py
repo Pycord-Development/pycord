@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, TypeVar, Union
 
 __all__ = (
     "Enum",
@@ -669,6 +669,11 @@ class SlashCommandOptionType(Enum):
             return cls.attachment
         if datatype.__name__ == "Mentionable":
             return cls.mentionable
+
+        if isinstance(datatype, types.UnionType) or getattr(datatype, "__origin__", None) is Union:
+            # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
+            # Type checking fails for this case, so ignore it.
+            return cls.from_datatype(datatype.__args__)  # type: ignore
 
         if issubclass(datatype, str):
             return cls.string
