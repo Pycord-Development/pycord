@@ -188,6 +188,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         convert the arguments beforehand, so take care to pass the correct
         arguments in.
         """
+        if self.cog is not None:
+            return await self.callback(self.cog, ctx, *args, **kwargs)
         return await self.callback(ctx, *args, **kwargs)
 
     @property
