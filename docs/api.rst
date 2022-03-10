@@ -1806,7 +1806,9 @@ of :class:`enum.Enum`.
     .. attribute:: select
 
         Represents a select component.
+    .. attribute:: input_text
 
+        Represents an input_text component.
 
 .. class:: ButtonStyle
 
@@ -1848,6 +1850,28 @@ of :class:`enum.Enum`.
     .. attribute:: url
 
         An alias for :attr:`link`.
+
+.. class:: InputTextStyle
+
+    Represents the style of the input text component.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: short
+
+        Represents a single-line input text field.
+    .. attribute:: long
+
+        Represents a multi-line input text field.
+    .. attribute:: singleline
+
+        An alias for :attr:`short`.
+    .. attribute:: multiline
+
+        An alias for :attr:`long`.
+    .. attribute:: paragraph
+
+        An alias for :attr:`long`.
 
 .. class:: VoiceRegion
 
