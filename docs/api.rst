@@ -1806,6 +1806,9 @@ of :class:`enum.Enum`.
     .. attribute:: select
 
         Represents a select component.
+    .. attribute:: input_text
+
+        Represents an input_text component.
 
 
 .. class:: ButtonStyle
@@ -1850,6 +1853,9 @@ of :class:`enum.Enum`.
         An alias for :attr:`link`.
 
 .. class:: InputTextStyle
+
+    Represents the style of the input text component.
+
     .. versionadded:: 2.0
 
     .. attribute:: short
