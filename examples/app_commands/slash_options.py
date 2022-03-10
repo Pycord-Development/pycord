@@ -22,7 +22,7 @@ async def hello(
 @bot.slash_command(guild_ids=[...])
 async def channel(
     ctx: discord.ApplicationContext,
-    channel: Option([discord.TextChannel, discord.VoiceChannel], "Select a channel")
+    channel: Option((discord.TextChannel, discord.VoiceChannel), "Select a channel")
     # you can specify allowed channel types by passing a list of them like: [discord.TextChannel, discord.VoiceChannel]
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
