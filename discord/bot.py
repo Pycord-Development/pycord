@@ -115,7 +115,7 @@ class ApplicationCommandMixin:
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
 
-        This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
+        This is usually not called, instead the :meth:`command` or
         other shortcut decorators are used instead.
 
         .. versionadded:: 2.0
@@ -321,7 +321,7 @@ class ApplicationCommandMixin:
     ) -> None:
         """|coro|
 
-        Registers a command. If the command has guild_ids set, or if the guild_ids parameter is passed, the command will
+        Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed, the command will
         be registered as a guild command for those guilds.
 
         Parameters
@@ -333,7 +333,7 @@ class ApplicationCommandMixin:
             if it seems to already be registered and up to date with our internal cache. Defaults to True.
         guild_ids: :class:`list`
             A list of guild ids to register the command for. If this is not set, the command's
-            :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
+            :attr:`ApplicationCommand.guild_ids` attribute will be used.
 
         Returns
         -------
@@ -361,7 +361,7 @@ class ApplicationCommandMixin:
             A list of commands to register. If this is not set (None), then all commands will be registered.
         guild_id: Optional[int]
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
-            set, the commands will be registered according to their :attr:`~.ApplicationCommand.guild_ids` attribute.
+            set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
         force: :class:`bool`
             Registers the commands regardless of the state of the command on Discord. This can sometimes cause commands
             to be re-registered without changes (The command can temporarily appear as an invalid command on the user's
@@ -752,8 +752,8 @@ class ApplicationCommandMixin:
         await self.invoke_application_command(ctx)
 
     def slash_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
 
         .. versionadded:: 2.0
@@ -767,8 +767,8 @@ class ApplicationCommandMixin:
         return self.application_command(cls=SlashCommand, **kwargs)
 
     def user_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
 
         .. versionadded:: 2.0
@@ -782,8 +782,8 @@ class ApplicationCommandMixin:
         return self.application_command(cls=UserCommand, **kwargs)
 
     def message_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
 
         .. versionadded:: 2.0
@@ -797,8 +797,8 @@ class ApplicationCommandMixin:
         return self.application_command(cls=MessageCommand, **kwargs)
 
     def application_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
 
         .. versionadded:: 2.0
 
