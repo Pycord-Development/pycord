@@ -103,6 +103,10 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
+    
+.. autofunction:: discord.commands.core.application_command
+
+.. autofunction:: discord.commands.core.command
 
 SlashCommand
 ~~~~~~~~~~~~~
@@ -111,6 +115,8 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
+    
+.. autofunction:: discord.commands.core.slash_command
 
 SlashCommandGroup
 ~~~~~~~~~~~~~~~~~~
@@ -127,6 +133,8 @@ Option
 
 .. autoclass:: Option
     :members:
+    
+.. autofunction:: discord.commands.core.option
 
 OptionChoice
 ~~~~~~~~~~~~~
@@ -143,6 +151,8 @@ UserCommand
 
 .. autoclass:: UserCommand
     :members:
+    
+.. autofunction:: discord.commands.core.user_command
 
 MessageCommand
 ~~~~~~~~~~~~~~~
@@ -151,6 +161,8 @@ MessageCommand
 
 .. autoclass:: MessageCommand
     :members:
+    
+.. autofunction:: discord.commands.core.message_command
 
 ApplicationContext
 ~~~~~~~~~~~~~~~~~~~
