@@ -689,23 +689,24 @@ class VoiceClient(VoiceProtocol):
         Must be in a voice channel to use.
         Must not be already recording.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Parameters
         ----------
-        sink: :class:`Sink`
+        sink: :class:`.Sink`
             A Sink which will "store" all the audio data.
-        callback: :class:`asynchronous function`
+        callback: :ref:`coroutine <coroutine>`
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
+            
         Raises
         ------
-        RecordingException
+        :exc:`RecordingException`
             Not connected to a voice channel.
-        RecordingException
+        :exc:`RecordingException`
             Already recording.
-        RecordingException
+        :exc:`RecordingException`
             Must provide a Sink object.
         """
         if not self.is_connected():
@@ -741,7 +742,7 @@ class VoiceClient(VoiceProtocol):
 
         Raises
         ------
-        RecordingException
+        :exc:`RecordingException`
             Not currently recording.
         """
         if not self.recording:
@@ -758,7 +759,7 @@ class VoiceClient(VoiceProtocol):
 
         Raises
         ------
-        RecordingException
+        :exc:`RecordingException`
             Not currently recording.
         """
         if not self.recording:
