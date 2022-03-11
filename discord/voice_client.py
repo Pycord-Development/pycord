@@ -702,11 +702,11 @@ class VoiceClient(VoiceProtocol):
             
         Raises
         ------
-        :exc:`.RecordingException`
+        RecordingException
             Not connected to a voice channel.
-        :exc:`.RecordingException`
+        RecordingException
             Already recording.
-        :exc:`.RecordingException`
+        RecordingException
             Must provide a Sink object.
         """
         if not self.is_connected():
@@ -742,7 +742,7 @@ class VoiceClient(VoiceProtocol):
 
         Raises
         ------
-        :exc:`.RecordingException`
+        RecordingException
             Not currently recording.
         """
         if not self.recording:
@@ -759,7 +759,7 @@ class VoiceClient(VoiceProtocol):
 
         Raises
         ------
-        :exc:`.RecordingException`
+        RecordingException
             Not currently recording.
         """
         if not self.recording:
