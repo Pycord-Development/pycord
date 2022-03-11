@@ -4917,14 +4917,14 @@ Sink Exception Hierarchy
 
     - :exc:`DiscordException`
         - :exc:`SinkException`
-            - :exc:`RecordingException`
-            - :exc:`WaveSinkError`
-            - :exc:`MP3SinkError`
-            - :exc:`MP4SinkError`
-            - :exc:`M4ASinkError`
-            - :exc:`MKVSinkError`
-            - :exc:`MKASinkError`
-            - :exc:`OGGSinkError`
+            - :exc:`sinks.RecordingException`
+            - :exc:`sinks.WaveSinkError`
+            - :exc:`sinks.MP3SinkError`
+            - :exc:`sinks.MP4SinkError`
+            - :exc:`sinks.M4ASinkError`
+            - :exc:`sinks.MKVSinkError`
+            - :exc:`sinks.MKASinkError`
+            - :exc:`sinks.OGGSinkError`
 
 
 Exceptions
