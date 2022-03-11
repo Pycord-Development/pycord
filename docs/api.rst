@@ -4894,6 +4894,8 @@ Sinks
 Sink Error Reference
 --------------------
 
+.. autoexception:: discord.sinks.RecordingException
+
 .. autoexception:: discord.sinks.WaveSinkError
 
 .. autoexception:: discord.sinks.MP3SinkError
@@ -4971,7 +4973,6 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
-                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
