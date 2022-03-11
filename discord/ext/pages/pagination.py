@@ -240,6 +240,7 @@ class Paginator(discord.ui.View):
         Whether to show a select menu that allows the user to switch between groups of pages.
     menu_placeholder: :class:`str`
         The placeholder text to show in the page group menu when no page group has been selected yet.
+        Defaults to "Select Page Group" if not provided.
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
@@ -362,6 +363,7 @@ class Paginator(discord.ui.View):
             Whether only the original user of the command can change pages.
         menu_placeholder: :class:`str`
             The placeholder text to show in the page group menu when no page group has been selected yet.
+            Defaults to "Select Page Group" if not provided.
         disable_on_timeout: :class:`bool`
             Whether the buttons get disabled when the paginator view times out.
         use_default_buttons: :class:`bool`
