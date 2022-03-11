@@ -38,7 +38,7 @@ __all__ = (
 class CommandPermission:
     """The class used in the application command decorators
     to hash permission data into a dictionary using the
-    :meth:`to_dict` method to be sent to the discord API later on.
+    :meth:`~to_dict` method to be sent to the discord API later on.
 
     .. versionadded:: 2.0
 
