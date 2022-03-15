@@ -126,7 +126,7 @@ class Modal:
             "components": self.to_components(),
         }
 
-    async def on_error(self, error: Exception, item: InputText, interaction: Interaction) -> None:
+    async def on_error(self, error: Exception, interaction: Interaction) -> None:
         """|coro|
 
         A callback that is called when the modal's callback fails with an error.
@@ -137,12 +137,10 @@ class Modal:
         -----------
         error: :class:`Exception`
             The exception that was raised.
-        item: :class:`InputText`
-            The item that failed the dispatch.
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in modal {self} for item {item}:", file=sys.stderr)
+        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
         traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
 
@@ -218,4 +216,4 @@ class ModalStore:
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:
-            return await value.on_error(e, child, interaction)
+            return await value.on_error(e, interaction)
