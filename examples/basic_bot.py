@@ -1,4 +1,4 @@
-# This example requires the 'members' and 'message_content' privileged intents
+# This example requires the 'members' and 'message_content' privileged intents to function.
 
 import random
 
