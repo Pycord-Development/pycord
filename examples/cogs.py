@@ -23,6 +23,9 @@ class MyCog(commands.Cog):
     async def ping(self, ctx: commands.Context):
         await ctx.send("Pong!")
 
+def setup(bot):
+    bot.add_cog(MyCog(bot)) # the setup function for the cog
+
 # Main file Eg: "bot.py:
 
 from discord.ext import commands
