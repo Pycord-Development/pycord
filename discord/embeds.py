@@ -33,6 +33,7 @@ from typing import (
     Final,
     List,
     Mapping,
+    Optional,
     Protocol,
     Type,
     TypeVar,
@@ -112,6 +113,32 @@ if TYPE_CHECKING:
         url: MaybeEmpty[str]
         icon_url: MaybeEmpty[str]
         proxy_icon_url: MaybeEmpty[str]
+
+
+class EmbedField:
+    """Represents a field on the :class:`Embed` object.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the field.
+    value: :class:`str`
+        The value of the field.
+    inline: :class:`bool`
+        Whether the field should be displayed inline.
+    """
+
+    def __init__(self, name: str, value: str, inline: Optional[bool] = False):
+        self.name = name
+        self.value = value
+        self.inline = inline
+
+    def to_dict(self) -> Dict[str, Union[str, bool]]:
+        return {
+            "name": self.name,
+            "value": self.value,
+            "inline": self.inline,
+        }
 
 
 class Embed:
@@ -195,6 +222,7 @@ class Embed:
         url: MaybeEmpty[Any] = EmptyEmbed,
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
+        fields: List[EmbedField] = None,
     ):
 
         self.colour = colour if colour is not EmptyEmbed else color
@@ -214,6 +242,10 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
+
+        if fields:
+            for field in fields:
+                self.add_field(name=field.name, value=field.value, inline=field.inline)
 
     @classmethod
     def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
@@ -614,6 +646,19 @@ class Embed:
         If the attribute has no value then :attr:`Empty` is returned.
         """
         return [EmbedProxy(d) for d in getattr(self, "_fields", [])]  # type: ignore
+
+    @fields.setter
+    def fields(self, value: List[EmbedField]) -> None:
+        """Sets the fields for the embed. This overwrites any existing fields.
+
+        Parameters
+        ----------
+        value: List[:class:`EmbedField`]
+            The list of :class:`EmbedField` objects to include in the embed.
+        """
+        self.clear_fields()
+        for field in value:
+            self.add_field(name=field.name, value=field.value, inline=field.inline)
 
     def add_field(self: E, *, name: Any, value: Any, inline: bool = True) -> E:
         """Adds a field to the embed object.
