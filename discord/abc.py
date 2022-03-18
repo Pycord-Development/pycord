@@ -1349,7 +1349,7 @@ class Messageable:
         if embed is not None and embeds is not None:
             raise InvalidArgument("cannot pass both embed and embeds parameter to send()")
 
-        if embed is not None:
+        if type(embed) != dict or embed != None:
             embed = embed.to_dict()
 
         elif embeds is not None:
