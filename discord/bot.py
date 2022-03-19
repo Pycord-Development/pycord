@@ -247,7 +247,8 @@ class ApplicationCommandMixin:
 
         registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
         to_check = {
-            "default_permission": None,
+            "dm_permission": None,
+            "default_member_permissions": None,
             "name": None,
             "description": None,
             "options": ["type", "name", "description", "autocomplete", "choices"],
@@ -558,6 +559,8 @@ class ApplicationCommandMixin:
                 registered_guild_commands[guild_id] = await self.register_commands(
                     guild_commands, guild_id=guild_id, force=force
                 )
+
+        return
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
