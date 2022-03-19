@@ -805,6 +805,24 @@ class Client:
         """
         return self._connection.get_channel(id)
 
+    def get_message(self, id: int, /) -> Optional[Message]:
+        """Returns a message the given ID.
+
+        This is useful if you have a message_id but don't want to do an API call
+        to access the message.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`.Message`]
+            The returned message or ``None`` if not found.
+        """
+        return self._connection._get_message(id)
+
     def get_partial_messageable(self, id: int, *, type: Optional[ChannelType] = None) -> PartialMessageable:
         """Returns a partial messageable with the given channel ID.
 
@@ -840,7 +858,7 @@ class Client:
         Returns
         --------
         Optional[:class:`.StageInstance`]
-            The returns stage instance of ``None`` if not found.
+            The stage instance or ``None`` if not found.
         """
         from .channel import StageChannel
 

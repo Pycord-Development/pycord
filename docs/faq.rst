@@ -262,6 +262,7 @@ There are multiple ways of doing this. If you have a specific model's ID then yo
 one of the following functions:
 
 - :meth:`Client.get_channel`
+- :meth:`Client.get_message`
 - :meth:`Client.get_guild`
 - :meth:`Client.get_user`
 - :meth:`Client.get_emoji`
@@ -325,10 +326,6 @@ Quick example: ::
     embed = discord.Embed()
     embed.set_image(url="attachment://image.png")
     await channel.send(file=file, embed=embed)
-
-.. note ::
-
-    Due to a Discord limitation, filenames may not include underscores.
 
 Is there an event for audit log entries being created?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

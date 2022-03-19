@@ -187,6 +187,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         convert the arguments beforehand, so take care to pass the correct
         arguments in.
         """
+        if self.cog is not None:
+            return await self.callback(self.cog, ctx, *args, **kwargs)
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -316,6 +318,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
         predicates = self.checks
+        if self.parent is not None:
+            # parent checks should be ran first
+            predicates = self.parent.checks + predicates
+
         if not predicates:
             # since we have no checks, then we just return True.
             return True
@@ -887,9 +893,7 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        *,
-        default_permissions: Optional[bool] = True,
-        permissions: Optional[List[CommandPermission]] = [],
+        **kwargs,
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -899,7 +903,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
-        self.checks = []
+        self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
         self._after_invoke = None
@@ -909,6 +913,7 @@ class SlashCommandGroup(ApplicationCommand):
         # Permissions
         self.default_member_permissions: Optional[Permissions] = kwargs.get("default_member_permissions", None)
         self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
+
 
     @property
     def module(self) -> Optional[str]:
@@ -1055,7 +1060,10 @@ class SlashCommandGroup(ApplicationCommand):
         ret = self.__class__(
             name=self.name,
             description=self.description,
-            **self.__original_kwargs__,
+            **{
+                param: value for param, value in self.__original_kwargs__.items()
+                if param not in ('name', 'description')
+            },
         )
         return self._ensure_assignment_on_copy(ret)
 

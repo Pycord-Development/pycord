@@ -238,6 +238,9 @@ class Paginator(discord.ui.View):
         Whether to show the page indicator when using the default buttons.
     show_menu: :class:`bool`
         Whether to show a select menu that allows the user to switch between groups of pages.
+    menu_placeholder: :class:`str`
+        The placeholder text to show in the page group menu when no page group has been selected yet.
+        Defaults to "Select Page Group" if not provided.
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
@@ -280,6 +283,7 @@ class Paginator(discord.ui.View):
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
+        menu_placeholder: str = "Select Page Group",
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
@@ -297,6 +301,7 @@ class Paginator(discord.ui.View):
         self.current_page = 0
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
+        self.menu_placeholder = menu_placeholder
         self.page_groups: Optional[List[PageGroup]] = None
 
         if all(isinstance(pg, PageGroup) for pg in pages):
@@ -335,6 +340,7 @@ class Paginator(discord.ui.View):
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
+        menu_placeholder: Optional[str] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
         default_button_row: Optional[int] = None,
@@ -355,6 +361,9 @@ class Paginator(discord.ui.View):
             Whether to show the page indicator when using the default buttons.
         author_check: :class:`bool`
             Whether only the original user of the command can change pages.
+        menu_placeholder: :class:`str`
+            The placeholder text to show in the page group menu when no page group has been selected yet.
+            Defaults to "Select Page Group" if not provided.
         disable_on_timeout: :class:`bool`
             Whether the buttons get disabled when the paginator view times out.
         use_default_buttons: :class:`bool`
@@ -382,6 +391,7 @@ class Paginator(discord.ui.View):
         self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
         self.show_indicator = show_indicator if show_indicator is not None else self.show_indicator
         self.usercheck = author_check if author_check is not None else self.usercheck
+        self.menu_placeholder = menu_placeholder if menu_placeholder is not None else self.menu_placeholder
         self.disable_on_timeout = disable_on_timeout if disable_on_timeout is not None else self.disable_on_timeout
         self.use_default_buttons = use_default_buttons if use_default_buttons is not None else self.use_default_buttons
         self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
@@ -498,7 +508,7 @@ class Paginator(discord.ui.View):
 
     def add_menu(self):
         """Adds the default :class:`PaginatorMenu` instance to the paginator."""
-        self.menu = PaginatorMenu(self.page_groups)
+        self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder)
         self.menu.paginator = self
         self.add_item(self.menu)
 
@@ -765,6 +775,11 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
+        if ephemeral and self.timeout >= 900 or self.timeout is None:
+            raise ValueError(
+                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
+            )
+
         self.update_buttons()
 
         page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
@@ -800,8 +815,7 @@ class Paginator(discord.ui.View):
             elif isinstance(msg, discord.Message):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
-                msg = await msg.original_message()
-                self.message = await msg.channel.fetch_message(msg.id)
+                self.message = await msg.original_message()
 
         return self.message
 
@@ -824,7 +838,7 @@ class PaginatorMenu(discord.ui.Select):
     def __init__(
         self,
         page_groups: List[PageGroup],
-        placeholder: str = "Select Page Group",
+        placeholder: Optional[str] = None,
         custom_id: Optional[str] = None,
     ):
         self.page_groups = page_groups
