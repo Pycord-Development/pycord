@@ -58,7 +58,6 @@ from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
 from .options import Option, OptionChoice
-from .permissions import CommandPermission
 
 __all__ = (
     "_BaseCommand",
@@ -534,15 +533,10 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-
-            If this is not empty then default_permissions will be set to False.
-
+    dm_permission: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -607,12 +601,10 @@ class SlashCommand(ApplicationCommand):
         self._after_invoke = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
+        self.default_member_permissions: Optional[Permissions] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
         )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.dm_permission: Optional[bool] = getattr(func, "__dm_permission__", kwargs.get("dm_permissions", None))
 
     def _parse_options(self, params) -> List[Option]:
         if list(params.items())[0][0] == "self":
@@ -720,10 +712,15 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
-            "default_permission": self.default_permission,
         }
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -850,6 +847,10 @@ class SlashCommandGroup(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this group belongs to. ``None`` if there
         isn't one.
+    dm_permission: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
     cog: Optional[:class:`Cog`]
@@ -910,10 +911,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional[Permissions] = kwargs.get("default_member_permissions", None)
+        self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
+
 
     @property
     def module(self) -> Optional[str]:
@@ -924,11 +924,16 @@ class SlashCommandGroup(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
-            "default_permission": self.default_permission,
         }
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1105,14 +1110,10 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`.CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-            If this is not empty then default_permissions will be set to ``False``.
-
+    dm_permission: :class:`bool`
+        Whether the command can be used in direct message channels.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1165,12 +1166,11 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
+        # Permissions
+        self.default_member_permissions: Optional[Permissions] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
         )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.dm_permission: Optional[bool] = getattr(func, "__dm_permission__", kwargs.get("dm_permissions", None))
 
         # Context Menu commands can't have parents
         self.parent = None
@@ -1208,12 +1208,19 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {
+        as_dict = {
             "name": self.name,
             "description": self.description,
             "type": self.type,
-            "default_permission": self.default_permission,
         }
+
+        if self.dm_permission is not None:
+            as_dict["dm_permission"] = self.dm_permission
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
+
+        return as_dict
 
 
 class UserCommand(ContextMenuCommand):
