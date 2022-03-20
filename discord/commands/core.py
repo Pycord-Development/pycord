@@ -50,7 +50,7 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError
+from ..errors import ClientException, ValidationError, NotFound
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
@@ -746,9 +746,10 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
-                arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                if arg is None:
-                    arg = ctx.guild.get_role(arg_id) or arg_id
+                try:
+                    arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                except NotFound:
+                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
@@ -892,9 +893,6 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        *,
-        default_permissions: Optional[bool] = True,
-        permissions: Optional[List[CommandPermission]] = [],
         **kwargs,
     ) -> None:
         validate_chat_input_name(name)
@@ -913,8 +911,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = default_permissions
-        self.permissions: List[CommandPermission] = permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -1058,7 +1056,10 @@ class SlashCommandGroup(ApplicationCommand):
         ret = self.__class__(
             name=self.name,
             description=self.description,
-            **self.__original_kwargs__,
+            **{
+                param: value for param, value in self.__original_kwargs__.items()
+                if param not in ('name', 'description')
+            },
         )
         return self._ensure_assignment_on_copy(ret)
 
