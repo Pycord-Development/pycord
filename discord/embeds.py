@@ -638,14 +638,17 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> List[_EmbedFieldProxy]:
-        """List[Union[``EmbedProxy``, :attr:`Empty`]]: Returns a :class:`list` of ``EmbedProxy`` denoting the field contents.
+    def fields(self) -> Optional[List[Dict[str, Union[bool, str]]]]:
+        """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the attribute has no value then ``None`` is returned.
         """
-        return [EmbedProxy(d) for d in getattr(self, "_fields", [])]  # type: ignore
+        if self._fields:
+            return self._fields
+        else:
+            return None
 
     @fields.setter
     def fields(self, value: List[EmbedField]) -> None:
