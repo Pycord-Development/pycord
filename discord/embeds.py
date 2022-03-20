@@ -656,6 +656,9 @@ class Embed:
         value: List[:class:`EmbedField`]
             The list of :class:`EmbedField` objects to include in the embed.
         """
+        if not all(isinstance(x, EmbedField) for x in value):
+            raise TypeError("Expected a list of EmbedField objects.")
+
         self.clear_fields()
         for field in value:
             self.add_field(name=field.name, value=field.value, inline=field.inline)
