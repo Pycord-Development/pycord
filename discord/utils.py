@@ -136,11 +136,11 @@ if TYPE_CHECKING:
     from .permissions import Permissions
     from .template import Template
 
-    cached_property = NewType('cached_property', property)
-
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
+    cached_property = NewType('cached_property', property)
+    
     P = ParamSpec("P")
 
 else:
