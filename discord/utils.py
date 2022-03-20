@@ -56,6 +56,7 @@ from typing import (
     List,
     Literal,
     Mapping,
+    NewType,
     Optional,
     Protocol,
     Sequence,
@@ -134,6 +135,8 @@ if TYPE_CHECKING:
     from .invite import Invite
     from .permissions import Permissions
     from .template import Template
+
+    cached_property = NewType('cached_property', property)
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
