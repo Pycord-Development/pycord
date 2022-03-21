@@ -26,47 +26,49 @@ from abc import ABC
 
 from discord.interactions import Interaction
 from discord.message import Message
-from .context import CompatApplicationContext, CompatExtContext
-from .core import CompatCommand, compat_command
-from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot
+
+from ..commands import AutoShardedBot as ExtAutoShardedBot
+from ..commands import Bot as ExtBot
+from .context import BridgeApplicationContext, BridgeExtContext
+from .core import BridgeCommand, bridge_command
 
 __all__ = ("Bot", "AutoShardedBot")
 
 
 class BotBase(ABC):
-    async def get_application_context(self, interaction: Interaction, cls=None) -> CompatApplicationContext:
-        cls = cls if cls is not None else CompatApplicationContext
-        # Ignore the type hinting error here. CompatApplicationContext is a subclass of ApplicationContext, and since
+    async def get_application_context(self, interaction: Interaction, cls=None) -> BridgeApplicationContext:
+        cls = cls if cls is not None else BridgeApplicationContext
+        # Ignore the type hinting error here. BridgeApplicationContext is a subclass of ApplicationContext, and since
         # we gave it cls, it will be used instead.
         return await super().get_application_context(interaction, cls=cls)  # type: ignore
 
-    async def get_context(self, message: Message, cls=None) -> CompatExtContext:
-        cls = cls if cls is not None else CompatExtContext
-        # Ignore the type hinting error here. CompatExtContext is a subclass of Context, and since we gave it cls, it
+    async def get_context(self, message: Message, cls=None) -> BridgeExtContext:
+        cls = cls if cls is not None else BridgeExtContext
+        # Ignore the type hinting error here. BridgeExtContext is a subclass of Context, and since we gave it cls, it
         # will be used instead.
         return await super().get_context(message, cls=cls)  # type: ignore
 
-    def add_compat_command(self, command: CompatCommand):
-        """Takes a :class:`.CompatCommand` and adds both a slash and traditional (prefix-based) version of the command
+    def add_bridge_command(self, command: BridgeCommand):
+        """Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command
         to the bot.
         """
         # Ignore the type hinting error here. All subclasses of BotBase pass the type checks.
         command.add_to(self)  # type: ignore
 
-    def compat_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.compat_command` and adds it to
-        the internal command list via :meth:`~.Bot.add_compat_command`.
+    def bridge_command(self, **kwargs):
+        """A shortcut decorator that invokes :func:`.bridge_command` and adds it to
+        the internal command list via :meth:`~.Bot.add_bridge_command`.
 
         Returns
         --------
-        Callable[..., :class:`CompatCommand`]
-            A decorator that converts the provided method into an :class:`.CompatCommand`, adds both a slash and
-            traditional (prefix-based) version of the command to the bot, and returns the :class:`.CompatCommand`.
+        Callable[..., :class:`BridgeCommand`]
+            A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and
+            traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`.
         """
 
-        def decorator(func) -> CompatCommand:
-            result = compat_command(**kwargs)(func)
-            self.add_compat_command(result)
+        def decorator(func) -> BridgeCommand:
+            result = bridge_command(**kwargs)(func)
+            self.add_bridge_command(result)
             return result
 
         return decorator
@@ -81,6 +83,7 @@ class Bot(BotBase, ExtBot):
 
     .. versionadded:: 2.0
     """
+
     pass
 
 
@@ -90,4 +93,5 @@ class AutoShardedBot(BotBase, ExtAutoShardedBot):
 
     .. versionadded:: 2.0
     """
+
     pass

@@ -25,23 +25,32 @@ DEALINGS IN THE SOFTWARE.
 from typing import Union
 
 import discord.commands.options
+from discord.commands import Option, SlashCommand
 from discord.enums import SlashCommandOptionType
-from discord.commands import SlashCommand, Option
-from ..commands import Bot as ExtBot, AutoShardedBot as ExtAutoShardedBot, Command, Converter, UserConverter, \
-    GuildChannelConverter, RoleConverter, BadArgument
 
-__all__ = ("CompatCommand", "compat_command", "CompatExtCommand", "CompatSlashCommand")
+from ..commands import AutoShardedBot as ExtAutoShardedBot
+from ..commands import BadArgument
+from ..commands import Bot as ExtBot
+from ..commands import (
+    Command,
+    Converter,
+    GuildChannelConverter,
+    RoleConverter,
+    UserConverter,
+)
+
+__all__ = ("BridgeCommand", "bridge_command", "BridgeExtCommand", "BridgeSlashCommand")
 
 
-class CompatSlashCommand(SlashCommand):
+class BridgeSlashCommand(SlashCommand):
     ...
 
 
-class CompatExtCommand(Command):
+class BridgeExtCommand(Command):
     ...
 
 
-class CompatCommand:
+class BridgeCommand:
     def __init__(self, callback, **kwargs):
         """
         This is the base class for commands that are compatible with both traditional (prefix-based) commands and slash
@@ -49,8 +58,8 @@ class CompatCommand:
 
         Parameters
         ----------
-        callback: Callable[[CompatContext, ...], Awaitable[Any]]
-            The callback to invoke when the command is executed. The first argument will be a :class:`CompatContext`,
+        callback: Callable[[BridgeContext, ...], Awaitable[Any]]
+            The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
             and any additional arguments will be passed to the callback. This callback must be a coroutine.
         kwargs: Optional[Dict[str, Any]]
             Keyword arguments that are directly passed to the respective command constructors.
@@ -63,10 +72,10 @@ class CompatCommand:
 
         Returns
         -------
-        :class:`CompatExtCommand`
+        :class:`BridgeExtCommand`
             The respective traditional (prefix-based) version of the command.
         """
-        command = CompatExtCommand(self.callback, **self.kwargs)
+        command = BridgeExtCommand(self.callback, **self.kwargs)
         return command
 
     def get_application_command(self):
@@ -74,10 +83,10 @@ class CompatCommand:
 
         Returns
         -------
-        :class:`CompatSlashCommand`
+        :class:`BridgeSlashCommand`
             The respective slash command version of the command.
         """
-        command = CompatSlashCommand(self.callback, **self.kwargs)
+        command = BridgeSlashCommand(self.callback, **self.kwargs)
         return command
 
     def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
@@ -92,7 +101,7 @@ class CompatCommand:
         bot.add_application_command(self.get_application_command())
 
 
-def compat_command(**kwargs):
+def bridge_command(**kwargs):
     """A decorator that is used to wrap a function as a command.
 
     Parameters
@@ -100,14 +109,16 @@ def compat_command(**kwargs):
     kwargs: Optional[Dict[str, Any]]
         Keyword arguments that are directly passed to the respective command constructors.
     """
+
     def decorator(callback):
-        return CompatCommand(callback, **kwargs)
+        return BridgeCommand(callback, **kwargs)
 
     return decorator
 
 
 class MentionableConverter(Converter):
     """A converter that can convert a mention to a user or a role."""
+
     async def convert(self, ctx, argument):
         try:
             return await RoleConverter().convert(ctx, argument)
@@ -119,7 +130,7 @@ def attachment_callback(*args):  # pylint: disable=unused-argument
     raise ValueError("Attachments are not supported for compatibility commands.")
 
 
-class CompatOption(Option, Converter):
+class BridgeOption(Option, Converter):
     async def convert(self, ctx, argument):
         if self.converter is not None:
             converted = await self.converter.convert(ctx, argument)
@@ -146,4 +157,4 @@ class CompatOption(Option, Converter):
         return converted
 
 
-discord.commands.options.Option = CompatOption
+discord.commands.options.Option = BridgeOption

@@ -50,7 +50,7 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError, NotFound
+from ..errors import ClientException, NotFound, ValidationError
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
@@ -1063,8 +1063,9 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value for param, value in self.__original_kwargs__.items()
-                if param not in ('name', 'description')
+                param: value
+                for param, value in self.__original_kwargs__.items()
+                if param not in ("name", "description")
             },
         )
         return self._ensure_assignment_on_copy(ret)

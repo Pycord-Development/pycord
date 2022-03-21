@@ -80,7 +80,7 @@ packages = [
     "discord.ext.commands",
     "discord.ext.tasks",
     "discord.ext.pages",
-    "discord.ext.compat",
+    "discord.ext.bridge",
 ]
 
 

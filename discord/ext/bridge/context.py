@@ -23,35 +23,36 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional, Union, Any
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
 from discord.message import Message
 from discord.webhook import WebhookMessage
+
 from ..commands import Context
 
-__all__ = ("CompatContext", "CompatExtContext", "CompatApplicationContext")
+__all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
 
 
-class CompatContext(ABC):
+class BridgeContext(ABC):
     """
     The base context class for compatibility commands. This class is an :class:`ABC` (abstract base class), which is
-    subclassed by :class:`CompatExtContext` and :class:`CompatApplicationContext`. The methods in this class are meant
+    subclassed by :class:`BridgeExtContext` and :class:`BridgeApplicationContext`. The methods in this class are meant
     to give parity between the two contexts, while still allowing for all of their functionality.
 
-    When this is passed to a command, it will either be passed as :class:`CompatExtContext`, or
-    :class:`CompatApplicationContext`. Since they are two separate classes, it is quite simple to use :meth:`isinstance`
+    When this is passed to a command, it will either be passed as :class:`BridgeExtContext`, or
+    :class:`BridgeApplicationContext`. Since they are two separate classes, it is quite simple to use :meth:`isinstance`
     to make different functionality for each context. For example, if you want to respond to a command with the command
     type that it was invoked with, you can do the following:
 
     .. code-block:: python3
 
-        @bot.compat_command()
-        async def example(ctx: CompatContext):
-            if isinstance(ctx, CompatExtContext):
+        @bot.bridge_command()
+        async def example(ctx: BridgeContext):
+            if isinstance(ctx, BridgeExtContext):
                 command_type = "Traditional (prefix-based) command"
-            elif isinstance(ctx, CompatApplicationContext):
+            elif isinstance(ctx, BridgeApplicationContext):
                 command_type = "Application command"
             await ctx.send(f"This command was invoked with a(n) {command_type}.")
 
@@ -73,8 +74,8 @@ class CompatContext(ABC):
     async def respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
 
-        Responds to the command with the respective response type to the current context. In :class:`CompatExtContext`,
-        this will be :meth:`~.ExtContext.reply` while in :class:`CompatApplicationContext`, this will be
+        Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`,
+        this will be :meth:`~.ExtContext.reply` while in :class:`BridgeApplicationContext`, this will be
         :meth:`~.ApplicationContext.respond`.
         """
         return await self._respond(*args, **kwargs)
@@ -82,15 +83,15 @@ class CompatContext(ABC):
     async def reply(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
 
-        Alias for :meth:`~.CompatContext.respond`.
+        Alias for :meth:`~.BridgeContext.respond`.
         """
         return await self.respond(*args, **kwargs)
 
     async def defer(self, *args, **kwargs) -> None:
         """|coro|
 
-        Defers the command with the respective approach to the current context. In :class:`CompatExtContext`, this will
-        be :meth:`~.ExtContext.trigger_typing` while in :class:`CompatApplicationContext`, this will be
+        Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will
+        be :meth:`~.ExtContext.trigger_typing` while in :class:`BridgeApplicationContext`, this will be
         :meth:`~.ApplicationContext.defer`.
 
         .. note::
@@ -103,8 +104,8 @@ class CompatContext(ABC):
         """|coro|
 
         Edits the original response message with the respective approach to the current context. In
-        :class:`CompatExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be
-        edited here. In :class:`CompatApplicationContext`, this will be :meth:`~.ApplicationContext.edit`.
+        :class:`BridgeExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be
+        edited here. In :class:`BridgeApplicationContext`, this will be :meth:`~.ApplicationContext.edit`.
         """
         return await self._edit(*args, **kwargs)
 
@@ -112,10 +113,10 @@ class CompatContext(ABC):
         return getattr(super(), attr)
 
 
-class CompatApplicationContext(CompatContext, ApplicationContext):
+class BridgeApplicationContext(BridgeContext, ApplicationContext):
     """
-    The application context class for compatibility commands. This class is a subclass of :class:`CompatContext` and
-    :class:`ApplicationContext`. This class is meant to be used with :class:`CompatCommand`.
+    The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and
+    :class:`ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`.
 
     .. versionadded:: 2.0
     """
@@ -130,13 +131,14 @@ class CompatApplicationContext(CompatContext, ApplicationContext):
         return await self._get_super("edit")(*args, **kwargs)
 
 
-class CompatExtContext(CompatContext, Context):
+class BridgeExtContext(BridgeContext, Context):
     """
-    The ext.commands context class for compatibility commands. This class is a subclass of :class:`CompatContext` and
-    :class:`Context`. This class is meant to be used with :class:`CompatCommand`.
+    The ext.commands context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and
+    :class:`Context`. This class is meant to be used with :class:`BridgeCommand`.
 
     .. versionadded:: 2.0
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._original_response_message: Optional[Message] = None
@@ -155,6 +157,6 @@ class CompatExtContext(CompatContext, Context):
 
 
 if TYPE_CHECKING:
-    # This is a workaround for mypy not being able to resolve the type of CompatCommand.
-    class CompatContext(ApplicationContext, Context):
+    # This is a workaround for mypy not being able to resolve the type of BridgeCommand.
+    class BridgeContext(ApplicationContext, Context):
         ...
