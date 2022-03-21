@@ -174,7 +174,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if hasattr(self, "id") and hasattr(other, "id"):
+        if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == self.guild_ids
@@ -899,9 +899,6 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        *,
-        default_permissions: Optional[bool] = True,
-        permissions: Optional[List[CommandPermission]] = [],
         **kwargs,
     ) -> None:
         validate_chat_input_name(name)
@@ -920,8 +917,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = default_permissions
-        self.permissions: List[CommandPermission] = permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -1065,7 +1062,10 @@ class SlashCommandGroup(ApplicationCommand):
         ret = self.__class__(
             name=self.name,
             description=self.description,
-            **self.__original_kwargs__,
+            **{
+                param: value for param, value in self.__original_kwargs__.items()
+                if param not in ('name', 'description')
+            },
         )
         return self._ensure_assignment_on_copy(ret)
 
