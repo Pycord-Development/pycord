@@ -1437,7 +1437,7 @@ class Client:
             See :meth:`Invite.set_scheduled_event` for more
             info on event invite linking.
 
-            ..versionadded:: 2.0
+            .. versionadded:: 2.0
 
         Raises
         -------
