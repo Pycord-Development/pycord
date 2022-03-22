@@ -88,7 +88,7 @@ class InputText:
 
     @property
     def style(self) -> InputTextStyle:
-        """:class:`discord.InputTextStyle`: The style of the input text field."""
+        """:class:`~discord.InputTextStyle`: The style of the input text field."""
         return self._underlying.style
 
     @style.setter
