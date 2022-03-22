@@ -377,7 +377,7 @@ def time_snowflake(dt: datetime.datetime, high: bool = False) -> int:
         The snowflake representing the time given.
     """
     discord_millis = int(dt.timestamp() * 1000 - DISCORD_EPOCH)
-    return (discord_millis << 22) + (2**22 - 1 if high else 0)
+    return (discord_millis << 22) + (2 ** 22 - 1 if high else 0)
 
 
 def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> Optional[T]:
@@ -477,6 +477,8 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
     if getter is None:
         try:
             getter = await getattr(obj, f"fetch_{attr}")(id)
+        except AttributeError:
+            getter = await getattr(obj, f"_fetch_{attr}")(id)
         except HTTPException:
             if default is not MISSING:
                 return default

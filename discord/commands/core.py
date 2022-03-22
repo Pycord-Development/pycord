@@ -50,7 +50,7 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError
+from ..errors import ClientException, ValidationError, NotFound
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
@@ -173,7 +173,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if hasattr(self, "id") and hasattr(other, "id"):
+        if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == self.guild_ids
@@ -743,9 +743,10 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
-                arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                if arg is None:
-                    arg = ctx.guild.get_role(arg_id) or arg_id
+                try:
+                    arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                except NotFound:
+                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
