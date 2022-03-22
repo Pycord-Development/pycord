@@ -4942,7 +4942,7 @@ Sink Exception Hierarchy
 .. exception_hierarchy::
 
     - :exc:`DiscordException`
-        - :exc:`SinkException`
+        - :exc:`sinks.SinkException`
             - :exc:`sinks.RecordingException`
             - :exc:`sinks.WaveSinkError`
             - :exc:`sinks.MP3SinkError`
