@@ -147,10 +147,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def __init__(self, func: Callable, **kwargs) -> None:
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
-        try:
-            cooldown = func.__commands_cooldown__
-        except AttributeError:
-            cooldown = kwargs.get("cooldown")
+        cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
@@ -160,15 +157,25 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
         self._buckets: CooldownMapping = buckets
 
-        try:
-            max_concurrency = func.__commands_max_concurrency__
-        except AttributeError:
-            max_concurrency = kwargs.get("max_concurrency")
+        max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
 
         self._callback = None
         self.module = None
+
+        self.name: str = kwargs.get("name", func.__name__)
+
+        try:
+            checks = func.__commands_checks__
+            checks.reverse()
+        except AttributeError:
+            checks = kwargs.get("checks", [])
+
+        self.checks = checks
+        self.id: Optional[int] = kwargs.get("id")
+        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.parent = kwargs.get("parent")
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -578,13 +585,8 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-
-        name = kwargs.get("name") or func.__name__
-        validate_chat_input_name(name)
-        self.name: str = name
+        validate_chat_input_name(self.name)
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
-        self.id = None
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
@@ -592,7 +594,6 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
-        self.parent = kwargs.get("parent")
         self.attached_to_group: bool = False
 
         self.cog = None
@@ -1152,25 +1153,15 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-
         # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
         self.description = ""
-        self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
 
         self.cog = None
         self.id = None
 
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
 
