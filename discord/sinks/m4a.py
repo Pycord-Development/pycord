@@ -31,16 +31,13 @@ from .errors import M4ASinkError
 
 
 class M4ASink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for for .m4a files.
 
-    Used for .m4a files.
-
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     Raises
     ------
     ClientException
-        An invalid encoding type was specified.
         Audio may only be formatted after recording is finished.
     """
 
@@ -55,6 +52,13 @@ class M4ASink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+        
+        Raises
+        ------
+        ClientException
+            Audio may only be formatted after recording is finished.
+        """
         if self.vc.recording:
             raise M4ASinkError("Audio may only be formatted after recording is finished.")
         m4a_file = f"{time.time()}.tmp"
