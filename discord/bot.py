@@ -31,6 +31,7 @@ import copy
 import inspect
 import sys
 import traceback
+from abc import ABC, abstractmethod
 from typing import (
     Any,
     Callable,
@@ -75,7 +76,7 @@ __all__ = (
 )
 
 
-class ApplicationCommandMixin:
+class ApplicationCommandMixin(ABC):
     """A mixin that implements common functionality for classes that need
     application command compatibility.
 
@@ -104,8 +105,8 @@ class ApplicationCommandMixin:
     @property
     def commands(self) -> List[Union[ApplicationCommand, Any]]:
         commands = self.application_commands
-        if self._supports_prefixed_commands:
-            commands += self.prefixed_commands
+        if self._bot._supports_prefixed_commands and hasattr(self._bot, "prefixed_commands"):
+            commands += self._bot.prefixed_commands
         return commands
 
     @property
@@ -128,8 +129,8 @@ class ApplicationCommandMixin:
         if isinstance(command, SlashCommand) and command.is_subcommand:
             raise TypeError("The provided command is a sub-command of group")
 
-        if self.debug_guilds and command.guild_ids is None:
-            command.guild_ids = self.debug_guilds
+        if self._bot.debug_guilds and command.guild_ids is None:
+            command.guild_ids = self._bot.debug_guilds
 
         for cmd in self.pending_application_commands:
             if cmd == command:
@@ -239,10 +240,10 @@ class ApplicationCommandMixin:
         cmds = self.pending_application_commands.copy()
 
         if guild_id is None:
-            registered_commands = await self.http.get_global_commands(self.user.id)
+            registered_commands = await self._bot.http.get_global_commands(self._bot.user.id)
             pending = [cmd for cmd in cmds if cmd.guild_ids is None]
         else:
-            registered_commands = await self.http.get_guild_commands(self.user.id, guild_id)
+            registered_commands = await self._bot.http.get_guild_commands(self._bot.user.id, guild_id)
             pending = [cmd for cmd in cmds if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
 
         registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
@@ -385,14 +386,14 @@ class ApplicationCommandMixin:
         if is_global:
             pending = list(filter(lambda c: c.guild_ids is None, commands))
             registration_methods = {
-                "bulk": self.http.bulk_upsert_global_commands,
-                "upsert": self.http.upsert_global_command,
-                "delete": self.http.delete_global_command,
-                "edit": self.http.edit_global_command,
+                "bulk": self._bot.http.bulk_upsert_global_commands,
+                "upsert": self._bot.http.upsert_global_command,
+                "delete": self._bot.http.delete_global_command,
+                "edit": self._bot.http.edit_global_command,
             }
 
             def register(method: str, *args, **kwargs):
-                return registration_methods[method](self.user.id, *args, **kwargs)
+                return registration_methods[method](self._bot.user.id, *args, **kwargs)
 
         else:
             pending = list(
@@ -402,14 +403,14 @@ class ApplicationCommandMixin:
                 )
             )
             registration_methods = {
-                "bulk": self.http.bulk_upsert_guild_commands,
-                "upsert": self.http.upsert_guild_command,
-                "delete": self.http.delete_guild_command,
-                "edit": self.http.edit_guild_command,
+                "bulk": self._bot.http.bulk_upsert_guild_commands,
+                "upsert": self._bot.http.upsert_guild_command,
+                "delete": self._bot.http.delete_guild_command,
+                "edit": self._bot.http.edit_guild_command,
             }
 
             def register(method: str, *args, **kwargs):
-                return registration_methods[method](self.user.id, guild_id, *args, **kwargs)
+                return registration_methods[method](self._bot.user.id, guild_id, *args, **kwargs)
 
         pending_actions = []
 
@@ -472,9 +473,9 @@ class ApplicationCommandMixin:
 
         # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
         if guild_id is None:
-            registered = await self.http.get_global_commands(self.user.id)
+            registered = await self._bot.http.get_global_commands(self._bot.user.id)
         else:
-            registered = await self.http.get_guild_commands(self.user.id, guild_id)
+            registered = await self._bot.http.get_guild_commands(self._bot.user.id, guild_id)
 
         for i in registered:
             cmd = get(
@@ -626,7 +627,7 @@ class ApplicationCommandMixin:
                         # Replace Role Names
                         if permission["type"] == 1:
                             role = get(
-                                self.get_guild(guild_id).roles,
+                                self._bot.get_guild(guild_id).roles,
                                 name=permission["id"],
                             )
 
@@ -682,7 +683,7 @@ class ApplicationCommandMixin:
 
             # Upsert
             try:
-                await self.http.bulk_upsert_command_permissions(self.user.id, guild_id, guild_cmd_perms)
+                await self._bot.http.bulk_upsert_command_permissions(self._bot.user.id, guild_id, guild_cmd_perms)
             except Forbidden:
                 raise RuntimeError(
                     f"Failed to add command permissions to guild {guild_id}",
@@ -716,7 +717,7 @@ class ApplicationCommandMixin:
             based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`.
         """
         if auto_sync is None:
-            auto_sync = self.auto_sync_commands
+            auto_sync = self._bot.auto_sync_commands
         if interaction.type not in (
             InteractionType.application_command,
             InteractionType.auto_complete,
@@ -740,7 +741,7 @@ class ApplicationCommandMixin:
                         await self.sync_commands()
                     else:
                         await self.sync_commands(unregister_guilds=[guild_id])
-                return self.dispatch("unknown_application_command", interaction)
+                return self._bot.dispatch("unknown_application_command", interaction)
 
         if interaction.type is InteractionType.auto_complete:
             ctx = await self.get_autocomplete_context(interaction)
@@ -988,19 +989,24 @@ class ApplicationCommandMixin:
         ctx: :class:`.ApplicationCommand`
             The invocation context to invoke.
         """
-        self.dispatch("application_command", ctx)
+        self._bot.dispatch("application_command", ctx)
         try:
-            if await self.can_run(ctx, call_once=True):
+            if await self._bot.can_run(ctx, call_once=True):
                 await ctx.command.invoke(ctx)
             else:
                 raise CheckFailure("The global check once functions failed.")
         except DiscordException as exc:
             await ctx.command.dispatch_error(ctx, exc)
         else:
-            self.dispatch("application_command_completion", ctx)
+            self._bot.dispatch("application_command_completion", ctx)
+
+    @property
+    @abstractmethod
+    def _bot(self) -> Union["Bot", "AutoShardedBot"]:
+        ...
 
 
-class BotBase(ApplicationCommandMixin, CogMixin):
+class BotBase(ApplicationCommandMixin, CogMixin, ABC):
     _supports_prefixed_commands = False
 
     # TODO I think
@@ -1404,7 +1410,9 @@ class Bot(BotBase, Client):
         .. versionadded:: 2.0
     """
 
-    pass
+    @property
+    def _bot(self) -> "Bot":
+        return self
 
 
 class AutoShardedBot(BotBase, AutoShardedClient):
@@ -1414,4 +1422,6 @@ class AutoShardedBot(BotBase, AutoShardedClient):
     .. versionadded:: 2.0
     """
 
-    pass
+    @property
+    def _bot(self) -> "AutoShardedBot":
+        return self
