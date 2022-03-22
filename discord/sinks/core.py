@@ -58,7 +58,7 @@ default_filters = {
 
 
 class Filters:
-    """Filters for sink
+    """Filters for :class:`~.Sink`
 
     .. versionadded:: 2.1
 
@@ -123,8 +123,9 @@ class AudioData:
     Raises
     ------
     ClientException
-        The AudioData is already finished writing,
-        The AudioData is still writing
+        The AudioData is already finished writing.
+    ClientException
+        The AudioData is still writing.
     """
 
     def __init__(self, file):
