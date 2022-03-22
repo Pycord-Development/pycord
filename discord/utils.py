@@ -1100,7 +1100,7 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 
 def basic_autocomplete(values: Values) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
-    will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
+    will return any options that start with the value from the user, case insensitive. If the ``values`` parameter is callable,
     it will be called with the AutocompleteContext.
 
     This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
