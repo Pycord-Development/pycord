@@ -151,28 +151,30 @@ class AudioData:
 
 
 class Sink(Filters):
-    """A Sink "stores" all the audio data.
+    """A sink "stores" recorded audio data.
 
-    Can be subclassed for extra customizablilty,
+    Can be subclassed for extra customizablilty.
 
     .. warning::
-        It is although recommended you use,
-        the officially provided sink classes
-        like :class:`~discord.sinks.WaveSink`
+        It is recommended you use,
+        the officially provided sink classes,
+        such as :class:`~discord.sinks.WaveSink`.
 
     just replace the following like so: ::
+    
         vc.start_recording(
             MySubClassedSink(),
             finished_callback,
             ctx.channel,
         )
 
-    .. versionadded:: 2.1
+    .. versionadded:: 2.0
 
     Raises
     ------
     ClientException
         An invalid encoding type was specified.
+    ClientException
         Audio may only be formatted after recording is finished.
     """
 
