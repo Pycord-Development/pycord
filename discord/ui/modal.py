@@ -32,7 +32,7 @@ class Modal:
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`] = None
+    custom_id: Optional[:class:`str`]
         The ID of the modal dialog that gets received during an interaction.
     """
 
