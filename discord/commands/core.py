@@ -174,7 +174,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if hasattr(self, "id") and hasattr(other, "id"):
+        if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == self.guild_ids
@@ -525,6 +525,8 @@ class SlashCommand(ApplicationCommand):
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    .. versionadded:: 2.0
+
     Attributes
     -----------
     name: :class:`str`
@@ -561,8 +563,12 @@ class SlashCommand(ApplicationCommand):
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-
-        .. versionadded:: 2.0
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The description localizations for this command. The values of this should be ``"locale": "description"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
     type = 1
 
@@ -583,6 +589,7 @@ class SlashCommand(ApplicationCommand):
         name = kwargs.get("name") or func.__name__
         validate_chat_input_name(name)
         self.name: str = name
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
         self.id = None
 
         description = kwargs.get("description") or (
@@ -590,6 +597,7 @@ class SlashCommand(ApplicationCommand):
         )
         validate_chat_input_description(description)
         self.description: str = description
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
         self.parent = kwargs.get("parent")
         self.attached_to_group: bool = False
 
@@ -724,7 +732,9 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
+            "name_localizations": self.name_localizations,
             "description": self.description,
+            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
             "default_permission": self.default_permission,
         }
