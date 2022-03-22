@@ -49,6 +49,7 @@ class Modal:
 
     async def callback(self, interaction: Interaction):
         """|coro|
+        
         The coroutine that is called when the modal dialog is submitted.
         Should be overridden to handle the values submitted by the user.
 
