@@ -51,8 +51,10 @@ class M4ASink(Sink):
         
         Raises
         ------
-        ClientException
+        M4ASinkError
             Audio may only be formatted after recording is finished.
+        M4ASinkError
+            Formatting the audio failed.
         """
         if self.vc.recording:
             raise M4ASinkError("Audio may only be formatted after recording is finished.")
