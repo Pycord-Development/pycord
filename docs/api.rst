@@ -134,7 +134,7 @@ Option
 .. autoclass:: Option
     :members:
     
-.. autofunction:: discord.commands.core.option
+.. autofunction:: discord.commands.core.Option
 
 OptionChoice
 ~~~~~~~~~~~~~
