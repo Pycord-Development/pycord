@@ -31,14 +31,9 @@ from .errors import M4ASinkError
 
 
 class M4ASink(Sink):
-    """A special sink for for .m4a files.
+    """A special sink for .m4a files.
 
     .. versionadded:: 2.0
-
-    Raises
-    ------
-    ClientException
-        Audio may only be formatted after recording is finished.
     """
 
     def __init__(self, *, filters=None):
