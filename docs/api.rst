@@ -4918,6 +4918,8 @@ Sinks
 Sink Error Reference
 --------------------
 
+.. autoexception:: discord.sinks.SinkException
+
 .. autoexception:: discord.sinks.RecordingException
 
 .. autoexception:: discord.sinks.WaveSinkError
