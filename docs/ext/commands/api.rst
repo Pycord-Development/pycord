@@ -589,24 +589,6 @@ Exceptions
 .. autoexception:: discord.ext.commands.MissingRequiredFlag
     :members:
 
-.. autoexception:: discord.ExtensionError
-    :members:
-
-.. autoexception:: discord.ExtensionAlreadyLoaded
-    :members:
-
-.. autoexception:: discord.ExtensionNotLoaded
-    :members:
-
-.. autoexception:: discord.NoEntryPointError
-    :members:
-
-.. autoexception:: discord.ExtensionFailed
-    :members:
-
-.. autoexception:: discord.ExtensionNotFound
-    :members:
-
 .. autoexception:: discord.ext.commands.CommandRegistrationError
     :members:
 
@@ -665,11 +647,5 @@ Exception Hierarchy
             - :exc:`~.commands.CommandInvokeError`
             - :exc:`~.commands.CommandOnCooldown`
             - :exc:`~.commands.MaxConcurrencyReached`
-        - :exc:`~.commands.ExtensionError`
-            - :exc:`~.commands.ExtensionAlreadyLoaded`
-            - :exc:`~.commands.ExtensionNotLoaded`
-            - :exc:`~.commands.NoEntryPointError`
-            - :exc:`~.commands.ExtensionFailed`
-            - :exc:`~.commands.ExtensionNotFound`
     - :exc:`~.ClientException`
         - :exc:`~.commands.CommandRegistrationError`
