@@ -212,9 +212,9 @@ Cog
 CogMeta
 ~~~~~~~~
 
-.. attributetable:: CogMeta
+.. attributetable:: cog.CogMeta
 
-.. autoclass:: CogMeta
+.. autoclass:: cog.CogMeta
     :members:
 
 Application Info
