@@ -758,13 +758,13 @@ class SlashCommand(ApplicationCommand):
                 arg_id = int(arg)
                 try:
                     arg = await get_or_fetch(ctx.guild, "role", arg_id)
-                except NotFound:
+                except (NotFound, ValueError):
                     try:
                         arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                    except NotFound:
+                    except (NotFound, ValueError):
                         try:
                             arg = await get_or_fetch(ctx.bot, "user", arg_id)
-                        except NotFound:
+                        except (NotFound, ValueError):
                             arg = arg_id
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
