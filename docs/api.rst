@@ -5030,3 +5030,12 @@ Exception Hierarchy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`DiscordServerError`
+            - :exc:`ApplicationCommandError`
+                - :exc:`CheckFailure`
+                - :exc:`ApplicationCommandInvokeError`
+            - :exc:`ExtensionError`
+                - :exc:`ExtensionAlreadyLoaded`
+                - :exc:`ExtensionNotLoaded`
+                - :exc:`NoEntryPointError`
+                - :exc:`ExtensionFailed`
+                - :exc:`ExtensionNotFound`
