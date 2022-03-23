@@ -198,6 +198,25 @@ CommandPermission
 
 .. autofunction:: discord.commands.permissions.is_owner
 
+Cogs
+-----
+
+Cog
+~~~~
+
+.. attributetable:: Cog
+
+.. autoclass:: Cog
+    :members:
+    
+CogMeta
+~~~~~~~~
+
+.. attributetable:: CogMeta
+
+.. autoclass:: CogMeta
+    :members:
+
 Application Info
 ------------------
 
