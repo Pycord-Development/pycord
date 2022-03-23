@@ -744,7 +744,7 @@ class WebhookMessage(Message):
             The edit is no longer in-place, instead the newly edited message is returned.
 
         Parameters
-        ------------
+        -----------
         content: Optional[:class:`str`]
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
@@ -776,7 +776,7 @@ class WebhookMessage(Message):
             .. versionadded:: 2.0
 
         Raises
-        ------
+        -------
         HTTPException
             Editing the message failed.
         Forbidden
