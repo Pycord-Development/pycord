@@ -1076,7 +1076,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
            This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this
            takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
-           :exc:`.CommandError`.
+           :exc:`.ApplicationCommandError`.
 
         Example
         ---------
@@ -1145,7 +1145,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
            This function can either be a regular function or a coroutine. Similar to a command :func:`.check`,
            this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
-           :exc:`.CommandError`.
+           :exc:`.ApplicationCommandError`.
 
         Example
         ---------
