@@ -5010,6 +5010,33 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.opus.OpusNotLoaded
 
+.. autoexception:: discord.ApplicationCommandError
+    :members:
+    
+.. autoexception:: discord.CheckFailure
+    :members:
+    
+.. autoexception:: discord.ApplicationCommandInvokeError
+    :members:
+
+.. autoexception:: discord.ExtensionError
+    :members:
+
+.. autoexception:: discord.ExtensionAlreadyLoaded
+    :members:
+
+.. autoexception:: discord.ExtensionNotLoaded
+    :members:
+
+.. autoexception:: discord.NoEntryPointError
+    :members:
+
+.. autoexception:: discord.ExtensionFailed
+    :members:
+
+.. autoexception:: discord.ExtensionNotFound
+    :members:
+
 Exception Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~
 
