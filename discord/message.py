@@ -582,6 +582,7 @@ class Message(Hashable):
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
     thread: Optional[:class:`Thread`]
         The thread created from this message, if any.
+
         .. versionadded:: 2.0
     reference: Optional[:class:`~discord.MessageReference`]
         The message that this message references. This is only applicable to messages of
