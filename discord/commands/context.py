@@ -51,7 +51,7 @@ if TYPE_CHECKING:
 
     from typing import Callable, Awaitable
 
-from ..utils import _cached_property as cached_property
+from ..utils import cached_property
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
