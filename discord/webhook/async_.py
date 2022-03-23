@@ -1270,7 +1270,7 @@ class Webhook(BaseWebhook):
           Edits this Webhook.
 
           Parameters
-          ------------
+          -----------
           name: Optional[:class:`str`]
               The webhook's new default name.
           avatar: Optional[:class:`bytes`]
@@ -1287,10 +1287,10 @@ class Webhook(BaseWebhook):
               Whether to use the bot token over the webhook token
               if available. Defaults to ``True``.
 
-        .. versionadded:: 2.0
+              .. versionadded:: 2.0
 
           Raises
-          -------
+          ------
           HTTPException
               Editing the webhook failed.
           NotFound
