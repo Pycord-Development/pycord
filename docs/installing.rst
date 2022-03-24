@@ -24,7 +24,7 @@ Installing
 
 .. note::
 
-    For new features like options, buttons, and threads, you need to install the pre-release until our v2.0 release. ::
+    For new features like slash commands, buttons, modals, and threads, you will need to install the pre-release a stable v2.0 is released. ::
 
         python3 -m pip install -U py-cord --pre
 
