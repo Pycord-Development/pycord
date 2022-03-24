@@ -3,7 +3,12 @@
 API Reference
 ===============
 
-The following section outlines the API of Pycord's command extension module.
+The following section outlines the API of Pycord's prefixed command extension module.
+
+.. note::
+
+    Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled.
+    
 
 .. _ext_commands_api_bot:
 
