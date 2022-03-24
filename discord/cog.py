@@ -41,6 +41,7 @@ from typing import (
     Type,
     TypeVar,
 )
+from asyncio import create_task
 
 import discord.utils
 
@@ -693,7 +694,11 @@ class CogMixin:
             raise errors.NoEntryPointError(key)
 
         try:
-            setup(self)
+            if inspect.iscoroutinefunction(setup):
+                create_task(setup(self))
+            else:
+                setup(self)
+                
         except Exception as e:
             del sys.modules[key]
             self._remove_module_references(lib.__name__)
