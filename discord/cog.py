@@ -60,8 +60,6 @@ __all__ = (
 
 CogT = TypeVar("CogT", bound="Cog")
 FuncT = TypeVar("FuncT", bound=Callable[..., Any])
-# Reason for the type ignore comment: importing BridgeCommand from .ext.bridge causes a circular import
-BridgeCommandT = TypeVar("BridgeCommandT", bound="BridgeCommand") #type: ignore
 
 MISSING: Any = discord.utils.MISSING
 
@@ -186,7 +184,9 @@ class CogMeta(type):
                     commands[elem] = value
                 
                 try:
-                    bridge_test: BridgeCommandT = value
+                    # a test to see if this value is a BridgeCommand
+                    getattr(value, "add_to")
+
                     if is_static_method:
                         raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
@@ -194,9 +194,10 @@ class CogMeta(type):
                     
                     commands["ext_" + elem] = value.get_ext_command()
                     commands["application_" + elem] = value.get_application_command()
-                except:
+                except AttributeError:
+                    # we are confident that the value is not a Bridge Command
                     pass
-                
+
                 if inspect.iscoroutinefunction(value):
                     try:
                         getattr(value, "__cog_listener__")
