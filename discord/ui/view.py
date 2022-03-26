@@ -467,6 +467,20 @@ class View:
         """
         return await self.__stopped
 
+    def disable_all_items(self, *, exclusions: Optional[List[int]]) -> None:
+        """
+        Disables all items in the view.
+
+        Parameters
+        ----------- 
+
+        exclusions: 
+            Optional[List[:class:`int`]] A list of item indexes in `self.children` to not disable from the view.
+        """
+        for i in range(len(self.children)):
+            if exceptions is None or i not in exceptions:
+                self.children[i].disabled
+
 
 class ViewStore:
     def __init__(self, state: ConnectionState):
