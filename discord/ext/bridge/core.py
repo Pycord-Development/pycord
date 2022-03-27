@@ -41,6 +41,8 @@ from ..commands import (
 
 __all__ = ("BridgeCommand", "bridge_command", "BridgeExtCommand", "BridgeSlashCommand")
 
+from ...utils import get
+
 
 class BridgeSlashCommand(SlashCommand):
     ...
@@ -151,10 +153,17 @@ class _BridgeOption(Option, Converter):
                 converted = await converter().convert(ctx, argument)
             else:
                 converted = converter(argument)
-        choices = [choice.value for choice in self.choices]
-        if self.choices and converted not in choices:
-            print(self.choices)
-            raise ValueError(f"{argument} is not a valid choice. Valid choices: {', '.join(choices)}")
+        if self.choices:
+            choices_names = [choice.name for choice in self.choices]
+            if converted in choices_names:
+                converted = get(self.choices, name=converted).value
+            else:
+                choices = [choice.value for choice in self.choices]
+                if converted not in choices:
+                    print(self.choices)
+                    raise ValueError(
+                        f"{argument} is not a valid choice. Valid choices: {list(set(choices_names + choices))}"
+                    )
 
         return converted
 
