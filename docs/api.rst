@@ -105,8 +105,10 @@ ApplicationCommand
     :members:
     
 .. autofunction:: discord.commands.core.application_command
+    :decorator:
 
 .. autofunction:: discord.commands.core.command
+    :decorator:
 
 SlashCommand
 ~~~~~~~~~~~~~
@@ -117,6 +119,7 @@ SlashCommand
     :members:
     
 .. autofunction:: discord.commands.core.slash_command
+    :decorator:
 
 SlashCommandGroup
 ~~~~~~~~~~~~~~~~~~
@@ -135,6 +138,7 @@ Option
     :members:
     
 .. autofunction:: discord.commands.core.Option
+    :decorator:
 
 OptionChoice
 ~~~~~~~~~~~~~
@@ -153,6 +157,7 @@ UserCommand
     :members:
     
 .. autofunction:: discord.commands.core.user_command
+    :decorator:
 
 MessageCommand
 ~~~~~~~~~~~~~~~
@@ -163,6 +168,7 @@ MessageCommand
     :members:
     
 .. autofunction:: discord.commands.core.message_command
+    :decorator:
 
 ApplicationContext
 ~~~~~~~~~~~~~~~~~~~
@@ -189,14 +195,19 @@ CommandPermission
     :members:
 
 .. autofunction:: discord.commands.permissions.permission
+    :decorator:
 
 .. autofunction:: discord.commands.permissions.has_role
+    :decorator:
 
 .. autofunction:: discord.commands.permissions.has_any_role
+    :decorator:
 
 .. autofunction:: discord.commands.permissions.is_user
+    :decorator:
 
 .. autofunction:: discord.commands.permissions.is_owner
+    :decorator:
 
 Cogs
 -----
