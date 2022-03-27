@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Union
+from typing import Union, Any
 
 import discord.commands.options
 from discord.commands import Option, SlashCommand
@@ -130,8 +130,8 @@ def attachment_callback(*args):  # pylint: disable=unused-argument
     raise ValueError("Attachments are not supported for compatibility commands.")
 
 
-class BridgeOption(Option, Converter):
-    async def convert(self, ctx, argument):
+class _BridgeOption(Option, Converter):
+    async def convert(self, ctx, argument) -> Any:
         if self.converter is not None:
             converted = await self.converter.convert(ctx, argument)
         else:
@@ -151,10 +151,12 @@ class BridgeOption(Option, Converter):
                 converted = await converter().convert(ctx, argument)
             else:
                 converted = converter(argument)
-        if self.choices and converted not in self.choices:
-            raise ValueError(f"{argument} is not a valid choice.")
+        choices = [choice.value for choice in self.choices]
+        if self.choices and converted not in choices:
+            print(self.choices)
+            raise ValueError(f"{argument} is not a valid choice. Valid choices: {', '.join(choices)}")
 
         return converted
 
 
-discord.commands.options.Option = BridgeOption
+discord.commands.options.Option = _BridgeOption
