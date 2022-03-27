@@ -126,6 +126,12 @@ class CogMeta(type):
                 @commands.command(hidden=False)
                 async def bar(self, ctx):
                     pass # hidden -> False
+
+    guild_ids: Optional[List[:class:`int`]]
+        A shortcut to command_attrs, what guild_ids should all application commands have
+        in the cog. You can override this by setting guild_ids per command.
+
+        .. versionadded:: 2.0
     """
 
     __cog_name__: str
