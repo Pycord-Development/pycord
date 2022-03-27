@@ -135,6 +135,7 @@ class CogMeta(type):
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
+        guild_ids = kwargs.pop("guild_ids", [])
         attrs["__cog_name__"] = kwargs.pop("name", name)
         attrs["__cog_settings__"] = kwargs.pop("command_attrs", {})
 
@@ -213,6 +214,8 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
+            if isinstance(command, ApplicationCommand) and command.guild_ids is None and len(guild_ids) != 0:
+                command.guild_ids = guild_ids
             if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
