@@ -174,7 +174,7 @@ resource_links = {
     "issues": "https://github.com/Pycord-Development/pycord/issues",
     "discussions": "https://github.com/Pycord-Development/pycord/discussions",
     "examples": f"https://github.com/Pycord-Development/pycord/tree/{branch}/examples",
-    "guide": "https://guide.pycord.dev/"
+    "guide": "https://guide.pycord.dev/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
