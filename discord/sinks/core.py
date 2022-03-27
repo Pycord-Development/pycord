@@ -126,8 +126,7 @@ class AudioData:
         self.finished = False
 
     def write(self, data):
-        """
-        Writes audio data.
+        """Writes audio data.
         
         Raises
         ------
@@ -142,8 +141,7 @@ class AudioData:
             pass
 
     def cleanup(self):
-        """
-        Finishes and cleans up the audio data.
+        """Finishes and cleans up the audio data.
         
         Raises
         ------
@@ -156,8 +154,7 @@ class AudioData:
         self.finished = True
 
     def on_format(self, encoding):
-        """
-        Called when audio data is formatted.
+        """Called when audio data is formatted.
         
         Raises
         ------
