@@ -138,6 +138,7 @@ class CogMeta(type):
     __cog_settings__: Dict[str, Any]
     __cog_commands__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
+    __cog_guild_ids__: List[int]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
@@ -220,8 +221,8 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if isinstance(command, ApplicationCommand) and command.guild_ids is None and len(new_cls.guild_ids) != 0:
-                command.guild_ids = new_cls.guild_ids
+            if isinstance(command, ApplicationCommand) and command.guild_ids is None and len(new_cls.__cog_guild_ids__) != 0:
+                command.guild_ids = new_cls.__cog_guild_ids__
             if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
@@ -263,6 +264,7 @@ class Cog(metaclass=CogMeta):
     __cog_settings__: ClassVar[Dict[str, Any]]
     __cog_commands__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
+    __cog_guild_ids__: ClassVar[List[int]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
