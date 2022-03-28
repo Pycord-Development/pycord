@@ -262,7 +262,7 @@ class ApplicationCommandMixin:
             "name_localizations": None,
             "description_localizations": None,
             "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
-                        "description_localizations"],  # TODO: Choices localization checking
+                        "description_localizations"],
         }
         # First let's check if the commands we have locally are the same as the ones on discord
         for cmd in pending:
