@@ -29,6 +29,7 @@ import asyncio
 import collections
 import copy
 import inspect
+import logging
 import sys
 import traceback
 from typing import (
@@ -74,6 +75,8 @@ __all__ = (
     "Bot",
     "AutoShardedBot",
 )
+
+_log = logging.getLogger(__name__)
 
 
 class ApplicationCommandMixin:
@@ -406,7 +409,7 @@ class ApplicationCommandMixin:
                 "edit": self.http.edit_global_command,
             }
 
-            def register(method: str, *args, **kwargs):
+            def _register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
                 return registration_methods[method](self.user.id, *args, **kwargs)
 
         else:
@@ -423,8 +426,20 @@ class ApplicationCommandMixin:
                 "edit": self.http.edit_guild_command,
             }
 
-            def register(method: str, *args, **kwargs):
+            def _register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
                 return registration_methods[method](self.user.id, guild_id, *args, **kwargs)
+
+        def register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
+            if kwargs.pop("_log", True):
+                if method == "bulk":
+                    _log.debug(f"Bulk updating commands {[c['name'] for c in args[0]]} for guild {guild_id}")
+                elif method == "upsert":
+                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")
+                elif method == "edit":
+                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")
+                elif method == "delete":
+                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")
+            return _register(method, *args, **kwargs)
 
         pending_actions = []
 
@@ -473,7 +488,12 @@ class ApplicationCommandMixin:
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
                 # If there's nothing to update, don't bother
                 if not (len(data) == 0 and len(prefetched_commands) == 0):
-                    registered = await register("bulk", data)
+                    _log.debug(
+                        f"Bulk updating commands %s for guild %s",
+                        {c['command'].name: c['action'] for c in pending_actions},
+                        guild_id
+                    )
+                    registered = await register("bulk", data, _log=False)
             else:
                 if len(pending_actions) == 0:
                     registered = []
