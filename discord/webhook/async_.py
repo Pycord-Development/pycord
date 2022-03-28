@@ -1371,6 +1371,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
+        thread_id: Optional[int] = None,
         wait: Literal[True],
     ) -> WebhookMessage:
         ...
@@ -1391,6 +1392,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
+        thread_id: Optional[int] = None,
         wait: Literal[False] = ...,
     ) -> None:
         ...
@@ -1410,6 +1412,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
+        thread_id: Optional[int] = None,
         wait: bool = False,
         delete_after: float = None,
     ) -> Optional[WebhookMessage]:
@@ -1539,9 +1542,9 @@ class Webhook(BaseWebhook):
             previous_allowed_mentions=previous_mentions,
         )
         adapter = async_context.get()
-        thread_id: Optional[int] = None
-        if thread is not MISSING:
-            thread_id = thread.id
+        if not thread_id:
+            if thread is not MISSING:
+                thread_id = thread.id
 
         data = await adapter.execute_webhook(
             self.id,
