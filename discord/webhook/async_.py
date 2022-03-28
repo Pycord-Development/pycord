@@ -1480,6 +1480,12 @@ class Webhook(BaseWebhook):
             The thread to send this webhook to.
 
             .. versionadded:: 2.0
+        thread_id: :class:`int`
+            The thread_id to send this webhook to. Can be used in lieu of 
+            creating a Thread or Snowflake object. The thread should be in
+            the channel(s) that the webhook has access to.
+
+            .. versionadded:: 2.1
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
