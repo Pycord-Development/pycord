@@ -466,15 +466,15 @@ class ApplicationCommandMixin:
                         registered.append(await register("upsert", cmd["command"].to_dict()))
                     else:
                         raise ValueError(f"Unknown action: {cmd['action']}")
+
+            # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
+            if guild_id is None:
+                registered = await self.http.get_global_commands(self.user.id)
+            else:
+                registered = await self.http.get_guild_commands(self.user.id, guild_id)
         else:
             data = [cmd.to_dict() for cmd in pending]
             registered = await register("bulk", data)
-
-        # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
-        if guild_id is None:
-            registered = await self.http.get_global_commands(self.user.id)
-        else:
-            registered = await self.http.get_guild_commands(self.user.id, guild_id)
 
         for i in registered:
             cmd = get(
