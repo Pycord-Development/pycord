@@ -42,6 +42,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    Literal,
 )
 
 from .client import Client
@@ -208,7 +209,7 @@ class ApplicationCommandMixin:
                     return
                 return command
 
-    async def get_desynced_commands(self, guild_id: Optional[int] = None) -> List[Dict[str, Any]]:
+    async def get_desynced_commands(self, guild_id: Optional[int] = None, prefetched=None) -> List[Dict[str, Any]]:
         """|coro|
 
         Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
@@ -225,6 +226,8 @@ class ApplicationCommandMixin:
         ----------
         guild_id: Optional[:class:`int`]
             The guild id to get the desynced commands for, else global commands if unspecified.
+        prefetched
+            If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage.
 
         Returns
         -------
@@ -239,10 +242,16 @@ class ApplicationCommandMixin:
         cmds = self.pending_application_commands.copy()
 
         if guild_id is None:
-            registered_commands = await self.http.get_global_commands(self.user.id)
+            if prefetched is not None:
+                registered_commands = prefetched
+            else:
+                registered_commands = await self.http.get_global_commands(self.user.id)
             pending = [cmd for cmd in cmds if cmd.guild_ids is None]
         else:
-            registered_commands = await self.http.get_guild_commands(self.user.id, guild_id)
+            if prefetched is not None:
+                registered_commands = prefetched
+            else:
+                registered_commands = await self.http.get_guild_commands(self.user.id, guild_id)
             pending = [cmd for cmd in cmds if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
 
         registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
@@ -250,7 +259,10 @@ class ApplicationCommandMixin:
             "default_permission": None,
             "name": None,
             "description": None,
-            "options": ["type", "name", "description", "autocomplete", "choices"],
+            "name_localizations": None,
+            "description_localizations": None,
+            "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
+                        "description_localizations"],  # TODO: Choices localization checking
         }
         # First let's check if the commands we have locally are the same as the ones on discord
         for cmd in pending:
@@ -285,7 +297,7 @@ class ApplicationCommandMixin:
                                 }
                             )
                             break
-                elif getattr(cmd, check) != match[check]:
+                elif getattr(cmd, check) != match.get(check):
                     # We have a difference
                     return_value.append(
                         {
@@ -344,10 +356,11 @@ class ApplicationCommandMixin:
         raise NotImplementedError("This function has not been implemented yet")
 
     async def register_commands(
-        self,
-        commands: Optional[List[ApplicationCommand]] = None,
-        guild_id: Optional[int] = None,
-        force: bool = True,
+            self,
+            commands: Optional[List[ApplicationCommand]] = None,
+            guild_id: Optional[int] = None,
+            method: Literal["individual", "bulk", "auto"] = "bulk",
+            force: bool = False,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -362,11 +375,13 @@ class ApplicationCommandMixin:
         guild_id: Optional[int]
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`~.ApplicationCommand.guild_ids` attribute.
+        method: Literal['individual', 'bulk', 'auto']
+            The method to use when registering the commands. If this is set to "individual", then each command will be
+            registered individually. If this is set to "bulk", then all commands will be registered in bulk. If this is
+            set to "auto", then the method will be determined automatically. Defaults to "bulk".
         force: :class:`bool`
-            Registers the commands regardless of the state of the command on Discord. This can sometimes cause commands
-            to be re-registered without changes (The command can temporarily appear as an invalid command on the user's
-            side) due to a bug in the API, but is a more foolproof method of registering
-            commands. Defaults to True.
+            Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
+            can result in hitting rate limits more often. Defaults to False.
         """
         if commands is None:
             commands = self.pending_application_commands
@@ -414,7 +429,11 @@ class ApplicationCommandMixin:
         pending_actions = []
 
         if not force:
-            desynced = await self.get_desynced_commands(guild_id=guild_id)
+            if guild_id is None:
+                prefetched_commands = await self.http.get_global_commands(self.user.id)
+            else:
+                prefetched_commands = await self.http.get_guild_commands(self.user.id, guild_id)
+            desynced = await self.get_desynced_commands(guild_id=guild_id, prefetched=prefetched_commands)
 
             for cmd in desynced:
                 if cmd["action"] == "delete":
@@ -449,10 +468,12 @@ class ApplicationCommandMixin:
                     raise ValueError(f"Unknown action: {cmd['action']}")
 
             filtered_deleted = list(filter(lambda a: a["action"] != "delete", pending_actions))
-            if len(filtered_deleted) == len(pending):
-                # It appears that all the commands need to be modified, so we can just do a bulk upsert
+            if method == "bulk" or (method == "auto" and len(filtered_deleted) == len(pending)):
+                # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
-                registered = await register("bulk", data)
+                # If there's nothing to update, don't bother
+                if not (len(data) == 0 and len(prefetched_commands) == 0):
+                    registered = await register("bulk", data)
             else:
                 if len(pending_actions) == 0:
                     registered = []
@@ -468,10 +489,11 @@ class ApplicationCommandMixin:
                         raise ValueError(f"Unknown action: {cmd['action']}")
 
             # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
-            if guild_id is None:
-                registered = await self.http.get_global_commands(self.user.id)
-            else:
-                registered = await self.http.get_guild_commands(self.user.id, guild_id)
+            if method != "bulk":
+                if guild_id is None:
+                    registered = await self.http.get_global_commands(self.user.id)
+                else:
+                    registered = await self.http.get_guild_commands(self.user.id, guild_id)
         else:
             data = [cmd.to_dict() for cmd in pending]
             registered = await register("bulk", data)
@@ -490,12 +512,13 @@ class ApplicationCommandMixin:
         return registered
 
     async def sync_commands(
-        self,
-        commands: Optional[List[ApplicationCommand]] = None,
-        force: bool = True,
-        guild_ids: Optional[List[int]] = None,
-        register_guild_commands: bool = True,
-        unregister_guilds: Optional[List[int]] = None,
+            self,
+            commands: Optional[List[ApplicationCommand]] = None,
+            method: Literal["individual", "bulk", "auto"] = "bulk",
+            force: bool = False,
+            guild_ids: Optional[List[int]] = None,
+            register_guild_commands: bool = True,
+            check_guilds: Optional[List[int]] = [],
     ) -> None:
         """|coro|
 
@@ -518,21 +541,26 @@ class ApplicationCommandMixin:
         ----------
         commands: Optional[List[:class:`~.ApplicationCommand`]]
             A list of commands to register. If this is not set (None), then all commands will be registered.
+        method: Literal['individual', 'bulk', 'auto']
+            The method to use when registering the commands. If this is set to "individual", then each command will be
+            registered individually. If this is set to "bulk", then all commands will be registered in bulk. If this is
+            set to "auto", then the method will be determined automatically. Defaults to "bulk".
         force: :class:`bool`
-            Registers the commands regardless of the state of the command on Discord. This can sometimes cause commands
-            to be re-registered without changes due to a bug in the API, but is sometimes a more foolproof method of
-            registering commands. Defaults to True.
+            Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
+            can result in hitting rate limits more often. Defaults to False.
         guild_ids: Optional[List[:class:`int`]]
             A list of guild ids to register the commands for. If this is not set, the commands'
             :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
         register_guild_commands: :class:`bool`
             Whether to register guild commands. Defaults to True.
-        unregister_guilds: Optional[List[:class:`int`]]
+        check_guilds: Optional[List[:class:`int`]]
             A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
             ``register_guild_commands`` is set to False, then this parameter is ignored.
         """
+
+        check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
 
         if commands is None:
             commands = self.pending_application_commands
@@ -542,7 +570,7 @@ class ApplicationCommandMixin:
                 cmd.guild_ids = guild_ids
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
-        registered_commands = await self.register_commands(global_commands, force=force)
+        registered_commands = await self.register_commands(global_commands, method=method, force=force)
 
         registered_guild_commands = {}
 
@@ -551,12 +579,12 @@ class ApplicationCommandMixin:
             for cmd in commands:
                 if cmd.guild_ids is not None:
                     cmd_guild_ids.extend(cmd.guild_ids)
-            if unregister_guilds is not None:
-                cmd_guild_ids.extend(unregister_guilds)
+            if check_guilds is not None:
+                cmd_guild_ids.extend(check_guilds)
             for guild_id in set(cmd_guild_ids):
                 guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    guild_commands, guild_id=guild_id, force=force
+                    guild_commands, guild_id=guild_id, method=method, force=force
                 )
 
         # TODO: 2.1: Remove this and favor permissions v2
@@ -739,7 +767,7 @@ class ApplicationCommandMixin:
                     if guild_id is None:
                         await self.sync_commands()
                     else:
-                        await self.sync_commands(unregister_guilds=[guild_id])
+                        await self.sync_commands(check_guilds=[guild_id])
                 return self.dispatch("unknown_application_command", interaction)
 
         if interaction.type is InteractionType.auto_complete:

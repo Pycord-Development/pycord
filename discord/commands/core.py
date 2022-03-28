@@ -726,12 +726,14 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
-            "name_localizations": self.name_localizations,
             "description": self.description,
-            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
@@ -907,7 +909,7 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        self.name = name
+        self.name = str(name)
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
