@@ -102,7 +102,7 @@ class ScheduledEventLocation:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
 
     def __str__(self) -> str:
-        return self.value
+        return str(self.value)
 
     @property
     def type(self) -> ScheduledEventLocationType:
@@ -232,7 +232,7 @@ class ScheduledEvent(Hashable):
             f"description={self.description} "
             f"start_time={self.start_time} "
             f"end_time={self.end_time} "
-            f"location={self.location} "
+            f"location={self.location!r} "
             f"status={self.status.name} "
             f"subscriber_count={self.subscriber_count} "
             f"creator_id={self.creator_id}>"
@@ -247,6 +247,11 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
+
+    @property
+    def url(self) -> str:
+        """:class:`str`: The url to reference the scheduled event."""
+        return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
     def cover(self) -> Optional[Asset]:
