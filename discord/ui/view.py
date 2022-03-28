@@ -473,9 +473,8 @@ class View:
 
         Parameters
         ----------- 
-
-        exclusions: 
-            Optional[List[:class:`int`]] A list of item indexes in `self.children` to not disable from the view.
+        exclusions: Optional[List[:class:`int`]]
+            A list of item indexes in `self.children` to not disable from the view.
         """
         for i in range(len(self.children)):
             if exclusions is None or i not in exclusions:
