@@ -1260,6 +1260,7 @@ class StageChannel(VocalGuildChannel):
         topic: str,
         privacy_level: StagePrivacyLevel = MISSING,
         reason: Optional[str] = None,
+        send_notification: Optional[bool] = False,
     ) -> StageInstance:
         """|coro|
 
@@ -1278,6 +1279,9 @@ class StageChannel(VocalGuildChannel):
             The stage instance's privacy level. Defaults to :attr:`StagePrivacyLevel.guild_only`.
         reason: :class:`str`
             The reason the stage instance was created. Shows up on the audit log.
+        send_notification: :class:`bool`
+            Send a notification to everyone in the server that the stage instance has started.
+            Defaults to ``False``. Requires the ``mention_everyone`` permission.
 
         Raises
         ------
@@ -1294,7 +1298,7 @@ class StageChannel(VocalGuildChannel):
             The newly created stage instance.
         """
 
-        payload: Dict[str, Any] = {"channel_id": self.id, "topic": topic}
+        payload: Dict[str, Any] = {"channel_id": self.id, "topic": topic, "send_start_notification": send_notification}
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):

@@ -1893,8 +1893,12 @@ class HTTPClient:
             "channel_id",
             "topic",
             "privacy_level",
+            "send_start_notification",
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        if payload.get("send_start_notification") is not None:
+            payload["send_start_notification"] = int(payload["send_start_notification"])
 
         return self.request(Route("POST", "/stage-instances"), json=payload, reason=reason)
 
