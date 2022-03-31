@@ -383,7 +383,6 @@ A lot of discord models work out of the gate as a parameter:
 - :class:`TextChannel`
 - :class:`VoiceChannel`
 - :class:`StageChannel` (since v1.7)
-- :class:`StoreChannel` (since v1.7)
 - :class:`CategoryChannel`
 - :class:`Invite`
 - :class:`Guild` (since v1.7)
@@ -420,8 +419,6 @@ converter is given below:
 | :class:`VoiceChannel`    | :class:`~ext.commands.VoiceChannelConverter`    |
 +--------------------------+-------------------------------------------------+
 | :class:`StageChannel`    | :class:`~ext.commands.StageChannelConverter`    |
-+--------------------------+-------------------------------------------------+
-| :class:`StoreChannel`    | :class:`~ext.commands.StoreChannelConverter`    |
 +--------------------------+-------------------------------------------------+
 | :class:`CategoryChannel` | :class:`~ext.commands.CategoryChannelConverter` |
 +--------------------------+-------------------------------------------------+
