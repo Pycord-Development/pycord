@@ -376,7 +376,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             reason=reason,
         )
 
-    async def delete_messages(self, messages: Iterable[Snowflake], reason: Optional[str] = None) -> None:
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes a list of messages. This is similar to :meth:`Message.delete`
