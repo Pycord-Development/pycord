@@ -30,7 +30,7 @@ from .channel import *
 from .client import *
 from .cog import Cog
 from .colour import *
-from .commands.__init__ import *
+from .commands import *
 from .components import *
 from .embeds import *
 from .emoji import *
