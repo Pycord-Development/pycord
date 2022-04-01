@@ -497,17 +497,18 @@ class ApplicationCommandMixin:
                 else:
                     raise ValueError(f"Unknown action: {cmd['action']}")
             filtered_no_action = list(filter(lambda c: c["action"] is not None, pending_actions))
-            filtered_deleted = list(filter(lambda a: a["action"] != "delete", filtered_no_action))
+            filtered_deleted = list(filter(lambda a: a["action"] != "delete", pending_actions))
             if method == "bulk" or (method == "auto" and len(filtered_deleted) == len(pending)):
                 # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
                 # If there's nothing to update, don't bother
-                if len(data) == 0 and len(filtered_no_action) == 0:
+                if len(filtered_no_action) == 0:
                     _log.debug("Skipping bulk command update: Commands are up to date")
+                    registered = prefetched_commands
                 else:
                     _log.debug(
                         f"Bulk updating commands %s for guild %s",
-                        {c['command'].name: c['action'] for c in filtered_no_action},
+                        {c['command'].name: c['action'] for c in pending_actions},
                         guild_id
                     )
                     registered = await register("bulk", data, _log=False)
