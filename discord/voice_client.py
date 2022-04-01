@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -699,7 +699,7 @@ class VoiceClient(VoiceProtocol):
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
-            
+
         Raises
         ------
         RecordingException

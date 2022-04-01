@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -397,7 +397,7 @@ class Client:
     ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         # Schedules the task
-        return asyncio.create_task(wrapped, name=f"pycord: {event_name}")
+        return asyncio.create_task(wrapped, name=f"pogcord: {event_name}")
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching event %s", event)

@@ -3,7 +3,7 @@
 API Reference
 ===============
 
-The following section outlines the API of Pycord's prefixed command extension module.
+The following section outlines the API of Pogcord's prefixed command extension module.
 
 .. note::
 

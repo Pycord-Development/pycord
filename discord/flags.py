@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -89,7 +89,7 @@ def fill_with_flags(*, inverted: bool = False):
 
         if inverted:
             max_bits = max(cls.VALID_FLAGS.values()).bit_length()
-            cls.DEFAULT_VALUE = -1 + (2**max_bits)
+            cls.DEFAULT_VALUE = -1 + (2 ** max_bits)
         else:
             cls.DEFAULT_VALUE = 0
 

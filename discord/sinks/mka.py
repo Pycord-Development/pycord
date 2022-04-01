@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -47,7 +47,7 @@ class MKASink(Sink):
 
     def format_audio(self, audio):
         """Formats the recorded audio.
-        
+
         Raises
         ------
         MKASinkError

@@ -4,7 +4,7 @@ discord.ext.commands
 
 An extension module to facilitate creation of bot commands.
 
-:copyright: (c) 2015-2021 Rapptz & (c) 2021-present Pycord Development
+:copyright: (c) 2015-2021 Rapptz & (c) 2021-present Pogcord Development
 :license: MIT, see LICENSE for more details.
 """
 

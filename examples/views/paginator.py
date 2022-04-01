@@ -1,4 +1,4 @@
-# Docs: https://docs.pycord.dev/en/master/ext/pages/index.html
+# Docs: https://docs.pogcord.dev/en/master/ext/pages/index.html
 # Note that the below examples use a Slash Command Group in a cog for better organization - it's not required for using ext.pages.
 import asyncio
 

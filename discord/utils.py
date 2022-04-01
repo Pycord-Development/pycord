@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -139,8 +139,8 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = NewType('cached_property', property)
-    
+    cached_property = NewType("cached_property", property)
+
     P = ParamSpec("P")
 
 else:

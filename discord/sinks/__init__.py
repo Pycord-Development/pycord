@@ -4,7 +4,7 @@ discord.sinks
 
 A place to store all officially given voice sinks.
 
-:copyright: 2021-present Pycord Development
+:copyright: 2021-present Pogcord Development
 :license: MIT, see LICENSE for more details.
 """
 from .core import *

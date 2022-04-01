@@ -52,7 +52,7 @@ with open("README.rst") as f:
     readme = f.read()
 
 # Extra Requirements
-# Ex: pip install py-cord[voice] or [speed]
+# Ex: pip install pog-cord[voice] or [speed]
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
@@ -84,13 +84,13 @@ packages = [
 
 
 setup(
-    name="py-cord",
-    author="Pycord Development",
-    url="https://pycord.dev/github",
+    name="pog-cord",
+    author="Pogcord Development",
+    url="https://pogcord.dev/github",
     project_urls={
-        "Website": "https://pycord.dev",
-        "Documentation": "https://docs.pycord.dev/en/master/",
-        "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
+        "Website": "https://pogcord.dev",
+        "Documentation": "https://docs.pogcord.dev/en/master/",
+        "Issue tracker": "https://github.com/Pogcord-Development/pogcord/issues",
     },
     version=version,
     packages=packages,

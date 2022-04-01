@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -39,11 +39,11 @@ def show_version() -> None:
     entries = ["- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(sys.version_info)]
 
     version_info = discord.version_info
-    entries.append("- py-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info))
+    entries.append("- pog-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info))
     if version_info.releaselevel != "final":
-        pkg = pkg_resources.get_distribution("py-cord")
+        pkg = pkg_resources.get_distribution("pog-cord")
         if pkg:
-            entries.append(f"    - py-cord pkg_resources: v{pkg.version}")
+            entries.append(f"    - pog-cord pkg_resources: v{pkg.version}")
 
     entries.append(f"- aiohttp v{aiohttp.__version__}")
     uname = platform.uname()
@@ -339,7 +339,7 @@ def add_newcog_args(subparser: argparse._SubParsersAction) -> None:
 
 
 def parse_args() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
-    parser = argparse.ArgumentParser(prog="discord", description="Tools for helping with Pycord")
+    parser = argparse.ArgumentParser(prog="discord", description="Tools for helping with Pogcord")
     parser.add_argument("-v", "--version", action="store_true", help="shows the library version")
     parser.set_defaults(func=core)
 

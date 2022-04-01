@@ -7,7 +7,7 @@ Let users assign themselves roles by clicking on Buttons.
 The view made is persistent, so it will work even when the bot restarts.
 
 See this example for more information about persistent views
-https://github.com/Pycord-Development/pycord/blob/master/examples/views/persistent.py
+https://github.com/Pogcord-Development/pogcord/blob/master/examples/views/persistent.py
 Make sure to load this cog when your bot starts!
 """
 

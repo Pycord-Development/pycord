@@ -2,7 +2,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -50,7 +50,7 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError, NotFound
+from ..errors import ClientException, NotFound, ValidationError
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
@@ -388,15 +388,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        
+
         This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -413,15 +413,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        
+
         This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -1073,8 +1073,9 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value for param, value in self.__original_kwargs__.items()
-                if param not in ('name', 'description')
+                param: value
+                for param, value in self.__original_kwargs__.items()
+                if param not in ("name", "description")
             },
         )
         return self._ensure_assignment_on_copy(ret)
@@ -1420,9 +1421,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1433,9 +1434,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1446,9 +1447,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1466,9 +1467,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
-    
+
     .. versionadded:: 2.0
-    
+
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1477,7 +1478,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
-        
+
     Raises
     -------
     TypeError
@@ -1496,12 +1497,12 @@ def application_command(cls=SlashCommand, **attrs):
 
 def command(**kwargs):
     """An alias for :meth:`application_command`.
-    
+
     .. note::
         This decorator is overridden by :func:`commands.command`.
-        
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]

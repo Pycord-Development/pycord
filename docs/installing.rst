@@ -4,16 +4,16 @@
 
 .. _intro:
 
-Installing Pycord
+Installing Pogcord
 =================
 
-This is the documentation for Pycord, a library for Python to aid
+This is the documentation for Pogcord, a library for Python to aid
 in creating applications that utilise the Discord API.
 
 Prerequisites
 -------------
 
-Pycord works with Python 3.8 or higher. Support for earlier versions of Python
+Pogcord works with Python 3.8 or higher. Support for earlier versions of Python
 is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported.
 
 
@@ -26,35 +26,35 @@ Installing
 
     For new features like slash commands, buttons, modals, and threads, you will need to install the pre-release a stable v2.0 is released. ::
 
-        python3 -m pip install -U py-cord --pre
+        python3 -m pip install -U pog-cord --pre
 
     For Windows users, this command should be used to install the pre-release: ::
 
-        py -3 -m pip install -U py-cord --pre
+        py -3 -m pip install -U pog-cord --pre
 
 You can get the library directly from PyPI: ::
 
-    python3 -m pip install -U py-cord
+    python3 -m pip install -U pog-cord
 
 If you are using Windows, then the following should be used instead: ::
 
-    py -3 -m pip install -U py-cord
+    py -3 -m pip install -U pog-cord
 
 
-To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g.
+To install additional packages for speedup,  you should use ``pog-cord[speed]`` instead of ``pog-cord``, e.g.
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
+    python3 -m pip install -U "pog-cord[speed]"
 
     # Windows
-    py -3 -m pip install -U py-cord[speed]
+    py -3 -m pip install -U pog-cord[speed]
 
 
-To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::
+To get voice support, you should use ``pog-cord[voice]`` instead of ``pog-cord``, e.g. ::
 
-    python3 -m pip install -U py-cord[voice]
+    python3 -m pip install -U pog-cord[voice]
 
 On Linux environments, installing voice requires getting the following dependencies:
 
@@ -105,14 +105,14 @@ However, for the quick and dirty:
 
     .. code-block:: shell
 
-        $ pip install -U py-cord
+        $ pip install -U pog-cord
 
 Congratulations. You now have a virtual environment all set up.
 
 Basic Concepts
 --------------
 
-Pycord revolves around the concept of :ref:`events <discord-api-events>`.
+Pogcord revolves around the concept of :ref:`events <discord-api-events>`.
 An event is something you listen to and then respond to. For example, when a message
 happens, you will receive an event about it that you can respond to.
 

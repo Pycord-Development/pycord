@@ -1,20 +1,20 @@
-Pycord
+Pogcord
 ======
 
 .. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord&style=for-the-badge&logo=discord&color=success
-   :target: https://pycord.dev/discord
+   :target: https://pogcord.dev/discord
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=semantic-release&color=yellowgreen
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/v/pog-cord.svg?style=for-the-badge&logo=semantic-release&color=yellowgreen
+   :target: https://pypi.python.org/pypi/pog-cord
    :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/pyversions/pog-cord.svg?style=for-the-badge&logo=python
+   :target: https://pypi.python.org/pypi/pog-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=blue&style=for-the-badge
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/dm/pog-cord?color=blueviolet&logo=pypi&logoColor=blue&style=for-the-badge
+   :target: https://pypi.python.org/pypi/pog-cord
    :alt: PyPI downloads
 
-A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+A fork of discord.py. Pogcord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 Key Features
 ------------
@@ -34,37 +34,37 @@ To install the library without full voice support, you can just run the followin
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U py-cord
+    python3 -m pip install -U pog-cord
 
     # Windows
-    py -3 -m pip install -U py-cord
+    py -3 -m pip install -U pog-cord
 
 Otherwise to get voice support you should run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[voice]"
+    python3 -m pip install -U "pog-cord[voice]"
 
     # Windows
-    py -3 -m pip install -U py-cord[voice]
+    py -3 -m pip install -U pog-cord[voice]
 
 To install additional packages for speedup, run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
+    python3 -m pip install -U "pog-cord[speed]"
     # Windows
-    py -3 -m pip install -U py-cord[speed]
+    py -3 -m pip install -U pog-cord[speed]
 
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/Pycord-Development/pycord
-    $ cd pycord
+    $ git clone https://github.com/Pogcord-Development/pogcord
+    $ cd pogcord
     $ python3 -m pip install -U .[voice]
 
 
@@ -125,8 +125,8 @@ Note: Make sure you do not reveal your bot token to anyone, it can grant access 
 Useful Links
 ------------
 
-- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
-- `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
-- `Our Official Discord Server <https://pycord.dev/discord>`_
+- `Documentation <https://docs.pogcord.dev/en/master/index.html>`_
+- `Learn how to create Discord bots with Pogcord <https://guide.pogcord.dev>`_
+- `Our Official Discord Server <https://pogcord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
 - `Unofficial Discord API Server <https://discord.gg/discord-api>`_

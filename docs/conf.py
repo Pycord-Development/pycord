@@ -1,5 +1,5 @@
 #
-# pycord documentation build configuration file, created by
+# pogcord documentation build configuration file, created by
 # sphinx-quickstart on Fri Aug 21 05:43:30 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,7 +50,7 @@ autodoc_typehints = "none"
 # napoleon_attr_annotations = False
 
 extlinks = {
-    "issue": ("https://github.com/Pycord-Development/pycord/issues/%s", "GH-"),
+    "issue": ("https://github.com/Pogcord-Development/pogcord/issues/%s", "GH-"),
 }
 
 # Links used for cross-referencing stuff in other documentation
@@ -83,8 +83,8 @@ source_suffix = {
 master_doc = "index"
 
 # General information about the project.
-project = "Pycord"
-copyright = "2015-2021, Rapptz & 2021-present, Pycord Development"
+project = "Pogcord"
+copyright = "2015-2021, Rapptz & 2021-present, Pogcord Development"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -161,7 +161,7 @@ html_experimental_html5_writer = True
 html_theme = "basic"
 
 html_context = {
-    "discord_invite": "https://pycord.dev/discord",
+    "discord_invite": "https://pogcord.dev/discord",
     "discord_extensions": [
         ("discord.ext.commands", "ext/commands"),
         ("discord.ext.tasks", "ext/tasks"),
@@ -170,11 +170,11 @@ html_context = {
 }
 
 resource_links = {
-    "discord": "https://pycord.dev/discord",
-    "issues": "https://github.com/Pycord-Development/pycord/issues",
-    "discussions": "https://github.com/Pycord-Development/pycord/discussions",
-    "examples": f"https://github.com/Pycord-Development/pycord/tree/{branch}/examples",
-    "guide": "https://guide.pycord.dev/",
+    "discord": "https://pogcord.dev/discord",
+    "issues": "https://github.com/Pogcord-Development/pogcord/issues",
+    "discussions": "https://github.com/Pogcord-Development/pogcord/discussions",
+    "examples": f"https://github.com/Pogcord-Development/pogcord/tree/{branch}/examples",
+    "guide": "https://guide.pogcord.dev/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -200,7 +200,7 @@ resource_links = {
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "./images/pycord.ico"
+html_favicon = "./images/pogcord.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -270,7 +270,7 @@ html_search_scorer = "_static/scorer.js"
 html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "pycorddoc"
+htmlhelp_basename = "pogcorddoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -289,7 +289,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "Pycord.tex", "Pycord Documentation", "Pycord Development", "manual"),
+    ("index", "Pogcord.tex", "Pogcord Documentation", "Pogcord Development", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -317,7 +317,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "Pycord", "Pycord Documentation", ["Pycord Development"], 1)]
+man_pages = [("index", "Pogcord", "Pogcord Documentation", ["Pogcord Development"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -331,10 +331,10 @@ man_pages = [("index", "Pycord", "Pycord Documentation", ["Pycord Development"],
 texinfo_documents = [
     (
         "index",
-        "Pycord",
-        "Pycord Documentation",
-        "Pycord Development",
-        "Pycord",
+        "Pogcord",
+        "Pogcord Documentation",
+        "Pogcord Development",
+        "Pogcord",
         "One line description of project.",
         "Miscellaneous",
     ),

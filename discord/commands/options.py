@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2021-present Pogcord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -218,8 +218,12 @@ class OptionChoice:
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None,
-                 name_localizations: Optional[Dict[str, str]] = None):
+    def __init__(
+        self,
+        name: str,
+        value: Optional[Union[str, int, float]] = None,
+        name_localizations: Optional[Dict[str, str]] = None,
+    ):
         self.name = name
         self.value = value if value is not None else name
         self.name_localizations = name_localizations

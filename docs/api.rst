@@ -3,7 +3,7 @@
 API Reference
 ===============
 
-The following section outlines the API of Pycord.
+The following section outlines the API of Pogcord.
 
 .. note::
 
@@ -11,7 +11,7 @@ The following section outlines the API of Pycord.
     in an output independent way.  If the logging module is not configured,
     these logs will not be output anywhere.  See :ref:`logging_setup` for
     more information on how to set up and use the logging module with
-    Pycord.
+    Pogcord.
 
 Version Related Info
 ---------------------
@@ -3921,7 +3921,7 @@ AuditLogDiff
 Webhook Support
 ------------------
 
-Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class.
+Pogcord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class.
 
 Webhook
 ~~~~~~~~~

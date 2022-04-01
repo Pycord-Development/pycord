@@ -6,7 +6,7 @@
 Setting Up Logging
 ==================
 
-*Pycord* logs errors and debug information via the :mod:`logging` python
+*Pogcord* logs errors and debug information via the :mod:`logging` python
 module. It is strongly recommended that the logging module is
 configured, as no errors or warnings will be output if it is not set up.
 Configuration of the ``logging`` module can be as simple as::
