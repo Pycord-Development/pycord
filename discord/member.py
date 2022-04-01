@@ -866,7 +866,7 @@ class Member(discord.abc.Messageable, _UserTag):
         You must have the :attr:`~Permissions.moderate_members` permission to
         remove the timeout.
 
-        This is equivalent to calling :meth:`~.timeout` and passing ``None`` to :param:`~.timeout.until`.
+        This is equivalent to calling :meth:`~.timeout` and passing ``None`` to the ``until`` parameter.
 
         Parameters
         -----------

@@ -28,7 +28,7 @@ from .audit_logs import *
 from .bot import *
 from .channel import *
 from .client import *
-from .cog import Cog
+from .cog import *
 from .colour import *
 from .commands.__init__ import *
 from .components import *

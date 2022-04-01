@@ -20,7 +20,7 @@ class InputText:
 
     Parameters
     ----------
-    style: :class:`discord.InputTextStyle`
+    style: :class:`~discord.InputTextStyle`
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
@@ -88,7 +88,7 @@ class InputText:
 
     @property
     def style(self) -> InputTextStyle:
-        """:class:`discord.InputTextStyle`: The style of the input text field."""
+        """:class:`~discord.InputTextStyle`: The style of the input text field."""
         return self._underlying.style
 
     @style.setter
