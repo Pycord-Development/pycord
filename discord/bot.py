@@ -310,6 +310,14 @@ class ApplicationCommandMixin:
                         }
                     )
                     break
+            else:
+                return_value.append(
+                    {
+                        "command": cmd,
+                        "action": None,
+                        "id": int(registered_commands_dict[cmd.name]["id"]),
+                    }
+                )
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd, value_ in registered_commands_dict.items():
@@ -479,25 +487,34 @@ class ApplicationCommandMixin:
                             "command": match,
                         }
                     )
+                elif cmd["action"] is None:
+                    pending_actions.append(
+                        {
+                            "action": None,
+                            "command": match,
+                        }
+                    )
                 else:
                     raise ValueError(f"Unknown action: {cmd['action']}")
-
-            filtered_deleted = list(filter(lambda a: a["action"] != "delete", pending_actions))
+            filtered_no_action = list(filter(lambda c: c["action"] is not None, pending_actions))
+            filtered_deleted = list(filter(lambda a: a["action"] != "delete", filtered_no_action))
             if method == "bulk" or (method == "auto" and len(filtered_deleted) == len(pending)):
                 # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
                 data = [cmd["command"].to_dict() for cmd in filtered_deleted]
                 # If there's nothing to update, don't bother
-                if not (len(data) == 0 and len(prefetched_commands) == 0):
+                if len(data) == 0 and len(filtered_no_action) == 0:
+                    _log.debug("Skipping bulk command update: Commands are up to date")
+                else:
                     _log.debug(
                         f"Bulk updating commands %s for guild %s",
-                        {c['command'].name: c['action'] for c in pending_actions},
+                        {c['command'].name: c['action'] for c in filtered_no_action},
                         guild_id
                     )
                     registered = await register("bulk", data, _log=False)
             else:
-                if len(pending_actions) == 0:
+                if len(filtered_no_action) == 0:
                     registered = []
-                for cmd in pending_actions:
+                for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
                         await register("delete", cmd["command"])
                         continue
