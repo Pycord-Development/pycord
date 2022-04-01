@@ -426,7 +426,7 @@ class HelpCommand:
             parent = parent.parent
         parent_sig = " ".join(reversed(entries))
 
-        if len(command.aliases) > 0:
+        if hasattr(command, "aliases") and len(command.aliases) > 0:
             aliases = "|".join(command.aliases)
             fmt = f"[{command.name}|{aliases}]"
             if parent_sig:
