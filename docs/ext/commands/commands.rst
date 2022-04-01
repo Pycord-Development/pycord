@@ -8,6 +8,11 @@ Commands
 One of the most appealing aspects of the command extension is how easy it is to define commands and
 how you can arbitrarily nest groups and commands to have a rich sub-command system.
 
+.. note::
+
+    Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled.
+
+
 Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar
 signature to the Python function.
 

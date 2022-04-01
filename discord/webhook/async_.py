@@ -744,7 +744,7 @@ class WebhookMessage(Message):
             The edit is no longer in-place, instead the newly edited message is returned.
 
         Parameters
-        ------------
+        -----------
         content: Optional[:class:`str`]
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
@@ -1270,7 +1270,7 @@ class Webhook(BaseWebhook):
           Edits this Webhook.
 
           Parameters
-          ------------
+          -----------
           name: Optional[:class:`str`]
               The webhook's new default name.
           avatar: Optional[:class:`bytes`]
@@ -1287,10 +1287,10 @@ class Webhook(BaseWebhook):
               Whether to use the bot token over the webhook token
               if available. Defaults to ``True``.
 
-        .. versionadded:: 2.0
+              .. versionadded:: 2.0
 
           Raises
-          -------
+          ------
           HTTPException
               Editing the webhook failed.
           NotFound

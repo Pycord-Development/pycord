@@ -17,11 +17,18 @@ Let's make a bot that responds to a specific message and walk you through it.
 
 It looks something like this:
 
+.. note::
+
+    Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent.
+
 .. code-block:: python3
 
     import discord
 
-    client = discord.Client()
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    client = discord.Client(intents=intents)
 
     @client.event
     async def on_ready():

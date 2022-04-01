@@ -1103,7 +1103,7 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 
 def basic_autocomplete(values: Values) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
-    will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
+    will return any options that start with the value from the user, case insensitive. If the ``values`` parameter is callable,
     it will be called with the AutocompleteContext.
 
     This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
@@ -1131,13 +1131,13 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
     Parameters
     -----------
-    values: Union[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
-        single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+        single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
-    Callable[[:class:`AutocompleteContext`], Awaitable[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
     """
 

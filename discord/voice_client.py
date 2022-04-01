@@ -689,16 +689,17 @@ class VoiceClient(VoiceProtocol):
         Must be in a voice channel to use.
         Must not be already recording.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Parameters
         ----------
-        sink: :class:`Sink`
+        sink: :class:`.Sink`
             A Sink which will "store" all the audio data.
-        callback: :class:`asynchronous function`
+        callback: :ref:`coroutine <coroutine>`
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
+            
         Raises
         ------
         RecordingException
