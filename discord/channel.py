@@ -99,7 +99,7 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
 
-async def _single_delete_strategy(messages: Iterable[Message], reason: Optional[str] = None):
+async def _single_delete_strategy(messages: Iterable[Message], *, reason: Optional[str] = None):
     for m in messages:
         await m.delete(reason=reason)
 
