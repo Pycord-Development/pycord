@@ -59,6 +59,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
     from .guild import Guild
@@ -80,7 +81,6 @@ if TYPE_CHECKING:
         Thread,
         PartialMessageable,
     ]
-
 
 MISSING: Any = utils.MISSING
 
@@ -162,7 +162,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
-        self.custom_id: Optional[str] = data.get("custom_id")
+        self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
         try:
@@ -188,6 +188,11 @@ class Interaction:
                 self.user = User(state=self._state, data=data["user"])
             except KeyError:
                 pass
+
+    @property
+    def client(self) -> Client:
+        """Returns the client that sent the interaction."""
+        return self._state._get_client()
 
     @property
     def guild(self) -> Optional[Guild]:
@@ -672,7 +677,7 @@ class InteractionResponse:
         """|coro|
 
         Responds to this interaction by editing the original message of
-        a component interaction.
+        a component or modal interaction.
 
         Parameters
         -----------
@@ -710,7 +715,7 @@ class InteractionResponse:
         msg = parent.message
         state = parent._state
         message_id = msg.id if msg else None
-        if parent.type is not InteractionType.component:
+        if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
         payload = {}
@@ -787,7 +792,7 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal):
+    async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
@@ -818,6 +823,7 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return self._parent
 
 
 class _InteractionMessageState:

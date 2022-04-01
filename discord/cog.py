@@ -213,7 +213,7 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if not isinstance(command, ApplicationCommand):
+            if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
                 if parent is not None:
@@ -420,7 +420,7 @@ class Cog(metaclass=CogMeta):
         -----------
         ctx: :class:`.Context`
             The invocation context where the error happened.
-        error: :class:`CommandError`
+        error: :class:`ApplicationCommandError`
             The error that happened.
         """
         pass
@@ -549,9 +549,9 @@ class CogMixin:
         -------
         TypeError
             The cog does not inherit from :class:`.Cog`.
-        CommandError
+        ApplicationCommandError
             An error happened during loading.
-        .ClientException
+        ClientException
             A cog with the same name is already loaded.
         """
 
