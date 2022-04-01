@@ -300,6 +300,9 @@ class ApplicationCommandMixin:
                                 }
                             )
                             break
+                    else:
+                        continue
+                    break
                 elif getattr(cmd, check) != match.get(check):
                     # We have a difference
                     return_value.append(
