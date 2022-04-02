@@ -6,6 +6,8 @@
 .. versionadded:: 2.0
 
 This module allows using one command callback in order to make both a prefix command and a slash command.
+This page includes the API reference/documentation for the module, but only contains a short example. For a more
+detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_.
 
 .. note::
     ``ext.bridge`` requires message content intent to be enabled in order to use it.
