@@ -50,13 +50,19 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError, NotFound
+from ..errors import (
+    ClientException,
+    ValidationError,
+    NotFound,
+    ApplicationCommandError,
+    ApplicationCommandInvokeError,
+    CheckFailure,
+)
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
-from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
 from .options import Option, OptionChoice
 from .permissions import CommandPermission
 

@@ -57,9 +57,8 @@ from .commands import (
     UserCommand,
     command,
 )
-from .commands.errors import CheckFailure
 from .enums import InteractionType
-from .errors import DiscordException, Forbidden
+from .errors import CheckFailure, DiscordException, Forbidden
 from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
