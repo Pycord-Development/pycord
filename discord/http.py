@@ -252,7 +252,6 @@ class HTTPClient:
                 headers["X-Audit-Log-Reason"] = _uriquote(reason, safe="/ ")
 
         kwargs["headers"] = headers
-
         # Proxy support
         if self.proxy is not None:
             kwargs["proxy"] = self.proxy
