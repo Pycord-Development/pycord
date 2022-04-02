@@ -1,6 +1,6 @@
 .. _discord_ext_bridge:
 
-``discord.ext.bridge`` -- A module that bridges prefix commands to slash commands
+``discord.ext.bridge`` -- A module that bridges slash commands to prefixed commands
 ===================================================================================
 
 .. versionadded:: 2.0
