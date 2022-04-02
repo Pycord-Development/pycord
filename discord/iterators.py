@@ -56,7 +56,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .audit_logs import AuditLogEntry
-    from .guild import Guild
+    from .guild import Guild, BanEntry
     from .member import Member
     from .message import Message
     from .scheduled_events import ScheduledEvent
@@ -678,14 +678,74 @@ class MemberIterator(_AsyncIterator["Member"]):
         return Member(data=data, guild=self.guild, state=self.state)
 
 
+class BanIterator(_AsyncIterator["BanEntry"]):
+    def __init__(self, guild, limit=None, before=None, after=None):
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=True))
+
+        self.guild = guild
+        self.limit = limit
+        self.after = after
+        self.before = before
+
+        self.state = self.guild._state
+        self.get_bans = self.state.http.get_bans
+        self.bans = asyncio.Queue()
+
+    async def next(self) -> BanEntry:
+        if self.bans.empty():
+            await self.fill_bans()
+
+        try:
+            return self.bans.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 1000:
+            r = 1000
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    async def fill_bans(self):
+        if not self._get_retrieve():
+            return
+        before = self.before.id if self.before else None
+        after = self.after.id if self.after else None
+        data = await self.get_bans(self.guild.id, self.retrieve, before, after)
+        if not data:
+            # no data, terminate
+            return
+
+        if len(data) < 1000:
+            self.limit = 0  # terminate loop
+
+        self.after = Object(id=int(data[-1]["user"]["id"]))
+
+        for element in reversed(data):
+            await self.bans.put(self.create_ban(element))
+
+    def create_ban(self, data):
+        from .guild import BanEntry
+        from .user import User
+
+        return BanEntry(reason=data["reason"], user=User(state=self.state, data=data["user"]))
+
+
 class ArchivedThreadIterator(_AsyncIterator["Thread"]):
     def __init__(
-        self,
-        channel_id: int,
-        guild: Guild,
-        limit: Optional[int],
-        joined: bool,
-        private: bool,
+            self,
+            channel_id: int,
+            guild: Guild,
+            limit: Optional[int],
+            joined: bool,
+            private: bool,
         before: Optional[Union[Snowflake, datetime.datetime]] = None,
     ):
         self.channel_id = channel_id

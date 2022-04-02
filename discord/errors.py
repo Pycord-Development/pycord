@@ -261,6 +261,7 @@ class PrivilegedIntentsRequired(ClientException):
 
     - :attr:`Intents.members`
     - :attr:`Intents.presences`
+    - :attr:`Intents.message_content`
 
     Attributes
     -----------

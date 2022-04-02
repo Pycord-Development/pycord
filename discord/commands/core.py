@@ -388,12 +388,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+        
+        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
+        
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
+            
         Raises
         -------
         TypeError
@@ -410,12 +413,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        
+        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
+        
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
+            
         Raises
         -------
         TypeError
@@ -545,13 +551,13 @@ class SlashCommand(ApplicationCommand):
 
             If this is not empty then default_permissions will be set to False.
 
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
@@ -869,13 +875,13 @@ class SlashCommandGroup(ApplicationCommand):
         isn't one.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -1131,13 +1137,13 @@ class ContextMenuCommand(ApplicationCommand):
         .. note::
             If this is not empty then default_permissions will be set to ``False``.
 
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
@@ -1248,13 +1254,13 @@ class UserCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -1346,13 +1352,13 @@ class MessageCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -1421,7 +1427,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1432,7 +1440,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1443,7 +1453,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1461,7 +1473,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
+    
     .. versionadded:: 2.0
+    
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1470,6 +1484,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
+        
     Raises
     -------
     TypeError
@@ -1487,10 +1502,13 @@ def application_command(cls=SlashCommand, **attrs):
 
 
 def command(**kwargs):
-    """There is an alias for :meth:`application_command`.
+    """An alias for :meth:`application_command`.
+    
     .. note::
         This decorator is overridden by :func:`commands.command`.
+        
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]
