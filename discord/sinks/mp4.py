@@ -31,17 +31,9 @@ from .errors import MP4SinkError
 
 
 class MP4Sink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mp4 files.
 
-    Used for .mp4 files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -55,6 +47,15 @@ class MP4Sink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+        
+        Raises
+        ------
+        MP4SinkError
+            Audio may only be formatted after recording is finished.
+        MP4SinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
             raise MP4SinkError("Audio may only be formatted after recording is finished.")
         mp4_file = f"{time.time()}.tmp"

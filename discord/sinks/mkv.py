@@ -30,17 +30,9 @@ from .errors import MKVSinkError
 
 
 class MKVSink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mkv files.
 
-    Used for .mkv files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -54,6 +46,15 @@ class MKVSink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+        
+        Raises
+        ------
+        MKVSinkError
+            Audio may only be formatted after recording is finished.
+        MKVSinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
             raise MKVSinkError("Audio may only be formatted after recording is finished.")
         args = [

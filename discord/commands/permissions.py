@@ -33,6 +33,7 @@ __all__ = (
 )
 
 
+
 def has_permissions(**perms: bool) -> Callable:
     """A decorator that limits the usage of a slash command to members with certain
     permissions.

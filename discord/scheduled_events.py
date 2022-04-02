@@ -102,7 +102,7 @@ class ScheduledEventLocation:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
 
     def __str__(self) -> str:
-        return self.value
+        return str(self.value)
 
     @property
     def type(self) -> ScheduledEventLocationType:
@@ -156,8 +156,6 @@ class ScheduledEvent(Hashable):
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
-    interested: Optional[:class:`int`]
-        Alias to :attr:`.subscriber_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -168,10 +166,6 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
-    created_at: :class:`datetime.datetime`
-        The datetime object of when the event was created.
-    cover: Optional[:class:`Asset`]
-        The cover image of the scheduled event.
     """
 
     __slots__ = (
@@ -232,7 +226,7 @@ class ScheduledEvent(Hashable):
             f"description={self.description} "
             f"start_time={self.start_time} "
             f"end_time={self.end_time} "
-            f"location={self.location} "
+            f"location={self.location!r} "
             f"status={self.status.name} "
             f"subscriber_count={self.subscriber_count} "
             f"creator_id={self.creator_id}>"
@@ -247,6 +241,11 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
+
+    @property
+    def url(self) -> str:
+        """:class:`str`: The url to reference the scheduled event."""
+        return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
     def cover(self) -> Optional[Asset]:

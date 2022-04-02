@@ -103,6 +103,12 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
+    
+.. autofunction:: discord.commands.core.application_command
+    :decorator:
+
+.. autofunction:: discord.commands.core.command
+    :decorator:
 
 SlashCommand
 ~~~~~~~~~~~~~
@@ -111,6 +117,9 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
+    
+.. autofunction:: discord.commands.core.slash_command
+    :decorator:
 
 SlashCommandGroup
 ~~~~~~~~~~~~~~~~~~
@@ -127,6 +136,9 @@ Option
 
 .. autoclass:: Option
     :members:
+    
+.. autofunction:: discord.commands.core.Option
+    :decorator:
 
 OptionChoice
 ~~~~~~~~~~~~~
@@ -143,6 +155,9 @@ UserCommand
 
 .. autoclass:: UserCommand
     :members:
+    
+.. autofunction:: discord.commands.core.user_command
+    :decorator:
 
 MessageCommand
 ~~~~~~~~~~~~~~~
@@ -151,6 +166,9 @@ MessageCommand
 
 .. autoclass:: MessageCommand
     :members:
+    
+.. autofunction:: discord.commands.core.message_command
+    :decorator:
 
 ApplicationContext
 ~~~~~~~~~~~~~~~~~~~
@@ -166,6 +184,25 @@ AutocompleteContext
 .. attributetable:: AutocompleteContext
 
 .. autoclass:: AutocompleteContext
+    :members:
+
+Cogs
+-----
+
+Cog
+~~~~
+
+.. attributetable:: Cog
+
+.. autoclass:: Cog
+    :members:
+    
+CogMeta
+~~~~~~~~
+
+.. attributetable:: CogMeta
+
+.. autoclass:: CogMeta
     :members:
 
 Application Info
@@ -4888,6 +4925,10 @@ Sinks
 Sink Error Reference
 --------------------
 
+.. autoexception:: discord.sinks.SinkException
+
+.. autoexception:: discord.sinks.RecordingException
+
 .. autoexception:: discord.sinks.WaveSinkError
 
 .. autoexception:: discord.sinks.MP3SinkError
@@ -4908,15 +4949,15 @@ Sink Exception Hierarchy
 .. exception_hierarchy::
 
     - :exc:`DiscordException`
-        - :exc:`SinkException`
-            - :exc:`RecordingException`
-            - :exc:`WaveSinkError`
-            - :exc:`MP3SinkError`
-            - :exc:`MP4SinkError`
-            - :exc:`M4ASinkError`
-            - :exc:`MKVSinkError`
-            - :exc:`MKASinkError`
-            - :exc:`OGGSinkError`
+        - :exc:`sinks.SinkException`
+            - :exc:`sinks.RecordingException`
+            - :exc:`sinks.WaveSinkError`
+            - :exc:`sinks.MP3SinkError`
+            - :exc:`sinks.MP4SinkError`
+            - :exc:`sinks.M4ASinkError`
+            - :exc:`sinks.MKVSinkError`
+            - :exc:`sinks.MKASinkError`
+            - :exc:`sinks.OGGSinkError`
 
 
 Exceptions
@@ -4957,6 +4998,33 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.opus.OpusNotLoaded
 
+.. autoexception:: discord.ApplicationCommandError
+    :members:
+    
+.. autoexception:: discord.CheckFailure
+    :members:
+    
+.. autoexception:: discord.ApplicationCommandInvokeError
+    :members:
+
+.. autoexception:: discord.ExtensionError
+    :members:
+
+.. autoexception:: discord.ExtensionAlreadyLoaded
+    :members:
+
+.. autoexception:: discord.ExtensionNotLoaded
+    :members:
+
+.. autoexception:: discord.NoEntryPointError
+    :members:
+
+.. autoexception:: discord.ExtensionFailed
+    :members:
+
+.. autoexception:: discord.ExtensionNotFound
+    :members:
+
 Exception Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -4965,7 +5033,6 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
-                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
@@ -4978,3 +5045,12 @@ Exception Hierarchy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`DiscordServerError`
+            - :exc:`ApplicationCommandError`
+                - :exc:`CheckFailure`
+                - :exc:`ApplicationCommandInvokeError`
+            - :exc:`ExtensionError`
+                - :exc:`ExtensionAlreadyLoaded`
+                - :exc:`ExtensionNotLoaded`
+                - :exc:`NoEntryPointError`
+                - :exc:`ExtensionFailed`
+                - :exc:`ExtensionNotFound`
