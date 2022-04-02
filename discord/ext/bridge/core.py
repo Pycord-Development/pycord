@@ -132,7 +132,7 @@ def attachment_callback(*args):  # pylint: disable=unused-argument
     raise ValueError("Attachments are not supported for compatibility commands.")
 
 
-class _BridgeOption(Option, Converter):
+class BridgeOption(Option, Converter):
     async def convert(self, ctx, argument) -> Any:
         if self.converter is not None:
             converted = await self.converter.convert(ctx, argument)
@@ -168,4 +168,4 @@ class _BridgeOption(Option, Converter):
         return converted
 
 
-discord.commands.options.Option = _BridgeOption
+discord.commands.options.Option = BridgeOption
