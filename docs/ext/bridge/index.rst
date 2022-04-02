@@ -7,6 +7,9 @@
 
 This module allows using one command callback in order to make both a prefix command and a slash command.
 
+.. note::
+    ``ext.bridge`` requires message content intent to be enabled in order to use it.
+
 Example usage:
 
 .. code-block:: python3
