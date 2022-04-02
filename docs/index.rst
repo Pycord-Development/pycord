@@ -51,6 +51,7 @@ These extensions help you during development when it comes to common tasks.
   ext/commands/index.rst
   ext/tasks/index.rst
   ext/pages/index.rst
+  ext/bridge/index.rst
 
 Manuals
 ---------
