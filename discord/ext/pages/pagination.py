@@ -761,7 +761,7 @@ class Paginator(discord.ui.View):
 
             .. warning::
 
-                If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be peristent).
+                If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent).
 
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
