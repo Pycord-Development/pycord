@@ -499,9 +499,9 @@ class Client:
         ------
         TypeError
             The token was in invalid type.
-        :exc:`.LoginFailure`
+        :exc:`LoginFailure`
             The wrong credentials are passed.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             An unknown HTTP related error occurred,
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
@@ -532,10 +532,10 @@ class Client:
 
         Raises
         -------
-        :exc:`.GatewayNotFound`
+        :exc:`GatewayNotFound`
             If the gateway to connect to Discord is not found. Usually if this
             is thrown then there is a Discord API outage.
-        :exc:`.ConnectionClosed`
+        :exc:`ConnectionClosed`
             The websocket connection has been terminated.
         """
 
@@ -805,6 +805,24 @@ class Client:
         """
         return self._connection.get_channel(id)
 
+    def get_message(self, id: int, /) -> Optional[Message]:
+        """Returns a message the given ID.
+
+        This is useful if you have a message_id but don't want to do an API call
+        to access the message.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`.Message`]
+            The returned message or ``None`` if not found.
+        """
+        return self._connection._get_message(id)
+
     def get_partial_messageable(self, id: int, *, type: Optional[ChannelType] = None) -> PartialMessageable:
         """Returns a partial messageable with the given channel ID.
 
@@ -840,7 +858,7 @@ class Client:
         Returns
         --------
         Optional[:class:`.StageInstance`]
-            The returns stage instance of ``None`` if not found.
+            The stage instance or ``None`` if not found.
         """
         from .channel import StageChannel
 
@@ -1145,7 +1163,7 @@ class Client:
 
         Raises
         ------
-        :exc:`.InvalidArgument`
+        :exc:`InvalidArgument`
             If the ``activity`` parameter is not the proper type.
         """
 
@@ -1221,7 +1239,7 @@ class Client:
 
         Raises
         ------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the guilds failed.
 
         Yields
@@ -1243,9 +1261,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The template is invalid.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the template failed.
 
         Returns
@@ -1284,9 +1302,9 @@ class Client:
             .. versionadded:: 2.0
         Raises
         ------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have access to the guild.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the guild failed.
 
         Returns
@@ -1328,9 +1346,9 @@ class Client:
 
         Raises
         ------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Guild creation failed.
-        :exc:`.InvalidArgument`
+        :exc:`InvalidArgument`
             Invalid icon image format given. Must be PNG or JPG.
 
         Returns
@@ -1366,9 +1384,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The stage instance or channel could not be found.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the stage instance failed.
 
         Returns
@@ -1419,13 +1437,13 @@ class Client:
             See :meth:`Invite.set_scheduled_event` for more
             info on event invite linking.
 
-            ..versionadded:: 2.0
+            .. versionadded:: 2.0
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The invite has expired or is invalid.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the invite failed.
 
         Returns
@@ -1458,11 +1476,11 @@ class Client:
 
         Raises
         -------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permissions to revoke invites.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The invite is invalid or expired.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Revoking the invite failed.
         """
 
@@ -1487,9 +1505,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             The widget for this guild is disabled.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the widget failed.
 
         Returns
@@ -1508,7 +1526,7 @@ class Client:
 
         Raises
         -------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the information failed somehow.
 
         Returns
@@ -1539,9 +1557,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             A user with this ID does not exist.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Fetching the user failed.
 
         Returns
@@ -1565,13 +1583,13 @@ class Client:
 
         Raises
         -------
-        :exc:`.InvalidData`
+        :exc:`InvalidData`
             An unknown channel type was received from Discord.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the channel failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid Channel ID.
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permission to fetch this channel.
 
         Returns
@@ -1601,11 +1619,11 @@ class Client:
 
         Raises
         --------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the webhook failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid webhook ID.
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permission to fetch this webhook.
 
         Returns
@@ -1625,9 +1643,9 @@ class Client:
 
         Raises
         --------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the sticker failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid sticker ID.
 
         Returns
@@ -1648,7 +1666,7 @@ class Client:
 
         Raises
         -------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the sticker packs failed.
 
         Returns

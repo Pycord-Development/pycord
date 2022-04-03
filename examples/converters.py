@@ -1,4 +1,4 @@
-# This example requires the 'members' privileged intent to use the Member converter.
+# This example requires the 'members' privileged intent to use the Member converter, and the 'message_content' privileged intent for prefixed commands.
 
 import typing
 
@@ -7,6 +7,7 @@ from discord.ext import commands
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
 bot = commands.Bot("!", intents=intents)
 

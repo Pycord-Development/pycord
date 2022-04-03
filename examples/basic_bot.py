@@ -1,4 +1,4 @@
-# This example requires the 'members' privileged intents
+# This example requires the 'members' and 'message_content' privileged intents
 
 import random
 
@@ -12,6 +12,7 @@ There are a number of utility commands being showcased here."""
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
 bot = commands.Bot(command_prefix="?", description=description, intents=intents)
 

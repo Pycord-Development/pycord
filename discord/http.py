@@ -98,6 +98,8 @@ if TYPE_CHECKING:
     MU = TypeVar("MU", bound="MaybeUnlock")
     Response = Coroutine[Any, Any, T]
 
+API_VERSION: int = 10
+
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
     text = await response.text(encoding="utf-8")
@@ -112,12 +114,10 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
 
 
 class Route:
-    BASE: ClassVar[str] = "https://discord.com/api/v10"
-
     def __init__(self, method: str, path: str, **parameters: Any) -> None:
         self.path: str = path
         self.method: str = method
-        url = self.BASE + self.path
+        url = self.base + self.path
         if parameters:
             url = url.format_map({k: _uriquote(v) if isinstance(v, str) else v for k, v in parameters.items()})
         self.url: str = url
@@ -127,6 +127,10 @@ class Route:
         self.guild_id: Optional[Snowflake] = parameters.get("guild_id")
         self.webhook_id: Optional[Snowflake] = parameters.get("webhook_id")
         self.webhook_token: Optional[str] = parameters.get("webhook_token")
+
+    @property
+    def base(self) -> str:
+        return f"https://discord.com/api/v{API_VERSION}"
 
     @property
     def bucket(self) -> str:
@@ -248,7 +252,6 @@ class HTTPClient:
                 headers["X-Audit-Log-Reason"] = _uriquote(reason, safe="/ ")
 
         kwargs["headers"] = headers
-
         # Proxy support
         if self.proxy is not None:
             kwargs["proxy"] = self.proxy
@@ -829,11 +832,7 @@ class HTTPClient:
             guild_id=guild_id,
             user_id=user_id,
         )
-        if reason:
-            # thanks aiohttp
-            r.url = f"{r.url}?reason={_uriquote(reason)}"
-
-        return self.request(r)
+        return self.request(r, reason=reason)
 
     def ban(
         self,
@@ -1342,8 +1341,23 @@ class HTTPClient:
             payload["icon"] = icon
         return self.request(Route("POST", "/guilds/templates/{code}", code=code), json=payload)
 
-    def get_bans(self, guild_id: Snowflake) -> Response[List[guild.Ban]]:
-        return self.request(Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id))
+    def get_bans(
+            self,
+            guild_id: Snowflake,
+            limit: Optional[int] = None,
+            before: Optional[Snowflake] = None,
+            after: Optional[Snowflake] = None,
+    ) -> Response[List[guild.Ban]]:
+        params: Dict[str, Union[int, Snowflake]] = {}
+
+        if limit is not None:
+            params["limit"] = limit
+        if before is not None:
+            params["before"] = before
+        if after is not None:
+            params["after"] = after
+
+        return self.request(Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id), params=params)
 
     def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[guild.Ban]:
         return self.request(
@@ -2454,10 +2468,10 @@ class HTTPClient:
         except HTTPException as exc:
             raise GatewayNotFound() from exc
         if zlib:
-            value = "{0}?encoding={1}&v=10&compress=zlib-stream"
+            value = "{0}?encoding={1}&v={2}&compress=zlib-stream"
         else:
-            value = "{0}?encoding={1}&v=10"
-        return value.format(data["url"], encoding)
+            value = "{0}?encoding={1}&v={2}"
+        return value.format(data["url"], encoding, API_VERSION)
 
     async def get_bot_gateway(self, *, encoding: str = "json", zlib: bool = True) -> Tuple[int, str]:
         try:
@@ -2466,10 +2480,10 @@ class HTTPClient:
             raise GatewayNotFound() from exc
 
         if zlib:
-            value = "{0}?encoding={1}&v=10&compress=zlib-stream"
+            value = "{0}?encoding={1}&v={2}&compress=zlib-stream"
         else:
-            value = "{0}?encoding={1}&v=10"
-        return data["shards"], value.format(data["url"], encoding)
+            value = "{0}?encoding={1}&v={2}"
+        return data["shards"], value.format(data["url"], encoding, API_VERSION)
 
     def get_user(self, user_id: Snowflake) -> Response[user.User]:
         return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
