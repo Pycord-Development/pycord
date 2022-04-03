@@ -45,6 +45,7 @@ from typing import (
 
 from . import abc, utils
 from .asset import Asset
+from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
 from .emoji import Emoji
@@ -66,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator
+from .iterators import AuditLogIterator, MemberIterator, BanIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -1886,29 +1887,59 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    async def bans(self) -> List[BanEntry]:
+    def bans(self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None,
+             after: Optional[SnowflakeTime] = None) -> BanIterator:
         """|coro|
 
-        Retrieves all the users that are banned from the guild as a :class:`list` of :class:`BanEntry`.
+        Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
+        have the :attr:`~Permissions.ban_members` permission.
 
-        You must have the :attr:`~Permissions.ban_members` permission
-        to get this information.
+        .. versionchanged:: 2.0
+            The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
+            of a list of ``BanEntry`` objects.
+
+        All parameters are optional.
+
+        Parameters
+        ----------
+        limit: Optional[:class:`int`]
+            The number of bans to retrieve. Defaults to 1000.
+        before: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans before this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans after this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have proper permissions to get the information.
         HTTPException
             An error occurred while fetching the information.
 
-        Returns
+        Yields
+        ------
+        :class:`.BanEntry`
+            The ban entry for the ban.
+
+        Examples
         --------
-        List[:class:`BanEntry`]
-            A list of :class:`BanEntry` objects.
+
+        Usage ::
+
+            async for ban in guild.bans(limit=150):
+                print(ban.user.name)
+
+        Flattening into a list ::
+
+            bans = await guild.bans(limit=150).flatten()
+            # bans is now a list of BanEntry...
         """
 
-        data: List[BanPayload] = await self._state.http.get_bans(self.id)
-        return [BanEntry(user=User(state=self._state, data=e["user"]), reason=e["reason"]) for e in data]
+        return BanIterator(self, limit=limit, before=before, after=after)
 
     async def prune_members(
         self,
@@ -2473,6 +2504,38 @@ class Guild(Hashable):
         """
         data = await self._state.http.get_roles(self.id)
         return [Role(guild=self, state=self._state, data=d) for d in data]
+
+    async def _fetch_role(self, role_id: int) -> Role:
+        """|coro|
+
+        Retrieves a :class:`Role` that the guild has.
+
+        .. note::
+
+            This method is an API call. For general usage, consider using :attr:`get_role` instead.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        role_id: :class:`int`
+            The role ID to fetch from the guild.
+
+        Raises
+        -------
+        HTTPException
+            Retrieving the role failed.
+
+        Returns
+        -------
+        Optional[:class:`Role`]
+            The role in the guild with the specified ID.
+            Returns ``None`` if not found.
+        """
+        roles = await self.fetch_roles()
+        for role in roles:
+            if role.id == role_id:
+                return role
 
     @overload
     async def create_role(

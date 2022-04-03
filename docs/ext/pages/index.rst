@@ -291,6 +291,14 @@ Example usage in a cog:
 API Reference
 -------------
 
+Page
+~~~~
+
+.. attributetable:: discord.ext.pages.Page
+
+.. autoclass:: discord.ext.pages.Page
+    :members:
+
 Paginator
 ~~~~~~~~~
 

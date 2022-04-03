@@ -36,6 +36,23 @@ class PageTest(commands.Cog):
 
         self.even_more_pages = ["11111", "22222", "33333"]
 
+        self.new_pages = [
+            pages.Page(
+                content="Page 1 Title!",
+                embeds=[
+                    discord.Embed(title="New Page 1 Embed Title 1!"),
+                    discord.Embed(title="New Page 1 Embed Title 2!"),
+                ],
+            ),
+            pages.Page(
+                content="Page 2 Title!",
+                embeds=[
+                    discord.Embed(title="New Page 2 Embed Title 1!"),
+                    discord.Embed(title="New Page 2 Embed Title 2!"),
+                ],
+            ),
+        ]
+
     def get_pages(self):
         return self.pages
 
@@ -46,6 +63,12 @@ class PageTest(commands.Cog):
     async def pagetest_default(self, ctx: discord.ApplicationContext):
         """Demonstrates using the paginator with the default options."""
         paginator = pages.Paginator(pages=self.get_pages())
+        await paginator.respond(ctx.interaction, ephemeral=False)
+
+    @pagetest.command(name="new")
+    async def pagetest_new(self, ctx: discord.ApplicationContext):
+        """Demonstrates using the paginator with the Page class."""
+        paginator = pages.Paginator(pages=self.new_pages)
         await paginator.respond(ctx.interaction, ephemeral=False)
 
     @pagetest.command(name="hidden")

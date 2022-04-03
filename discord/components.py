@@ -58,6 +58,7 @@ __all__ = (
     "Button",
     "SelectMenu",
     "SelectOption",
+    "InputText",
 )
 
 C = TypeVar("C", bound="Component")
@@ -148,8 +149,8 @@ class InputText(Component):
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
-    label: Optional[:class:`str`]
-        The label for the input text field, if any.
+    label: :class:`str`
+        The label for the input text field.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     min_length: Optional[:class:`int`]
@@ -181,7 +182,7 @@ class InputText(Component):
         self.type = ComponentType.input_text
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
-        self.label: Optional[str] = data.get("label", None)
+        self.label: str = data.get("label", None)
         self.placeholder: Optional[str] = data.get("placeholder", None)
         self.min_length: Optional[int] = data.get("min_length", None)
         self.max_length: Optional[int] = data.get("max_length", None)
