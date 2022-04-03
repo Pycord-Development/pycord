@@ -773,7 +773,7 @@ class Message(Hashable):
 
         self.thread: Optional[Thread]
         try:
-            self.thread = Thread(guild=self.guild, state=state, data=data['thread'])
+            self.thread = Thread(guild=self.guild, state=state, data=data["thread"])
         except KeyError:
             self.thread = None
 
