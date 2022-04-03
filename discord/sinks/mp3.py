@@ -32,22 +32,9 @@ from .errors import MP3SinkError
 
 
 class MP3Sink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mp3 files.
 
-    Used for .mp3 files.
-
-    .. versionadded:: 2.1
-
-    Parameters
-    ----------
-    output_path: :class:`string`
-        A path to where the audio files should be output.
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -61,6 +48,15 @@ class MP3Sink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+        
+        Raises
+        ------
+        MP3SinkError
+            Audio may only be formatted after recording is finished.
+        MP3SinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
             raise MP3SinkError("Audio may only be formatted after recording is finished.")
         args = [
