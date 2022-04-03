@@ -236,7 +236,7 @@ class ApplicationContext(discord.abc.Messageable):
                 else:
                     return await self.followup.send(*args, **kwargs)  # self.send_followup
             except discord.errors.InteractionResponded:
-                await self.followup.send(*args, **kwargs)
+                return await self.followup.send(*args, **kwargs)
 
         return wrapper
 
