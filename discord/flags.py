@@ -741,6 +741,7 @@ class Intents(BaseFlags):
 
         - :class:`Message`
         - :attr:`Client.cached_messages`
+        - :meth:`Client.get_message`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -772,6 +773,7 @@ class Intents(BaseFlags):
 
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
+        - :meth:`Client.get_message` (only for guilds)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -808,6 +810,7 @@ class Intents(BaseFlags):
 
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for DMs)
+        - :meth:`Client.get_message` (only for DMs)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 

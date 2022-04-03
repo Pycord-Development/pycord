@@ -30,17 +30,9 @@ from .errors import MKASinkError
 
 
 class MKASink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mka files.
 
-    Used for .mka files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -54,6 +46,15 @@ class MKASink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+        
+        Raises
+        ------
+        MKASinkError
+            Audio may only be formatted after recording is finished.
+        MKASinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
             raise MKASinkError("Audio may only be formatted after recording is finished.")
         args = [
