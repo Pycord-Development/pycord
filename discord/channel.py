@@ -97,9 +97,9 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
 
-async def _single_delete_strategy(messages: Iterable[Message]):
+async def _single_delete_strategy(messages: Iterable[Message], *, reason: Optional[str] = None):
     for m in messages:
-        await m.delete()
+        await m.delete(reason=reason)
 
 
 class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
@@ -374,7 +374,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             reason=reason,
         )
 
-    async def delete_messages(self, messages: Iterable[Snowflake]) -> None:
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes a list of messages. This is similar to :meth:`Message.delete`
@@ -394,6 +394,8 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         -----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
 
         Raises
         ------
@@ -414,14 +416,14 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
 
         if len(messages) == 1:
             message_id: int = messages[0].id
-            await self._state.http.delete_message(self.id, message_id)
+            await self._state.http.delete_message(self.id, message_id, reason=reason)
             return
 
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
         message_ids: SnowflakeList = [m.id for m in messages]
-        await self._state.http.delete_messages(self.id, message_ids)
+        await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
         self,
@@ -433,6 +435,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         around: Optional[SnowflakeTime] = None,
         oldest_first: Optional[bool] = False,
         bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
 
@@ -476,6 +479,8 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
 
         Raises
         -------
@@ -509,7 +514,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         async for message in iterator:
             if count == 100:
                 to_delete = ret[-100:]
-                await strategy(to_delete)
+                await strategy(to_delete, reason=reason)
                 count = 0
                 await asyncio.sleep(1)
 
@@ -519,10 +524,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             if message.id < minimum_time:
                 # older than 14 days old
                 if count == 1:
-                    await ret[-1].delete()
+                    await ret[-1].delete(reason=reason)
                 elif count >= 2:
                     to_delete = ret[-count:]
-                    await strategy(to_delete)
+                    await strategy(to_delete, reason=reason)
 
                 count = 0
                 strategy = _single_delete_strategy
@@ -534,10 +539,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         if count >= 2:
             # more than 2 messages -> bulk delete
             to_delete = ret[-count:]
-            await strategy(to_delete)
+            await strategy(to_delete, reason=reason)
         elif count == 1:
             # delete a single message
-            await ret[-1].delete()
+            await ret[-1].delete(reason=reason)
 
         return ret
 
