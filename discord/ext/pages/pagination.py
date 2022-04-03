@@ -758,6 +758,11 @@ class Paginator(discord.ui.View):
         ephemeral: :class:`bool`
             Whether the paginator message and its components are ephemeral.
             If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.
+
+            .. warning::
+
+                If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be peristent).
+
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
         target_message: :class:`str`
@@ -775,7 +780,7 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
-        if ephemeral and self.timeout >= 900 or self.timeout is None:
+        if ephemeral and (self.timeout >= 900 or self.timeout is None):
             raise ValueError(
                 "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
             )
@@ -801,8 +806,9 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout
-                msg = await msg.channel.fetch_message(msg.id)
+                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
+                if not ephemeral:
+                    msg = await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(
                     content=page_content.content,
@@ -810,9 +816,7 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-            if isinstance(msg, discord.WebhookMessage):
-                self.message = await msg.channel.fetch_message(msg.id)
-            elif isinstance(msg, discord.Message):
+            if isinstance(msg, (discord.Message, discord.WebhookMessage)):
                 self.message = msg
             elif isinstance(msg, discord.Interaction):
                 self.message = await msg.original_message()
