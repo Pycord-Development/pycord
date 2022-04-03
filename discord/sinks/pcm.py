@@ -25,17 +25,9 @@ from .core import Filters, Sink, default_filters
 
 
 class PCMSink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .pcm files.
 
-    Used for .pcm files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -44,7 +36,7 @@ class PCMSink(Sink):
         self.filters = filters
         Filters.__init__(self, **self.filters)
 
-        self.encoding = "ogg"
+        self.encoding = "pcm"
         self.vc = None
         self.audio_data = {}
 

@@ -129,7 +129,9 @@ async def autocomplete_example(
     color: Option(str, "Pick a color!", autocomplete=get_colors),
     animal: Option(str, "Pick an animal!", autocomplete=get_animals),
 ):
-    """This demonstrates using the ctx.options parameter to create slash command options that are dependent on the values entered for other options."""
+    """Demonstrates using ctx.options to create options that are dependent on the values of other options.
+    For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
+    For the `animal` option, the callback uses the input from the color option to return an iterable of animals"""
     await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for the animal.")
 
 
