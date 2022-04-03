@@ -474,7 +474,7 @@ class ApplicationCommandMixin(ABC):
                     )
                     continue
                 # We can assume the command item is a command, since it's only a string if action is delete
-                match = get(pending, name=cmd["command"].name)
+                match = get(pending, name=cmd["command"].name, type=cmd["command"].type)
                 if match is None:
                     continue
                 if cmd["action"] == "edit":
