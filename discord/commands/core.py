@@ -50,20 +50,24 @@ from typing import (
 )
 
 from ..enums import ChannelType, SlashCommandOptionType
-from ..errors import ClientException, ValidationError
+from ..errors import (
+    ClientException,
+    ValidationError,
+    NotFound,
+    ApplicationCommandError,
+    ApplicationCommandInvokeError,
+    CheckFailure,
+)
 from ..member import Member
 from ..message import Attachment, Message
 from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
-from .errors import ApplicationCommandError, ApplicationCommandInvokeError, CheckFailure
 from .options import (
     Option,
     OptionChoice,
-    ThreadOption,
     _minmax_setting_for_option,
-    _type_checking_for_option,
-    channel_type_map,
+    _type_checking_for_option
 )
 from .permissions import CommandPermission
 
@@ -154,10 +158,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def __init__(self, func: Callable, **kwargs) -> None:
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
-        try:
-            cooldown = func.__commands_cooldown__
-        except AttributeError:
-            cooldown = kwargs.get("cooldown")
+        cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
@@ -167,21 +168,31 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
         self._buckets: CooldownMapping = buckets
 
-        try:
-            max_concurrency = func.__commands_max_concurrency__
-        except AttributeError:
-            max_concurrency = kwargs.get("max_concurrency")
+        max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
 
         self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
 
         self._callback = None
         self.module = None
 
+        self.name: str = kwargs.get("name", func.__name__)
+
+        try:
+            checks = func.__commands_checks__
+            checks.reverse()
+        except AttributeError:
+            checks = kwargs.get("checks", [])
+
+        self.checks = checks
+        self.id: Optional[int] = kwargs.get("id")
+        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.parent = kwargs.get("parent")
+
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if hasattr(self, "id") and hasattr(other, "id"):
+        if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == self.guild_ids
@@ -195,6 +206,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         convert the arguments beforehand, so take care to pass the correct
         arguments in.
         """
+        if self.cog is not None:
+            return await self.callback(self.cog, ctx, *args, **kwargs)
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -324,6 +337,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
         predicates = self.checks
+        if self.parent is not None:
+            # parent checks should be ran first
+            predicates = self.parent.checks + predicates
+
         if not predicates:
             # since we have no checks, then we just return True.
             return True
@@ -389,12 +406,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+        
+        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
+        
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
+            
         Raises
         -------
         TypeError
@@ -411,12 +431,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        
+        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
+        
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
+            
         Raises
         -------
         TypeError
@@ -520,6 +543,8 @@ class SlashCommand(ApplicationCommand):
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    .. versionadded:: 2.0
+
     Attributes
     -----------
     name: :class:`str`
@@ -544,20 +569,24 @@ class SlashCommand(ApplicationCommand):
 
             If this is not empty then default_permissions will be set to False.
 
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-
-        .. versionadded:: 2.0
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The description localizations for this command. The values of this should be ``"locale": "description"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
     type = 1
 
@@ -573,19 +602,15 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-
-        name = kwargs.get("name") or func.__name__
-        validate_chat_input_name(name)
-        self.name: str = name
-        self.id = None
+        validate_chat_input_name(self.name)
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
         )
         validate_chat_input_description(description)
         self.description: str = description
-        self.parent = kwargs.get("parent")
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
         self.attached_to_group: bool = False
 
         self.cog = None
@@ -816,7 +841,9 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
+            "name_localizations": self.name_localizations,
             "description": self.description,
+            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
             "default_permission": self.default_permission,
         }
@@ -844,9 +871,10 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.mentionable:
                 arg_id = int(arg)
-                arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                if arg is None:
-                    arg = ctx.guild.get_role(arg_id) or arg_id
+                try:
+                    arg = await get_or_fetch(ctx.guild, "member", arg_id)
+                except NotFound:
+                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
@@ -950,13 +978,13 @@ class SlashCommandGroup(ApplicationCommand):
         isn't one.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -990,9 +1018,7 @@ class SlashCommandGroup(ApplicationCommand):
         description: str,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
-        *,
-        default_permissions: Optional[bool] = True,
-        permissions: Optional[List[CommandPermission]] = [],
+        **kwargs,
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
@@ -1002,7 +1028,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
-        self.checks = []
+        self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
         self._after_invoke = None
@@ -1010,8 +1036,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = default_permissions
-        self.permissions: List[CommandPermission] = permissions
+        self.default_permission = kwargs.get("default_permission", True)
+        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
 
@@ -1155,7 +1181,10 @@ class SlashCommandGroup(ApplicationCommand):
         ret = self.__class__(
             name=self.name,
             description=self.description,
-            **self.__original_kwargs__,
+            **{
+                param: value for param, value in self.__original_kwargs__.items()
+                if param not in ('name', 'description')
+            },
         )
         return self._ensure_assignment_on_copy(ret)
 
@@ -1210,13 +1239,13 @@ class ContextMenuCommand(ApplicationCommand):
         .. note::
             If this is not empty then default_permissions will be set to ``False``.
 
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
@@ -1238,25 +1267,15 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-
         # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
         self.description = ""
-        self.name: str = kwargs.pop("name", func.__name__)
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
 
         self.cog = None
         self.id = None
 
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
         self._before_invoke = None
         self._after_invoke = None
 
@@ -1327,13 +1346,13 @@ class UserCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -1425,13 +1444,13 @@ class MessageCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`Cog`]
+    cog: Optional[:class:`.Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
         is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
@@ -1500,7 +1519,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1511,7 +1532,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1522,7 +1545,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
+    
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1540,7 +1565,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
+    
     .. versionadded:: 2.0
+    
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1549,6 +1576,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
+        
     Raises
     -------
     TypeError
@@ -1566,10 +1594,13 @@ def application_command(cls=SlashCommand, **attrs):
 
 
 def command(**kwargs):
-    """There is an alias for :meth:`application_command`.
+    """An alias for :meth:`application_command`.
+    
     .. note::
         This decorator is overridden by :func:`commands.command`.
+        
     .. versionadded:: 2.0
+    
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]
