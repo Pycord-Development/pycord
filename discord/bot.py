@@ -375,6 +375,7 @@ class ApplicationCommandMixin(ABC):
             guild_id: Optional[int] = None,
             method: Literal["individual", "bulk", "auto"] = "bulk",
             force: bool = False,
+            delete_existing: bool = True,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -388,16 +389,16 @@ class ApplicationCommandMixin(ABC):
             A list of commands to register. If this is not set (None), then all commands will be registered.
         guild_id: Optional[int]
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
-
             set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
         method: Literal['individual', 'bulk', 'auto']
             The method to use when registering the commands. If this is set to "individual", then each command will be
             registered individually. If this is set to "bulk", then all commands will be registered in bulk. If this is
             set to "auto", then the method will be determined automatically. Defaults to "bulk".
-
         force: :class:`bool`
             Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
             can result in hitting rate limits more often. Defaults to False.
+        delete_existing: :class:`bool`
+            Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
         if commands is None:
             commands = self.pending_application_commands
@@ -467,7 +468,7 @@ class ApplicationCommandMixin(ABC):
                 if cmd["action"] == "delete":
                     pending_actions.append(
                         {
-                            "action": "delete",
+                            "action": "delete" if delete_existing else None,
                             "command": cmd["id"],
                             "name": cmd["command"],
                         }
@@ -562,6 +563,7 @@ class ApplicationCommandMixin(ABC):
             guild_ids: Optional[List[int]] = None,
             register_guild_commands: bool = True,
             check_guilds: Optional[List[int]] = [],
+            delete_exiting: bool = True,
     ) -> None:
         """|coro|
 
@@ -601,6 +603,8 @@ class ApplicationCommandMixin(ABC):
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
             ``register_guild_commands`` is set to False, then this parameter is ignored.
+        delete_exiting: :class:`bool`
+            Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
         check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
@@ -613,7 +617,8 @@ class ApplicationCommandMixin(ABC):
                 cmd.guild_ids = guild_ids
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
-        registered_commands = await self.register_commands(global_commands, method=method, force=force)
+        registered_commands = await self.register_commands(global_commands, method=method, force=force,
+                                                           delete_existing=delete_exiting)
 
         registered_guild_commands = {}
 
@@ -627,7 +632,7 @@ class ApplicationCommandMixin(ABC):
             for guild_id in set(cmd_guild_ids):
                 guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    guild_commands, guild_id=guild_id, method=method, force=force
+                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_exiting
                 )
 
         # TODO: 2.1: Remove this and favor permissions v2
