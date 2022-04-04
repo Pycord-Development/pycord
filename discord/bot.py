@@ -255,9 +255,7 @@ class ApplicationCommandMixin(ABC):
                         ),
                         MISSING,
                     )
-                    if match_ is MISSING:
-                        return True
-                    elif _check_command(subcommand, match_):
+                    if match_ is not MISSING and _check_command(subcommand, match_):
                         return True
             else:
                 as_dict = cmd.to_dict()
@@ -291,6 +289,10 @@ class ApplicationCommandMixin(ABC):
                                 return True
                     elif getattr(cmd, check) != match.get(check):
                         # We have a difference
+                        if check == "default_permission" and getattr(cmd, check) is True and match.get(check) is None:
+                            # This is a special case
+                            # TODO: Remove for perms v2
+                            continue
                         return True
                 return False
 
@@ -325,6 +327,9 @@ class ApplicationCommandMixin(ABC):
                         "id": int(registered_commands_dict[cmd.name]["id"]),
                     }
                 )
+            else:
+                # We have this command registered but it's the same
+                return_value.append({"command": cmd, "action": None, "id": int(match["id"])})
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd, value_ in registered_commands_dict.items():
@@ -473,8 +478,8 @@ class ApplicationCommandMixin(ABC):
                     pending_actions.append(
                         {
                             "action": "delete" if delete_existing else None,
-                            "command": cmd["id"],
-                            "name": cmd["command"],
+                            "command": collections.namedtuple("Command", ["name"])(name=cmd["command"]),
+                            "id": cmd["id"],
                         }
                     )
                     continue
