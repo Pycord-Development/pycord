@@ -939,6 +939,7 @@ class ApplicationCommandMixin(ABC):
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
+        **kwargs
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
@@ -954,6 +955,8 @@ class ApplicationCommandMixin(ABC):
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
+        kwargs:
+            Any additional keyword arguments to pass to :class:`.SlashCommandGroup`.
 
         Returns
         --------
@@ -961,7 +964,7 @@ class ApplicationCommandMixin(ABC):
             The slash command group that was created.
         """
         description = description or "No description provided."
-        group = SlashCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids, **kwargs)
         self.add_application_command(group)
         return group
 

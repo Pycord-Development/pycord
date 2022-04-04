@@ -940,6 +940,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
     @property
     def module(self) -> Optional[str]:
@@ -952,6 +954,10 @@ class SlashCommandGroup(ApplicationCommand):
             "options": [c.to_dict() for c in self.subcommands],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
