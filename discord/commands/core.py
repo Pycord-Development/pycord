@@ -770,7 +770,7 @@ class SlashCommand(ApplicationCommand):
             ):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
-                        op.input_type in (OT.user, OT.mentionable)
+                        op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
                         and (_data := resolved.get("members", {}).get(arg)) is not None):
                     # The option type is a user, we resolved a member from the snowflake and assigned it to _data
                     if (_user_data := resolved.get("users", {}).get(arg)) is not None:
