@@ -289,7 +289,7 @@ class ApplicationCommandMixin(ABC):
                             ]:
                                 # We have a difference
                                 return True
-                    elif getattr(cmd, check) != match[check]:
+                    elif getattr(cmd, check) != match.get(check):
                         # We have a difference
                         return True
                 return False
