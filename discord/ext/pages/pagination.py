@@ -88,6 +88,15 @@ class PaginatorButton(discord.ui.Button):
         self.paginator = None
 
     async def callback(self, interaction: discord.Interaction):
+        """|coro|
+
+        The coroutine that is called when the navigation button is clicked.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction created by clicking the navigation button.
+        """
         if self.button_type == "first":
             self.paginator.current_page = 0
         elif self.button_type == "prev":
@@ -102,7 +111,7 @@ class PaginatorButton(discord.ui.Button):
                 self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
-        await self.paginator.goto_page(page_number=self.paginator.current_page)
+        await self.paginator.goto_page(page_number=self.paginator.current_page, interaction=interaction)
 
 
 class Page:
@@ -116,15 +125,21 @@ class Page:
         The content of the page. Corresponds to the :class:`discord.Message.content` attribute.
     embeds: Optional[List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute.
+    custom_view: Optional[:class:`discord.ui.View`]
+        The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator.
     """
 
     def __init__(
-        self, content: Optional[str] = None, embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None
+        self,
+        content: Optional[str] = None,
+        embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None,
+        custom_view: Optional[discord.ui.View] = None,
     ):
         if content is None and embeds is None:
             raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
         self._content = content
         self._embeds = embeds
+        self._custom_view = custom_view
 
     @property
     def content(self) -> Optional[str]:
@@ -145,6 +160,16 @@ class Page:
     def embeds(self, value: Optional[List[Union[List[discord.Embed], discord.Embed]]]):
         """Sets the embeds for the page."""
         self._embeds = value
+
+    @property
+    def custom_view(self) -> Optional[discord.ui.View]:
+        """Gets the custom view assigned to the page."""
+        return self._custom_view
+
+    @custom_view.setter
+    def custom_view(self, value: Optional[discord.ui.View]):
+        """Assigns a custom view to be shown when the page is displayed."""
+        self._custom_view = value
 
 
 class PageGroup:
@@ -470,7 +495,9 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
-    async def goto_page(self, page_number=0) -> discord.Message:
+    async def goto_page(
+        self, page_number: int = 0, *, interaction: Optional[discord.Interaction] = None
+    ) -> discord.Message:
         """Updates the paginator message to show the specified page number.
 
         Parameters
@@ -481,6 +508,10 @@ class Paginator(discord.ui.View):
             .. note::
 
                 Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
+
+        interaction: Optional[:class:`discord.Interaction`]
+            The interaction to use when editing the message. If not provided, the message will be edited using the paginator's
+            stored :attr:`message` attribute instead.
 
         Returns
         -------
@@ -495,6 +526,12 @@ class Paginator(discord.ui.View):
         page = self.pages[page_number]
         page = self.get_page_content(page)
 
+        if page.custom_view:
+            self.update_custom_view(page.custom_view)
+
+        if interaction:
+            return await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
+
         return await self.message.edit(
             content=page.content,
             embeds=page.embeds,
@@ -508,7 +545,7 @@ class Paginator(discord.ui.View):
 
     def add_menu(self):
         """Adds the default :class:`PaginatorMenu` instance to the paginator."""
-        self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder)
+        self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder, custom_id="pages_group_menu")
         self.menu.paginator = self
         self.add_item(self.menu)
 
@@ -521,6 +558,7 @@ class Paginator(discord.ui.View):
                 label="<<",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
+                custom_id="pages_first_button",
             ),
             PaginatorButton(
                 "prev",
@@ -528,12 +566,14 @@ class Paginator(discord.ui.View):
                 style=discord.ButtonStyle.red,
                 loop_label="↪",
                 row=self.default_button_row,
+                custom_id="pages_prev_button",
             ),
             PaginatorButton(
                 "page_indicator",
                 style=discord.ButtonStyle.gray,
                 disabled=True,
                 row=self.default_button_row,
+                custom_id="pages_indicator_button",
             ),
             PaginatorButton(
                 "next",
@@ -541,12 +581,14 @@ class Paginator(discord.ui.View):
                 style=discord.ButtonStyle.green,
                 loop_label="↩",
                 row=self.default_button_row,
+                custom_id="pages_next_button",
             ),
             PaginatorButton(
                 "last",
                 label=">>",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
+                custom_id="pages_last_button",
             ),
         ]
         for button in default_buttons:
@@ -640,13 +682,19 @@ class Paginator(discord.ui.View):
         # We're done adding standard buttons and menus, so we can now add any specified custom view items below them
         # The bot developer should handle row assignments for their view before passing it to Paginator
         if self.custom_view:
-            for item in self.custom_view.children:
-                self.add_item(item)
+            self.update_custom_view(self.custom_view)
+
         return self.buttons
+
+    def update_custom_view(self, custom_view: discord.ui.View):
+        """Updates the custom view shown on the paginator."""
+        self.custom_view.clear_items()
+        for item in custom_view.children:
+            self.custom_view.add_item(item)
 
     @staticmethod
     def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
-        """Returns the correct content type for a page based on its content."""
+        """Converts a page into a :class:`Page` object based on its content."""
         if isinstance(page, Page):
             return page
         elif isinstance(page, str):
