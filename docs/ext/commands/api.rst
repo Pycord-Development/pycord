@@ -3,7 +3,12 @@
 API Reference
 ===============
 
-The following section outlines the API of Pycord's command extension module.
+The following section outlines the API of Pycord's prefixed command extension module.
+
+.. note::
+
+    Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled.
+    
 
 .. _ext_commands_api_bot:
 
@@ -589,24 +594,6 @@ Exceptions
 .. autoexception:: discord.ext.commands.MissingRequiredFlag
     :members:
 
-.. autoexception:: discord.ExtensionError
-    :members:
-
-.. autoexception:: discord.ExtensionAlreadyLoaded
-    :members:
-
-.. autoexception:: discord.ExtensionNotLoaded
-    :members:
-
-.. autoexception:: discord.NoEntryPointError
-    :members:
-
-.. autoexception:: discord.ExtensionFailed
-    :members:
-
-.. autoexception:: discord.ExtensionNotFound
-    :members:
-
 .. autoexception:: discord.ext.commands.CommandRegistrationError
     :members:
 
@@ -665,11 +652,5 @@ Exception Hierarchy
             - :exc:`~.commands.CommandInvokeError`
             - :exc:`~.commands.CommandOnCooldown`
             - :exc:`~.commands.MaxConcurrencyReached`
-        - :exc:`~.commands.ExtensionError`
-            - :exc:`~.commands.ExtensionAlreadyLoaded`
-            - :exc:`~.commands.ExtensionNotLoaded`
-            - :exc:`~.commands.NoEntryPointError`
-            - :exc:`~.commands.ExtensionFailed`
-            - :exc:`~.commands.ExtensionNotFound`
     - :exc:`~.ClientException`
         - :exc:`~.commands.CommandRegistrationError`

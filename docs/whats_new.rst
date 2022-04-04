@@ -826,7 +826,7 @@ v1.0.0
 --------
 
 The changeset for this version are too big to be listed here, for more information please
-see :ref:`the migrating page <migrating_to_v1>`.
+see :ref:`the migrating page <migrating_1_0>`.
 
 
 .. _vp0p16p6:
