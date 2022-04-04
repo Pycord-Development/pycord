@@ -789,7 +789,7 @@ class SlashCommand(ApplicationCommand):
                     kw = {}
                     if op.input_type is SlashCommandOptionType.user:
                         obj_type = User
-                    elif op.input_type is OT.role:
+                    elif op.input_type is SlashCommandOptionType.role:
                         obj_type = Role
                         kw["guild"] = ctx.guild
                     elif op.input_type is OT.channel:
