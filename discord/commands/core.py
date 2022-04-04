@@ -761,7 +761,6 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            OT = SlashCommandOptionType
             if op.input_type in (OT.user, OT.role, OT.channel, OT.attachment, OT.mentionable):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
