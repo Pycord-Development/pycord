@@ -689,7 +689,8 @@ class Paginator(discord.ui.View):
     def update_custom_view(self, custom_view: discord.ui.View):
         """Updates the custom view shown on the paginator."""
         if isinstance(self.custom_view, discord.ui.View):
-            self.custom_view.clear_items()
+            for item in self.custom_view.children:
+                self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
 
