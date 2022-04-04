@@ -795,7 +795,7 @@ class SlashCommand(ApplicationCommand):
                     elif op.input_type is SlashCommandOptionType.channel:
                         obj_type = _guild_channel_factory(_data["type"])
                         kw["guild"] = ctx.guild
-                    elif op.input_type is OT.attachment:
+                    elif op.input_type is SlashCommandOptionType.attachment:
                         obj_type = Attachment
                     arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
