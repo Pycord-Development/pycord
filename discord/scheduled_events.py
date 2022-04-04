@@ -156,8 +156,6 @@ class ScheduledEvent(Hashable):
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
-    interested: Optional[:class:`int`]
-        Alias to :attr:`.subscriber_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -168,10 +166,6 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
-    created_at: :class:`datetime.datetime`
-        The datetime object of when the event was created.
-    cover: Optional[:class:`Asset`]
-        The cover image of the scheduled event.
     """
 
     __slots__ = (
