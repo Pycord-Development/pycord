@@ -787,7 +787,7 @@ class SlashCommand(ApplicationCommand):
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
                     obj_type = None
                     kw = {}
-                    if op.input_type is OT.user:
+                    if op.input_type is SlashCommandOptionType.user:
                         obj_type = User
                     elif op.input_type is OT.role:
                         obj_type = Role
