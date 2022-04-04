@@ -777,7 +777,7 @@ class SlashCommand(ApplicationCommand):
                         # We resolved the user from the user id
                         _data["user"] = _user_data
                     arg = Member(state=ctx.interaction._state, data=_data, guild=ctx.guild)
-                elif op.input_type is OT.mentionable:
+                elif op.input_type is SlashCommandOptionType.mentionable:
                     if (_data := resolved.get(f"users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
                     elif (_data := resolved.get(f"roles", {}).get(arg)) is not None:
