@@ -138,7 +138,7 @@ class Page:
         if content is None and embeds is None:
             raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
         self._content = content
-        self._embeds = embeds
+        self._embeds = embeds or []
         self._custom_view = custom_view
 
     @property
@@ -688,9 +688,10 @@ class Paginator(discord.ui.View):
 
     def update_custom_view(self, custom_view: discord.ui.View):
         """Updates the custom view shown on the paginator."""
-        self.custom_view.clear_items()
+        if isinstance(self.custom_view, discord.ui.View):
+            self.custom_view.clear_items()
         for item in custom_view.children:
-            self.custom_view.add_item(item)
+            self.add_item(item)
 
     @staticmethod
     def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
@@ -767,6 +768,9 @@ class Paginator(discord.ui.View):
         page = self.pages[self.current_page]
         page_content = self.get_page_content(page)
 
+        if page_content.custom_view:
+            self.update_custom_view(page_content.custom_view)
+
         self.user = ctx.author
 
         if target:
@@ -837,6 +841,9 @@ class Paginator(discord.ui.View):
 
         page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
         page_content: Page = self.get_page_content(page)
+
+        if page_content.custom_view:
+            self.update_custom_view(page_content.custom_view)
 
         self.user = interaction.user
         if target:
