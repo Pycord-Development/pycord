@@ -278,6 +278,7 @@ class Paginator(discord.ui.View):
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination components.
+        If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
