@@ -239,7 +239,62 @@ class ApplicationCommandMixin(ABC):
             respectively contain the command and the action to perform. Other keys may also be present depending on
             the action, including ``id``.
         """
+
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
+
+        def _check_command(cmd: ApplicationCommand, match: Dict) -> bool:
+            if isinstance(cmd, SlashCommandGroup):
+                if len(cmd.subcommands) != len(match.get("options", [])):
+                    return True
+                for i, subcommand in enumerate(cmd.subcommands):
+                    match_ = next(
+                        (
+                            data
+                            for data in match["options"]
+                            if data["name"] == subcommand.name
+                        ),
+                        MISSING,
+                    )
+                    if match_ is not MISSING and _check_command(subcommand, match_):
+                        return True
+            else:
+                as_dict = cmd.to_dict()
+                to_check = {
+                    "default_permission": None,
+                    "name": None,
+                    "description": None,
+                    "name_localizations": None,
+                    "description_localizations": None,
+                    "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
+                                "description_localizations"],
+                }
+                for check, value in to_check.items():
+                    if type(to_check[check]) == list:
+                        # We need to do some falsy conversion here
+                        # The API considers False (autocomplete) and [] (choices) to be falsy values
+                        falsy_vals = (False, [])
+                        for opt in value:
+                            cmd_vals = (
+                                [val.get(opt, MISSING) for val in as_dict[check]]
+                                if check in as_dict
+                                else []
+                            )
+                            for i, val in enumerate(cmd_vals):
+                                if val in falsy_vals:
+                                    cmd_vals[i] = MISSING
+                            if match.get(check, MISSING) is not MISSING and cmd_vals != [
+                                val.get(opt, MISSING) for val in match[check]
+                            ]:
+                                # We have a difference
+                                return True
+                    elif getattr(cmd, check) != match.get(check):
+                        # We have a difference
+                        if check == "default_permission" and getattr(cmd, check) is True and match.get(check) is None:
+                            # This is a special case
+                            # TODO: Remove for perms v2
+                            continue
+                        return True
+                return False
 
         return_value = []
         cmds = self.pending_application_commands.copy()
@@ -258,69 +313,23 @@ class ApplicationCommandMixin(ABC):
             pending = [cmd for cmd in cmds if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
 
         registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
-        to_check = {
-            "default_permission": None,
-            "name": None,
-            "description": None,
-            "name_localizations": None,
-            "description_localizations": None,
-            "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
-                        "description_localizations"],
-        }
         # First let's check if the commands we have locally are the same as the ones on discord
         for cmd in pending:
             match = registered_commands_dict.get(cmd.name)
             if match is None:
                 # We don't have this command registered
                 return_value.append({"command": cmd, "action": "upsert"})
-                continue
-
-            as_dict = cmd.to_dict()
-
-            for check, value in to_check.items():
-                if type(to_check[check]) == list:
-                    # We need to do some falsy conversion here
-                    # The API considers False (autocomplete) and [] (choices) to be falsy values
-                    falsy_vals = (False, [])
-                    for opt in value:
-
-                        cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
-                        for i, val in enumerate(cmd_vals):
-                            if val in falsy_vals:
-                                cmd_vals[i] = MISSING
-                        if match.get(check, MISSING) is not MISSING and cmd_vals != [
-                            val.get(opt, MISSING) for val in match[check]
-                        ]:
-                            # We have a difference
-                            return_value.append(
-                                {
-                                    "command": cmd,
-                                    "action": "edit",
-                                    "id": int(registered_commands_dict[cmd.name]["id"]),
-                                }
-                            )
-                            break
-                    else:
-                        continue
-                    break
-                elif getattr(cmd, check) != match.get(check):
-                    # We have a difference
-                    return_value.append(
-                        {
-                            "command": cmd,
-                            "action": "edit",
-                            "id": int(registered_commands_dict[cmd.name]["id"]),
-                        }
-                    )
-                    break
-            else:
+            elif _check_command(cmd, match):
                 return_value.append(
                     {
                         "command": cmd,
-                        "action": None,
+                        "action": "edit",
                         "id": int(registered_commands_dict[cmd.name]["id"]),
                     }
                 )
+            else:
+                # We have this command registered but it's the same
+                return_value.append({"command": cmd, "action": None, "id": int(match["id"])})
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd, value_ in registered_commands_dict.items():
@@ -469,8 +478,8 @@ class ApplicationCommandMixin(ABC):
                     pending_actions.append(
                         {
                             "action": "delete" if delete_existing else None,
-                            "command": cmd["id"],
-                            "name": cmd["command"],
+                            "command": collections.namedtuple("Command", ["name"])(name=cmd["command"]),
+                            "id": cmd["id"],
                         }
                     )
                     continue
@@ -519,7 +528,7 @@ class ApplicationCommandMixin(ABC):
                     )
                     registered = await register("bulk", data, _log=False)
             else:
-                if len(filtered_no_action) == 0:
+                if not filtered_no_action:
                     registered = []
                 for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
@@ -930,6 +939,7 @@ class ApplicationCommandMixin(ABC):
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
+        **kwargs
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
@@ -945,6 +955,8 @@ class ApplicationCommandMixin(ABC):
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
+        kwargs:
+            Any additional keyword arguments to pass to :class:`.SlashCommandGroup`.
 
         Returns
         --------
@@ -952,7 +964,7 @@ class ApplicationCommandMixin(ABC):
             The slash command group that was created.
         """
         description = description or "No description provided."
-        group = SlashCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids, **kwargs)
         self.add_application_command(group)
         return group
 
@@ -1259,7 +1271,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
     async def can_run(self, ctx: ApplicationContext, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
 
-        if len(data) == 0:
+        if not data:
             return True
 
         # type-checker doesn't distinguish between functions and methods
