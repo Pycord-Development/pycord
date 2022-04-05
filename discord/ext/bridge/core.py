@@ -45,10 +45,16 @@ from ...utils import get
 
 
 class BridgeSlashCommand(SlashCommand):
+    """
+    A subclass of :class:`.SlashCommand` that is used to implement bridge commands.
+    """
     ...
 
 
 class BridgeExtCommand(Command):
+    """
+    A subclass of :class:`.ext.commands.Command` that is used to implement bridge commands.
+    """
     ...
 
 

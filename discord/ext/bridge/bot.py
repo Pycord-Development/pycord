@@ -77,8 +77,8 @@ class BotBase(ABC):
 class Bot(BotBase, ExtBot):
     """Represents a discord bot, with support for cross-compatibility between command types.
 
-    This class is a subclass of :class:`commands.Bot` and as a result
-    anything that you can do with a :class:`commands.Bot` you can do with
+    This class is a subclass of :class:`.ext.commands.Bot` and as a result
+    anything that you can do with a :class:`.ext.commands.Bot` you can do with
     this bot.
 
     .. versionadded:: 2.0
@@ -89,7 +89,7 @@ class Bot(BotBase, ExtBot):
 
 class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
-    :class:`commands.AutoShardedBot` instead.
+    :class:`.ext.commands.AutoShardedBot` instead.
 
     .. versionadded:: 2.0
     """

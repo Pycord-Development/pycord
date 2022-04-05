@@ -10,7 +10,7 @@ This page includes the API reference/documentation for the module, but only cont
 detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_.
 
 .. note::
-    ``ext.bridge`` requires message content intent to be enabled in order to use it.
+    ``ext.bridge`` requires the message content intent to be enabled, as it uses the ``ext.commands`` extension.
 
 Example usage:
 
@@ -19,7 +19,10 @@ Example usage:
     import discord
     from discord.ext import bridge
 
-    bot = bridge.Bot(command_prefix="!")
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    bot = bridge.Bot(command_prefix="!", intents=intents)
 
     @bot.bridge_command()
     async def hello(ctx):
@@ -74,6 +77,12 @@ Commands
 
 .. automethod:: discord.ext.bridge.bridge_command()
     :decorator:
+
+.. autoclass:: discord.ext.bridge.BridgeExtCommand
+    :members:
+
+.. autoclass:: discord.ext.bridge.BridgeSlashCommand
+    :members:
 
 Context
 ~~~~~~~
