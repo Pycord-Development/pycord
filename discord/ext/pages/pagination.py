@@ -744,7 +744,7 @@ class Paginator(discord.ui.View):
         Parameters
         ----------
         interaction: Optional[:class:`discord.Interaction`]
-            The interaction used to trigger the page action.
+            The interaction that was used to trigger the page action.
         """
         if self.get_page_content(self.pages[self.current_page]).callback:
             await self.get_page_content(self.pages[self.current_page]).callback(interaction=interaction)
