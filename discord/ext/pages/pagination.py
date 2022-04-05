@@ -228,7 +228,8 @@ class PageGroup:
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
     trigger_on_display: :class:`bool`
-        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`.
+        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
+        Has no effect if no callback exists for a `Page`.
     """
 
     def __init__(
@@ -302,7 +303,8 @@ class Paginator(discord.ui.View):
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
     trigger_on_display: :class:`bool`
-        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`.
+        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
+        Has no effect if no callback exists for a `Page`.
 
     Attributes
     ----------
@@ -395,6 +397,7 @@ class Paginator(discord.ui.View):
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
+        trigger_on_display: Optional[bool] = None,
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
 
@@ -426,6 +429,9 @@ class Paginator(discord.ui.View):
         custom_buttons: Optional[List[:class:`PaginatorButton`]]
             A list of PaginatorButtons to initialize the Paginator with.
             If ``use_default_buttons`` is ``True``, this parameter is ignored.
+        trigger_on_display: :class:`bool`
+            Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
+            Has no effect if no callback exists for a `Page`.
         """
 
         # Update pages and reset current_page to 0 (default)
@@ -445,6 +451,7 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
+        self.trigger_on_display = trigger_on_display if trigger_on_display is not None else self.trigger_on_display
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
             for button in custom_buttons:
