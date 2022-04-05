@@ -658,7 +658,7 @@ class SlashCommandOptionType(Enum):
 
     @classmethod
     def from_datatype(cls, datatype):
-        if isinstance(datatype, (tuple, list)):  # typing.Union has been used
+        if isinstance(datatype, tuple):  # typing.Union has been used
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all(x == cls.channel for x in datatypes):
                 return cls.channel
