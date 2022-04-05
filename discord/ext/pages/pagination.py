@@ -142,10 +142,15 @@ class Page:
         self._embeds = embeds or []
         self._custom_view = custom_view
 
-    async def callback(self):
+    async def callback(self, interaction: Optional[discord.Interaction] = None):
         """|coro|
 
         The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called.
+
+        Parameters
+        ----------
+        interaction: Optional[:class:`discord.Interaction`]
+            The interaction associated with the callback, if any.
         """
         pass
 
@@ -222,6 +227,8 @@ class PageGroup:
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
+    trigger_on_display: :class:`bool`
+        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`.
     """
 
     def __init__(
@@ -240,6 +247,7 @@ class PageGroup:
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
+        trigger_on_display: Optional[bool] = None,
     ):
         self.label = label
         self.description = description
@@ -255,6 +263,7 @@ class PageGroup:
         self.custom_view: discord.ui.View = custom_view
         self.timeout: float = timeout
         self.custom_buttons: List = custom_buttons
+        self.trigger_on_display = trigger_on_display
 
 
 class Paginator(discord.ui.View):
@@ -292,6 +301,8 @@ class Paginator(discord.ui.View):
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
         A list of PaginatorButtons to initialize the Paginator with.
         If ``use_default_buttons`` is ``True``, this parameter is ignored.
+    trigger_on_display: :class:`bool`
+        Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`.
 
     Attributes
     ----------
@@ -326,6 +337,7 @@ class Paginator(discord.ui.View):
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
+        trigger_on_display: Optional[bool] = None,
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
@@ -354,6 +366,7 @@ class Paginator(discord.ui.View):
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
+        self.trigger_on_display = trigger_on_display
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
         if self.custom_buttons and not self.use_default_buttons:
@@ -504,9 +517,7 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
-    async def goto_page(
-        self, page_number: int = 0, *, interaction: Optional[discord.Interaction] = None
-    ) -> discord.Message:
+    async def goto_page(self, page_number: int = 0, *, interaction: Optional[discord.Interaction] = None) -> None:
         """Updates the paginator message to show the specified page number.
 
         Parameters
@@ -539,13 +550,15 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page.custom_view)
 
         if interaction:
-            return await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
-
-        return await self.message.edit(
-            content=page.content,
-            embeds=page.embeds,
-            view=self,
-        )
+            await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
+        else:
+            await self.message.edit(
+                content=page.content,
+                embeds=page.embeds,
+                view=self,
+            )
+        if self.trigger_on_display:
+            await self.page_action(interaction=interaction)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if self.usercheck:
@@ -718,10 +731,16 @@ class Paginator(discord.ui.View):
             else:
                 raise TypeError("All list items must be embeds.")
 
-    async def page_action(self) -> None:
-        """Triggers the callback associated with the current page, if any."""
+    async def page_action(self, interaction: Optional[discord.Interaction]) -> None:
+        """Triggers the callback associated with the current page, if any.
+
+        Parameters
+        ----------
+        interaction: Optional[:class:`discord.Interaction`]
+            The interaction used to trigger the page action.
+        """
         if self.get_page_content(self.pages[self.current_page]).callback:
-            await self.get_page_content(self.pages[self.current_page]).callback()
+            await self.get_page_content(self.pages[self.current_page]).callback(interaction=interaction)
 
     async def send(
         self,
