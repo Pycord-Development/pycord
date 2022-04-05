@@ -1471,25 +1471,26 @@ of :class:`enum.Enum`.
     .. attribute:: text
 
         A text channel.
+
     .. attribute:: voice
 
         A voice channel.
+
     .. attribute:: private
 
         A private text channel. Also called a direct message.
+
     .. attribute:: group
 
         A private group text channel.
+
     .. attribute:: category
 
         A category channel.
+
     .. attribute:: news
 
         A guild news channel.
-
-    .. attribute:: store
-
-        A guild store channel.
 
     .. attribute:: stage_voice
 
@@ -4338,15 +4339,6 @@ ThreadMember
 
 .. autoclass:: ThreadMember()
     :members:
-
-StoreChannel
-~~~~~~~~~~~~~
-
-.. attributetable:: StoreChannel
-
-.. autoclass:: StoreChannel()
-    :members:
-    :inherited-members:
 
 VoiceChannel
 ~~~~~~~~~~~~~
