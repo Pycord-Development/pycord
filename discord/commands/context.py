@@ -51,7 +51,7 @@ if TYPE_CHECKING:
 
     from typing import Callable, Awaitable
 
-from ..utils import _cached_property as cached_property
+from ..utils import cached_property
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -216,7 +216,7 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
-    def send_modal(self) -> Interaction:
+    def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 

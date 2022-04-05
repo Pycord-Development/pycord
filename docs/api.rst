@@ -103,6 +103,12 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
+    
+.. autofunction:: discord.commands.core.application_command
+    :decorator:
+
+.. autofunction:: discord.commands.core.command
+    :decorator:
 
 SlashCommand
 ~~~~~~~~~~~~~
@@ -111,6 +117,9 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
+    
+.. autofunction:: discord.commands.core.slash_command
+    :decorator:
 
 SlashCommandGroup
 ~~~~~~~~~~~~~~~~~~
@@ -127,6 +136,9 @@ Option
 
 .. autoclass:: Option
     :members:
+    
+.. autofunction:: discord.commands.core.Option
+    :decorator:
 
 OptionChoice
 ~~~~~~~~~~~~~
@@ -143,6 +155,9 @@ UserCommand
 
 .. autoclass:: UserCommand
     :members:
+    
+.. autofunction:: discord.commands.core.user_command
+    :decorator:
 
 MessageCommand
 ~~~~~~~~~~~~~~~
@@ -151,6 +166,9 @@ MessageCommand
 
 .. autoclass:: MessageCommand
     :members:
+    
+.. autofunction:: discord.commands.core.message_command
+    :decorator:
 
 ApplicationContext
 ~~~~~~~~~~~~~~~~~~~
@@ -166,6 +184,48 @@ AutocompleteContext
 .. attributetable:: AutocompleteContext
 
 .. autoclass:: AutocompleteContext
+    :members:
+
+CommandPermission
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: CommandPermission
+
+.. autoclass:: CommandPermission
+    :members:
+
+.. autofunction:: discord.commands.permissions.permission
+    :decorator:
+
+.. autofunction:: discord.commands.permissions.has_role
+    :decorator:
+
+.. autofunction:: discord.commands.permissions.has_any_role
+    :decorator:
+
+.. autofunction:: discord.commands.permissions.is_user
+    :decorator:
+
+.. autofunction:: discord.commands.permissions.is_owner
+    :decorator:
+
+Cogs
+-----
+
+Cog
+~~~~
+
+.. attributetable:: Cog
+
+.. autoclass:: Cog
+    :members:
+    
+CogMeta
+~~~~~~~~
+
+.. attributetable:: CogMeta
+
+.. autoclass:: CogMeta
     :members:
 
 Application Info
@@ -1434,25 +1494,26 @@ of :class:`enum.Enum`.
     .. attribute:: text
 
         A text channel.
+
     .. attribute:: voice
 
         A voice channel.
+
     .. attribute:: private
 
         A private text channel. Also called a direct message.
+
     .. attribute:: group
 
         A private group text channel.
+
     .. attribute:: category
 
         A category channel.
+
     .. attribute:: news
 
         A guild news channel.
-
-    .. attribute:: store
-
-        A guild store channel.
 
     .. attribute:: stage_voice
 
@@ -1788,7 +1849,9 @@ of :class:`enum.Enum`.
     .. attribute:: select
 
         Represents a select component.
+    .. attribute:: input_text
 
+        Represents an input_text component.
 
 .. class:: ButtonStyle
 
@@ -1830,6 +1893,28 @@ of :class:`enum.Enum`.
     .. attribute:: url
 
         An alias for :attr:`link`.
+
+.. class:: InputTextStyle
+
+    Represents the style of the input text component.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: short
+
+        Represents a single-line input text field.
+    .. attribute:: long
+
+        Represents a multi-line input text field.
+    .. attribute:: singleline
+
+        An alias for :attr:`short`.
+    .. attribute:: multiline
+
+        An alias for :attr:`long`.
+    .. attribute:: paragraph
+
+        An alias for :attr:`long`.
 
 .. class:: VoiceRegion
 
@@ -3126,7 +3211,7 @@ of :class:`enum.Enum`.
 
     Represents the status of a scheduled event.
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: scheduled
 
@@ -3152,7 +3237,7 @@ of :class:`enum.Enum`.
 
     Represents a scheduled event location type (otherwise known as the entity type on the API).
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: stage_instance
 
@@ -4105,7 +4190,7 @@ Guild
 ScheduledEvent
 ~~~~~~~~~~~~~~~
 
-.. attributestable:: ScheduledEvent
+.. attributetable:: ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
@@ -4277,15 +4362,6 @@ ThreadMember
 
 .. autoclass:: ThreadMember()
     :members:
-
-StoreChannel
-~~~~~~~~~~~~~
-
-.. attributetable:: StoreChannel
-
-.. autoclass:: StoreChannel()
-    :members:
-    :inherited-members:
 
 VoiceChannel
 ~~~~~~~~~~~~~
@@ -4541,7 +4617,7 @@ RawThreadDeleteEvent
     :members:
 
 RawScheduledEventSubscription
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: RawScheduledEventSubscription
 
@@ -4864,6 +4940,10 @@ Sinks
 Sink Error Reference
 --------------------
 
+.. autoexception:: discord.sinks.SinkException
+
+.. autoexception:: discord.sinks.RecordingException
+
 .. autoexception:: discord.sinks.WaveSinkError
 
 .. autoexception:: discord.sinks.MP3SinkError
@@ -4884,15 +4964,15 @@ Sink Exception Hierarchy
 .. exception_hierarchy::
 
     - :exc:`DiscordException`
-        - :exc:`SinkException`
-            - :exc:`RecordingException`
-            - :exc:`WaveSinkError`
-            - :exc:`MP3SinkError`
-            - :exc:`MP4SinkError`
-            - :exc:`M4ASinkError`
-            - :exc:`MKVSinkError`
-            - :exc:`MKASinkError`
-            - :exc:`OGGSinkError`
+        - :exc:`sinks.SinkException`
+            - :exc:`sinks.RecordingException`
+            - :exc:`sinks.WaveSinkError`
+            - :exc:`sinks.MP3SinkError`
+            - :exc:`sinks.MP4SinkError`
+            - :exc:`sinks.M4ASinkError`
+            - :exc:`sinks.MKVSinkError`
+            - :exc:`sinks.MKASinkError`
+            - :exc:`sinks.OGGSinkError`
 
 
 Exceptions
@@ -4933,6 +5013,33 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.opus.OpusNotLoaded
 
+.. autoexception:: discord.ApplicationCommandError
+    :members:
+    
+.. autoexception:: discord.CheckFailure
+    :members:
+    
+.. autoexception:: discord.ApplicationCommandInvokeError
+    :members:
+
+.. autoexception:: discord.ExtensionError
+    :members:
+
+.. autoexception:: discord.ExtensionAlreadyLoaded
+    :members:
+
+.. autoexception:: discord.ExtensionNotLoaded
+    :members:
+
+.. autoexception:: discord.NoEntryPointError
+    :members:
+
+.. autoexception:: discord.ExtensionFailed
+    :members:
+
+.. autoexception:: discord.ExtensionNotFound
+    :members:
+
 Exception Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -4941,7 +5048,6 @@ Exception Hierarchy
     - :exc:`Exception`
         - :exc:`DiscordException`
             - :exc:`ClientException`
-                - :exc:`RecordingException`
                 - :exc:`InvalidData`
                 - :exc:`InvalidArgument`
                 - :exc:`LoginFailure`
@@ -4954,3 +5060,12 @@ Exception Hierarchy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`DiscordServerError`
+            - :exc:`ApplicationCommandError`
+                - :exc:`CheckFailure`
+                - :exc:`ApplicationCommandInvokeError`
+            - :exc:`ExtensionError`
+                - :exc:`ExtensionAlreadyLoaded`
+                - :exc:`ExtensionNotLoaded`
+                - :exc:`NoEntryPointError`
+                - :exc:`ExtensionFailed`
+                - :exc:`ExtensionNotFound`

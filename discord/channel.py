@@ -73,7 +73,6 @@ __all__ = (
     "StageChannel",
     "DMChannel",
     "CategoryChannel",
-    "StoreChannel",
     "GroupChannel",
     "PartialMessageable",
 )
@@ -90,7 +89,6 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import GroupDMChannel as GroupChannelPayload
     from .types.channel import StageChannel as StageChannelPayload
-    from .types.channel import StoreChannel as StoreChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
     from .types.snowflake import SnowflakeList
@@ -99,9 +97,9 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
 
-async def _single_delete_strategy(messages: Iterable[Message]):
+async def _single_delete_strategy(messages: Iterable[Message], *, reason: Optional[str] = None):
     for m in messages:
-        await m.delete()
+        await m.delete(reason=reason)
 
 
 class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
@@ -376,7 +374,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             reason=reason,
         )
 
-    async def delete_messages(self, messages: Iterable[Snowflake]) -> None:
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes a list of messages. This is similar to :meth:`Message.delete`
@@ -396,6 +394,8 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         -----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
 
         Raises
         ------
@@ -416,14 +416,14 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
 
         if len(messages) == 1:
             message_id: int = messages[0].id
-            await self._state.http.delete_message(self.id, message_id)
+            await self._state.http.delete_message(self.id, message_id, reason=reason)
             return
 
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
         message_ids: SnowflakeList = [m.id for m in messages]
-        await self._state.http.delete_messages(self.id, message_ids)
+        await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
         self,
@@ -435,6 +435,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         around: Optional[SnowflakeTime] = None,
         oldest_first: Optional[bool] = False,
         bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
 
@@ -478,6 +479,8 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
 
         Raises
         -------
@@ -511,7 +514,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         async for message in iterator:
             if count == 100:
                 to_delete = ret[-100:]
-                await strategy(to_delete)
+                await strategy(to_delete, reason=reason)
                 count = 0
                 await asyncio.sleep(1)
 
@@ -521,10 +524,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             if message.id < minimum_time:
                 # older than 14 days old
                 if count == 1:
-                    await ret[-1].delete()
+                    await ret[-1].delete(reason=reason)
                 elif count >= 2:
                     to_delete = ret[-count:]
-                    await strategy(to_delete)
+                    await strategy(to_delete, reason=reason)
 
                 count = 0
                 strategy = _single_delete_strategy
@@ -536,10 +539,10 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         if count >= 2:
             # more than 2 messages -> bulk delete
             to_delete = ret[-count:]
-            await strategy(to_delete)
+            await strategy(to_delete, reason=reason)
         elif count == 1:
             # delete a single message
-            await ret[-1].delete()
+            await ret[-1].delete(reason=reason)
 
         return ret
 
@@ -1641,175 +1644,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return await self.guild.create_stage_channel(name, category=self, **options)
 
 
-class StoreChannel(discord.abc.GuildChannel, Hashable):
-    """Represents a Discord guild store channel.
-
-    .. container:: operations
-
-        .. describe:: x == y
-
-            Checks if two channels are equal.
-
-        .. describe:: x != y
-
-            Checks if two channels are not equal.
-
-        .. describe:: hash(x)
-
-            Returns the channel's hash.
-
-        .. describe:: str(x)
-
-            Returns the channel's name.
-
-    Attributes
-    -----------
-    name: :class:`str`
-        The channel name.
-    guild: :class:`Guild`
-        The guild the channel belongs to.
-    id: :class:`int`
-        The channel ID.
-    category_id: :class:`int`
-        The category channel ID this channel belongs to.
-    position: :class:`int`
-        The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
-    nsfw: :class:`bool`
-        If the channel is marked as "not safe for work".
-
-        .. note::
-
-            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
-    """
-
-    __slots__ = (
-        "name",
-        "id",
-        "guild",
-        "_state",
-        "nsfw",
-        "category_id",
-        "position",
-        "_overwrites",
-    )
-
-    def __init__(self, *, state: ConnectionState, guild: Guild, data: StoreChannelPayload):
-        self._state: ConnectionState = state
-        self.id: int = int(data["id"])
-        self._update(guild, data)
-
-    def __repr__(self) -> str:
-        return f"<StoreChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
-
-    def _update(self, guild: Guild, data: StoreChannelPayload) -> None:
-        self.guild: Guild = guild
-        self.name: str = data["name"]
-        self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.position: int = data["position"]
-        self.nsfw: bool = data.get("nsfw", False)
-        self._fill_overwrites(data)
-
-    @property
-    def _sorting_bucket(self) -> int:
-        return ChannelType.text.value
-
-    @property
-    def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
-        return ChannelType.store
-
-    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
-        base = super().permissions_for(obj)
-
-        # store channels do not have voice related permissions
-        denied = Permissions.voice()
-        base.value &= ~denied.value
-        return base
-
-    def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the channel is NSFW."""
-        return self.nsfw
-
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
-    async def clone(self, *, name: Optional[str] = None, reason: Optional[str] = None) -> StoreChannel:
-        return await self._clone_impl({"nsfw": self.nsfw}, name=name, reason=reason)
-
-    @overload
-    async def edit(
-        self,
-        *,
-        name: str = ...,
-        position: int = ...,
-        nsfw: bool = ...,
-        sync_permissions: bool = ...,
-        category: Optional[CategoryChannel],
-        reason: Optional[str],
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite],
-    ) -> Optional[StoreChannel]:
-        ...
-
-    @overload
-    async def edit(self) -> Optional[StoreChannel]:
-        ...
-
-    async def edit(self, *, reason=None, **options):
-        """|coro|
-
-        Edits the channel.
-
-        You must have the :attr:`~Permissions.manage_channels` permission to
-        use this.
-
-        .. versionchanged:: 2.0
-            Edits are no longer in-place, the newly edited channel is returned instead.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The new channel name.
-        position: :class:`int`
-            The new channel's position.
-        nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
-        sync_permissions: :class:`bool`
-            Whether to sync permissions with the channel's new or pre-existing
-            category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
-            The new category for this channel. Can be ``None`` to remove the
-            category.
-        reason: Optional[:class:`str`]
-            The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
-
-            .. versionadded:: 1.3
-
-        Raises
-        ------
-        InvalidArgument
-            If position is less than 0 or greater than the number of channels, or if
-            the permission overwrite information is not in proper form.
-        Forbidden
-            You do not have permissions to edit the channel.
-        HTTPException
-            Editing the channel failed.
-
-        Returns
-        --------
-        Optional[:class:`.StoreChannel`]
-            The newly edited store channel. If the edit was only positional
-            then ``None`` is returned instead.
-        """
-
-        payload = await self._edit(options, reason=reason)
-        if payload is not None:
-            # the payload will always be the proper channel payload
-            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
-
-
 DMC = TypeVar("DMC", bound="DMChannel")
 
 
@@ -2164,8 +1998,6 @@ def _guild_channel_factory(channel_type: int):
         return CategoryChannel, value
     elif value is ChannelType.news:
         return TextChannel, value
-    elif value is ChannelType.store:
-        return StoreChannel, value
     elif value is ChannelType.stage_voice:
         return StageChannel, value
     else:
