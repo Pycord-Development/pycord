@@ -358,7 +358,7 @@ class Paginator(discord.ui.View):
                 List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
             ] = self.page_groups[0].pages
 
-        self.page_count = len(self.pages) - 1
+        self.page_count = max(len(self.pages), 0)
         self.buttons = {}
         self.custom_buttons: List = custom_buttons
         self.show_disabled = show_disabled
