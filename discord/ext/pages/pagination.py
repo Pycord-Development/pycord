@@ -134,12 +134,20 @@ class Page:
         content: Optional[str] = None,
         embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None,
         custom_view: Optional[discord.ui.View] = None,
+        **kwargs,
     ):
         if content is None and embeds is None:
             raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
+
+    async def callback(self):
+        """|coro|
+
+        The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called.
+        """
+        pass
 
     @property
     def content(self) -> Optional[str]:
@@ -709,6 +717,11 @@ class Paginator(discord.ui.View):
                 return Page(content=None, embeds=page)
             else:
                 raise TypeError("All list items must be embeds.")
+
+    async def page_action(self) -> None:
+        """Triggers the callback associated with the current page, if any."""
+        if self.get_page_content(self.pages[self.current_page]).callback:
+            await self.get_page_content(self.pages[self.current_page]).callback()
 
     async def send(
         self,
