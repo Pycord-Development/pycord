@@ -778,9 +778,9 @@ class SlashCommand(ApplicationCommand):
                         _data["user"] = _user_data
                     arg = Member(state=ctx.interaction._state, data=_data, guild=ctx.guild)
                 elif op.input_type is SlashCommandOptionType.mentionable:
-                    if (_data := resolved.get(f"users", {}).get(arg)) is not None:
+                    if (_data := resolved.get("users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
-                    elif (_data := resolved.get(f"roles", {}).get(arg)) is not None:
+                    elif (_data := resolved.get("roles", {}).get(arg)) is not None:
                         arg = Role(state=ctx.interaction._state, data=_data, guild=ctx.guild)
                     else:
                         arg = Object(id=int(arg))
