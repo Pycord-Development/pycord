@@ -742,12 +742,14 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
-            "name_localizations": self.name_localizations,
             "description": self.description,
-            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
@@ -943,7 +945,7 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        self.name = name
+        self.name = str(name)
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
@@ -961,6 +963,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
     @property
     def module(self) -> Optional[str]:
@@ -973,6 +977,10 @@ class SlashCommandGroup(ApplicationCommand):
             "options": [c.to_dict() for c in self.subcommands],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
