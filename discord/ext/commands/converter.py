@@ -74,7 +74,6 @@ __all__ = (
     "PartialEmojiConverter",
     "CategoryChannelConverter",
     "IDConverter",
-    "StoreChannelConverter",
     "ThreadConverter",
     "GuildChannelConverter",
     "GuildStickerConverter",
@@ -564,25 +563,6 @@ class CategoryChannelConverter(IDConverter[discord.CategoryChannel]):
         return GuildChannelConverter._resolve_channel(ctx, argument, "categories", discord.CategoryChannel)
 
 
-class StoreChannelConverter(IDConverter[discord.StoreChannel]):
-    """Converts to a :class:`~discord.StoreChannel`.
-
-    All lookups are via the local guild. If in a DM context, then the lookup
-    is done by the global cache.
-
-    The lookup strategy is as follows (in order):
-
-    1. Lookup by ID.
-    2. Lookup by mention.
-    3. Lookup by name.
-
-    .. versionadded:: 1.7
-    """
-
-    async def convert(self, ctx: Context, argument: str) -> discord.StoreChannel:
-        return GuildChannelConverter._resolve_channel(ctx, argument, "channels", discord.StoreChannel)
-
-
 class ThreadConverter(IDConverter[discord.Thread]):
     """Coverts to a :class:`~discord.Thread`.
 
@@ -1063,7 +1043,6 @@ CONVERTER_MAPPING: Dict[Type[Any], Any] = {
     discord.Emoji: EmojiConverter,
     discord.PartialEmoji: PartialEmojiConverter,
     discord.CategoryChannel: CategoryChannelConverter,
-    discord.StoreChannel: StoreChannelConverter,
     discord.Thread: ThreadConverter,
     discord.abc.GuildChannel: GuildChannelConverter,
     discord.GuildSticker: GuildStickerConverter,
