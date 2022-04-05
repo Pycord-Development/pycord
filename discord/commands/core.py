@@ -49,6 +49,9 @@ from typing import (
     get_type_hints,
 )
 
+from ..role import Role
+from ..object import Object
+from ..channel import _guild_channel_factory
 from ..enums import ChannelType, SlashCommandOptionType
 from ..errors import (
     ClientException,
@@ -836,12 +839,14 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
-            "name_localizations": self.name_localizations,
             "description": self.description,
-            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
@@ -855,29 +860,49 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            if SlashCommandOptionType.user.value <= op.input_type.value <= SlashCommandOptionType.role.value:
-                if ctx.guild is None and op.input_type.name == "user":
-                    _data = ctx.interaction.data["resolved"]["users"][arg]
-                    _data["id"] = int(arg)
-                    arg = User(state=ctx.interaction._state, data=_data)
+            if op.input_type in (
+                SlashCommandOptionType.user,
+                SlashCommandOptionType.role,
+                SlashCommandOptionType.channel,
+                SlashCommandOptionType.attachment,
+                SlashCommandOptionType.mentionable,
+            ):
+                resolved = ctx.interaction.data.get("resolved", {})
+                if (
+                        op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
+                        and (_data := resolved.get("members", {}).get(arg)) is not None):
+                    # The option type is a user, we resolved a member from the snowflake and assigned it to _data
+                    if (_user_data := resolved.get("users", {}).get(arg)) is not None:
+                        # We resolved the user from the user id
+                        _data["user"] = _user_data
+                    arg = Member(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                elif op.input_type is SlashCommandOptionType.mentionable:
+                    if (_data := resolved.get("users", {}).get(arg)) is not None:
+                        arg = User(state=ctx.interaction._state, data=_data)
+                    elif (_data := resolved.get("roles", {}).get(arg)) is not None:
+                        arg = Role(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                    else:
+                        arg = Object(id=int(arg))
+                elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
+                    obj_type = None
+                    kw = {}
+                    if op.input_type is SlashCommandOptionType.user:
+                        obj_type = User
+                    elif op.input_type is SlashCommandOptionType.role:
+                        obj_type = Role
+                        kw["guild"] = ctx.guild
+                    elif op.input_type is SlashCommandOptionType.channel:
+                        obj_type = _guild_channel_factory(_data["type"])
+                        kw["guild"] = ctx.guild
+                    elif op.input_type is SlashCommandOptionType.attachment:
+                        obj_type = Attachment
+                    arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
-                    name = "member" if op.input_type.name == "user" else op.input_type.name
-                    arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
-
-            elif op.input_type == SlashCommandOptionType.mentionable:
-                arg_id = int(arg)
-                try:
-                    arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                except NotFound:
-                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
+                    # We couldn't resolve the object, so we just return an empty object
+                    arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
-
-            elif op.input_type == SlashCommandOptionType.attachment:
-                _data = ctx.interaction.data["resolved"]["attachments"][arg]
-                _data["id"] = int(arg)
-                arg = Attachment(state=ctx.interaction._state, data=_data)
 
             kwargs[op._parameter_name] = arg
 
@@ -1017,7 +1042,7 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        self.name = name
+        self.name = str(name)
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
@@ -1035,6 +1060,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
         if self.permissions and self.default_permission:
             self.default_permission = False
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
     @property
     def module(self) -> Optional[str]:
@@ -1047,6 +1074,10 @@ class SlashCommandGroup(ApplicationCommand):
             "options": [c.to_dict() for c in self.subcommands],
             "default_permission": self.default_permission,
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
