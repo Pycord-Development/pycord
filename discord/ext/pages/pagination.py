@@ -92,16 +92,16 @@ class PaginatorButton(discord.ui.Button):
             self.paginator.current_page = 0
         elif self.button_type == "prev":
             if self.paginator.loop_pages and self.paginator.current_page == 0:
-                self.paginator.current_page = self.paginator.page_count
+                self.paginator.current_page = self.paginator.page_count - 1
             else:
                 self.paginator.current_page -= 1
         elif self.button_type == "next":
-            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count:
+            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count - 1:
                 self.paginator.current_page = 0
             else:
                 self.paginator.current_page += 1
         elif self.button_type == "last":
-            self.paginator.current_page = self.paginator.page_count
+            self.paginator.current_page = self.paginator.page_count - 1
         await self.paginator.goto_page(page_number=self.paginator.current_page)
 
 
@@ -268,7 +268,7 @@ class Paginator(discord.ui.View):
     current_page: :class:`int`
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
-        A zero-indexed value showing the total number of pages.
+        The total number of pages.
     buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
         A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
     user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
@@ -310,7 +310,7 @@ class Paginator(discord.ui.View):
                 List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
             ] = self.page_groups[0].pages
 
-        self.page_count = len(self.pages) - 1
+        self.page_count = len(self.pages)
         self.buttons = {}
         self.custom_buttons: List = custom_buttons
         self.show_disabled = show_disabled
@@ -385,7 +385,7 @@ class Paginator(discord.ui.View):
         self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
-        self.page_count = len(self.pages) - 1
+        self.page_count = len(self.pages)
         self.current_page = 0
         # Apply config changes, if specified
         self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
@@ -490,7 +490,7 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         self.current_page = page_number
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count}"
 
         page = self.pages[page_number]
         page = self.get_page_content(page)
@@ -561,7 +561,7 @@ class Paginator(discord.ui.View):
                 if button.label or button.emoji
                 else button.button_type.capitalize()
                 if button.button_type != "page_indicator"
-                else f"{self.current_page + 1}/{self.page_count + 1}",
+                else f"{self.current_page + 1}/{self.page_count}",
                 disabled=button.disabled,
                 custom_id=button.custom_id,
                 emoji=button.emoji,
@@ -595,18 +595,18 @@ class Paginator(discord.ui.View):
                 elif self.current_page >= 1:
                     button["hidden"] = False
             elif key == "last":
-                if self.current_page >= self.page_count - 1:
+                if self.current_page >= self.page_count - 2:
                     button["hidden"] = True
-                if self.current_page < self.page_count - 1:
+                if self.current_page < self.page_count - 2:
                     button["hidden"] = False
             elif key == "next":
-                if self.current_page == self.page_count:
+                if self.current_page == self.page_count - 1:
                     if not self.loop_pages:
                         button["hidden"] = True
                         button["object"].label = button["label"]
                     else:
                         button["object"].label = button["loop_label"]
-                elif self.current_page < self.page_count:
+                elif self.current_page < self.page_count - 1:
                     button["hidden"] = False
                     button["object"].label = button["label"]
             elif key == "prev":
@@ -621,7 +621,7 @@ class Paginator(discord.ui.View):
                     button["object"].label = button["label"]
         self.clear_items()
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count}"
         for key, button in self.buttons.items():
             if key != "page_indicator":
                 if button["hidden"]:
