@@ -315,7 +315,7 @@ class View:
 
         The default implementation of this returns ``True``.
 
-        If this returns ``False`` :meth:`on_check_failure` is called
+        If this returns ``False``, :meth:`on_check_failure` is called.
 
         .. note::
 
@@ -344,7 +344,8 @@ class View:
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
         A callback that is called when a :meth:`View.interaction_check` returns ``False``.
-        This is good to overwrite when you want a custom error message
+        This can be used to send a response when a check failure occurs.
+
         Parameters
         -----------
         interaction: :class:`~discord.Interaction`
