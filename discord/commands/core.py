@@ -602,6 +602,9 @@ class SlashCommand(ApplicationCommand):
 
         validate_chat_input_name(self.name)
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        if self.name_localizations:
+            for locale, string in self.name_localizations.items():
+                validate_chat_input_name(string, locale=locale)
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
@@ -609,6 +612,10 @@ class SlashCommand(ApplicationCommand):
         validate_chat_input_description(description)
         self.description: str = description
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
+        if self.description_localizations:
+            for locale, string in self.description_localizations.items():
+                validate_chat_input_description(string, locale=locale)
+
         self.attached_to_group: bool = False
 
         self.cog = None
@@ -1152,6 +1159,8 @@ class ContextMenuCommand(ApplicationCommand):
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    .. versionadded:: 2.0
+
     Attributes
     -----------
     name: :class:`str`
@@ -1180,8 +1189,9 @@ class ContextMenuCommand(ApplicationCommand):
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-
-        .. versionadded:: 2.0
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -1195,6 +1205,8 @@ class ContextMenuCommand(ApplicationCommand):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
+
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
 
         # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
@@ -1253,12 +1265,17 @@ class ContextMenuCommand(ApplicationCommand):
         return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
-        return {
+        as_dict = {
             "name": self.name,
             "description": self.description,
             "type": self.type,
             "default_permission": self.default_permission,
         }
+
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+
+        return as_dict
 
 
 class UserCommand(ContextMenuCommand):
@@ -1539,27 +1556,85 @@ def command(**kwargs):
 
 
 docs = "https://discord.com/developers/docs"
+valid_locales = [
+    "da",
+    "de",
+    "en-GB",
+    "en-US",
+    "es-ES",
+    "fr",
+    "hr",
+    "it",
+    "lt",
+    "hu",
+    "nl",
+    "no",
+    "pl",
+    "pt-BR",
+    "ro",
+    "fi",
+    "sv-SE",
+    "vi",
+    "tr",
+    "cs",
+    "el",
+    "bg",
+    "ru",
+    "uk",
+    "hi",
+    "th",
+    "zh-CN",
+    "ja",
+    "zh-TW",
+    "ko",
+]
 
 
 # Validation
-def validate_chat_input_name(name: Any):
+def validate_chat_input_name(name: Any, locale: str = None):
     # Must meet the regex ^[\w-]{1,32}$
+    print(locale)
+    if locale not in valid_locales and locale is not None:
+        raise ValidationError(
+            f"Locale {locale} is not a valid locale, in command names, "
+            f"see {docs}/reference#locales for list of supported locales."
+        )
     if not isinstance(name, str):
-        raise TypeError(f"Chat input command names and options must be of type str. Received {name}")
+        raise TypeError(
+            f"Chat input command names and options must be of type str."
+            f"Received {name}" + f" in locale {locale}" if locale else ""
+        )
     if not re.match(r"^[\w-]{1,32}$", name):
         raise ValidationError(
-            r'Chat input command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
-            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. Received "
-            f"{name}"
+             'Chat input command names and options must follow the regex '
+            r'"^[\w-]{1,32}$". For more information, see '
+            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
+            f"Received {name}" + f" in locale {locale}" if locale else ""
         )
     if not 1 <= len(name) <= 32:
-        raise ValidationError(f"Chat input command names and options must be 1-32 characters long. Received {name}")
+        raise ValidationError(
+             "Chat input command names and options must be 1-32 characters long. "
+            f"Received {name}" + f" in locale {locale}" if locale else ""
+        )
     if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
+        raise ValidationError(
+             "Chat input command names and options must be lowercase. "
+            f"Received {name}" + f" in locale {locale}" if locale else ""
+        )
 
 
-def validate_chat_input_description(description: Any):
+def validate_chat_input_description(description: Any, locale: str = None):
+    if locale not in valid_locales and locale is not None:
+        raise ValidationError(
+            f"Locale {locale} is not a valid locale, in command descriptions, "
+            f"see {docs}/reference#locales for list of supported locales."
+        )
     if not isinstance(description, str):
-        raise TypeError(f"Command description must be of type str. Received {description}")
+        raise TypeError(
+            f"Command description must be of type str. Received {description} " + f" in locale {locale}" if locale else ""
+        )
     if not 1 <= len(description) <= 100:
-        raise ValidationError(f"Command description must be 1-100 characters long. Received {description}")
+        raise ValidationError(
+             "Command description must be 1-100 characters long. "
+            f"Received {description}" + f" in locale {locale}" if locale else ""
+        )
