@@ -1593,7 +1593,6 @@ valid_locales = [
 # Validation
 def validate_chat_input_name(name: Any, locale: str = None):
     # Must meet the regex ^[\w-]{1,32}$
-    print(locale)
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
             f"Locale {locale} is not a valid locale, in command names, "
