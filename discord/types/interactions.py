@@ -77,7 +77,7 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
 
 
 class _ApplicationCommandOptionChoiceOptional(TypedDict, total=False):
-    name_localization: Dict[str, str]
+    name_localizations: Dict[str, str]
 
 
 class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
