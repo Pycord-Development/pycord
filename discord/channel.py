@@ -498,7 +498,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
             around=around,
             oldest_first=oldest_first,
             bulk=bulk,
-            reason=reason
+            reason=reason,
         )
 
     async def webhooks(self) -> List[Webhook]:
@@ -1115,7 +1115,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             around=around,
             oldest_first=oldest_first,
             bulk=bulk,
-            reason=reason
+            reason=reason,
         )
 
     async def webhooks(self) -> List[Webhook]:

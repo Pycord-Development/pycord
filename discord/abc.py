@@ -120,7 +120,7 @@ async def _purge_messages_helper(
         around: Optional[SnowflakeTime] = None,
         oldest_first: Optional[bool] = False,
         bulk: bool = True,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
 ) -> List[Message]:
     if check is MISSING:
         check = lambda m: True
