@@ -52,7 +52,7 @@ from typing import (
 from ..role import Role
 from ..object import Object
 from ..channel import _guild_channel_factory
-from ..enums import ChannelType, SlashCommandOptionType
+from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
     ClientException,
     ValidationError,
@@ -1418,7 +1418,18 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
+            author_id = int(message["author"]["id"])
+            self_or_system_message: bool = (
+                ctx.bot.user.id == author_id
+                or try_enum(MessageType, message["type"]) not in (
+                    MessageType.default,
+                    MessageType.reply,
+                    MessageType.application_command,
+                    MessageType.thread_starter_message,
+                )
+            )
+            user_id = ctx.author.id if self_or_system_message else author_id
+            data = await ctx.interaction._state.http.start_private_message(user_id)
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
