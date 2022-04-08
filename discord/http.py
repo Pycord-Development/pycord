@@ -251,8 +251,10 @@ class HTTPClient:
             if reason:
                 headers["X-Audit-Log-Reason"] = _uriquote(reason, safe="/ ")
 
-        kwargs["headers"] = headers
+        if locale := kwargs.pop('locale', None):
+            headers["X-Discord-Locale"] = locale
 
+        kwargs["headers"] = headers
         # Proxy support
         if self.proxy is not None:
             kwargs["proxy"] = self.proxy
@@ -1908,8 +1910,12 @@ class HTTPClient:
             "channel_id",
             "topic",
             "privacy_level",
+            "send_start_notification",
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        if payload.get("send_start_notification") is not None:
+            payload["send_start_notification"] = int(payload["send_start_notification"])
 
         return self.request(Route("POST", "/stage-instances"), json=payload, reason=reason)
 
@@ -2060,17 +2066,25 @@ class HTTPClient:
 
     # Application commands (global)
 
-    def get_global_commands(self, application_id: Snowflake) -> Response[List[interactions.ApplicationCommand]]:
+    def get_global_commands(
+        self, application_id: Snowflake, *, with_localizations: bool = True, locale: str = None,
+    ) -> Response[List[interactions.ApplicationCommand]]:
+        params = {
+            "with_localizations": int(with_localizations)
+        }
+
         return self.request(
             Route(
                 "GET",
                 "/applications/{application_id}/commands",
                 application_id=application_id,
-            )
+            ),
+            params=params,
+            locale=locale,
         )
 
     def get_global_command(
-        self, application_id: Snowflake, command_id: Snowflake
+        self, application_id: Snowflake, command_id: Snowflake, locale: str = None,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             "GET",
@@ -2078,7 +2092,7 @@ class HTTPClient:
             application_id=application_id,
             command_id=command_id,
         )
-        return self.request(r)
+        return self.request(r, locale=locale)
 
     def upsert_global_command(self, application_id: Snowflake, payload) -> Response[interactions.ApplicationCommand]:
         r = Route(
