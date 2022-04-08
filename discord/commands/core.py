@@ -52,8 +52,7 @@ from typing import (
 from ..role import Role
 from ..object import Object
 from ..channel import _guild_channel_factory
-from ..enums import ChannelType, SlashCommandOptionType
-
+from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
     ClientException,
     ValidationError,
@@ -152,6 +151,7 @@ class _BaseCommand:
 
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
+    __original_kwargs__: Dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
@@ -919,6 +919,7 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+    __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -959,6 +960,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
+        self.attached_to_group: bool = False
         self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
@@ -995,7 +997,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def command(self, **kwargs) -> SlashCommand:
+    def command(self, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> SlashCommand:
             command = SlashCommand(func, parent=self, **kwargs)
             self.subcommands.append(command)
@@ -1119,9 +1121,8 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value
-                for param, value in self.__original_kwargs__.items()
-                if param not in ("name", "description")
+                param: value for param, value in self.__original_kwargs__.items()
+                if param not in ('name', 'description')
             },
         )
         return self._ensure_assignment_on_copy(ret)
@@ -1417,7 +1418,18 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
+            author_id = int(message["author"]["id"])
+            self_or_system_message: bool = (
+                ctx.bot.user.id == author_id
+                or try_enum(MessageType, message["type"]) not in (
+                    MessageType.default,
+                    MessageType.reply,
+                    MessageType.application_command,
+                    MessageType.thread_starter_message,
+                )
+            )
+            user_id = ctx.author.id if self_or_system_message else author_id
+            data = await ctx.interaction._state.http.start_private_message(user_id)
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
@@ -1593,7 +1605,7 @@ valid_locales = [
 
 
 # Validation
-def validate_chat_input_name(name: Any, locale: str = None):
+def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[\w-]{1,32}$
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
@@ -1624,7 +1636,7 @@ def validate_chat_input_name(name: Any, locale: str = None):
         )
 
 
-def validate_chat_input_description(description: Any, locale: str = None):
+def validate_chat_input_description(description: Any, locale: Optional[str] = None):
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
             f"Locale {locale} is not a valid locale, in command descriptions, "

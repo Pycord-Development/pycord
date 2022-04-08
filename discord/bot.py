@@ -287,7 +287,7 @@ class ApplicationCommandMixin(ABC):
                             ]:
                                 # We have a difference
                                 return True
-                    elif getattr(cmd, check) != match.get(check):
+                    elif getattr(cmd, check, None) != match.get(check):
                         # We have a difference
                         if check == "default_permission" and getattr(cmd, check) is True and match.get(check) is None:
                             # This is a special case
