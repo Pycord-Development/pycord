@@ -1758,7 +1758,7 @@ class PartialMessage(Hashable):
             ChannelType.public_thread,
             ChannelType.private_thread,
         ):
-            raise TypeError(f"Expected TextChannel, DMChannel or Thread not {type(channel)!r}")
+            raise TypeError(f"Expected TextChannel, VoiceChannel, DMChannel or Thread not {type(channel)!r}")
 
         self.channel: PartialMessageableChannel = channel
         self._state: ConnectionState = channel._state
