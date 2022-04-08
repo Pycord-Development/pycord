@@ -1352,8 +1352,6 @@ class EmbeddedHelpCommand(HelpCommand):
     It extends it by formatting prefixed command help data into a more attractive embedded form.
     """
 
-    def __init__(self):
-        super().__init__()
     
     async def send_bot_help(self, mapping):
         ctx = self.context
