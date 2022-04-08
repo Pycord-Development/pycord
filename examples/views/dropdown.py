@@ -8,8 +8,9 @@ from discord.ext import commands
 # That the user can choose. The callback function
 # Of this class is called when the user changes their choice
 class Dropdown(discord.ui.Select):
-    def __init__(self):
-
+    def __init__(self, bot):
+        self.bot = bot # For example, you can use self.bot to retrieve a user or perform other functions in the callback.
+        # Alternatively you can use Interaction.client, so you don't need to pass the bot instance.
         # Set the options that will be presented inside the dropdown
         options = [
             discord.SelectOption(label="Red", description="Your favourite colour is red", emoji="🟥"),
@@ -36,11 +37,12 @@ class Dropdown(discord.ui.Select):
 
 
 class DropdownView(discord.ui.View):
-    def __init__(self):
+    def __init__(self, bot):
+        self.bot = bot
         super().__init__()
 
         # Adds the dropdown to our view object.
-        self.add_item(Dropdown())
+        self.add_item(Dropdown(self.bot))
 
 
 class Bot(commands.Bot):
@@ -60,7 +62,7 @@ async def colour(ctx):
     """Sends a message with our dropdown containing colours"""
 
     # Create the view containing our dropdown
-    view = DropdownView()
+    view = DropdownView(bot)
 
     # Sending a message containing our view
     await ctx.send("Pick your favourite colour:", view=view)

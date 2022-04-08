@@ -148,7 +148,7 @@ pygments_style = "friendly"
 
 # Nitpicky mode options
 nitpick_ignore_files = [
-    "migrating",
+    "migrating_to_v1",
     "whats_new",
 ]
 
@@ -174,6 +174,7 @@ resource_links = {
     "issues": "https://github.com/Pycord-Development/pycord/issues",
     "discussions": "https://github.com/Pycord-Development/pycord/discussions",
     "examples": f"https://github.com/Pycord-Development/pycord/tree/{branch}/examples",
+    "guide": "https://guide.pycord.dev/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme

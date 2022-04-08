@@ -186,7 +186,6 @@ class ChannelType(Enum):
     group = 3
     category = 4
     news = 5
-    store = 6
     news_thread = 10
     public_thread = 11
     private_thread = 12
@@ -615,7 +614,7 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
-    # public = 1 Deprecated
+    # public = 1 (deprecated)
     closed = 2
     guild_only = 2
 

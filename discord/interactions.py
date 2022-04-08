@@ -55,7 +55,6 @@ if TYPE_CHECKING:
         CategoryChannel,
         PartialMessageable,
         StageChannel,
-        StoreChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -77,7 +76,6 @@ if TYPE_CHECKING:
         StageChannel,
         TextChannel,
         CategoryChannel,
-        StoreChannel,
         Thread,
         PartialMessageable,
     ]
@@ -677,7 +675,7 @@ class InteractionResponse:
         """|coro|
 
         Responds to this interaction by editing the original message of
-        a component interaction.
+        a component or modal interaction.
 
         Parameters
         -----------
@@ -715,7 +713,7 @@ class InteractionResponse:
         msg = parent.message
         state = parent._state
         message_id = msg.id if msg else None
-        if parent.type is not InteractionType.component:
+        if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
         payload = {}
@@ -792,7 +790,7 @@ class InteractionResponse:
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal):
+    async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
@@ -823,6 +821,7 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return self._parent
 
 
 class _InteractionMessageState:

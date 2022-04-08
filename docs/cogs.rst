@@ -11,7 +11,7 @@ There comes a point in your bot's development when you want to organize a collec
 The gist:
 
 - Each cog is a Python class that subclasses :class:`.Cog`.
-- Every command is marked with the :func:`.command` decorator or the corresponding shortcut command decorator.
+- Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator.
 - Every listener is marked with the :meth:`.Cog.listener` decorator.
 - Cogs are then registered with the :meth:`.Bot.add_cog` call.
 - Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call.

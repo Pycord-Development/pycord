@@ -4,6 +4,7 @@ import asyncio
 import os
 import sys
 from itertools import groupby
+import traceback
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from .input_text import InputText
@@ -24,12 +25,14 @@ class Modal:
 
     This object must be inherited to create a UI within Discord.
 
+    .. versionadded:: 2.0
+
     Parameters
     ----------
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`] = None
+    custom_id: Optional[:class:`str`]
         The ID of the modal dialog that gets received during an interaction.
     """
 
@@ -46,6 +49,7 @@ class Modal:
 
     async def callback(self, interaction: Interaction):
         """|coro|
+        
         The coroutine that is called when the modal dialog is submitted.
         Should be overridden to handle the values submitted by the user.
 
@@ -123,6 +127,23 @@ class Modal:
             "components": self.to_components(),
         }
 
+    async def on_error(self, error: Exception, interaction: Interaction) -> None:
+        """|coro|
+
+        A callback that is called when the modal's callback fails with an error.
+
+        The default implementation prints the traceback to stderr.
+
+        Parameters
+        -----------
+        error: :class:`Exception`
+            The exception that was raised.
+        interaction: :class:`~discord.Interaction`
+            The interaction that led to the failure.
+        """
+        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
+
 
 class _ModalWeights:
     __slots__ = ("weights",)
@@ -182,15 +203,18 @@ class ModalStore:
         if value is None:
             return
 
-        components = [
-            component
-            for parent_component in interaction.data["components"]
-            for component in parent_component["components"]
-        ]
-        for component in components:
-            for child in value.children:
-                if child.custom_id == component["custom_id"]:  # type: ignore
-                    child.refresh_state(component)
-                    break
-        await value.callback(interaction)
-        self.remove_modal(value, user_id)
+        try:
+            components = [
+                component
+                for parent_component in interaction.data["components"]
+                for component in parent_component["components"]
+            ]
+            for component in components:
+                for child in value.children:
+                    if child.custom_id == component["custom_id"]:  # type: ignore
+                        child.refresh_state(component)
+                        break
+            await value.callback(interaction)
+            self.remove_modal(value, user_id)
+        except Exception as e:
+            return await value.on_error(e, interaction)
