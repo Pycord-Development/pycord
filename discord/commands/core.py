@@ -151,6 +151,7 @@ class _BaseCommand:
 
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
+    __original_kwargs__: Dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
@@ -918,6 +919,7 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+    __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -958,6 +960,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
+        self.attached_to_group: bool = False
         self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
@@ -994,7 +997,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def command(self, **kwargs) -> SlashCommand:
+    def command(self, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> SlashCommand:
             command = SlashCommand(func, parent=self, **kwargs)
             self.subcommands.append(command)
@@ -1591,7 +1594,7 @@ valid_locales = [
 
 
 # Validation
-def validate_chat_input_name(name: Any, locale: str = None):
+def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[\w-]{1,32}$
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
@@ -1622,7 +1625,7 @@ def validate_chat_input_name(name: Any, locale: str = None):
         )
 
 
-def validate_chat_input_description(description: Any, locale: str = None):
+def validate_chat_input_description(description: Any, locale: Optional[str] = None):
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
             f"Locale {locale} is not a valid locale, in command descriptions, "
