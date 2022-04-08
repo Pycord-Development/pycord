@@ -358,7 +358,7 @@ class Paginator(discord.ui.View):
                 List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
             ] = self.page_groups[0].pages
 
-        self.page_count = max(len(self.pages), 0)
+        self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: List = custom_buttons
         self.show_disabled = show_disabled
@@ -438,7 +438,7 @@ class Paginator(discord.ui.View):
         self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
-        self.page_count = len(self.pages) - 1
+        self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = 0
         # Apply config changes, if specified
         self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
