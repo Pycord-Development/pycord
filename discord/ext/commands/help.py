@@ -39,11 +39,11 @@ if TYPE_CHECKING:
     from .context import Context
 
 __all__ = (
-    'Paginator',
-    'HelpCommand',
-    'DefaultHelpCommand',
-    'MinimalHelpCommand',
-    'EmbeddedHelpCommand',
+    "Paginator",
+    "HelpCommand",
+    "DefaultHelpCommand",
+    "MinimalHelpCommand",
+    "EmbeddedHelpCommand",
 )
 
 # help -> shows info of bot on top/bottom and lists subcommands
