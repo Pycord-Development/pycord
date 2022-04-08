@@ -1418,9 +1418,9 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            author_id = message["author"]["id"]
+            author_id = int(message["author"]["id"])
             self_or_system_message: bool = (
-                ctx.bot.user.id == int(author_id)
+                ctx.bot.user.id == author_id
                 or try_enum(MessageType, message["type"]) not in (
                     MessageType.default,
                     MessageType.reply,
@@ -1428,7 +1428,7 @@ class MessageCommand(ContextMenuCommand):
                     MessageType.thread_starter_message,
                 )
             )
-            user_id = ctx.author.id if self_or_system_message else int(author_id)
+            user_id = ctx.author.id if self_or_system_message else author_id
             data = await ctx.interaction._state.http.start_private_message(user_id)
             channel = ctx.interaction._state.add_dm_channel(data)
 
