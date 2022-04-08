@@ -16,9 +16,11 @@ if TYPE_CHECKING:
 class InputText:
     """Represents a UI text input field.
 
+    .. versionadded:: 2.0
+
     Parameters
     ----------
-    style: :class:`discord.InputTextStyle`
+    style: :class:`~discord.InputTextStyle`
         The style of the input text field.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
@@ -40,7 +42,7 @@ class InputText:
         Pre-fills the input text field with this value.
         Must be 4000 characters or fewer.
     row: Optional[:class:`int`]
-        The relative row this button belongs to. A Discord component can only have 5
+        The relative row this input text field belongs to. A modal dialog can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
@@ -86,7 +88,7 @@ class InputText:
             required=required,
             value=value,
         )
-        self._input_value = None
+        self._input_value = False
         self.row = row
         self._rendered_row: Optional[int] = None
 
@@ -96,7 +98,7 @@ class InputText:
 
     @property
     def style(self) -> InputTextStyle:
-        """:class:`discord.InputTextStyle`: The style of the input text field."""
+        """:class:`~discord.InputTextStyle`: The style of the input text field."""
         return self._underlying.style
 
     @style.setter
@@ -182,7 +184,10 @@ class InputText:
     @property
     def value(self) -> Optional[str]:
         """Optional[:class:`str`]: The value entered in the text field."""
-        return self._input_value or self._underlying.value
+        if self._input_value is not False:
+            # only False on init, otherwise the value was either set or cleared
+            return self._input_value  # type: ignore
+        return self._underlying.value
 
     @value.setter
     def value(self, value: Optional[str]):

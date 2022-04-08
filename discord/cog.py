@@ -126,17 +126,25 @@ class CogMeta(type):
                 @commands.command(hidden=False)
                 async def bar(self, ctx):
                     pass # hidden -> False
+
+    guild_ids: Optional[List[:class:`int`]]
+        A shortcut to command_attrs, what guild_ids should all application commands have
+        in the cog. You can override this by setting guild_ids per command.
+
+        .. versionadded:: 2.0
     """
 
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
     __cog_commands__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
+    __cog_guild_ids__: List[int]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
         attrs["__cog_name__"] = kwargs.pop("name", name)
         attrs["__cog_settings__"] = kwargs.pop("command_attrs", {})
+        attrs["__cog_guild_ids__"] = kwargs.pop("guild_ids", [])
 
         description = kwargs.pop("description", None)
         if description is None:
@@ -213,7 +221,9 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if not isinstance(command, ApplicationCommand):
+            if isinstance(command, ApplicationCommand) and command.guild_ids is None and len(new_cls.__cog_guild_ids__) != 0:
+                command.guild_ids = new_cls.__cog_guild_ids__
+            if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
                 if parent is not None:
@@ -254,6 +264,7 @@ class Cog(metaclass=CogMeta):
     __cog_settings__: ClassVar[Dict[str, Any]]
     __cog_commands__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
+    __cog_guild_ids__: ClassVar[List[int]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
@@ -420,7 +431,7 @@ class Cog(metaclass=CogMeta):
         -----------
         ctx: :class:`.Context`
             The invocation context where the error happened.
-        error: :class:`CommandError`
+        error: :class:`ApplicationCommandError`
             The error that happened.
         """
         pass
@@ -549,9 +560,9 @@ class CogMixin:
         -------
         TypeError
             The cog does not inherit from :class:`.Cog`.
-        CommandError
+        ApplicationCommandError
             An error happened during loading.
-        .ClientException
+        ClientException
             A cog with the same name is already loaded.
         """
 

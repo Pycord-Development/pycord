@@ -1157,7 +1157,7 @@ class Message(Hashable):
         if self.type is MessageType.guild_invite_reminder:
             return "Wondering who to invite?\nStart by inviting anyone who can help you build the server!"
 
-    async def delete(self, *, delay: Optional[float] = None) -> None:
+    async def delete(self, *, delay: Optional[float] = None, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes the message.
@@ -1174,6 +1174,8 @@ class Message(Hashable):
         delay: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message. If the deletion fails then it is silently ignored.
+        reason: Optional[:class:`str`]
+            The reason for deleting the message. Shows up on the audit log.
 
         Raises
         ------
@@ -1184,7 +1186,7 @@ class Message(Hashable):
         HTTPException
             Deleting the message failed.
         """
-        del_func = self._state.http.delete_message(self.channel.id, self.id)
+        del_func = self._state.http.delete_message(self.channel.id, self.id, reason=reason)
         if delay is not None:
             utils.delay_task(delay, del_func)
         else:
@@ -1756,7 +1758,7 @@ class PartialMessage(Hashable):
             ChannelType.public_thread,
             ChannelType.private_thread,
         ):
-            raise TypeError(f"Expected TextChannel, DMChannel or Thread not {type(channel)!r}")
+            raise TypeError(f"Expected TextChannel, VoiceChannel, DMChannel or Thread not {type(channel)!r}")
 
         self.channel: PartialMessageableChannel = channel
         self._state: ConnectionState = channel._state
