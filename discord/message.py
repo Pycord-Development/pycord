@@ -1157,7 +1157,7 @@ class Message(Hashable):
         if self.type is MessageType.guild_invite_reminder:
             return "Wondering who to invite?\nStart by inviting anyone who can help you build the server!"
 
-    async def delete(self, *, delay: Optional[float] = None) -> None:
+    async def delete(self, *, delay: Optional[float] = None, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes the message.
@@ -1174,6 +1174,8 @@ class Message(Hashable):
         delay: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message. If the deletion fails then it is silently ignored.
+        reason: Optional[:class:`str`]
+            The reason for deleting the message. Shows up on the audit log.
 
         Raises
         ------
@@ -1184,7 +1186,7 @@ class Message(Hashable):
         HTTPException
             Deleting the message failed.
         """
-        del_func = self._state.http.delete_message(self.channel.id, self.id)
+        del_func = self._state.http.delete_message(self.channel.id, self.id, reason=reason)
         if delay is not None:
             utils.delay_task(delay, del_func)
         else:
@@ -1756,7 +1758,7 @@ class PartialMessage(Hashable):
             ChannelType.public_thread,
             ChannelType.private_thread,
         ):
-            raise TypeError(f"Expected TextChannel, DMChannel or Thread not {type(channel)!r}")
+            raise TypeError(f"Expected TextChannel, VoiceChannel, DMChannel or Thread not {type(channel)!r}")
 
         self.channel: PartialMessageableChannel = channel
         self._state: ConnectionState = channel._state
@@ -1812,8 +1814,6 @@ class PartialMessage(Hashable):
 
         Edits the message.
 
-        The content must be able to be transformed into a string via ``str(content)``.
-
         .. versionchanged:: 1.7
             :class:`discord.Message` is returned instead of ``None`` if an edit took place.
 
@@ -1822,9 +1822,13 @@ class PartialMessage(Hashable):
         content: Optional[:class:`str`]
             The new content to replace the message with.
             Could be ``None`` to remove the content.
-        embed: Optional[:class:`Embed`]
+        embed: Optional[:class:`~discord.Embed`]
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
+        embeds: Optional[List[:class:`~discord.Embed`]]
+            A list of embeds to upload. Must be a maximum of 10.
+
+            .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1863,53 +1867,43 @@ class PartialMessage(Hashable):
             The message that was edited.
         """
 
-        try:
-            content = fields["content"]
-        except KeyError:
-            pass
-        else:
-            if content is not None:
-                fields["content"] = str(content)
+        content = fields.pop("content", MISSING)
+        if content is not MISSING:
+            fields["content"] = str(content)
 
-        try:
-            embed = fields["embed"]
-        except KeyError:
-            pass
-        else:
-            if embed is not None:
-                fields["embed"] = embed.to_dict()
+        embed = fields.pop("embed", MISSING)
+        embeds = fields.pop("embeds", MISSING)
 
-        try:
-            suppress: bool = fields.pop("suppress")
-        except KeyError:
-            pass
-        else:
-            flags = MessageFlags._from_value(0)
-            flags.suppress_embeds = suppress
-            fields["flags"] = flags.value
+        if embed is not MISSING and embeds is not MISSING:
+            raise InvalidArgument("Cannot pass both embed and embeds parameters.")
+
+        if embed is not MISSING:
+            fields["embeds"] = [embed.to_dict()]
+
+        if embeds is not MISSING:
+            fields["embeds"] = [embed.to_dict() for embed in embeds]
+
+        suppress = fields.pop("suppress", False)
+        flags = MessageFlags._from_value(0)
+        flags.suppress_embeds = suppress
+        fields["flags"] = flags.value
 
         delete_after = fields.pop("delete_after", None)
 
-        try:
-            allowed_mentions = fields.pop("allowed_mentions")
-        except KeyError:
-            pass
+        allowed_mentions = fields.get("allowed_mentions", MISSING)
+        if allowed_mentions is not MISSING:
+            if self._state.allowed_mentions is not None:
+                allowed_mentions = self._state.allowed_mentions.merge(allowed_mentions).to_dict()
+            else:
+                allowed_mentions = allowed_mentions.to_dict()
+            fields["allowed_mentions"] = allowed_mentions
         else:
-            if allowed_mentions is not None:
-                if self._state.allowed_mentions is not None:
-                    allowed_mentions = self._state.allowed_mentions.merge(allowed_mentions).to_dict()
-                else:
-                    allowed_mentions = allowed_mentions.to_dict()
-                fields["allowed_mentions"] = allowed_mentions
+            fields["allowed_mentions"] = self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
 
-        try:
-            view = fields.pop("view")
-        except KeyError:
-            # To check for the view afterwards
-            view = None
-        else:
-            self._state.prevent_view_updates_for(self.id)
-            fields["components"] = view.to_components() if view else []
+        view = fields.pop("view", None)
+        self._state.prevent_view_updates_for(self.id)
+        fields["components"] = view.to_components() if view else []
+
         if fields:
             data = await self._state.http.edit_message(self.channel.id, self.id, **fields)
 

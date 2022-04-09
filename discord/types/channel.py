@@ -39,7 +39,7 @@ class PermissionOverwrite(TypedDict):
     deny: str
 
 
-ChannelType = Literal[0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13]
+ChannelType = Literal[0, 1, 2, 3, 4, 5, 10, 11, 12, 13]
 
 
 class _BaseChannel(TypedDict):
@@ -93,10 +93,6 @@ class CategoryChannel(_BaseGuildChannel):
     type: Literal[4]
 
 
-class StoreChannel(_BaseGuildChannel):
-    type: Literal[6]
-
-
 class _StageChannelOptional(TypedDict, total=False):
     rtc_region: Optional[str]
     topic: str
@@ -134,7 +130,6 @@ GuildChannel = Union[
     NewsChannel,
     VoiceChannel,
     CategoryChannel,
-    StoreChannel,
     StageChannel,
     ThreadChannel,
 ]
