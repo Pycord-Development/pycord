@@ -319,7 +319,7 @@ class Embed:
     def __len__(self) -> int:
         total = len(self.title) + len(self.description)
         for field in getattr(self, "_fields", []):
-            total += len(field["name"]) + len(field["value"])
+            total += len(field.name) + len(field.value)
 
         try:
             footer_text = self._footer["text"]
@@ -781,7 +781,14 @@ class Embed:
         """Converts this embed object into a dict."""
 
         # add in the raw data into the dict
-        result = {key[1:]: getattr(self, key) for key in self.__slots__ if key[0] == "_" and hasattr(self, key)}
+        result = {
+            key[1:]: getattr(self, key)
+            for key in self.__slots__
+            if key[0] == "_" and key != "_fields" and hasattr(self, key)
+        }
+
+        # add in the fields
+        result["fields"] = [field.to_dict() for field in self._fields]
 
         # deal with basic convenience wrappers
 
