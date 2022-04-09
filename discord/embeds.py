@@ -156,6 +156,7 @@ class EmbedField:
         return self
 
     def to_dict(self) -> Dict[str, Union[str, bool]]:
+        """Converts this EmbedField object into a dict."""
         return {
             "name": self.name,
             "value": self.value,
