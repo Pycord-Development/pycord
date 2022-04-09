@@ -222,22 +222,13 @@ class ApplicationContext(discord.abc.Messageable):
 
     async def respond(self) -> Union[Interaction, WebhookMessage]:
         """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
-        or a followup response depending if the interaction has been responded to yet or not."""
-
-        # This technically can still be effected by the race condition. Solving that would include a breaking change
-        # But now it will raise InteractionResponded not the unexpected HTTP exception
-        # So we return a wrapper that retires when that exception got raised
-
-        async def wrapper(*args, **kwargs):
-            try:
-                if not self.interaction.response.is_done():
-                    return await self.interaction.response.send_message(*args, **kwargs)  # self.response
-                else:
-                    return await self.followup.send(*args, **kwargs)  # self.send_followup
-            except discord.errors.InteractionResponded:
-                return await self.followup.send(*args, **kwargs)
-
-        return wrapper
+        try:
+            if not self.interaction.response.is_done():
+                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+            else:
+                return await self.followup.send(*args, **kwargs)  # self.send_followup
+        except discord.errors.InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
 
     @property
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
