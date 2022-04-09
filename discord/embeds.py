@@ -91,11 +91,6 @@ if TYPE_CHECKING:
         text: MaybeEmpty[str]
         icon_url: MaybeEmpty[str]
 
-    class _EmbedFieldProxy(Protocol):
-        name: MaybeEmpty[str]
-        value: MaybeEmpty[str]
-        inline: bool
-
     class _EmbedMediaProxy(Protocol):
         url: MaybeEmpty[str]
         proxy_url: MaybeEmpty[str]
@@ -784,7 +779,7 @@ class Embed:
         result = {
             key[1:]: getattr(self, key)
             for key in self.__slots__
-            if key[0] == "_" and key != "_fields" and hasattr(self, key)
+            if key != "_fields" and key[0] == "_" and hasattr(self, key)
         }
 
         # add in the fields
@@ -811,7 +806,7 @@ class Embed:
                 else:
                     result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
 
-        # add in the non raw attribute ones
+        # add in the non-raw attribute ones
         if self.type:
             result["type"] = self.type
 
