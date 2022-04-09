@@ -43,7 +43,10 @@ from typing import (
 from . import utils
 from .colour import Colour
 
-__all__ = ("Embed",)
+__all__ = (
+    "Embed",
+    "EmbedField",
+)
 
 
 class _EmptyEmbed:
