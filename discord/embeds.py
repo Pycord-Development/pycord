@@ -690,6 +690,19 @@ class Embed:
         for field in value:
             self.add_field(name=field.name, value=field.value, inline=field.inline)
 
+    def append_field(self, field: EmbedField) -> None:
+        """Appends an :class:`EmbedField` object to the embed.
+
+        Parameters
+        ----------
+        field: :class:`EmbedField`
+            The field to add.
+        """
+        if not isinstance(field, EmbedField):
+            raise TypeError("Expected an EmbedField object.")
+
+        self._fields.append(field)
+
     def add_field(self: E, *, name: str, value: str, inline: bool = True) -> E:
         """Adds a field to the embed object.
 
@@ -705,10 +718,7 @@ class Embed:
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
-
-        field = EmbedField(name=str(name), value=str(value), inline=inline)
-
-        self._fields.append(field)
+        self._fields.append(EmbedField(name=str(name), value=str(value), inline=inline))
 
         return self
 
