@@ -131,6 +131,24 @@ class EmbedField:
         self.value = value
         self.inline = inline
 
+    @classmethod
+    def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
+        """Converts a :class:`dict` to a :class:`EmbedField` provided it is in the
+        format that Discord expects it to be in.
+
+        You can find out about this format in the `official Discord documentation`__.
+
+        .. _DiscordDocs: https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
+
+        __ DiscordDocs_
+
+        Parameters
+        -----------
+        data: :class:`dict`
+            The dictionary to convert into an EmbedField object.
+        """
+        return cls(name=data["name"], value=data["value"], inline=data.get("inline", False))
+
     def to_dict(self) -> Dict[str, Union[str, bool]]:
         return {
             "name": self.name,
@@ -298,12 +316,17 @@ class Embed:
             "image",
             "footer",
         ):
-            try:
-                value = data[attr]
-            except KeyError:
-                continue
+            if attr == "fields":
+                value = data.get(attr, [])
+                if value:
+                    self._fields = [EmbedField.from_dict(d) for d in value]
             else:
-                setattr(self, f"_{attr}", value)
+                try:
+                    value = data[attr]
+                except KeyError:
+                    continue
+                else:
+                    setattr(self, f"_{attr}", value)
 
         return self
 
