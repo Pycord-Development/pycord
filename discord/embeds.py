@@ -138,9 +138,9 @@ class EmbedField:
 
         You can find out about this format in the `official Discord documentation`__.
 
-        .. _DiscordDocs: https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
+        .. _DiscordDocsEF: https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
 
-        __ DiscordDocs_
+        __ DiscordDocsEF_
 
         Parameters
         -----------
