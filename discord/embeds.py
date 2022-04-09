@@ -246,9 +246,6 @@ class Embed:
         if timestamp:
             self.timestamp = timestamp
         self._fields: List[EmbedField] = fields or []
-        if self._fields:
-            for field in self._fields:
-                self.add_field(name=field.name, value=field.value, inline=field.inline)
 
     @classmethod
     def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
