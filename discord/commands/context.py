@@ -220,9 +220,8 @@ class ApplicationContext(discord.abc.Messageable):
         """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
-    @property
-    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
-        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
+    async def respond(self) -> Union[Interaction, WebhookMessage]:
+        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
         or a followup response depending if the interaction has been responded to yet or not."""
 
         # This technically can still be effected by the race condition. Solving that would include a breaking change
