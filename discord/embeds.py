@@ -246,8 +246,8 @@ class Embed:
         if timestamp:
             self.timestamp = timestamp
         self._fields: List[EmbedField] = fields or []
-        if fields:
-            for field in fields:
+        if self._fields:
+            for field in self._fields:
                 self.add_field(name=field.name, value=field.value, inline=field.inline)
 
     @classmethod
@@ -669,7 +669,7 @@ class Embed:
         for field in value:
             self.add_field(name=field.name, value=field.value, inline=field.inline)
 
-    def add_field(self: E, *, name: Any, value: Any, inline: bool = True) -> E:
+    def add_field(self: E, *, name: str, value: str, inline: bool = True) -> E:
         """Adds a field to the embed object.
 
         This function returns the class instance to allow for fluent-style
@@ -687,10 +687,7 @@ class Embed:
 
         field = EmbedField(name=str(name), value=str(value), inline=inline)
 
-        try:
-            self._fields.append(field)
-        except AttributeError:
-            self._fields = [field]
+        self._fields.append(field)
 
         return self
 
@@ -716,10 +713,7 @@ class Embed:
 
         field = EmbedField(name=str(name), value=str(value), inline=inline)
 
-        try:
-            self._fields.insert(index, field)
-        except AttributeError:
-            self._fields = [field]
+        self._fields.insert(index, field)
 
         return self
 
@@ -748,7 +742,7 @@ class Embed:
         """
         try:
             del self._fields[index]
-        except (AttributeError, IndexError):
+        except IndexError:
             pass
 
     def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
@@ -778,7 +772,7 @@ class Embed:
 
         try:
             field = self._fields[index]
-        except (TypeError, IndexError, AttributeError):
+        except (TypeError, IndexError):
             raise IndexError("field index out of range")
 
         field.name = str(name)
