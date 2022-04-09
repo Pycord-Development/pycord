@@ -222,7 +222,7 @@ class Embed:
         url: MaybeEmpty[Any] = EmptyEmbed,
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
-        fields: List[EmbedField] = None,
+        fields: Optional[List[EmbedField]] = None,
     ):
 
         self.colour = colour if colour is not EmptyEmbed else color
@@ -242,7 +242,7 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
-
+        self._fields: List[EmbedField] = fields or []
         if fields:
             for field in fields:
                 self.add_field(name=field.name, value=field.value, inline=field.inline)
@@ -638,7 +638,7 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> Optional[List[Dict[str, Union[bool, str]]]]:
+    def fields(self) -> Optional[List[EmbedField]]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
@@ -682,11 +682,7 @@ class Embed:
             Whether the field should be displayed inline.
         """
 
-        field = {
-            "inline": inline,
-            "name": str(name),
-            "value": str(value),
-        }
+        field = EmbedField(name=str(name), value=str(value), inline=inline)
 
         try:
             self._fields.append(field)
@@ -715,11 +711,7 @@ class Embed:
             Whether the field should be displayed inline.
         """
 
-        field = {
-            "inline": inline,
-            "name": str(name),
-            "value": str(value),
-        }
+        field = EmbedField(name=str(name), value=str(value), inline=inline)
 
         try:
             self._fields.insert(index, field)
@@ -786,9 +778,9 @@ class Embed:
         except (TypeError, IndexError, AttributeError):
             raise IndexError("field index out of range")
 
-        field["name"] = str(name)
-        field["value"] = str(value)
-        field["inline"] = inline
+        field.name = str(name)
+        field.value = str(value)
+        field.inline = inline
         return self
 
     def to_dict(self) -> EmbedData:
