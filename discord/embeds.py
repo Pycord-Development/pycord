@@ -147,7 +147,13 @@ class EmbedField:
         data: :class:`dict`
             The dictionary to convert into an EmbedField object.
         """
-        return cls(name=data["name"], value=data["value"], inline=data.get("inline", False))
+        self: E = cls.__new__(cls)
+
+        self.name = data["name"]
+        self.value = data["value"]
+        self.inline = data.get("inline", False)
+
+        return self
 
     def to_dict(self) -> Dict[str, Union[str, bool]]:
         return {
@@ -180,7 +186,7 @@ class Embed:
     :attr:`Embed.Empty`.
 
     For ease of use, all parameters that expect a :class:`str` are implicitly
-    casted to :class:`str` for you.
+    cast to :class:`str` for you.
 
     Attributes
     -----------
