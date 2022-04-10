@@ -192,7 +192,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.topic: Optional[str] = data.get("topic")
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self.nsfw: bool = data.get("nsfw", False)
         # Does this need coercion into `int`? No idea yet.
         self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
@@ -816,7 +816,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.last_message_id: Optional[int] = utils._get_as_snowflake(data, 'last_message_id')
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self.bitrate: int = data.get("bitrate")
         self.user_limit: int = data.get("user_limit")
         self._fill_overwrites(data)
