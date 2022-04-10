@@ -144,6 +144,7 @@ class Embed:
     title: :class:`str`
         The title of the embed.
         This can be set during initialisation.
+        Must be 256 characters or fewer.
     type: :class:`str`
         The type of embed. Usually "rich".
         This can be set during initialisation.
@@ -152,6 +153,7 @@ class Embed:
     description: :class:`str`
         The description of the embed.
         This can be set during initialisation.
+        Must be 4096 characters or fewer.
     url: :class:`str`
         The URL of the embed.
         This can be set during initialisation.
@@ -380,6 +382,7 @@ class Embed:
         -----------
         text: :class:`str`
             The footer text.
+            Must be 2048 characters or fewer.
         icon_url: :class:`str`
             The URL of the footer icon. Only HTTP(S) is supported.
         """
@@ -572,6 +575,7 @@ class Embed:
         -----------
         name: :class:`str`
             The name of the author.
+            Must be 256 characters or fewer.
         url: :class:`str`
             The URL for the author.
         icon_url: :class:`str`
@@ -619,14 +623,16 @@ class Embed:
         """Adds a field to the embed object.
 
         This function returns the class instance to allow for fluent-style
-        chaining.
+        chaining. There must be 25 fields or fewer.
 
         Parameters
         -----------
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
@@ -648,7 +654,7 @@ class Embed:
         """Inserts a field before a specified index to the embed.
 
         This function returns the class instance to allow for fluent-style
-        chaining.
+        chaining. There must be 25 fields or fewer.
 
         .. versionadded:: 1.2
 
@@ -658,8 +664,10 @@ class Embed:
             The index of where to insert the field.
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
@@ -708,7 +716,7 @@ class Embed:
     def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Modifies a field to the embed object.
 
-        The index must point to a valid pre-existing field.
+        The index must point to a valid pre-existing field. There must be 25 fields or fewer.
 
         This function returns the class instance to allow for fluent-style
         chaining.
@@ -719,8 +727,10 @@ class Embed:
             The index of the field to modify.
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
 
