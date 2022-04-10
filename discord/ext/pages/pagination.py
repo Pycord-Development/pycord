@@ -757,6 +757,7 @@ class Paginator(discord.ui.View):
         reference: Optional[Union[discord.Message, discord.MessageReference, discord.PartialMessage]] = None,
         allowed_mentions: Optional[discord.AllowedMentions] = None,
         mention_author: bool = None,
+        delete_after: float = None,
     ) -> discord.Message:
         """Sends a message with the paginated items.
 
@@ -782,6 +783,8 @@ class Paginator(discord.ui.View):
             are used instead.
         mention_author: Optional[:class:`bool`]
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time
 
         Returns
         --------
@@ -831,6 +834,7 @@ class Paginator(discord.ui.View):
             reference=reference,
             allowed_mentions=allowed_mentions,
             mention_author=mention_author,
+            delete_after=delete_after,
         )
 
         return self.message
