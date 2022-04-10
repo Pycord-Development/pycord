@@ -1734,6 +1734,9 @@ of :class:`enum.Enum`.
     .. attribute:: bug_hunter_level_2
 
         The user is a Bug Hunter Level 2.
+    .. attribute:: underage_deleted
+
+        The user is deleted for being underage.
     .. attribute:: verified_bot
 
         The user is a Verified Bot.
