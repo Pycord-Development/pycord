@@ -756,7 +756,7 @@ class Paginator(discord.ui.View):
         target_message: Optional[str] = None,
         reference: Optional[Union[discord.Message, discord.MessageReference, discord.PartialMessage]] = None,
         allowed_mentions: Optional[discord.AllowedMentions] = None,
-        mention_author: bool = None,
+        mention_author: Optional[bool] = None,
         delete_after: Optional[float] = None,
     ) -> discord.Message:
         """Sends a message with the paginated items.
