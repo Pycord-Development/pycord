@@ -1,16 +1,16 @@
 Pycord
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord&style=for-the-badge&logo=discord&color=success
+.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
    :target: https://pycord.dev/discord
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=semantic-release&color=yellowgreen
+.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python
+.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=blue&style=for-the-badge
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=white&style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
 
@@ -108,7 +108,9 @@ Traditional Commands Example
     import discord
     from discord.ext import commands
 
-    bot = commands.Bot(command_prefix=">")
+    intents = discord.Intents.default()
+    intents.message_content = True
+    bot = commands.Bot(command_prefix=">", intents=intents)
 
     @bot.command()
     async def ping(ctx):
@@ -124,6 +126,7 @@ Useful Links
 ------------
 
 - `Documentation <https://docs.pycord.dev/en/master/index.html>`_
+- `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
 - `Unofficial Discord API Server <https://discord.gg/discord-api>`_

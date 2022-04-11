@@ -524,8 +524,6 @@ class Member(discord.abc.Messageable, _UserTag):
     @property
     def mention(self) -> str:
         """:class:`str`: Returns a string that allows you to mention the member."""
-        if self.nick:
-            return f"<@!{self._user.id}>"
         return f"<@{self._user.id}>"
 
     @property
@@ -866,7 +864,7 @@ class Member(discord.abc.Messageable, _UserTag):
         You must have the :attr:`~Permissions.moderate_members` permission to
         remove the timeout.
 
-        This is equivalent to calling :meth:`~.timeout` and passing ``None`` to :param:`~.timeout.until`.
+        This is equivalent to calling :meth:`~.timeout` and passing ``None`` to the ``until`` parameter.
 
         Parameters
         -----------

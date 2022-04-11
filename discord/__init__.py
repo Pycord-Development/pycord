@@ -13,7 +13,7 @@ __title__ = "pycord"
 __author__ = "Pycord Development"
 __license__ = "MIT"
 __copyright__ = "Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development"
-__version__ = "2.0.0b5"
+__version__ = "2.0.0b7"
 
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
@@ -28,9 +28,9 @@ from .audit_logs import *
 from .bot import *
 from .channel import *
 from .client import *
-from .cog import Cog
+from .cog import *
 from .colour import *
-from .commands.__init__ import *
+from .commands import *
 from .components import *
 from .embeds import *
 from .emoji import *
@@ -75,6 +75,6 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel="beta", serial=5)
+version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel="beta", serial=7)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

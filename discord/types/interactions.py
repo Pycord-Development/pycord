@@ -46,6 +46,10 @@ ApplicationCommandType = Literal[1, 2, 3]
 class _ApplicationCommandOptional(TypedDict, total=False):
     options: List[ApplicationCommandOption]
     type: ApplicationCommandType
+    name_localized: str
+    name_localizations: Dict[str, str]
+    description_localized: str
+    description_localizations: Dict[str, str]
 
 
 class ApplicationCommand(_ApplicationCommandOptional):
@@ -58,6 +62,8 @@ class ApplicationCommand(_ApplicationCommandOptional):
 class _ApplicationCommandOptionOptional(TypedDict, total=False):
     choices: List[ApplicationCommandOptionChoice]
     options: List[ApplicationCommandOption]
+    name_localizations: Dict[str, str]
+    description_localizations: Dict[str, str]
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -70,7 +76,11 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
     required: bool
 
 
-class ApplicationCommandOptionChoice(TypedDict):
+class _ApplicationCommandOptionChoiceOptional(TypedDict, total=False):
+    name_localizations: Dict[str, str]
+
+
+class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
     name: str
     value: Union[str, int]
 

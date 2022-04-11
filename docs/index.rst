@@ -25,7 +25,7 @@ Getting started
 
 Is this your first time using the library? This is the place to get started!
 
-- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging`
+- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`
 - **Working with Discord:** :doc:`discord` | :doc:`intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
@@ -51,6 +51,7 @@ These extensions help you during development when it comes to common tasks.
   ext/commands/index.rst
   ext/tasks/index.rst
   ext/pages/index.rst
+  ext/bridge/index.rst
 
 Manuals
 ---------
@@ -64,6 +65,7 @@ These pages go into great detail about everything the API can do.
   discord.ext.commands API Reference <ext/commands/api.rst>
   discord.ext.tasks API Reference <ext/tasks/index.rst>
   discord.ext.pages API Reference <ext/pages/index.rst>
+  discord.ext.bridge API Reference <ext/bridge/index.rst>
 
 Meta
 ------
@@ -75,4 +77,4 @@ If you're looking for something related to the project itself, it's here.
 
   whats_new
   version_guarantees
-  migrating
+  migrating_to_v1
