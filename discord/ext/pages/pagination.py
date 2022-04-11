@@ -784,7 +784,7 @@ class Paginator(discord.ui.View):
         mention_author: Optional[:class:`bool`]
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
         delete_after: Optional[:class:`float`]
-            If set, deletes the paginator after the specified time
+            If set, deletes the paginator after the specified time.
 
         Returns
         --------
