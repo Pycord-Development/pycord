@@ -646,22 +646,23 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def _parse_options(self, params) -> List[Option]:
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
+    def _check_required_params(self, params):
         params = iter(params.items())
+        required_params = ["self", "context"] if self.attached_to_group or self.cog else ["context"]
+        for p in required_params:
+            try:
+                next(params)
+            except StopIteration:
+                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.')
 
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+        return params
+
+    def _parse_options(self, params, *, check_params: bool = True) -> List[Option]:
+        if check_params:
+            params = self._check_required_params(params)
 
         final_options = []
         for p_name, p_obj in params:
-
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
@@ -673,38 +674,32 @@ class SlashCommand(ApplicationCommand):
                     option = Option(option.__args__, "No description provided")
 
             if not isinstance(option, Option):
-                option = Option(option, "No description provided")
+                if isinstance(p_obj.default, Option):  # arg: type = Option(...)
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
+                    option = p_obj.default
+                else: # arg: Option(...) = default
+                    option = Option(option, "No description provided")
 
             if option.default is None:
-                if p_obj.default == inspect.Parameter.empty:
-                    option.default = None
-                else:
+                if not p_obj.default == inspect.Parameter.empty and not isinstance(p_obj.default, Option):
                     option.default = p_obj.default
                     option.required = False
 
             if option.name is None:
                 option.name = p_name
-            option._parameter_name = p_name
+            if option.name != p_name:
+                option._parameter_name = p_name
 
             validate_chat_input_name(option.name)
             validate_chat_input_description(option.description)
 
+            print(option.name, option.default, option.required)
             final_options.append(option)
 
         return final_options
 
     def _match_option_param_names(self, params, options):
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
-        params = iter(params.items())
-
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+        params = self._check_required_params(params)
 
         check_annotations = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
@@ -728,10 +723,9 @@ class SlashCommand(ApplicationCommand):
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
-        left_out_params[""] = ""  # bypass first iter (ctx)
         for k, v in params:
             left_out_params[k] = v
-        options.extend(self._parse_options(left_out_params))
+        options.extend(self._parse_options(left_out_params, check_params=False))
 
         return options
 
