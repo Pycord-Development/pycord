@@ -478,7 +478,7 @@ class View:
         """
         for i in range(len(self.children)):
             if exclusions is None or i not in exclusions:
-                self.children[i].disabled
+                self.children[i].disabled = True
 
 
 class ViewStore:
