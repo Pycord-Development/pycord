@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 import time
+from abc import abstractmethod
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -47,6 +48,7 @@ from typing import (
 import discord.abc
 
 from . import utils
+from .file import File
 from .asset import Asset
 from .enums import (
     ChannelType,
@@ -75,6 +77,7 @@ __all__ = (
     "CategoryChannel",
     "GroupChannel",
     "PartialMessageable",
+    "ForumChannel"
 )
 
 if TYPE_CHECKING:
@@ -91,13 +94,14 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
+    from .types.channel import ForumChannel as ForumChannelPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
     from .webhook import Webhook
 
 
-class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
+class _TextChannel(discord.abc.GuildChannel, Hashable):
     """Represents a Discord text channel.
 
     .. container:: operations
@@ -169,25 +173,22 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         "default_auto_archive_duration",
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, data: TextChannelPayload):
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
         self._type: int = data["type"]
         self._update(guild, data)
 
+    @property
+    def _repr_attrs(self) -> Tuple[str, ...]:
+        return "id", "name", "position", "nsfw", "category_id"
+
     def __repr__(self) -> str:
-        attrs = [
-            ("id", self.id),
-            ("name", self.name),
-            ("position", self.position),
-            ("nsfw", self.nsfw),
-            ("news", self.is_news()),
-            ("category_id", self.category_id),
-        ]
+        attrs = [(val, getattr(self, val)) for val in self._repr_attrs]
         joined = " ".join("%s=%r" % t for t in attrs)
         return f"<{self.__class__.__name__} {joined}>"
 
-    def _update(self, guild: Guild, data: TextChannelPayload) -> None:
+    def _update(self, guild: Guild, data: TextChannelPayload | ForumChannelPayload) -> None:
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
@@ -200,9 +201,6 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         self._type: int = data.get("type", self._type)
         self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
         self._fill_overwrites(data)
-
-    async def _get_channel(self):
-        return self
 
     @property
     def type(self) -> ChannelType:
@@ -238,10 +236,6 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
     def is_nsfw(self) -> bool:
         """:class:`bool`: Checks if the channel is NSFW."""
         return self.nsfw
-
-    def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news/anouncements channel."""
-        return self._type == ChannelType.news.value
 
     @property
     def last_message(self) -> Optional[Message]:
@@ -653,14 +647,83 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         """
         return self.guild.get_thread(thread_id)
 
-    async def create_thread(
+    def archived_threads(
         self,
         *,
-        name: str,
-        message: Optional[Snowflake] = None,
-        auto_archive_duration: ThreadArchiveDuration = MISSING,
-        type: Optional[ChannelType] = None,
-        reason: Optional[str] = None,
+        private: bool = False,
+        joined: bool = False,
+        limit: Optional[int] = 50,
+        before: Optional[Union[Snowflake, datetime.datetime]] = None,
+    ) -> ArchivedThreadIterator:
+        """Returns an :class:`~discord.AsyncIterator` that iterates over all archived threads in the guild.
+
+        You must have :attr:`~Permissions.read_message_history` to use this. If iterating over private threads
+        then :attr:`~Permissions.manage_threads` is also required.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        limit: Optional[:class:`bool`]
+            The number of threads to retrieve.
+            If ``None``, retrieves every archived thread in the channel. Note, however,
+            that this would make it a slow operation.
+        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve archived channels before the given date or ID.
+        private: :class:`bool`
+            Whether to retrieve private archived threads.
+        joined: :class:`bool`
+            Whether to retrieve private archived threads that you've joined.
+            You cannot set ``joined`` to ``True`` and ``private`` to ``False``.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to get archived threads.
+        HTTPException
+            The request to get the archived threads failed.
+
+        Yields
+        -------
+        :class:`Thread`
+            The archived threads.
+        """
+        return ArchivedThreadIterator(
+            self.id,
+            self.guild,
+            limit=limit,
+            joined=joined,
+            private=private,
+            before=before,
+        )
+
+
+class TextChannel(discord.abc.Messageable, _TextChannel):
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: TextChannelPayload):
+        super().__init__(state=state, guild=guild, data=data)
+
+    @property
+    def _repr_attrs(self) -> Tuple[str, ...]:
+        return super()._repr_attrs + ("news",)
+
+    def _update(self, guild: Guild, data: TextChannelPayload) -> None:
+        super()._update(guild, data)
+
+    def _get_channel(self) -> "TextChannel":
+        return self
+
+    def is_news(self) -> bool:
+        """:class:`bool`: Checks if the channel is a news/anouncements channel."""
+        return self._type == ChannelType.news.value
+
+    async def create_thread(
+            self,
+            *,
+            name: str,
+            message: Optional[Snowflake] = None,
+            auto_archive_duration: ThreadArchiveDuration = MISSING,
+            type: Optional[ChannelType] = None,
+            reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
 
@@ -724,55 +787,177 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
 
         return Thread(guild=self.guild, state=self._state, data=data)
 
-    def archived_threads(
-        self,
-        *,
-        private: bool = False,
-        joined: bool = False,
-        limit: Optional[int] = 50,
-        before: Optional[Union[Snowflake, datetime.datetime]] = None,
-    ) -> ArchivedThreadIterator:
-        """Returns an :class:`~discord.AsyncIterator` that iterates over all archived threads in the guild.
 
-        You must have :attr:`~Permissions.read_message_history` to use this. If iterating over private threads
-        then :attr:`~Permissions.manage_threads` is also required.
+class ForumChannel(_TextChannel):
+    def __init__(self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload):
+        super().__init__(state=state, guild=guild, data=data)
+
+    def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
+        super()._update(guild, data)
+
+    @property
+    def guidelines(self) -> Optional[str]:
+        """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`.
+        """
+        return self.topic
+
+    async def create_post(
+            self,
+            name: str,  # Could be renamed to title?
+            message_content=None,
+            *,
+            tts=None,
+            embed=None,
+            embeds=None,
+            file=None,
+            files=None,
+            stickers=None,
+            delete_message_after=None,
+            nonce=None,
+            allowed_mentions=None,
+            view=None,
+            auto_archive_duration: ThreadArchiveDuration = MISSING,
+            reason: Optional[str] = None,
+    ) -> Thread:
+        """|coro|
+
+        Creates a thread in this forum channel.
+
+        To create a public thread, you must have :attr:`~discord.Permissions.create_public_threads`.
+        For a private thread, :attr:`~discord.Permissions.create_private_threads` is needed instead.
 
         .. versionadded:: 2.0
 
         Parameters
         -----------
-        limit: Optional[:class:`bool`]
-            The number of threads to retrieve.
-            If ``None``, retrieves every archived thread in the channel. Note, however,
-            that this would make it a slow operation.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
-            Retrieve archived channels before the given date or ID.
-        private: :class:`bool`
-            Whether to retrieve private archived threads.
-        joined: :class:`bool`
-            Whether to retrieve private archived threads that you've joined.
-            You cannot set ``joined`` to ``True`` and ``private`` to ``False``.
+        name: :class:`str`
+            The name of the thread.
+        message: Optional[:class:`abc.Snowflake`]
+            A snowflake representing the message to create the thread with.
+            If ``None`` is passed then a private thread is created.
+            Defaults to ``None``.
+        auto_archive_duration: :class:`int`
+            The duration in minutes before a thread is automatically archived for inactivity.
+            If not provided, the channel's default auto archive duration is used.
+        type: Optional[:class:`ChannelType`]
+            The type of thread to create. If a ``message`` is passed then this parameter
+            is ignored, as a thread created with a message is always a public thread.
+            By default this creates a private thread if this is ``None``.
+        reason: :class:`str`
+            The reason for creating a new thread. Shows up on the audit log.
 
         Raises
-        ------
-        Forbidden
-            You do not have permissions to get archived threads.
-        HTTPException
-            The request to get the archived threads failed.
-
-        Yields
         -------
+        Forbidden
+            You do not have permissions to create a thread.
+        HTTPException
+            Starting the thread failed.
+
+        Returns
+        --------
         :class:`Thread`
-            The archived threads.
+            The created thread
         """
-        return ArchivedThreadIterator(
-            self.id,
-            self.guild,
-            limit=limit,
-            joined=joined,
-            private=private,
-            before=before,
-        )
+        state = self._state
+        content = str(message_content) if message_content is not None else None
+
+        if embed is not None and embeds is not None:
+            raise InvalidArgument("cannot pass both embed and embeds parameter to create_post()")
+
+        if embed is not None:
+            embed = embed.to_dict()
+
+        elif embeds is not None:
+            if len(embeds) > 10:
+                raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
+            embeds = [embed.to_dict() for embed in embeds]
+
+        if stickers is not None:
+            stickers = [sticker.id for sticker in stickers]
+
+        if allowed_mentions is None:
+            allowed_mentions = state.allowed_mentions and state.allowed_mentions.to_dict()
+        elif state.allowed_mentions is not None:
+            allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
+        else:
+            allowed_mentions = allowed_mentions.to_dict()
+
+        if view:
+            if not hasattr(view, "__discord_ui_view__"):
+                raise InvalidArgument(f"view parameter must be View not {view.__class__!r}")
+
+            components = view.to_components()
+        else:
+            components = None
+
+        if file is not None and files is not None:
+            raise InvalidArgument("cannot pass both file and files parameter to send()")
+
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be File")
+
+            try:
+                data = await state.http.send_files(
+                    self.id,
+                    files=[file],
+                    allowed_mentions=allowed_mentions,
+                    content=content,
+                    tts=tts,
+                    embed=embed,
+                    embeds=embeds,
+                    nonce=nonce,
+                    stickers=stickers,
+                    components=components,
+                )
+            finally:
+                file.close()
+
+        elif files is not None:
+            if len(files) > 10:
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument("files parameter must be a list of File")
+
+            try:
+                data = await state.http.send_files(
+                    self.id,
+                    files=files,
+                    content=content,
+                    tts=tts,
+                    embed=embed,
+                    embeds=embeds,
+                    nonce=nonce,
+                    allowed_mentions=allowed_mentions,
+                    stickers=stickers,
+                    components=components,
+                )
+            finally:
+                for f in files:
+                    f.close()
+        else:
+            data = await state.http.start_forum_thread(
+                self.id,
+                content,
+                name=name,
+                tts=tts,
+                embed=embed,
+                embeds=embeds,
+                nonce=nonce,
+                allowed_mentions=allowed_mentions,
+                stickers=stickers,
+                components=components,
+                auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
+                reason=reason,
+            )
+        ret = Thread(guild=self.guild, state=self._state, data=data)
+        msg = ret.get_partial_message(data['last_message_id'])
+        if view:
+            state.store_view(view, msg.id)
+
+        if delete_message_after is not None:
+            await msg.delete(delay=delete_message_after)
+        return ret
 
 
 class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hashable):
@@ -1784,7 +1969,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
 
         def comparator(channel):
-            return (not isinstance(channel, TextChannel), channel.position)
+            return (not isinstance(channel, _TextChannel), channel.position)
 
         ret = [c for c in self.guild.channels if c.category_id == self.id]
         ret.sort(key=comparator)
@@ -1811,6 +1996,16 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         .. versionadded:: 1.7
         """
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, StageChannel)]
+        ret.sort(key=lambda c: (c.position, c.id))
+        return ret
+
+    @property
+    def forum_channels(self) -> List[ForumChannel]:
+        """List[:class:`ForumChannel`]: Returns the forum channels that are under this category.
+
+        .. versionadded:: 2.0
+        """
+        ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, ForumChannel)]
         ret.sort(key=lambda c: (c.position, c.id))
         return ret
 
@@ -1851,6 +2046,20 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             The channel that was just created.
         """
         return await self.guild.create_stage_channel(name, category=self, **options)
+
+    async def create_forum_channel(self, name: str, **options: Any) -> ForumChannel:
+        """|coro|
+
+        A shortcut method to :meth:`Guild.create_forum_channel` to create a :class:`ForumChannel` in the category.
+
+        .. versionadded:: 2.0
+
+        Returns
+        -------
+        :class:`ForumChannel`
+            The channel that was just created.
+        """
+        return await self.guild.create_forum_channel(name, category=self, **options)
 
 
 DMC = TypeVar("DMC", bound="DMChannel")
@@ -2209,6 +2418,8 @@ def _guild_channel_factory(channel_type: int):
         return TextChannel, value
     elif value is ChannelType.stage_voice:
         return StageChannel, value
+    elif value is ChannelType.forum:
+        return ForumChannel, value
     else:
         return None, value
 

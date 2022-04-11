@@ -81,7 +81,7 @@ if TYPE_CHECKING:
         GroupChannel,
         PartialMessageable,
         TextChannel,
-        VoiceChannel,
+        VoiceChannel
     )
     from .client import Client
     from .embeds import Embed
@@ -305,6 +305,7 @@ class GuildChannel:
     - :class:`~discord.VoiceChannel`
     - :class:`~discord.CategoryChannel`
     - :class:`~discord.StageChannel`
+    - :class:`~discord.ForumChannel`
 
     This ABC must also implement :class:`~discord.abc.Snowflake`.
 
