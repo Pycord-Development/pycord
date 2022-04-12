@@ -467,7 +467,7 @@ class View:
         """
         return await self.__stopped
 
-    def disable_all_items(self, *, exclusions: Optional[List[Union[int, View.Item]]) -> None:
+    def disable_all_items(self, *, exclusions: Optional[List[Union[int, View.Item]]]) -> None:
         """
         Disables all items in the view.
 
