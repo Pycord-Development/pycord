@@ -478,9 +478,12 @@ class View:
         """
         for i in exclusions:
             if isinstance(i, int):
-                self.children[i].disabled = True
+                if not self.children[i].disabled:
+                    self.children[i].disabled = True
             elif isinstance(i, Item):
-                i.disabled = True
+                if hasattr(i, "disabled"):
+                    if not i.disabled:
+                        i.disabled = True
 
 
 class ViewStore:
