@@ -1929,7 +1929,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
         .. versionadded:: 2.0
         """
-        return f'https://discord.com/channels/@me/{self.id}'
+        return f"https://discord.com/channels/@me/{self.id}"
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -2096,7 +2096,7 @@ class GroupChannel(discord.abc.Messageable, Hashable):
 
         .. versionadded:: 2.0
         """
-        return f'https://discord.com/channels/@me/{self.id}'
+        return f"https://discord.com/channels/@me/{self.id}"
 
     def permissions_for(self, obj: Snowflake, /) -> Permissions:
         """Handles permission resolution for a :class:`User`.
