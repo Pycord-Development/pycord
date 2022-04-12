@@ -823,7 +823,7 @@ class Embed:
         }
 
         # add in the fields
-        result["fields"] = [field.to_dict() for field in self._fields if self._fields]
+        result["fields"] = [field.to_dict() for field in self._fields]
 
         # deal with basic convenience wrappers
 
