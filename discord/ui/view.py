@@ -473,13 +473,13 @@ class View:
 
         Parameters
         ----------- 
-        exclusions: Optional[List[Union[:class:`int`, :class:`View.Item`]]]
+        exclusions: Optional[List[Union[:class:`int`, :class:`ui.Item`]]]
             A list of items or indexes in `self.children` to not disable from the view.
         """
         for i in exclusions:
             if isinstance(i, int):
                 self.children[i].disabled = True
-            elif isinstance(i, discord.ui.Item):
+            elif isinstance(i, Item):
                 i.disabled = True
 
 
