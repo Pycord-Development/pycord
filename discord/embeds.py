@@ -325,8 +325,7 @@ class Embed:
         ):
             if attr == "fields":
                 value = data.get(attr, [])
-                if value:
-                    self._fields = [EmbedField.from_dict(d) for d in value]
+                self._fields = [EmbedField.from_dict(d) for d in value] if value else []
             else:
                 try:
                     value = data[attr]
