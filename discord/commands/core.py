@@ -669,9 +669,9 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)
+                    option = Option(option.__args__[0], "No description provided", required=False)  # type: ignore # union type
                 else:
-                    option = Option(option.__args__, "No description provided")
+                    option = Option(option.__args__, "No description provided")  # type: ignore # union type
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):  # arg: type = Option(...)
@@ -693,7 +693,6 @@ class SlashCommand(ApplicationCommand):
             validate_chat_input_name(option.name)
             validate_chat_input_description(option.description)
 
-            print(option.name, option.default, option.required)
             final_options.append(option)
 
         return final_options
@@ -701,13 +700,13 @@ class SlashCommand(ApplicationCommand):
     def _match_option_param_names(self, params, options):
         params = self._check_required_params(params)
 
-        check_annotations = [
+        check_annotations: List[Callable[[Option, Type], bool]] = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
             and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: isinstance(a, type) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
             validate_chat_input_name(o.name)
@@ -718,7 +717,7 @@ class SlashCommand(ApplicationCommand):
                 raise ClientException(f"Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
-            if not any(c(o, p_obj) for c in check_annotations):
+            if not any(check(o, p_obj) for check in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
 
