@@ -839,6 +839,61 @@ class Paginator(discord.ui.View):
 
         return self.message
 
+    async def edit(
+        self,
+        message: discord.Message,
+        suppress: Optional[bool] = None,
+        allowed_mentions: Optional[discord.AllowedMentions] = None,
+        delete_after: Optional[float] = None,
+    ) -> discord.Message:
+        """Edits an existing message to replace it with the paginator contents.
+
+        Parameters
+        -----------
+        message: :class:`discord.Message`
+            The message to edit with the paginator.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message. This removes
+            all the embeds if set to ``True``. If set to ``False``
+            this brings the embeds back if they were suppressed.
+            Using this parameter requires :attr:`~.Permissions.manage_messages`.
+        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time.
+        Returns
+        --------
+        :class:`discord.Message`
+            The message that was edited.
+        """
+        if not isinstance(message, discord.Message):
+            raise TypeError(f"expected Message not {message.__class__!r}")
+
+        self.update_buttons()
+        self.update_buttons()
+
+        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page_content: Page = self.get_page_content(page)
+
+        if page_content.custom_view:
+            self.update_custom_view(page_content.custom_view)
+
+        self.user = message.author
+
+        return await message.edit(
+            content=page_content.content,
+            embeds=page_content.embeds,
+            view=self,
+            suppress=suppress,
+            allowed_mentions=allowed_mentions,
+            delete_after=delete_after,
+        )
+
     async def respond(
         self,
         interaction: discord.Interaction,
