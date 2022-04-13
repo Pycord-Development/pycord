@@ -848,6 +848,11 @@ class Paginator(discord.ui.View):
     ) -> discord.Message:
         """Edits an existing message to replace it with the paginator contents.
 
+        .. note::
+
+            If invoked from an interaction, you will still need to respond to the interaction.
+
+
         Parameters
         -----------
         message: :class:`discord.Message`
@@ -866,6 +871,7 @@ class Paginator(discord.ui.View):
             are used instead.
         delete_after: Optional[:class:`float`]
             If set, deletes the paginator after the specified time.
+
         Returns
         --------
         :class:`discord.Message`
@@ -884,15 +890,20 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page_content.custom_view)
 
         self.user = message.author
+        self.message = message
+        try:
+            await message.edit(
+                content=page_content.content,
+                embeds=page_content.embeds,
+                view=self,
+                suppress=suppress,
+                allowed_mentions=allowed_mentions,
+                delete_after=delete_after,
+            )
+        except discord.NotFound:
+            pass
 
-        return await message.edit(
-            content=page_content.content,
-            embeds=page_content.embeds,
-            view=self,
-            suppress=suppress,
-            allowed_mentions=allowed_mentions,
-            delete_after=delete_after,
-        )
+        return message
 
     async def respond(
         self,
