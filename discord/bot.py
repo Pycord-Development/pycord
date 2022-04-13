@@ -376,7 +376,7 @@ class ApplicationCommandMixin(ABC):
             The command that was registered
         """
         # TODO: Write this
-        raise NotImplementedError("This function has not been implemented yet")
+        raise RuntimeError("This function has not been implemented yet")
 
     async def register_commands(
             self,
@@ -899,7 +899,7 @@ class ApplicationCommandMixin(ABC):
 
     def application_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`command` and adds it to
-        the internal command list via :meth:`add_application_command`.
+        the internal command list via :meth:`~.Bot.add_application_command`.
 
         .. versionadded:: 2.0
 

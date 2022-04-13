@@ -358,7 +358,7 @@ class Paginator(discord.ui.View):
                 List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
             ] = self.page_groups[0].pages
 
-        self.page_count = max(len(self.pages), 0)
+        self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: List = custom_buttons
         self.show_disabled = show_disabled
@@ -438,7 +438,7 @@ class Paginator(discord.ui.View):
         self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
-        self.page_count = len(self.pages) - 1
+        self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = 0
         # Apply config changes, if specified
         self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
@@ -756,7 +756,8 @@ class Paginator(discord.ui.View):
         target_message: Optional[str] = None,
         reference: Optional[Union[discord.Message, discord.MessageReference, discord.PartialMessage]] = None,
         allowed_mentions: Optional[discord.AllowedMentions] = None,
-        mention_author: bool = None,
+        mention_author: Optional[bool] = None,
+        delete_after: Optional[float] = None,
     ) -> discord.Message:
         """Sends a message with the paginated items.
 
@@ -782,6 +783,8 @@ class Paginator(discord.ui.View):
             are used instead.
         mention_author: Optional[:class:`bool`]
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time.
 
         Returns
         --------
@@ -831,6 +834,7 @@ class Paginator(discord.ui.View):
             reference=reference,
             allowed_mentions=allowed_mentions,
             mention_author=mention_author,
+            delete_after=delete_after,
         )
 
         return self.message

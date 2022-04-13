@@ -514,6 +514,14 @@ class GuildChannel:
         return f"<#{self.id}>"
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.guild.id}/{self.id}"
+
+    @property
     def created_at(self) -> datetime:
         """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
@@ -1434,11 +1442,11 @@ class Messageable:
 
         if allowed_mentions is None:
             allowed_mentions = state.allowed_mentions and state.allowed_mentions.to_dict()
-
         elif state.allowed_mentions is not None:
             allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             allowed_mentions = allowed_mentions.to_dict()
+
         if mention_author is not None:
             allowed_mentions = allowed_mentions or AllowedMentions().to_dict()
             allowed_mentions["replied_user"] = bool(mention_author)
