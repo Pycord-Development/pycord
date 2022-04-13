@@ -881,7 +881,6 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected Message not {message.__class__!r}")
 
         self.update_buttons()
-        self.update_buttons()
 
         page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
         page_content: Page = self.get_page_content(page)
