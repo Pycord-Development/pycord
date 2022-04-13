@@ -901,6 +901,8 @@ class Paginator(discord.ui.View):
             )
         except discord.NotFound:
             pass
+        except discord.Forbidden:
+            pass
 
         return message
 
