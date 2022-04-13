@@ -138,7 +138,8 @@ class Select(Item[V]):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
 
     @property

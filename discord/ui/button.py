@@ -98,7 +98,8 @@ class Button(Item[V]):
         super().__init__()
         if len(label) > 80:
             raise ValueError("label must be 80 characters or fewer")
-
+        if custom_id is not None and len(custom_id) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
 
@@ -152,7 +153,8 @@ class Button(Item[V]):
     def custom_id(self, value: Optional[str]):
         if value is not None and not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
 
     @property
