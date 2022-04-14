@@ -351,7 +351,7 @@ class Thread(Messageable, Hashable):
             raise ClientException("Parent channel not found")
         return parent.permissions_for(obj)
 
-    async def delete_messages(self, messages: Iterable[Snowflake]) -> None:
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes a list of messages. This is similar to :meth:`Message.delete`
@@ -373,6 +373,8 @@ class Thread(Messageable, Hashable):
         -----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
 
         Raises
         ------
@@ -394,14 +396,14 @@ class Thread(Messageable, Hashable):
 
         if len(messages) == 1:
             message_id = messages[0].id
-            await self._state.http.delete_message(self.id, message_id)
+            await self._state.http.delete_message(self.id, message_id, reason=reason)
             return
 
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
         message_ids: SnowflakeList = [m.id for m in messages]
-        await self._state.http.delete_messages(self.id, message_ids)
+        await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
             self,
