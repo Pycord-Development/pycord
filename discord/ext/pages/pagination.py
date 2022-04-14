@@ -874,8 +874,8 @@ class Paginator(discord.ui.View):
 
         Returns
         --------
-        :class:`discord.Message`
-            The message that was edited.
+        Optional[:class:`discord.Message`]
+            The message that was edited. Returns ``None`` if the operation failed.
         """
         if not isinstance(message, discord.Message):
             raise TypeError(f"expected Message not {message.__class__!r}")
