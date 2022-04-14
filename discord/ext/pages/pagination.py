@@ -899,9 +899,7 @@ class Paginator(discord.ui.View):
                 allowed_mentions=allowed_mentions,
                 delete_after=delete_after,
             )
-        except discord.NotFound:
-            pass
-        except discord.Forbidden:
+        except (discord.NotFound, discord.Forbidden):
             pass
 
         return message
