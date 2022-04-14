@@ -845,7 +845,7 @@ class Paginator(discord.ui.View):
         suppress: Optional[bool] = None,
         allowed_mentions: Optional[discord.AllowedMentions] = None,
         delete_after: Optional[float] = None,
-    ) -> discord.Message:
+    ) -> Optional[discord.Message]:
         """Edits an existing message to replace it with the paginator contents.
 
         .. note::
@@ -889,9 +889,8 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page_content.custom_view)
 
         self.user = message.author
-        self.message = message
         try:
-            await message.edit(
+            self.message = await message.edit(
                 content=page_content.content,
                 embeds=page_content.embeds,
                 view=self,
@@ -902,7 +901,7 @@ class Paginator(discord.ui.View):
         except (discord.NotFound, discord.Forbidden):
             pass
 
-        return message
+        return self.message
 
     async def respond(
         self,
