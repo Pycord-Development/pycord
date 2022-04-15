@@ -33,6 +33,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    Iterable,
     List,
     Optional,
     Protocol,
@@ -42,7 +43,6 @@ from typing import (
     Union,
     overload,
     runtime_checkable,
-    Iterable,
 )
 
 from . import utils
@@ -111,16 +111,16 @@ async def _single_delete_strategy(messages: Iterable[Message], *, reason: Option
 
 
 async def _purge_messages_helper(
-        channel: Union[TextChannel, Thread, VoiceChannel],
-        *,
-        limit: Optional[int] = 100,
-        check: Callable[[Message], bool] = MISSING,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = False,
-        bulk: bool = True,
-        reason: Optional[str] = None,
+    channel: Union[TextChannel, Thread, VoiceChannel],
+    *,
+    limit: Optional[int] = 100,
+    check: Callable[[Message], bool] = MISSING,
+    before: Optional[SnowflakeTime] = None,
+    after: Optional[SnowflakeTime] = None,
+    around: Optional[SnowflakeTime] = None,
+    oldest_first: Optional[bool] = False,
+    bulk: bool = True,
+    reason: Optional[str] = None,
 ) -> List[Message]:
     if check is MISSING:
         check = lambda m: True

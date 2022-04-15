@@ -67,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator, BanIterator
+from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -93,7 +93,7 @@ if TYPE_CHECKING:
         StageChannel,
         TextChannel,
         VoiceChannel,
-        ForumChannel
+        ForumChannel,
     )
     from .permissions import Permissions
     from .state import ConnectionState
@@ -2015,8 +2015,9 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    def bans(self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None,
-             after: Optional[SnowflakeTime] = None) -> BanIterator:
+    def bans(
+        self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None, after: Optional[SnowflakeTime] = None
+    ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must

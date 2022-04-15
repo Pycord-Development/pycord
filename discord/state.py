@@ -1655,10 +1655,10 @@ class ConnectionState:
                 return channel
 
     def create_message(
-            self,
-            *,
-            channel: MessageableChannel,
-            data: MessagePayload,
+        self,
+        *,
+        channel: MessageableChannel,
+        data: MessagePayload,
     ) -> Message:
         return Message(state=self, channel=channel, data=data)
 

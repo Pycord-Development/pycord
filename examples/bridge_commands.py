@@ -1,7 +1,6 @@
 import asyncio
 
 import discord
-
 from discord.ext import bridge
 
 intents = discord.Intents.default()

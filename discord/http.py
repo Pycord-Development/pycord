@@ -251,7 +251,7 @@ class HTTPClient:
             if reason:
                 headers["X-Audit-Log-Reason"] = _uriquote(reason, safe="/ ")
 
-        if locale := kwargs.pop('locale', None):
+        if locale := kwargs.pop("locale", None):
             headers["X-Discord-Locale"] = locale
 
         kwargs["headers"] = headers
@@ -1394,11 +1394,11 @@ class HTTPClient:
         return self.request(Route("POST", "/guilds/templates/{code}", code=code), json=payload)
 
     def get_bans(
-            self,
-            guild_id: Snowflake,
-            limit: Optional[int] = None,
-            before: Optional[Snowflake] = None,
-            after: Optional[Snowflake] = None,
+        self,
+        guild_id: Snowflake,
+        limit: Optional[int] = None,
+        before: Optional[Snowflake] = None,
+        after: Optional[Snowflake] = None,
     ) -> Response[List[guild.Ban]]:
         params: Dict[str, Union[int, Snowflake]] = {}
 
@@ -2116,11 +2116,13 @@ class HTTPClient:
     # Application commands (global)
 
     def get_global_commands(
-        self, application_id: Snowflake, *, with_localizations: bool = True, locale: str = None,
+        self,
+        application_id: Snowflake,
+        *,
+        with_localizations: bool = True,
+        locale: str = None,
     ) -> Response[List[interactions.ApplicationCommand]]:
-        params = {
-            "with_localizations": int(with_localizations)
-        }
+        params = {"with_localizations": int(with_localizations)}
 
         return self.request(
             Route(
@@ -2133,7 +2135,10 @@ class HTTPClient:
         )
 
     def get_global_command(
-        self, application_id: Snowflake, command_id: Snowflake, locale: str = None,
+        self,
+        application_id: Snowflake,
+        command_id: Snowflake,
+        locale: str = None,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             "GET",

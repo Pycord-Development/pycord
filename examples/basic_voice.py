@@ -123,6 +123,7 @@ class Music(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
 
+
 intents = discord.Intents.default()
 intents.message_content = True
 
