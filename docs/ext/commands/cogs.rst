@@ -74,7 +74,6 @@ Using Cogs
 Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:
 
 .. code-block:: python3
-    :emphasize-lines: 22,24
 
     class Economy(commands.Cog):
         ...
