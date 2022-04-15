@@ -1267,37 +1267,37 @@ class Webhook(BaseWebhook):
     ) -> Webhook:
         """|coro|
 
-          Edits this Webhook.
+        Edits this Webhook.
 
-          Parameters
-          -----------
-          name: Optional[:class:`str`]
-              The webhook's new default name.
-          avatar: Optional[:class:`bytes`]
-              A :term:`py:bytes-like object` representing the webhook's new default avatar.
-          channel: Optional[:class:`abc.Snowflake`]
-              The webhook's new channel. This requires an authenticated webhook.
+        Parameters
+        -----------
+        name: Optional[:class:`str`]
+            The webhook's new default name.
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the webhook's new default avatar.
+        channel: Optional[:class:`abc.Snowflake`]
+            The webhook's new channel. This requires an authenticated webhook.
 
-              .. versionadded:: 2.0
-          reason: Optional[:class:`str`]
-              The reason for editing this webhook. Shows up on the audit log.
+            .. versionadded:: 2.0
+        reason: Optional[:class:`str`]
+            The reason for editing this webhook. Shows up on the audit log.
 
-              .. versionadded:: 1.4
-          prefer_auth: :class:`bool`
-              Whether to use the bot token over the webhook token
-              if available. Defaults to ``True``.
+            .. versionadded:: 1.4
+        prefer_auth: :class:`bool`
+            Whether to use the bot token over the webhook token
+            if available. Defaults to ``True``.
 
-              .. versionadded:: 2.0
+            .. versionadded:: 2.0
 
-          Raises
-          ------
-          HTTPException
-              Editing the webhook failed.
-          NotFound
-              This webhook does not exist.
-          InvalidArgument
-              This webhook does not have a token associated with it
-              or it tried editing a channel without authentication.
+        Raises
+        ------
+        HTTPException
+            Editing the webhook failed.
+        NotFound
+            This webhook does not exist.
+        InvalidArgument
+            This webhook does not have a token associated with it
+            or it tried editing a channel without authentication.
         """
         if self.token is None and self.auth_token is None:
             raise InvalidArgument("This webhook does not have a token associated with it")
