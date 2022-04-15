@@ -40,11 +40,11 @@ from typing import (
     Dict,
     Generator,
     List,
+    Literal,
     Optional,
     Type,
     TypeVar,
     Union,
-    Literal,
 )
 
 from .client import Client
@@ -248,11 +248,7 @@ class ApplicationCommandMixin(ABC):
                     return True
                 for i, subcommand in enumerate(cmd.subcommands):
                     match_ = next(
-                        (
-                            data
-                            for data in match["options"]
-                            if data["name"] == subcommand.name
-                        ),
+                        (data for data in match["options"] if data["name"] == subcommand.name),
                         MISSING,
                     )
                     if match_ is not MISSING and _check_command(subcommand, match_):
@@ -265,8 +261,15 @@ class ApplicationCommandMixin(ABC):
                     "description": None,
                     "name_localizations": None,
                     "description_localizations": None,
-                    "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
-                                "description_localizations"],
+                    "options": [
+                        "type",
+                        "name",
+                        "description",
+                        "autocomplete",
+                        "choices",
+                        "name_localizations",
+                        "description_localizations",
+                    ],
                 }
                 for check, value in to_check.items():
                     if type(to_check[check]) == list:
@@ -274,11 +277,7 @@ class ApplicationCommandMixin(ABC):
                         # The API considers False (autocomplete) and [] (choices) to be falsy values
                         falsy_vals = (False, [])
                         for opt in value:
-                            cmd_vals = (
-                                [val.get(opt, MISSING) for val in as_dict[check]]
-                                if check in as_dict
-                                else []
-                            )
+                            cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                             for i, val in enumerate(cmd_vals):
                                 if val in falsy_vals:
                                     cmd_vals[i] = MISSING
@@ -379,12 +378,12 @@ class ApplicationCommandMixin(ABC):
         raise RuntimeError("This function has not been implemented yet")
 
     async def register_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            guild_id: Optional[int] = None,
-            method: Literal["individual", "bulk", "auto"] = "bulk",
-            force: bool = False,
-            delete_existing: bool = True,
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        guild_id: Optional[int] = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        delete_existing: bool = True,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -523,8 +522,8 @@ class ApplicationCommandMixin(ABC):
                 else:
                     _log.debug(
                         f"Bulk updating commands %s for guild %s",
-                        {c['command'].name: c['action'] for c in pending_actions},
-                        guild_id
+                        {c["command"].name: c["action"] for c in pending_actions},
+                        guild_id,
                     )
                     registered = await register("bulk", data, _log=False)
             else:
@@ -565,14 +564,14 @@ class ApplicationCommandMixin(ABC):
         return registered
 
     async def sync_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            method: Literal["individual", "bulk", "auto"] = "bulk",
-            force: bool = False,
-            guild_ids: Optional[List[int]] = None,
-            register_guild_commands: bool = True,
-            check_guilds: Optional[List[int]] = [],
-            delete_exiting: bool = True,
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        guild_ids: Optional[List[int]] = None,
+        register_guild_commands: bool = True,
+        check_guilds: Optional[List[int]] = [],
+        delete_exiting: bool = True,
     ) -> None:
         """|coro|
 
@@ -626,8 +625,9 @@ class ApplicationCommandMixin(ABC):
                 cmd.guild_ids = guild_ids
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
-        registered_commands = await self.register_commands(global_commands, method=method, force=force,
-                                                           delete_existing=delete_exiting)
+        registered_commands = await self.register_commands(
+            global_commands, method=method, force=force, delete_existing=delete_exiting
+        )
 
         registered_guild_commands = {}
 
@@ -828,7 +828,6 @@ class ApplicationCommandMixin(ABC):
                         await self.sync_commands(check_guilds=[guild_id])
                 return self._bot.dispatch("unknown_application_command", interaction)
 
-
         if interaction.type is InteractionType.auto_complete:
             return self.dispatch("application_command_auto_complete", interaction, command)
 
@@ -836,8 +835,7 @@ class ApplicationCommandMixin(ABC):
         ctx.command = command
         await self.invoke_application_command(ctx)
 
-    async def on_application_command_auto_complete(self, interaction: Interaction,
-                                                   command: ApplicationCommand) -> None:
+    async def on_application_command_auto_complete(self, interaction: Interaction, command: ApplicationCommand) -> None:
         async def callback() -> None:
             ctx = await self.get_autocomplete_context(interaction)
             ctx.command = command
@@ -935,11 +933,7 @@ class ApplicationCommandMixin(ABC):
         return self.application_command(**kwargs)
 
     def create_group(
-        self,
-        name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
-        **kwargs
+        self, name: str, description: Optional[str] = None, guild_ids: Optional[List[int]] = None, **kwargs
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
