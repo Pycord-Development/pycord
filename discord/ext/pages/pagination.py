@@ -756,7 +756,8 @@ class Paginator(discord.ui.View):
         target_message: Optional[str] = None,
         reference: Optional[Union[discord.Message, discord.MessageReference, discord.PartialMessage]] = None,
         allowed_mentions: Optional[discord.AllowedMentions] = None,
-        mention_author: bool = None,
+        mention_author: Optional[bool] = None,
+        delete_after: Optional[float] = None,
     ) -> discord.Message:
         """Sends a message with the paginated items.
 
@@ -782,6 +783,8 @@ class Paginator(discord.ui.View):
             are used instead.
         mention_author: Optional[:class:`bool`]
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time.
 
         Returns
         --------
@@ -831,7 +834,72 @@ class Paginator(discord.ui.View):
             reference=reference,
             allowed_mentions=allowed_mentions,
             mention_author=mention_author,
+            delete_after=delete_after,
         )
+
+        return self.message
+
+    async def edit(
+        self,
+        message: discord.Message,
+        suppress: Optional[bool] = None,
+        allowed_mentions: Optional[discord.AllowedMentions] = None,
+        delete_after: Optional[float] = None,
+    ) -> Optional[discord.Message]:
+        """Edits an existing message to replace it with the paginator contents.
+
+        .. note::
+
+            If invoked from an interaction, you will still need to respond to the interaction.
+
+
+        Parameters
+        -----------
+        message: :class:`discord.Message`
+            The message to edit with the paginator.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message. This removes
+            all the embeds if set to ``True``. If set to ``False``
+            this brings the embeds back if they were suppressed.
+            Using this parameter requires :attr:`~.Permissions.manage_messages`.
+        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time.
+
+        Returns
+        --------
+        Optional[:class:`discord.Message`]
+            The message that was edited. Returns ``None`` if the operation failed.
+        """
+        if not isinstance(message, discord.Message):
+            raise TypeError(f"expected Message not {message.__class__!r}")
+
+        self.update_buttons()
+
+        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page_content: Page = self.get_page_content(page)
+
+        if page_content.custom_view:
+            self.update_custom_view(page_content.custom_view)
+
+        self.user = message.author
+        try:
+            self.message = await message.edit(
+                content=page_content.content,
+                embeds=page_content.embeds,
+                view=self,
+                suppress=suppress,
+                allowed_mentions=allowed_mentions,
+                delete_after=delete_after,
+            )
+        except (discord.NotFound, discord.Forbidden):
+            pass
 
         return self.message
 

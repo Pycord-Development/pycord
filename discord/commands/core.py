@@ -49,20 +49,20 @@ from typing import (
     overload,
 )
 
-from ..role import Role
-from ..object import Object
 from ..channel import _guild_channel_factory
 from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
-    ClientException,
-    ValidationError,
-    NotFound,
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
+    ClientException,
+    NotFound,
+    ValidationError,
 )
 from ..member import Member
 from ..message import Attachment, Message
+from ..object import Object
+from ..role import Role
 from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
@@ -405,15 +405,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        
+
         This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -430,15 +430,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        
+
         This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -773,8 +773,9 @@ class SlashCommand(ApplicationCommand):
             ):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
-                        op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
-                        and (_data := resolved.get("members", {}).get(arg)) is not None):
+                    op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
+                    and (_data := resolved.get("members", {}).get(arg)) is not None
+                ):
                     # The option type is a user, we resolved a member from the snowflake and assigned it to _data
                     if (_user_data := resolved.get("users", {}).get(arg)) is not None:
                         # We resolved the user from the user id
@@ -796,7 +797,7 @@ class SlashCommand(ApplicationCommand):
                         obj_type = Role
                         kw["guild"] = ctx.guild
                     elif op.input_type is SlashCommandOptionType.channel:
-                        obj_type = _guild_channel_factory(_data["type"])
+                        obj_type = _guild_channel_factory(_data["type"])[0]
                         kw["guild"] = ctx.guild
                     elif op.input_type is SlashCommandOptionType.attachment:
                         obj_type = Attachment
@@ -1114,8 +1115,9 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value for param, value in self.__original_kwargs__.items()
-                if param not in ('name', 'description')
+                param: value
+                for param, value in self.__original_kwargs__.items()
+                if param not in ("name", "description")
             },
         )
         return self._ensure_assignment_on_copy(ret)
@@ -1412,14 +1414,13 @@ class MessageCommand(ContextMenuCommand):
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
             author_id = int(message["author"]["id"])
-            self_or_system_message: bool = (
-                ctx.bot.user.id == author_id
-                or try_enum(MessageType, message["type"]) not in (
-                    MessageType.default,
-                    MessageType.reply,
-                    MessageType.application_command,
-                    MessageType.thread_starter_message,
-                )
+            self_or_system_message: bool = ctx.bot.user.id == author_id or try_enum(
+                MessageType, message["type"]
+            ) not in (
+                MessageType.default,
+                MessageType.reply,
+                MessageType.application_command,
+                MessageType.thread_starter_message,
             )
             user_id = ctx.author.id if self_or_system_message else author_id
             data = await ctx.interaction._state.http.start_private_message(user_id)
@@ -1472,9 +1473,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1485,9 +1486,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1498,9 +1499,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1518,9 +1519,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
-    
+
     .. versionadded:: 2.0
-    
+
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1529,7 +1530,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
-        
+
     Raises
     -------
     TypeError
@@ -1548,12 +1549,12 @@ def application_command(cls=SlashCommand, **attrs):
 
 def command(**kwargs):
     """An alias for :meth:`application_command`.
-    
+
     .. note::
         This decorator is overridden by :func:`commands.command`.
-        
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]
@@ -1607,25 +1608,31 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     if not isinstance(name, str):
         raise TypeError(
-            f"Chat input command names and options must be of type str."
-            f"Received {name}" + f" in locale {locale}" if locale else ""
+            f"Chat input command names and options must be of type str." f"Received {name}" + f" in locale {locale}"
+            if locale
+            else ""
         )
     if not re.match(r"^[\w-]{1,32}$", name):
         raise ValidationError(
-             'Chat input command names and options must follow the regex '
+            "Chat input command names and options must follow the regex "
             r'"^[\w-]{1,32}$". For more information, see '
             f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
+            f"Received {name}" + f" in locale {locale}"
+            if locale
+            else ""
         )
     if not 1 <= len(name) <= 32:
         raise ValidationError(
-             "Chat input command names and options must be 1-32 characters long. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
+            "Chat input command names and options must be 1-32 characters long. "
+            f"Received {name}" + f" in locale {locale}"
+            if locale
+            else ""
         )
     if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         raise ValidationError(
-             "Chat input command names and options must be lowercase. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
+            "Chat input command names and options must be lowercase. " f"Received {name}" + f" in locale {locale}"
+            if locale
+            else ""
         )
 
 
@@ -1637,10 +1644,13 @@ def validate_chat_input_description(description: Any, locale: Optional[str] = No
         )
     if not isinstance(description, str):
         raise TypeError(
-            f"Command description must be of type str. Received {description} " + f" in locale {locale}" if locale else ""
+            f"Command description must be of type str. Received {description} " + f" in locale {locale}"
+            if locale
+            else ""
         )
     if not 1 <= len(description) <= 100:
         raise ValidationError(
-             "Command description must be 1-100 characters long. "
-            f"Received {description}" + f" in locale {locale}" if locale else ""
+            "Command description must be 1-100 characters long. " f"Received {description}" + f" in locale {locale}"
+            if locale
+            else ""
         )
