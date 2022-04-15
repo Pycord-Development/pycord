@@ -134,9 +134,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         The category channel ID this channel belongs to, if applicable.
     topic: Optional[:class:`str`]
         The channel's topic. ``None`` if it doesn't exist.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     last_message_id: Optional[:class:`int`]
         The last message ID of the message sent to this channel. It may
         *not* point to an existing or valid message.
@@ -193,7 +193,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.topic: Optional[str] = data.get("topic")
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self.nsfw: bool = data.get("nsfw", False)
         # Does this need coercion into `int`? No idea yet.
         self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
@@ -973,7 +973,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "category_id",
         "rtc_region",
         "video_quality_mode",
-        'last_message_id',
+        "last_message_id",
     )
 
     def __init__(
@@ -1000,8 +1000,8 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
         self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, 'last_message_id')
-        self.position: int = data["position"]
+        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+        self.position: int = data.get("position")
         self.bitrate: int = data.get("bitrate")
         self.user_limit: int = data.get("user_limit")
         self._fill_overwrites(data)
@@ -1087,9 +1087,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         The channel ID.
     category_id: Optional[:class:`int`]
         The category channel ID this channel belongs to, if applicable.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
@@ -1223,16 +1223,16 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
-            self,
-            *,
-            limit: Optional[int] = 100,
-            check: Callable[[Message], bool] = MISSING,
-            before: Optional[SnowflakeTime] = None,
-            after: Optional[SnowflakeTime] = None,
-            around: Optional[SnowflakeTime] = None,
-            oldest_first: Optional[bool] = False,
-            bulk: bool = True,
-            reason: Optional[str] = None,
+        self,
+        *,
+        limit: Optional[int] = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: Optional[SnowflakeTime] = None,
+        after: Optional[SnowflakeTime] = None,
+        around: Optional[SnowflakeTime] = None,
+        oldest_first: Optional[bool] = False,
+        bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
 
@@ -1327,7 +1327,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         return [Webhook.from_state(d, state=self._state) for d in data]
 
     async def create_webhook(
-            self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None
+        self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None
     ) -> Webhook:
         """|coro|
 
@@ -1559,9 +1559,9 @@ class StageChannel(VocalGuildChannel):
         The channel's topic. ``None`` if it isn't set.
     category_id: Optional[:class:`int`]
         The category channel ID this channel belongs to, if applicable.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
@@ -1836,9 +1836,9 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         The guild the category belongs to.
     id: :class:`int`
         The category channel ID.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the category list. This is a number that starts at 0. e.g. the
-        top category is position 0.
+        top category is position 0. Can be ``None`` if the channel was received in an interaction.
     nsfw: :class:`bool`
         If the channel is marked as "not safe for work".
 
@@ -1871,7 +1871,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.nsfw: bool = data.get("nsfw", False)
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self._fill_overwrites(data)
 
     @property
