@@ -23,6 +23,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .core import *
-from .context import *
 from .bot import *
+from .context import *
+from .core import *
