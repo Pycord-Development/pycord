@@ -414,16 +414,16 @@ class Thread(Messageable, Hashable):
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
-            self,
-            *,
-            limit: Optional[int] = 100,
-            check: Callable[[Message], bool] = MISSING,
-            before: Optional[SnowflakeTime] = None,
-            after: Optional[SnowflakeTime] = None,
-            around: Optional[SnowflakeTime] = None,
-            oldest_first: Optional[bool] = False,
-            bulk: bool = True,
-            reason: Optional[str] = None,
+        self,
+        *,
+        limit: Optional[int] = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: Optional[SnowflakeTime] = None,
+        after: Optional[SnowflakeTime] = None,
+        around: Optional[SnowflakeTime] = None,
+        oldest_first: Optional[bool] = False,
+        bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
 

@@ -1898,7 +1898,9 @@ class PartialMessage(Hashable):
                 allowed_mentions = allowed_mentions.to_dict()
             fields["allowed_mentions"] = allowed_mentions
         else:
-            fields["allowed_mentions"] = self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            fields["allowed_mentions"] = (
+                self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            )
 
         view = fields.pop("view", MISSING)
         if view is not MISSING:

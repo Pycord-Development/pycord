@@ -222,17 +222,18 @@ class OptionChoice:
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
-    def __init__(self, name: str, value: Optional[Union[str, int, float]] = None,
-                 name_localizations: Optional[Dict[str, str]] = None):
+    def __init__(
+        self,
+        name: str,
+        value: Optional[Union[str, int, float]] = None,
+        name_localizations: Optional[Dict[str, str]] = None,
+    ):
         self.name = str(name)
         self.value = value if value is not None else name
         self.name_localizations = name_localizations
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
-        as_dict = {
-            "name": self.name,
-            "value": self.value
-        }
+        as_dict = {"name": self.name, "value": self.value}
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
 
