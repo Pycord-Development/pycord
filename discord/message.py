@@ -1869,7 +1869,7 @@ class PartialMessage(Hashable):
 
         content = fields.pop("content", MISSING)
         if content is not MISSING:
-            fields["content"] = str(content)
+            fields["content"] = str(content) if content is not None else None
 
         embed = fields.pop("embed", MISSING)
         embeds = fields.pop("embeds", MISSING)
@@ -1898,11 +1898,14 @@ class PartialMessage(Hashable):
                 allowed_mentions = allowed_mentions.to_dict()
             fields["allowed_mentions"] = allowed_mentions
         else:
-            fields["allowed_mentions"] = self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            fields["allowed_mentions"] = (
+                self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            )
 
-        view = fields.pop("view", None)
-        self._state.prevent_view_updates_for(self.id)
-        fields["components"] = view.to_components() if view else []
+        view = fields.pop("view", MISSING)
+        if view is not MISSING:
+            self._state.prevent_view_updates_for(self.id)
+            fields["components"] = view.to_components() if view else []
 
         if fields:
             data = await self._state.http.edit_message(self.channel.id, self.id, **fields)

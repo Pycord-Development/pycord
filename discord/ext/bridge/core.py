@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Union, Any
+from typing import Any, Union
 
 import discord.commands.options
 from discord.commands import Option, SlashCommand
@@ -48,6 +48,7 @@ class BridgeSlashCommand(SlashCommand):
     """
     A subclass of :class:`.SlashCommand` that is used to implement bridge commands.
     """
+
     ...
 
 
@@ -55,6 +56,7 @@ class BridgeExtCommand(Command):
     """
     A subclass of :class:`.ext.commands.Command` that is used to implement bridge commands.
     """
+
     ...
 
 

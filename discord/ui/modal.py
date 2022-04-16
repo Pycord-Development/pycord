@@ -3,8 +3,8 @@ from __future__ import annotations
 import asyncio
 import os
 import sys
-from itertools import groupby
 import traceback
+from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from .input_text import InputText
@@ -50,7 +50,7 @@ class Modal:
 
     async def callback(self, interaction: Interaction):
         """|coro|
-        
+
         The coroutine that is called when the modal dialog is submitted.
         Should be overridden to handle the values submitted by the user.
 
