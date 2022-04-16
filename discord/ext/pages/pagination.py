@@ -578,7 +578,7 @@ class Paginator(discord.ui.View):
 
     def add_menu(self):
         """Adds the default :class:`PaginatorMenu` instance to the paginator."""
-        self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder, custom_id="pages_group_menu")
+        self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder)
         self.menu.paginator = self
         self.add_item(self.menu)
 
