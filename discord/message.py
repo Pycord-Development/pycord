@@ -1869,7 +1869,7 @@ class PartialMessage(Hashable):
 
         content = fields.pop("content", MISSING)
         if content is not MISSING:
-            fields["content"] = str(content)
+            fields["content"] = str(content) if content is not None else None
 
         embed = fields.pop("embed", MISSING)
         embeds = fields.pop("embeds", MISSING)
