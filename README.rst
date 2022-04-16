@@ -1,18 +1,21 @@
 Pycord
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?color=blue&label=discord&style=for-the-badge&logo=discord&color=success
+.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
    :target: https://pycord.dev/discord
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=semantic-release&color=yellowgreen
+.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python
+.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=blue&style=for-the-badge
+.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=white&style=for-the-badge
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI downloads
+.. image:: https://img.shields.io/github/v/release/Pycord-Development/pycord?include_prereleases&label=Latest%20Release&logo=github&sort=semver&style=for-the-badge&logoColor=white
+   :target: https://github.com/Pycord-Development/pycord/releases
+   :alt: Latest release
 
 A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
