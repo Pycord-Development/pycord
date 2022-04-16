@@ -813,7 +813,8 @@ class ApplicationCommandMixin(ABC):
         except KeyError:
             for cmd in self.application_commands:
                 guild_id = interaction.data.get("guild_id")
-                if guild_id: guild_id = int(guild_id)
+                if guild_id: 
+                    guild_id = int(guild_id)
                 if cmd.name == interaction.data["name"] and (
                     guild_id == cmd.guild_ids
                     or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
