@@ -398,6 +398,7 @@ class Paginator(discord.ui.View):
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
         trigger_on_display: Optional[bool] = None,
+        interaction: Optional[discord.Interaction] = None,
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
 
@@ -432,6 +433,9 @@ class Paginator(discord.ui.View):
         trigger_on_display: :class:`bool`
             Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
             Has no effect if no callback exists for a `Page`.
+        interaction: Optional[:class:`discord.Interaction`]
+            The interaction to use when updating the paginator. If not provided, the paginator will be updated
+            by using its stored :attr:`message` attribute instead.
         """
 
         # Update pages and reset current_page to 0 (default)
@@ -460,7 +464,7 @@ class Paginator(discord.ui.View):
             self.buttons = {}
             self.add_default_buttons()
 
-        await self.goto_page(self.current_page)
+        await self.goto_page(self.current_page, interaction=interaction)
 
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
@@ -1023,6 +1027,15 @@ class PaginatorMenu(discord.ui.Select):
         super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts, custom_id=custom_id)
 
     async def callback(self, interaction: discord.Interaction):
+        """|coro|
+
+        The coroutine that is called when a menu option is selected.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction created by selecting the menu option.
+        """
         selection = self.values[0]
         for page_group in self.page_groups:
             if selection == page_group.label:
@@ -1036,4 +1049,5 @@ class PaginatorMenu(discord.ui.Select):
                     loop_pages=page_group.loop_pages,
                     custom_view=page_group.custom_view,
                     custom_buttons=page_group.custom_buttons,
+                    interaction=interaction,
                 )
