@@ -31,17 +31,9 @@ from .errors import MP4SinkError
 
 
 class MP4Sink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mp4 files.
 
-    Used for .mp4 files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -55,10 +47,17 @@ class MP4Sink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+
+        Raises
+        ------
+        MP4SinkError
+            Audio may only be formatted after recording is finished.
+        MP4SinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
-            raise MP4SinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise MP4SinkError("Audio may only be formatted after recording is finished.")
         mp4_file = f"{time.time()}.tmp"
         args = [
             "ffmpeg",
@@ -75,19 +74,13 @@ class MP4Sink(Sink):
             mp4_file,
         ]
         if os.path.exists(mp4_file):
-            os.remove(
-                mp4_file
-            )  # process will get stuck asking whether or not to overwrite, if file already exists.
+            os.remove(mp4_file)  # process will get stuck asking whether or not to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(
-                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
-            )
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
         except FileNotFoundError:
             raise MP4SinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise MP4SinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise MP4SinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         process.communicate(audio.file.read())
 

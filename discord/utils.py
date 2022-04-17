@@ -56,6 +56,7 @@ from typing import (
     List,
     Literal,
     Mapping,
+    NewType,
     Optional,
     Protocol,
     Sequence,
@@ -137,6 +138,8 @@ if TYPE_CHECKING:
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
+
+    cached_property = NewType("cached_property", property)
 
     P = ParamSpec("P")
 
@@ -277,9 +280,7 @@ def deprecated(
             else:
                 fmt = "{0.__name__} is deprecated."
 
-            warnings.warn(
-                fmt.format(func, instead), stacklevel=3, category=DeprecationWarning
-            )
+            warnings.warn(fmt.format(func, instead), stacklevel=3, category=DeprecationWarning)
             warnings.simplefilter("default", DeprecationWarning)  # reset filter
             return func(*args, **kwargs)
 
@@ -465,9 +466,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
                 return elem
         return None
 
-    converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
-    ]
+    converted = [(attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()]
 
     for elem in iterable:
         if _all(pred(elem) == value for pred, value in converted):
@@ -481,7 +480,11 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
     if getter is None:
         try:
             getter = await getattr(obj, f"fetch_{attr}")(id)
-        except HTTPException:
+        except AttributeError:
+            getter = await getattr(obj, f"_fetch_{attr}")(id)
+            if getter is None:
+                raise ValueError(f"Could not find {attr} with id {id} on {obj}")
+        except (HTTPException, ValueError):
             if default is not MISSING:
                 return default
             else:
@@ -543,9 +546,7 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
         return float(reset_after)
     utc = datetime.timezone.utc
     now = datetime.datetime.now(utc)
-    reset = datetime.datetime.fromtimestamp(
-        float(request.headers["X-Ratelimit-Reset"]), utc
-    )
+    reset = datetime.datetime.fromtimestamp(float(request.headers["X-Ratelimit-Reset"]), utc)
     return (reset - now).total_seconds()
 
 
@@ -568,9 +569,7 @@ async def async_all(gen, *, check=_isawaitable):
 
 async def sane_wait_for(futures, *, timeout):
     ensured = [asyncio.ensure_future(fut) for fut in futures]
-    done, pending = await asyncio.wait(
-        ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED
-    )
+    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
     if len(pending) != 0:
         raise asyncio.TimeoutError()
@@ -593,9 +592,7 @@ def compute_timedelta(dt: datetime.datetime):
     return max((dt - now).total_seconds(), 0)
 
 
-async def sleep_until(
-    when: datetime.datetime, result: Optional[T] = None
-) -> Optional[T]:
+async def sleep_until(when: datetime.datetime, result: Optional[T] = None) -> Optional[T]:
     """|coro|
 
     Sleep until a specified time.
@@ -738,9 +735,7 @@ def resolve_template(code: Union[Template, str]) -> str:
     return code
 
 
-_MARKDOWN_ESCAPE_SUBREGEX = "|".join(
-    r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|")
-)
+_MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|"))
 
 # regular expression for finding and escaping links in markdown
 # note: technically, brackets are allowed in link text.
@@ -801,9 +796,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     return re.sub(regex, replacement, text, 0, re.MULTILINE)
 
 
-def escape_markdown(
-    text: str, *, as_needed: bool = False, ignore_links: bool = True
-) -> str:
+def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
     r"""A helper function that escapes Discord's markdown.
 
     Parameters
@@ -1002,16 +995,11 @@ def evaluate_annotation(
             is_literal = True
 
         evaluated_args = tuple(
-            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str)
-            for arg in args
+            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str) for arg in args
         )
 
-        if is_literal and not all(
-            isinstance(x, (str, int, bool, type(None))) for x in evaluated_args
-        ):
-            raise TypeError(
-                "Literal arguments must be of type str, int, bool, or NoneType."
-            )
+        if is_literal and not all(isinstance(x, (str, int, bool, type(None))) for x in evaluated_args):
+            raise TypeError("Literal arguments must be of type str, int, bool, or NoneType.")
 
         if evaluated_args == args:
             return tp
@@ -1117,7 +1105,7 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 
 def basic_autocomplete(values: Values) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
-    will return any options that start with the value from the user, case insensitive. If :param:`values` is callable,
+    will return any options that start with the value from the user, case insensitive. If the ``values`` parameter is callable,
     it will be called with the AutocompleteContext.
 
     This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
@@ -1145,13 +1133,13 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
     Parameters
     -----------
-    values: Union[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
-        single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+        single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
-    Callable[[:class:`AutocompleteContext`], Awaitable[Union[Iterable[:class:`OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
     """
 

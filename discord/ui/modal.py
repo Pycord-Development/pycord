@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import asyncio
 import os
 import sys
+import traceback
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
@@ -22,16 +24,33 @@ class Modal:
     """Represents a UI Modal dialog.
 
     This object must be inherited to create a UI within Discord.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    title: :class:`str`
+        The title of the modal dialog.
+        Must be 45 characters or fewer.
+    custom_id: Optional[:class:`str`]
+        The ID of the modal dialog that gets received during an interaction.
+        Must be 100 characters or fewer.
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+        if not (isinstance(custom_id, str) or custom_id is None):
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+
         self.custom_id = custom_id or os.urandom(16).hex()
         self.title = title
         self.children: List[InputText] = []
         self.__weights = _ModalWeights(self.children)
+        loop = asyncio.get_running_loop()
+        self._stopped: asyncio.Future[bool] = loop.create_future()
 
     async def callback(self, interaction: Interaction):
         """|coro|
+
         The coroutine that is called when the modal dialog is submitted.
         Should be overridden to handle the values submitted by the user.
 
@@ -40,7 +59,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that submitted the modal dialog.
         """
-        pass
+        self.stop()
 
     def to_components(self) -> List[Dict[str, Any]]:
         def key(item: InputText) -> int:
@@ -93,12 +112,38 @@ class Modal:
         except ValueError:
             pass
 
+    def stop(self) -> None:
+        """Stops listening to interaction events from the modal dialog."""
+        if not self._stopped.done():
+            self._stopped.set_result(True)
+
+    async def wait(self) -> bool:
+        """Waits for the modal dialog to be submitted."""
+        return await self._stopped
+
     def to_dict(self):
         return {
             "title": self.title,
             "custom_id": self.custom_id,
             "components": self.to_components(),
         }
+
+    async def on_error(self, error: Exception, interaction: Interaction) -> None:
+        """|coro|
+
+        A callback that is called when the modal's callback fails with an error.
+
+        The default implementation prints the traceback to stderr.
+
+        Parameters
+        -----------
+        error: :class:`Exception`
+            The exception that was raised.
+        interaction: :class:`~discord.Interaction`
+            The interaction that led to the failure.
+        """
+        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
 
 class _ModalWeights:
@@ -124,9 +169,7 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:
@@ -161,15 +204,18 @@ class ModalStore:
         if value is None:
             return
 
-        components = [
-            component
-            for parent_component in interaction.data["components"]
-            for component in parent_component["components"]
-        ]
-        for component in components:
-            for child in value.children:
-                if child.custom_id == component["custom_id"]:  # type: ignore
-                    child.refresh_state(component)
-                    break
-        await value.callback(interaction)
-        self.remove_modal(value, user_id)
+        try:
+            components = [
+                component
+                for parent_component in interaction.data["components"]
+                for component in parent_component["components"]
+            ]
+            for component in components:
+                for child in value.children:
+                    if child.custom_id == component["custom_id"]:  # type: ignore
+                        child.refresh_state(component)
+                        break
+            await value.callback(interaction)
+            self.remove_modal(value, user_id)
+        except Exception as e:
+            return await value.on_error(e, interaction)

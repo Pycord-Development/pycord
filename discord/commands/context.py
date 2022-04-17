@@ -51,7 +51,7 @@ if TYPE_CHECKING:
 
     from typing import Callable, Awaitable
 
-from ..utils import _cached_property as cached_property
+from ..utils import cached_property
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -159,11 +159,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
-        return (
-            self.interaction.guild.me
-            if self.interaction.guild is not None
-            else self.bot.user
-        )
+        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Optional[Message]:
@@ -213,21 +209,26 @@ class ApplicationContext(discord.abc.Messageable):
                 return [
                     option
                     for option in self.command.options  # type: ignore
-                    if option.to_dict()["name"]
-                    not in [opt["name"] for opt in self.selected_options]
+                    if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
                 ]
             else:
                 return self.command.options  # type: ignore
         return None
 
     @property
-    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
-        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
-        or a followup response depending if the interaction has been responded to yet or not."""
-        if not self.interaction.response.is_done():
-            return self.interaction.response.send_message  # self.response
-        else:
-            return self.followup.send  # self.send_followup
+    def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
+        """Sends a modal dialog to the user who invoked the interaction."""
+        return self.interaction.response.send_modal
+
+    async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
+        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        try:
+            if not self.interaction.response.is_done():
+                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+            else:
+                return await self.followup.send(*args, **kwargs)  # self.send_followup
+        except discord.errors.InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
 
     @property
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
@@ -295,7 +296,7 @@ class AutocompleteContext:
         The option the user is currently typing.
     value: :class:`.str`
         The content of the focused option.
-    options :class:`.dict`
+    options: :class:`.dict`
         A name to value mapping of the options that the user has selected before this option.
     """
 

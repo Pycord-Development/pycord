@@ -201,9 +201,7 @@ class RawReactionActionEvent(_RawReprMixin):
         "member",
     )
 
-    def __init__(
-        self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str
-    ) -> None:
+    def __init__(self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
@@ -353,9 +351,7 @@ class RawTypingEvent(_RawReprMixin):
     def __init__(self, data: TypingEvent) -> None:
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
-        self.when: datetime.datetime = datetime.datetime.fromtimestamp(
-            data.get("timestamp"), tz=datetime.timezone.utc
-        )
+        self.when: datetime.datetime = datetime.datetime.fromtimestamp(data.get("timestamp"), tz=datetime.timezone.utc)
         self.member: Optional[Member] = None
 
         try:

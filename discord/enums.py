@@ -25,7 +25,17 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 __all__ = (
     "Enum",
@@ -70,29 +80,15 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value <= other.value
-        )
-        cls.__ge__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value >= other.value
-        )
-        cls.__lt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value < other.value
-        )
-        cls.__gt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value > other.value
-        )
+        cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
+        cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
+        cls.__lt__ = lambda self, other: isinstance(other, self.__class__) and self.value < other.value
+        cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
     return cls
 
 
 def _is_descriptor(obj):
-    return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
-    )
+    return hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
 
 
 class EnumMeta(type):
@@ -144,9 +140,7 @@ class EnumMeta(type):
         return (cls._enum_member_map_[name] for name in cls._enum_member_names_)
 
     def __reversed__(cls):
-        return (
-            cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_)
-        )
+        return (cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_))
 
     def __len__(cls):
         return len(cls._enum_member_names_)
@@ -202,7 +196,6 @@ class ChannelType(Enum):
     group = 3
     category = 4
     news = 5
-    store = 6
     news_thread = 10
     public_thread = 11
     private_thread = 12
@@ -631,7 +624,7 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
-    # public = 1 Deprecated
+    # public = 1 (deprecated)
     closed = 2
     guild_only = 2
 
@@ -666,6 +659,13 @@ class SlashCommandOptionType(Enum):
                 return cls.mentionable
             else:
                 raise TypeError("Invalid usage of typing.Union")
+
+        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(datatype, types.UnionType)
+
+        if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
+            # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
+            # Type checking fails for this case, so ignore it.
+            return cls.from_datatype(datatype.__args__)  # type: ignore
 
         if datatype.__name__ in ["Member", "User"]:
             return cls.user

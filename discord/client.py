@@ -225,12 +225,8 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
-        self._listeners: Dict[
-            str, List[Tuple[asyncio.Future, Callable[..., bool]]]
-        ] = {}
+        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
+        self._listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         self.shard_id: Optional[int] = options.get("shard_id")
         self.shard_count: Optional[int] = options.get("shard_count")
 
@@ -248,9 +244,7 @@ class Client:
 
         self._handlers: Dict[str, Callable] = {"ready": self._handle_ready}
 
-        self._hooks: Dict[str, Callable] = {
-            "before_identify": self._call_before_identify_hook
-        }
+        self._hooks: Dict[str, Callable] = {"before_identify": self._call_before_identify_hook}
 
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
@@ -266,9 +260,7 @@ class Client:
 
     # internals
 
-    def _get_websocket(
-        self, guild_id: Optional[int] = None, *, shard_id: Optional[int] = None
-    ) -> DiscordWebSocket:
+    def _get_websocket(self, guild_id: Optional[int] = None, *, shard_id: Optional[int] = None) -> DiscordWebSocket:
         return self.ws
 
     def _get_state(self, **options: Any) -> ConnectionState:
@@ -461,17 +453,13 @@ class Client:
 
     # hooks
 
-    async def _call_before_identify_hook(
-        self, shard_id: Optional[int], *, initial: bool = False
-    ) -> None:
+    async def _call_before_identify_hook(self, shard_id: Optional[int], *, initial: bool = False) -> None:
         # This hook is an internal hook that actually calls the public one.
         # It allows the library to have its own hook without stepping on the
         # toes of those who need to override their own hook.
         await self.before_identify_hook(shard_id, initial=initial)
 
-    async def before_identify_hook(
-        self, shard_id: Optional[int], *, initial: bool = False
-    ) -> None:
+    async def before_identify_hook(self, shard_id: Optional[int], *, initial: bool = False) -> None:
         """|coro|
 
         A hook that is called before IDENTIFYing a session. This is useful
@@ -511,17 +499,15 @@ class Client:
         ------
         TypeError
             The token was in invalid type.
-        :exc:`.LoginFailure`
+        :exc:`LoginFailure`
             The wrong credentials are passed.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             An unknown HTTP related error occurred,
             usually when it isn't 200 or the known incorrect credentials
             passing status code.
         """
         if not isinstance(token, str):
-            raise TypeError(
-                f"token must be of type str, not {token.__class__.__name__}"
-            )
+            raise TypeError(f"token must be of type str, not {token.__class__.__name__}")
 
         _log.info("logging in using static token")
 
@@ -546,10 +532,10 @@ class Client:
 
         Raises
         -------
-        :exc:`.GatewayNotFound`
+        :exc:`GatewayNotFound`
             If the gateway to connect to Discord is not found. Usually if this
             is thrown then there is a Discord API outage.
-        :exc:`.ConnectionClosed`
+        :exc:`ConnectionClosed`
             The websocket connection has been terminated.
         """
 
@@ -621,9 +607,7 @@ class Client:
                 # Always try to RESUME the connection
                 # If the connection is not RESUME-able then the gateway will invalidate the session.
                 # This is apparently what the official Discord client does.
-                ws_params.update(
-                    sequence=self.ws.sequence, resume=True, session=self.ws.session_id
-                )
+                ws_params.update(sequence=self.ws.sequence, resume=True, session=self.ws.session_id)
 
     async def close(self) -> None:
         """|coro|
@@ -789,9 +773,7 @@ class Client:
         if value is None or isinstance(value, AllowedMentions):
             self._connection.allowed_mentions = value
         else:
-            raise TypeError(
-                f"allowed_mentions must be AllowedMentions not {value.__class__!r}"
-            )
+            raise TypeError(f"allowed_mentions must be AllowedMentions not {value.__class__!r}")
 
     @property
     def intents(self) -> Intents:
@@ -808,9 +790,7 @@ class Client:
         """List[:class:`~discord.User`]: Returns a list of all the users the bot can see."""
         return list(self._connection._users.values())
 
-    def get_channel(
-        self, id: int, /
-    ) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
+    def get_channel(self, id: int, /) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
         """Returns a channel or thread with the given ID.
 
         Parameters
@@ -825,9 +805,25 @@ class Client:
         """
         return self._connection.get_channel(id)
 
-    def get_partial_messageable(
-        self, id: int, *, type: Optional[ChannelType] = None
-    ) -> PartialMessageable:
+    def get_message(self, id: int, /) -> Optional[Message]:
+        """Returns a message the given ID.
+
+        This is useful if you have a message_id but don't want to do an API call
+        to access the message.
+
+        Parameters
+        -----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`.Message`]
+            The returned message or ``None`` if not found.
+        """
+        return self._connection._get_message(id)
+
+    def get_partial_messageable(self, id: int, *, type: Optional[ChannelType] = None) -> PartialMessageable:
         """Returns a partial messageable with the given channel ID.
 
         This is useful if you have a channel_id but don't want to do an API call
@@ -862,7 +858,7 @@ class Client:
         Returns
         --------
         Optional[:class:`.StageInstance`]
-            The returns stage instance of ``None`` if not found.
+            The stage instance or ``None`` if not found.
         """
         from .channel import StageChannel
 
@@ -1167,7 +1163,7 @@ class Client:
 
         Raises
         ------
-        :exc:`.InvalidArgument`
+        :exc:`InvalidArgument`
             If the ``activity`` parameter is not the proper type.
         """
 
@@ -1243,7 +1239,7 @@ class Client:
 
         Raises
         ------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the guilds failed.
 
         Yields
@@ -1265,9 +1261,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The template is invalid.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the template failed.
 
         Returns
@@ -1306,9 +1302,9 @@ class Client:
             .. versionadded:: 2.0
         Raises
         ------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have access to the guild.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the guild failed.
 
         Returns
@@ -1350,9 +1346,9 @@ class Client:
 
         Raises
         ------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Guild creation failed.
-        :exc:`.InvalidArgument`
+        :exc:`InvalidArgument`
             Invalid icon image format given. Must be PNG or JPG.
 
         Returns
@@ -1369,9 +1365,7 @@ class Client:
         region_value = str(region)
 
         if code:
-            data = await self.http.create_from_template(
-                code, name, region_value, icon_base64
-            )
+            data = await self.http.create_from_template(code, name, region_value, icon_base64)
         else:
             data = await self.http.create_guild(name, region_value, icon_base64)
         return Guild(data=data, state=self._connection)
@@ -1390,9 +1384,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The stage instance or channel could not be found.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the stage instance failed.
 
         Returns
@@ -1443,13 +1437,13 @@ class Client:
             See :meth:`Invite.set_scheduled_event` for more
             info on event invite linking.
 
-            ..versionadded:: 2.0
+            .. versionadded:: 2.0
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The invite has expired or is invalid.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Getting the invite failed.
 
         Returns
@@ -1482,11 +1476,11 @@ class Client:
 
         Raises
         -------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permissions to revoke invites.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             The invite is invalid or expired.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Revoking the invite failed.
         """
 
@@ -1511,9 +1505,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             The widget for this guild is disabled.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the widget failed.
 
         Returns
@@ -1532,7 +1526,7 @@ class Client:
 
         Raises
         -------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the information failed somehow.
 
         Returns
@@ -1563,9 +1557,9 @@ class Client:
 
         Raises
         -------
-        :exc:`.NotFound`
+        :exc:`NotFound`
             A user with this ID does not exist.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Fetching the user failed.
 
         Returns
@@ -1576,9 +1570,7 @@ class Client:
         data = await self.http.get_user(user_id)
         return User(state=self._connection, data=data)
 
-    async def fetch_channel(
-        self, channel_id: int, /
-    ) -> Union[GuildChannel, PrivateChannel, Thread]:
+    async def fetch_channel(self, channel_id: int, /) -> Union[GuildChannel, PrivateChannel, Thread]:
         """|coro|
 
         Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID.
@@ -1591,13 +1583,13 @@ class Client:
 
         Raises
         -------
-        :exc:`.InvalidData`
+        :exc:`InvalidData`
             An unknown channel type was received from Discord.
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the channel failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid Channel ID.
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permission to fetch this channel.
 
         Returns
@@ -1609,9 +1601,7 @@ class Client:
 
         factory, ch_type = _threaded_channel_factory(data["type"])
         if factory is None:
-            raise InvalidData(
-                "Unknown channel type {type} for channel ID {id}.".format_map(data)
-            )
+            raise InvalidData("Unknown channel type {type} for channel ID {id}.".format_map(data))
 
         if ch_type in (ChannelType.group, ChannelType.private):
             # the factory will be a DMChannel or GroupChannel here
@@ -1629,11 +1619,11 @@ class Client:
 
         Raises
         --------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the webhook failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid webhook ID.
-        :exc:`.Forbidden`
+        :exc:`Forbidden`
             You do not have permission to fetch this webhook.
 
         Returns
@@ -1644,9 +1634,7 @@ class Client:
         data = await self.http.get_webhook(webhook_id)
         return Webhook.from_state(data, state=self._connection)
 
-    async def fetch_sticker(
-        self, sticker_id: int, /
-    ) -> Union[StandardSticker, GuildSticker]:
+    async def fetch_sticker(self, sticker_id: int, /) -> Union[StandardSticker, GuildSticker]:
         """|coro|
 
         Retrieves a :class:`.Sticker` with the specified ID.
@@ -1655,9 +1643,9 @@ class Client:
 
         Raises
         --------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the sticker failed.
-        :exc:`.NotFound`
+        :exc:`NotFound`
             Invalid sticker ID.
 
         Returns
@@ -1678,7 +1666,7 @@ class Client:
 
         Raises
         -------
-        :exc:`.HTTPException`
+        :exc:`HTTPException`
             Retrieving the sticker packs failed.
 
         Returns
@@ -1687,10 +1675,7 @@ class Client:
             All available premium sticker packs.
         """
         data = await self.http.list_premium_sticker_packs()
-        return [
-            StickerPack(state=self._connection, data=pack)
-            for pack in data["sticker_packs"]
-        ]
+        return [StickerPack(state=self._connection, data=pack) for pack in data["sticker_packs"]]
 
     async def create_dm(self, user: Snowflake) -> DMChannel:
         """|coro|
@@ -1750,9 +1735,7 @@ class Client:
             raise TypeError(f"expected an instance of View not {view.__class__!r}")
 
         if not view.is_persistent():
-            raise ValueError(
-                "View is not persistent. Items need to have a custom_id set and View must have no timeout"
-            )
+            raise ValueError("View is not persistent. Items need to have a custom_id set and View must have no timeout")
 
         self._connection.store_view(view, message_id)
 

@@ -30,17 +30,9 @@ from .errors import MKASinkError
 
 
 class MKASink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .mka files.
 
-    Used for .mka files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -54,10 +46,17 @@ class MKASink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+
+        Raises
+        ------
+        MKASinkError
+            Audio may only be formatted after recording is finished.
+        MKASinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
-            raise MKASinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise MKASinkError("Audio may only be formatted after recording is finished.")
         args = [
             "ffmpeg",
             "-f",
@@ -82,9 +81,7 @@ class MKASink(Sink):
         except FileNotFoundError:
             raise MKASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise MKASinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise MKASinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         out = process.communicate(audio.file.read())[0]
         out = io.BytesIO(out)

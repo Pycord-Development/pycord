@@ -38,6 +38,7 @@ from .enums import (
 from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
+from .object import Object
 
 __all__ = (
     "ScheduledEvent",
@@ -73,7 +74,7 @@ class ScheduledEventLocation:
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
@@ -91,9 +92,9 @@ class ScheduledEventLocation:
         value: Union[str, int, StageChannel, VoiceChannel],
     ):
         self._state = state
-        self.value: Union[str, StageChannel, VoiceChannel]
+        self.value: Union[str, StageChannel, VoiceChannel, Object]
         if isinstance(value, int):
-            self.value = self._state._get_guild_channel({"channel_id": int(value)})
+            self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
         else:
             self.value = value
 
@@ -101,7 +102,7 @@ class ScheduledEventLocation:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
 
     def __str__(self) -> str:
-        return self.value
+        return str(self.value)
 
     @property
     def type(self) -> ScheduledEventLocationType:
@@ -155,8 +156,6 @@ class ScheduledEvent(Hashable):
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
-    interested: Optional[:class:`int`]
-        Alias to :attr:`.subscriber_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -167,10 +166,6 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
-    created_at: :class:`datetime.datetime`
-        The datetime object of when the event was created.
-    cover: Optional[:class:`Asset`]
-        The cover image of the scheduled event.
     """
 
     __slots__ = (
@@ -204,16 +199,12 @@ class ScheduledEvent(Hashable):
         self.name: str = data.get("name")
         self.description: Optional[str] = data.get("description", None)
         self._cover: Optional[str] = data.get("image", None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
-            data.get("scheduled_start_time")
-        )
+        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
         end_time = data.get("scheduled_end_time", None)
         if end_time != None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
-        self.status: ScheduledEventStatus = try_enum(
-            ScheduledEventStatus, data.get("status")
-        )
+        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
         self.subscriber_count: Optional[int] = data.get("user_count", None)
         self.creator_id = data.get("creator_id", None)
         self.creator: Optional[Member] = creator
@@ -221,9 +212,7 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get("entity_metadata")
         channel_id = data.get("channel_id", None)
         if channel_id is None:
-            self.location = ScheduledEventLocation(
-                state=state, value=entity_metadata["location"]
-            )
+            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
         else:
             self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
@@ -237,7 +226,7 @@ class ScheduledEvent(Hashable):
             f"description={self.description} "
             f"start_time={self.start_time} "
             f"end_time={self.end_time} "
-            f"location={self.location} "
+            f"location={self.location!r} "
             f"status={self.status.name} "
             f"subscriber_count={self.subscriber_count} "
             f"creator_id={self.creator_id}>"
@@ -252,6 +241,11 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
+
+    @property
+    def url(self) -> str:
+        """:class:`str`: The url to reference the scheduled event."""
+        return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
     def cover(self) -> Optional[Asset]:
@@ -271,9 +265,7 @@ class ScheduledEvent(Hashable):
         name: str = MISSING,
         description: str = MISSING,
         status: Union[int, ScheduledEventStatus] = MISSING,
-        location: Union[
-            str, int, VoiceChannel, StageChannel, ScheduledEventLocation
-        ] = MISSING,
+        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
         cover: Optional[bytes] = MISSING,
@@ -348,9 +340,7 @@ class ScheduledEvent(Hashable):
                 payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:
-            if not isinstance(
-                location, (ScheduledEventLocation, utils._MissingSentinel)
-            ):
+            if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
                 location = ScheduledEventLocation(state=self._state, value=location)
 
             if location.type is ScheduledEventLocationType.external:
@@ -364,9 +354,7 @@ class ScheduledEvent(Hashable):
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
             end_time = self.end_time
             if end_time is None:
-                raise ValidationError(
-                    "end_time needs to be passed if location type is external."
-                )
+                raise ValidationError("end_time needs to be passed if location type is external.")
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
@@ -375,12 +363,8 @@ class ScheduledEvent(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(
-                self.guild.id, self.id, **payload, reason=reason
-            )
-            return ScheduledEvent(
-                data=data, guild=self.guild, creator=self.creator, state=self._state
-            )
+            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload, reason=reason)
+            return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
 
     async def delete(self) -> None:
         """|coro|

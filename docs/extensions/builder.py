@@ -29,9 +29,7 @@ class DPYStandaloneHTMLBuilder(StandaloneHTMLBuilder):
         genindex = IndexEntries(self.env).create_index(self, group_entries=False)
         indexcounts = []
         for _k, entries in genindex:
-            indexcounts.append(
-                sum(1 + len(subitems) for _, (_, subitems, _) in entries)
-            )
+            indexcounts.append(sum(1 + len(subitems) for _, (_, subitems, _) in entries))
 
         genindexcontext = {
             "genindexentries": genindex,
@@ -49,7 +47,7 @@ class DPYStandaloneHTMLBuilder(StandaloneHTMLBuilder):
                     "count": count,
                     "genindexentries": genindex,
                 }
-                self.handle_page("genindex-" + key, ctx, "genindex-single.html")
+                self.handle_page(f"genindex-{key}", ctx, "genindex-single.html")
         else:
             self.handle_page("genindex", genindexcontext, "genindex.html")
 
@@ -71,8 +69,7 @@ def add_builders(app) -> None:
         pass
     else:
         injected_mro = tuple(
-            base if base is not StandaloneHTMLBuilder else DPYStandaloneHTMLBuilder
-            for base in original.mro()[1:]
+            base if base is not StandaloneHTMLBuilder else DPYStandaloneHTMLBuilder for base in original.mro()[1:]
         )
         new_builder = type(original.__name__, injected_mro, {"name": "readthedocs"})
         app.set_translator("readthedocs", DPYHTML5Translator, override=True)

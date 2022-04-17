@@ -30,17 +30,9 @@ from .errors import OGGSinkError
 
 
 class OGGSink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .ogg files.
 
-    Used for .ogg files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -54,10 +46,17 @@ class OGGSink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+
+        Raises
+        ------
+        OGGSinkError
+            Audio may only be formatted after recording is finished.
+        OGGSinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
-            raise OGGSinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise OGGSinkError("Audio may only be formatted after recording is finished.")
         args = [
             "ffmpeg",
             "-f",
@@ -82,9 +81,7 @@ class OGGSink(Sink):
         except FileNotFoundError:
             raise OGGSinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise OGGSinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
+            raise OGGSinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
 
         out = process.communicate(audio.file.read())[0]
         out = io.BytesIO(out)

@@ -46,6 +46,10 @@ ApplicationCommandType = Literal[1, 2, 3]
 class _ApplicationCommandOptional(TypedDict, total=False):
     options: List[ApplicationCommandOption]
     type: ApplicationCommandType
+    name_localized: str
+    name_localizations: Dict[str, str]
+    description_localized: str
+    description_localizations: Dict[str, str]
 
 
 class ApplicationCommand(_ApplicationCommandOptional):
@@ -58,6 +62,8 @@ class ApplicationCommand(_ApplicationCommandOptional):
 class _ApplicationCommandOptionOptional(TypedDict, total=False):
     choices: List[ApplicationCommandOptionChoice]
     options: List[ApplicationCommandOption]
+    name_localizations: Dict[str, str]
+    description_localizations: Dict[str, str]
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -70,7 +76,11 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
     required: bool
 
 
-class ApplicationCommandOptionChoice(TypedDict):
+class _ApplicationCommandOptionChoiceOptional(TypedDict, total=False):
+    name_localizations: Dict[str, str]
+
+
+class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
     name: str
     value: Union[str, int]
 
@@ -104,44 +114,32 @@ class _ApplicationCommandInteractionDataOption(TypedDict):
     name: str
 
 
-class _ApplicationCommandInteractionDataOptionSubcommand(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionSubcommand(_ApplicationCommandInteractionDataOption):
     type: Literal[1, 2]
     options: List[ApplicationCommandInteractionDataOption]
 
 
-class _ApplicationCommandInteractionDataOptionString(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionString(_ApplicationCommandInteractionDataOption):
     type: Literal[3]
     value: str
 
 
-class _ApplicationCommandInteractionDataOptionInteger(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionInteger(_ApplicationCommandInteractionDataOption):
     type: Literal[4]
     value: int
 
 
-class _ApplicationCommandInteractionDataOptionBoolean(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionBoolean(_ApplicationCommandInteractionDataOption):
     type: Literal[5]
     value: bool
 
 
-class _ApplicationCommandInteractionDataOptionSnowflake(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionSnowflake(_ApplicationCommandInteractionDataOption):
     type: Literal[6, 7, 8, 9, 11]
     value: Snowflake
 
 
-class _ApplicationCommandInteractionDataOptionNumber(
-    _ApplicationCommandInteractionDataOption
-):
+class _ApplicationCommandInteractionDataOptionNumber(_ApplicationCommandInteractionDataOption):
     type: Literal[10]
     value: float
 

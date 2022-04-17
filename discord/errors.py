@@ -61,6 +61,9 @@ __all__ = (
     "NoEntryPointError",
     "ExtensionFailed",
     "ExtensionNotFound",
+    "ApplicationCommandError",
+    "CheckFailure",
+    "ApplicationCommandInvokeError",
 )
 
 
@@ -138,9 +141,7 @@ class HTTPException(DiscordException):
         The Discord specific error code for the failure.
     """
 
-    def __init__(
-        self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]
-    ):
+    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
@@ -263,6 +264,7 @@ class PrivilegedIntentsRequired(ClientException):
 
     - :attr:`Intents.members`
     - :attr:`Intents.presences`
+    - :attr:`Intents.message_content`
 
     Attributes
     -----------
@@ -315,9 +317,7 @@ class ExtensionError(DiscordException):
         self.name: str = name
         message = message or f"Extension {name!r} had an error."
         # clean-up @everyone and @here mentions
-        m = message.replace("@everyone", "@\u200beveryone").replace(
-            "@here", "@\u200bhere"
-        )
+        m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
         super().__init__(m, *args)
 
 
@@ -388,3 +388,41 @@ class ExtensionNotFound(ExtensionError):
     def __init__(self, name: str) -> None:
         msg = f"Extension {name!r} could not be found."
         super().__init__(msg, name=name)
+
+
+class ApplicationCommandError(DiscordException):
+    r"""The base exception type for all application command related errors.
+
+    This inherits from :exc:`DiscordException`.
+
+    This exception and exceptions inherited from it are handled
+    in a special way as they are caught and passed into a special event
+    from :class:`.Bot`\, :func:`.on_command_error`.
+    """
+    pass
+
+
+class CheckFailure(ApplicationCommandError):
+    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
+
+    This inherits from :exc:`ApplicationCommandError`
+    """
+
+    pass
+
+
+class ApplicationCommandInvokeError(ApplicationCommandError):
+    """Exception raised when the command being invoked raised an exception.
+
+    This inherits from :exc:`ApplicationCommandError`
+
+    Attributes
+    -----------
+    original: :exc:`Exception`
+        The original exception that was raised. You can also get this via
+        the ``__cause__`` attribute.
+    """
+
+    def __init__(self, e: Exception) -> None:
+        self.original: Exception = e
+        super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")

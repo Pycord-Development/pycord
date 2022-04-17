@@ -87,9 +87,7 @@ class Reaction:
         emoji: Optional[Union[PartialEmoji, Emoji, str]] = None,
     ):
         self.message: Message = message
-        self.emoji: Union[
-            PartialEmoji, Emoji, str
-        ] = emoji or message._state.get_reaction_emoji(data["emoji"])
+        self.emoji: Union[PartialEmoji, Emoji, str] = emoji or message._state.get_reaction_emoji(data["emoji"])
         self.count: int = data.get("count", 1)
         self.me: bool = data.get("me")
 
@@ -165,9 +163,7 @@ class Reaction:
         """
         await self.message.clear_reaction(self.emoji)
 
-    def users(
-        self, *, limit: Optional[int] = None, after: Optional[Snowflake] = None
-    ) -> ReactionIterator:
+    def users(self, *, limit: Optional[int] = None, after: Optional[Snowflake] = None) -> ReactionIterator:
         """Returns an :class:`AsyncIterator` representing the users that have reacted to the message.
 
         The ``after`` parameter must represent a member

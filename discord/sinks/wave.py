@@ -30,17 +30,9 @@ from .errors import WaveSinkError
 
 
 class WaveSink(Sink):
-    """A Sink "stores" all the audio data.
+    """A special sink for .wav(wave) files.
 
-    Used for .wav(wave) files.
-
-    .. versionadded:: 2.1
-
-    Raises
-    ------
-    ClientException
-        An invalid encoding type was specified.
-        Audio may only be formatted after recording is finished.
+    .. versionadded:: 2.0
     """
 
     def __init__(self, *, filters=None):
@@ -54,10 +46,17 @@ class WaveSink(Sink):
         self.audio_data = {}
 
     def format_audio(self, audio):
+        """Formats the recorded audio.
+
+        Raises
+        ------
+        WaveSinkError
+            Audio may only be formatted after recording is finished.
+        WaveSinkError
+            Formatting the audio failed.
+        """
         if self.vc.recording:
-            raise WaveSinkError(
-                "Audio may only be formatted after recording is finished."
-            )
+            raise WaveSinkError("Audio may only be formatted after recording is finished.")
         data = audio.file
 
         with wave.open(data, "wb") as f:

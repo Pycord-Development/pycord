@@ -27,7 +27,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+import asyncio
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, Coroutine
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -55,10 +56,10 @@ if TYPE_CHECKING:
         CategoryChannel,
         PartialMessageable,
         StageChannel,
-        StoreChannel,
         TextChannel,
         VoiceChannel,
     )
+    from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
     from .guild import Guild
@@ -76,11 +77,9 @@ if TYPE_CHECKING:
         StageChannel,
         TextChannel,
         CategoryChannel,
-        StoreChannel,
         Thread,
         PartialMessageable,
     ]
-
 
 MISSING: Any = utils.MISSING
 
@@ -118,6 +117,8 @@ class Interaction:
         The users locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
+    custom_id: Optional[:class:`str`]
+        The custom ID for the interaction.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -133,6 +134,7 @@ class Interaction:
         "guild_locale",
         "token",
         "version",
+        "custom_id",
         "_permissions",
         "_state",
         "_session",
@@ -159,6 +161,7 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
+        self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
         try:
@@ -186,6 +189,11 @@ class Interaction:
                 pass
 
     @property
+    def client(self) -> Client:
+        """Returns the client that sent the interaction."""
+        return self._state._get_client()
+
+    @property
     def guild(self) -> Optional[Guild]:
         """Optional[:class:`Guild`]: The guild the interaction was sent from."""
         return self._state and self._state._get_guild(self.guild_id)
@@ -209,14 +217,8 @@ class Interaction:
         channel = guild and guild._resolve_channel(self.channel_id)
         if channel is None:
             if self.channel_id is not None:
-                type = (
-                    ChannelType.text
-                    if self.guild_id is not None
-                    else ChannelType.private
-                )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=type
-                )
+                type = ChannelType.text if self.guild_id is not None else ChannelType.private
+                return PartialMessageable(state=self._state, id=self.channel_id, type=type)
             return None
         return channel
 
@@ -435,11 +437,13 @@ class InteractionResponse:
     __slots__: Tuple[str, ...] = (
         "_responded",
         "_parent",
+        "_response_lock",
     )
 
     def __init__(self, parent: Interaction):
         self._parent: Interaction = parent
         self._responded: bool = False
+        self._response_lock = asyncio.Lock()
 
     def is_done(self) -> bool:
         """:class:`bool`: Indicates whether an interaction response has been done before.
@@ -481,19 +485,21 @@ class InteractionResponse:
                 defer_type = InteractionResponseType.deferred_channel_message.value
             else:
                 defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type is InteractionType.application_command:
+        elif parent.type in (InteractionType.application_command, InteractionType.modal_submit):
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
                 data = {"flags": 64}
 
         if defer_type:
             adapter = async_context.get()
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=defer_type,
-                data=data,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=defer_type,
+                    data=data,
+                )
             )
             self._responded = True
 
@@ -517,11 +523,13 @@ class InteractionResponse:
         parent = self._parent
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.pong.value,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.pong.value,
+                )
             )
             self._responded = True
 
@@ -613,14 +621,10 @@ class InteractionResponse:
         state = self._parent._state
 
         if allowed_mentions is None:
-            payload["allowed_mentions"] = (
-                state.allowed_mentions and state.allowed_mentions.to_dict()
-            )
+            payload["allowed_mentions"] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
         elif state.allowed_mentions is not None:
-            payload["allowed_mentions"] = state.allowed_mentions.merge(
-                allowed_mentions
-            ).to_dict()
+            payload["allowed_mentions"] = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             payload["allowed_mentions"] = allowed_mentions.to_dict()
         if file is not None and files is not None:
@@ -634,22 +638,22 @@ class InteractionResponse:
 
         if files is not None:
             if len(files) > 10:
-                raise InvalidArgument(
-                    "files parameter must be a list of up to 10 elements"
-                )
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
         parent = self._parent
         adapter = async_context.get()
         try:
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.channel_message.value,
-                data=payload,
-                files=files,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.channel_message.value,
+                    data=payload,
+                    files=files,
+                )
             )
         finally:
             if files:
@@ -680,7 +684,7 @@ class InteractionResponse:
         """|coro|
 
         Responds to this interaction by editing the original message of
-        a component interaction.
+        a component or modal interaction.
 
         Parameters
         -----------
@@ -718,7 +722,7 @@ class InteractionResponse:
         msg = parent.message
         state = parent._state
         message_id = msg.id if msg else None
-        if parent.type is not InteractionType.component:
+        if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
         payload = {}
@@ -739,12 +743,14 @@ class InteractionResponse:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.message_update.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.message_update.value,
+                data=payload,
+            )
         )
 
         if view and not view.is_finished():
@@ -785,31 +791,73 @@ class InteractionResponse:
         payload = {"choices": [c.to_dict() for c in choices]}
 
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.auto_complete_result.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.auto_complete_result.value,
+                data=payload,
+            )
         )
 
         self._responded = True
 
-    async def send_modal(self, modal: Modal):
+    async def send_modal(self, modal: Modal) -> Interaction:
+        """|coro|
+        Responds to this interaction by sending a modal dialog.
+        This cannot be used to respond to another modal dialog submission.
+
+        Parameters
+        ----------
+        modal: :class:`discord.ui.Modal`
+            The modal dialog to display to the user.
+
+        Raises
+        ------
+        HTTPException
+            Sending the modal failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
         if self._responded:
             raise InteractionResponded(self._parent)
 
         payload = modal.to_dict()
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            self._parent.id,
-            self._parent.token,
-            session=self._parent._session,
-            type=InteractionResponseType.modal.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                self._parent.id,
+                self._parent.token,
+                session=self._parent._session,
+                type=InteractionResponseType.modal.value,
+                data=payload,
+            )
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return self._parent
+
+    async def _locked_response(self, coro: Coroutine[Any]):
+        """|coro|
+
+        Wraps a response and makes sure that it's locked while executing.
+
+        Parameters
+        -----------
+        coro: Coroutine[Any]
+            The coroutine to wrap.
+
+        Raises
+        -------
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        async with self._response_lock:
+            if self.is_done():
+                coro.close()  # cleanup unawaited coroutine
+                raise InteractionResponded(self._parent)
+            await coro
 
 
 class _InteractionMessageState:

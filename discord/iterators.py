@@ -56,7 +56,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .audit_logs import AuditLogEntry
-    from .guild import Guild
+    from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
     from .scheduled_events import ScheduledEvent
@@ -300,9 +300,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
             if self.limit is None:
                 raise ValueError("history does not support around with limit=None")
             if self.limit > 101:
-                raise ValueError(
-                    "history max limit 101 when specifying around parameter"
-                )
+                raise ValueError("history max limit 101 when specifying around parameter")
             elif self.limit == 101:
                 self.limit = 100  # Thanks discord
 
@@ -358,9 +356,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
 
             channel = self.channel
             for element in data:
-                await self.messages.put(
-                    self.state.create_message(channel=channel, data=element)
-                )
+                await self.messages.put(self.state.create_message(channel=channel, data=element))
 
     async def _retrieve_messages(self, retrieve) -> List[Message]:
         """Retrieve messages and update next parameters."""
@@ -369,9 +365,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
     async def _retrieve_messages_before_strategy(self, retrieve):
         """Retrieve messages using before parameter."""
         before = self.before.id if self.before else None
-        data: List[MessagePayload] = await self.logs_from(
-            self.channel.id, retrieve, before=before
-        )
+        data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, before=before)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -381,9 +375,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
     async def _retrieve_messages_after_strategy(self, retrieve):
         """Retrieve messages using after parameter."""
         after = self.after.id if self.after else None
-        data: List[MessagePayload] = await self.logs_from(
-            self.channel.id, retrieve, after=after
-        )
+        data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, after=after)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -394,9 +386,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
         """Retrieve messages using around parameter."""
         if self.around:
             around = self.around.id if self.around else None
-            data: List[MessagePayload] = await self.logs_from(
-                self.channel.id, retrieve, around=around
-            )
+            data: List[MessagePayload] = await self.logs_from(self.channel.id, retrieve, around=around)
             self.around = None
             return data
         return []
@@ -516,9 +506,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 if element["action_type"] is None:
                     continue
 
-                await self.entries.put(
-                    AuditLogEntry(data=element, users=self._users, guild=self.guild)
-                )
+                await self.entries.put(AuditLogEntry(data=element, users=self._users, guild=self.guild))
 
 
 class GuildIterator(_AsyncIterator["Guild"]):
@@ -688,6 +676,66 @@ class MemberIterator(_AsyncIterator["Member"]):
         from .member import Member
 
         return Member(data=data, guild=self.guild, state=self.state)
+
+
+class BanIterator(_AsyncIterator["BanEntry"]):
+    def __init__(self, guild, limit=None, before=None, after=None):
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=True))
+
+        self.guild = guild
+        self.limit = limit
+        self.after = after
+        self.before = before
+
+        self.state = self.guild._state
+        self.get_bans = self.state.http.get_bans
+        self.bans = asyncio.Queue()
+
+    async def next(self) -> BanEntry:
+        if self.bans.empty():
+            await self.fill_bans()
+
+        try:
+            return self.bans.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 1000:
+            r = 1000
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    async def fill_bans(self):
+        if not self._get_retrieve():
+            return
+        before = self.before.id if self.before else None
+        after = self.after.id if self.after else None
+        data = await self.get_bans(self.guild.id, self.retrieve, before, after)
+        if not data:
+            # no data, terminate
+            return
+
+        if len(data) < 1000:
+            self.limit = 0  # terminate loop
+
+        self.after = Object(id=int(data[-1]["user"]["id"]))
+
+        for element in reversed(data):
+            await self.bans.put(self.create_ban(element))
+
+    def create_ban(self, data):
+        from .guild import BanEntry
+        from .user import User
+
+        return BanEntry(reason=data["reason"], user=User(state=self.state, data=data["user"]))
 
 
 class ArchivedThreadIterator(_AsyncIterator["Thread"]):

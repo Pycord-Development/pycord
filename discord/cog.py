@@ -126,17 +126,25 @@ class CogMeta(type):
                 @commands.command(hidden=False)
                 async def bar(self, ctx):
                     pass # hidden -> False
+
+    guild_ids: Optional[List[:class:`int`]]
+        A shortcut to command_attrs, what guild_ids should all application commands have
+        in the cog. You can override this by setting guild_ids per command.
+
+        .. versionadded:: 2.0
     """
 
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
     __cog_commands__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
+    __cog_guild_ids__: List[int]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
         attrs["__cog_name__"] = kwargs.pop("name", name)
         attrs["__cog_settings__"] = kwargs.pop("command_attrs", {})
+        attrs["__cog_guild_ids__"] = kwargs.pop("guild_ids", [])
 
         description = kwargs.pop("description", None)
         if description is None:
@@ -150,8 +158,7 @@ class CogMeta(type):
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
         valid_commands = [
-            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand))
-            for j in reversed(new_cls.__mro__)
+            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)
         ]
         if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
             not isinstance(i, _BaseCommand) for i in valid_commands
@@ -168,9 +175,7 @@ class CogMeta(type):
                     del listeners[elem]
 
                 try:
-                    if getattr(value, "parent") is not None and isinstance(
-                        value, ApplicationCommand
-                    ):
+                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
                         # Skip commands if they are a part of a group
                         continue
                 except AttributeError:
@@ -181,13 +186,27 @@ class CogMeta(type):
                     value = value.__func__
                 if isinstance(value, _filter):
                     if is_static_method:
-                        raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
-                        )
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
-                elif inspect.iscoroutinefunction(value):
+
+                try:
+                    # a test to see if this value is a BridgeCommand
+                    getattr(value, "add_to")
+
+                    if is_static_method:
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                    if elem.startswith(("cog_", "bot_")):
+                        raise TypeError(no_bot_cog.format(base, elem))
+
+                    commands[f"ext_{elem}"] = value.get_ext_command()
+                    commands[f"application_{elem}"] = value.get_application_command()
+                except AttributeError:
+                    # we are confident that the value is not a Bridge Command
+                    pass
+
+                if inspect.iscoroutinefunction(value):
                     try:
                         getattr(value, "__cog_listener__")
                     except AttributeError:
@@ -218,7 +237,13 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if not isinstance(command, ApplicationCommand):
+            if (
+                isinstance(command, ApplicationCommand)
+                and command.guild_ids is None
+                and len(new_cls.__cog_guild_ids__) != 0
+            ):
+                command.guild_ids = new_cls.__cog_guild_ids__
+            if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
                 if parent is not None:
@@ -259,6 +284,7 @@ class Cog(metaclass=CogMeta):
     __cog_settings__: ClassVar[Dict[str, Any]]
     __cog_commands__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
+    __cog_guild_ids__: ClassVar[List[int]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
@@ -278,11 +304,7 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [
-            c
-            for c in self.__cog_commands__
-            if isinstance(c, ApplicationCommand) and c.parent is None
-        ]
+        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
 
     @property
     def qualified_name(self) -> str:
@@ -318,17 +340,12 @@ class Cog(metaclass=CogMeta):
         List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]
             The listeners defined in this cog.
         """
-        return [
-            (name, getattr(self, method_name))
-            for name, method_name in self.__cog_listeners__
-        ]
+        return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
         """Return None if the method is not overridden. Otherwise returns the overridden method."""
-        return getattr(
-            getattr(method, "__func__", method), "__cog_special_method__", method
-        )
+        return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
     def listener(cls, name: str = MISSING) -> Callable[[FuncT], FuncT]:
@@ -350,9 +367,7 @@ class Cog(metaclass=CogMeta):
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(
-                f"Cog.listener expected str but received {name.__class__.__name__!r} instead."
-            )
+            raise TypeError(f"Cog.listener expected str but received {name.__class__.__name__!r} instead.")
 
         def decorator(func: FuncT) -> FuncT:
             actual = func
@@ -423,9 +438,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    async def cog_command_error(
-        self, ctx: ApplicationContext, error: Exception
-    ) -> None:
+    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -438,7 +451,7 @@ class Cog(metaclass=CogMeta):
         -----------
         ctx: :class:`.Context`
             The invocation context where the error happened.
-        error: :class:`CommandError`
+        error: :class:`ApplicationCommandError`
             The error that happened.
         """
         pass
@@ -567,9 +580,9 @@ class CogMixin:
         -------
         TypeError
             The cog does not inherit from :class:`.Cog`.
-        CommandError
+        ApplicationCommandError
             An error happened during loading.
-        .ClientException
+        ClientException
             A cog with the same name is already loaded.
         """
 
@@ -670,8 +683,7 @@ class CogMixin:
             remove = [
                 index
                 for index, event in enumerate(event_list)
-                if event.__module__ is not None
-                and _is_submodule(name, event.__module__)
+                if event.__module__ is not None and _is_submodule(name, event.__module__)
             ]
 
             for index in reversed(remove):
@@ -695,9 +707,7 @@ class CogMixin:
                 if _is_submodule(name, module):
                     del sys.modules[module]
 
-    def _load_from_module_spec(
-        self, spec: importlib.machinery.ModuleSpec, key: str
-    ) -> None:
+    def _load_from_module_spec(self, spec: importlib.machinery.ModuleSpec, key: str) -> None:
         # precondition: key not in self.__extensions
         lib = importlib.util.module_from_spec(spec)
         sys.modules[key] = lib
@@ -858,11 +868,7 @@ class CogMixin:
             raise errors.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
-        modules = {
-            name: module
-            for name, module in sys.modules.items()
-            if _is_submodule(lib.__name__, name)
-        }
+        modules = {name: module for name, module in sys.modules.items() if _is_submodule(lib.__name__, name)}
 
         try:
             # Unload and then load the module...

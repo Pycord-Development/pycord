@@ -11,9 +11,7 @@ with open("requirements.txt") as f:
 version = ""
 with open("discord/__init__.py") as f:
 
-    search = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
-    )
+    search = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE)
 
     if search is not None:
         version = search.group(1)
@@ -44,7 +42,7 @@ if version.endswith(("a", "b", "rc")):
         )
         out, err = p.communicate()
         if out:
-            version += "+g" + out.decode("utf-8").strip()
+            version += f"+g{out.decode('utf-8').strip()}"
     except Exception:
         pass
 
@@ -58,7 +56,7 @@ with open("README.rst") as f:
 extras_require = {
     "voice": ["PyNaCl>=1.3.0,<1.6"],
     "docs": [
-        "sphinx==4.4.0",
+        "sphinx==4.5.0",
         "sphinxcontrib_trio==1.1.2",
         "sphinxcontrib-websupport",
         "myst-parser",
@@ -82,6 +80,7 @@ packages = [
     "discord.ext.commands",
     "discord.ext.tasks",
     "discord.ext.pages",
+    "discord.ext.bridge",
 ]
 
 

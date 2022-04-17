@@ -35,7 +35,7 @@ class MyModal(Modal):
 async def modal_slash(ctx):
     """Shows an example of a modal dialog being invoked from a slash command."""
     modal = MyModal(title="Slash Command Modal")
-    await ctx.interaction.response.send_modal(modal)
+    await ctx.send_modal(modal)
 
 
 @bot.message_command(name="messagemodal", guild_ids=[...])
@@ -43,7 +43,7 @@ async def modal_message(ctx, message):
     """Shows an example of a modal dialog being invoked from a message command."""
     modal = MyModal(title="Message Command Modal")
     modal.title = f"Modal for Message ID: {message.id}"
-    await ctx.interaction.response.send_modal(modal)
+    await ctx.send_modal(modal)
 
 
 @bot.user_command(name="usermodal", guild_ids=[...])
@@ -51,7 +51,7 @@ async def modal_user(ctx, member):
     """Shows an example of a modal dialog being invoked from a user command."""
     modal = MyModal(title="User Command Modal")
     modal.title = f"Modal for User: {member.display_name}"
-    await ctx.interaction.response.send_modal(modal)
+    await ctx.send_modal(modal)
 
 
 @bot.command()
@@ -69,12 +69,8 @@ async def modaltest(ctx):
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(
-                    label="First Modal", description="Shows the first modal"
-                ),
-                discord.SelectOption(
-                    label="Second Modal", description="Shows the second modal"
-                ),
+                discord.SelectOption(label="First Modal", description="Shows the first modal"),
+                discord.SelectOption(label="Second Modal", description="Shows the second modal"),
             ],
         )
         async def select_callback(self, select, interaction):

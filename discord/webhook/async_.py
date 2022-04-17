@@ -163,9 +163,7 @@ class AsyncWebhookAdapter:
                         form_data.add_field(**p)
                     to_send = form_data
                 try:
-                    async with session.request(
-                        method, url, data=to_send, headers=headers, params=params
-                    ) as response:
+                    async with session.request(method, url, data=to_send, headers=headers, params=params) as response:
                         _log.debug(
                             "Webhook ID %s with %s %s has returned status code %s",
                             webhook_id,
@@ -174,10 +172,7 @@ class AsyncWebhookAdapter:
                             response.status,
                         )
                         data = (await response.text(encoding="utf-8")) or None
-                        if (
-                            data
-                            and response.headers["Content-Type"] == "application/json"
-                        ):
+                        if data and response.headers["Content-Type"] == "application/json":
                             data = json.loads(data)
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
@@ -267,9 +262,7 @@ class AsyncWebhookAdapter:
         reason: Optional[str] = None,
     ) -> Response[WebhookPayload]:
         route = Route("PATCH", "/webhooks/{webhook_id}", webhook_id=webhook_id)
-        return self.request(
-            route, session, reason=reason, payload=payload, auth_token=token
-        )
+        return self.request(route, session, reason=reason, payload=payload, auth_token=token)
 
     def edit_webhook_with_token(
         self,
@@ -500,9 +493,7 @@ class AsyncWebhookAdapter:
             webhook_id=application_id,
             webhook_token=token,
         )
-        return self.request(
-            r, session, payload=payload, multipart=multipart, files=files
-        )
+        return self.request(r, session, payload=payload, multipart=multipart, files=files)
 
     def delete_original_interaction_response(
         self,
@@ -572,9 +563,7 @@ def handle_message_parameters(
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
-            payload["allowed_mentions"] = previous_allowed_mentions.merge(
-                allowed_mentions
-            ).to_dict()
+            payload["allowed_mentions"] = previous_allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             payload["allowed_mentions"] = allowed_mentions.to_dict()
     elif previous_allowed_mentions is not None:
@@ -611,9 +600,7 @@ def handle_message_parameters(
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
 
 
-async_context: ContextVar[AsyncWebhookAdapter] = ContextVar(
-    "async_webhook_context", default=AsyncWebhookAdapter()
-)
+async_context: ContextVar[AsyncWebhookAdapter] = ContextVar("async_webhook_context", default=AsyncWebhookAdapter())
 
 
 class PartialWebhookChannel(Hashable):
@@ -685,9 +672,7 @@ class _FriendlyHttpAttributeErrorHelper:
 class _WebhookState:
     __slots__ = ("_parent", "_webhook")
 
-    def __init__(
-        self, webhook: Any, parent: Optional[Union[ConnectionState, _WebhookState]]
-    ):
+    def __init__(self, webhook: Any, parent: Optional[Union[ConnectionState, _WebhookState]]):
         self._webhook: Any = webhook
 
         self._parent: Optional[ConnectionState]
@@ -759,7 +744,7 @@ class WebhookMessage(Message):
             The edit is no longer in-place, instead the newly edited message is returned.
 
         Parameters
-        ------------
+        -----------
         content: Optional[:class:`str`]
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
@@ -791,7 +776,7 @@ class WebhookMessage(Message):
             .. versionadded:: 2.0
 
         Raises
-        -------
+        ------
         HTTPException
             Editing the message failed.
         Forbidden
@@ -861,9 +846,7 @@ class WebhookMessage(Message):
             async def inner_call(delay: float = delay):
                 await asyncio.sleep(delay)
                 try:
-                    await self._state._webhook.delete_message(
-                        self.id, thread_id=thread_id
-                    )
+                    await self._state._webhook.delete_message(self.id, thread_id=thread_id)
                 except HTTPException:
                     pass
 
@@ -895,9 +878,7 @@ class BaseWebhook(Hashable):
         state: Optional[ConnectionState] = None,
     ):
         self.auth_token: Optional[str] = token
-        self._state: Union[ConnectionState, _WebhookState] = state or _WebhookState(
-            self, parent=state
-        )
+        self._state: Union[ConnectionState, _WebhookState] = state or _WebhookState(self, parent=state)
         self._update(data)
 
     def _update(self, data: WebhookPayload):
@@ -1229,17 +1210,11 @@ class Webhook(BaseWebhook):
         adapter = async_context.get()
 
         if prefer_auth and self.auth_token:
-            data = await adapter.fetch_webhook(
-                self.id, self.auth_token, session=self.session
-            )
+            data = await adapter.fetch_webhook(self.id, self.auth_token, session=self.session)
         elif self.token:
-            data = await adapter.fetch_webhook_with_token(
-                self.id, self.token, session=self.session
-            )
+            data = await adapter.fetch_webhook_with_token(self.id, self.token, session=self.session)
         else:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         return Webhook(data, self.session, token=self.auth_token, state=self._state)
 
@@ -1272,20 +1247,14 @@ class Webhook(BaseWebhook):
             This webhook does not have a token associated with it.
         """
         if self.token is None and self.auth_token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         adapter = async_context.get()
 
         if prefer_auth and self.auth_token:
-            await adapter.delete_webhook(
-                self.id, token=self.auth_token, session=self.session, reason=reason
-            )
+            await adapter.delete_webhook(self.id, token=self.auth_token, session=self.session, reason=reason)
         elif self.token:
-            await adapter.delete_webhook_with_token(
-                self.id, self.token, session=self.session, reason=reason
-            )
+            await adapter.delete_webhook_with_token(self.id, self.token, session=self.session, reason=reason)
 
     async def edit(
         self,
@@ -1298,51 +1267,47 @@ class Webhook(BaseWebhook):
     ) -> Webhook:
         """|coro|
 
-          Edits this Webhook.
+        Edits this Webhook.
 
-          Parameters
-          ------------
-          name: Optional[:class:`str`]
-              The webhook's new default name.
-          avatar: Optional[:class:`bytes`]
-              A :term:`py:bytes-like object` representing the webhook's new default avatar.
-          channel: Optional[:class:`abc.Snowflake`]
-              The webhook's new channel. This requires an authenticated webhook.
+        Parameters
+        -----------
+        name: Optional[:class:`str`]
+            The webhook's new default name.
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the webhook's new default avatar.
+        channel: Optional[:class:`abc.Snowflake`]
+            The webhook's new channel. This requires an authenticated webhook.
 
-              .. versionadded:: 2.0
-          reason: Optional[:class:`str`]
-              The reason for editing this webhook. Shows up on the audit log.
+            .. versionadded:: 2.0
+        reason: Optional[:class:`str`]
+            The reason for editing this webhook. Shows up on the audit log.
 
-              .. versionadded:: 1.4
-          prefer_auth: :class:`bool`
-              Whether to use the bot token over the webhook token
-              if available. Defaults to ``True``.
+            .. versionadded:: 1.4
+        prefer_auth: :class:`bool`
+            Whether to use the bot token over the webhook token
+            if available. Defaults to ``True``.
 
-        .. versionadded:: 2.0
+            .. versionadded:: 2.0
 
-          Raises
-          -------
-          HTTPException
-              Editing the webhook failed.
-          NotFound
-              This webhook does not exist.
-          InvalidArgument
-              This webhook does not have a token associated with it
-              or it tried editing a channel without authentication.
+        Raises
+        ------
+        HTTPException
+            Editing the webhook failed.
+        NotFound
+            This webhook does not exist.
+        InvalidArgument
+            This webhook does not have a token associated with it
+            or it tried editing a channel without authentication.
         """
         if self.token is None and self.auth_token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         payload = {}
         if name is not MISSING:
             payload["name"] = str(name) if name is not None else None
 
         if avatar is not MISSING:
-            payload["avatar"] = (
-                utils._bytes_to_base64_data(avatar) if avatar is not None else None
-            )
+            payload["avatar"] = utils._bytes_to_base64_data(avatar) if avatar is not None else None
 
         adapter = async_context.get()
 
@@ -1381,9 +1346,7 @@ class Webhook(BaseWebhook):
         if data is None:
             raise RuntimeError("Unreachable code hit: data was not assigned")
 
-        return Webhook(
-            data=data, session=self.session, token=self.auth_token, state=self._state
-        )
+        return Webhook(data=data, session=self.session, token=self.auth_token, state=self._state)
 
     def _create_message(self, data):
         state = _WebhookState(self, parent=self._state)
@@ -1542,30 +1505,22 @@ class Webhook(BaseWebhook):
         """
 
         if self.token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
-        previous_mentions: Optional[AllowedMentions] = getattr(
-            self._state, "allowed_mentions", None
-        )
+        previous_mentions: Optional[AllowedMentions] = getattr(self._state, "allowed_mentions", None)
         if content is None:
             content = MISSING
 
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
-            raise InvalidArgument(
-                "ephemeral messages can only be sent from application webhooks"
-            )
+            raise InvalidArgument("ephemeral messages can only be sent from application webhooks")
 
         if application_webhook:
             wait = True
 
         if view is not MISSING:
             if isinstance(self._state, _WebhookState):
-                raise InvalidArgument(
-                    "Webhook views require an associated state with the webhook"
-                )
+                raise InvalidArgument("Webhook views require an associated state with the webhook")
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
 
@@ -1617,9 +1572,7 @@ class Webhook(BaseWebhook):
 
         return msg
 
-    async def fetch_message(
-        self, id: int, *, thread_id: Optional[int] = None
-    ) -> WebhookMessage:
+    async def fetch_message(self, id: int, *, thread_id: Optional[int] = None) -> WebhookMessage:
         """|coro|
 
         Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook.
@@ -1651,9 +1604,7 @@ class Webhook(BaseWebhook):
         """
 
         if self.token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         adapter = async_context.get()
         data = await adapter.get_webhook_message(
@@ -1751,21 +1702,15 @@ class Webhook(BaseWebhook):
         """
 
         if self.token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         if view is not MISSING:
             if isinstance(self._state, _WebhookState):
-                raise InvalidArgument(
-                    "This webhook does not have state associated with it"
-                )
+                raise InvalidArgument("This webhook does not have state associated with it")
 
             self._state.prevent_view_updates_for(message_id)
 
-        previous_mentions: Optional[AllowedMentions] = getattr(
-            self._state, "allowed_mentions", None
-        )
+        previous_mentions: Optional[AllowedMentions] = getattr(self._state, "allowed_mentions", None)
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -1799,9 +1744,7 @@ class Webhook(BaseWebhook):
             self._state.store_view(view, message_id)
         return message
 
-    async def delete_message(
-        self, message_id: int, *, thread_id: Optional[int] = None
-    ) -> None:
+    async def delete_message(self, message_id: int, *, thread_id: Optional[int] = None) -> None:
         """|coro|
 
         Deletes a message owned by this webhook.
@@ -1826,9 +1769,7 @@ class Webhook(BaseWebhook):
             Deleted a message that is not yours.
         """
         if self.token is None:
-            raise InvalidArgument(
-                "This webhook does not have a token associated with it"
-            )
+            raise InvalidArgument("This webhook does not have a token associated with it")
 
         adapter = async_context.get()
         await adapter.delete_webhook_message(

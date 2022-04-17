@@ -67,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator
+from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -88,13 +88,7 @@ if TYPE_CHECKING:
     import datetime
 
     from .abc import Snowflake, SnowflakeTime
-    from .channel import (
-        CategoryChannel,
-        StageChannel,
-        StoreChannel,
-        TextChannel,
-        VoiceChannel,
-    )
+    from .channel import CategoryChannel, StageChannel, TextChannel, VoiceChannel
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
@@ -107,9 +101,7 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
-    GuildChannel = Union[
-        VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel
-    ]
+    GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, CategoryChannel]
     ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
 
 
@@ -209,7 +201,7 @@ class Guild(Hashable):
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
-        - ``COMMERCE``: Guild can sell things using store channels.
+        - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``FEATURABLE``: Guild is able to be featured in Server Discovery.
@@ -389,9 +381,7 @@ class Guild(Hashable):
             del self._threads[k]
 
     def _filter_threads(self, channel_ids: Set[int]) -> Dict[int, Thread]:
-        to_remove: Dict[int, Thread] = {
-            k: t for k, t in self._threads.items() if t.parent_id in channel_ids
-        }
+        to_remove: Dict[int, Thread] = {k: t for k, t in self._threads.items() if t.parent_id in channel_ids}
         for k in to_remove:
             del self._threads[k]
         return to_remove
@@ -471,15 +461,11 @@ class Guild(Hashable):
 
         self.name: str = guild.get("name")
         self.region: VoiceRegion = try_enum(VoiceRegion, guild.get("region"))
-        self.verification_level: VerificationLevel = try_enum(
-            VerificationLevel, guild.get("verification_level")
-        )
+        self.verification_level: VerificationLevel = try_enum(VerificationLevel, guild.get("verification_level"))
         self.default_notifications: NotificationLevel = try_enum(
             NotificationLevel, guild.get("default_message_notifications")
         )
-        self.explicit_content_filter: ContentFilter = try_enum(
-            ContentFilter, guild.get("explicit_content_filter", 0)
-        )
+        self.explicit_content_filter: ContentFilter = try_enum(ContentFilter, guild.get("explicit_content_filter", 0))
         self.afk_timeout: int = guild.get("afk_timeout")
         self._icon: Optional[str] = guild.get("icon")
         self._banner: Optional[str] = guild.get("banner")
@@ -492,39 +478,25 @@ class Guild(Hashable):
             self._roles[role.id] = role
 
         self.mfa_level: MFALevel = guild.get("mfa_level")
-        self.emojis: Tuple[Emoji, ...] = tuple(
-            map(lambda d: state.store_emoji(self, d), guild.get("emojis", []))
-        )
+        self.emojis: Tuple[Emoji, ...] = tuple(map(lambda d: state.store_emoji(self, d), guild.get("emojis", [])))
         self.stickers: Tuple[GuildSticker, ...] = tuple(
             map(lambda d: state.store_sticker(self, d), guild.get("stickers", []))
         )
         self.features: List[GuildFeature] = guild.get("features", [])
         self._splash: Optional[str] = guild.get("splash")
-        self._system_channel_id: Optional[int] = utils._get_as_snowflake(
-            guild, "system_channel_id"
-        )
+        self._system_channel_id: Optional[int] = utils._get_as_snowflake(guild, "system_channel_id")
         self.description: Optional[str] = guild.get("description")
         self.max_presences: Optional[int] = guild.get("max_presences")
         self.max_members: Optional[int] = guild.get("max_members")
-        self.max_video_channel_users: Optional[int] = guild.get(
-            "max_video_channel_users"
-        )
+        self.max_video_channel_users: Optional[int] = guild.get("max_video_channel_users")
         self.premium_tier: int = guild.get("premium_tier", 0)
-        self.premium_subscription_count: int = (
-            guild.get("premium_subscription_count") or 0
-        )
-        self.premium_progress_bar_enabled: bool = (
-            guild.get("premium_progress_bar_enabled") or False
-        )
+        self.premium_subscription_count: int = guild.get("premium_subscription_count") or 0
+        self.premium_progress_bar_enabled: bool = guild.get("premium_progress_bar_enabled") or False
         self._system_channel_flags: int = guild.get("system_channel_flags", 0)
         self.preferred_locale: Optional[str] = guild.get("preferred_locale")
         self._discovery_splash: Optional[str] = guild.get("discovery_splash")
-        self._rules_channel_id: Optional[int] = utils._get_as_snowflake(
-            guild, "rules_channel_id"
-        )
-        self._public_updates_channel_id: Optional[int] = utils._get_as_snowflake(
-            guild, "public_updates_channel_id"
-        )
+        self._rules_channel_id: Optional[int] = utils._get_as_snowflake(guild, "rules_channel_id")
+        self._public_updates_channel_id: Optional[int] = utils._get_as_snowflake(guild, "public_updates_channel_id")
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get("nsfw_level", 0))
         self.approximate_presence_count = guild.get("approximate_presence_count")
         self.approximate_member_count = guild.get("approximate_member_count")
@@ -543,22 +515,12 @@ class Guild(Hashable):
 
         events = []
         for event in guild.get("guild_scheduled_events", []):
-            creator = (
-                None
-                if not event.get("creator", None)
-                else self.get_member(event.get("creator_id"))
-            )
-            events.append(
-                ScheduledEvent(
-                    state=self._state, guild=self, creator=creator, data=event
-                )
-            )
+            creator = None if not event.get("creator", None) else self.get_member(event.get("creator_id"))
+            events.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
         self._scheduled_events_from_list(events)
 
         self._sync(guild)
-        self._large: Optional[bool] = (
-            None if member_count is None else self._member_count >= 250
-        )
+        self._large: Optional[bool] = None if member_count is None else self._member_count >= 250
 
         self.owner_id: Optional[int] = utils._get_as_snowflake(guild, "owner_id")
         self.afk_channel: Optional[VocalGuildChannel] = self.get_channel(utils._get_as_snowflake(guild, "afk_channel_id"))  # type: ignore
@@ -710,17 +672,13 @@ class Guild(Hashable):
             channels.sort(key=lambda c: (c._sorting_bucket, c.position, c.id))
         return as_list
 
-    def _resolve_channel(
-        self, id: Optional[int], /
-    ) -> Optional[Union[GuildChannel, Thread]]:
+    def _resolve_channel(self, id: Optional[int], /) -> Optional[Union[GuildChannel, Thread]]:
         if id is None:
             return
 
         return self._channels.get(id) or self._threads.get(id)
 
-    def get_channel_or_thread(
-        self, channel_id: int, /
-    ) -> Optional[Union[Thread, GuildChannel]]:
+    def get_channel_or_thread(self, channel_id: int, /) -> Optional[Union[Thread, GuildChannel]]:
         """Returns a channel or thread with the given ID.
 
         .. versionadded:: 2.0
@@ -825,18 +783,12 @@ class Guild(Hashable):
         .. versionadded:: 2.0
         """
         more_stickers = 60 if "MORE_STICKERS" in self.features else 0
-        return max(
-            more_stickers, self._PREMIUM_GUILD_LIMITS[self.premium_tier].stickers
-        )
+        return max(more_stickers, self._PREMIUM_GUILD_LIMITS[self.premium_tier].stickers)
 
     @property
     def bitrate_limit(self) -> float:
         """:class:`float`: The maximum bitrate for voice channels this guild can have."""
-        vip_guild = (
-            self._PREMIUM_GUILD_LIMITS[1].bitrate
-            if "VIP_REGIONS" in self.features
-            else 96e3
-        )
+        vip_guild = self._PREMIUM_GUILD_LIMITS[1].bitrate if "VIP_REGIONS" in self.features else 96e3
         return max(vip_guild, self._PREMIUM_GUILD_LIMITS[self.premium_tier].bitrate)
 
     @property
@@ -966,27 +918,21 @@ class Guild(Hashable):
         """Optional[:class:`Asset`]: Returns the guild's banner asset, if available."""
         if self._banner is None:
             return None
-        return Asset._from_guild_image(
-            self._state, self.id, self._banner, path="banners"
-        )
+        return Asset._from_guild_image(self._state, self.id, self._banner, path="banners")
 
     @property
     def splash(self) -> Optional[Asset]:
         """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available."""
         if self._splash is None:
             return None
-        return Asset._from_guild_image(
-            self._state, self.id, self._splash, path="splashes"
-        )
+        return Asset._from_guild_image(self._state, self.id, self._splash, path="splashes")
 
     @property
     def discovery_splash(self) -> Optional[Asset]:
         """Optional[:class:`Asset`]: Returns the guild's discovery splash asset, if available."""
         if self._discovery_splash is None:
             return None
-        return Asset._from_guild_image(
-            self._state, self.id, self._discovery_splash, path="discovery-splashes"
-        )
+        return Asset._from_guild_image(self._state, self.id, self._discovery_splash, path="discovery-splashes")
 
     @property
     def member_count(self) -> int:
@@ -1065,9 +1011,7 @@ class Guild(Hashable):
 
             # do the actual lookup and return if found
             # if it isn't found then we'll do a full name lookup below.
-            result = utils.get(
-                members, name=name[:-5], discriminator=potential_discriminator
-            )
+            result = utils.get(members, name=name[:-5], discriminator=potential_discriminator)
             if result is not None:
                 return result
 
@@ -1092,18 +1036,14 @@ class Guild(Hashable):
         perms = []
         for target, perm in overwrites.items():
             if not isinstance(perm, PermissionOverwrite):
-                raise InvalidArgument(
-                    f"Expected PermissionOverwrite received {perm.__class__.__name__}"
-                )
+                raise InvalidArgument(f"Expected PermissionOverwrite received {perm.__class__.__name__}")
 
             allow, deny = perm.pair()
             payload = {
                 "allow": allow.value,
                 "deny": deny.value,
                 "id": target.id,
-                "type": abc._Overwrites.ROLE
-                if isinstance(target, Role)
-                else abc._Overwrites.MEMBER,
+                "type": abc._Overwrites.ROLE if isinstance(target, Role) else abc._Overwrites.MEMBER,
             }
 
             perms.append(payload)
@@ -1642,15 +1582,11 @@ class Guild(Hashable):
             if discovery_splash is None:
                 fields["discovery_splash"] = discovery_splash
             else:
-                fields["discovery_splash"] = utils._bytes_to_base64_data(
-                    discovery_splash
-                )
+                fields["discovery_splash"] = utils._bytes_to_base64_data(discovery_splash)
 
         if default_notifications is not MISSING:
             if not isinstance(default_notifications, NotificationLevel):
-                raise InvalidArgument(
-                    "default_notifications field must be of type NotificationLevel"
-                )
+                raise InvalidArgument("default_notifications field must be of type NotificationLevel")
             fields["default_message_notifications"] = default_notifications.value
 
         if afk_channel is not MISSING:
@@ -1679,9 +1615,7 @@ class Guild(Hashable):
 
         if owner is not MISSING:
             if self.owner_id != self._state.self_id:
-                raise InvalidArgument(
-                    "To transfer ownership you must be the owner of the guild."
-                )
+                raise InvalidArgument("To transfer ownership you must be the owner of the guild.")
 
             fields["owner_id"] = owner.id
 
@@ -1690,35 +1624,26 @@ class Guild(Hashable):
 
         if verification_level is not MISSING:
             if not isinstance(verification_level, VerificationLevel):
-                raise InvalidArgument(
-                    "verification_level field must be of type VerificationLevel"
-                )
+                raise InvalidArgument("verification_level field must be of type VerificationLevel")
 
             fields["verification_level"] = verification_level.value
 
         if explicit_content_filter is not MISSING:
             if not isinstance(explicit_content_filter, ContentFilter):
-                raise InvalidArgument(
-                    "explicit_content_filter field must be of type ContentFilter"
-                )
+                raise InvalidArgument("explicit_content_filter field must be of type ContentFilter")
 
             fields["explicit_content_filter"] = explicit_content_filter.value
 
         if system_channel_flags is not MISSING:
             if not isinstance(system_channel_flags, SystemChannelFlags):
-                raise InvalidArgument(
-                    "system_channel_flags field must be of type SystemChannelFlags"
-                )
+                raise InvalidArgument("system_channel_flags field must be of type SystemChannelFlags")
 
             fields["system_channel_flags"] = system_channel_flags.value
 
         if community is not MISSING:
             features = []
             if community:
-                if (
-                    "rules_channel_id" in fields
-                    and "public_updates_channel_id" in fields
-                ):
+                if "rules_channel_id" in fields and "public_updates_channel_id" in fields:
                     features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
@@ -1761,9 +1686,7 @@ class Guild(Hashable):
         def convert(d):
             factory, ch_type = _guild_channel_factory(d["type"])
             if factory is None:
-                raise InvalidData(
-                    "Unknown channel type {type} for channel ID {id}.".format_map(d)
-                )
+                raise InvalidData("Unknown channel type {type} for channel ID {id}.".format_map(d))
 
             channel = factory(guild=self, state=self._state, data=d)
             return channel
@@ -1790,10 +1713,7 @@ class Guild(Hashable):
             The active threads
         """
         data = await self._state.http.get_active_threads(self.id)
-        threads = [
-            Thread(guild=self, state=self._state, data=d)
-            for d in data.get("threads", [])
-        ]
+        threads = [Thread(guild=self, state=self._state, data=d) for d in data.get("threads", [])]
         thread_lookup: Dict[int, Thread] = {thread.id: thread for thread in threads}
         for member in data.get("members", []):
             thread = thread_lookup.get(int(member["id"]))
@@ -1803,9 +1723,7 @@ class Guild(Hashable):
         return threads
 
     # TODO: Remove Optional typing here when async iterators are refactored
-    def fetch_members(
-        self, *, limit: int = 1000, after: Optional[SnowflakeTime] = None
-    ) -> MemberIterator:
+    def fetch_members(self, *, limit: int = 1000, after: Optional[SnowflakeTime] = None) -> MemberIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving the guild's members. In order to use this,
         :meth:`Intents.members` must be enabled.
 
@@ -1915,9 +1833,7 @@ class Guild(Hashable):
             The :class:`BanEntry` object for the specified user.
         """
         data: BanPayload = await self._state.http.get_ban(user.id, self.id)
-        return BanEntry(
-            user=User(state=self._state, data=data["user"]), reason=data["reason"]
-        )
+        return BanEntry(user=User(state=self._state, data=data["user"]), reason=data["reason"])
 
     async def fetch_channel(self, channel_id: int, /) -> Union[GuildChannel, Thread]:
         """|coro|
@@ -1952,9 +1868,7 @@ class Guild(Hashable):
 
         factory, ch_type = _threaded_guild_channel_factory(data["type"])
         if factory is None:
-            raise InvalidData(
-                "Unknown channel type {type} for channel ID {id}.".format_map(data)
-            )
+            raise InvalidData("Unknown channel type {type} for channel ID {id}.".format_map(data))
 
         if ch_type in (ChannelType.group, ChannelType.private):
             raise InvalidData("Channel ID resolved to a private channel")
@@ -1966,32 +1880,60 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    async def bans(self) -> List[BanEntry]:
+    def bans(
+        self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None, after: Optional[SnowflakeTime] = None
+    ) -> BanIterator:
         """|coro|
 
-        Retrieves all the users that are banned from the guild as a :class:`list` of :class:`BanEntry`.
+        Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
+        have the :attr:`~Permissions.ban_members` permission.
 
-        You must have the :attr:`~Permissions.ban_members` permission
-        to get this information.
+        .. versionchanged:: 2.0
+            The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
+            of a list of ``BanEntry`` objects.
+
+        All parameters are optional.
+
+        Parameters
+        ----------
+        limit: Optional[:class:`int`]
+            The number of bans to retrieve. Defaults to 1000.
+        before: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans before this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans after this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have proper permissions to get the information.
         HTTPException
             An error occurred while fetching the information.
 
-        Returns
+        Yields
+        ------
+        :class:`.BanEntry`
+            The ban entry for the ban.
+
+        Examples
         --------
-        List[:class:`BanEntry`]
-            A list of :class:`BanEntry` objects.
+
+        Usage ::
+
+            async for ban in guild.bans(limit=150):
+                print(ban.user.name)
+
+        Flattening into a list ::
+
+            bans = await guild.bans(limit=150).flatten()
+            # bans is now a list of BanEntry...
         """
 
-        data: List[BanPayload] = await self._state.http.get_bans(self.id)
-        return [
-            BanEntry(user=User(state=self._state, data=e["user"]), reason=e["reason"])
-            for e in data
-        ]
+        return BanIterator(self, limit=limit, before=before, after=after)
 
     async def prune_members(
         self,
@@ -2051,9 +1993,7 @@ class Guild(Hashable):
         """
 
         if not isinstance(days, int):
-            raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
-            )
+            raise InvalidArgument(f"Expected int for ``days``, received {days.__class__.__name__} instead.")
 
         role_ids = [str(role.id) for role in roles] if roles else []
         data = await self._state.http.prune_members(
@@ -2112,9 +2052,7 @@ class Guild(Hashable):
         data = await self._state.http.guild_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
 
-    async def estimate_pruned_members(
-        self, *, days: int, roles: List[Snowflake] = MISSING
-    ) -> int:
+    async def estimate_pruned_members(self, *, days: int, roles: List[Snowflake] = MISSING) -> int:
         """|coro|
 
         Similar to :meth:`prune_members` except instead of actually
@@ -2147,9 +2085,7 @@ class Guild(Hashable):
         """
 
         if not isinstance(days, int):
-            raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
-            )
+            raise InvalidArgument(f"Expected int for ``days``, received {days.__class__.__name__} instead.")
 
         role_ids = [str(role.id) for role in roles] if roles else []
         data = await self._state.http.estimate_pruned_members(self.id, days, role_ids)
@@ -2180,15 +2116,11 @@ class Guild(Hashable):
         result = []
         for invite in data:
             channel = self.get_channel(int(invite["channel"]["id"]))
-            result.append(
-                Invite(state=self._state, data=invite, guild=self, channel=channel)
-            )
+            result.append(Invite(state=self._state, data=invite, guild=self, channel=channel))
 
         return result
 
-    async def create_template(
-        self, *, name: str, description: str = MISSING
-    ) -> Template:
+    async def create_template(self, *, name: str, description: str = MISSING) -> Template:
         """|coro|
 
         Creates a template for the guild.
@@ -2269,11 +2201,7 @@ class Guild(Hashable):
         def convert(d):
             factory, _ = _integration_factory(d["type"])
             if factory is None:
-                raise InvalidData(
-                    "Unknown integration type {type!r} for integration ID {id}".format_map(
-                        d
-                    )
-                )
+                raise InvalidData("Unknown integration type {type!r} for integration ID {id}".format_map(d))
             return factory(guild=self, data=d)
 
         return [convert(d) for d in data]
@@ -2393,14 +2321,10 @@ class Guild(Hashable):
 
         payload["tags"] = emoji
 
-        data = await self._state.http.create_guild_sticker(
-            self.id, payload, file, reason
-        )
+        data = await self._state.http.create_guild_sticker(self.id, payload, file, reason)
         return self._state.store_sticker(self, data)
 
-    async def delete_sticker(
-        self, sticker: Snowflake, *, reason: Optional[str] = None
-    ) -> None:
+    async def delete_sticker(self, sticker: Snowflake, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes the custom :class:`Sticker` from the guild.
@@ -2523,14 +2447,10 @@ class Guild(Hashable):
 
         img = utils._bytes_to_base64_data(image)
         role_ids = [role.id for role in roles] if roles else []
-        data = await self._state.http.create_custom_emoji(
-            self.id, name, img, roles=role_ids, reason=reason
-        )
+        data = await self._state.http.create_custom_emoji(self.id, name, img, roles=role_ids, reason=reason)
         return self._state.store_emoji(self, data)
 
-    async def delete_emoji(
-        self, emoji: Snowflake, *, reason: Optional[str] = None
-    ) -> None:
+    async def delete_emoji(self, emoji: Snowflake, *, reason: Optional[str] = None) -> None:
         """|coro|
 
         Deletes the custom :class:`Emoji` from the guild.
@@ -2578,6 +2498,38 @@ class Guild(Hashable):
         """
         data = await self._state.http.get_roles(self.id)
         return [Role(guild=self, state=self._state, data=d) for d in data]
+
+    async def _fetch_role(self, role_id: int) -> Role:
+        """|coro|
+
+        Retrieves a :class:`Role` that the guild has.
+
+        .. note::
+
+            This method is an API call. For general usage, consider using :attr:`get_role` instead.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        -----------
+        role_id: :class:`int`
+            The role ID to fetch from the guild.
+
+        Raises
+        -------
+        HTTPException
+            Retrieving the role failed.
+
+        Returns
+        -------
+        Optional[:class:`Role`]
+            The role in the guild with the specified ID.
+            Returns ``None`` if not found.
+        """
+        roles = await self.fetch_roles()
+        for role in roles:
+            if role.id == role_id:
+                return role
 
     @overload
     async def create_role(
@@ -2687,9 +2639,7 @@ class Guild(Hashable):
         # TODO: add to cache
         return role
 
-    async def edit_role_positions(
-        self, positions: Dict[Snowflake, int], *, reason: Optional[str] = None
-    ) -> List[Role]:
+    async def edit_role_positions(self, positions: Dict[Snowflake, int], *, reason: Optional[str] = None) -> List[Role]:
         """|coro|
 
         Bulk edits a list of :class:`Role` in the guild.
@@ -2743,9 +2693,7 @@ class Guild(Hashable):
 
             role_positions.append(payload)
 
-        data = await self._state.http.move_role_position(
-            self.id, role_positions, reason=reason
-        )
+        data = await self._state.http.move_role_position(self.id, role_positions, reason=reason)
         roles: List[Role] = []
         for d in data:
             role = Role(guild=self, data=d, state=self._state)
@@ -2986,9 +2934,7 @@ class Guild(Hashable):
 
         return Widget(state=self._state, data=data)
 
-    async def edit_widget(
-        self, *, enabled: bool = MISSING, channel: Optional[Snowflake] = MISSING
-    ) -> None:
+    async def edit_widget(self, *, enabled: bool = MISSING, channel: Optional[Snowflake] = MISSING) -> None:
         """|coro|
 
         Edits the widget of the guild.
@@ -3241,23 +3187,17 @@ class Guild(Hashable):
 
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise TypeError(
-                    "welcome_channels parameter must be a list of WelcomeScreenChannel."
-                )
+                raise TypeError("welcome_channels parameter must be a list of WelcomeScreenChannel.")
 
             welcome_channels_data.append(channel.to_dict())
 
         options["welcome_channels"] = welcome_channels_data
 
         if options:
-            new = await self._state.http.edit_welcome_screen(
-                self.id, options, reason=options.get("reason")
-            )
+            new = await self._state.http.edit_welcome_screen(self.id, options, reason=options.get("reason"))
             return WelcomeScreen(data=new, guild=self)
 
-    async def fetch_scheduled_events(
-        self, *, with_user_count: bool = True
-    ) -> List[ScheduledEvent]:
+    async def fetch_scheduled_events(self, *, with_user_count: bool = True) -> List[ScheduledEvent]:
         """|coro|
 
         Returns a list of :class:`ScheduledEvent` in the guild.
@@ -3285,21 +3225,11 @@ class Guild(Hashable):
         List[:class:`ScheduledEvent`]
             The fetched scheduled events
         """
-        data = await self._state.http.get_scheduled_events(
-            self.id, with_user_count=with_user_count
-        )
+        data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
         for event in data:
-            creator = (
-                None
-                if not event.get("creator", None)
-                else self.get_member(event.get("creator_id"))
-            )
-            result.append(
-                ScheduledEvent(
-                    state=self._state, guild=self, creator=creator, data=event
-                )
-            )
+            creator = None if not event.get("creator", None) else self.get_member(event.get("creator_id"))
+            result.append(ScheduledEvent(state=self._state, guild=self, creator=creator, data=event))
 
         self._scheduled_events_from_list(result)
         return result
@@ -3335,14 +3265,8 @@ class Guild(Hashable):
         data = await self._state.http.get_scheduled_event(
             guild_id=self.id, event_id=event_id, with_user_count=with_user_count
         )
-        creator = (
-            None
-            if not data.get("creator", None)
-            else self.get_member(data.get("creator_id"))
-        )
-        event = ScheduledEvent(
-            state=self._state, guild=self, creator=creator, data=data
-        )
+        creator = None if not data.get("creator", None) else self.get_member(data.get("creator_id"))
+        event = ScheduledEvent(state=self._state, guild=self, creator=creator, data=data)
 
         old_event = self._scheduled_events.get(event.id)
         if old_event:
@@ -3438,12 +3362,8 @@ class Guild(Hashable):
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
-        data = await self._state.http.create_scheduled_event(
-            guild_id=self.id, reason=reason, **payload
-        )
-        event = ScheduledEvent(
-            state=self._state, guild=self, creator=self.me, data=data
-        )
+        data = await self._state.http.create_scheduled_event(guild_id=self.id, reason=reason, **payload)
+        event = ScheduledEvent(state=self._state, guild=self, creator=self.me, data=data)
         self._add_scheduled_event(event)
         return event
 
