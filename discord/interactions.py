@@ -850,8 +850,6 @@ class InteractionResponse:
 
         Raises
         -------
-        HTTPException
-            Deferring the interaction failed.
         InteractionResponded
             This interaction has already been responded to before.
         """
