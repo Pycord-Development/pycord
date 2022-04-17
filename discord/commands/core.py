@@ -1624,7 +1624,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     if not isinstance(name, str):
         raise TypeError(
-            f"Command names and options must be of type str." f"Received {name}" + f" in locale {locale}"
+            f"Command names and options must be of type str." f"Received {name} in locale {locale}"
             if locale
             else ""
         )
