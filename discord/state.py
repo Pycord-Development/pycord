@@ -1554,6 +1554,13 @@ class ConnectionState:
                     elif channel_id is not None:
                         guild._add_member(member)
 
+                self.dispatch("voice_state_update", member, before, after)
+            else:
+                _log.debug(
+                    "VOICE_STATE_UPDATE referencing an unknown member ID: %s. Discarding.",
+                    data["user_id"],
+                )
+
             if int(data["user_id"]) == self_id:
                 voice = self._get_voice_client(guild.id)
                 if voice is not None:
@@ -1562,12 +1569,6 @@ class ConnectionState:
                     coro = voice.on_voice_state_update(data)
                     asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
 
-                self.dispatch("voice_state_update", member, before, after)
-            else:
-                _log.debug(
-                    "VOICE_STATE_UPDATE referencing an unknown member ID: %s. Discarding.",
-                    data["user_id"],
-                )
 
     def parse_voice_server_update(self, data) -> None:
         try:
