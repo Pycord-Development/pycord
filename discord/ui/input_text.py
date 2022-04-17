@@ -153,7 +153,7 @@ class InputText:
     def min_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if 0 <= value <= 4000:
+        if value < 0 or value > 4000:
             raise ValueError("min_length must be between 0 and 4000")
         self._underlying.min_length = value
 
@@ -166,7 +166,7 @@ class InputText:
     def max_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if 0 < value <= 4000:
+        if value <= 0 or value > 4000:
             raise ValueError("max_length must be between 1 and 4000")
         self._underlying.max_length = value
 
