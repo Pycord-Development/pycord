@@ -1655,7 +1655,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
     if locale not in valid_locales and locale is not None:
         raise ValidationError(
-            f"Locale {locale} is not a valid locale, "
+            f"Locale '{locale}' is not a valid locale, "
             f"see {docs}/reference#locales for list of supported locales."
         )
     if not isinstance(description, str):
