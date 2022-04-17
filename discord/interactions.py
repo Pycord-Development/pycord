@@ -857,7 +857,7 @@ class InteractionResponse:
         """
         async with self._response_lock:
             if self.is_done():
-                coro.close()  # Cleanup unawaited coroutine
+                coro.close()  # cleanup unawaited coroutine
                 raise InteractionResponded(self._parent)
             await coro
 
