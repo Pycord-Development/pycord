@@ -841,7 +841,7 @@ class InteractionResponse:
     async def _locked_response(self, coro: Coroutine[Any]):
         """|coro|
 
-        Wraps a response and makes sure that is locked while executing
+        Wraps a response and makes sure that it's locked while executing.
 
         Parameters
         -----------
