@@ -845,8 +845,8 @@ class InteractionResponse:
 
         Parameters
         -----------
-        coro:
-            The coroutine to wrap
+        coro: Coroutine[Any]
+            The coroutine to wrap.
 
         Raises
         -------
