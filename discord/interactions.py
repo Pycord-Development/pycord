@@ -424,6 +424,36 @@ class Interaction:
         else:
             await func
 
+    def to_dict(self) -> Dict[str, Any]:
+        data = {
+            "id": self.id,
+            "application_id": self.application_id,
+            "type": self.type.value,
+            "token": self.token,
+            "version": self.version,
+        }
+
+        if self.data is not None:
+            data["data"] = self.data
+
+        if self.guild_id is not None:
+            data["guild_id"] = self.guild_id
+
+        if self.channel_id is not None:
+            data["channel_id"] = self.channel_id
+
+        if self.user is not None:
+            user = self.user if isinstance(self.user, User) else self.user._user
+            data["user"] = user._to_minimal_user_json()
+
+        if self.locale:
+            data["locale"] = self.locale
+
+        if self.guild_locale:
+            data["guild_locale"] = self.guild_locale
+
+        return data
+
 
 class InteractionResponse:
     """Represents a Discord interaction response.
