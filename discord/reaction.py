@@ -24,20 +24,20 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING, Union, Optional
+
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from .iterators import ReactionIterator
 
-__all__ = (
-    'Reaction',
-)
+__all__ = ("Reaction",)
 
 if TYPE_CHECKING:
-    from .types.message import Reaction as ReactionPayload
+    from .abc import Snowflake
+    from .emoji import Emoji
     from .message import Message
     from .partial_emoji import PartialEmoji
-    from .emoji import Emoji
-    from .abc import Snowflake
+    from .types.message import Reaction as ReactionPayload
+
 
 class Reaction:
     """Represents a reaction to a message.
@@ -76,13 +76,20 @@ class Reaction:
     message: :class:`Message`
         Message this reaction is for.
     """
-    __slots__ = ('message', 'count', 'emoji', 'me')
 
-    def __init__(self, *, message: Message, data: ReactionPayload, emoji: Optional[Union[PartialEmoji, Emoji, str]] = None):
+    __slots__ = ("message", "count", "emoji", "me")
+
+    def __init__(
+        self,
+        *,
+        message: Message,
+        data: ReactionPayload,
+        emoji: Optional[Union[PartialEmoji, Emoji, str]] = None,
+    ):
         self.message: Message = message
-        self.emoji: Union[PartialEmoji, Emoji, str] = emoji or message._state.get_reaction_emoji(data['emoji'])
-        self.count: int = data.get('count', 1)
-        self.me: bool = data.get('me')
+        self.emoji: Union[PartialEmoji, Emoji, str] = emoji or message._state.get_reaction_emoji(data["emoji"])
+        self.count: int = data.get("count", 1)
+        self.me: bool = data.get("me")
 
     # TODO: typeguard
     def is_custom_emoji(self) -> bool:
@@ -104,7 +111,7 @@ class Reaction:
         return str(self.emoji)
 
     def __repr__(self) -> str:
-        return f'<Reaction emoji={self.emoji!r} me={self.me} count={self.count}>'
+        return f"<Reaction emoji={self.emoji!r} me={self.me} count={self.count}>"
 
     async def remove(self, user: Snowflake) -> None:
         """|coro|
@@ -202,7 +209,7 @@ class Reaction:
         """
 
         if not isinstance(self.emoji, str):
-            emoji = f'{self.emoji.name}:{self.emoji.id}'
+            emoji = f"{self.emoji.name}:{self.emoji.id}"
         else:
             emoji = self.emoji
 

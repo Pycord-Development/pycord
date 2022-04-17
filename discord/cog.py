@@ -28,25 +28,45 @@ import importlib
 import inspect
 import sys
 import types
-from typing import Any, Callable, Mapping, ClassVar, Dict, Generator, List, Optional, Tuple, TypeVar, Type
-
-import discord.utils
-from . import errors
-from .commands import _BaseCommand, ApplicationCommand, ApplicationContext
-
-__all__ = (
-    'CogMeta',
-    'Cog',
-    'CogMixin',
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    Generator,
+    List,
+    Mapping,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
 )
 
-CogT = TypeVar('CogT', bound='Cog')
-FuncT = TypeVar('FuncT', bound=Callable[..., Any])
+import discord.utils
+
+from . import errors
+from .commands import (
+    ApplicationCommand,
+    ApplicationContext,
+    SlashCommandGroup,
+    _BaseCommand,
+)
+
+__all__ = (
+    "CogMeta",
+    "Cog",
+    "CogMixin",
+)
+
+CogT = TypeVar("CogT", bound="Cog")
+FuncT = TypeVar("FuncT", bound=Callable[..., Any])
 
 MISSING: Any = discord.utils.MISSING
 
+
 def _is_submodule(parent: str, child: str) -> bool:
-    return parent == child or child.startswith(parent + ".")
+    return parent == child or child.startswith(f"{parent}.")
+
 
 class CogMeta(type):
     """A metaclass for defining a cog.
@@ -106,30 +126,43 @@ class CogMeta(type):
                 @commands.command(hidden=False)
                 async def bar(self, ctx):
                     pass # hidden -> False
+
+    guild_ids: Optional[List[:class:`int`]]
+        A shortcut to command_attrs, what guild_ids should all application commands have
+        in the cog. You can override this by setting guild_ids per command.
+
+        .. versionadded:: 2.0
     """
+
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
     __cog_commands__: List[ApplicationCommand]
     __cog_listeners__: List[Tuple[str, str]]
+    __cog_guild_ids__: List[int]
 
     def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
-        attrs['__cog_name__'] = kwargs.pop('name', name)
-        attrs['__cog_settings__'] = kwargs.pop('command_attrs', {})
+        attrs["__cog_name__"] = kwargs.pop("name", name)
+        attrs["__cog_settings__"] = kwargs.pop("command_attrs", {})
+        attrs["__cog_guild_ids__"] = kwargs.pop("guild_ids", [])
 
-        description = kwargs.pop('description', None)
+        description = kwargs.pop("description", None)
         if description is None:
-            description = inspect.cleandoc(attrs.get('__doc__', ''))
-        attrs['__cog_description__'] = description
+            description = inspect.cleandoc(attrs.get("__doc__", ""))
+        attrs["__cog_description__"] = description
 
         commands = {}
         listeners = {}
-        no_bot_cog = 'Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})'
+        no_bot_cog = "Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})"
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
-        valid_commands = [(c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)]
-        if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(not isinstance(i, _BaseCommand) for i in valid_commands):
+        valid_commands = [
+            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)
+        ]
+        if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
+            not isinstance(i, _BaseCommand) for i in valid_commands
+        ):
             _filter = ApplicationCommand
         else:
             _filter = _BaseCommand
@@ -153,17 +186,33 @@ class CogMeta(type):
                     value = value.__func__
                 if isinstance(value, _filter):
                     if is_static_method:
-                        raise TypeError(f'Command in method {base}.{elem!r} must not be staticmethod.')
-                    if elem.startswith(('cog_', 'bot_')):
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                    if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
-                elif inspect.iscoroutinefunction(value):
+
+                try:
+                    # a test to see if this value is a BridgeCommand
+                    getattr(value, "add_to")
+
+                    if is_static_method:
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                    if elem.startswith(("cog_", "bot_")):
+                        raise TypeError(no_bot_cog.format(base, elem))
+
+                    commands[f"ext_{elem}"] = value.get_ext_command()
+                    commands[f"application_{elem}"] = value.get_application_command()
+                except AttributeError:
+                    # we are confident that the value is not a Bridge Command
+                    pass
+
+                if inspect.iscoroutinefunction(value):
                     try:
-                        getattr(value, '__cog_listener__')
+                        getattr(value, "__cog_listener__")
                     except AttributeError:
                         continue
                     else:
-                        if elem.startswith(('cog_', 'bot_')):
+                        if elem.startswith(("cog_", "bot_")):
                             raise TypeError(no_bot_cog.format(base, elem))
                         listeners[elem] = value
 
@@ -184,14 +233,17 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
 
-        lookup = {
-            cmd.qualified_name: cmd
-            for cmd in new_cls.__cog_commands__
-        }
+        lookup = {cmd.qualified_name: cmd for cmd in new_cls.__cog_commands__}
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if not isinstance(command, ApplicationCommand):
+            if (
+                isinstance(command, ApplicationCommand)
+                and command.guild_ids is None
+                and len(new_cls.__cog_guild_ids__) != 0
+            ):
+                command.guild_ids = new_cls.__cog_guild_ids__
+            if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
                 if parent is not None:
@@ -211,9 +263,11 @@ class CogMeta(type):
     def qualified_name(cls) -> str:
         return cls.__cog_name__
 
+
 def _cog_special_method(func: FuncT) -> FuncT:
     func.__cog_special_method__ = None
     return func
+
 
 class Cog(metaclass=CogMeta):
     """The base class that all cogs must inherit from.
@@ -225,18 +279,18 @@ class Cog(metaclass=CogMeta):
     When inheriting from this class, the options shown in :class:`CogMeta`
     are equally valid here.
     """
+
     __cog_name__: ClassVar[str]
     __cog_settings__: ClassVar[Dict[str, Any]]
     __cog_commands__: ClassVar[List[ApplicationCommand]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
+    __cog_guild_ids__: ClassVar[List[int]]
 
     def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
-        self = super().__new__(cls)
-
-        return self
+        return super().__new__(cls)
 
     def get_commands(self) -> List[ApplicationCommand]:
         r"""
@@ -275,8 +329,8 @@ class Cog(metaclass=CogMeta):
             A command or group from the cog.
         """
         for command in self.__cog_commands__:
-            if command.parent is None:
-                yield command
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
 
     def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.
@@ -291,7 +345,7 @@ class Cog(metaclass=CogMeta):
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
         """Return None if the method is not overridden. Otherwise returns the overridden method."""
-        return getattr(getattr(method, "__func__", method), '__cog_special_method__', method)
+        return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
     def listener(cls, name: str = MISSING) -> Callable[[FuncT], FuncT]:
@@ -313,14 +367,14 @@ class Cog(metaclass=CogMeta):
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(f'Cog.listener expected str but received {name.__class__.__name__!r} instead.')
+            raise TypeError(f"Cog.listener expected str but received {name.__class__.__name__!r} instead.")
 
         def decorator(func: FuncT) -> FuncT:
             actual = func
             if isinstance(actual, staticmethod):
                 actual = actual.__func__
             if not inspect.iscoroutinefunction(actual):
-                raise TypeError('Listener function must be a coroutine function.')
+                raise TypeError("Listener function must be a coroutine function.")
             actual.__cog_listener__ = True
             to_assign = name or actual.__name__
             try:
@@ -332,6 +386,7 @@ class Cog(metaclass=CogMeta):
             # to pick it up but the metaclass unfurls the function and
             # thus the assignments need to be on the actual function
             return func
+
         return decorator
 
     def has_error_handler(self) -> bool:
@@ -339,7 +394,7 @@ class Cog(metaclass=CogMeta):
 
         .. versionadded:: 1.7
         """
-        return not hasattr(self.cog_command_error.__func__, '__cog_special_method__')
+        return not hasattr(self.cog_command_error.__func__, "__cog_special_method__")
 
     @_cog_special_method
     def cog_unload(self) -> None:
@@ -396,7 +451,7 @@ class Cog(metaclass=CogMeta):
         -----------
         ctx: :class:`.Context`
             The invocation context where the error happened.
-        error: :class:`CommandError`
+        error: :class:`ApplicationCommandError`
             The error that happened.
         """
         pass
@@ -438,23 +493,22 @@ class Cog(metaclass=CogMeta):
         # is essentially just the command loading, which raises if there are
         # duplicates. When this condition is met, we want to undo all what
         # we've added so far for some form of atomic loading.
-        
+
         for index, command in enumerate(self.__cog_commands__):
             command._set_cog(self)
 
-            if not isinstance(command, ApplicationCommand):
-                if command.parent is None:
-                    try:
-                        bot.add_command(command)
-                    except Exception as e:
-                        # undo our additions
-                        for to_undo in self.__cog_commands__[:index]:
-                            if to_undo.parent is None:
-                                bot.remove_command(to_undo.name)
-                        raise e
-            else:
+            if isinstance(command, ApplicationCommand):
                 bot.add_application_command(command)
 
+            elif command.parent is None:
+                try:
+                    bot.add_command(command)
+                except Exception as e:
+                    # undo our additions
+                    for to_undo in self.__cog_commands__[:index]:
+                        if to_undo.parent is None:
+                            bot.remove_command(to_undo.name)
+                    raise e
         # check if we're overriding the default
         if cls.bot_check is not Cog.bot_check:
             bot.add_check(self.bot_check)
@@ -470,7 +524,7 @@ class Cog(metaclass=CogMeta):
             bot.add_listener(getattr(self, method_name), name)
 
         return self
-    
+
     def _eject(self, bot) -> None:
         cls = self.__class__
 
@@ -478,9 +532,8 @@ class Cog(metaclass=CogMeta):
             for command in self.__cog_commands__:
                 if isinstance(command, ApplicationCommand):
                     bot.remove_application_command(command)
-                else:
-                    if command.parent is None:
-                        bot.remove_command(command.name)
+                elif command.parent is None:
+                    bot.remove_command(command.name)
 
             for _, method_name in self.__cog_listeners__:
                 bot.remove_listener(getattr(self, method_name))
@@ -496,12 +549,13 @@ class Cog(metaclass=CogMeta):
             except Exception:
                 pass
 
+
 class CogMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__cogs: Dict[str, Cog] = {}
         self.__extensions: Dict[str, types.ModuleType] = {}
-        
+
     def add_cog(self, cog: Cog, *, override: bool = False) -> None:
         """Adds a "cog" to the bot.
 
@@ -526,23 +580,23 @@ class CogMixin:
         -------
         TypeError
             The cog does not inherit from :class:`.Cog`.
-        CommandError
+        ApplicationCommandError
             An error happened during loading.
-        .ClientException
+        ClientException
             A cog with the same name is already loaded.
         """
 
         if not isinstance(cog, Cog):
-            raise TypeError('cogs must derive from Cog')
+            raise TypeError("cogs must derive from Cog")
 
         cog_name = cog.__cog_name__
         existing = self.__cogs.get(cog_name)
 
         if existing is not None:
             if not override:
-                raise discord.ClientException(f'Cog named {cog_name!r} already loaded')
+                raise discord.ClientException(f"Cog named {cog_name!r} already loaded")
             self.remove_cog(cog_name)
-        
+
         cog = cog._inject(self)
         self.__cogs[cog_name] = cog
 
@@ -587,7 +641,7 @@ class CogMixin:
         cog = self.__cogs.pop(name, None)
         if cog is None:
             return
-        
+
         if hasattr(self, "_help_command"):
             help_command = self._help_command
             if help_command and help_command.cog is cog:
@@ -626,17 +680,18 @@ class CogMixin:
 
         # remove all the listeners from the module
         for event_list in self.extra_events.copy().values():
-            remove = []
-            for index, event in enumerate(event_list):
-                if event.__module__ is not None and _is_submodule(name, event.__module__):
-                    remove.append(index)
+            remove = [
+                index
+                for index, event in enumerate(event_list)
+                if event.__module__ is not None and _is_submodule(name, event.__module__)
+            ]
 
             for index in reversed(remove):
                 del event_list[index]
 
     def _call_module_finalizers(self, lib: types.ModuleType, key: str) -> None:
         try:
-            func = getattr(lib, 'teardown')
+            func = getattr(lib, "teardown")
         except AttributeError:
             pass
         else:
@@ -663,7 +718,7 @@ class CogMixin:
             raise errors.ExtensionFailed(key, e) from e
 
         try:
-            setup = getattr(lib, 'setup')
+            setup = getattr(lib, "setup")
         except AttributeError:
             del sys.modules[key]
             raise errors.NoEntryPointError(key)
@@ -813,11 +868,7 @@ class CogMixin:
             raise errors.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
-        modules = {
-            name: module
-            for name, module in sys.modules.items()
-            if _is_submodule(lib.__name__, name)
-        }
+        modules = {name: module for name, module in sys.modules.items() if _is_submodule(lib.__name__, name)}
 
         try:
             # Unload and then load the module...

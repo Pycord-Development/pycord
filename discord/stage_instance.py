@@ -25,22 +25,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
-from .utils import MISSING, cached_slot_property
-from .mixins import Hashable
-from .errors import InvalidArgument
 from .enums import StagePrivacyLevel, try_enum
+from .errors import InvalidArgument
+from .mixins import Hashable
+from .utils import MISSING, cached_slot_property
 
-__all__ = (
-    'StageInstance',
-)
+__all__ = ("StageInstance",)
 
 if TYPE_CHECKING:
-    from .types.channel import StageInstance as StageInstancePayload
-    from .state import ConnectionState
     from .channel import StageChannel
     from .guild import Guild
+    from .state import ConnectionState
+    from .types.channel import StageInstance as StageInstancePayload
 
 
 class StageInstance(Hashable):
@@ -76,17 +74,20 @@ class StageInstance(Hashable):
         The privacy level of the stage instance.
     discoverable_disabled: :class:`bool`
         Whether discoverability for the stage instance is disabled.
+    scheduled_event: Optional[:class:`.ScheduledEvent`]
+        The scheduled event linked with the stage instance, if any.
     """
 
     __slots__ = (
-        '_state',
-        'id',
-        'guild',
-        'channel_id',
-        'topic',
-        'privacy_level',
-        'discoverable_disabled',
-        '_cs_channel',
+        "_state",
+        "id",
+        "guild",
+        "channel_id",
+        "topic",
+        "privacy_level",
+        "discoverable_disabled",
+        "scheduled_event",
+        "_cs_channel",
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, data: StageInstancePayload) -> None:
@@ -95,25 +96,35 @@ class StageInstance(Hashable):
         self._update(data)
 
     def _update(self, data: StageInstancePayload):
-        self.id: int = int(data['id'])
-        self.channel_id: int = int(data['channel_id'])
-        self.topic: str = data['topic']
-        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data['privacy_level'])
-        self.discoverable_disabled: bool = data.get('discoverable_disabled', False)
+        self.id: int = int(data["id"])
+        self.channel_id: int = int(data["channel_id"])
+        self.topic: str = data["topic"]
+        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data["privacy_level"])
+        self.discoverable_disabled: bool = data.get("discoverable_disabled", False)
+        event_id = data.get("guild_scheduled_event")
+        if event_id is not None:
+            event_id = int(event_id)
+        self.scheduled_event = self.guild.get_scheduled_event(event_id)
 
     def __repr__(self) -> str:
-        return f'<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>'
+        return f"<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
 
-    @cached_slot_property('_cs_channel')
+    @cached_slot_property("_cs_channel")
     def channel(self) -> Optional[StageChannel]:
         """Optional[:class:`StageChannel`]: The channel that stage instance is running in."""
         # the returned channel will always be a StageChannel or None
-        return self._state.get_channel(self.channel_id) # type: ignore
+        return self._state.get_channel(self.channel_id)  # type: ignore
 
     def is_public(self) -> bool:
-        return self.privacy_level is StagePrivacyLevel.public
+        return False
 
-    async def edit(self, *, topic: str = MISSING, privacy_level: StagePrivacyLevel = MISSING, reason: Optional[str] = None) -> None:
+    async def edit(
+        self,
+        *,
+        topic: str = MISSING,
+        privacy_level: StagePrivacyLevel = MISSING,
+        reason: Optional[str] = None,
+    ) -> None:
         """|coro|
 
         Edits the stage instance.
@@ -143,13 +154,13 @@ class StageInstance(Hashable):
         payload = {}
 
         if topic is not MISSING:
-            payload['topic'] = topic
+            payload["topic"] = topic
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):
-                raise InvalidArgument('privacy_level field must be of type PrivacyLevel')
+                raise InvalidArgument("privacy_level field must be of type PrivacyLevel")
 
-            payload['privacy_level'] = privacy_level.value
+            payload["privacy_level"] = privacy_level.value
 
         if payload:
             await self._state.http.edit_stage_instance(self.channel_id, **payload, reason=reason)

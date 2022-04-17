@@ -41,36 +41,32 @@ Some documentation to refer to:
 from __future__ import annotations
 
 import asyncio
-import socket
 import logging
+import select
+import socket
 import struct
 import threading
-import select
 import time
-from typing import Any, Callable, List, Optional, TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple
 
 from . import opus, utils
 from .backoff import ExponentialBackoff
-from .gateway import *
 from .errors import ClientException, ConnectionClosed
+from .gateway import *
 from .player import AudioPlayer, AudioSource
-from .sinks import Sink, RawData, RecordingException
-
+from .sinks import RawData, RecordingException, Sink
 from .utils import MISSING
 
 if TYPE_CHECKING:
+    from . import abc
     from .client import Client
     from .guild import Guild
-    from .state import ConnectionState
-    from .user import ClientUser
     from .opus import Encoder
-    from . import abc
-
-    from .types.voice import (
-        GuildVoiceState as GuildVoiceStatePayload,
-        VoiceServerUpdate as VoiceServerUpdatePayload,
-        SupportedModes,
-    )
+    from .state import ConnectionState
+    from .types.voice import GuildVoiceState as GuildVoiceStatePayload
+    from .types.voice import SupportedModes
+    from .types.voice import VoiceServerUpdate as VoiceServerUpdatePayload
+    from .user import ClientUser
 
 
 has_nacl: bool
@@ -362,9 +358,7 @@ class VoiceClient(VoiceProtocol):
         self._voice_state_complete.clear()
         self._voice_server_complete.clear()
         self._handshaking = True
-        _log.info(
-            "Starting voice handshake... (connection attempt %d)", self._connections + 1
-        )
+        _log.info("Starting voice handshake... (connection attempt %d)", self._connections + 1)
         self._connections += 1
 
     def finish_handshake(self) -> None:
@@ -427,9 +421,7 @@ class VoiceClient(VoiceProtocol):
         self._potentially_reconnecting = True
         try:
             # We only care about VOICE_SERVER_UPDATE since VOICE_STATE_UPDATE can come before we get disconnected
-            await asyncio.wait_for(
-                self._voice_server_complete.wait(), timeout=self.timeout
-            )
+            await asyncio.wait_for(self._voice_server_complete.wait(), timeout=self.timeout)
         except asyncio.TimeoutError:
             self._potentially_reconnecting = False
             await self.disconnect(force=True)
@@ -484,27 +476,20 @@ class VoiceClient(VoiceProtocol):
                         await self.disconnect()
                         break
                     if exc.code == 4014:
-                        _log.info(
-                            "Disconnected from voice by force... potentially reconnecting."
-                        )
+                        _log.info("Disconnected from voice by force... potentially reconnecting.")
                         successful = await self.potential_reconnect()
-                        if not successful:
-                            _log.info(
-                                "Reconnect was unsuccessful, disconnecting from voice normally..."
-                            )
-                            await self.disconnect()
-                            break
-                        else:
+                        if successful:
                             continue
 
+                        _log.info("Reconnect was unsuccessful, disconnecting from voice normally...")
+                        await self.disconnect()
+                        break
                 if not reconnect:
                     await self.disconnect()
                     raise
 
                 retry = backoff.delay()
-                _log.exception(
-                    "Disconnected from voice... Reconnecting in %.2fs.", retry
-                )
+                _log.exception("Disconnected from voice... Reconnecting in %.2fs.", retry)
                 self._connected.clear()
                 await asyncio.sleep(retry)
                 await self.voice_disconnect()
@@ -564,7 +549,7 @@ class VoiceClient(VoiceProtocol):
         struct.pack_into(">I", header, 4, self.timestamp)
         struct.pack_into(">I", header, 8, self.ssrc)
 
-        encrypt_packet = getattr(self, "_encrypt_" + self.mode)
+        encrypt_packet = getattr(self, f"_encrypt_{self.mode}")
         return encrypt_packet(header, data)
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data) -> bytes:
@@ -623,13 +608,9 @@ class VoiceClient(VoiceProtocol):
         return data
 
     def get_ssrc(self, user_id):
-        return {info["user_id"]: ssrc for ssrc, info in self.ws.ssrc_map.items()}[
-            user_id
-        ]
+        return {info["user_id"]: ssrc for ssrc, info in self.ws.ssrc_map.items()}[user_id]
 
-    def play(
-        self, source: AudioSource, *, after: Callable[[Optional[Exception]], Any] = None
-    ) -> None:
+    def play(self, source: AudioSource, *, after: Callable[[Optional[Exception]], Any] = None) -> None:
         """Plays an :class:`AudioSource`.
 
         The finalizer, ``after`` is called after the source has been exhausted
@@ -665,9 +646,7 @@ class VoiceClient(VoiceProtocol):
             raise ClientException("Already playing audio.")
 
         if not isinstance(source, AudioSource):
-            raise TypeError(
-                f"source must be an AudioSource not {source.__class__.__name__}"
-            )
+            raise TypeError(f"source must be an AudioSource not {source.__class__.__name__}")
 
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder()
@@ -710,16 +689,17 @@ class VoiceClient(VoiceProtocol):
         Must be in a voice channel to use.
         Must not be already recording.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Parameters
         ----------
-        sink: :class:`Sink`
+        sink: :class:`.Sink`
             A Sink which will "store" all the audio data.
-        callback: :class:`asynchronous function`
+        callback: :ref:`coroutine <coroutine>`
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
+
         Raises
         ------
         RecordingException
@@ -818,9 +798,7 @@ class VoiceClient(VoiceProtocol):
 
         self.stopping_time = time.perf_counter()
         self.sink.cleanup()
-        callback = asyncio.run_coroutine_threadsafe(
-            callback(self.sink, *args), self.loop
-        )
+        callback = asyncio.run_coroutine_threadsafe(callback(self.sink, *args), self.loop)
         result = callback.result()
 
         if result is not None:
@@ -835,7 +813,7 @@ class VoiceClient(VoiceProtocol):
             silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
             self.user_timestamps[data.ssrc] = data.timestamp
 
-        data.decoded_data = struct.pack('<h', 0) * silence * opus._OpusStruct.CHANNELS + data.decoded_data
+        data.decoded_data = struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS + data.decoded_data
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])

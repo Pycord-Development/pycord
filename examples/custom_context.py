@@ -25,11 +25,11 @@ class MyContext(commands.Context):  # custom context
 class MyApplicationContext(discord.ApplicationContext):  # custom application context
     async def success(self, message):
         try:
-            await self.respond(embed=discord.Embed(  # respond with a green embed with "Success" title
-                title="Success",
-                description=message,
-                colour=discord.Colour.green()
-            ))
+            await self.respond(
+                embed=discord.Embed(  # respond with a green embed with "Success" title
+                    title="Success", description=message, colour=discord.Colour.green()
+                )
+            )
         except discord.HTTPException:  # ignore exceptions
             pass
 

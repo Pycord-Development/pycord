@@ -25,35 +25,37 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 from . import utils
-from typing import TYPE_CHECKING, Optional, Dict, Any, Union
+from .asset import Asset
 from .enums import (
+    ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     ScheduledEventStatus,
-    ScheduledEventLocationType,
     try_enum,
 )
-from .mixins import Hashable
-from .iterators import ScheduledEventSubscribersIterator
 from .errors import ValidationError
-from .asset import Asset
+from .iterators import ScheduledEventSubscribersIterator
+from .mixins import Hashable
+from .object import Object
 
 __all__ = (
-    'ScheduledEvent',
-    'ScheduledEventLocation',
+    "ScheduledEvent",
+    "ScheduledEventLocation",
 )
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .state import ConnectionState
-    from .member import Member
     from .guild import Guild
     from .iterators import AsyncIterator
-    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .member import Member
+    from .state import ConnectionState
     from .types.channel import StageChannel, VoiceChannel
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
 MISSING = utils.MISSING
+
 
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
@@ -72,22 +74,27 @@ class ScheduledEventLocation:
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
     """
 
     __slots__ = (
-        '_state',
-        'value',
+        "_state",
+        "value",
     )
 
-    def __init__(self, *, state: ConnectionState, value: Union[str, int, StageChannel, VoiceChannel]):
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        value: Union[str, int, StageChannel, VoiceChannel],
+    ):
         self._state = state
-        self.value: Union[str, StageChannel, VoiceChannel]
+        self.value: Union[str, StageChannel, VoiceChannel, Object]
         if isinstance(value, int):
-            self.value = self._state._get_guild_channel({"channel_id": int(value)})
+            self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
         else:
             self.value = value
 
@@ -95,8 +102,8 @@ class ScheduledEventLocation:
         return f"<ScheduledEventLocation value={self.value} type={self.type}>"
 
     def __str__(self) -> str:
-        return self.value
-    
+        return str(self.value)
+
     @property
     def type(self) -> ScheduledEventLocationType:
         if isinstance(self.value, str):
@@ -149,8 +156,6 @@ class ScheduledEvent(Hashable):
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
         The number of users that have marked themselves as interested for the event.
-    interested: Optional[:class:`int`]
-        Alias to :attr:`.subscriber_count`
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -161,67 +166,70 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
-    created_at: :class:`datetime.datetime`
-        The datetime object of when the event was created.
-    cover: Optional[:class:`Asset`]
-        The cover image of the scheduled event.
     """
-    
+
     __slots__ = (
-        'id',
-        'name',
-        'description',
-        'start_time',
-        'end_time',
-        'status',
-        'creator_id',
-        'creator',
-        'location',
-        'guild',
-        '_state',
-        '_cover',
-        'subscriber_count',
+        "id",
+        "name",
+        "description",
+        "start_time",
+        "end_time",
+        "status",
+        "creator_id",
+        "creator",
+        "location",
+        "guild",
+        "_state",
+        "_cover",
+        "subscriber_count",
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, creator: Optional[Member], data: ScheduledEventPayload):
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        guild: Guild,
+        creator: Optional[Member],
+        data: ScheduledEventPayload,
+    ):
         self._state: ConnectionState = state
-        
-        self.id: int = int(data.get('id'))
+
+        self.id: int = int(data.get("id"))
         self.guild: Guild = guild
-        self.name: str = data.get('name')
-        self.description: Optional[str] = data.get('description', None)
-        self._cover: Optional[str] = data.get('image', None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
-        end_time = data.get('scheduled_end_time', None)
+        self.name: str = data.get("name")
+        self.description: Optional[str] = data.get("description", None)
+        self._cover: Optional[str] = data.get("image", None)
+        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
+        end_time = data.get("scheduled_end_time", None)
         if end_time != None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
-        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
-        self.subscriber_count: Optional[int] = data.get('user_count', None)
-        self.creator_id = data.get('creator_id', None)
+        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
+        self.subscriber_count: Optional[int] = data.get("user_count", None)
+        self.creator_id = data.get("creator_id", None)
         self.creator: Optional[Member] = creator
 
-        entity_metadata = data.get('entity_metadata')
-        channel_id = data.get('channel_id', None)
-        if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
-        else:
+        entity_metadata = data.get("entity_metadata")
+        channel_id = data.get("channel_id", None)
+        if channel_id is None:
             self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
+        else:
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return (
-            f'<ScheduledEvent id={self.id} '
-            f'name={self.name} '
-            f'description={self.description} '
-            f'start_time={self.start_time} '
-            f'end_time={self.end_time} '
-            f'location={self.location} '
-            f'status={self.status.name} '
-            f'subscriber_count={self.subscriber_count} '
-            f'creator_id={self.creator_id}>'
+            f"<ScheduledEvent id={self.id} "
+            f"name={self.name} "
+            f"description={self.description} "
+            f"start_time={self.start_time} "
+            f"end_time={self.end_time} "
+            f"location={self.location!r} "
+            f"status={self.status.name} "
+            f"subscriber_count={self.subscriber_count} "
+            f"creator_id={self.creator_id}>"
         )
 
     @property
@@ -233,6 +241,11 @@ class ScheduledEvent(Hashable):
     def interested(self) -> Optional[int]:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
+
+    @property
+    def url(self) -> str:
+        """:class:`str`: The url to reference the scheduled event."""
+        return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
     def cover(self) -> Optional[Asset]:
@@ -259,15 +272,15 @@ class ScheduledEvent(Hashable):
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> Optional[ScheduledEvent]:
         """|coro|
-        
+
         Edits the Scheduled Event's data
-        
+
         All parameters are optional unless ``location.type`` is
         :attr:`ScheduledEventLocationType.external`, then ``end_time``
         is required.
-        
+
         Will return a new :class:`.ScheduledEvent` object if applicable.
-        
+
         Parameters
         -----------
         name: :class:`str`
@@ -345,7 +358,7 @@ class ScheduledEvent(Hashable):
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
-        
+
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
@@ -355,7 +368,7 @@ class ScheduledEvent(Hashable):
 
     async def delete(self) -> None:
         """|coro|
-        
+
         Deletes the scheduled event.
 
         Raises
@@ -464,7 +477,7 @@ class ScheduledEvent(Hashable):
         The ``after`` and ``before`` parameters must represent member
         or user objects and meet the :class:`abc.Snowflake` abc.
 
-        .. note:: 
+        .. note::
 
             Even is ``as_member`` is set to ``True``, if the user
             is outside the guild, it will be a :class:`User` object.
@@ -516,4 +529,6 @@ class ScheduledEvent(Hashable):
             ``False`` or the user is outside the guild, it will be a
             :class:`User` object.
         """
-        return ScheduledEventSubscribersIterator(event=self, limit=limit, with_member=as_member, before=before, after=after)
+        return ScheduledEventSubscribersIterator(
+            event=self, limit=limit, with_member=as_member, before=before, after=after
+        )

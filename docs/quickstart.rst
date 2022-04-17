@@ -7,8 +7,8 @@
 Quickstart
 ==========
 
-This page gives a brief introduction to the library. It assumes you have the library installed,
-if you don't check the :ref:`installing` portion.
+This page gives a brief introduction to the library. It assumes you have the library installed.
+If you don't, check the :ref:`installing` portion.
 
 A Minimal Bot
 -------------
@@ -17,11 +17,18 @@ Let's make a bot that responds to a specific message and walk you through it.
 
 It looks something like this:
 
+.. note::
+
+    Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent.
+
 .. code-block:: python3
 
     import discord
 
-    client = discord.Client()
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    client = discord.Client(intents=intents)
 
     @client.event
     async def on_ready():
@@ -55,7 +62,7 @@ There's a lot going on here, so let's walk you through it step by step:
    sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author`
    is the same as the :attr:`Client.user`.
 5. Afterwards, we check if the :class:`Message.content` starts with ``'$hello'``. If it does,
-   then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of 
+   then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of
    handling commands, which can be later automated with the :doc:`./ext/commands/index` framework.
 6. Finally, we run the bot with our login token. If you need help getting your token or creating a bot,
    look in the :ref:`discord-intro` section.
@@ -106,8 +113,8 @@ Let's look at the differences compared to the previous example, step-by-step:
 1. The first line remains unchanged.
 2. Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports
    slash command creation and other features, while inheriting all the features of :class:`.Client`.
-3. We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. 
-   The ``guild_ids`` attribute contains a list of guilds where this command will be active. 
+3. We then use the :meth:`.Bot.slash_command` decorator to register a new slash command.
+   The ``guild_ids`` attribute contains a list of guilds where this command will be active.
    If you omit it, the command will be globally available, and may take up to an hour to register.
 4. Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that
    all slash commands must have some form of response, otherwise they will fail.

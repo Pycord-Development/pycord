@@ -21,9 +21,7 @@ class Confirm(discord.ui.View):
     # Stop the View from listening to more input.
     # We also send the user an ephemeral message that we're confirming their choice.
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green)
-    async def confirm(
-        self, button: discord.ui.Button, interaction: discord.Interaction
-    ):
+    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_message("Confirming", ephemeral=True)
         self.value = True
         self.stop()
