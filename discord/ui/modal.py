@@ -34,6 +34,7 @@ class Modal:
         Must be 45 characters or fewer.
     custom_id: Optional[:class:`str`]
         The ID of the modal dialog that gets received during an interaction.
+        Must be 100 characters or fewer.
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
