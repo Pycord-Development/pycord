@@ -1544,12 +1544,6 @@ class ConnectionState:
         # self.user is *always* cached when this is called
         self_id = self.user.id  # type: ignore
         if guild is not None:
-            if int(data["user_id"]) == self_id:
-                voice = self._get_voice_client(guild.id)
-                if voice is not None:
-                    coro = voice.on_voice_state_update(data)
-                    asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
-
             member, before, after = guild._update_voice_state(data, channel_id)  # type: ignore
             if member is not None:
                 if flags.voice:
@@ -1559,6 +1553,14 @@ class ConnectionState:
                         guild._remove_member(member)  # type: ignore
                     elif channel_id is not None:
                         guild._add_member(member)
+
+            if int(data["user_id"]) == self_id:
+                voice = self._get_voice_client(guild.id)
+                if voice is not None:
+                    if guild.me.voice is None:
+                        self._remove_voice_client(guild.id)
+                    coro = voice.on_voice_state_update(data)
+                    asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
 
                 self.dispatch("voice_state_update", member, before, after)
             else:
