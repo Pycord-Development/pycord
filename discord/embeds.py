@@ -116,6 +116,8 @@ if TYPE_CHECKING:
 class EmbedField:
     """Represents a field on the :class:`Embed` object.
 
+    .. versionadded:: 2.0
+
     Attributes
     ----------
     name: :class:`str`
@@ -692,6 +694,8 @@ class Embed:
 
     def append_field(self, field: EmbedField) -> None:
         """Appends an :class:`EmbedField` object to the embed.
+
+        .. versionadded:: 2.0
 
         Parameters
         ----------
