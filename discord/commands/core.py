@@ -1646,7 +1646,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         raise ValidationError(
-            "Command names and options must be lowercase. " f"Received {name}" + f" in locale {locale}"
+            f"Command names and options must be lowercase. Received {name} in locale {locale}"
             if locale
             else ""
         )
