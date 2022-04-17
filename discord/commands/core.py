@@ -1666,7 +1666,7 @@ def validate_chat_input_description(description: Any, locale: Optional[str] = No
         )
     if not 1 <= len(description) <= 100:
         raise ValidationError(
-            "Command and option description must be 1-100 characters long. " f"Received {description}" + f" in locale {locale}"
+            "Command and option description must be 1-100 characters long. " f"Received {description} in locale {locale}"
             if locale
             else ""
         )
