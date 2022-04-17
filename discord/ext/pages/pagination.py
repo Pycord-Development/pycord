@@ -591,7 +591,6 @@ class Paginator(discord.ui.View):
                 label="<<",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
-                custom_id="pages_first_button",
             ),
             PaginatorButton(
                 "prev",
@@ -599,14 +598,12 @@ class Paginator(discord.ui.View):
                 style=discord.ButtonStyle.red,
                 loop_label="↪",
                 row=self.default_button_row,
-                custom_id="pages_prev_button",
             ),
             PaginatorButton(
                 "page_indicator",
                 style=discord.ButtonStyle.gray,
                 disabled=True,
                 row=self.default_button_row,
-                custom_id="pages_indicator_button",
             ),
             PaginatorButton(
                 "next",
@@ -614,14 +611,12 @@ class Paginator(discord.ui.View):
                 style=discord.ButtonStyle.green,
                 loop_label="↩",
                 row=self.default_button_row,
-                custom_id="pages_next_button",
             ),
             PaginatorButton(
                 "last",
                 label=">>",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
-                custom_id="pages_last_button",
             ),
         ]
         for button in default_buttons:
