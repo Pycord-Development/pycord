@@ -1640,7 +1640,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     if not 1 <= len(name) <= 32:
         raise ValidationError(
             "Command names and options must be 1-32 characters long. "
-            f"Received {name}" + f" in locale {locale}"
+            f"Received {name} in locale {locale}"
             if locale
             else ""
         )
