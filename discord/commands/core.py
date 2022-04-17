@@ -1660,7 +1660,7 @@ def validate_chat_input_description(description: Any, locale: Optional[str] = No
         )
     if not isinstance(description, str):
         raise TypeError(
-            f"Command and option description must be of type str. Received {description} " + f" in locale {locale}"
+            f"Command and option description must be of type str. Received {description} in locale {locale}"
             if locale
             else ""
         )
