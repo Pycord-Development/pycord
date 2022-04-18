@@ -67,7 +67,7 @@ class InputText:
             raise ValueError("label must be 45 characters or fewer")
         if min_length < 0 or min_length > 4000:
             raise ValueError("min_length must be between 0 and 4000")
-        if 0 < max_length <= 4000:
+        if max_length < 0 or max_length > 4000:
             raise ValueError("max_length must be between 1 and 4000")
         if len(value) > 4000:
             raise ValueError("value must be 4000 characters or fewer")
