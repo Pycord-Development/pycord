@@ -139,7 +139,7 @@ class Option:
                     input_type = SlashCommandOptionType.string
                 else:
                     if _type == SlashCommandOptionType.channel:
-                        if not isinstance(input_type, list):
+                        if not isinstance(input_type, tuple):
                             input_type = (input_type,)
                         for i in input_type:
                             if i.__name__ == "GuildChannel":
