@@ -33,6 +33,7 @@ from typing import (
     Final,
     List,
     Mapping,
+    Optional,
     Protocol,
     Type,
     TypeVar,
@@ -42,7 +43,10 @@ from typing import (
 from . import utils
 from .colour import Colour
 
-__all__ = ("Embed",)
+__all__ = (
+    "Embed",
+    "EmbedField",
+)
 
 
 class _EmptyEmbed:
@@ -87,11 +91,6 @@ if TYPE_CHECKING:
         text: MaybeEmpty[str]
         icon_url: MaybeEmpty[str]
 
-    class _EmbedFieldProxy(Protocol):
-        name: MaybeEmpty[str]
-        value: MaybeEmpty[str]
-        inline: bool
-
     class _EmbedMediaProxy(Protocol):
         url: MaybeEmpty[str]
         proxy_url: MaybeEmpty[str]
@@ -112,6 +111,59 @@ if TYPE_CHECKING:
         url: MaybeEmpty[str]
         icon_url: MaybeEmpty[str]
         proxy_icon_url: MaybeEmpty[str]
+
+
+class EmbedField:
+    """Represents a field on the :class:`Embed` object.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the field.
+    value: :class:`str`
+        The value of the field.
+    inline: :class:`bool`
+        Whether the field should be displayed inline.
+    """
+
+    def __init__(self, name: str, value: str, inline: Optional[bool] = False):
+        self.name = name
+        self.value = value
+        self.inline = inline
+
+    @classmethod
+    def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
+        """Converts a :class:`dict` to a :class:`EmbedField` provided it is in the
+        format that Discord expects it to be in.
+
+        You can find out about this format in the `official Discord documentation`__.
+
+        .. _DiscordDocsEF: https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
+
+        __ DiscordDocsEF_
+
+        Parameters
+        -----------
+        data: :class:`dict`
+            The dictionary to convert into an EmbedField object.
+        """
+        self: E = cls.__new__(cls)
+
+        self.name = data["name"]
+        self.value = data["value"]
+        self.inline = data.get("inline", False)
+
+        return self
+
+    def to_dict(self) -> Dict[str, Union[str, bool]]:
+        """Converts this EmbedField object into a dict."""
+        return {
+            "name": self.name,
+            "value": self.value,
+            "inline": self.inline,
+        }
 
 
 class Embed:
@@ -137,13 +189,14 @@ class Embed:
     :attr:`Embed.Empty`.
 
     For ease of use, all parameters that expect a :class:`str` are implicitly
-    casted to :class:`str` for you.
+    cast to :class:`str` for you.
 
     Attributes
     -----------
     title: :class:`str`
         The title of the embed.
         This can be set during initialisation.
+        Must be 256 characters or fewer.
     type: :class:`str`
         The type of embed. Usually "rich".
         This can be set during initialisation.
@@ -152,6 +205,7 @@ class Embed:
     description: :class:`str`
         The description of the embed.
         This can be set during initialisation.
+        Must be 4096 characters or fewer.
     url: :class:`str`
         The URL of the embed.
         This can be set during initialisation.
@@ -195,6 +249,7 @@ class Embed:
         url: MaybeEmpty[Any] = EmptyEmbed,
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
+        fields: Optional[List[EmbedField]] = None,
     ):
 
         self.colour = colour if colour is not EmptyEmbed else color
@@ -214,6 +269,7 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
+        self._fields: List[EmbedField] = fields or []
 
     @classmethod
     def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
@@ -271,12 +327,16 @@ class Embed:
             "image",
             "footer",
         ):
-            try:
-                value = data[attr]
-            except KeyError:
-                continue
+            if attr == "fields":
+                value = data.get(attr, [])
+                self._fields = [EmbedField.from_dict(d) for d in value] if value else []
             else:
-                setattr(self, f"_{attr}", value)
+                try:
+                    value = data[attr]
+                except KeyError:
+                    continue
+                else:
+                    setattr(self, f"_{attr}", value)
 
         return self
 
@@ -287,7 +347,7 @@ class Embed:
     def __len__(self) -> int:
         total = len(self.title) + len(self.description)
         for field in getattr(self, "_fields", []):
-            total += len(field["name"]) + len(field["value"])
+            total += len(field.name) + len(field.value)
 
         try:
             footer_text = self._footer["text"]
@@ -380,6 +440,7 @@ class Embed:
         -----------
         text: :class:`str`
             The footer text.
+            Must be 2048 characters or fewer.
         icon_url: :class:`str`
             The URL of the footer icon. Only HTTP(S) is supported.
         """
@@ -572,6 +633,7 @@ class Embed:
         -----------
         name: :class:`str`
             The name of the author.
+            Must be 256 characters or fewer.
         url: :class:`str`
             The URL for the author.
         icon_url: :class:`str`
@@ -606,41 +668,67 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> List[_EmbedFieldProxy]:
-        """List[Union[``EmbedProxy``, :attr:`Empty`]]: Returns a :class:`list` of ``EmbedProxy`` denoting the field contents.
+    def fields(self) -> Optional[List[EmbedField]]:
+        """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the attribute has no value then ``None`` is returned.
         """
-        return [EmbedProxy(d) for d in getattr(self, "_fields", [])]  # type: ignore
+        if self._fields:
+            return self._fields
+        else:
+            return None
 
-    def add_field(self: E, *, name: Any, value: Any, inline: bool = True) -> E:
+    @fields.setter
+    def fields(self, value: List[EmbedField]) -> None:
+        """Sets the fields for the embed. This overwrites any existing fields.
+
+        Parameters
+        ----------
+        value: List[:class:`EmbedField`]
+            The list of :class:`EmbedField` objects to include in the embed.
+        """
+        if not all(isinstance(x, EmbedField) for x in value):
+            raise TypeError("Expected a list of EmbedField objects.")
+
+        self.clear_fields()
+        for field in value:
+            self.add_field(name=field.name, value=field.value, inline=field.inline)
+
+    def append_field(self, field: EmbedField) -> None:
+        """Appends an :class:`EmbedField` object to the embed.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        field: :class:`EmbedField`
+            The field to add.
+        """
+        if not isinstance(field, EmbedField):
+            raise TypeError("Expected an EmbedField object.")
+
+        self._fields.append(field)
+
+    def add_field(self: E, *, name: str, value: str, inline: bool = True) -> E:
         """Adds a field to the embed object.
 
         This function returns the class instance to allow for fluent-style
-        chaining.
+        chaining. There must be 25 fields or fewer.
 
         Parameters
         -----------
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
-
-        field = {
-            "inline": inline,
-            "name": str(name),
-            "value": str(value),
-        }
-
-        try:
-            self._fields.append(field)
-        except AttributeError:
-            self._fields = [field]
+        self._fields.append(EmbedField(name=str(name), value=str(value), inline=inline))
 
         return self
 
@@ -648,7 +736,7 @@ class Embed:
         """Inserts a field before a specified index to the embed.
 
         This function returns the class instance to allow for fluent-style
-        chaining.
+        chaining. There must be 25 fields or fewer.
 
         .. versionadded:: 1.2
 
@@ -658,22 +746,17 @@ class Embed:
             The index of where to insert the field.
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
 
-        field = {
-            "inline": inline,
-            "name": str(name),
-            "value": str(value),
-        }
+        field = EmbedField(name=str(name), value=str(value), inline=inline)
 
-        try:
-            self._fields.insert(index, field)
-        except AttributeError:
-            self._fields = [field]
+        self._fields.insert(index, field)
 
         return self
 
@@ -702,13 +785,13 @@ class Embed:
         """
         try:
             del self._fields[index]
-        except (AttributeError, IndexError):
+        except IndexError:
             pass
 
     def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Modifies a field to the embed object.
 
-        The index must point to a valid pre-existing field.
+        The index must point to a valid pre-existing field. There must be 25 fields or fewer.
 
         This function returns the class instance to allow for fluent-style
         chaining.
@@ -719,8 +802,10 @@ class Embed:
             The index of the field to modify.
         name: :class:`str`
             The name of the field.
+            Must be 256 characters or fewer.
         value: :class:`str`
             The value of the field.
+            Must be 1024 characters or fewer.
         inline: :class:`bool`
             Whether the field should be displayed inline.
 
@@ -732,19 +817,26 @@ class Embed:
 
         try:
             field = self._fields[index]
-        except (TypeError, IndexError, AttributeError):
+        except (TypeError, IndexError):
             raise IndexError("field index out of range")
 
-        field["name"] = str(name)
-        field["value"] = str(value)
-        field["inline"] = inline
+        field.name = str(name)
+        field.value = str(value)
+        field.inline = inline
         return self
 
     def to_dict(self) -> EmbedData:
         """Converts this embed object into a dict."""
 
         # add in the raw data into the dict
-        result = {key[1:]: getattr(self, key) for key in self.__slots__ if key[0] == "_" and hasattr(self, key)}
+        result = {
+            key[1:]: getattr(self, key)
+            for key in self.__slots__
+            if key != "_fields" and key[0] == "_" and hasattr(self, key)
+        }
+
+        # add in the fields
+        result["fields"] = [field.to_dict() for field in self._fields]
 
         # deal with basic convenience wrappers
 
@@ -767,7 +859,7 @@ class Embed:
                 else:
                     result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
 
-        # add in the non raw attribute ones
+        # add in the non-raw attribute ones
         if self.type:
             result["type"] = self.type
 
