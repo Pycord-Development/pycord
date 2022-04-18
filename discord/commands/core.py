@@ -696,7 +696,7 @@ class SlashCommand(ApplicationCommand):
 
             if option.name is None:
                 option.name = p_name
-            if option.name != p_name:
+            if option.name != p_name or option._parameter_name is None:
                 option._parameter_name = p_name
 
             _validate_names(option)
@@ -744,6 +744,12 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _set_cog(self, cog):
+        prev = self.cog
+        super()._set_cog(cog)
+        if (prev is None and cog is not None) or (prev is not None and cog is None):
+            self.options = self._parse_options(self._get_signature_parameters())  # parse again to leave out self
 
     @property
     def is_subcommand(self) -> bool:
@@ -1155,7 +1161,7 @@ class SlashCommandGroup(ApplicationCommand):
             return self.copy()
 
     def _set_cog(self, cog):
-        self.cog = cog
+        super()._set_cog(cog)
         for subcommand in self.subcommands:
             subcommand._set_cog(cog)
 
