@@ -38,15 +38,42 @@ class Modal:
     """
 
     def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
-        if not (isinstance(custom_id, str) or custom_id is None):
+        if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
-
-        self.custom_id = custom_id or os.urandom(16).hex()
-        self.title = title
+        self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
+        if len(title) > 45:
+            raise ValueError("title must be 45 characters or fewer")
+        self._title = title
         self.children: List[InputText] = []
-        self.__weights = _ModalWeights(self.children)
+        self._weights = _ModalWeights(self.children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
+
+    @property
+    def title(self) -> str:
+        """The title of the modal dialog."""
+        return self._title
+
+    @title.setter
+    def title(self, value: str):
+        if len(value) > 45:
+            raise ValueError("title must be 45 characters or fewer")
+        if not isinstance(value, str):
+            raise TypeError(f"expected title to be str, not {value.__class__.__name__}")
+        self._title = value
+
+    @property
+    def custom_id(self) -> str:
+        """The ID of the modal dialog that gets received during an interaction."""
+        return self._custom_id
+
+    @custom_id.setter
+    def custom_id(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError(f"expected custom_id to be str, not {value.__class__.__name__}")
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
+        self._custom_id = value
 
     async def callback(self, interaction: Interaction):
         """|coro|
@@ -96,7 +123,7 @@ class Modal:
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
-        self.__weights.add_item(item)
+        self._weights.add_item(item)
         self.children.append(item)
 
     def remove_item(self, item: InputText):

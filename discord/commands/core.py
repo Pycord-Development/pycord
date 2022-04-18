@@ -146,6 +146,20 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
             return function
 
 
+def _validate_names(obj):
+    validate_chat_input_name(obj.name)
+    if obj.name_localizations:
+        for locale, string in obj.name_localizations.items():
+            validate_chat_input_name(string, locale=locale)
+
+
+def _validate_descriptions(obj):
+    validate_chat_input_description(obj.description)
+    if obj.description_localizations:
+        for locale, string in obj.description_localizations.items():
+            validate_chat_input_description(string, locale=locale)
+
+
 class _BaseCommand:
     __slots__ = ()
 
@@ -601,21 +615,16 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        validate_chat_input_name(self.name)
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
-        if self.name_localizations:
-            for locale, string in self.name_localizations.items():
-                validate_chat_input_name(string, locale=locale)
+        _validate_names(self)
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
         )
-        validate_chat_input_description(description)
+
         self.description: str = description
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
-        if self.description_localizations:
-            for locale, string in self.description_localizations.items():
-                validate_chat_input_description(string, locale=locale)
+        _validate_descriptions(self)
 
         self.attached_to_group: bool = False
 
@@ -686,8 +695,8 @@ class SlashCommand(ApplicationCommand):
                 option.name = p_name
             option._parameter_name = p_name
 
-            validate_chat_input_name(option.name)
-            validate_chat_input_description(option.description)
+            _validate_names(option)
+            _validate_descriptions(option)
 
             final_options.append(option)
 
@@ -715,8 +724,8 @@ class SlashCommand(ApplicationCommand):
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
-            validate_chat_input_name(o.name)
-            validate_chat_input_description(o.description)
+            _validate_names(o)
+            _validate_descriptions(o)
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
@@ -1608,56 +1617,44 @@ valid_locales = [
 # Validation
 def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[\w-]{1,32}$
-    if locale not in valid_locales and locale is not None:
+    if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale {locale} is not a valid locale, in command names, "
+            f"Locale '{locale}' is not a valid locale, "
             f"see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(name, str):
-        raise TypeError(
-            f"Chat input command names and options must be of type str." f"Received {name}" + f" in locale {locale}"
-            if locale
-            else ""
-        )
-    if not re.match(r"^[\w-]{1,32}$", name):
-        raise ValidationError(
-            "Chat input command names and options must follow the regex "
-            r'"^[\w-]{1,32}$". For more information, see '
+        error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
+    elif not re.match(r"^[\w-]{1,32}$", name):
+        error = ValidationError(
+            r"Command names and options must follow the regex \"^[\w-]{1,32}$\". For more information, see "
             f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f"Received {name}" + f" in locale {locale}"
-            if locale
-            else ""
+            f"Received \"{name}\""
         )
-    if not 1 <= len(name) <= 32:
-        raise ValidationError(
-            "Chat input command names and options must be 1-32 characters long. "
-            f"Received {name}" + f" in locale {locale}"
-            if locale
-            else ""
-        )
-    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(
-            "Chat input command names and options must be lowercase. " f"Received {name}" + f" in locale {locale}"
-            if locale
-            else ""
-        )
+    elif not 1 <= len(name) <= 32:
+        error = ValidationError(f"Command names and options must be 1-32 characters long. Received \"{name}\"")
+    elif not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+        error = ValidationError(f"Command names and options must be lowercase. Received \"{name}\"")
+
+    if error:
+        if locale:
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error
 
 
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
-    if locale not in valid_locales and locale is not None:
+    if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale {locale} is not a valid locale, in command descriptions, "
+            f"Locale '{locale}' is not a valid locale, "
             f"see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(description, str):
-        raise TypeError(
-            f"Command description must be of type str. Received {description} " + f" in locale {locale}"
-            if locale
-            else ""
-        )
-    if not 1 <= len(description) <= 100:
-        raise ValidationError(
-            "Command description must be 1-100 characters long. " f"Received {description}" + f" in locale {locale}"
-            if locale
-            else ""
-        )
+        error = TypeError(f"Command and option description must be of type str. Received \"{description}\"")
+    elif not 1 <= len(description) <= 100:
+        error = ValidationError(f"Command and option description must be 1-100 characters long. Received \"{description}\"")
+
+    if error:
+        if locale:
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error
