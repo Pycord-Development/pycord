@@ -220,14 +220,15 @@ class ApplicationContext(discord.abc.Messageable):
         """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
-    @property
-    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
-        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
-        or a followup response depending on if the interaction has been responded to yet or not."""
-        if not self.interaction.response.is_done():
-            return self.interaction.response.send_message  # self.response
-        else:
-            return self.followup.send  # self.send_followup
+    async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
+        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        try:
+            if not self.interaction.response.is_done():
+                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+            else:
+                return await self.followup.send(*args, **kwargs)  # self.send_followup
+        except discord.errors.InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
 
     @property
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:

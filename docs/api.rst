@@ -4673,6 +4673,14 @@ Embed
 .. autoclass:: Embed
     :members:
 
+EmbedField
+~~~~~~~~~~
+
+.. attributetable:: EmbedField
+
+.. autoclass:: EmbedField
+    :members:
+
 AllowedMentions
 ~~~~~~~~~~~~~~~~~
 
