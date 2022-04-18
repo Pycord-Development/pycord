@@ -65,7 +65,7 @@ class InputText:
         super().__init__()
         if len(label) > 45:
             raise ValueError("label must be 45 characters or fewer")
-        if 0 <= min_length <= 4000:
+        if min_length < 0 or min_length > 4000:
             raise ValueError("min_length must be between 0 and 4000")
         if 0 < max_length <= 4000:
             raise ValueError("max_length must be between 1 and 4000")
