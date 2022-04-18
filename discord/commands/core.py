@@ -1622,30 +1622,24 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
             f"Locale '{locale}' is not a valid locale, "
             f"see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(name, str):
-        msg = f"Command names and options must be of type str. Received {name}"
-        if locale:
-            msg += f" in locale {locale}"
-        raise TypeError(msg)
-    if not re.match(r"^[\w-]{1,32}$", name):
-        msg = (
-            r'Command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
+        error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
+    elif not re.match(r"^[\w-]{1,32}$", name):
+        error = ValidationError(
+            r"Command names and options must follow the regex \"^[\w-]{1,32}$\". For more information, see "
             f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f"Received {name}"
+            f"Received \"{name}\""
         )
+    elif not 1 <= len(name) <= 32:
+        error = ValidationError(f"Command names and options must be 1-32 characters long. Received \"{name}\"")
+    elif not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+        error = ValidationError(f"Command names and options must be lowercase. Received \"{name}\"")
+
+    if error:
         if locale:
-            msg += f" in locale {locale}"
-        raise ValidationError(msg)
-    if not 1 <= len(name) <= 32:
-        msg = f"Command names and options must be 1-32 characters long. Received {name}"
-        if locale:
-            msg += f" in locale {locale}"
-        raise ValidationError(msg)
-    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        msg = f"Command names and options must be lowercase. Received {name}"
-        if locale:
-            msg += f" in locale {locale}"
-        raise ValidationError(msg)
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error
 
 
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
@@ -1654,13 +1648,13 @@ def validate_chat_input_description(description: Any, locale: Optional[str] = No
             f"Locale '{locale}' is not a valid locale, "
             f"see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(description, str):
         msg = f"Command and option description must be of type str. Received {description}"
-        if locale:
             msg += f" in locale {locale}"
         raise TypeError(msg)
     if not 1 <= len(description) <= 100:
         msg = f"Command and option description must be 1-100 characters long. Received {description}"
         if locale:
-            msg += f" in locale {locale}"
-        raise ValidationError(msg)
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error
