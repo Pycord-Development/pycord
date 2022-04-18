@@ -32,6 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -815,6 +816,15 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif issubclass(op._raw_type, Enum):
+                if isinstance(arg, str) and arg.isdigit():
+                    try:
+                        arg = op._raw_type(int(arg))
+                    except ValueError:
+                        arg = op._raw_type(arg)
+                else:
+                    arg = op._raw_type(arg)
 
             kwargs[op._parameter_name] = arg
 
