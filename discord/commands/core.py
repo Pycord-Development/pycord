@@ -1650,11 +1650,11 @@ def validate_chat_input_description(description: Any, locale: Optional[str] = No
         )
     error = None
     if not isinstance(description, str):
-        msg = f"Command and option description must be of type str. Received {description}"
-            msg += f" in locale {locale}"
-        raise TypeError(msg)
-    if not 1 <= len(description) <= 100:
-        msg = f"Command and option description must be 1-100 characters long. Received {description}"
+        error = TypeError(f"Command and option description must be of type str. Received \"{description}\"")
+    elif not 1 <= len(description) <= 100:
+        error = ValidationError(f"Command and option description must be 1-100 characters long. Received \"{description}\"")
+
+    if error:
         if locale:
             error.args = (error.args[0]+f" in locale {locale}",)
         raise error
