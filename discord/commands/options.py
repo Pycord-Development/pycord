@@ -141,7 +141,10 @@ class Option:
                 else:
                     if _type == SlashCommandOptionType.channel:
                         if not isinstance(input_type, tuple):
-                            input_type = (input_type,)
+                            if hasattr(input_type, "__args__"):  # Union
+                                input_type = input_type.__args__
+                            else:
+                                input_type = (input_type,)
                         for i in input_type:
                             if i.__name__ == "GuildChannel":
                                 continue
