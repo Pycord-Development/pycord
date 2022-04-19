@@ -65,13 +65,13 @@ class InputText:
         super().__init__()
         if len(label) > 45:
             raise ValueError("label must be 45 characters or fewer")
-        if min_length < 0 or min_length > 4000:
+        if min_length and (min_length < 0 or min_length > 4000):
             raise ValueError("min_length must be between 0 and 4000")
-        if max_length < 0 or max_length > 4000:
+        if max_length and (max_length < 0 or max_length > 4000):
             raise ValueError("max_length must be between 1 and 4000")
-        if len(value) > 4000:
+        if value and len(value) > 4000:
             raise ValueError("value must be 4000 characters or fewer")
-        if len(placeholder) > 100:
+        if placeholder and len(placeholder) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
