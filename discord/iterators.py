@@ -56,7 +56,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .audit_logs import AuditLogEntry
-    from .guild import Guild, BanEntry
+    from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
     from .scheduled_events import ScheduledEvent
@@ -740,12 +740,12 @@ class BanIterator(_AsyncIterator["BanEntry"]):
 
 class ArchivedThreadIterator(_AsyncIterator["Thread"]):
     def __init__(
-            self,
-            channel_id: int,
-            guild: Guild,
-            limit: Optional[int],
-            joined: bool,
-            private: bool,
+        self,
+        channel_id: int,
+        guild: Guild,
+        limit: Optional[int],
+        joined: bool,
+        private: bool,
         before: Optional[Union[Snowflake, datetime.datetime]] = None,
     ):
         self.channel_id = channel_id

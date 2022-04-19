@@ -224,6 +224,14 @@ class Thread(Messageable, Hashable):
         return f"<#{self.id}>"
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the thread.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.guild.id}/{self.id}"
+
+    @property
     def members(self) -> List[ThreadMember]:
         """List[:class:`ThreadMember`]: A list of thread members in this thread.
 
@@ -406,16 +414,16 @@ class Thread(Messageable, Hashable):
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
-            self,
-            *,
-            limit: Optional[int] = 100,
-            check: Callable[[Message], bool] = MISSING,
-            before: Optional[SnowflakeTime] = None,
-            after: Optional[SnowflakeTime] = None,
-            around: Optional[SnowflakeTime] = None,
-            oldest_first: Optional[bool] = False,
-            bulk: bool = True,
-            reason: Optional[str] = None,
+        self,
+        *,
+        limit: Optional[int] = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: Optional[SnowflakeTime] = None,
+        after: Optional[SnowflakeTime] = None,
+        around: Optional[SnowflakeTime] = None,
+        oldest_first: Optional[bool] = False,
+        bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
 
