@@ -188,7 +188,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         joined = " ".join("%s=%r" % t for t in attrs)
         return f"<{self.__class__.__name__} {joined}>"
 
-    def _update(self, guild: Guild, data: TextChannelPayload | ForumChannelPayload) -> None:
+    def _update(self, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]) -> None:
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
