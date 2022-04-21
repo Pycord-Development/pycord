@@ -77,7 +77,7 @@ __all__ = (
     "CategoryChannel",
     "GroupChannel",
     "PartialMessageable",
-    "ForumChannel"
+    "ForumChannel",
 )
 
 if TYPE_CHECKING:
