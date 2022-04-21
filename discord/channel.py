@@ -923,7 +923,7 @@ class ForumChannel(_TextChannel):
                 data = await state.http.send_files(
                     self.id,
                     files=files,
-                    content=content,
+                    content=message_content,
                     tts=tts,
                     embed=embed,
                     embeds=embeds,
