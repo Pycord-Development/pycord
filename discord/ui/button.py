@@ -96,7 +96,7 @@ class Button(Item[V]):
         row: Optional[int] = None,
     ):
         super().__init__()
-        if len(label) > 80:
+        if label and len(label) > 80:
             raise ValueError("label must be 80 characters or fewer")
         if custom_id is not None and len(custom_id) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
