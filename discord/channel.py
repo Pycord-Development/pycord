@@ -804,7 +804,7 @@ class ForumChannel(_TextChannel):
     async def create_post(
             self,
             name: str,  # Could be renamed to title?
-            message_content=None,
+            content=None,
             *,
             tts=None,
             embed=None,
