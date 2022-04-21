@@ -81,7 +81,7 @@ if TYPE_CHECKING:
         GroupChannel,
         PartialMessageable,
         TextChannel,
-        VoiceChannel
+        VoiceChannel,
     )
     from .client import Client
     from .embeds import Embed
