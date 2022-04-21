@@ -475,8 +475,8 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            for i in exclusions:
-                child.disabled = True if child != i else None
+            if child not in exclusions:
+                child.disabled = True
 
 
 class ViewStore:
