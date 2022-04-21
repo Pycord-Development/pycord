@@ -476,7 +476,7 @@ class View:
         """
         for child in self.children:
             for i in exclusions:
-                child.disabled = True if child != i
+                child.disabled = True if child != i else None
 
 
 class ViewStore:
