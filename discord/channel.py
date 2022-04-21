@@ -902,7 +902,7 @@ class ForumChannel(_TextChannel):
                     self.id,
                     files=[file],
                     allowed_mentions=allowed_mentions,
-                    content=content,
+                    content=message_content,
                     tts=tts,
                     embed=embed,
                     embeds=embeds,
