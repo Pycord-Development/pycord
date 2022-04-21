@@ -938,7 +938,7 @@ class ForumChannel(_TextChannel):
         else:
             data = await state.http.start_forum_thread(
                 self.id,
-                content,
+                content=message_content,
                 name=name,
                 tts=tts,
                 embed=embed,
