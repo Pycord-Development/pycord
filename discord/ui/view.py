@@ -465,23 +465,18 @@ class View:
         """
         return await self.__stopped
 
-    def disable_all_items(self, *, exclusions: Optional[List[Union[int, Item]]]) -> None:
+    def disable_all_items(self, *, exclusions: Optional[List[Item]]) -> None:
         """
         Disables all items in the view.
 
         Parameters
         ----------- 
-        exclusions: Optional[List[Union[:class:`int`, :class:`ui.Item`]]]
-            A list of items or indexes in `self.children` to not disable from the view.
+        exclusions: Optional[List[:class:`ui.Item`]]
+            A list of items in `self.children` to not disable from the view.
         """
-        for i in exclusions:
-            if isinstance(i, int):
-                if not self.children[i].disabled:
-                    self.children[i].disabled = True
-            elif isinstance(i, Item):
-                if hasattr(i, "disabled"):
-                    if not i.disabled:
-                        i.disabled = True
+        for child in self.children:
+            for i in exclusions:
+                child.disabled = True if child != i
 
 
 class ViewStore:
