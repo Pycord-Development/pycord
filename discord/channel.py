@@ -859,7 +859,7 @@ class ForumChannel(_TextChannel):
             The created thread
         """
         state = self._state
-        content = str(message_content) if message_content is not None else None
+        message_content = str(content) if content is not None else None
 
         if embed is not None and embeds is not None:
             raise InvalidArgument("cannot pass both embed and embeds parameter to create_post()")
