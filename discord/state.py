@@ -897,7 +897,7 @@ class ConnectionState:
         has_thread = guild.get_thread(thread.id)
         guild._add_thread(thread)
         if not has_thread:
-            if data.get('newly_created'):
+            if data.get("newly_created"):
                 self.dispatch("thread_create", thread)
             else:
                 self.dispatch("thread_join", thread)
