@@ -736,6 +736,8 @@ class Paginator(discord.ui.View):
                 return Page(content=None, embeds=page)
             else:
                 raise TypeError("All list items must be embeds.")
+        else:
+            raise TypeError("Page content must be a Page object, string, an embed, or a list of embeds.")
 
     async def page_action(self, interaction: Optional[discord.Interaction] = None) -> None:
         """Triggers the callback associated with the current page, if any.
