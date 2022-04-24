@@ -668,17 +668,14 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> Optional[List[EmbedField]]:
+    def fields(self) -> List[EmbedField]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
 
         If the attribute has no value then ``None`` is returned.
         """
-        if self._fields:
-            return self._fields
-        else:
-            return None
+        return self._fields
 
     @fields.setter
     def fields(self, value: List[EmbedField]) -> None:
