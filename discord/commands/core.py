@@ -669,12 +669,12 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)
+                    option = Option(option.__args__[0], None, required=False)
                 else:
-                    option = Option(option.__args__, "No description provided")
+                    option = Option(option.__args__, None)
 
             if not isinstance(option, Option):
-                option = Option(option, "No description provided")
+                option = Option(option, None)
 
             if option.default is None:
                 if p_obj.default == inspect.Parameter.empty:
