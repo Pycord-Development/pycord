@@ -759,10 +759,7 @@ class Embed:
 
     def clear_fields(self) -> None:
         """Removes all fields from this embed."""
-        try:
-            self._fields.clear()
-        except AttributeError:
-            self._fields = []
+        self._fields.clear()
 
     def remove_field(self, index: int) -> None:
         """Removes a field at a specified index.
