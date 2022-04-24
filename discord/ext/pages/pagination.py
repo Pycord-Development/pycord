@@ -904,7 +904,7 @@ class Paginator(discord.ui.View):
 
     async def respond(
         self,
-        interaction: discord.Interaction,
+        interaction: Union[discord.Interaction, discord.ext.bridge.BridgeContext],
         ephemeral: bool = False,
         target: Optional[discord.abc.Messageable] = None,
         target_message: str = "Paginator sent!",
@@ -913,8 +913,9 @@ class Paginator(discord.ui.View):
 
         Parameters
         ------------
-        interaction: :class:`discord.Interaction`
-            The interaction which invoked the paginator.
+        interaction: Union[:class:`discord.Interaction`, :class:`discord.ext.bridge.BridgeContext`]
+            The interaction or BridgeContext which invoked the paginator.
+            If passing a BridgeContext object, you cannot make this an ephemeral paginator.
         ephemeral: :class:`bool`
             Whether the paginator message and its components are ephemeral.
             If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.
@@ -934,8 +935,8 @@ class Paginator(discord.ui.View):
             The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
-        if not isinstance(interaction, discord.Interaction):
-            raise TypeError(f"expected Interaction not {interaction.__class__!r}")
+        if not isinstance(interaction, (discord.Interaction, discord.ext.bridge.BridgeContext)):
+            raise TypeError(f"expected Interaction or BridgeContext, not {interaction.__class__!r}")
 
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
@@ -953,37 +954,58 @@ class Paginator(discord.ui.View):
         if page_content.custom_view:
             self.update_custom_view(page_content.custom_view)
 
-        self.user = interaction.user
-        if target:
-            await interaction.response.send_message(target_message, ephemeral=ephemeral)
-            self.message = await target.send(
-                content=page_content.content,
-                embeds=page_content.embeds,
-                view=self,
-            )
-        else:
-            if interaction.response.is_done():
-                msg = await interaction.followup.send(
-                    content=page_content.content,
-                    embeds=page_content.embeds,
-                    view=self,
-                    ephemeral=ephemeral,
-                )
-                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
-                if not ephemeral:
-                    msg = await msg.channel.fetch_message(msg.id)
-            else:
-                msg = await interaction.response.send_message(
-                    content=page_content.content,
-                    embeds=page_content.embeds,
-                    view=self,
-                    ephemeral=ephemeral,
-                )
-            if isinstance(msg, (discord.Message, discord.WebhookMessage)):
-                self.message = msg
-            elif isinstance(msg, discord.Interaction):
-                self.message = await msg.original_message()
+        if isinstance(interaction, discord.Interaction):
+            self.user = interaction.user
 
+            if target:
+                await interaction.response.send_message(target_message, ephemeral=ephemeral)
+                self.message = await target.send(
+                    content=page_content.content,
+                    embeds=page_content.embeds,
+                    view=self,
+                )
+            else:
+                if interaction.response.is_done():
+                    msg = await interaction.followup.send(
+                        content=page_content.content,
+                        embeds=page_content.embeds,
+                        view=self,
+                        ephemeral=ephemeral,
+                    )
+                    # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
+                    if not ephemeral:
+                        msg = await msg.channel.fetch_message(msg.id)
+                else:
+                    msg = await interaction.response.send_message(
+                        content=page_content.content,
+                        embeds=page_content.embeds,
+                        view=self,
+                        ephemeral=ephemeral,
+                    )
+                if isinstance(msg, (discord.Message, discord.WebhookMessage)):
+                    self.message = msg
+                elif isinstance(msg, discord.Interaction):
+                    self.message = await msg.original_message()
+        else:
+            ctx = interaction
+            self.user = ctx.author
+            if target:
+                await ctx.respond(target_message, ephemeral=ephemeral)
+                self.message = await ctx.send(
+                    content=page_content.content,
+                    embeds=page_content.embeds,
+                    view=self,
+                )
+            else:
+                msg = await ctx.respond(
+                    content=page_content.content,
+                    embeds=page_content.embeds,
+                    view=self,
+                )
+                if isinstance(msg, (discord.Message, discord.WebhookMessage)):
+                    self.message = msg
+                elif isinstance(msg, discord.Interaction):
+                    self.message = await msg.original_message()
         return self.message
 
 
