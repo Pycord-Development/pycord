@@ -53,7 +53,7 @@ class InputText:
         self,
         *,
         style: InputTextStyle = InputTextStyle.short,
-        custom_id: str = MISSING,
+        custom_id: Optional[str] = None,
         label: str,
         placeholder: Optional[str] = None,
         min_length: Optional[int] = None,
@@ -63,9 +63,19 @@ class InputText:
         row: Optional[int] = None,
     ):
         super().__init__()
-        custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
-        if not (isinstance(custom_id, str) or custom_id is None):
+        if len(label) > 45:
+            raise ValueError("label must be 45 characters or fewer")
+        if min_length and (min_length < 0 or min_length > 4000):
+            raise ValueError("min_length must be between 0 and 4000")
+        if max_length and (max_length < 0 or max_length > 4000):
+            raise ValueError("max_length must be between 1 and 4000")
+        if value and len(value) > 4000:
+            raise ValueError("value must be 4000 characters or fewer")
+        if placeholder and len(placeholder) > 100:
+            raise ValueError("placeholder must be 100 characters or fewer")
+        if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+        custom_id = os.urandom(16).hex() if custom_id is None else custom_id
 
         self._underlying = InputTextComponent._raw_construct(
             type=ComponentType.input_text,
@@ -94,7 +104,7 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(f"style must be of type InputTextStyle not {value.__class__}")
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__.__name__}")
         self._underlying.style = value
 
     @property
@@ -105,7 +115,7 @@ class InputText:
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(f"custom_id must be None or str not {value.__class__}")
+            raise TypeError(f"custom_id must be None or str not {value.__class__.__name__}")
         self._underlying.custom_id = value
 
     @property
@@ -115,8 +125,10 @@ class InputText:
 
     @label.setter
     def label(self, value: str):
+        if len(value) > 45:
+            raise ValueError("label must be 45 characters or fewer")
         if not isinstance(value, str):
-            raise TypeError(f"label should be str not {value.__class__}")
+            raise TypeError(f"label should be str not {value.__class__.__name__}")
         self._underlying.label = value
 
     @property
@@ -127,7 +139,9 @@ class InputText:
     @placeholder.setter
     def placeholder(self, value: Optional[str]):
         if value and not isinstance(value, str):
-            raise TypeError(f"placeholder must be None or str not {value.__class__}")  # type: ignore
+            raise TypeError(f"placeholder must be None or str not {value.__class__.__name__}")  # type: ignore
+        if value and len(value) > 100:
+            raise ValueError("placeholder must be 100 characters or fewer")
         self._underlying.placeholder = value
 
     @property
@@ -138,7 +152,9 @@ class InputText:
     @min_length.setter
     def min_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_length must be None or int not {value.__class__}")  # type: ignore
+            raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
+        if value and (value < 0 or value) > 4000:
+            raise ValueError("min_length must be between 0 and 4000")
         self._underlying.min_length = value
 
     @property
@@ -149,7 +165,9 @@ class InputText:
     @max_length.setter
     def max_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_length must be None or int not {value.__class__}")  # type: ignore
+            raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
+        if value and (value <= 0 or value > 4000):
+            raise ValueError("max_length must be between 1 and 4000")
         self._underlying.max_length = value
 
     @property
@@ -160,7 +178,7 @@ class InputText:
     @required.setter
     def required(self, value: Optional[bool]):
         if not isinstance(value, bool):
-            raise TypeError(f"required must be bool not {value.__class__}")  # type: ignore
+            raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         self._underlying.required = bool(value)
 
     @property
@@ -174,7 +192,9 @@ class InputText:
     @value.setter
     def value(self, value: Optional[str]):
         if value and not isinstance(value, str):
-            raise TypeError(f"value must be None or str not {value.__class__}")  # type: ignore
+            raise TypeError(f"value must be None or str not {value.__class__.__name__}")  # type: ignore
+        if value and len(value) > 4000:
+            raise ValueError("value must be 4000 characters or fewer")
         self._underlying.value = value
 
     @property

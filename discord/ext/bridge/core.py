@@ -41,6 +41,8 @@ from ..commands import (
 
 __all__ = ("BridgeCommand", "bridge_command", "BridgeExtCommand", "BridgeSlashCommand")
 
+from ..commands.converter import _convert_to_bool
+
 from ...utils import get
 
 
@@ -142,38 +144,40 @@ def attachment_callback(*args):  # pylint: disable=unused-argument
 
 class BridgeOption(Option, Converter):
     async def convert(self, ctx, argument) -> Any:
-        if self.converter is not None:
-            converted = await self.converter.convert(ctx, argument)
-        else:
-            mapping = {
-                SlashCommandOptionType.string: str,
-                SlashCommandOptionType.integer: int,
-                SlashCommandOptionType.boolean: bool,
-                SlashCommandOptionType.user: UserConverter,
-                SlashCommandOptionType.channel: GuildChannelConverter,
-                SlashCommandOptionType.role: RoleConverter,
-                SlashCommandOptionType.mentionable: MentionableConverter,
-                SlashCommandOptionType.number: float,
-                SlashCommandOptionType.attachment: attachment_callback,
-            }
-            converter = mapping[self.input_type]
-            if issubclass(converter, Converter):
-                converted = await converter().convert(ctx, argument)
+        try:
+            if self.converter is not None:
+                converted = await self.converter.convert(ctx, argument)
             else:
-                converted = converter(argument)
-        if self.choices:
-            choices_names = [choice.name for choice in self.choices]
-            if converted in choices_names:
-                converted = get(self.choices, name=converted).value
-            else:
-                choices = [choice.value for choice in self.choices]
-                if converted not in choices:
-                    print(self.choices)
-                    raise ValueError(
-                        f"{argument} is not a valid choice. Valid choices: {list(set(choices_names + choices))}"
-                    )
+                mapping = {
+                    SlashCommandOptionType.string: str,
+                    SlashCommandOptionType.integer: int,
+                    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
+                    SlashCommandOptionType.user: UserConverter,
+                    SlashCommandOptionType.channel: GuildChannelConverter,
+                    SlashCommandOptionType.role: RoleConverter,
+                    SlashCommandOptionType.mentionable: MentionableConverter,
+                    SlashCommandOptionType.number: float,
+                    SlashCommandOptionType.attachment: attachment_callback,
+                }
+                converter = mapping[self.input_type]
+                if issubclass(converter, Converter):
+                    converted = await converter().convert(ctx, argument)
+                else:
+                    converted = converter(argument)
+            if self.choices:
+                choices_names = [choice.name for choice in self.choices]
+                if converted in choices_names:
+                    converted = get(self.choices, name=converted).value
+                else:
+                    choices = [choice.value for choice in self.choices]
+                    if converted not in choices:
+                        raise ValueError(
+                            f"{argument} is not a valid choice. Valid choices: {list(set(choices_names + choices))}"
+                        )
 
-        return converted
+            return converted
+        except ValueError as exc:
+            raise BadArgument() from exc
 
 
 discord.commands.options.Option = BridgeOption
