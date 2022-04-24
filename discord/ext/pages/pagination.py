@@ -62,7 +62,12 @@ class PaginatorGotoModal(discord.ui.Modal):
         interaction: :class:`~discord.Interaction`
             The interaction that submitted the modal dialog.
         """
-        await self.paginator.goto_page(page_number=int(self.children[0].value))
+        new_page = int(self.children[0].value) - 1
+        if new_page > self.paginator.page_count:
+            new_page = self.paginator.page_count
+        elif new_page < 0:
+            new_page = 0
+        await self.paginator.goto_page(page_number=new_page, interaction=interaction)
 
 
 class PaginatorActionButton(discord.ui.Button):
@@ -122,7 +127,7 @@ class PaginatorActionButton(discord.ui.Button):
                 else:
                     input_type = "modal"
             if input_type == "modal":
-                modal = PaginatorGotoModal(self.paginator)
+                modal = PaginatorGotoModal(self.paginator, title="Goto Page")
                 await interaction.response.send_modal(modal)
             elif input_type == "wait_for":
                 msg = await self.paginator.bot.wait_for("message", check=check)
@@ -766,7 +771,7 @@ class Paginator(discord.ui.View):
         :class:`~discord.Message`
             The message associated with the paginator.
         """
-        self.update_buttons()
+        self.update_nav_buttons()
         if self.show_menu:
             self.add_menu()
 
@@ -1128,7 +1133,7 @@ class Paginator(discord.ui.View):
         if mention_author is not None and not isinstance(mention_author, bool):
             raise TypeError(f"expected bool not {mention_author.__class__!r}")
 
-        self.update_buttons()
+        self.update_nav_buttons()
         if self.show_menu:
             self.add_menu()
 
@@ -1209,7 +1214,7 @@ class Paginator(discord.ui.View):
         if not isinstance(message, discord.Message):
             raise TypeError(f"expected Message not {message.__class__!r}")
 
-        self.update_buttons()
+        self.update_nav_buttons()
         if self.show_menu:
             self.add_menu()
 
@@ -1283,7 +1288,7 @@ class Paginator(discord.ui.View):
                 "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
             )
 
-        self.update_buttons()
+        self.update_nav_buttons()
         if self.show_menu:
             self.add_menu()
 
