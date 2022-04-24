@@ -959,39 +959,34 @@ class Paginator(discord.ui.View):
 
             if target:
                 await interaction.response.send_message(target_message, ephemeral=ephemeral)
-                self.message = await target.send(
+                msg = await target.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
                     view=self,
                 )
+            elif interaction.response.is_done():
+                msg = await interaction.followup.send(
+                    content=page_content.content,
+                    embeds=page_content.embeds,
+                    view=self,
+                    ephemeral=ephemeral,
+                )
+                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
+                if not ephemeral:
+                    msg = await msg.channel.fetch_message(msg.id)
             else:
-                if interaction.response.is_done():
-                    msg = await interaction.followup.send(
-                        content=page_content.content,
-                        embeds=page_content.embeds,
-                        view=self,
-                        ephemeral=ephemeral,
-                    )
-                    # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
-                    if not ephemeral:
-                        msg = await msg.channel.fetch_message(msg.id)
-                else:
-                    msg = await interaction.response.send_message(
-                        content=page_content.content,
-                        embeds=page_content.embeds,
-                        view=self,
-                        ephemeral=ephemeral,
-                    )
-                if isinstance(msg, (discord.Message, discord.WebhookMessage)):
-                    self.message = msg
-                elif isinstance(msg, discord.Interaction):
-                    self.message = await msg.original_message()
+                msg = await interaction.response.send_message(
+                    content=page_content.content,
+                    embeds=page_content.embeds,
+                    view=self,
+                    ephemeral=ephemeral,
+                )
         else:
             ctx = interaction
             self.user = ctx.author
             if target:
                 await ctx.respond(target_message, ephemeral=ephemeral)
-                self.message = await ctx.send(
+                msg = await ctx.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
                     view=self,
@@ -1002,10 +997,10 @@ class Paginator(discord.ui.View):
                     embeds=page_content.embeds,
                     view=self,
                 )
-                if isinstance(msg, (discord.Message, discord.WebhookMessage)):
-                    self.message = msg
-                elif isinstance(msg, discord.Interaction):
-                    self.message = await msg.original_message()
+        if isinstance(msg, (discord.Message, discord.WebhookMessage)):
+            self.message = msg
+        elif isinstance(msg, discord.Interaction):
+            self.message = await msg.original_message()
         return self.message
 
 
