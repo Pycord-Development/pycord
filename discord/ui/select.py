@@ -149,7 +149,7 @@ class Select(Item[V]):
 
     @placeholder.setter
     def placeholder(self, value: Optional[str]):
-        if len(value) > 150:
+        if value and len(value) > 150:
             raise ValueError("placeholder must be 150 characters or fewer")
         if value is not None and not isinstance(value, str):
             raise TypeError("placeholder must be None or str")
