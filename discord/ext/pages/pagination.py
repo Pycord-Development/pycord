@@ -130,12 +130,15 @@ class PaginatorActionButton(discord.ui.Button):
                 modal = PaginatorGotoModal(self.paginator, title="Goto Page")
                 await interaction.response.send_modal(modal)
             elif input_type == "wait_for":
+                ask_msg = await interaction.response.send_message("What page would you like to go to?")
                 msg = await self.paginator.bot.wait_for("message", check=check)
                 try:
                     page_number = int(msg.content)
                 except ValueError:
                     page_number = self.paginator.current_page
-                await self.paginator.goto_page(page_number=page_number)
+                await self.paginator.goto_page(page_number=page_number - 1, interaction=interaction)
+                await ask_msg.delete_original_message()
+                await msg.delete()
 
 
 class PaginatorButton(discord.ui.Button):
@@ -705,7 +708,9 @@ class Paginator(discord.ui.View):
                 item.disabled = True
         if page:
             if interaction:
-                await interaction.followup.edit_message(content=page.content, embeds=page.embeds, view=self)
+                await interaction.followup.edit_message(
+                    self.message.id, content=page.content, embeds=page.embeds, view=self
+                )
             else:
                 await self.message.edit(
                     content=page.content,
@@ -792,7 +797,12 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page.custom_view)
 
         if interaction:
-            await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
+            if interaction.response.is_done():
+                await interaction.followup.edit_message(
+                    self.message.id, content=page.content, embeds=page.embeds, view=self
+                )
+            else:
+                await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
         else:
             await self.message.edit(
                 content=page.content,
