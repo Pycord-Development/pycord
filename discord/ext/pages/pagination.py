@@ -316,6 +316,8 @@ class PageGroup:
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
+    action_button_row: :class:`int`
+        The row where the action buttons are displayed. Has no effect if :attr:`show_action_row` is ``False``.
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
@@ -328,6 +330,20 @@ class PageGroup:
     trigger_on_display: :class:`bool`
         Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
         Has no effect if no callback exists for a `Page`.
+    show_action_row: :class:`bool`
+        Whether to show the default action row, which contains additional buttons for taking action on the paginator and its contents.
+        The default buttons are:
+            **Cancel Paginator**, **Stop Paginator**, **Trigger Current :class:`Page` Callback**,
+            **Go to provided page #**, and **Search Across Pages**.
+    input_method: Literal["modal", "wait_for"]
+        The method to use for accepting input from the user for use with the paginator. Mostly used with the **Goto** action button.
+        If ``modal``, a modal dialog will be used to ask the user to provide their input.
+        If ``wait_for``, the paginator will wait for the user to provide their input in a normal message.
+
+        .. warning::
+
+            ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
+
     """
 
     def __init__(
@@ -342,11 +358,14 @@ class PageGroup:
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
         default_button_row: int = 0,
+        action_button_row: int = 1,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
         trigger_on_display: Optional[bool] = None,
+        show_action_row: Optional[bool] = False,
+        input_method: Literal["modal", "wait_for"] = "modal",
     ):
         self.label = label
         self.description = description
@@ -358,11 +377,14 @@ class PageGroup:
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
+        self.action_button_row = action_button_row
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.timeout: float = timeout
         self.custom_buttons: List = custom_buttons
         self.trigger_on_display = trigger_on_display
+        self.show_action_row = show_action_row
+        self.input_method = input_method
 
 
 class Paginator(discord.ui.View):
@@ -390,6 +412,8 @@ class Paginator(discord.ui.View):
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
+    action_button_row: :class:`int`
+        The row where the action buttons are displayed. Has no effect if :attr:`show_action_row` is ``False``.
     loop_pages: :class:`bool`
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
@@ -403,18 +427,19 @@ class Paginator(discord.ui.View):
     trigger_on_display: :class:`bool`
         Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
         Has no effect if no callback exists for a `Page`.
-    show_default_action_row: :class:`bool`
+    show_action_row: :class:`bool`
         Whether to show the default action row, which contains additional buttons for taking action on the paginator and its contents.
         The default buttons are:
-            **Cancel Paginator**, **Stop Paginator**, **Trigger Current :class:`Page` Callback**, **Go to provided page #**, and **Search Across Pages**.
+            **Cancel Paginator**, **Stop Paginator**, **Trigger Current :class:`Page` Callback**,
+            **Go to provided page #**, and **Search Across Pages**.
     input_method: Literal["modal", "wait_for"]
-        The method to use for accepting input from the user for use with the paginator.
+        The method to use for accepting input from the user for use with the paginator. Mostly used with the **Goto** action button.
         If ``modal``, a modal dialog will be used to ask the user to provide their input.
         If ``wait_for``, the paginator will wait for the user to provide their input in a normal message.
 
         .. warning::
 
-                ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
+            ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
 
     Attributes
     ----------
@@ -426,8 +451,10 @@ class Paginator(discord.ui.View):
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
         A zero-indexed value showing the total number of pages.
-    buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+    nav_buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
         A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
+    action_buttons: Dict[:class:`str`, :class:`~PaginatorActionButton`]
+        A dictionary containing the :class:`~PaginatorActionButton` objects included in this paginator.
     user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
         The user or member that invoked the paginator.
     message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
@@ -445,12 +472,13 @@ class Paginator(discord.ui.View):
         disable_on_timeout=True,
         use_default_buttons=True,
         default_button_row: int = 0,
+        action_button_row: int = 1,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
         trigger_on_display: Optional[bool] = None,
-        show_default_action_row: Optional[bool] = False,
+        show_action_row: Optional[bool] = False,
         input_method: Literal["modal", "wait_for"] = "modal",
         bot: Optional[discord.Bot] = None,
     ) -> None:
@@ -473,17 +501,19 @@ class Paginator(discord.ui.View):
             ] = self.page_groups[0].pages
 
         self.page_count = max(len(self.pages) - 1, 0)
-        self.buttons = {}
+        self.nav_buttons = {}
+        self.action_buttons = {}
         self.custom_buttons: List = custom_buttons
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
         self.default_button_row = default_button_row
+        self.action_button_row = action_button_row
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.trigger_on_display = trigger_on_display
-        self.show_action_row = show_default_action_row
+        self.show_action_row = show_action_row
         self.input_method = input_method
         self.bot = bot
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
@@ -515,12 +545,15 @@ class Paginator(discord.ui.View):
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
         default_button_row: Optional[int] = None,
+        action_button_row: Optional[int] = None,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
         timeout: Optional[float] = None,
         custom_buttons: Optional[List[PaginatorButton]] = None,
         trigger_on_display: Optional[bool] = None,
         interaction: Optional[discord.Interaction] = None,
+        show_action_row: Optional[bool] = False,
+        input_method: Literal["modal", "wait_for"] = "modal",
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
 
@@ -543,6 +576,8 @@ class Paginator(discord.ui.View):
             Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
         default_button_row: Optional[:class:`int`]
             The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
+        action_button_row: :class:`int`
+            The row where the action buttons are displayed. Has no effect if :attr:`show_action_row` is ``False``.
         loop_pages: :class:`bool`
             Whether to loop the pages when clicking prev/next while at the first/last page in the list.
         custom_view: Optional[:class:`discord.ui.View`]
@@ -558,6 +593,21 @@ class Paginator(discord.ui.View):
         interaction: Optional[:class:`discord.Interaction`]
             The interaction to use when updating the paginator. If not provided, the paginator will be updated
             by using its stored :attr:`message` attribute instead.
+        show_action_row: :class:`bool`
+            Whether to show the default action row, which contains additional buttons for taking action on the paginator and its contents.
+            The default buttons are:
+                **Cancel Paginator**, **Stop Paginator**, **Trigger Current :class:`Page` Callback**,
+                **Go to provided page #**, and **Search Across Pages**.
+        input_method: Literal["modal", "wait_for"]
+            The method to use for accepting input from the user for use with the paginator. Mostly used with the **Goto** action button.
+            If ``modal``, a modal dialog will be used to ask the user to provide their input.
+            If ``wait_for``, the paginator will wait for the user to provide their input in a normal message.
+
+            .. warning::
+
+                ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
+
+
         """
 
         # Update pages and reset current_page to 0 (default)
@@ -574,10 +624,13 @@ class Paginator(discord.ui.View):
         self.disable_on_timeout = disable_on_timeout if disable_on_timeout is not None else self.disable_on_timeout
         self.use_default_buttons = use_default_buttons if use_default_buttons is not None else self.use_default_buttons
         self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
+        self.action_button_row = action_button_row if action_button_row is not None else self.action_button_row
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
         self.trigger_on_display = trigger_on_display if trigger_on_display is not None else self.trigger_on_display
+        self.show_action_row = show_action_row
+        self.input_method = input_method
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
             for button in custom_buttons:
@@ -704,10 +757,14 @@ class Paginator(discord.ui.View):
         self.menu.paginator = self
         self.add_item(self.menu)
 
+    @discord.utils.deprecated("add_default_nav_buttons")
     def add_default_buttons(self):
-        """Adds the full list of default buttons that can be used with the paginator.
+        self.add_default_nav_buttons()
+
+    def add_default_nav_buttons(self):
+        """Adds the full list of default navigation buttons that can be used with the paginator.
         Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."""
-        default_buttons = [
+        default_nav_buttons = [
             PaginatorButton(
                 "first",
                 label="<<",
@@ -741,13 +798,62 @@ class Paginator(discord.ui.View):
                 row=self.default_button_row,
             ),
         ]
-        action_buttons = []
-        for button in default_buttons:
+
+        for button in default_nav_buttons:
             self.add_button(button)
 
+    def add_default_action_buttons(self):
+        """Adds the full list of default action buttons that can be used with the paginator.
+        Includes ``cancel``, ``disable``, ``action``, ``goto``, and ``search``.
+        """
+        action_buttons = [
+            PaginatorActionButton(
+                button_type="cancel",
+                paginator=self,
+                label="Cancel",
+                style=discord.ButtonStyle.gray,
+                row=self.action_button_row,
+            ),
+            PaginatorActionButton(
+                button_type="disable",
+                paginator=self,
+                label="Disable",
+                style=discord.ButtonStyle.red,
+                row=self.action_button_row,
+            ),
+            PaginatorActionButton(
+                button_type="action",
+                paginator=self,
+                label="Action",
+                style=discord.ButtonStyle.green,
+                row=self.action_button_row,
+            ),
+            PaginatorActionButton(
+                button_type="goto",
+                paginator=self,
+                emoji="🔢",
+                style=discord.ButtonStyle.blurple,
+                row=self.action_button_row,
+            ),
+            PaginatorActionButton(
+                button_type="search",
+                paginator=self,
+                label="Search",
+                style=discord.ButtonStyle.blurple,
+                row=self.action_button_row,
+            ),
+        ]
+        if self.show_action_row:
+            for button in action_buttons:
+                self.add_action_button(button)
+
+    @discord.utils.deprecated("add_nav_button")
     def add_button(self, button: PaginatorButton):
+        self.add_nav_button(button)
+
+    def add_nav_button(self, button: PaginatorButton):
         """Adds a :class:`PaginatorButton` to the paginator."""
-        self.buttons[button.button_type] = {
+        self.nav_buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
                 label=button.label
@@ -764,7 +870,24 @@ class Paginator(discord.ui.View):
             "loop_label": button.loop_label,
             "hidden": button.disabled if button.button_type != "page_indicator" else not self.show_indicator,
         }
-        self.buttons[button.button_type]["object"].callback = button.callback
+        self.nav_buttons[button.button_type]["object"].callback = button.callback
+        button.paginator = self
+
+    def add_action_button(self, button: PaginatorActionButton):
+        """Adds a :class:`PaginatorActionButton` to the paginator."""
+        self.action_buttons[button.button_type] = {
+            "object": discord.ui.Button(
+                style=button.style,
+                label=button.label if button.label or button.emoji else button.button_type.capitalize(),
+                disabled=button.disabled,
+                custom_id=button.custom_id,
+                emoji=button.emoji,
+                row=button.row,
+            ),
+            "label": button.label,
+            "hidden": button.disabled,
+        }
+        self.action_buttons[button.button_type]["object"].callback = button.callback
         button.paginator = self
 
     def remove_button(self, button_type: str):
