@@ -21,18 +21,116 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Literal, Optional, Union
 
 import discord
 from discord.ext.commands import Context
 
 __all__ = (
+    "PaginatorActionButton",
     "PaginatorButton",
     "Paginator",
     "PageGroup",
     "PaginatorMenu",
     "Page",
 )
+
+
+class PaginatorGotoModal(discord.ui.Modal):
+    """The modal dialog used when the user clicks the "Goto" button in the default set of paginator action buttons."""
+
+    def __init__(self, paginator, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.paginator: Paginator = paginator
+        self.title = "Goto Page"
+        self.add_item(
+            discord.ui.InputText(
+                label="Page Number",
+                value=str(self.paginator.page_number),
+                required=True,
+            )
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        """|coro|
+
+        The coroutine that is called when the modal dialog is submitted.
+        Should be overridden to handle the values submitted by the user.
+
+        Parameters
+        -----------
+        interaction: :class:`~discord.Interaction`
+            The interaction that submitted the modal dialog.
+        """
+        await self.paginator.goto_page(page_number=int(self.children[0].value))
+
+
+class PaginatorActionButton(discord.ui.Button):
+    """Creates a button used to take an action on the paginator or its currently displayed page.
+    Only meant to be used with the default action buttons. If you want to use a custom button to perform a similar action,
+    please pass a custom view to the paginator instead.
+
+    Parameters
+    ----------
+    paginator :class:`Paginator`
+        The paginator this button is associated to.
+    """
+
+    def __init__(
+        self,
+        button_type: Literal[
+            "cancel",
+            "disable",
+            "action",
+            "goto",
+            "search",
+        ],
+        paginator,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.button_type = button_type
+        self.paginator: Paginator = paginator
+
+    async def callback(self, interaction: discord.Interaction):
+        """|coro|
+
+        The coroutine that is called when the action button is clicked.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction created by clicking the navigation button.
+        """
+        if self.button_type == "cancel":
+            await self.paginator.cancel()
+        elif self.button_type == "disable":
+            await self.paginator.disable()
+        elif self.button_type == "action":
+            await self.paginator.page_action(interaction=interaction)
+        elif self.button_type == "goto":
+
+            def check(m):
+                return m.author.id == interaction.user.id and m.channel.id == interaction.channel.id
+
+            if self.paginator.bot is None:
+                input_type = "modal"
+            else:
+                if self.paginator.input_method == "wait_for":
+                    input_type = "wait_for"
+                else:
+                    input_type = "modal"
+            if input_type == "modal":
+                modal = PaginatorGotoModal(self.paginator)
+                await interaction.response.send_modal(modal)
+            elif input_type == "wait_for":
+                msg = await self.paginator.bot.wait_for("message", check=check)
+                try:
+                    page_number = int(msg.content)
+                except ValueError:
+                    page_number = self.paginator.current_page
+                await self.paginator.goto_page(page_number=page_number)
 
 
 class PaginatorButton(discord.ui.Button):
@@ -305,6 +403,18 @@ class Paginator(discord.ui.View):
     trigger_on_display: :class:`bool`
         Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
         Has no effect if no callback exists for a `Page`.
+    show_default_action_row: :class:`bool`
+        Whether to show the default action row, which contains additional buttons for taking action on the paginator and its contents.
+        The default buttons are:
+            **Cancel Paginator**, **Stop Paginator**, **Trigger Current :class:`Page` Callback**, **Go to provided page #**, and **Search Across Pages**.
+    input_method: Literal["modal", "wait_for"]
+        The method to use for accepting input from the user for use with the paginator.
+        If ``modal``, a modal dialog will be used to ask the user to provide their input.
+        If ``wait_for``, the paginator will wait for the user to provide their input in a normal message.
+
+        .. warning::
+
+                ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
 
     Attributes
     ----------
@@ -340,6 +450,9 @@ class Paginator(discord.ui.View):
         timeout: Optional[float] = 180.0,
         custom_buttons: Optional[List[PaginatorButton]] = None,
         trigger_on_display: Optional[bool] = None,
+        show_default_action_row: Optional[bool] = False,
+        input_method: Literal["modal", "wait_for"] = "modal",
+        bot: Optional[discord.Bot] = None,
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
@@ -347,6 +460,7 @@ class Paginator(discord.ui.View):
             List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
         ] = pages
         self.current_page = 0
+        self._page_mumber = self.current_page + 1
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
         self.menu_placeholder = menu_placeholder
@@ -369,6 +483,9 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.trigger_on_display = trigger_on_display
+        self.show_action_row = show_default_action_row
+        self.input_method = input_method
+        self.bot = bot
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
         if self.custom_buttons and not self.use_default_buttons:
@@ -382,6 +499,11 @@ class Paginator(discord.ui.View):
 
         self.usercheck = author_check
         self.user = None
+
+    @property
+    def page_number(self) -> int:
+        """A one-indexed value showing the current page number. Ideal for user-friendly display."""
+        return self._page_mumber
 
     async def update(
         self,
@@ -619,6 +741,7 @@ class Paginator(discord.ui.View):
                 row=self.default_button_row,
             ),
         ]
+        action_buttons = []
         for button in default_buttons:
             self.add_button(button)
 
