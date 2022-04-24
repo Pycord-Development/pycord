@@ -153,7 +153,7 @@ class Button(Item[V]):
     def custom_id(self, value: Optional[str]):
         if value is not None and not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
 
@@ -184,7 +184,7 @@ class Button(Item[V]):
 
     @label.setter
     def label(self, value: Optional[str]):
-        if len(value) > 80:
+        if value and len(value) > 80:
             raise ValueError("label must be 80 characters or fewer")
         self._underlying.label = str(value) if value is not None else value
 
