@@ -301,10 +301,11 @@ class Context(discord.abc.Messageable, Generic[BotT]):
     @discord.utils.cached_property
     def me(self) -> Union[Member, ClientUser]:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message contexts.
+        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        message contexts, or when :meth:`Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
-        return self.guild.me if self.guild is not None else self.bot.user  # type: ignore
+        return self.guild.me if self.guild is not None and self.guild.me is not None else self.bot.user  # type: ignore
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
