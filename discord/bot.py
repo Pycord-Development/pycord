@@ -616,7 +616,7 @@ class ApplicationCommandMixin(ABC):
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
-        check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
+        check_guilds = list(set((check_guilds or []) + (self.debug_guilds or [])))
 
         if commands is None:
             commands = self.pending_application_commands
