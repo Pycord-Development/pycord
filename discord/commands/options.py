@@ -26,7 +26,7 @@ import inspect
 from typing import Any, Dict, List, Literal, Optional, Union
 from enum import Enum
 
-from ..enums import ChannelType, SlashCommandOptionType
+from ..enums import ChannelType, SlashCommandOptionType, Enum as DiscordEnum
 
 __all__ = (
     "ThreadOption",
@@ -129,7 +129,7 @@ class Option:
             if hasattr(input_type, "convert"):
                 self.converter = input_type
                 input_type = SlashCommandOptionType.string
-            elif issubclass(input_type, Enum):
+            elif issubclass(input_type, (Enum, DiscordEnum)):
                 enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
                 if len(enum_choices) != len([elem for elem in enum_choices if elem.value.__class__ == enum_choices[0].value.__class__]):
                     enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
