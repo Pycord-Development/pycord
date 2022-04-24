@@ -689,9 +689,7 @@ class Embed:
         if not all(isinstance(x, EmbedField) for x in value):
             raise TypeError("Expected a list of EmbedField objects.")
 
-        self.clear_fields()
-        for field in value:
-            self.add_field(name=field.name, value=field.value, inline=field.inline)
+        self._fields = value
 
     def append_field(self, field: EmbedField) -> None:
         """Appends an :class:`EmbedField` object to the embed.
