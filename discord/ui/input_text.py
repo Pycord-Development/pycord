@@ -65,13 +65,13 @@ class InputText:
         super().__init__()
         if len(label) > 45:
             raise ValueError("label must be 45 characters or fewer")
-        if min_length < 0 or min_length > 4000:
+        if min_length and (min_length < 0 or min_length > 4000):
             raise ValueError("min_length must be between 0 and 4000")
-        if max_length < 0 or max_length > 4000:
+        if max_length and (max_length < 0 or max_length > 4000):
             raise ValueError("max_length must be between 1 and 4000")
-        if len(value) > 4000:
+        if value and len(value) > 4000:
             raise ValueError("value must be 4000 characters or fewer")
-        if len(placeholder) > 100:
+        if placeholder and len(placeholder) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
@@ -140,7 +140,7 @@ class InputText:
     def placeholder(self, value: Optional[str]):
         if value and not isinstance(value, str):
             raise TypeError(f"placeholder must be None or str not {value.__class__.__name__}")  # type: ignore
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         self._underlying.placeholder = value
 
@@ -153,7 +153,7 @@ class InputText:
     def min_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value < 0 or value > 4000:
+        if value and (value < 0 or value) > 4000:
             raise ValueError("min_length must be between 0 and 4000")
         self._underlying.min_length = value
 
@@ -166,7 +166,7 @@ class InputText:
     def max_length(self, value: Optional[int]):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value <= 0 or value > 4000:
+        if value and (value <= 0 or value > 4000):
             raise ValueError("max_length must be between 1 and 4000")
         self._underlying.max_length = value
 
@@ -193,7 +193,7 @@ class InputText:
     def value(self, value: Optional[str]):
         if value and not isinstance(value, str):
             raise TypeError(f"value must be None or str not {value.__class__.__name__}")  # type: ignore
-        if len(value) > 4000:
+        if value and len(value) > 4000:
             raise ValueError("value must be 4000 characters or fewer")
         self._underlying.value = value
 

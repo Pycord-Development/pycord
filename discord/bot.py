@@ -572,6 +572,7 @@ class ApplicationCommandMixin(ABC):
         register_guild_commands: bool = True,
         check_guilds: Optional[List[int]] = [],
         delete_exiting: bool = True,
+        _register_permissions: bool = True,  # TODO: Remove for perms v2
     ) -> None:
         """|coro|
 
@@ -646,6 +647,10 @@ class ApplicationCommandMixin(ABC):
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
+        
+        if not _register_permissions:
+            return
+
         global_permissions: List = []
 
         for i in registered_commands:
