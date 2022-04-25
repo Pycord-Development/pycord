@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 from typing import Dict, List, Optional, Union
 
 import discord
+from discord.ext.bridge import BridgeContext
 from discord.ext.commands import Context
 
 __all__ = (
@@ -906,7 +907,7 @@ class Paginator(discord.ui.View):
 
     async def respond(
         self,
-        interaction: Union[discord.Interaction, discord.ext.bridge.BridgeContext],
+        interaction: Union[discord.Interaction, BridgeContext],
         ephemeral: bool = False,
         target: Optional[discord.abc.Messageable] = None,
         target_message: str = "Paginator sent!",
@@ -915,7 +916,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ------------
-        interaction: Union[:class:`discord.Interaction`, :class:`discord.ext.bridge.BridgeContext`]
+        interaction: Union[:class:`discord.Interaction`, :class:`BridgeContext`]
             The interaction or BridgeContext which invoked the paginator.
             If passing a BridgeContext object, you cannot make this an ephemeral paginator.
         ephemeral: :class:`bool`
@@ -937,7 +938,7 @@ class Paginator(discord.ui.View):
             The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
-        if not isinstance(interaction, (discord.Interaction, discord.ext.bridge.BridgeContext)):
+        if not isinstance(interaction, (discord.Interaction, BridgeContext)):
             raise TypeError(f"expected Interaction or BridgeContext, not {interaction.__class__!r}")
 
         if target is not None and not isinstance(target, discord.abc.Messageable):
