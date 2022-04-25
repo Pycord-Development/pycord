@@ -683,7 +683,7 @@ class SlashCommand(ApplicationCommand):
                     option = Option(option.__args__)
 
             if not isinstance(option, Option):
-                option = Option(option, None)
+                option = Option(option)
 
             if option.default is None:
                 if p_obj.default == inspect.Parameter.empty:
