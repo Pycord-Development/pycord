@@ -680,7 +680,7 @@ class SlashCommand(ApplicationCommand):
                 if self._is_typing_optional(option):
                     option = Option(option.__args__[0], None, required=False)
                 else:
-                    option = Option(option.__args__, None)
+                    option = Option(option.__args__)
 
             if not isinstance(option, Option):
                 option = Option(option, None)
