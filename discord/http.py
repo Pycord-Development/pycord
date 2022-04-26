@@ -1091,9 +1091,9 @@ class HTTPClient:
             *,
             name: str,
             auto_archive_duration: threads.ThreadArchiveDuration,
+            rate_limit_per_user: int,
             invitable: bool = True,
             reason: Optional[str] = None,
-            tts: bool = False,
             embed: Optional[embed.Embed] = None,
             embeds: Optional[List[embed.Embed]] = None,
             nonce: Optional[str] = None,
@@ -1108,9 +1108,6 @@ class HTTPClient:
         }
         if content:
             payload["content"] = content
-
-        if tts:
-            payload["tts"] = True
 
         if embed:
             payload["embeds"] = [embed]
@@ -1129,6 +1126,9 @@ class HTTPClient:
 
         if stickers:
             payload["sticker_ids"] = stickers
+
+        if rate_limit_per_user:
+            payload["rate_limit_per_user"] = rate_limit_per_user
         # TODO: Once supported by API, remove has_message=true query parameter
         route = Route("POST", "/channels/{channel_id}/threads?has_message=true", channel_id=channel_id)
         return self.request(route, json=payload, reason=reason)
