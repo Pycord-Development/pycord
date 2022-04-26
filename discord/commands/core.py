@@ -678,7 +678,7 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], None, required=False)
+                    option = Option(option.__args__[0], required=False)
                 else:
                     option = Option(option.__args__)
 
