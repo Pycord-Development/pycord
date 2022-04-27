@@ -572,6 +572,7 @@ class ApplicationCommandMixin(ABC):
         register_guild_commands: bool = True,
         check_guilds: Optional[List[int]] = [],
         delete_exiting: bool = True,
+        _register_permissions: bool = True,  # TODO: Remove for perms v2
     ) -> None:
         """|coro|
 
@@ -646,6 +647,10 @@ class ApplicationCommandMixin(ABC):
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
+        
+        if not _register_permissions:
+            return
+
         global_permissions: List = []
 
         for i in registered_commands:
@@ -812,9 +817,12 @@ class ApplicationCommandMixin(ABC):
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
             for cmd in self.application_commands:
+                guild_id = interaction.data.get("guild_id")
+                if guild_id: 
+                    guild_id = int(guild_id)
                 if cmd.name == interaction.data["name"] and (
-                    interaction.data.get("guild_id") == cmd.guild_ids
-                    or (isinstance(cmd.guild_ids, list) and interaction.data.get("guild_id") in cmd.guild_ids)
+                    guild_id == cmd.guild_ids
+                    or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
                 ):
                     command = cmd
                     break
