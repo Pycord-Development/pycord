@@ -60,6 +60,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
+from .flags import ChannelFlags
 from .invite import Invite
 from .iterators import ArchivedThreadIterator
 from .mixins import Hashable
@@ -155,6 +156,10 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         The default auto archive duration in minutes for threads created in this channel.
 
         .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -171,6 +176,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "_type",
         "last_message_id",
         "default_auto_archive_duration",
+        "flags",
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]):
@@ -200,6 +206,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
         self._type: int = data.get("type", self._type)
         self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self._fill_overwrites(data)
 
     @property
@@ -801,12 +808,11 @@ class ForumChannel(_TextChannel):
         """
         return self.topic
 
-    async def create_post(
+    async def create_thread(
             self,
-            name: str,  # Could be renamed to title?
+            name: str,
             content=None,
             *,
-            tts=None,
             embed=None,
             embeds=None,
             file=None,
@@ -817,6 +823,7 @@ class ForumChannel(_TextChannel):
             allowed_mentions=None,
             view=None,
             auto_archive_duration: ThreadArchiveDuration = MISSING,
+            slowmode_delay: int = MISSING,
             reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
@@ -832,17 +839,39 @@ class ForumChannel(_TextChannel):
         -----------
         name: :class:`str`
             The name of the thread.
-        message: Optional[:class:`abc.Snowflake`]
-            A snowflake representing the message to create the thread with.
-            If ``None`` is passed then a private thread is created.
-            Defaults to ``None``.
+        content: :class:`str`
+            The content of the message to send.
+        embed: :class:`~discord.Embed`
+            The rich embed for the content.
+        file: :class:`~discord.File`
+            The file to upload.
+        files: List[:class:`~discord.File`]
+            A list of files to upload. Must be a maximum of 10.
+        nonce: :class:`int`
+            The nonce to use for sending this message. If the message was successfully sent,
+            then the message will have a nonce with this value.
+        allowed_mentions: :class:`~discord.AllowedMentions`
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
+        view: :class:`discord.ui.View`
+            A Discord UI View to add to the message.
+        embeds: List[:class:`~discord.Embed`]
+            A list of embeds to upload. Must be a maximum of 10.
+        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+            A list of stickers to upload. Must be a maximum of 3.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
-        type: Optional[:class:`ChannelType`]
-            The type of thread to create. If a ``message`` is passed then this parameter
-            is ignored, as a thread created with a message is always a public thread.
-            By default this creates a private thread if this is ``None``.
+        slowmode_delay: :class:`int`
+            The number of seconds a member must wait between sending messages
+            in the new thread. A value of `0` denotes that it is disabled.
+            Bots and users with :attr:`~Permissions.manage_channels` or
+            :attr:`~Permissions.manage_messages` bypass slowmode.
+            If not provided, the forum channel's default slowmode is used.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
 
@@ -903,7 +932,6 @@ class ForumChannel(_TextChannel):
                     files=[file],
                     allowed_mentions=allowed_mentions,
                     content=message_content,
-                    tts=tts,
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
@@ -924,7 +952,6 @@ class ForumChannel(_TextChannel):
                     self.id,
                     files=files,
                     content=message_content,
-                    tts=tts,
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
@@ -948,6 +975,7 @@ class ForumChannel(_TextChannel):
                 stickers=stickers,
                 components=components,
                 auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
+                rate_limit_per_user=slowmode_delay or self.slowmode_delay,
                 reason=reason,
             )
         ret = Thread(guild=self.guild, state=self._state, data=data)
@@ -974,6 +1002,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "rtc_region",
         "video_quality_mode",
         "last_message_id",
+        "flags",
     )
 
     def __init__(
@@ -1004,6 +1033,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self.position: int = data.get("position")
         self.bitrate: int = data.get("bitrate")
         self.user_limit: int = data.get("user_limit")
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self._fill_overwrites(data)
 
     @property
@@ -1105,6 +1135,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
+        .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
         .. versionadded:: 2.0
     """
 
@@ -1573,6 +1607,10 @@ class StageChannel(VocalGuildChannel):
         The camera video quality for the stage channel's participants.
 
         .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = ("topic",)
@@ -1845,6 +1883,10 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         .. note::
 
             To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -1856,6 +1898,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         "position",
         "_overwrites",
         "category_id",
+        "flags",
     )
 
     def __init__(self, *, state: ConnectionState, guild: Guild, data: CategoryChannelPayload):
@@ -1872,6 +1915,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.nsfw: bool = data.get("nsfw", False)
         self.position: int = data.get("position")
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self._fill_overwrites(data)
 
     @property

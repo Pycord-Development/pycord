@@ -97,6 +97,7 @@ if TYPE_CHECKING:
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
     from .user import ClientUser
+    from .flags import ChannelFlags
 
     PartialMessageableChannel = Union[TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
@@ -328,6 +329,7 @@ class GuildChannel:
     type: ChannelType
     position: int
     category_id: Optional[int]
+    flags: ChannelFlags
     _state: ConnectionState
     _overwrites: List[_Overwrites]
 
