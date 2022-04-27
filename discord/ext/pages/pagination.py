@@ -126,6 +126,8 @@ class Page:
         The content of the page. Corresponds to the :class:`discord.Message.content` attribute.
     embeds: Optional[List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute.
+    files: Optional[List[:class:`discord.File`]]
+        A list of local files to be shown with the page.
     custom_view: Optional[:class:`discord.ui.View`]
         The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator.
     """
@@ -135,6 +137,7 @@ class Page:
         content: Optional[str] = None,
         embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None,
         custom_view: Optional[discord.ui.View] = None,
+        files: Optional[List[discord.File]] = None,
         **kwargs,
     ):
         if content is None and embeds is None:
@@ -142,6 +145,7 @@ class Page:
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
+        self._files = files or []
 
     async def callback(self, interaction: Optional[discord.Interaction] = None):
         """|coro|
@@ -184,6 +188,16 @@ class Page:
     def custom_view(self, value: Optional[discord.ui.View]):
         """Assigns a custom view to be shown when the page is displayed."""
         self._custom_view = value
+
+    @property
+    def files(self) -> Optional[List[discord.File]]:
+        """Gets the files associated with the page."""
+        return self._files
+
+    @files.setter
+    def files(self, value: Optional[List[discord.File]]):
+        """Sets the files associated with the page."""
+        self._files = value
 
 
 class PageGroup:
@@ -561,12 +575,31 @@ class Paginator(discord.ui.View):
         if page.custom_view:
             self.update_custom_view(page.custom_view)
 
+        for file in page.files:
+            with open(file.fp.name, "rb") as fp:  # type: ignore
+                page.files[page.files.index(file)] = discord.File(
+                    fp,  # type: ignore
+                    filename=file.filename,
+                    description=file.description,
+                    spoiler=file.spoiler,
+                )
+
         if interaction:
-            await interaction.response.edit_message(content=page.content, embeds=page.embeds, view=self)
+            await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+            await interaction.followup.edit_message(
+                message_id=self.message.id,
+                content=page.content,
+                embeds=page.embeds,
+                attachments=[],
+                files=page.files or [],
+                view=self,
+            )
         else:
             await self.message.edit(
                 content=page.content,
                 embeds=page.embeds,
+                attachments=[],
+                files=page.files or [],
                 view=self,
             )
         if self.trigger_on_display:
@@ -729,16 +762,22 @@ class Paginator(discord.ui.View):
         if isinstance(page, Page):
             return page
         elif isinstance(page, str):
-            return Page(content=page, embeds=[])
+            return Page(content=page, embeds=[], files=[])
         elif isinstance(page, discord.Embed):
-            return Page(content=None, embeds=[page])
+            return Page(content=None, embeds=[page], files=[])
+        elif isinstance(page, discord.File):
+            return Page(content=None, embeds=[], files=[page])
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
-                return Page(content=None, embeds=page)
+                return Page(content=None, embeds=page, files=[])
+            if all(isinstance(x, discord.File) for x in page):
+                return Page(content=None, embeds=[], files=page)
             else:
-                raise TypeError("All list items must be embeds.")
+                raise TypeError("All list items must be embeds or files.")
         else:
-            raise TypeError("Page content must be a Page object, string, an embed, or a list of embeds.")
+            raise TypeError(
+                "Page content must be a Page object, string, an embed, a list of embeds, a file, or a list of files."
+            )
 
     async def page_action(self, interaction: Optional[discord.Interaction] = None) -> None:
         """Triggers the callback associated with the current page, if any.
@@ -832,6 +871,7 @@ class Paginator(discord.ui.View):
         self.message = await ctx.send(
             content=page_content.content,
             embeds=page_content.embeds,
+            files=page_content.files,
             view=self,
             reference=reference,
             allowed_mentions=allowed_mentions,
@@ -891,10 +931,13 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page_content.custom_view)
 
         self.user = message.author
+
         try:
             self.message = await message.edit(
                 content=page_content.content,
                 embeds=page_content.embeds,
+                files=page_content.files,
+                attachments=[],
                 view=self,
                 suppress=suppress,
                 allowed_mentions=allowed_mentions,
@@ -965,12 +1008,14 @@ class Paginator(discord.ui.View):
                 msg = await target.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
+                    files=page_content.files,
                     view=self,
                 )
             elif interaction.response.is_done():
                 msg = await interaction.followup.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
+                    files=page_content.files,
                     view=self,
                     ephemeral=ephemeral,
                 )
@@ -981,6 +1026,7 @@ class Paginator(discord.ui.View):
                 msg = await interaction.response.send_message(
                     content=page_content.content,
                     embeds=page_content.embeds,
+                    files=page_content.files,
                     view=self,
                     ephemeral=ephemeral,
                 )
@@ -992,18 +1038,21 @@ class Paginator(discord.ui.View):
                 msg = await ctx.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
+                    files=page_content.files,
                     view=self,
                 )
             else:
                 msg = await ctx.respond(
                     content=page_content.content,
                     embeds=page_content.embeds,
+                    files=page_content.files,
                     view=self,
                 )
         if isinstance(msg, (discord.Message, discord.WebhookMessage)):
             self.message = msg
         elif isinstance(msg, discord.Interaction):
             self.message = await msg.original_message()
+
         return self.message
 
 
