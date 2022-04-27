@@ -97,11 +97,6 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
 
-async def _single_delete_strategy(messages: Iterable[Message], *, reason: Optional[str] = None):
-    for m in messages:
-        await m.delete(reason=reason)
-
-
 class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
     """Represents a Discord text channel.
 
@@ -135,9 +130,9 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         The category channel ID this channel belongs to, if applicable.
     topic: Optional[:class:`str`]
         The channel's topic. ``None`` if it doesn't exist.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     last_message_id: Optional[:class:`int`]
         The last message ID of the message sent to this channel. It may
         *not* point to an existing or valid message.
@@ -197,7 +192,7 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.topic: Optional[str] = data.get("topic")
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self.nsfw: bool = data.get("nsfw", False)
         # Does this need coercion into `int`? No idea yet.
         self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
@@ -494,57 +489,17 @@ class TextChannel(discord.abc.Messageable, discord.abc.GuildChannel, Hashable):
         List[:class:`.Message`]
             The list of messages that were deleted.
         """
-
-        if check is MISSING:
-            check = lambda m: True
-
-        iterator = self.history(
+        return await discord.abc._purge_messages_helper(
+            self,
             limit=limit,
+            check=check,
             before=before,
             after=after,
-            oldest_first=oldest_first,
             around=around,
+            oldest_first=oldest_first,
+            bulk=bulk,
+            reason=reason,
         )
-        ret: List[Message] = []
-        count = 0
-
-        minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
-        strategy = self.delete_messages if bulk else _single_delete_strategy
-
-        async for message in iterator:
-            if count == 100:
-                to_delete = ret[-100:]
-                await strategy(to_delete, reason=reason)
-                count = 0
-                await asyncio.sleep(1)
-
-            if not check(message):
-                continue
-
-            if message.id < minimum_time:
-                # older than 14 days old
-                if count == 1:
-                    await ret[-1].delete(reason=reason)
-                elif count >= 2:
-                    to_delete = ret[-count:]
-                    await strategy(to_delete, reason=reason)
-
-                count = 0
-                strategy = _single_delete_strategy
-
-            count += 1
-            ret.append(message)
-
-        # SOme messages remaining to poll
-        if count >= 2:
-            # more than 2 messages -> bulk delete
-            to_delete = ret[-count:]
-            await strategy(to_delete, reason=reason)
-        elif count == 1:
-            # delete a single message
-            await ret[-1].delete(reason=reason)
-
-        return ret
 
     async def webhooks(self) -> List[Webhook]:
         """|coro|
@@ -833,6 +788,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "category_id",
         "rtc_region",
         "video_quality_mode",
+        "last_message_id",
     )
 
     def __init__(
@@ -859,7 +815,8 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
         self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.position: int = data["position"]
+        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+        self.position: int = data.get("position")
         self.bitrate: int = data.get("bitrate")
         self.user_limit: int = data.get("user_limit")
         self._fill_overwrites(data)
@@ -914,7 +871,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         return base
 
 
-class VoiceChannel(VocalGuildChannel):
+class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
     """Represents a Discord guild voice channel.
 
     .. container:: operations
@@ -945,9 +902,9 @@ class VoiceChannel(VocalGuildChannel):
         The channel ID.
     category_id: Optional[:class:`int`]
         The category channel ID this channel belongs to, if applicable.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
@@ -960,6 +917,9 @@ class VoiceChannel(VocalGuildChannel):
     video_quality_mode: :class:`VideoQualityMode`
         The camera video quality for the voice channel's participants.
 
+        .. versionadded:: 2.0
+    last_message_id: Optional[:class:`int`]
+        The ID of the last message sent to this channel. It may not always point to an existing or valid message.
         .. versionadded:: 2.0
     """
 
@@ -978,6 +938,251 @@ class VoiceChannel(VocalGuildChannel):
         ]
         joined = " ".join("%s=%r" % t for t in attrs)
         return f"<{self.__class__.__name__} {joined}>"
+
+    async def _get_channel(self):
+        return self
+
+    @property
+    def last_message(self) -> Optional[Message]:
+        """Fetches the last message from this channel in cache.
+
+        The message might not be valid or point to an existing message.
+
+        .. admonition:: Reliable Fetching
+            :class: helpful
+
+            For a slightly more reliable method of fetching the
+            last message, consider using either :meth:`history`
+            or :meth:`fetch_message` with the :attr:`last_message_id`
+            attribute.
+
+        Returns
+        ---------
+        Optional[:class:`Message`]
+            The last message in this channel or ``None`` if not found.
+        """
+        return self._state._get_message(self.last_message_id) if self.last_message_id else None
+
+    def get_partial_message(self, message_id: int, /) -> PartialMessage:
+        """Creates a :class:`PartialMessage` from the message ID.
+
+        This is useful if you want to work with a message and only have its ID without
+        doing an unnecessary API call.
+
+        .. versionadded:: 1.6
+
+        Parameters
+        ------------
+        message_id: :class:`int`
+            The message ID to create a partial message for.
+
+        Returns
+        ---------
+        :class:`PartialMessage`
+            The partial message.
+        """
+
+        from .message import PartialMessage
+
+        return PartialMessage(channel=self, id=message_id)
+
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Deletes a list of messages. This is similar to :meth:`Message.delete`
+        except it bulk deletes multiple messages.
+
+        As a special case, if the number of messages is 0, then nothing
+        is done. If the number of messages is 1 then single message
+        delete is done. If it's more than two, then bulk delete is used.
+
+        You cannot bulk delete more than 100 messages or messages that
+        are older than 14 days old.
+
+        You must have the :attr:`~Permissions.manage_messages` permission to
+        use this.
+
+        Parameters
+        -----------
+        messages: Iterable[:class:`abc.Snowflake`]
+            An iterable of messages denoting which ones to bulk delete.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
+
+        Raises
+        ------
+        ClientException
+            The number of messages to delete was more than 100.
+        Forbidden
+            You do not have proper permissions to delete the messages.
+        NotFound
+            If single delete, then the message was already deleted.
+        HTTPException
+            Deleting the messages failed.
+        """
+        if not isinstance(messages, (list, tuple)):
+            messages = list(messages)
+
+        if len(messages) == 0:
+            return  # do nothing
+
+        if len(messages) == 1:
+            message_id: int = messages[0].id
+            await self._state.http.delete_message(self.id, message_id, reason=reason)
+            return
+
+        if len(messages) > 100:
+            raise ClientException("Can only bulk delete messages up to 100 messages")
+
+        message_ids: SnowflakeList = [m.id for m in messages]
+        await self._state.http.delete_messages(self.id, message_ids, reason=reason)
+
+    async def purge(
+        self,
+        *,
+        limit: Optional[int] = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: Optional[SnowflakeTime] = None,
+        after: Optional[SnowflakeTime] = None,
+        around: Optional[SnowflakeTime] = None,
+        oldest_first: Optional[bool] = False,
+        bulk: bool = True,
+        reason: Optional[str] = None,
+    ) -> List[Message]:
+        """|coro|
+
+        Purges a list of messages that meet the criteria given by the predicate
+        ``check``. If a ``check`` is not provided then all messages are deleted
+        without discrimination.
+
+        You must have the :attr:`~Permissions.manage_messages` permission to
+        delete messages even if they are your own.
+        The :attr:`~Permissions.read_message_history` permission is
+        also needed to retrieve message history.
+
+        Examples
+        ---------
+
+        Deleting bot's messages ::
+
+            def is_me(m):
+                return m.author == client.user
+
+            deleted = await channel.purge(limit=100, check=is_me)
+            await channel.send(f'Deleted {len(deleted)} message(s)')
+
+        Parameters
+        -----------
+        limit: Optional[:class:`int`]
+            The number of messages to search through. This is not the number
+            of messages that will be deleted, though it can be.
+        check: Callable[[:class:`Message`], :class:`bool`]
+            The function used to check if a message should be deleted.
+            It must take a :class:`Message` as its sole parameter.
+        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``before`` in :meth:`history`.
+        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``after`` in :meth:`history`.
+        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``around`` in :meth:`history`.
+        oldest_first: Optional[:class:`bool`]
+            Same as ``oldest_first`` in :meth:`history`.
+        bulk: :class:`bool`
+            If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
+            a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
+            fall back to single delete if messages are older than two weeks.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have proper permissions to do the actions required.
+        HTTPException
+            Purging the messages failed.
+
+        Returns
+        --------
+        List[:class:`.Message`]
+            The list of messages that were deleted.
+        """
+        return await discord.abc._purge_messages_helper(
+            self,
+            limit=limit,
+            check=check,
+            before=before,
+            after=after,
+            around=around,
+            oldest_first=oldest_first,
+            bulk=bulk,
+            reason=reason,
+        )
+
+    async def webhooks(self) -> List[Webhook]:
+        """|coro|
+
+        Gets the list of webhooks from this channel.
+
+        Requires :attr:`~.Permissions.manage_webhooks` permissions.
+
+        Raises
+        -------
+        Forbidden
+            You don't have permissions to get the webhooks.
+
+        Returns
+        --------
+        List[:class:`Webhook`]
+            The webhooks for this channel.
+        """
+
+        from .webhook import Webhook
+
+        data = await self._state.http.channel_webhooks(self.id)
+        return [Webhook.from_state(d, state=self._state) for d in data]
+
+    async def create_webhook(
+        self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None
+    ) -> Webhook:
+        """|coro|
+
+        Creates a webhook for this channel.
+
+        Requires :attr:`~.Permissions.manage_webhooks` permissions.
+
+        .. versionchanged:: 1.1
+            Added the ``reason`` keyword-only parameter.
+
+        Parameters
+        -------------
+        name: :class:`str`
+            The webhook's name.
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the webhook's default avatar.
+            This operates similarly to :meth:`~ClientUser.edit`.
+        reason: Optional[:class:`str`]
+            The reason for creating this webhook. Shows up in the audit logs.
+
+        Raises
+        -------
+        HTTPException
+            Creating the webhook failed.
+        Forbidden
+            You do not have permissions to create a webhook.
+
+        Returns
+        --------
+        :class:`Webhook`
+            The created webhook.
+        """
+
+        from .webhook import Webhook
+
+        if avatar is not None:
+            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+
+        data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
+        return Webhook.from_state(data, state=self._state)
 
     @property
     def type(self) -> ChannelType:
@@ -1169,9 +1374,9 @@ class StageChannel(VocalGuildChannel):
         The channel's topic. ``None`` if it isn't set.
     category_id: Optional[:class:`int`]
         The category channel ID this channel belongs to, if applicable.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0.
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
@@ -1263,6 +1468,7 @@ class StageChannel(VocalGuildChannel):
         topic: str,
         privacy_level: StagePrivacyLevel = MISSING,
         reason: Optional[str] = None,
+        send_notification: Optional[bool] = False,
     ) -> StageInstance:
         """|coro|
 
@@ -1281,6 +1487,9 @@ class StageChannel(VocalGuildChannel):
             The stage instance's privacy level. Defaults to :attr:`StagePrivacyLevel.guild_only`.
         reason: :class:`str`
             The reason the stage instance was created. Shows up on the audit log.
+        send_notification: :class:`bool`
+            Send a notification to everyone in the server that the stage instance has started.
+            Defaults to ``False``. Requires the ``mention_everyone`` permission.
 
         Raises
         ------
@@ -1297,7 +1506,7 @@ class StageChannel(VocalGuildChannel):
             The newly created stage instance.
         """
 
-        payload: Dict[str, Any] = {"channel_id": self.id, "topic": topic}
+        payload: Dict[str, Any] = {"channel_id": self.id, "topic": topic, "send_start_notification": send_notification}
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):
@@ -1442,9 +1651,9 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         The guild the category belongs to.
     id: :class:`int`
         The category channel ID.
-    position: :class:`int`
+    position: Optional[:class:`int`]
         The position in the category list. This is a number that starts at 0. e.g. the
-        top category is position 0.
+        top category is position 0. Can be ``None`` if the channel was received in an interaction.
     nsfw: :class:`bool`
         If the channel is marked as "not safe for work".
 
@@ -1477,7 +1686,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self.nsfw: bool = data.get("nsfw", False)
-        self.position: int = data["position"]
+        self.position: int = data.get("position")
         self._fill_overwrites(data)
 
     @property
@@ -1715,6 +1924,14 @@ class DMChannel(discord.abc.Messageable, Hashable):
         return ChannelType.private
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/@me/{self.id}"
+
+    @property
     def created_at(self) -> datetime.datetime:
         """:class:`datetime.datetime`: Returns the direct message channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
@@ -1872,6 +2089,14 @@ class GroupChannel(discord.abc.Messageable, Hashable):
     def created_at(self) -> datetime.datetime:
         """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/@me/{self.id}"
 
     def permissions_for(self, obj: Snowflake, /) -> Permissions:
         """Handles permission resolution for a :class:`User`.

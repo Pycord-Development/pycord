@@ -49,17 +49,20 @@ from typing import (
     overload,
 )
 
-from ..enums import ChannelType, SlashCommandOptionType
+from ..channel import _guild_channel_factory
+from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
-    ClientException,
-    ValidationError,
-    NotFound,
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
+    ClientException,
+    NotFound,
+    ValidationError,
 )
 from ..member import Member
 from ..message import Attachment, Message
+from ..object import Object
+from ..role import Role
 from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
@@ -142,11 +145,26 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
             return function
 
 
+def _validate_names(obj):
+    validate_chat_input_name(obj.name)
+    if obj.name_localizations:
+        for locale, string in obj.name_localizations.items():
+            validate_chat_input_name(string, locale=locale)
+
+
+def _validate_descriptions(obj):
+    validate_chat_input_description(obj.description)
+    if obj.description_localizations:
+        for locale, string in obj.description_localizations.items():
+            validate_chat_input_description(string, locale=locale)
+
+
 class _BaseCommand:
     __slots__ = ()
 
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
+    __original_kwargs__: Dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
@@ -400,15 +418,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        
+
         This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -425,15 +443,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        
+
         This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -591,15 +609,17 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        validate_chat_input_name(self.name)
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        _validate_names(self)
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
         )
-        validate_chat_input_description(description)
+
         self.description: str = description
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
+        _validate_descriptions(self)
+
         self.attached_to_group: bool = False
 
         self.cog = None
@@ -667,8 +687,8 @@ class SlashCommand(ApplicationCommand):
                 option.name = p_name
             option._parameter_name = p_name
 
-            validate_chat_input_name(option.name)
-            validate_chat_input_description(option.description)
+            _validate_names(option)
+            _validate_descriptions(option)
 
             final_options.append(option)
 
@@ -696,8 +716,8 @@ class SlashCommand(ApplicationCommand):
             lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
-            validate_chat_input_name(o.name)
-            validate_chat_input_description(o.description)
+            _validate_names(o)
+            _validate_descriptions(o)
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
@@ -731,11 +751,13 @@ class SlashCommand(ApplicationCommand):
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
-            "name_localizations": self.name_localizations,
             "description": self.description,
-            "description_localizations": self.description_localizations,
             "options": [o.to_dict() for o in self.options],
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
@@ -755,29 +777,50 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            if SlashCommandOptionType.user.value <= op.input_type.value <= SlashCommandOptionType.role.value:
-                if ctx.guild is None and op.input_type.name == "user":
-                    _data = ctx.interaction.data["resolved"]["users"][arg]
-                    _data["id"] = int(arg)
-                    arg = User(state=ctx.interaction._state, data=_data)
+            if op.input_type in (
+                SlashCommandOptionType.user,
+                SlashCommandOptionType.role,
+                SlashCommandOptionType.channel,
+                SlashCommandOptionType.attachment,
+                SlashCommandOptionType.mentionable,
+            ):
+                resolved = ctx.interaction.data.get("resolved", {})
+                if (
+                    op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
+                    and (_data := resolved.get("members", {}).get(arg)) is not None
+                ):
+                    # The option type is a user, we resolved a member from the snowflake and assigned it to _data
+                    if (_user_data := resolved.get("users", {}).get(arg)) is not None:
+                        # We resolved the user from the user id
+                        _data["user"] = _user_data
+                    arg = Member(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                elif op.input_type is SlashCommandOptionType.mentionable:
+                    if (_data := resolved.get("users", {}).get(arg)) is not None:
+                        arg = User(state=ctx.interaction._state, data=_data)
+                    elif (_data := resolved.get("roles", {}).get(arg)) is not None:
+                        arg = Role(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                    else:
+                        arg = Object(id=int(arg))
+                elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
+                    obj_type = None
+                    kw = {}
+                    if op.input_type is SlashCommandOptionType.user:
+                        obj_type = User
+                    elif op.input_type is SlashCommandOptionType.role:
+                        obj_type = Role
+                        kw["guild"] = ctx.guild
+                    elif op.input_type is SlashCommandOptionType.channel:
+                        obj_type = _guild_channel_factory(_data["type"])[0]
+                        kw["guild"] = ctx.guild
+                    elif op.input_type is SlashCommandOptionType.attachment:
+                        obj_type = Attachment
+                    arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
-                    name = "member" if op.input_type.name == "user" else op.input_type.name
-                    arg = await get_or_fetch(ctx.guild, name, int(arg), default=int(arg))
-
-            elif op.input_type == SlashCommandOptionType.mentionable:
-                arg_id = int(arg)
-                try:
-                    arg = await get_or_fetch(ctx.guild, "member", arg_id)
-                except NotFound:
-                    arg = await get_or_fetch(ctx.guild, "role", arg_id)
+                    # We couldn't resolve the object, so we just return an empty object
+                    arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
-
-            elif op.input_type == SlashCommandOptionType.attachment:
-                _data = ctx.interaction.data["resolved"]["attachments"][arg]
-                _data["id"] = int(arg)
-                arg = Attachment(state=ctx.interaction._state, data=_data)
 
             kwargs[op._parameter_name] = arg
 
@@ -887,6 +930,7 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+    __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -921,12 +965,13 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        self.name = name
+        self.name = str(name)
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
+        self.attached_to_group: bool = False
         self.checks = kwargs.get("checks", [])
 
         self._before_invoke = None
@@ -938,6 +983,8 @@ class SlashCommandGroup(ApplicationCommand):
         self.default_member_permissions: Optional[Permissions] = kwargs.get("default_member_permissions", None)
         self.dm_permission: Optional[bool] = kwargs.get("dm_permission", None)
 
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
     @property
     def module(self) -> Optional[str]:
@@ -949,6 +996,10 @@ class SlashCommandGroup(ApplicationCommand):
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
         }
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not None:
+            as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
@@ -961,7 +1012,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def command(self, **kwargs) -> SlashCommand:
+    def command(self, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> SlashCommand:
             command = SlashCommand(func, parent=self, **kwargs)
             self.subcommands.append(command)
@@ -1085,8 +1136,9 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value for param, value in self.__original_kwargs__.items()
-                if param not in ('name', 'description')
+                param: value
+                for param, value in self.__original_kwargs__.items()
+                if param not in ("name", "description")
             },
         )
         return self._ensure_assignment_on_copy(ret)
@@ -1126,6 +1178,8 @@ class ContextMenuCommand(ApplicationCommand):
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    .. versionadded:: 2.0
+
     Attributes
     -----------
     name: :class:`str`
@@ -1150,8 +1204,9 @@ class ContextMenuCommand(ApplicationCommand):
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-
-        .. versionadded:: 2.0
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -1165,6 +1220,8 @@ class ContextMenuCommand(ApplicationCommand):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
+
+        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
 
         # Discord API doesn't support setting descriptions for context menu commands
         # so it must be empty
@@ -1233,6 +1290,9 @@ class ContextMenuCommand(ApplicationCommand):
 
         if self.default_member_permissions is not None:
             as_dict["default_member_permissions"] = self.default_member_permissions.value
+
+        if self.name_localizations is not None:
+            as_dict["name_localizations"] = self.name_localizations
 
         return as_dict
 
@@ -1374,7 +1434,17 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
+            author_id = int(message["author"]["id"])
+            self_or_system_message: bool = ctx.bot.user.id == author_id or try_enum(
+                MessageType, message["type"]
+            ) not in (
+                MessageType.default,
+                MessageType.reply,
+                MessageType.application_command,
+                MessageType.thread_starter_message,
+            )
+            user_id = ctx.author.id if self_or_system_message else author_id
+            data = await ctx.interaction._state.http.start_private_message(user_id)
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
@@ -1424,9 +1494,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1437,9 +1507,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1450,9 +1520,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1470,9 +1540,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
-    
+
     .. versionadded:: 2.0
-    
+
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1481,7 +1551,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
-        
+
     Raises
     -------
     TypeError
@@ -1500,12 +1570,12 @@ def application_command(cls=SlashCommand, **attrs):
 
 def command(**kwargs):
     """An alias for :meth:`application_command`.
-    
+
     .. note::
         This decorator is overridden by :func:`commands.command`.
-        
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]
@@ -1515,27 +1585,81 @@ def command(**kwargs):
 
 
 docs = "https://discord.com/developers/docs"
+valid_locales = [
+    "da",
+    "de",
+    "en-GB",
+    "en-US",
+    "es-ES",
+    "fr",
+    "hr",
+    "it",
+    "lt",
+    "hu",
+    "nl",
+    "no",
+    "pl",
+    "pt-BR",
+    "ro",
+    "fi",
+    "sv-SE",
+    "vi",
+    "tr",
+    "cs",
+    "el",
+    "bg",
+    "ru",
+    "uk",
+    "hi",
+    "th",
+    "zh-CN",
+    "ja",
+    "zh-TW",
+    "ko",
+]
 
 
 # Validation
-def validate_chat_input_name(name: Any):
+def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[\w-]{1,32}$
-    if not isinstance(name, str):
-        raise TypeError(f"Chat input command names and options must be of type str. Received {name}")
-    if not re.match(r"^[\w-]{1,32}$", name):
+    if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            r'Chat input command names and options must follow the regex "^[\w-]{1,32}$". For more information, see '
-            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. Received "
-            f"{name}"
+            f"Locale '{locale}' is not a valid locale, "
+            f"see {docs}/reference#locales for list of supported locales."
         )
-    if not 1 <= len(name) <= 32:
-        raise ValidationError(f"Chat input command names and options must be 1-32 characters long. Received {name}")
-    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(f"Chat input command names and options must be lowercase. Received {name}")
+    error = None
+    if not isinstance(name, str):
+        error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
+    elif not re.match(r"^[\w-]{1,32}$", name):
+        error = ValidationError(
+            r"Command names and options must follow the regex \"^[\w-]{1,32}$\". For more information, see "
+            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
+            f"Received \"{name}\""
+        )
+    elif not 1 <= len(name) <= 32:
+        error = ValidationError(f"Command names and options must be 1-32 characters long. Received \"{name}\"")
+    elif not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+        error = ValidationError(f"Command names and options must be lowercase. Received \"{name}\"")
+
+    if error:
+        if locale:
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error
 
 
-def validate_chat_input_description(description: Any):
+def validate_chat_input_description(description: Any, locale: Optional[str] = None):
+    if locale is not None and locale not in valid_locales:
+        raise ValidationError(
+            f"Locale '{locale}' is not a valid locale, "
+            f"see {docs}/reference#locales for list of supported locales."
+        )
+    error = None
     if not isinstance(description, str):
-        raise TypeError(f"Command description must be of type str. Received {description}")
-    if not 1 <= len(description) <= 100:
-        raise ValidationError(f"Command description must be 1-100 characters long. Received {description}")
+        error = TypeError(f"Command and option description must be of type str. Received \"{description}\"")
+    elif not 1 <= len(description) <= 100:
+        error = ValidationError(f"Command and option description must be 1-100 characters long. Received \"{description}\"")
+
+    if error:
+        if locale:
+            error.args = (error.args[0]+f" in locale {locale}",)
+        raise error

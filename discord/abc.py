@@ -27,11 +27,13 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import time
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
     Dict,
+    Iterable,
     List,
     Optional,
     Protocol,
@@ -79,6 +81,7 @@ if TYPE_CHECKING:
         GroupChannel,
         PartialMessageable,
         TextChannel,
+        VoiceChannel,
     )
     from .client import Client
     from .embeds import Embed
@@ -95,11 +98,80 @@ if TYPE_CHECKING:
     from .ui.view import View
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[TextChannel, Thread, DMChannel, PartialMessageable]
+    PartialMessageableChannel = Union[TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
 
 MISSING = utils.MISSING
+
+
+async def _single_delete_strategy(messages: Iterable[Message], *, reason: Optional[str] = None):
+    for m in messages:
+        await m.delete(reason=reason)
+
+
+async def _purge_messages_helper(
+    channel: Union[TextChannel, Thread, VoiceChannel],
+    *,
+    limit: Optional[int] = 100,
+    check: Callable[[Message], bool] = MISSING,
+    before: Optional[SnowflakeTime] = None,
+    after: Optional[SnowflakeTime] = None,
+    around: Optional[SnowflakeTime] = None,
+    oldest_first: Optional[bool] = False,
+    bulk: bool = True,
+    reason: Optional[str] = None,
+) -> List[Message]:
+    if check is MISSING:
+        check = lambda m: True
+
+    iterator = channel.history(
+        limit=limit,
+        before=before,
+        after=after,
+        oldest_first=oldest_first,
+        around=around,
+    )
+    ret: List[Message] = []
+    count = 0
+
+    minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
+    strategy = channel.delete_messages if bulk else _single_delete_strategy
+
+    async for message in iterator:
+        if count == 100:
+            to_delete = ret[-100:]
+            await strategy(to_delete, reason=reason)
+            count = 0
+            await asyncio.sleep(1)
+
+        if not check(message):
+            continue
+
+        if message.id < minimum_time:
+            # older than 14 days old
+            if count == 1:
+                await ret[-1].delete(reason=reason)
+            elif count >= 2:
+                to_delete = ret[-count:]
+                await strategy(to_delete, reason=reason)
+
+            count = 0
+            strategy = _single_delete_strategy
+
+        count += 1
+        ret.append(message)
+
+    # Some messages remaining to poll
+    if count >= 2:
+        # more than 2 messages -> bulk delete
+        to_delete = ret[-count:]
+        await strategy(to_delete, reason=reason)
+    elif count == 1:
+        # delete a single message
+        await ret[-1].delete(reason=reason)
+
+    return ret
 
 
 class _Undefined:
@@ -440,6 +512,14 @@ class GuildChannel:
     def mention(self) -> str:
         """:class:`str`: The string that allows you to mention the channel."""
         return f"<#{self.id}>"
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.guild.id}/{self.id}"
 
     @property
     def created_at(self) -> datetime:
@@ -1362,11 +1442,11 @@ class Messageable:
 
         if allowed_mentions is None:
             allowed_mentions = state.allowed_mentions and state.allowed_mentions.to_dict()
-
         elif state.allowed_mentions is not None:
             allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             allowed_mentions = allowed_mentions.to_dict()
+
         if mention_author is not None:
             allowed_mentions = allowed_mentions or AllowedMentions().to_dict()
             allowed_mentions["replied_user"] = bool(mention_author)

@@ -67,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator, BanIterator
+from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -88,12 +88,7 @@ if TYPE_CHECKING:
     import datetime
 
     from .abc import Snowflake, SnowflakeTime
-    from .channel import (
-        CategoryChannel,
-        StageChannel,
-        TextChannel,
-        VoiceChannel,
-    )
+    from .channel import CategoryChannel, StageChannel, TextChannel, VoiceChannel
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
@@ -571,6 +566,14 @@ class Guild(Hashable):
         .. versionadded:: 2.0
         """
         return list(self._threads.values())
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the guild.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.id}"
 
     @property
     def large(self) -> bool:
@@ -1885,8 +1888,9 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    def bans(self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None,
-             after: Optional[SnowflakeTime] = None) -> BanIterator:
+    def bans(
+        self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None, after: Optional[SnowflakeTime] = None
+    ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
