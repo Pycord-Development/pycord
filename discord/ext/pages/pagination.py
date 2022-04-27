@@ -159,6 +159,19 @@ class Page:
         """
         pass
 
+    def update_files(self) -> Optional[List[discord.File]]:
+        """Updates the files associated with the page by re-uploading them.
+        Typically used when the page is changed."""
+        for file in self._files:
+            with open(file.fp.name, "rb") as fp:  # type: ignore
+                self._files[self._files.index(file)] = discord.File(
+                    fp,  # type: ignore
+                    filename=file.filename,
+                    description=file.description,
+                    spoiler=file.spoiler,
+                )
+        return self._files
+
     @property
     def content(self) -> Optional[str]:
         """Gets the content for the page."""
@@ -486,7 +499,14 @@ class Paginator(discord.ui.View):
         if self.disable_on_timeout:
             for item in self.children:
                 item.disabled = True
-            await self.message.edit(view=self)
+            page = self.pages[self.current_page]
+            page = self.get_page_content(page)
+            files = page.update_files()
+            await self.message.edit(
+                view=self,
+                files=files or [],
+                attachments=[],
+            )
 
     async def disable(
         self,
@@ -575,14 +595,7 @@ class Paginator(discord.ui.View):
         if page.custom_view:
             self.update_custom_view(page.custom_view)
 
-        for file in page.files:
-            with open(file.fp.name, "rb") as fp:  # type: ignore
-                page.files[page.files.index(file)] = discord.File(
-                    fp,  # type: ignore
-                    filename=file.filename,
-                    description=file.description,
-                    spoiler=file.spoiler,
-                )
+        files = page.update_files()
 
         if interaction:
             await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
@@ -591,7 +604,7 @@ class Paginator(discord.ui.View):
                 content=page.content,
                 embeds=page.embeds,
                 attachments=[],
-                files=page.files or [],
+                files=files or [],
                 view=self,
             )
         else:
@@ -599,7 +612,7 @@ class Paginator(discord.ui.View):
                 content=page.content,
                 embeds=page.embeds,
                 attachments=[],
-                files=page.files or [],
+                files=files or [],
                 view=self,
             )
         if self.trigger_on_display:
