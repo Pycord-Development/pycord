@@ -573,7 +573,6 @@ class ApplicationCommandMixin(ABC):
         register_guild_commands: bool = True,
         check_guilds: Optional[List[int]] = [],
         delete_exiting: bool = True,
-        _register_permissions: bool = True,  # TODO: Remove for perms v2
     ) -> None:
         """|coro|
 
