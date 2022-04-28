@@ -11,7 +11,9 @@
 #
 name: "CodeQL"
 
-on: [ push, pull_request ]
+on:
+  push: null
+  pull_request: null
   schedule:
     - cron: '26 6 * * 6'
 
