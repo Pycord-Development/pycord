@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple, Type, Union
 
-from discord.errors import ClientException, DiscordException
+from discord.errors import *
 
 if TYPE_CHECKING:
     from inspect import Parameter
@@ -40,6 +40,8 @@ if TYPE_CHECKING:
     from .converter import Converter
     from .cooldowns import BucketType, Cooldown
     from .flags import Flag
+
+    
 
 
 __all__ = (
@@ -94,7 +96,244 @@ __all__ = (
     "MissingFlagArgument",
     "TooManyFlags",
     "MissingRequiredFlag",
+    "NoMoreItems",
+    "GatewayNotFound",
+    "HTTPException",
+    "Forbidden",
+    "NotFound",
+    "DiscordServerError",
+    "InvalidData",
+    "InvalidArgument",
+    "LoginFailure",
+    "ConnectionClosed",
+    "PrivilegedIntentsRequired",
+    "InteractionResponded",
+    "ExtensionError",
+    "ExtensionAlreadyLoaded",
+    "ExtensionNotLoaded",
+    "NoEntryPointError",
+    "ExtensionFailed",
+    "ExtensionNotFound",
+    "ApplicationCommandError",
+    "CheckFailure",
+    "ApplicationCommandInvokeError",
 )
+
+class ApplicationCommandInvokeError(ApplicationCommandInvokeError):
+    """Exception raised when the command being invoked raised an exception.
+    This inherits from :exc:`ApplicationCommandError`
+    Attributes
+    -----------
+    original: :exc:`Exception`
+        The original exception that was raised. You can also get this via
+        the ``__cause__`` attribute.
+    """
+    pass
+
+
+class CheckFailure(CheckFailure):
+    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
+    This inherits from :exc:`ApplicationCommandError`
+    """
+
+    pass
+
+
+class ApplicationCommandError(ApplicationCommandError):
+    r"""The base exception type for all application command related errors.
+    This inherits from :exc:`DiscordException`.
+    This exception and exceptions inherited from it are handled
+    in a special way as they are caught and passed into a special event
+    from :class:`.Bot`\, :func:`.on_command_error`.
+    """
+    pass
+
+
+class ExtensionNotFound(ExtensionNotFound):
+    """An exception raised when an extension is not found.
+    This inherits from :exc:`ExtensionError`
+    .. versionchanged:: 1.3
+        Made the ``original`` attribute always None.
+    Attributes
+    -----------
+    name: :class:`str`
+        The extension that had the error.
+    """
+    pass
+
+
+class ExtensionFailed(ExtensionFailed):
+    """An exception raised when an extension failed to load during execution of the module or ``setup`` entry point.
+    This inherits from :exc:`ExtensionError`
+    Attributes
+    -----------
+    name: :class:`str`
+        The extension that had the error.
+    original: :exc:`Exception`
+        The original exception that was raised. You can also get this via
+        the ``__cause__`` attribute.
+    """
+    pass
+
+class NoEntryPointError(NoEntryPointError):
+    """An exception raised when an extension was not loaded.
+    This inherits from :exc:`ExtensionError`
+    """
+    pass
+
+
+class ExtensionNotLoaded(ExtensionError):
+    """An exception raised when an extension was not loaded.
+    This inherits from :exc:`ExtensionError`
+    """
+    pass
+    
+
+
+class ExtensionAlreadyLoaded(ExtensionAlreadyLoaded):
+    """An exception raised when an extension has already been loaded.
+    This inherits from :exc:`ExtensionError`
+    """
+    pass
+
+class ExtensionError(ExtensionError):
+    """Base exception for extension related errors.
+    This inherits from :exc:`~discord.DiscordException`.
+    Attributes
+    ------------
+    name: :class:`str`
+        The extension that had an error.
+    """
+    pass
+
+
+
+class InteractionResponded(InteractionResponded):
+    """Exception that's raised when sending another interaction response using
+    :class:`InteractionResponse` when one has already been done before.
+    An interaction can only respond once.
+    .. versionadded:: 2.0
+    Attributes
+    -----------
+    interaction: :class:`Interaction`
+        The interaction that's already been responded to.
+    """
+    pass
+
+
+class PrivilegedIntentsRequired(PrivilegedIntentsRequired):
+    """Exception that's raised when the gateway is requesting privileged intents
+    but they're not ticked in the developer page yet.
+    Go to https://discord.com/developers/applications/ and enable the intents
+    that are required. Currently these are as follows:
+    - :attr:`Intents.members`
+    - :attr:`Intents.presences`
+    - :attr:`Intents.message_content`
+    Attributes
+    -----------
+    shard_id: Optional[:class:`int`]
+        The shard ID that got closed if applicable.
+    """
+    pass
+
+
+class ConnectionClosed(ConnectionClosed):
+    """Exception that's raised when the gateway connection is
+    closed for reasons that could not be handled internally.
+    Attributes
+    -----------
+    code: :class:`int`
+        The close code of the websocket.
+    reason: :class:`str`
+        The reason provided for the closure.
+    shard_id: Optional[:class:`int`]
+        The shard ID that got closed if applicable.
+    """
+    pass
+
+
+class LoginFailure(LoginFailure):
+    """Exception that's raised when the :meth:`Client.login` function
+    fails to log you in from improper credentials or some other misc.
+    failure.
+    """
+
+    pass
+
+
+class InvalidArgument(InvalidArgument):
+    """Exception that's raised when an argument to a function
+    is invalid some way (e.g. wrong value or wrong type).
+    This could be considered the analogous of ``ValueError`` and
+    ``TypeError`` except inherited from :exc:`ClientException` and thus
+    :exc:`DiscordException`.
+    """
+
+    pass
+
+
+class InvalidData(InvalidData):
+    """Exception that's raised when the library encounters unknown
+    or invalid data from Discord.
+    """
+
+    pass
+
+
+class DiscordServerError(DiscordServerError):
+    """Exception that's raised for when a 500 range status code occurs.
+    Subclass of :exc:`HTTPException`.
+    .. versionadded:: 1.5
+    """
+
+    pass
+
+class NotFound(NotFound):
+    """Exception that's raised for when status code 404 occurs.
+    Subclass of :exc:`HTTPException`
+    """
+
+    pass
+
+
+class Forbidden(Forbidden):
+    """Exception that's raised for when status code 403 occurs.
+    Subclass of :exc:`HTTPException`
+    """
+
+    pass
+
+class HTTPException(HTTPException):
+    """Exception that's raised when an HTTP request operation fails.
+    Attributes
+    ------------
+    response: :class:`aiohttp.ClientResponse`
+        The response of the failed HTTP request. This is an
+        instance of :class:`aiohttp.ClientResponse`. In some cases
+        this could also be a :class:`requests.Response`.
+    text: :class:`str`
+        The text of the error. Could be an empty string.
+    status: :class:`int`
+        The status code of the HTTP request.
+    code: :class:`int`
+        The Discord specific error code for the failure.
+    """
+    pass
+
+
+class ValidationError(ValidationError):
+    """An Exception that is raised when there is a Validation Error."""
+
+    pass
+
+class GatewayNotFound(GatewayNotFound):
+    """An exception that is raised when the gateway for Discord could not be found"""
+    
+    pass
+class NoMoreItems(NoMoreItems):
+    """Exception that is raised when an async iteration operation has no more items."""
+    
+    pass
 
 
 class CommandError(DiscordException):
