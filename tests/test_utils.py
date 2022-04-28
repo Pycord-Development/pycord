@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any
+from typing import TypeVar, Tuple, Any, List, Dict
 
 import pytest
 
@@ -42,7 +42,7 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all,
+    async_all, get_or_fetch,
 )
 from .helpers import coroutine
 
@@ -157,3 +157,30 @@ async def test_async_all(size) -> None:  # type: ignore[no-untyped-def]
         values.append(coroutine(value) if random.choice((True, False)) else value)
 
     assert all(raw_values) == await async_all(values)
+
+
+async def test_get_or_fetch():
+    class Test:
+        def __init__(self, values: Dict[int, int]):
+            self.values = values
+
+        def get_x(self, key: int) -> int:
+            return self.values.get(key)
+
+        async def fetch_x(self, key: int) -> int:
+            return self.values[key]
+
+        async def _fetch_x(self, key: int) -> int:
+            return self.values[key]
+
+    test = Test({i: random.randint(0, 100) for i in range(100)})
+
+    while True:
+        for k, v in test.values.items():
+            assert v == await get_or_fetch(test, "x", k)
+        if test.get_x(0) is not None:
+            Test.get_x = lambda self, key: None
+        elif hasattr(Test, 'fetch_x'):
+            del Test.fetch_x
+        else:
+            break
