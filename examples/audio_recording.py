@@ -1,28 +1,26 @@
 import os
 
 import discord
-from discord.commands import ApplicationContext, Option
+from discord.commands import ApplicationContext, option
 
 bot = discord.Bot(debug_guilds=[...])
 bot.connections = {}
 
 
 @bot.command()
+@option("encoding", choices=[
+    "mp3",
+    "wav",
+    "pcm",
+    "ogg",
+    "mka",
+    "mkv",
+    "mp4",
+    "m4a",
+])
 async def start(
     ctx: ApplicationContext,
-    encoding: Option(
-        str,
-        choices=[
-            "mp3",
-            "wav",
-            "pcm",
-            "ogg",
-            "mka",
-            "mkv",
-            "mp4",
-            "m4a",
-        ],
-    ),
+        encoding: str
 ):
     """
     Record your voice!
