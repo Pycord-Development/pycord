@@ -648,7 +648,7 @@ class SlashCommand(ApplicationCommand):
         self.default_member_permissions: Optional[Permissions] = getattr(
             func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
         )
-        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_onlys", None))
+        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
     def _parse_options(self, params) -> List[Option]:
         if list(params.items())[0][0] == "self":
@@ -1244,7 +1244,7 @@ class ContextMenuCommand(ApplicationCommand):
         self.default_member_permissions: Optional[Permissions] = getattr(
             func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
         )
-        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_onlys", None))
+        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
         # Context Menu commands can't have parents
         self.parent = None
