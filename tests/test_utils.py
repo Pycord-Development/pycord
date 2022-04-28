@@ -61,6 +61,9 @@ def test_copy_doc() -> None:
     def bar(a, b):  # type: ignore[no-untyped-def]
         return a, b
 
+    foo(1, 2)
+    bar(1, 2)
+
     assert bar.__doc__ == foo.__doc__
     assert signature(bar) == signature(foo)
 
