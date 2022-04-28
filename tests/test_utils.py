@@ -105,6 +105,8 @@ def test_find_get() -> None:
         def __repr__(self) -> str:
             return f'<Obj {self.value}>'
 
+    repr(Obj(0))
+
     obj_list = [Obj(i) for i in range(10)]
     for i in range(11):
         for val in (
