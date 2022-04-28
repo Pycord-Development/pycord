@@ -28,18 +28,22 @@ from ..permissions import Permissions
 from .core import ApplicationCommand
 
 __all__ = (
-    "has_permissions",
+    "default_permissions",
     "guild_only",
 )
 
 
-
-def has_permissions(**perms: bool) -> Callable:
+def default_permissions(**perms: bool) -> Callable:
     """A decorator that limits the usage of a slash command to members with certain
     permissions.
 
     The permissions passed in must be exactly like the properties shown under
     :class:`.discord.Permissions`.
+
+    .. note::
+        These permissions can be updated by server administrators per-guild. As such, these are only "defaults", as the
+        name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you
+        should use an internal check such as :func:`~.ext.commands.has_permissions`.
 
     Parameters
     ------------
