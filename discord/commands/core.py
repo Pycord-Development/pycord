@@ -87,6 +87,9 @@ if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
     from ..cog import Cog
+    from .. import Permissions
+else:
+    Permissions = TypeVar("Permissions")
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
