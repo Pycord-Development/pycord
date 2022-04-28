@@ -380,6 +380,7 @@ class AuditLogAction(Enum):
     thread_create = 110
     thread_update = 111
     thread_delete = 112
+    application_command_permission_update = 121
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -431,6 +432,7 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
+            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -467,6 +469,8 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
+        elif v < 121:
+            return "application_command_permission"
 
 
 class UserFlags(Enum):
