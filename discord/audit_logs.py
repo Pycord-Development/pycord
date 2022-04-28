@@ -424,6 +424,8 @@ class AuditLogEntry(Hashable):
         self.reason = data.get("reason")
         self.extra = data.get("options")
 
+        # TODO: there's some new fields with perms V2
+
         if isinstance(self.action, enums.AuditLogAction) and self.extra:
             if self.action is enums.AuditLogAction.member_prune:
                 # member prune has two keys with useful information
