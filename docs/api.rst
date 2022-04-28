@@ -100,8 +100,9 @@ Application Commands
 Command Permission Decorators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. note:
-These can only be used with :class:`SlashCommand`s.
+.. note::
+    These can only be used with slash commands, not context menus.
+
 
 .. autofunction:: discord.commands.default_permissions
     :decorator:
