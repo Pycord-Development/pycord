@@ -475,7 +475,7 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if child not in exclusions:
+            if exclusions is None or child not in exclusions:
                 child.disabled = True
 
 
