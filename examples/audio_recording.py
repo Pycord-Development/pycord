@@ -20,7 +20,7 @@ bot.connections = {}
 ])
 async def start(
     ctx: ApplicationContext,
-        encoding: str
+    encoding: str
 ):
     """
     Record your voice!

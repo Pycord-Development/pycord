@@ -5,8 +5,6 @@ from discord import option
 from discord.commands import Option
 
 bot = discord.Bot()
-
-
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well
 
