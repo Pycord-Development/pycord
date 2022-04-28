@@ -96,6 +96,20 @@ AutoShardedBot
 Application Commands
 ---------------------
 
+
+Command Permission Decorators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note:
+These can only be used with :class:`SlashCommand`s.
+
+.. autofunction:: discord.commands.default_permissions
+    :decorator:
+
+.. autofunction:: discord.commands.guild_only
+    :decorator:
+
+
 ApplicationCommand
 ~~~~~~~~~~~~~~~~~~~
 
@@ -104,10 +118,10 @@ ApplicationCommand
 .. autoclass:: ApplicationCommand
     :members:
     
-.. autofunction:: discord.commands.core.application_command
+.. autofunction:: discord.commands.application_command
     :decorator:
 
-.. autofunction:: discord.commands.core.command
+.. autofunction:: discord.commands.command
     :decorator:
 
 SlashCommand
@@ -118,7 +132,7 @@ SlashCommand
 .. autoclass:: SlashCommand
     :members:
     
-.. autofunction:: discord.commands.core.slash_command
+.. autofunction:: discord.commands.slash_command
     :decorator:
 
 SlashCommandGroup
@@ -137,7 +151,7 @@ Option
 .. autoclass:: Option
     :members:
     
-.. autofunction:: discord.commands.core.Option
+.. autofunction:: discord.commands.Option
     :decorator:
 
 OptionChoice
@@ -156,7 +170,7 @@ UserCommand
 .. autoclass:: UserCommand
     :members:
     
-.. autofunction:: discord.commands.core.user_command
+.. autofunction:: discord.commands.user_command
     :decorator:
 
 MessageCommand
@@ -167,7 +181,7 @@ MessageCommand
 .. autoclass:: MessageCommand
     :members:
     
-.. autofunction:: discord.commands.core.message_command
+.. autofunction:: discord.commands.message_command
     :decorator:
 
 ApplicationContext
