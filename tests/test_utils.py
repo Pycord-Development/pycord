@@ -277,7 +277,8 @@ def test_evaluate_annotation(
             return
         annotation = annotation.__name__
     if use_cache:
-        cache = globals() | locals()
+        cache = globals().copy()
+        cache.update(locals())
     else:
         cache = {}
     if annotation_type == test6:
