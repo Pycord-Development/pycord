@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any, List, Dict, Optional, Callable
+from typing import TypeVar, Tuple, Any, List, Dict, Optional, Callable, Literal
 
 import pytest
 
@@ -42,7 +42,7 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all, get_or_fetch, basic_autocomplete, generate_snowflake,
+    async_all, get_or_fetch, basic_autocomplete, generate_snowflake, format_dt,
 )
 from .helpers import coroutine
 
@@ -206,3 +206,13 @@ async def test_basic_autocomplete(phrase, phrases) -> None:  # type: ignore[no-u
 
     for i in range(len(phrase)):
         assert phrase in await autocomplete(MockContext(phrase[:i]))
+
+
+@pytest.mark.parametrize('style', ('t', 'T', 'd', "D", 'f', 'F', 'R', None))
+def test_format_dt(style: Optional[Literal['f', 'F', 'd', 'D', 't', 'T', 'R']]) -> None:
+    dt = utcnow()
+    if style is None:
+        formatted = f'<t:{int(dt.timestamp())}>'
+    else:
+        formatted = f'<t:{int(dt.timestamp())}:{style}>'
+    assert formatted == format_dt(dt, style=style)
