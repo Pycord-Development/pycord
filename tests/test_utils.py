@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any, Dict, Optional, Callable, Literal, Type
+from typing import TypeVar, Tuple, Any, Dict, Optional, Callable, Literal, Type, Union
 
 import pytest
 
@@ -42,8 +42,10 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all, get_or_fetch, basic_autocomplete, generate_snowflake, format_dt, resolve_annotation,
+    async_all, get_or_fetch, basic_autocomplete, generate_snowflake, format_dt, resolve_annotation, evaluate_annotation,
+    PY_310,
 )
+from discord import utils
 from .helpers import coroutine, MockObject
 
 A = TypeVar('A')
@@ -232,3 +234,60 @@ def test_resolve_annotation(annotation: Optional[Type[object]], use_str: bool) -
             return
         annotation = annotation.__name__
     assert issubclass(resolve_annotation(annotation, globals(), locals(), None), annotation_type)
+
+
+test1 = type('test1', (object,), {'__args__': (MockObject,)})
+test2 = type('test2', (test1,), {'__origin__': Union})
+test3 = type('test3', (test2,), {'__args__': [type(None), MockObject]})
+test4 = type('test4', (object,), {'__origin__': Literal, '__args__': ('a', 'b')})
+test5 = type('test5', (test4,), {})
+test6 = type('test6', (test5,), {'__args__': (MockObject,)})
+
+
+@pytest.mark.parametrize('annotation', (
+        None,
+        MockObject,
+        Optional[MockObject],
+        test1,
+        test2,
+        test3,
+        test4,
+        test5,
+        test6,
+        "MockObject | None" if PY_310 else None,
+))
+@pytest.mark.parametrize('use_str', (True, False))
+@pytest.mark.parametrize('use_cache', (True, False))
+def test_evaluate_annotation(
+        annotation: Optional[Type[object]],
+        use_str: bool,
+        use_cache: bool,
+) -> None:
+    reset_310 = False
+    annotation_type = annotation
+    if annotation_type == test5 and PY_310:
+        reset_310 = True
+        utils.PY_310 = False
+    if annotation_type is None:
+        annotation_type = type(None)
+    if use_str and not isinstance(annotation, str):
+        if annotation is None:
+            if reset_310:
+                utils.PY_310 = True
+            return
+        annotation = annotation.__name__
+    if use_cache:
+        cache = globals() | locals()
+    else:
+        cache = {}
+    if annotation_type == test6:
+        with pytest.raises(TypeError):
+            evaluate_annotation(annotation, globals(), locals(), {})
+        return
+    result = evaluate_annotation(annotation, globals(), locals(), cache)
+    if reset_310:
+        utils.PY_310 = True
+    if annotation is None:
+        assert result is None
+    elif type(annotation_type) is object:
+        assert issubclass(result, annotation_type)
