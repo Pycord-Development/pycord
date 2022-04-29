@@ -279,6 +279,7 @@ def test_evaluate_annotation(
             annotation = annotation.__name__
         else:
             annotation = str(annotation)
+            import typing
     if use_cache:
         cache = globals().copy()
         cache.update(locals())
