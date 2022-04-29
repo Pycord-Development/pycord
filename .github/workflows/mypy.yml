@@ -1,13 +1,12 @@
 name: mypy
-on: [pull_request, push]
+on: [ pull_request, push ]
 jobs:
   mypy:
-    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
+    #    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: pip install mypy
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements-dev.txt
       - run: mkdir --parents --verbose .mypy_cache
-      - run: mypy --ignore-missing-imports --install-types --non-interactive .
+      - run: mypy --non-interactive .
