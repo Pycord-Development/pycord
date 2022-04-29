@@ -192,15 +192,16 @@ async def test_get_or_fetch():
             break
 
 
-phrases = "test", "test2", "test3", "tests", "testing", "testing2", "tea"
+phrase_values = "test", "test2", "test3", "tests", "testing", "testing2", "tea"
 
 
-@pytest.mark.parametrize('phrase', phrases)
-async def test_basic_autocomplete(phrase) -> None:  # type: ignore[no-untyped-def]
+@pytest.mark.parametrize('phrase', phrase_values)
+@pytest.mark.parametrize('phrases', (phrase_values, lambda ctx: coroutine(phrase_values), lambda ctx: phrase_values))
+async def test_basic_autocomplete(phrase, phrases) -> None:  # type: ignore[no-untyped-def]
     autocomplete = basic_autocomplete(phrases)
 
     class MockContext:
-        def __init__(self, value):
+        def __init__(self, value: str):
             self.value = value
 
     for i in range(len(phrase)):
