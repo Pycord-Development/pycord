@@ -275,7 +275,10 @@ def test_evaluate_annotation(
             if reset_310:
                 utils.PY_310 = True
             return
-        annotation = annotation.__name__
+        if hasattr(annotation, '__name__'):
+            annotation = annotation.__name__
+        else:
+            annotation = str(annotation)
     if use_cache:
         cache = globals().copy()
         cache.update(locals())
