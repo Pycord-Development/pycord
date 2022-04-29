@@ -222,8 +222,13 @@ def test_format_dt(style: Optional[Literal['f', 'F', 'd', 'D', 't', 'T', 'R']]) 
 
 
 @pytest.mark.parametrize('annotation', (None, MockObject))
-def test_resolve_annotation(annotation: Optional[Type[object]]) -> None:
+@pytest.mark.parametrize('use_str', (True, False))
+def test_resolve_annotation(annotation: Optional[Type[object]], use_str: bool) -> None:
     annotation_type = annotation
     if annotation_type is None:
         annotation_type = type(None)
-    assert issubclass(resolve_annotation(annotation, {'': ''}, None, None), annotation_type)
+    if use_str:
+        if annotation is None:
+            return
+        annotation = annotation.__name__
+    assert issubclass(resolve_annotation(annotation, globals(), locals(), None), annotation_type)
