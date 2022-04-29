@@ -26,6 +26,12 @@ from typing import TypeVar
 
 V = TypeVar('V')
 
+__all__ = "coroutine", "MockObject"
+
 
 async def coroutine(val: V) -> V:
     return val
+
+
+class MockObject:
+    ...

@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any, List, Dict, Optional, Callable, Literal
+from typing import TypeVar, Tuple, Any, Dict, Optional, Callable, Literal, Type
 
 import pytest
 
@@ -42,9 +42,9 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all, get_or_fetch, basic_autocomplete, generate_snowflake, format_dt,
+    async_all, get_or_fetch, basic_autocomplete, generate_snowflake, format_dt, resolve_annotation,
 )
-from .helpers import coroutine
+from .helpers import coroutine, MockObject
 
 A = TypeVar('A')
 B = TypeVar('B')
@@ -165,12 +165,15 @@ async def test_async_all(size) -> None:  # type: ignore[no-untyped-def]
     assert all(raw_values) == await async_all(values)
 
 
-async def test_get_or_fetch():
+async def test_get_or_fetch() -> None:
     class Test:
         def __init__(self, values: Dict[int, int]):
             self.values = values
+            self.allow_get = True
 
         def get_x(self, key: int) -> Optional[int]:
+            if not self.allow_get:
+                return None
             return self.values.get(key)
 
         async def fetch_x(self, key: int) -> int:
@@ -185,7 +188,7 @@ async def test_get_or_fetch():
         for k, v in test.values.items():
             assert v == await get_or_fetch(test, "x", k)
         if test.get_x(0) is not None:
-            Test.get_x = lambda self, key: None  # type: ignore[assignment]
+            test.allow_get = False
         elif hasattr(Test, 'fetch_x'):
             del Test.fetch_x
         else:
@@ -216,3 +219,11 @@ def test_format_dt(style: Optional[Literal['f', 'F', 'd', 'D', 't', 'T', 'R']]) 
     else:
         formatted = f'<t:{int(dt.timestamp())}:{style}>'
     assert formatted == format_dt(dt, style=style)
+
+
+@pytest.mark.parametrize('annotation', (None, MockObject))
+def test_resolve_annotation(annotation: Optional[Type[object]]) -> None:
+    annotation_type = annotation
+    if annotation_type is None:
+        annotation_type = type(None)
+    assert issubclass(resolve_annotation(annotation, {'': ''}, None, None), annotation_type)
