@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any, List, Dict
+from typing import TypeVar, Tuple, Any, List, Dict, Optional
 
 import pytest
 
@@ -42,7 +42,7 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all, get_or_fetch,
+    async_all, get_or_fetch, basic_autocomplete,
 )
 from .helpers import coroutine
 
@@ -169,7 +169,7 @@ async def test_get_or_fetch():
         def __init__(self, values: Dict[int, int]):
             self.values = values
 
-        def get_x(self, key: int) -> int:
+        def get_x(self, key: int) -> Optional[int]:
             return self.values.get(key)
 
         async def fetch_x(self, key: int) -> int:
@@ -184,8 +184,23 @@ async def test_get_or_fetch():
         for k, v in test.values.items():
             assert v == await get_or_fetch(test, "x", k)
         if test.get_x(0) is not None:
-            Test.get_x = lambda self, key: None
+            Test.get_x = lambda self, key: None  # type: ignore[assignment]
         elif hasattr(Test, 'fetch_x'):
             del Test.fetch_x
         else:
             break
+
+
+phrases = "test", "test2", "test3", "tests", "testing", "testing2", "tea"
+
+
+@pytest.mark.parametrize('phrase', phrases)
+async def test_basic_autocomplete(phrase) -> None:  # type: ignore[no-untyped-def]
+    autocomplete = basic_autocomplete(phrases)
+
+    class MockContext:
+        def __init__(self, value):
+            self.value = value
+
+    for i in range(len(phrase)):
+        assert phrase in await autocomplete(MockContext(phrase[:i]))
