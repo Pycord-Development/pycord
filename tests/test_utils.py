@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 import datetime
 import random
 from inspect import signature
-from typing import TypeVar, Tuple, Any, List, Dict, Optional
+from typing import TypeVar, Tuple, Any, List, Dict, Optional, Callable
 
 import pytest
 
@@ -42,7 +42,7 @@ from discord.utils import (
     _unique,
     _parse_ratelimit_header,
     maybe_coroutine,
-    async_all, get_or_fetch, basic_autocomplete,
+    async_all, get_or_fetch, basic_autocomplete, generate_snowflake,
 )
 from .helpers import coroutine
 
@@ -68,9 +68,10 @@ def test_copy_doc() -> None:
     assert signature(bar) == signature(foo)
 
 
-def test_snowflake() -> None:
+@pytest.mark.parametrize('func', (time_snowflake, generate_snowflake))
+def test_snowflake(func: Callable[[datetime.datetime], int]) -> None:
     now = utcnow().replace(microsecond=0)
-    snowflake = time_snowflake(now)
+    snowflake = func(now)
     assert snowflake_time(snowflake) == now
 
 
