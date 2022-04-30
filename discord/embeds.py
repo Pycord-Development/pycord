@@ -668,17 +668,14 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> Optional[List[EmbedField]]:
+    def fields(self) -> List[EmbedField]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
 
         If the attribute has no value then ``None`` is returned.
         """
-        if self._fields:
-            return self._fields
-        else:
-            return None
+        return self._fields
 
     @fields.setter
     def fields(self, value: List[EmbedField]) -> None:
@@ -692,9 +689,7 @@ class Embed:
         if not all(isinstance(x, EmbedField) for x in value):
             raise TypeError("Expected a list of EmbedField objects.")
 
-        self.clear_fields()
-        for field in value:
-            self.add_field(name=field.name, value=field.value, inline=field.inline)
+        self._fields = value
 
     def append_field(self, field: EmbedField) -> None:
         """Appends an :class:`EmbedField` object to the embed.
@@ -762,10 +757,7 @@ class Embed:
 
     def clear_fields(self) -> None:
         """Removes all fields from this embed."""
-        try:
-            self._fields.clear()
-        except AttributeError:
-            self._fields = []
+        self._fields.clear()
 
     def remove_field(self, index: int) -> None:
         """Removes a field at a specified index.
