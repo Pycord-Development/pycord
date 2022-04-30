@@ -60,7 +60,7 @@ from .commands import (
     command,
 )
 from .enums import InteractionType
-from .errors import CheckFailure, DiscordException, Forbidden
+from .errors import CheckFailure, DiscordException, Forbidden, HTTPException
 from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
@@ -616,7 +616,7 @@ class ApplicationCommandMixin(ABC):
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
-        check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
+        check_guilds = list(set((check_guilds or []) + (self.debug_guilds or [])))
 
         if commands is None:
             commands = self.pending_application_commands
@@ -647,7 +647,7 @@ class ApplicationCommandMixin(ABC):
 
         # TODO: 2.1: Remove this and favor permissions v2
         # Global Command Permissions
-        
+
         if not _register_permissions:
             return
 
@@ -778,6 +778,10 @@ class ApplicationCommandMixin(ABC):
                     f"Failed to add command permissions to guild {guild_id}",
                     file=sys.stderr,
                 )
+            except HTTPException:
+                _log.warning(
+                    "Command Permissions V2 not yet implemented, permissions will not be set for your commands."
+                )
 
     async def process_application_commands(self, interaction: Interaction, auto_sync: bool = None) -> None:
         """|coro|
@@ -818,11 +822,10 @@ class ApplicationCommandMixin(ABC):
         except KeyError:
             for cmd in self.application_commands:
                 guild_id = interaction.data.get("guild_id")
-                if guild_id: 
+                if guild_id:
                     guild_id = int(guild_id)
                 if cmd.name == interaction.data["name"] and (
-                    guild_id == cmd.guild_ids
-                    or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
+                    guild_id == cmd.guild_ids or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
                 ):
                     command = cmd
                     break
