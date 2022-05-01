@@ -279,7 +279,7 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
-        if len(fields) > 25:
+        if fields is not None and len(fields) > 25:
             raise ValueError("Embeds cannot have more than 25 fields")
         self._fields: List[EmbedField] = fields or []
 
