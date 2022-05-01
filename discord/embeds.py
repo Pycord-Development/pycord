@@ -122,14 +122,20 @@ class EmbedField:
     ----------
     name: :class:`str`
         The name of the field.
+        Must be 256 characters or fewer.
     value: :class:`str`
         The value of the field.
+        Must be 1024 characters or fewer.
     inline: :class:`bool`
         Whether the field should be displayed inline.
     """
 
     def __init__(self, name: str, value: str, inline: Optional[bool] = False):
+        if len(name) > 256:
+            raise ValueError("Embed field names must be 256 characters or fewer.")
         self.name = name
+        if len(value) > 1024:
+            raise ValueError("Embed field values must be 1024 characters or fewer.")
         self.value = value
         self.inline = inline
 
@@ -259,9 +265,13 @@ class Embed:
         self.description = description
 
         if self.title is not EmptyEmbed and self.title is not None:
+            if len(self.title) > 256:
+                raise ValueError("title must be 256 characters or fewer")
             self.title = str(self.title)
 
         if self.description is not EmptyEmbed and self.description is not None:
+            if len(self.description) > 4096:
+                raise ValueError("description must be 4096 characters or fewer")
             self.description = str(self.description)
 
         if self.url is not EmptyEmbed and self.url is not None:
@@ -269,6 +279,8 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
+        if len(fields) > 25:
+            raise ValueError("Embeds cannot have more than 25 fields")
         self._fields: List[EmbedField] = fields or []
 
     @classmethod
@@ -447,6 +459,8 @@ class Embed:
 
         self._footer = {}
         if text is not EmptyEmbed:
+            if len(text) > 2048:
+                raise ValueError("Embed footer text must be 2048 characters or fewer")
             self._footer["text"] = str(text)
 
         if icon_url is not EmptyEmbed:
@@ -640,9 +654,12 @@ class Embed:
             The URL of the author icon. Only HTTP(S) is supported.
         """
 
-        self._author = {
-            "name": str(name),
-        }
+        self._author = {}
+
+        if name is not EmptyEmbed:
+            if len(name) > 256:
+                raise ValueError("Embed author name must be 256 characters or fewer.")
+            self._author["name"] = str(name)
 
         if url is not EmptyEmbed:
             self._author["url"] = str(url)
@@ -703,7 +720,8 @@ class Embed:
         """
         if not isinstance(field, EmbedField):
             raise TypeError("Expected an EmbedField object.")
-
+        if len(self._fields) >= 25:
+            raise ValueError("Cannot have more than 25 fields in an embed.")
         self._fields.append(field)
 
     def add_field(self: E, *, name: str, value: str, inline: bool = True) -> E:
@@ -723,6 +741,8 @@ class Embed:
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
+        if len(self._fields) >= 25:
+            raise ValueError("Cannot have more than 25 fields in an embed.")
         self._fields.append(EmbedField(name=str(name), value=str(value), inline=inline))
 
         return self
@@ -748,7 +768,8 @@ class Embed:
         inline: :class:`bool`
             Whether the field should be displayed inline.
         """
-
+        if len(self._fields) >= 25:
+            raise ValueError("Cannot have more than 25 fields in an embed.")
         field = EmbedField(name=str(name), value=str(value), inline=inline)
 
         self._fields.insert(index, field)
@@ -812,8 +833,14 @@ class Embed:
         except (TypeError, IndexError):
             raise IndexError("field index out of range")
 
+        if len(name) > 256:
+            raise ValueError("Embed field names must be 256 characters or fewer.")
         field.name = str(name)
+
+        if len(value) > 1024:
+            raise ValueError("Embed field values must be 1024 characters or fewer.")
         field.value = str(value)
+
         field.inline = inline
         return self
 
