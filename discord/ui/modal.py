@@ -44,8 +44,8 @@ class Modal:
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: List[InputText] = []
-        self._weights = _ModalWeights(self._children)
+        self.children: List[InputText] = []
+        self._weights = _ModalWeights(self.children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
 
@@ -61,11 +61,6 @@ class Modal:
         if not isinstance(value, str):
             raise TypeError(f"expected title to be str, not {value.__class__.__name__}")
         self._title = value
-
-    @property
-    def children(self) -> List[InputText]:
-        """The child components associated with the modal dialog."""
-        return self._children
 
     @property
     def custom_id(self) -> str:
@@ -97,7 +92,7 @@ class Modal:
         def key(item: InputText) -> int:
             return item._rendered_row or 0
 
-        children = sorted(self._children, key=key)
+        children = sorted(self.children, key=key)
         components: List[Dict[str, Any]] = []
         for _, group in groupby(children, key=key):
             children = [item.to_component_dict() for item in group]
@@ -122,14 +117,14 @@ class Modal:
             The item to add to the modal dialog
         """
 
-        if len(self._children) > 5:
+        if len(self.children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
         self._weights.add_item(item)
-        self._children.append(item)
+        self.children.append(item)
 
     def remove_item(self, item: InputText):
         """Removes an InputText component from the modal dialog.
@@ -140,7 +135,7 @@ class Modal:
             The item to remove from the modal dialog.
         """
         try:
-            self._children.remove(item)
+            self.children.remove(item)
         except ValueError:
             pass
 
