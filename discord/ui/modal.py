@@ -35,16 +35,18 @@ class Modal:
     custom_id: Optional[:class:`str`]
         The ID of the modal dialog that gets received during an interaction.
         Must be 100 characters or fewer.
+    children: Optional[List[:class:`InputText`]]
+        The list of InputText fields that are displayed in the modal dialog.
     """
 
-    def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+    def __init__(self, title: str, custom_id: Optional[str] = None, children: Optional[List[InputText]] = None) -> None:
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: List[InputText] = []
+        self._children: List[InputText] = children or []
         self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
@@ -66,6 +68,14 @@ class Modal:
     def children(self) -> List[InputText]:
         """The child components associated with the modal dialog."""
         return self._children
+
+    @children.setter
+    def children(self, value: List[InputText]):
+        for item in value:
+            if not isinstance(item, InputText):
+                raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
+        self._weights = _ModalWeights(self._children)
+        self._children = value
 
     @property
     def custom_id(self) -> str:
