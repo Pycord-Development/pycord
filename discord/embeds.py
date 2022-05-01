@@ -458,6 +458,7 @@ class Embed:
         """
 
         self._footer = {}
+
         if text is not EmptyEmbed:
             if len(text) > 2048:
                 raise ValueError("Embed footer text must be 2048 characters or fewer")
