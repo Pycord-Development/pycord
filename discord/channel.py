@@ -967,7 +967,6 @@ class ForumChannel(_TextChannel):
                 self.id,
                 content=message_content,
                 name=name,
-                tts=tts,
                 embed=embed,
                 embeds=embeds,
                 nonce=nonce,
