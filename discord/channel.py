@@ -48,7 +48,6 @@ from typing import (
 import discord.abc
 
 from . import utils
-from .file import File
 from .asset import Asset
 from .enums import (
     ChannelType,
@@ -60,6 +59,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
+from .file import File
 from .flags import ChannelFlags
 from .invite import Invite
 from .iterators import ArchivedThreadIterator
@@ -91,11 +91,11 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.channel import CategoryChannel as CategoryChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
+    from .types.channel import ForumChannel as ForumChannelPayload
     from .types.channel import GroupDMChannel as GroupChannelPayload
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
-    from .types.channel import ForumChannel as ForumChannelPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
@@ -724,13 +724,13 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self._type == ChannelType.news.value
 
     async def create_thread(
-            self,
-            *,
-            name: str,
-            message: Optional[Snowflake] = None,
-            auto_archive_duration: ThreadArchiveDuration = MISSING,
-            type: Optional[ChannelType] = None,
-            reason: Optional[str] = None,
+        self,
+        *,
+        name: str,
+        message: Optional[Snowflake] = None,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        type: Optional[ChannelType] = None,
+        reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
 
@@ -804,27 +804,26 @@ class ForumChannel(_TextChannel):
 
     @property
     def guidelines(self) -> Optional[str]:
-        """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`.
-        """
+        """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
 
     async def create_thread(
-            self,
-            name: str,
-            content=None,
-            *,
-            embed=None,
-            embeds=None,
-            file=None,
-            files=None,
-            stickers=None,
-            delete_message_after=None,
-            nonce=None,
-            allowed_mentions=None,
-            view=None,
-            auto_archive_duration: ThreadArchiveDuration = MISSING,
-            slowmode_delay: int = MISSING,
-            reason: Optional[str] = None,
+        self,
+        name: str,
+        content=None,
+        *,
+        embed=None,
+        embeds=None,
+        file=None,
+        files=None,
+        stickers=None,
+        delete_message_after=None,
+        nonce=None,
+        allowed_mentions=None,
+        view=None,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
+        reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
 
@@ -978,7 +977,7 @@ class ForumChannel(_TextChannel):
                 reason=reason,
             )
         ret = Thread(guild=self.guild, state=self._state, data=data)
-        msg = ret.get_partial_message(data['last_message_id'])
+        msg = ret.get_partial_message(data["last_message_id"])
         if view:
             state.store_view(view, msg.id)
 

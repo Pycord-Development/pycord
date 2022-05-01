@@ -90,10 +90,10 @@ if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
     from .channel import (
         CategoryChannel,
+        ForumChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
-        ForumChannel,
     )
     from .permissions import Permissions
     from .state import ConnectionState
@@ -1365,16 +1365,16 @@ class Guild(Hashable):
         return channel
 
     async def create_forum_channel(
-            self,
-            name: str,
-            *,
-            reason: Optional[str] = None,
-            category: Optional[CategoryChannel] = None,
-            position: int = MISSING,
-            topic: str = MISSING,
-            slowmode_delay: int = MISSING,
-            nsfw: bool = MISSING,
-            overwrites: Dict[Union[Role, Member], PermissionOverwrite] = MISSING,
+        self,
+        name: str,
+        *,
+        reason: Optional[str] = None,
+        category: Optional[CategoryChannel] = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+        overwrites: Dict[Union[Role, Member], PermissionOverwrite] = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1482,12 +1482,12 @@ class Guild(Hashable):
         return channel
 
     async def create_category(
-            self,
-            name: str,
-            *,
-            overwrites: Dict[Union[Role, Member], PermissionOverwrite] = MISSING,
-            reason: Optional[str] = None,
-            position: int = MISSING,
+        self,
+        name: str,
+        *,
+        overwrites: Dict[Union[Role, Member], PermissionOverwrite] = MISSING,
+        reason: Optional[str] = None,
+        position: int = MISSING,
     ) -> CategoryChannel:
         """|coro|
 

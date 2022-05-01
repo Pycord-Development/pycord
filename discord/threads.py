@@ -43,7 +43,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
-    from .channel import CategoryChannel, TextChannel, ForumChannel
+    from .channel import CategoryChannel, ForumChannel, TextChannel
     from .guild import Guild
     from .member import Member
     from .message import Message, PartialMessage
@@ -576,7 +576,7 @@ class Thread(Messageable, Hashable):
             # copy the ChannelFlags object to avoid mutating the original
             flags = ChannelFlags._from_value(self.flags.value)
             flags.pinned = pinned
-            payload['flags'] = flags.value
+            payload["flags"] = flags.value
 
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload

@@ -86,6 +86,7 @@ if TYPE_CHECKING:
     from .client import Client
     from .embeds import Embed
     from .enums import InviteTarget
+    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
@@ -97,7 +98,6 @@ if TYPE_CHECKING:
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
     from .user import ClientUser
-    from .flags import ChannelFlags
 
     PartialMessageableChannel = Union[TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
