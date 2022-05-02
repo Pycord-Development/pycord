@@ -238,6 +238,7 @@ class AuditLogChanges:
             "location_type",
             _enum_transformer(enums.ScheduledEventLocationType),
         ),
+        "command_id": ("command_id", _transform_snowflake),
     }
 
     def __init__(
@@ -423,8 +424,6 @@ class AuditLogEntry(Hashable):
         # this key is technically not usually present
         self.reason = data.get("reason")
         self.extra = data.get("options")
-
-        # TODO: there's some new fields with perms V2
 
         if isinstance(self.action, enums.AuditLogAction) and self.extra:
             if self.action is enums.AuditLogAction.member_prune:
