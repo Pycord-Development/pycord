@@ -29,12 +29,46 @@ from discord.ext.commands import Context
 
 __all__ = (
     "PaginatorActionButton",
+    "PaginatorGotoModal",
+    "PageSelectMenu",
     "PaginatorButton",
     "Paginator",
     "PageGroup",
     "PaginatorMenu",
     "Page",
 )
+
+
+class PageSelectMenu(discord.ui.Select):
+    """Creates a select menu used to switch between pages.
+
+    Parameters
+    ----------
+    placeholder: :class:`str`
+        The placeholder text that is shown if nothing is selected.
+
+    Attributes
+    ----------
+    paginator: :class:`Paginator`
+        The paginator class where this menu is being used.
+        Assigned to the menu when ``Paginator.add_menu`` is called.
+    """
+
+    def __init__(self, paginator, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.paginator: Paginator = paginator
+
+    async def callback(self, interaction: discord.Interaction):
+        """|coro|
+
+        The coroutine that is called when a menu option is selected.
+
+        Parameters
+        -----------
+        interaction: :class:`discord.Interaction`
+            The interaction created by selecting the menu option.
+        """
+        ...
 
 
 class PaginatorGotoModal(discord.ui.Modal):
