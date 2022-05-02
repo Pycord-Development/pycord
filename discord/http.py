@@ -2246,7 +2246,7 @@ class HTTPClient:
         application_id: Snowflake,
         guild_id: Snowflake,
         command_id: Snowflake,
-    ) -> Response:  # TODO: Typing
+    ) -> Response[interactions.GuildApplicationCommandPermissions]:
         r = Route(
             "GET",
             "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions",
@@ -2259,7 +2259,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-    ) -> Response:  # TODO: Typing
+    ) -> Response[List[interactions.GuildApplicationCommandPermissions]]:
         r = Route(
             "GET",
             "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
