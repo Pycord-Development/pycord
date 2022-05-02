@@ -41,7 +41,7 @@ class Modal:
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
-        if len(title) > 45:
+        if len(str(title)) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
         self.children: List[InputText] = []
