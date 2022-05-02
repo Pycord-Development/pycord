@@ -98,9 +98,9 @@ def guild_only() -> Callable:
 
     def inner(command: Callable):
         if isinstance(command, ApplicationCommand):
-            command.dm_permission = False
+            command.guild_only = True
         else:
-            command.__dm_permission__ = False
+            command.__guild_only__ = True
         return command
 
     return inner

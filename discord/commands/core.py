@@ -203,6 +203,12 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
         self.parent = kwargs.get("parent")
 
+        # Permissions
+        self.default_member_permissions: Optional[Permissions] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        )
+        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
+
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
@@ -643,12 +649,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-
-        # Permissions
-        self.default_member_permissions: Optional[Permissions] = getattr(
-            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
-        )
-        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
     def _parse_options(self, params) -> List[Option]:
         if list(params.items())[0][0] == "self":
@@ -1239,12 +1239,6 @@ class ContextMenuCommand(ApplicationCommand):
         self._after_invoke = None
 
         self.validate_parameters()
-
-        # Permissions
-        self.default_member_permissions: Optional[Permissions] = getattr(
-            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
-        )
-        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
         # Context Menu commands can't have parents
         self.parent = None

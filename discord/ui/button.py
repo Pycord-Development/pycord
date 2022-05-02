@@ -96,9 +96,9 @@ class Button(Item[V]):
         row: Optional[int] = None,
     ):
         super().__init__()
-        if label and len(label) > 80:
+        if label and len(str(label)) > 80:
             raise ValueError("label must be 80 characters or fewer")
-        if custom_id is not None and len(custom_id) > 100:
+        if custom_id is not None and len(str(custom_id)) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
@@ -184,7 +184,7 @@ class Button(Item[V]):
 
     @label.setter
     def label(self, value: Optional[str]):
-        if value and len(value) > 80:
+        if value and len(str(value)) > 80:
             raise ValueError("label must be 80 characters or fewer")
         self._underlying.label = str(value) if value is not None else value
 
