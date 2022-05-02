@@ -123,11 +123,18 @@ class PaginatorActionButton(discord.ui.Button):
             if self.paginator.bot is None:
                 input_type = "modal"
             else:
-                if self.paginator.input_method == "wait_for":
+                if self.paginator.goto_select:
+                    if len(self.paginator.pages) <= 25:
+                        input_type = "select"
+                    else:
+                        input_type = self.paginator.input_method
+                elif self.paginator.input_method == "wait_for":
                     input_type = "wait_for"
                 else:
                     input_type = "modal"
-            if input_type == "modal":
+            if input_type == "select":
+                ...
+            elif input_type == "modal":
                 modal = PaginatorGotoModal(self.paginator, title="Goto Page")
                 await interaction.response.send_modal(modal)
             elif input_type == "wait_for":
@@ -380,6 +387,9 @@ class PageGroup:
 
             ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
 
+    goto_select: :class:`bool`
+        Whether to use a select menu to choose a page number to go to. Only works if the number of pages is 25 or less, otherwise
+        it will fall back to using the :attr:`input_method` value.
     """
 
     def __init__(
@@ -402,6 +412,7 @@ class PageGroup:
         trigger_on_display: Optional[bool] = None,
         show_action_row: Optional[bool] = False,
         input_method: Literal["modal", "wait_for"] = "modal",
+        goto_select: Optional[bool] = None,
     ):
         self.label = label
         self.description = description
@@ -421,6 +432,7 @@ class PageGroup:
         self.trigger_on_display = trigger_on_display
         self.show_action_row = show_action_row
         self.input_method = input_method
+        self.goto_select = goto_select
 
 
 class Paginator(discord.ui.View):
@@ -476,6 +488,9 @@ class Paginator(discord.ui.View):
         .. warning::
 
             ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
+    goto_select: :class:`bool`
+        Whether to use a select menu to choose a page number to go to. Only works if the number of pages is 25 or less, otherwise
+        it will fall back to using the :attr:`input_method` value.
 
     Attributes
     ----------
@@ -516,6 +531,7 @@ class Paginator(discord.ui.View):
         trigger_on_display: Optional[bool] = None,
         show_action_row: Optional[bool] = False,
         input_method: Literal["modal", "wait_for"] = "modal",
+        goto_select: bool = False,
         bot: Optional[discord.Bot] = None,
     ) -> None:
         super().__init__(timeout=timeout)
@@ -551,6 +567,7 @@ class Paginator(discord.ui.View):
         self.trigger_on_display = trigger_on_display
         self.show_action_row = show_action_row
         self.input_method = input_method
+        self.goto_select = goto_select
         self.bot = bot
         self.message: Union[discord.Message, discord.WebhookMessage, None] = None
 
@@ -593,6 +610,7 @@ class Paginator(discord.ui.View):
         interaction: Optional[discord.Interaction] = None,
         show_action_row: Optional[bool] = False,
         input_method: Literal["modal", "wait_for"] = "modal",
+        goto_select: Optional[bool] = None,
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
 
@@ -645,7 +663,9 @@ class Paginator(discord.ui.View):
             .. warning::
 
                 ``wait_for`` can only be used if :attr:`Paginator.bot` is set, otherwise it will fall back to ``modal``.
-
+        goto_select: :class:`bool`
+            Whether to use a select menu to choose a page number to go to. Only works if the number of pages is 25 or less, otherwise
+            it will fall back to using the :attr:`input_method` value.
 
         """
 
@@ -668,8 +688,9 @@ class Paginator(discord.ui.View):
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
         self.trigger_on_display = trigger_on_display if trigger_on_display is not None else self.trigger_on_display
-        self.show_action_row = show_action_row
-        self.input_method = input_method
+        self.show_action_row = show_action_row if show_action_row is not None else self.show_action_row
+        self.input_method = input_method if input_method is not None else self.input_method
+        self.goto_select = goto_select if goto_select is not None else self.goto_select
         if custom_buttons and not self.use_default_buttons:
             self.nav_buttons = {}
             for button in custom_buttons:
