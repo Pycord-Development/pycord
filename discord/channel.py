@@ -925,7 +925,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
     __slots__ = ('nsfw')
 
-    def _update(self, guild: Guild, data: Union[VoiceChannelPayload, StageChannelPayload]):
+    def _update(self, guild: Guild, data: VoiceChannelPayload):
         super()._update(guild, data)
         self.nsfw: bool = data.get("nsfw", False)
 
