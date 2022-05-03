@@ -114,6 +114,7 @@ GuildFeature = Literal[
     "VERIFIED",
     "VIP_REGIONS",
     "WELCOME_SCREEN_ENABLED",
+    "AUTO_MODERATION",
 ]
 
 
