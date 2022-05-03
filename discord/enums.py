@@ -232,6 +232,7 @@ class MessageType(Enum):
     thread_starter_message = 21
     guild_invite_reminder = 22
     context_menu_command = 23
+    auto_moderation_action = 24
 
 
 class VoiceRegion(Enum):
@@ -380,6 +381,10 @@ class AuditLogAction(Enum):
     thread_create = 110
     thread_update = 111
     thread_delete = 112
+    auto_moderation_rule_create = 140
+    auto_moderation_rule_update = 141
+    auto_moderation_rule_delete = 142 
+
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -431,6 +436,9 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
+            AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
+            AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
+            AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
         }
         return lookup[self]
 
@@ -467,6 +475,8 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
+        elif v < 143:
+            return "auto_moderation_rule"
 
 
 class UserFlags(Enum):
