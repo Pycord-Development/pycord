@@ -1616,7 +1616,7 @@ valid_locales = [
 
 # Validation
 def validate_chat_input_name(name: Any, locale: Optional[str] = None):
-    # Must meet the regex ^[\w-]{1,32}$
+    # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
             f"Locale '{locale}' is not a valid locale, "
