@@ -88,8 +88,6 @@ if TYPE_CHECKING:
 
     from ..cog import Cog
     from .. import Permissions
-else:
-    Permissions = TypeVar("Permissions")
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -204,7 +202,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.parent = kwargs.get("parent")
 
         # Permissions
-        self.default_member_permissions: Optional[Permissions] = getattr(
+        self.default_member_permissions: Optional["Permissions"] = getattr(
             func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
         )
         self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
@@ -983,7 +981,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_member_permissions: Optional[Permissions] = kwargs.get("default_member_permissions", None)
+        self.default_member_permissions: Optional["Permissions"] = kwargs.get("default_member_permissions", None)
         self.guild_only: Optional[bool] = kwargs.get("guild_only", None)
 
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
