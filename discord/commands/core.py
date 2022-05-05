@@ -1624,7 +1624,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
             f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
         )
     error = None
-    if not isinstance(name, str): not re.match(r"^[\w-]{1,32}$", name):
+    if not isinstance(name, str) or not re.match(r"^[\w-]{1,32}$", name):
         error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
