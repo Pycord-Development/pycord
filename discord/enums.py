@@ -700,8 +700,11 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+
         if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
-            raise TypeError(f"Invalid class {datatype} used as an input type for an Option")  # TODO: Improve the error message
+            raise TypeError(
+                f"Invalid class {datatype} used as an input type for an Option"
+            )  # TODO: Improve the error message
 
 
 class EmbeddedActivity(Enum):

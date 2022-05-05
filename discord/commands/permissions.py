@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from typing import Callable, Dict, Union
+
 from ..permissions import Permissions
 from .core import ApplicationCommand
 

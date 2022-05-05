@@ -2240,7 +2240,7 @@ class HTTPClient:
         return self.request(r, json=payload)
 
     # Application commands (permissions)
-    
+
     def get_command_permissions(
         self,
         application_id: Snowflake,
@@ -2254,7 +2254,7 @@ class HTTPClient:
             guild_id=guild_id,
         )
         return self.request(r)
-    
+
     def get_guild_command_permissions(
         self,
         application_id: Snowflake,
@@ -2267,7 +2267,7 @@ class HTTPClient:
             guild_id=guild_id,
         )
         return self.request(r)
-    
+
     # Interaction responses
 
     def _edit_webhook_helper(

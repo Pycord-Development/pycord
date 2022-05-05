@@ -1576,7 +1576,6 @@ class ConnectionState:
                     coro = voice.on_voice_state_update(data)
                     asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
 
-
     def parse_voice_server_update(self, data) -> None:
         try:
             key_id = int(data["guild_id"])
