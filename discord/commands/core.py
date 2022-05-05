@@ -1618,17 +1618,17 @@ valid_locales = [
 
 # Validation
 def validate_chat_input_name(name: Any, locale: Optional[str] = None):
-    # Must meet the regex ^[\w-]{1,32}$
+    # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
             f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
         )
     error = None
-    if not isinstance(name, str):
-        error = TypeError(f'Command names and options must be of type str. Received "{name}"')
-    elif not re.match(r"^[\w-]{1,32}$", name):
+    if not isinstance(name, str): not re.match(r"^[\w-]{1,32}$", name):
+        error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
+    elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
-            r"Command names and options must follow the regex \"^[\w-]{1,32}$\". For more information, see "
+            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". For more information, see "
             f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
             f'Received "{name}"'
         )
