@@ -682,10 +682,13 @@ class SlashCommand(ApplicationCommand):
                 else:  # arg: Option(...) = default
                     option = Option(option, "No description provided")
 
-            if option.default is None:
-                if not p_obj.default == inspect.Parameter.empty and not isinstance(p_obj.default, Option):
-                    option.default = p_obj.default
-                    option.required = False
+            if (
+                option.default is None
+                and p_obj.default != inspect.Parameter.empty
+                and not isinstance(p_obj.default, Option)
+            ):
+                option.default = p_obj.default
+                option.required = False
 
             if option.name is None:
                 option.name = p_name
@@ -716,7 +719,7 @@ class SlashCommand(ApplicationCommand):
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException(f"Too many arguments passed to the options kwarg.")
+                raise ClientException("Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
             if not any(check(o, p_obj) for check in check_annotations):
@@ -1631,7 +1634,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     elif not 1 <= len(name) <= 32:
         error = ValidationError(f'Command names and options must be 1-32 characters long. Received "{name}"')
-    elif not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+    elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
         error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
 
     if error:
