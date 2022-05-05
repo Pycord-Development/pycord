@@ -86,8 +86,8 @@ __all__ = (
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
-    from ..cog import Cog
     from .. import Permissions
+    from ..cog import Cog
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -679,7 +679,7 @@ class SlashCommand(ApplicationCommand):
                 if isinstance(p_obj.default, Option):  # arg: type = Option(...)
                     p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
                     option = p_obj.default
-                else: # arg: Option(...) = default
+                else:  # arg: Option(...) = default
                     option = Option(option, "No description provided")
 
             if option.default is None:
@@ -1622,7 +1622,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     error = None
     if not isinstance(name, str) or not re.match(r"^[\w-]{1,32}$", name):
-        error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
+        error = TypeError(f'Command names and options must be of type str. Received "{name}"')
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
             r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". For more information, see "
