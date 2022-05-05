@@ -85,7 +85,7 @@ class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
     value: Union[str, int]
 
 
-ApplicationCommandPermissionType = Literal[1, 2]
+ApplicationCommandPermissionType = Literal[1, 2, 3]
 
 
 class ApplicationCommandPermissions(TypedDict):

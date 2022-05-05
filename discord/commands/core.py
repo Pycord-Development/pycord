@@ -67,7 +67,6 @@ from ..user import User
 from ..utils import async_all, find, get_or_fetch, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
-from .permissions import CommandPermission
 
 __all__ = (
     "_BaseCommand",
@@ -88,6 +87,7 @@ if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
     from ..cog import Cog
+    from .. import Permissions
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -200,6 +200,12 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
         self.parent = kwargs.get("parent")
+
+        # Permissions
+        self.default_member_permissions: Optional["Permissions"] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        )
+        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -573,16 +579,11 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-
-            If this is not empty then default_permissions will be set to False.
-
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -646,14 +647,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-
-        # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -760,7 +753,6 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
-            "default_permission": self.default_permission,
         }
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -768,6 +760,12 @@ class SlashCommand(ApplicationCommand):
             as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
+
+        if self.guild_only is not None:
+            as_dict["guild_only"] = self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -916,6 +914,10 @@ class SlashCommandGroup(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this group belongs to. ``None`` if there
         isn't one.
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
     cog: Optional[:class:`.Cog`]
@@ -978,10 +980,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional["Permissions"] = kwargs.get("default_member_permissions", None)
+        self.guild_only: Optional[bool] = kwargs.get("guild_only", None)
+
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
@@ -994,7 +995,6 @@ class SlashCommandGroup(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
-            "default_permission": self.default_permission,
         }
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -1003,6 +1003,12 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
+
+        if self.guild_only is not None:
+            as_dict["guild_only"] = self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1182,15 +1188,11 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`.CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-            If this is not empty then default_permissions will be set to ``False``.
-
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1235,13 +1237,6 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
-
         # Context Menu commands can't have parents
         self.parent = None
 
@@ -1282,8 +1277,13 @@ class ContextMenuCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "type": self.type,
-            "default_permission": self.default_permission,
         }
+
+        if self.guild_only is not None:
+            as_dict["guild_only"] = self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -1618,42 +1618,42 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, "
-            f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
         )
     error = None
-    if not isinstance(name, str):
+    if not isinstance(name, str) or not re.match(r"^[\w-]{1,32}$", name):
         error = TypeError(f"Command names and options must be of type str. Received \"{name}\"")
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
             r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". For more information, see "
             f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f"Received \"{name}\""
+            f'Received "{name}"'
         )
     elif not 1 <= len(name) <= 32:
-        error = ValidationError(f"Command names and options must be 1-32 characters long. Received \"{name}\"")
+        error = ValidationError(f'Command names and options must be 1-32 characters long. Received "{name}"')
     elif not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        error = ValidationError(f"Command names and options must be lowercase. Received \"{name}\"")
+        error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
 
     if error:
         if locale:
-            error.args = (error.args[0]+f" in locale {locale}",)
+            error.args = (f"{error.args[0]} in locale {locale}",)
         raise error
 
 
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, "
-            f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
         )
     error = None
     if not isinstance(description, str):
-        error = TypeError(f"Command and option description must be of type str. Received \"{description}\"")
+        error = TypeError(f'Command and option description must be of type str. Received "{description}"')
     elif not 1 <= len(description) <= 100:
-        error = ValidationError(f"Command and option description must be 1-100 characters long. Received \"{description}\"")
+        error = ValidationError(
+            f'Command and option description must be 1-100 characters long. Received "{description}"'
+        )
 
     if error:
         if locale:
-            error.args = (error.args[0]+f" in locale {locale}",)
+            error.args = (f"{error.args[0]} in locale {locale}",)
         raise error
