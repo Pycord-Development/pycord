@@ -2239,19 +2239,34 @@ class HTTPClient:
         )
         return self.request(r, json=payload)
 
-    def bulk_upsert_command_permissions(
+    # Application commands (permissions)
+
+    def get_command_permissions(
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: List[interactions.EditApplicationCommand],
-    ) -> Response[List[interactions.ApplicationCommand]]:
+        command_id: Snowflake,
+    ) -> Response[interactions.GuildApplicationCommandPermissions]:
         r = Route(
-            "PUT",
+            "GET",
+            "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions",
+            application_id=application_id,
+            guild_id=guild_id,
+        )
+        return self.request(r)
+
+    def get_guild_command_permissions(
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+    ) -> Response[List[interactions.GuildApplicationCommandPermissions]]:
+        r = Route(
+            "GET",
             "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
             application_id=application_id,
             guild_id=guild_id,
         )
-        return self.request(r, json=payload)
+        return self.request(r)
 
     # Interaction responses
 

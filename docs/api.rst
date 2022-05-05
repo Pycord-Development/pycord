@@ -96,6 +96,18 @@ AutoShardedBot
 Application Commands
 ---------------------
 
+
+Command Permission Decorators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+.. autofunction:: discord.commands.default_permissions
+    :decorator:
+
+.. autofunction:: discord.commands.guild_only
+    :decorator:
+
+
 ApplicationCommand
 ~~~~~~~~~~~~~~~~~~~
 
@@ -104,10 +116,10 @@ ApplicationCommand
 .. autoclass:: ApplicationCommand
     :members:
     
-.. autofunction:: discord.commands.core.application_command
+.. autofunction:: discord.commands.application_command
     :decorator:
 
-.. autofunction:: discord.commands.core.command
+.. autofunction:: discord.commands.command
     :decorator:
 
 SlashCommand
@@ -118,7 +130,7 @@ SlashCommand
 .. autoclass:: SlashCommand
     :members:
     
-.. autofunction:: discord.commands.core.slash_command
+.. autofunction:: discord.commands.slash_command
     :decorator:
 
 SlashCommandGroup
@@ -137,7 +149,7 @@ Option
 .. autoclass:: Option
     :members:
     
-.. autofunction:: discord.commands.core.Option
+.. autofunction:: discord.commands.Option
     :decorator:
 
 OptionChoice
@@ -156,7 +168,7 @@ UserCommand
 .. autoclass:: UserCommand
     :members:
     
-.. autofunction:: discord.commands.core.user_command
+.. autofunction:: discord.commands.user_command
     :decorator:
 
 MessageCommand
@@ -167,7 +179,7 @@ MessageCommand
 .. autoclass:: MessageCommand
     :members:
     
-.. autofunction:: discord.commands.core.message_command
+.. autofunction:: discord.commands.message_command
     :decorator:
 
 ApplicationContext
@@ -185,29 +197,6 @@ AutocompleteContext
 
 .. autoclass:: AutocompleteContext
     :members:
-
-CommandPermission
-~~~~~~~~~~~~~~~~~
-
-.. attributetable:: CommandPermission
-
-.. autoclass:: CommandPermission
-    :members:
-
-.. autofunction:: discord.commands.permissions.permission
-    :decorator:
-
-.. autofunction:: discord.commands.permissions.has_role
-    :decorator:
-
-.. autofunction:: discord.commands.permissions.has_any_role
-    :decorator:
-
-.. autofunction:: discord.commands.permissions.is_user
-    :decorator:
-
-.. autofunction:: discord.commands.permissions.is_owner
-    :decorator:
 
 Cogs
 -----
@@ -2865,6 +2854,21 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
+        
+    .. attribute:: application_command_permission_update
+
+        An application command's permissions were updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        an :class:`Object` with the ID of the command that
+        had it's permissions edited.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.command_id`
+
+        .. versionadded:: 2.0
+        
 
 .. class:: AuditLogActionCategory
 
@@ -3927,6 +3931,12 @@ AuditLogDiff
         Non-moderators can now add other non-moderators to this thread.
 
         :type: :class:`bool`
+        
+    .. attribute:: command_id
+
+        This command's permissions were updated.
+
+        :type: :class:`int`
 
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these
