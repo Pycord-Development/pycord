@@ -2854,6 +2854,21 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
+        
+    .. attribute:: application_command_permission_update
+
+        An application command's permissions were updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        an :class:`Object` with the ID of the command that
+        had it's permissions edited.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.command_id`
+
+        .. versionadded:: 2.0
+        
 
 .. class:: AuditLogActionCategory
 
@@ -3916,6 +3931,12 @@ AuditLogDiff
         Non-moderators can now add other non-moderators to this thread.
 
         :type: :class:`bool`
+        
+    .. attribute:: command_id
+
+        This command's permissions were updated.
+
+        :type: :class:`int`
 
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these
