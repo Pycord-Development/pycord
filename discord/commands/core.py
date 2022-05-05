@@ -655,45 +655,49 @@ class SlashCommand(ApplicationCommand):
         if self.permissions and self.default_permission:
             self.default_permission = False
 
-    def _parse_options(self, params) -> List[Option]:
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
+    def _check_required_params(self, params):
         params = iter(params.items())
+        required_params = ["self", "context"] if self.attached_to_group or self.cog else ["context"]
+        for p in required_params:
+            try:
+                next(params)
+            except StopIteration:
+                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.')
 
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+        return params
+
+    def _parse_options(self, params, *, check_params: bool = True) -> List[Option]:
+        if check_params:
+            params = self._check_required_params(params)
 
         final_options = []
         for p_name, p_obj in params:
-
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)
+                    option = Option(option.__args__[0], "No description provided", required=False)  # type: ignore # union type
                 else:
-                    option = Option(option.__args__, "No description provided")
+                    option = Option(option.__args__, "No description provided")  # type: ignore # union type
 
             if not isinstance(option, Option):
-                option = Option(option, "No description provided")
+                if isinstance(p_obj.default, Option):  # arg: type = Option(...)
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
+                    option = p_obj.default
+                else: # arg: Option(...) = default
+                    option = Option(option, "No description provided")
 
             if option.default is None:
-                if p_obj.default == inspect.Parameter.empty:
-                    option.default = None
-                else:
+                if not p_obj.default == inspect.Parameter.empty and not isinstance(p_obj.default, Option):
                     option.default = p_obj.default
                     option.required = False
 
             if option.name is None:
                 option.name = p_name
-            option._parameter_name = p_name
+            if option.name != p_name or option._parameter_name is None:
+                option._parameter_name = p_name
 
             _validate_names(option)
             _validate_descriptions(option)
@@ -703,25 +707,15 @@ class SlashCommand(ApplicationCommand):
         return final_options
 
     def _match_option_param_names(self, params, options):
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
-        params = iter(params.items())
+        params = self._check_required_params(params)
 
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
-
-        check_annotations = [
+        check_annotations: List[Callable[[Option, Type], bool]] = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
             and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: isinstance(a, type) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
             _validate_names(o)
@@ -732,15 +726,14 @@ class SlashCommand(ApplicationCommand):
                 raise ClientException(f"Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
-            if not any(c(o, p_obj) for c in check_annotations):
+            if not any(check(o, p_obj) for check in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
-        left_out_params[""] = ""  # bypass first iter (ctx)
         for k, v in params:
             left_out_params[k] = v
-        options.extend(self._parse_options(left_out_params))
+        options.extend(self._parse_options(left_out_params, check_params=False))
 
         return options
 
@@ -751,6 +744,12 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _set_cog(self, cog):
+        prev = self.cog
+        super()._set_cog(cog)
+        if (prev is None and cog is not None) or (prev is not None and cog is None):
+            self.options = self._parse_options(self._get_signature_parameters())  # parse again to leave out self
 
     @property
     def is_subcommand(self) -> bool:
@@ -1162,7 +1161,7 @@ class SlashCommandGroup(ApplicationCommand):
             return self.copy()
 
     def _set_cog(self, cog):
-        self.cog = cog
+        super()._set_cog(cog)
         for subcommand in self.subcommands:
             subcommand._set_cog(cog)
 
