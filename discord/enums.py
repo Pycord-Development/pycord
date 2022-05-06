@@ -262,30 +262,33 @@ class EventType(Enum):
     private_channel_pins_update = 48
 
     # Guild and Direct message typing
-    typing = 49
+    raw_typing = 49
+    typing = 50
 
     # Guild and Direct message reactions:
-    raw_reaction_add = 50
-    reaction_add = 51
-    raw_reaction_clear = 52
-    reaction_clear = 53
-    raw_reaction_remove = 54
-    reaction_remove = 55
-    raw_reaction_clear_emoji = 56
-    reaction_clear_emoji = 57
+    raw_reaction_add = 51
+    reaction_add = 52
+    raw_reaction_clear = 53
+    reaction_clear = 54
+    raw_reaction_remove = 55
+    reaction_remove = 56
+    raw_reaction_clear_emoji = 57
+    reaction_clear_emoji = 58
 
     # Utility events:
-    disconnect = 58
-    ready = 59
-    connect = 60
-    resumed = 61
-    shard_ready = 62
+    disconnect = 59
+    ready = 60
+    connect = 61
+    resumed = 62
+    shard_ready = 63
+    shard_connect = 64
+    shard_resumed = 65
 
     # Interactions:
-    interaction = 63
-    command = 64
-    command_completion = 65
-    command_error = 66
+    interaction = 66
+    command = 67
+    command_completion = 68
+    command_error = 69 # nice
 
     def __str__(self):
         return self.name
