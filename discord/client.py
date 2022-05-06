@@ -401,7 +401,6 @@ class Client:
 
     def dispatch(self, event: Union[str, EventType], *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching event %s", event)
-        method = f"on_{str(event)}"
 
         listeners = self._listeners.get(event)
         if listeners:
@@ -432,9 +431,9 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
-        coro = self.events.get(method)
+        coro = self.events.get(event)
         if coro is not None:
-            self._schedule_event(coro, method, *args, **kwargs)
+            self._schedule_event(coro, event, *args, **kwargs)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
@@ -1100,7 +1099,7 @@ class Client:
 
     # event registration
 
-    def event(self, coro: Coro) -> Coro:
+    def event(self, event_name: Optional[Union[str, EventType]] = None) -> Coro:
         """A decorator that registers an event to listen to.
 
         You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
@@ -1112,40 +1111,20 @@ class Client:
 
         .. code-block:: python3
 
-            @client.event
+            @client.event()
             async def on_ready():
                 print('Ready!')
 
-        Raises
-        --------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("event registered must be a coroutine function")
-
-        self.events[coro.__name__] = coro
-        _log.debug("%s has successfully been registered as an event", coro.__name__)
-        return coro
-
-    def event_for(self, event_name: Union[str, EventType]):
-        """Similar to :meth:`@Client.event` except that it uses a provided name instead
-        of the name for the coroutine.
-
-        Example
-        ---------
-
-        .. code-block:: python3
-
-            @client.event_for(EventType.message)
-            async def message_here(message):
-                print(message.content)
+            @client.event(EventType.message)
+            async def hello_message_arrived(message):
+                if message.author != client.user:
+                    await message.reply("Nice")
 
         Parameters
         ------------
         event_name: :type:`Union[str, EventType]`
-            The name of the event to register this coroutine under.
+            The name of the event to register this coroutine under. If this is not provided, then
+            the name of the coroutine provided will be used instead.
 
         Raises
         --------
@@ -1156,12 +1135,12 @@ class Client:
             if not asyncio.iscoroutinefunction(coro):
                 raise TypeError("event registered must be a coroutine function")
 
-            actual_event = str(event_name)
-            if not actual_event.startswith("on_"):
-                actual_event = "on_" + actual_event
+            actual_event = coro.__name__ if event_name is None else str(event_name)
+            if actual_event.startswith("on_"):
+                actual_event = actual_event.lstrip("on_")
 
             self.events[actual_event] = coro
-            _log.debug("%s has successfully been registered as an event", actual_event)
+            _log.debug("%s has successfully been registered as an event", event_name)
             return coro
         return wrapped
 
