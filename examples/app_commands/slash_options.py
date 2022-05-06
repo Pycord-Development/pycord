@@ -25,10 +25,10 @@ bot = discord.Bot()
     # age: Option(int, "Enter your age") = 18
 )
 async def hello(
-        ctx: discord.ApplicationContext,
-        name: str,
-        gender: str,
-        age: str,
+    ctx: discord.ApplicationContext,
+    name: str,
+    gender: str,
+    age: str,
 ):
     await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
@@ -38,11 +38,11 @@ async def hello(
     "channel",
     [discord.TextChannel, discord.VoiceChannel],
     # you can specify allowed channel types by passing a list of them like this
-    description="Select a channel"
+    description="Select a channel",
 )
 async def channel(
-        ctx: discord.ApplicationContext,
-        channel: Union[discord.TextChannel, discord.VoiceChannel],
+    ctx: discord.ApplicationContext,
+    channel: Union[discord.TextChannel, discord.VoiceChannel],
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 
@@ -50,8 +50,8 @@ async def channel(
 @bot.slash_command(name="attach_file")
 @option("attachment", discord.Attachment, description="A file to attach to the message", required=False)
 async def say(
-        ctx: discord.ApplicationContext,
-        attachment: discord.Attachment,
+    ctx: discord.ApplicationContext,
+    attachment: discord.Attachment,
 ):
     """This demonstrates how to attach a file with a slash command."""
     file = await attachment.to_file()

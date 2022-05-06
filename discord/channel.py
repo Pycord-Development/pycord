@@ -923,7 +923,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     """
 
-    __slots__ = ('nsfw')
+    __slots__ = "nsfw"
 
     def _update(self, guild: Guild, data: VoiceChannelPayload):
         super()._update(guild, data)
