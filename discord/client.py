@@ -53,7 +53,7 @@ from .appinfo import AppInfo
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import Emoji
-from .enums import ChannelType, Status, VoiceRegion
+from .enums import EventType, ChannelType, Status, VoiceRegion
 from .errors import *
 from .flags import ApplicationFlags, Intents
 from .gateway import *
@@ -243,8 +243,8 @@ class Client:
         )
 
         self._handlers: Dict[str, Callable] = {"ready": self._handle_ready}
-
         self._hooks: Dict[str, Callable] = {"before_identify": self._call_before_identify_hook}
+        self.events: Dict[str, Coro] = {}
 
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
@@ -399,9 +399,9 @@ class Client:
         # Schedules the task
         return asyncio.create_task(wrapped, name=f"pycord: {event_name}")
 
-    def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
+    def dispatch(self, event: Union[str, EventType], *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching event %s", event)
-        method = f"on_{event}"
+        method = f"on_{str(event)}"
 
         listeners = self._listeners.get(event)
         if listeners:
@@ -432,11 +432,8 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
-        try:
-            coro = getattr(self, method)
-        except AttributeError:
-            pass
-        else:
+        coro = self.events.get(method)
+        if coro is not None:
             self._schedule_event(coro, method, *args, **kwargs)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
@@ -1128,9 +1125,45 @@ class Client:
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError("event registered must be a coroutine function")
 
-        setattr(self, coro.__name__, coro)
+        self.events[coro.__name__] = coro
         _log.debug("%s has successfully been registered as an event", coro.__name__)
         return coro
+
+    def event_for(self, event_name: Union[str, EventType]):
+        """Similar to :meth:`@Client.event` except that it uses a provided name instead
+        of the name for the coroutine.
+
+        Example
+        ---------
+
+        .. code-block:: python3
+
+            @client.event_for(EventType.messsage)
+            async def message_here(message):
+                print(message.content)
+
+        Parameters
+        ------------
+        event_name: :type:`Union[str, EventType]`
+            The name of the event to register this coroutine under.
+
+        Raises
+        --------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        def wrapped(coro: Coro):
+            if not asyncio.iscoroutinefunction(coro):
+                raise TypeError("event registered must be a coroutine function")
+
+            actual_event = str(event_name)
+            if not actual_event.startswith("on_"):
+                actual_event = "on_" + actual_event
+
+            self.events[actual_event] = coro
+            _log.debug("%s has successfully been registered as an event", actual_event)
+            return coro
+        return wrapped
 
     async def change_presence(
         self,
