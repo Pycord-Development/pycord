@@ -1138,7 +1138,7 @@ class Client:
 
         .. code-block:: python3
 
-            @client.event_for(EventType.messsage)
+            @client.event_for(EventType.message)
             async def message_here(message):
                 print(message.content)
 
