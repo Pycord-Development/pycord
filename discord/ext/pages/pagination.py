@@ -430,7 +430,7 @@ class PageGroup:
         self,
         pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
         label: str,
-        description: str,
+        description: Optional[str] = None,
         emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,

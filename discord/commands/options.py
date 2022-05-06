@@ -80,12 +80,12 @@ class Option:
     ----------
     input_type: :class:`Any`
         The type of input that is expected for this option.
-    description: :class:`str`
-        The description of this option.
-        Must be 100 characters or fewer.
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
+    description: Optional[:class:`str`]
+        The description of this option.
+        Must be 100 characters or fewer.
     choices: Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]
         The list of available choices for this option.
         Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
@@ -115,10 +115,11 @@ class Option:
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
-    def __init__(self, input_type: Any, /, description: str = None, **kwargs) -> None:
+    def __init__(self, input_type: Any = str, /, description: Optional[str] = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         if self.name is not None:
             self.name = str(self.name)
+        self._parameter_name = self.name  # default
         self.description = description or "No description provided"
         self.converter = None
         self._raw_type = input_type
@@ -140,7 +141,10 @@ class Option:
                 else:
                     if _type == SlashCommandOptionType.channel:
                         if not isinstance(input_type, tuple):
-                            input_type = (input_type,)
+                            if hasattr(input_type, "__args__"):  # Union
+                                input_type = input_type.__args__
+                            else:
+                                input_type = (input_type,)
                         for i in input_type:
                             if i.__name__ == "GuildChannel":
                                 continue

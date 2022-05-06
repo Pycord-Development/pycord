@@ -25,227 +25,83 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import Callable, Dict, Union
 
+from ..permissions import Permissions
+from .core import ApplicationCommand
+
 __all__ = (
-    "CommandPermission",
-    "has_role",
-    "has_any_role",
-    "is_user",
-    "is_owner",
-    "permission",
+    "default_permissions",
+    "guild_only",
 )
 
 
-class CommandPermission:
-    """The class used in the application command decorators
-    to hash permission data into a dictionary using the
-    :meth:`~to_dict` method to be sent to the discord API later on.
+def default_permissions(**perms: bool) -> Callable:
+    """A decorator that limits the usage of a slash command to members with certain
+    permissions.
 
-    .. versionadded:: 2.0
+    The permissions passed in must be exactly like the properties shown under
+    :class:`.discord.Permissions`.
 
-    Attributes
-    -----------
-    id: Union[:class:`int`, :class:`str`]
-        A string or integer that represents or helps get
-        the id of the user or role that the permission is tied to.
-    type: :class:`int`
-        An integer representing the type of the permission.
-    permission: :class:`bool`
-        A boolean representing the permission's value.
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
-    """
-
-    def __init__(
-        self,
-        id: Union[int, str],
-        type: int,
-        permission: bool = True,
-        guild_id: int = None,
-    ):
-        self.id = id
-        self.type = type
-        self.permission = permission
-        self.guild_id = guild_id
-
-    def to_dict(self) -> Dict[str, Union[int, bool]]:
-        return {"id": self.id, "type": self.type, "permission": self.permission}
-
-
-def permission(
-    role_id: int = None,
-    user_id: int = None,
-    permission: bool = True,
-    guild_id: int = None,
-):
-    """The method used to specify application command permissions
-    for specific users or roles using their id.
-
-    This method is meant to be used as a decorator.
-
-    .. versionadded:: 2.0
+    .. note::
+        These permissions can be updated by server administrators per-guild. As such, these are only "defaults", as the
+        name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you
+        should use an internal check such as :func:`~.ext.commands.has_permissions`.
 
     Parameters
-    -----------
-    role_id: :class:`int`
-        An integer which represents the id of the role that the
-        permission may be tied to.
-    user_id: :class:`int`
-        An integer which represents the id of the user that the
-        permission may be tied to.
-    permission: :class:`bool`
-        A boolean representing the permission's value.
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
+    ------------
+    perms
+        An argument list of permissions to check for.
+
+    Example
+    ---------
+
+    .. code-block:: python3
+
+        from discord import has_permissions
+
+        @bot.slash_command()
+        @has_permissions(manage_messages=True)
+        async def test(ctx):
+            await ctx.respond('You can manage messages.')
+
     """
 
-    def decorator(func: Callable):
-        if not role_id is None:
-            app_cmd_perm = CommandPermission(role_id, 1, permission, guild_id)
-        elif not user_id is None:
-            app_cmd_perm = CommandPermission(user_id, 2, permission, guild_id)
+    invalid = set(perms) - set(Permissions.VALID_FLAGS)
+    if invalid:
+        raise TypeError(f"Invalid permission(s): {', '.join(invalid)}")
+
+    def inner(command: Callable):
+        if isinstance(command, ApplicationCommand):
+            command.default_member_permissions = Permissions(**perms)
         else:
-            raise ValueError("role_id or user_id must be specified!")
+            command.__default_member_permissions__ = Permissions(**perms)
+        return command
 
-        # Create __app_cmd_perms__
-        if not hasattr(func, "__app_cmd_perms__"):
-            func.__app_cmd_perms__ = []
-
-        # Append
-        func.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
-
-    return decorator
+    return inner
 
 
-def has_role(item: Union[int, str], guild_id: int = None):
-    """The method used to specify application command role restrictions.
+def guild_only() -> Callable:
+    """A decorator that limits the usage of a slash command to guild contexts.
+    The command won't be able to be used in private message channels.
 
-    This method is meant to be used as a decorator.
+    Example
+    ---------
 
-    .. versionadded:: 2.0
+    .. code-block:: python3
 
-    Parameters
-    -----------
-    item: Union[:class:`int`, :class:`str`]
-        An integer or string that represent the id or name of the role
-        that the permission is tied to.
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
+        from discord import guild_only
+
+        @bot.slash_command()
+        @guild_only()
+        async def test(ctx):
+            await ctx.respond('You\'re in a guild.')
+
     """
 
-    def decorator(func: Callable):
-        # Create __app_cmd_perms__
-        if not hasattr(func, "__app_cmd_perms__"):
-            func.__app_cmd_perms__ = []
+    def inner(command: Callable):
+        if isinstance(command, ApplicationCommand):
+            command.guild_only = True
+        else:
+            command.__guild_only__ = True
+        return command
 
-        # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission(item, 1, True, guild_id)  # {"id": item, "type": 1, "permission": True}
-
-        # Append
-        func.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
-
-    return decorator
-
-
-def has_any_role(*items: Union[int, str], guild_id: int = None):
-    """The method used to specify multiple application command role restrictions,
-    The application command runs if the invoker has **any** of the specified roles.
-
-    This method is meant to be used as a decorator.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    *items: Union[:class:`int`, :class:`str`]
-        The integers or strings that represent the ids or names of the roles
-        that the permission is tied to.
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
-    """
-
-    def decorator(func: Callable):
-        # Create __app_cmd_perms__
-        if not hasattr(func, "__app_cmd_perms__"):
-            func.__app_cmd_perms__ = []
-
-        # Permissions (Will Convert ID later in register_commands if needed)
-        for item in items:
-            app_cmd_perm = CommandPermission(item, 1, True, guild_id)  # {"id": item, "type": 1, "permission": True}
-
-            # Append
-            func.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
-
-    return decorator
-
-
-def is_user(user: int, guild_id: int = None):
-    """The method used to specify application command user restrictions.
-
-    This method is meant to be used as a decorator.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    user: :class:`int`
-        An integer that represent the id of the user that the permission is tied to.
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
-    """
-
-    def decorator(func: Callable):
-        # Create __app_cmd_perms__
-        if not hasattr(func, "__app_cmd_perms__"):
-            func.__app_cmd_perms__ = []
-
-        # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission(user, 2, True, guild_id)  # {"id": user, "type": 2, "permission": True}
-
-        # Append
-        func.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
-
-    return decorator
-
-
-def is_owner(guild_id: int = None):
-    """The method used to limit application commands exclusively
-    to the owner of the bot.
-
-    This method is meant to be used as a decorator.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    -----------
-    guild_id: :class:`int`
-        The integer which represents the id of the guild that the
-        permission may be tied to.
-    """
-
-    def decorator(func: Callable):
-        # Create __app_cmd_perms__
-        if not hasattr(func, "__app_cmd_perms__"):
-            func.__app_cmd_perms__ = []
-
-        # Permissions (Will Convert ID later in register_commands if needed)
-        app_cmd_perm = CommandPermission("owner", 2, True, guild_id)  # {"id": "owner", "type": 2, "permission": True}
-
-        # Append
-        func.__app_cmd_perms__.append(app_cmd_perm)
-
-        return func
-
-    return decorator
+    return inner
