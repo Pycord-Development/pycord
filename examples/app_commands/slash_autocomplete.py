@@ -127,9 +127,9 @@ async def get_animals(ctx: discord.AutocompleteContext):
 @option("color", description="Pick a color!", autocomplete=get_colors)
 @option("animal", description="Pick an animal!", autocomplete=get_animals)
 async def autocomplete_example(
-        ctx: discord.ApplicationContext,
-        color: str,
-        animal: str,
+    ctx: discord.ApplicationContext,
+    color: str,
+    animal: str,
 ):
     """Demonstrates using ctx.options to create options that are dependent on the values of other options.
     For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
@@ -151,9 +151,9 @@ async def autocomplete_example(
     # Demonstrates passing a static iterable discord.utils.basic_autocomplete
 )
 async def autocomplete_basic_example(
-        ctx: discord.ApplicationContext,
-        color: str,
-        animal: str,
+    ctx: discord.ApplicationContext,
+    color: str,
+    animal: str,
 ):
     """This demonstrates using the discord.utils.basic_autocomplete helper function.
     For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
