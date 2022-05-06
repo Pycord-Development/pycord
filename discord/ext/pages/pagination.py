@@ -44,19 +44,23 @@ class PageSelectMenu(discord.ui.Select):
 
     Parameters
     ----------
-    placeholder: :class:`str`
-        The placeholder text that is shown if nothing is selected.
-
-    Attributes
-    ----------
     paginator: :class:`Paginator`
-        The paginator class where this menu is being used.
-        Assigned to the menu when ``Paginator.add_menu`` is called.
+        The :class:`Paginator` class associated with this page select menu.
     """
 
-    def __init__(self, paginator, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, paginator, row: int = 4):
         self.paginator: Paginator = paginator
+        pages = [self.paginator.get_page_content(page) for page in paginator.pages]
+        opts = [
+            discord.SelectOption(
+                label=f"Page {pages.index(page) + 1}",
+                value=str(pages.index(page)),
+                description=page.title,
+            )
+            for page in pages
+        ]
+
+        super().__init__(min_values=1, max_values=1, options=opts, row=row)
 
     async def callback(self, interaction: discord.Interaction):
         """|coro|
@@ -68,7 +72,7 @@ class PageSelectMenu(discord.ui.Select):
         interaction: :class:`discord.Interaction`
             The interaction created by selecting the menu option.
         """
-        ...
+        await self.paginator.goto_page(page_number=int(self.values[0]), interaction=interaction)
 
 
 class PaginatorGotoModal(discord.ui.Modal):
@@ -167,7 +171,12 @@ class PaginatorActionButton(discord.ui.Button):
                 else:
                     input_type = "modal"
             if input_type == "select":
-                ...
+                if self.paginator.page_select_menu:
+                    self.paginator.remove_item(self.paginator.page_select_menu)
+                    self.paginator.page_select_menu = None
+                else:
+                    self.paginator.add_page_select_menu(PageSelectMenu(self.paginator))
+                await self.paginator.goto_page(page_number=self.paginator.current_page, interaction=interaction)
             elif input_type == "modal":
                 modal = PaginatorGotoModal(self.paginator, title="Goto Page")
                 await interaction.response.send_modal(modal)
@@ -285,6 +294,7 @@ class Page:
         embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None,
         custom_view: Optional[discord.ui.View] = None,
         files: Optional[List[discord.File]] = None,
+        title: Optional[str] = None,
         **kwargs,
     ):
         if content is None and embeds is None:
@@ -293,6 +303,7 @@ class Page:
         self._embeds = embeds or []
         self._custom_view = custom_view
         self._files = files or []
+        self._title = title
 
     async def callback(self, interaction: Optional[discord.Interaction] = None):
         """|coro|
@@ -358,6 +369,16 @@ class Page:
     def files(self, value: Optional[List[discord.File]]):
         """Sets the files associated with the page."""
         self._files = value
+
+    @property
+    def title(self) -> Optional[str]:
+        """Gets the title for the page."""
+        return self._title
+
+    @title.setter
+    def title(self, value: Optional[str]):
+        """Sets the title for the page."""
+        self._title = value
 
 
 class PageGroup:
@@ -530,6 +551,8 @@ class Paginator(discord.ui.View):
     ----------
     menu: Optional[List[:class:`PaginatorMenu`]]
         The page group select menu associated with this paginator.
+    page_select_menu: Optional[:class:`PageSelectMenu`]
+        The page select menu currently displayed with this paginator.
     page_groups: Optional[List[:class:`PageGroup`]]
         List of :class:`PageGroup` objects the user can switch between.
     current_page: :class:`int`
@@ -578,6 +601,7 @@ class Paginator(discord.ui.View):
         self.menu: Optional[PaginatorMenu] = None
         self.show_menu = show_menu
         self.menu_placeholder = menu_placeholder
+        self.page_select_menu: Optional[PageSelectMenu] = None
         self.page_groups: Optional[List[PageGroup]] = None
 
         if all(isinstance(pg, PageGroup) for pg in pages):
@@ -866,7 +890,10 @@ class Paginator(discord.ui.View):
         :class:`~discord.Message`
             The message associated with the paginator.
         """
+        self.current_page = page_number
+
         self.update_nav_buttons()
+
         if self.show_menu:
             self.add_menu()
 
@@ -876,7 +903,9 @@ class Paginator(discord.ui.View):
         if self.custom_view:
             self.update_custom_view(self.custom_view)
 
-        self.current_page = page_number
+        if self.page_select_menu:
+            self.add_page_select_menu(self.page_select_menu)
+
         if self.show_indicator:
             self.nav_buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
 
@@ -919,6 +948,11 @@ class Paginator(discord.ui.View):
         self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder)
         self.menu.paginator = self
         self.add_item(self.menu)
+
+    def add_page_select_menu(self, menu: PageSelectMenu):
+        """Adds a :class:`PageSelectMenu` instance to the paginator."""
+        self.page_select_menu = menu
+        self.add_item(self.page_select_menu)
 
     @discord.utils.deprecated("add_default_nav_buttons")
     def add_default_buttons(self):
