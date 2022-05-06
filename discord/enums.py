@@ -384,6 +384,7 @@ class AuditLogAction(Enum):
     auto_moderation_rule_create = 140
     auto_moderation_rule_update = 141
     auto_moderation_rule_delete = 142 
+    auto_moderation_block_message = 143
 
 
     @property
@@ -439,6 +440,7 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
+            AuditLogAction.auto_moderation_block_message: None,
         }
         return lookup[self]
 
@@ -475,7 +477,7 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
-        elif v < 143:
+        elif v < 144:
             return "auto_moderation_rule"
 
 
