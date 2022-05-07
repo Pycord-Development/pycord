@@ -35,7 +35,6 @@ from collections import OrderedDict
 from typing import (
     TYPE_CHECKING,
     Any,
-    Awaitable,
     Callable,
     Coroutine,
     Dict,
@@ -46,17 +45,15 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    overload,
 )
 
 from ..channel import _guild_channel_factory
-from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
+from ..enums import MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
     ClientException,
-    NotFound,
     ValidationError,
 )
 from ..member import Member
@@ -64,7 +61,7 @@ from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
 from ..user import User
-from ..utils import async_all, find, get_or_fetch, utcnow
+from ..utils import async_all, find, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 

@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Callable, Dict, Union
+from typing import Callable
 
 from ..permissions import Permissions
 from .core import ApplicationCommand

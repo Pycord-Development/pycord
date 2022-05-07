@@ -60,7 +60,7 @@ from .commands import (
     command,
 )
 from .enums import InteractionType
-from .errors import CheckFailure, DiscordException, Forbidden, HTTPException
+from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
