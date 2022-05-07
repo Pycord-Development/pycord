@@ -25,10 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import datetime
-import time
-from abc import abstractmethod
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -1140,7 +1137,11 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     """
 
-    __slots__ = ()
+    __slots__ = "nsfw"
+
+    def _update(self, guild: Guild, data: VoiceChannelPayload):
+        super()._update(guild, data)
+        self.nsfw: bool = data.get("nsfw", False)
 
     def __repr__(self) -> str:
         attrs = [
@@ -1158,6 +1159,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
     async def _get_channel(self):
         return self
+
+    def is_nsfw(self) -> bool:
+        """:class:`bool`: Checks if the channel is NSFW."""
+        return self.nsfw
 
     @property
     def last_message(self) -> Optional[Message]:

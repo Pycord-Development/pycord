@@ -238,6 +238,7 @@ class AuditLogChanges:
             "location_type",
             _enum_transformer(enums.ScheduledEventLocationType),
         ),
+        "command_id": ("command_id", _transform_snowflake),
     }
 
     def __init__(

@@ -380,6 +380,7 @@ class AuditLogAction(Enum):
     thread_create = 110
     thread_update = 111
     thread_delete = 112
+    application_command_permission_update = 121
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -431,6 +432,7 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
+            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -467,6 +469,8 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
+        elif v < 121:
+            return "application_command_permission"
 
 
 class UserFlags(Enum):
@@ -695,8 +699,12 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        # TODO: Improve the error message
-        raise TypeError(f"Invalid class {datatype} used as an input type for an Option")
+        from .commands.context import ApplicationContext
+
+        if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
+            raise TypeError(
+                f"Invalid class {datatype} used as an input type for an Option"
+            )  # TODO: Improve the error message
 
 
 class EmbeddedActivity(Enum):
