@@ -400,6 +400,7 @@ class Client:
         return asyncio.create_task(wrapped, name=f"pycord: {event_name}")
 
     def dispatch(self, event: Union[str, EventType], *args: Any, **kwargs: Any) -> None:
+        event = str(event) # ensure that the event is a string first
         _log.debug("Dispatching event %s", event)
 
         listeners = self._listeners.get(event)
@@ -549,7 +550,7 @@ class Client:
                     await self.ws.poll_event()
             except ReconnectWebSocket as e:
                 _log.info("Got a request to %s the websocket.", e.op)
-                self.dispatch("disconnect")
+                self.dispatch(EventType.disconnect)
                 ws_params.update(
                     sequence=self.ws.sequence,
                     resume=e.resume,
@@ -565,7 +566,7 @@ class Client:
                 asyncio.TimeoutError,
             ) as exc:
 
-                self.dispatch("disconnect")
+                self.dispatch(EventType.disconnect)
                 if not reconnect:
                     await self.close()
                     if isinstance(exc, ConnectionClosed) and exc.code == 1000:
