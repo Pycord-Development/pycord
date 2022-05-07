@@ -230,7 +230,7 @@ class PageGroup:
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
         Also used as the SelectOption value.
-    description: :class:`str`
+    description: Optional[:class:`str`]
         The description shown on the corresponding PaginatorMenu dropdown option.
     emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
         The emoji shown on the corresponding PaginatorMenu dropdown option.
@@ -264,7 +264,7 @@ class PageGroup:
         self,
         pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
         label: str,
-        description: str,
+        description: Optional[str] = None,
         emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
@@ -279,7 +279,7 @@ class PageGroup:
         trigger_on_display: Optional[bool] = None,
     ):
         self.label = label
-        self.description = description
+        self.description: Optional[str] = description
         self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
         self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
         self.show_disabled = show_disabled

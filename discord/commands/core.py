@@ -100,11 +100,15 @@ else:
 
 
 def wrap_callback(coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
         try:
             ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return
@@ -116,11 +120,15 @@ def wrap_callback(coro):
 
 
 def hooked_wrapped_callback(command, ctx, coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
             ret = await coro(arg)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return

@@ -1124,7 +1124,7 @@ class Client:
         Parameters
         ------------
         event_name: :type:`Union[str, EventType]`
-            The name of the event to register this coroutine under. If this is not provided, then
+            The event to register this coroutine under. If this is not provided, then
             the name of the coroutine provided will be used instead.
 
         Raises
