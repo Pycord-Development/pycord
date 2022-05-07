@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union, Coroutine
+from typing import TYPE_CHECKING, Any, Coroutine, Dict, List, Optional, Tuple, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
