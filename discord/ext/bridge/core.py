@@ -86,8 +86,7 @@ class BridgeCommand:
         :class:`BridgeExtCommand`
             The respective traditional (prefix-based) version of the command.
         """
-        command = BridgeExtCommand(self.callback, **self.kwargs)
-        return command
+        return BridgeExtCommand(self.callback, **self.kwargs)
 
     def get_application_command(self):
         """A method to get the discord.commands version of this command.
@@ -97,8 +96,7 @@ class BridgeCommand:
         :class:`BridgeSlashCommand`
             The respective slash command version of the command.
         """
-        command = BridgeSlashCommand(self.callback, **self.kwargs)
-        return command
+        return BridgeSlashCommand(self.callback, **self.kwargs)
 
     def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
         """Adds the command to a bot.

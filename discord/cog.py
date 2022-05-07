@@ -220,10 +220,11 @@ class CogMeta(type):
 
         listeners_as_list = []
         for listener in listeners.values():
-            for listener_name in listener.__cog_listener_names__:
-                # I use __name__ instead of just storing the value so I can inject
-                # the self attribute when the time comes to add them to the bot
-                listeners_as_list.append((listener_name, listener.__name__))
+            # I use __name__ instead of just storing the value so I can inject
+            # the self attribute when the time comes to add them to the bot
+            listeners_as_list.extend(
+                (listener_name, listener.__name__) for listener_name in listener.__cog_listener_names__
+            )
 
         new_cls.__cog_listeners__ = listeners_as_list
 
@@ -719,9 +720,9 @@ class CogMixin:
 
         try:
             setup = getattr(lib, "setup")
-        except AttributeError:
+        except AttributeError as exc:
             del sys.modules[key]
-            raise errors.NoEntryPointError(key)
+            raise errors.NoEntryPointError(key) from exc
 
         try:
             setup(self)
@@ -736,8 +737,8 @@ class CogMixin:
     def _resolve_name(self, name: str, package: Optional[str]) -> str:
         try:
             return importlib.util.resolve_name(name, package)
-        except ImportError:
-            raise errors.ExtensionNotFound(name)
+        except ImportError as e:
+            raise errors.ExtensionNotFound(name) from e
 
     def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Loads an extension.

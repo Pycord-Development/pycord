@@ -145,7 +145,7 @@ class BridgeExtContext(BridgeContext, Context):
 
     async def _respond(self, *args, **kwargs) -> Message:
         message = await self._get_super("reply")(*args, **kwargs)
-        if self._original_response_message == None:
+        if self._original_response_message is None:
             self._original_response_message = message
         return message
 

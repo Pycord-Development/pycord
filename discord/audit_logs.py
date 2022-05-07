@@ -95,15 +95,11 @@ def _transform_channel(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optio
 
 
 def _transform_member_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Union[Member, User, None]:
-    if data is None:
-        return None
-    return entry._get_member(int(data))
+    return None if data is None else entry._get_member(int(data))
 
 
 def _transform_guild_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Guild]:
-    if data is None:
-        return None
-    return entry._state._get_guild(data)
+    return None if data is None else entry._state._get_guild(data)
 
 
 def _transform_overwrites(

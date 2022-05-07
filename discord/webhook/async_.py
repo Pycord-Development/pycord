@@ -587,15 +587,15 @@ def handle_message_parameters(
                 }
             )
         else:
-            for index, file in enumerate(files):
-                multipart.append(
-                    {
-                        "name": f"file{index}",
-                        "value": file.fp,
-                        "filename": file.filename,
-                        "content_type": "application/octet-stream",
-                    }
-                )
+            multipart.extend(
+                {
+                    "name": f"file{index}",
+                    "value": file.fp,
+                    "filename": file.filename,
+                    "content_type": "application/octet-stream",
+                }
+                for index, file in enumerate(files)
+            )
 
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
 
@@ -679,9 +679,7 @@ class _WebhookState:
         self._parent = None if isinstance(parent, _WebhookState) else parent
 
     def _get_guild(self, guild_id):
-        if self._parent is not None:
-            return self._parent._get_guild(guild_id)
-        return None
+        return self._parent._get_guild(guild_id) if self._parent is not None else None
 
     def store_user(self, data):
         if self._parent is not None:
