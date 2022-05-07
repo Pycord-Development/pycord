@@ -32,6 +32,7 @@ import inspect
 import re
 import types
 from collections import OrderedDict
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -682,25 +683,19 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)  # type: ignore # union type
+                    option = Option(option.__args__[0], required=False)
                 else:
-                    option = Option(option.__args__, "No description provided")  # type: ignore # union type
+                    option = Option(option.__args__)
 
             if not isinstance(option, Option):
-                if isinstance(p_obj.default, Option):  # arg: type = Option(...)
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
-                    option = p_obj.default
-                else:  # arg: Option(...) = default
-                    option = Option(option, "No description provided")
+                option = Option(option)
 
-            if (
-                option.default is None
-                and p_obj.default != inspect.Parameter.empty
-                and not isinstance(p_obj.default, Option)
-            ):
-                option.default = p_obj.default
-                option.required = False
-
+            if option.default is None:
+                if p_obj.default == inspect.Parameter.empty:
+                    option.default = None
+                else:
+                    option.default = p_obj.default
+                    option.required = False
             if option.name is None:
                 option.name = p_name
             if option.name != p_name or option._parameter_name is None:
@@ -829,6 +824,15 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif issubclass(op._raw_type, Enum):
+                if isinstance(arg, str) and arg.isdigit():
+                    try:
+                        arg = op._raw_type(int(arg))
+                    except ValueError:
+                        arg = op._raw_type(arg)
+                else:
+                    arg = op._raw_type(arg)
 
             kwargs[op._parameter_name] = arg
 
