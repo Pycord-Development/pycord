@@ -655,7 +655,13 @@ class SlashCommand(ApplicationCommand):
 
     def _check_required_params(self, params):
         params = iter(params.items())
-        required_params = ["self", "context"] if self.attached_to_group or self.cog else ["context"]
+        required_params = (
+            ["self", "context"]
+            if self.attached_to_group
+            or self.cog
+            or len(self.callback.__qualname__.split(".")) > 1
+            else ["context"]
+        )
         for p in required_params:
             try:
                 next(params)
@@ -745,12 +751,6 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
-
-    def _set_cog(self, cog):
-        prev = self.cog
-        super()._set_cog(cog)
-        if (prev is None and cog is not None) or (prev is not None and cog is None):
-            self.options = self._parse_options(self._get_signature_parameters())  # parse again to leave out self
 
     @property
     def is_subcommand(self) -> bool:
