@@ -2,95 +2,96 @@
 
 .. _discord-intro:
 
-Creating a Bot Account
+Создание аккаунта бота
 ======================
 
-In order to work with the library and the Discord API in general, we must first create a Discord Bot account.
+Для работы с библиотекой и приложением Discord API необходимо создать аккаунт бота.
 
-Creating a Bot account is a pretty straightforward process.
+Создание аккаунта бота это простой процесс.
 
-1. Make sure you're logged on to the `Discord website <https://discord.com>`_.
-2. Navigate to the `application page <https://discord.com/developers/applications>`_
-3. Click on the "New Application" button.
+1. Убедитесь, что вы авторизованы на `Discord сайте <https://discord.com>`_.
+2. Направляйтесь на `страницу <https://discord.com/developers/applications>`_
+3. Нажимайте на кнопку "New application"
 
     .. image:: /images/discord_create_app_button.png
-        :alt: The new application button.
+        :alt: Та самая кнопка.
 
-4. Give the application a name and click "Create".
+4. Дайте нашему приложению название и нажмите "Create".
 
     .. image:: /images/discord_create_app_form.png
-        :alt: The new application form filled in.
+        :alt: То самое поле для ввода.
 
-5. Create a Bot User by navigating to the "Bot" tab and clicking "Add Bot".
+5. Для создания аккаунта бота идите в раздел "Bot" и нажмите на "Add Bot".
 
-    - Click "Yes, do it!" to continue.
+    - Чтобы продолжить нажмите на "Yes, do it!"
 
     .. image:: /images/discord_create_bot_user.png
-        :alt: The Add Bot button.
-6. Make sure that **Public Bot** is ticked if you want others to invite your bot.
+        :alt: Та самая кнопка.
 
-    - You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you
-      are developing a service that needs it. If you're unsure, then **leave it unchecked**.
+6. Убедитесь, что **Public Bot** активирован в настройках, если вы хотите, чтобы другие могли пригласить вашего бота к себе.
+
+    - Также убедитесь, что **Require OAuth2 Code Grant** не отмечен, если вы не
+      делаете это для сервиса, который нуждается в этом. Если вы не уверены - то **не отмечайте этот пункт**.
 
     .. image:: /images/discord_bot_user_options.png
-        :alt: How the Bot User options should look like for most people.
+        :alt: Как должны выглядеть опции бота-пользователя для большинства людей.
 
-7. Copy the token using the "Copy" button.
+7. Скопируйте токен, используя кнопку "Copy".
 
-    - **This is not the Client Secret at the General Information page.**
+    - **Это не Секрет клиента на странице Общая информация.**
 
     .. warning::
 
-        It should be worth noting that this token is essentially your bot's
-        password. You should **never** share this with someone else. In doing so,
-        someone can log in to your bot and do malicious things, such as leaving
-        servers, ban all members inside a server, or pinging everyone maliciously.
+        Стоит отметить, что этот токен по сути является паролем вашего бота.
+        пароль. Вы **никогда** не должны передавать его кому-либо еще. В этом случае
+        кто-то может войти в систему вашего бота и совершить вредоносные действия, например, покинуть
+        сервера, забанить всех пользователей на сервере или злонамеренно пинговать всех подряд.
 
-        The possibilities are endless, so **do not share this token.**
+        Возможности безграничны, так что **не делитесь этим жетоном**.
 
-        If you accidentally leaked your token, click the "Regenerate" button as soon
-        as possible. This revokes your old token and re-generates a new one.
-        Now you need to use the new token to login.
+        Если вы случайно слили свой токен, нажмите кнопку "Regenerate"
+        как можно скорее. Это аннулирует ваш старый токен и сгенерирует новый.
+        Теперь вам нужно использовать новый токен для входа в систему.
 
-And that's it. You now have a bot account and you can login with that token.
+Вот и все. Теперь у вас есть учетная запись бота, и вы можете войти в систему с помощью этого токена.
 
 .. _discord_invite_bot:
 
-Inviting Your Bot
+Приглашение вашего бота
 -----------------
 
-So you've made a Bot User but it's not actually in any server.
+И так, вы сделали аккаунт Вашему боту, но его по прежнему нет нигде.
 
-If you want to invite your bot you must create an invite URL for it.
+Если вы хотите его пригласить вам необходимо создать ссылку на его приглашение.
 
-1. Make sure you're logged on to the `Discord website <https://discord.com>`_.
-2. Navigate to the `application page <https://discord.com/developers/applications>`_
-3. Click on your bot's page.
-4. Expand the "OAuth2" tab and click on "URL Generator".
+1. Убедитесь, что вы авторизованы на `Discord сайте <https://discord.com>`_.
+2. Направляйтесь на `страницу приложения <https://discord.com/developers/applications>`_
+3. Нажмите в раздел вашего бота.
+4. Раскройте вкладку "OAuth2" и нажмите на "URL Generator".
 
     .. image:: /images/discord_oauth2.png
-        :alt: How the OAuth2 tab should look like.
+        :alt: Как раздел OAuth2 должен выглядеть.
 
-5. Tick the "bot" and "applications.commands" checkboxes under "scopes".
+5. Отметьте "bot" и "applications.commands" в разделе "scopes".
 
     .. image:: /images/discord_oauth2_scope.png
-        :alt: The scopes checkbox with "bot" and "applications.commands" ticked.
+        :alt: Отмеченнные указанные разделы
 
-6. Tick the permissions required for your bot to function under "Bot Permissions".
+6. Отметьте нужные для работы бота разрешения в разделе "Bot Permissions".
 
-    - Please be aware of the consequences of requiring your bot to have the "Administrator" permission.
+    - Пожалуйста, обратите внимание на последствия запроса вашего бота наличия права "Administrator".
 
-    - Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled. Check the `2FA support page <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_ for more information.
+    - У владельцев бота должна быть включена двухфакторная аутентификация (вход по коду) для некоторых действий и разрешений. Подробнее на странице `Поддержка двухфакторной аутентификации <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_.
 
     .. image:: /images/discord_oauth2_perms.png
-        :alt: The permission checkboxes with some permissions checked.
+        :alt: Некоторые права отмечены.
 
-7. Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click "Authorize".
+7. Теперь ссылка может использована для приглашения вашего бота на сервер. Скопируйте и перейдите по ссылке в вашем браузере, выберите нужный сервер и нажмите "Авторизовать".
 
 
 .. note::
 
-    The person adding the bot needs "Manage Server" permissions to do so.
+    Человеку, приглашающего бота, нужны права "Manage Server" (Управление Сервером)
 
-If you want to generate this URL dynamically at run-time inside your bot and using the
-:class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`.
+Если вы хотите генерировать эту ссылку прямо в вашем боте, используя
+:class:`discord.Permissions` - вы можете использовать :func:`discord.utils.oauth_url`.
