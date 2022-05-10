@@ -3,29 +3,30 @@
 .. versionadded:: 0.6.0
 .. _logging_setup:
 
-Setting Up Logging
+Настройка логгера
 ==================
 
-*Pycord* logs errors and debug information via the :mod:`logging` python
-module. It is strongly recommended that the logging module is
-configured, as no errors or warnings will be output if it is not set up.
-Configuration of the ``logging`` module can be as simple as::
+
+*Pycord* регистрирует ошибки и отладочную информацию через python :mod:`logging`
+модуль. Настоятельно рекомендуется, чтобы модуль протоколирования был
+так как если он не настроен, ошибки и предупреждения выводиться не будут.
+Конфигурация модуля ``logging`` проста::
 
     import logging
 
     logging.basicConfig(level=logging.INFO)
 
-Placed at the start of the application. This will output the logs from
-discord as well as other libraries that use the ``logging`` module
-directly to the console.
+Размещается в начале приложения. Это позволит выводить журналы из
+discord, а также других библиотек, использующих модуль ``logging``.
+непосредственно в консоль.
 
-The optional ``level`` argument specifies what level of events to log
-out and can be any of ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, and
-``DEBUG`` and if not specified defaults to ``WARNING``.
+Необязательный аргумент ``level`` указывает, на каком уровне регистрировать события.
+и может быть любым из ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, и
+``DEBUG``, а если не указан, то по умолчанию принимает значение ``WARNING``.
 
-More advanced setups are possible with the :mod:`logging` module. For
-example to write the logs to a file called ``discord.log`` instead of
-outputting them to the console the following snippet can be used::
+Более сложные настройки возможны с помощью модуля :mod:`logging`. Для
+например, для записи логов в файл с именем ``discord.log`` вместо
+выводить их в консоль, можно использовать следующее::
 
     import discord
     import logging
@@ -36,11 +37,11 @@ outputting them to the console the following snippet can be used::
     handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     logger.addHandler(handler)
 
-This is recommended, especially at verbose levels such as ``INFO``
-and ``DEBUG``, as there are a lot of events logged and it would clog the
-stdout of your program.
+Это рекомендуется, особенно на таких уровнях, как ``INFO`` и ``DEBUG``.
+и ``DEBUG``, так как регистрируется много событий, и это засоряет
+вывод вашей программы.
 
 
 
-For more information, check the documentation and tutorial of the
-:mod:`logging` module.
+Для получения дополнительной информации ознакомьтесь с документацией и учебником по
+:mod:`logging`.
