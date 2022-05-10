@@ -150,7 +150,7 @@ class PaginatorActionButton(discord.ui.Button):
         if self.button_type == "cancel":
             await self.paginator.cancel()
         elif self.button_type == "disable":
-            await self.paginator.disable()
+            await self.paginator.disable(interaction=interaction)
         elif self.button_type == "action":
             await self.paginator.page_action(interaction=interaction)
         elif self.button_type == "goto":
@@ -816,11 +816,12 @@ class Paginator(discord.ui.View):
             The interaction to use when disabling the paginator. If not provided, the paginator message will be edited using the paginator's
             stored :attr:`message` attribute instead.
         """
-        page = self.get_page_content(page)
+
         for item in self.children:
             if include_custom or not self.custom_view or item not in self.custom_view.children:
                 item.disabled = True
         if page:
+            page = self.get_page_content(page)
             if interaction:
                 await interaction.followup.edit_message(
                     self.message.id, content=page.content, embeds=page.embeds, view=self
@@ -832,7 +833,10 @@ class Paginator(discord.ui.View):
                     view=self,
                 )
         else:
-            await self.message.edit(view=self)
+            if interaction:
+                await interaction.response.edit_message(view=self)
+            else:
+                await self.message.edit(view=self)
 
     async def cancel(
         self,
@@ -856,11 +860,11 @@ class Paginator(discord.ui.View):
             await self.message.delete()
         else:
             items = self.children.copy()
-            page = self.get_page_content(page)
             for item in items:
                 if include_custom or not self.custom_view or item not in self.custom_view.children:
                     self.remove_item(item)
             if page:
+                page = self.get_page_content(page)
                 await self.message.edit(
                     content=page.content,
                     embeds=page.embeds,
