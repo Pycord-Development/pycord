@@ -138,8 +138,8 @@ A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async r
 Полезные ссылки:
 ------------
 
-- `Документация <https://docs.pycord.dev/en/master/index.html> (разрабатывается русская)`_
-- `Учитесь тому, как создавать Дискорд ботов с Pycord <https://guide.pycord.dev> (постараемся тоже перевести)`_
+- `Документация <https://docs.pycord.dev/en/master/index.html> разрабатывается русская`_
+- `Учитесь тому, как создавать Дискорд ботов с Pycord <https://guide.pycord.dev> постараемся тоже перевести`_
 - `Наш официальный дискорд сервер: <https://pycord.dev/discord>`_
 - `Официальный дискорд сервер разработчиков Discord <https://discord.gg/discord-developers>`_
 - `Неофициальный дискорд сервер Discord API <https://discord.gg/discord-api>`_
