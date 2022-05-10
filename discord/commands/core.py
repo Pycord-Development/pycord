@@ -825,6 +825,12 @@ class SlashCommand(ApplicationCommand):
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
 
+            elif op._raw_type in (SlashCommandOptionType.integer,
+                                  SlashCommandOptionType.number,
+                                  SlashCommandOptionType.string,
+                                  SlashCommandOptionType.boolean):
+                pass
+
             elif issubclass(op._raw_type, Enum):
                 if isinstance(arg, str) and arg.isdigit():
                     try:
