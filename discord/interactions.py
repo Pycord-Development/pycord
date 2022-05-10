@@ -679,6 +679,8 @@ class InteractionResponse:
         embeds: List[Embed] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
+        file: File = MISSING,
+        files: List[File] = MISSING,
         delete_after: Optional[float] = None,
     ) -> None:
         """|coro|
@@ -701,6 +703,11 @@ class InteractionResponse:
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
+        file: :class:`File`
+            The file to upload. This cannot be mixed with ``files`` parameter.
+        files: List[:class:`File`]
+            A list of files to send with the content. Must be a maximum of 10. This
+            cannot be mixed with the ``file`` parameter.
         delete_after: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
@@ -742,16 +749,38 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+
+        if file is not MISSING and files is not MISSING:
+            raise InvalidArgument("cannot pass both file and files parameter to edit_message()")
+
+        if file is not MISSING:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be a File")
+            else:
+                files = [file]
+
+        if files is not MISSING:
+            if len(files) > 10:
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument("files parameter must be a list of File")
+
         adapter = async_context.get()
-        await self._locked_response(
-            adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.message_update.value,
-                data=payload,
+        try:
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.message_update.value,
+                    data=payload,
+                    files=files,
+                )
             )
-        )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view and not view.is_finished():
             state.store_view(view, message_id)
