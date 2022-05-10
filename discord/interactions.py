@@ -677,10 +677,10 @@ class InteractionResponse:
         content: Optional[Any] = MISSING,
         embed: Optional[Embed] = MISSING,
         embeds: List[Embed] = MISSING,
-        attachments: List[Attachment] = MISSING,
-        view: Optional[View] = MISSING,
         file: File = MISSING,
         files: List[File] = MISSING,
+        attachments: List[Attachment] = MISSING,
+        view: Optional[View] = MISSING,
         delete_after: Optional[float] = None,
     ) -> None:
         """|coro|
@@ -697,17 +697,17 @@ class InteractionResponse:
         embed: Optional[:class:`Embed`]
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
+        file: :class:`File`
+            A new file to add to the message. This cannot be mixed with ``files`` parameter.
+        files: List[:class:`File`]
+            A list of new files to add to the message. Must be a maximum of 10. This
+            cannot be mixed with the ``file`` parameter.
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
         view: Optional[:class:`~discord.ui.View`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
-        file: :class:`File`
-            The file to upload. This cannot be mixed with ``files`` parameter.
-        files: List[:class:`File`]
-            A list of files to send with the content. Must be a maximum of 10. This
-            cannot be mixed with the ``file`` parameter.
         delete_after: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
@@ -758,12 +758,19 @@ class InteractionResponse:
                 raise InvalidArgument("file parameter must be a File")
             else:
                 files = [file]
+                if "attachments" not in payload:
+                    # we keep previous attachments when adding a new file
+                    payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
         if files is not MISSING:
             if len(files) > 10:
                 raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
+            else:
+                if "attachments" not in payload:
+                    # we keep previous attachments when adding new files
+                    payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
         adapter = async_context.get()
         try:
