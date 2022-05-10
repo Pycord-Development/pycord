@@ -4,22 +4,22 @@
 
 .. currentmodule:: discord
 
-Quickstart
+Быстрый старт
 ==========
 
-This page gives a brief introduction to the library. It assumes you have the library installed.
-If you don't, check the :ref:`installing` portion.
+Эта страница введет вас в библиотеку. Она предполагает, что вы установили библиотеку.
+Если вы не установили, посмотрите раздел :ref:`installing`.
 
-A Minimal Bot
+Базовый бот
 -------------
 
-Let's make a bot that responds to a specific message and walk you through it.
+Давайте сделаем бота, который будет отвечать на определенное сообщение и показывать вам его.
 
-It looks something like this:
+Это выглядит как-то так:
 
 .. note::
 
-    Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent.
+    Этот пример использует содержимое сообщений, поэтому требует привилегии :attr:`Intents.message_content`.
 
 .. code-block:: python3
 
@@ -40,57 +40,63 @@ It looks something like this:
             return
 
         if message.content.startswith('$hello'):
-            await message.channel.send('Hello!')
+            await message.channel.send('Привет!')
 
-    client.run('your token here')
+    client.run('токен сюда')
 
-Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict
-with the library.
+Давайте назовем этот файл ``example_bot.py``. Убедитесь, что она назван не ``discord.py``. Такое название
+конфликтует с библиотекой.
 
-There's a lot going on here, so let's walk you through it step by step:
+Здесь будет много всего, поэтому пойдем по шагам.
 
-1. The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError`
-   then head on over to :ref:`installing` section to properly install.
-2. Next, we create an instance of a :class:`Client`. This client is our connection to Discord.
-3. We then use the :meth:`Client.event` decorator to register an event. This library has many events.
-   Since this library is asynchronous, we do things in a "callback" style manner.
+1. Первая линия просто импортирует библиотеку, если это вызвало ошибку `ModuleNotFoundError` или `ImportError`,
+   то тогда перейдите к разделу :ref:`installing` для правильной установки.
+2. Далее, мы создаем экземпляр класса :class:`Client`. Этот клиент является нашей связью с Discord.
 
-   A callback is essentially a function that is called when something happens. In our case,
-   the :func:`on_ready` event is called when the bot has finished logging in and setting things
-   up and the :func:`on_message` event is called when the bot has received a message.
-4. Since the :func:`on_message` event triggers for *every* message received, we have to make
-   sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author`
-   is the same as the :attr:`Client.user`.
-5. Afterwards, we check if the :class:`Message.content` starts with ``'$hello'``. If it does,
-   then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of
-   handling commands, which can be later automated with the :doc:`./ext/commands/index` framework.
+3. Мы используем декоратор :meth:`Client.event` для зарегистрировать событие. Эта библиотека имеет много событий.
+   Поскольку эта библиотека является асинхронной, мы выполняем действия в стиле "обратного вызова".
+
+   Отклик - это то, что вызывается при том, что что-то происходит. В нашем случае,
+   событие :func:`on_ready` вызывается когда бот закончил входить и настраиваться,
+   а событие :func:`on_message` вызывается когда бот получил сообщение.
+   
+4. Поскольку событие :func:`on_message` срабатывает для *каждого* полученного сообщения, мы должны убедиться, что
+   убедиться, что мы игнорируем сообщения от самих себя. Для этого мы проверяем, совпадает ли :attr:`Message.author`
+   совпадает с :attr:`Client.user`.
+
+5. После этого мы проверяем: начинается ля :class:`Message.content` с ``'$hello'``. Если это так,
+   тогда мы отсылаем сообщение в этот канал со строкой ``'Привет!'``. Это простое способ обработки команд,
+    которые могут быть потом автоматизированы с помощью фреймворка :doc:`./ext/commands/index`.
+
 6. Finally, we run the bot with our login token. If you need help getting your token or creating a bot,
    look in the :ref:`discord-intro` section.
+6. Наконец, мы запустили бота с нашим токеном. Если вам нужна будет помощь при получении токена или создании бота,
+   загляните в раздел :ref:`discord-intro`.
 
 
-Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a
-Python script, we can run it directly.
+Мы создали бота, теперь нам нужно его *запустить*. К счастью, это просто, потому что это просто
+скрипт Python, и мы может его напрямую запустить.
 
-On Windows:
+На Windows:
 
 .. code-block:: shell
 
     $ py -3 example_bot.py
 
-On other systems:
+На других системах:
 
 .. code-block:: shell
 
     $ python3 example_bot.py
 
-Now you can try playing around with your basic bot.
+Теперь вы можете поиграться со своим ботом.
 
-A Minimal Bot with Slash Commands
+Базовый бот со слэш командой
 ---------------------------------
 
-As a continuation, let's create a bot that registers a simple slash command!
+В продолжение давате создадим бота, который будет регистрировать простую слэш команду!
 
-It looks something like this:
+Это будет выглядеть как-то так:
 
 .. code-block:: python3
 
@@ -104,21 +110,26 @@ It looks something like this:
 
     @bot.slash_command(guild_ids=[your, guild_ids, here])
     async def hello(ctx):
-        await ctx.respond("Hello!")
+        await ctx.respond("Привет!")
 
-    bot.run("your token here")
-
-Let's look at the differences compared to the previous example, step-by-step:
-
-1. The first line remains unchanged.
-2. Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports
-   slash command creation and other features, while inheriting all the features of :class:`.Client`.
-3. We then use the :meth:`.Bot.slash_command` decorator to register a new slash command.
-   The ``guild_ids`` attribute contains a list of guilds where this command will be active.
-   If you omit it, the command will be globally available, and may take up to an hour to register.
-4. Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that
-   all slash commands must have some form of response, otherwise they will fail.
-5. Finally, we, once again, run the bot with our login token.
+    bot.run("Ваш токен сюда")
 
 
-Congratulations! Now you have created your first slash command!
+Давайте разберем различия между этим, и предыдущим примером по шагам:
+
+1. Первая строка не изменилась.
+
+2. Далее, мы создаем экземпляр класса :class:`.Bot`. Это различно от класса :class:`.Client`, так как
+   он поддерживает создание слэш команд и другие возможности, а наследует все возможности класса :class:`.Client`.
+
+3. Затем мы используем :meth:`.Bot.slash_command` - декоратор, чтобы зарегистрировать новую слэш команду.
+   ``guild_ids`` - это список сервером, где эта команда будет активна.
+   Если мы его пропустим, то команда будет доступна на всех серверах, и его регистрация может занять до часа.
+
+4. Затем мы вызываем ответ на слэш команду в виде текстового ответа. Пожалуйста, обратите внимание,
+   что все слэш команды должны иметь хотя бы один ответ, иначе они не будут успешно выполнены.
+
+5. Наконец, мы запускаем бота с нашим токеном.
+
+
+Поздравляем! Вы создали первого бота, который использует слэш команды!
