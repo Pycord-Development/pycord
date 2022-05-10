@@ -52,6 +52,7 @@ These extensions help you during development when it comes to common tasks.
   ext/tasks/index.rst
   ext/pages/index.rst
   ext/ipc/index.rst
+  ext/bridge/index.rst
 
 Manuals
 ---------
@@ -66,6 +67,7 @@ These pages go into great detail about everything the API can do.
   discord.ext.tasks API Reference <ext/tasks/index.rst>
   discord.ext.pages API Reference <ext/pages/index.rst>
   discord.ext.ipc API Reference <ext/ipc/api.rst>
+  discord.ext.bridge API Reference <ext/bridge/index.rst>
 
 Meta
 ------

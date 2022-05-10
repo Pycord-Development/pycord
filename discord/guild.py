@@ -67,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator, BanIterator
+from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -88,13 +88,7 @@ if TYPE_CHECKING:
     import datetime
 
     from .abc import Snowflake, SnowflakeTime
-    from .channel import (
-        CategoryChannel,
-        StageChannel,
-        StoreChannel,
-        TextChannel,
-        VoiceChannel,
-    )
+    from .channel import CategoryChannel, StageChannel, TextChannel, VoiceChannel
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
@@ -107,7 +101,7 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
-    GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, CategoryChannel, StoreChannel]
+    GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, CategoryChannel]
     ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
 
 
@@ -207,7 +201,7 @@ class Guild(Hashable):
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
-        - ``COMMERCE``: Guild can sell things using store channels.
+        - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``FEATURABLE``: Guild is able to be featured in Server Discovery.
@@ -572,6 +566,14 @@ class Guild(Hashable):
         .. versionadded:: 2.0
         """
         return list(self._threads.values())
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the guild.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.id}"
 
     @property
     def large(self) -> bool:
@@ -1729,7 +1731,7 @@ class Guild(Hashable):
         return threads
 
     # TODO: Remove Optional typing here when async iterators are refactored
-    def fetch_members(self, *, limit: int = 1000, after: Optional[SnowflakeTime] = None) -> MemberIterator:
+    def fetch_members(self, *, limit: Optional[int] = 1000, after: Optional[SnowflakeTime] = None) -> MemberIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving the guild's members. In order to use this,
         :meth:`Intents.members` must be enabled.
 
@@ -1886,8 +1888,9 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    def bans(self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None,
-             after: Optional[SnowflakeTime] = None) -> BanIterator:
+    def bans(
+        self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None, after: Optional[SnowflakeTime] = None
+    ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must

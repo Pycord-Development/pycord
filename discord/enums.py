@@ -25,7 +25,17 @@ DEALINGS IN THE SOFTWARE.
 
 import types
 from collections import namedtuple
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 __all__ = (
     "Enum",
@@ -186,7 +196,6 @@ class ChannelType(Enum):
     group = 3
     category = 4
     news = 5
-    store = 6
     news_thread = 10
     public_thread = 11
     private_thread = 12
@@ -371,6 +380,7 @@ class AuditLogAction(Enum):
     thread_create = 110
     thread_update = 111
     thread_delete = 112
+    application_command_permission_update = 121
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -422,6 +432,7 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
+            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -458,6 +469,8 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
+        elif v < 121:
+            return "application_command_permission"
 
 
 class UserFlags(Enum):
@@ -651,6 +664,13 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
+        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(datatype, types.UnionType)
+
+        if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
+            # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
+            # Type checking fails for this case, so ignore it.
+            return cls.from_datatype(datatype.__args__)  # type: ignore
+
         if datatype.__name__ in ["Member", "User"]:
             return cls.user
         if datatype.__name__ in [
@@ -679,8 +699,12 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        # TODO: Improve the error message
-        raise TypeError(f"Invalid class {datatype} used as an input type for an Option")
+        from .commands.context import ApplicationContext
+
+        if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
+            raise TypeError(
+                f"Invalid class {datatype} used as an input type for an Option"
+            )  # TODO: Improve the error message
 
 
 class EmbeddedActivity(Enum):

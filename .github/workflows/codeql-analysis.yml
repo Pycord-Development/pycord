@@ -12,17 +12,14 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
+  push: null
+  pull_request: null
   schedule:
     - cron: '26 6 * * 6'
 
 jobs:
   analyze:
-    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
+    #    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     name: Analyze
     runs-on: ubuntu-latest
     permissions:

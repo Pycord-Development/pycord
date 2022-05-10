@@ -27,7 +27,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+import asyncio
+from typing import TYPE_CHECKING, Any, Coroutine, Dict, List, Optional, Tuple, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -55,7 +56,6 @@ if TYPE_CHECKING:
         CategoryChannel,
         PartialMessageable,
         StageChannel,
-        StoreChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -77,7 +77,6 @@ if TYPE_CHECKING:
         StageChannel,
         TextChannel,
         CategoryChannel,
-        StoreChannel,
         Thread,
         PartialMessageable,
     ]
@@ -438,11 +437,13 @@ class InteractionResponse:
     __slots__: Tuple[str, ...] = (
         "_responded",
         "_parent",
+        "_response_lock",
     )
 
     def __init__(self, parent: Interaction):
         self._parent: Interaction = parent
         self._responded: bool = False
+        self._response_lock = asyncio.Lock()
 
     def is_done(self) -> bool:
         """:class:`bool`: Indicates whether an interaction response has been done before.
@@ -491,12 +492,14 @@ class InteractionResponse:
 
         if defer_type:
             adapter = async_context.get()
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=defer_type,
-                data=data,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=defer_type,
+                    data=data,
+                )
             )
             self._responded = True
 
@@ -520,11 +523,13 @@ class InteractionResponse:
         parent = self._parent
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.pong.value,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.pong.value,
+                )
             )
             self._responded = True
 
@@ -640,13 +645,15 @@ class InteractionResponse:
         parent = self._parent
         adapter = async_context.get()
         try:
-            await adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.channel_message.value,
-                data=payload,
-                files=files,
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.channel_message.value,
+                    data=payload,
+                    files=files,
+                )
             )
         finally:
             if files:
@@ -736,12 +743,14 @@ class InteractionResponse:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.message_update.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.message_update.value,
+                data=payload,
+            )
         )
 
         if view and not view.is_finished():
@@ -782,12 +791,14 @@ class InteractionResponse:
         payload = {"choices": [c.to_dict() for c in choices]}
 
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            parent.id,
-            parent.token,
-            session=parent._session,
-            type=InteractionResponseType.auto_complete_result.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                type=InteractionResponseType.auto_complete_result.value,
+                data=payload,
+            )
         )
 
         self._responded = True
@@ -814,16 +825,39 @@ class InteractionResponse:
 
         payload = modal.to_dict()
         adapter = async_context.get()
-        await adapter.create_interaction_response(
-            self._parent.id,
-            self._parent.token,
-            session=self._parent._session,
-            type=InteractionResponseType.modal.value,
-            data=payload,
+        await self._locked_response(
+            adapter.create_interaction_response(
+                self._parent.id,
+                self._parent.token,
+                session=self._parent._session,
+                type=InteractionResponseType.modal.value,
+                data=payload,
+            )
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
+
+    async def _locked_response(self, coro: Coroutine[Any]):
+        """|coro|
+
+        Wraps a response and makes sure that it's locked while executing.
+
+        Parameters
+        -----------
+        coro: Coroutine[Any]
+            The coroutine to wrap.
+
+        Raises
+        -------
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        async with self._response_lock:
+            if self.is_done():
+                coro.close()  # cleanup unawaited coroutine
+                raise InteractionResponded(self._parent)
+            await coro
 
 
 class _InteractionMessageState:

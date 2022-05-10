@@ -699,7 +699,7 @@ class VoiceClient(VoiceProtocol):
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
-            
+
         Raises
         ------
         RecordingException
