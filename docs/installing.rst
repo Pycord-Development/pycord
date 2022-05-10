@@ -4,44 +4,45 @@
 
 .. _intro:
 
-Installing Pycord
+Установка Pycord
 =================
 
-This is the documentation for Pycord, a library for Python to aid
-in creating applications that utilise the Discord API.
+Это документация к Pycord, библиотеке для Python чтобы помощь
+в создании приложений, использующих Discord API
 
-Prerequisites
+Требования
 -------------
 
-Pycord works with Python 3.8 or higher. Support for earlier versions of Python
-is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported.
+Pycord работает с Python 3.8 или выше. Поддержка более ранних версий Python
+не предусмотрена. Python 2.7 и ниже не поддерживается. Python 3.7 и ниже не поддерживается.
 
 
 .. _installing:
 
-Installing
+Установка
 -----------
 
 .. note::
 
-    For new features like slash commands, buttons, modals, and threads, you will need to install the pre-release a stable v2.0 is released. ::
+    Для новых функций, таких как слэш-команды, кнопки, модальные окна и потоки, вам придется установить предварительное релиза версии 2.0. ::
 
         python3 -m pip install -U py-cord --pre
 
-    For Windows users, this command should be used to install the pre-release: ::
+    Для пользователей Windows, эта команда должна быть использована для установки предварительной версии: ::
 
         py -3 -m pip install -U py-cord --pre
 
-You can get the library directly from PyPI: ::
+Вы можете получить Pycord напрямую через PyPI: ::
 
     python3 -m pip install -U py-cord
 
-If you are using Windows, then the following should be used instead: ::
+Если вы используете Windows, то команда должна выглядеть так: ::
 
     py -3 -m pip install -U py-cord
 
 
 To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g.
+Для установки дополнительных пакетов для ускорения,  вы должны использовать ``py-cord[speed]`` вместо ``py-cord``, например:
 
 .. code:: sh
 
@@ -52,71 +53,70 @@ To install additional packages for speedup,  you should use ``py-cord[speed]`` i
     py -3 -m pip install -U py-cord[speed]
 
 
-To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::
+Чтобы получить поддержку голосового чата, вы должны использовать ``py-cord[voice]`` вместо ``py-cord``, например: ::
 
     python3 -m pip install -U py-cord[voice]
 
-On Linux environments, installing voice requires getting the following dependencies:
+Для установки поддержки голосового чата на системе Linux вам нужно установить следующее:
 
 - `libffi <https://github.com/libffi/libffi>`_
 - `libnacl <https://github.com/saltstack/libnacl>`_
 - `python3-dev <https://packages.debian.org/python3-dev>`_
 
-For a Debian-based system, the following command will get these dependencies:
+Для систем, основанных на Debian вам нужно установить следующее:
 
 .. code-block:: shell
 
     $ apt install libffi-dev libnacl-dev python3-dev
 
-Remember to check your permissions!
+Не забудьте проверить права доступа!
 
-Virtual Environments
+Виртуальные среды
 ~~~~~~~~~~~~~~~~~~~~
 
-Sometimes you want to keep libraries from polluting system installs or use a different version of
-libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide.
-For this purpose, the standard library as of Python 3.3 comes with a concept called "Virtual Environment"s to
-help maintain these separate versions.
+Иногда вы захотите избежать того, чтобы библиотеки не загрязняли вашу систему, или вы хотите использовать
+другую версию библиотеки, которая уже установлена. А может вы не имеете прав чтобы установить библиотеки сразу в систему.
+Для этого в Python 3.3 появилась новая функция, названная "Виртуальные Среды", чтобы помощь в решении указанных проблем.
 
-A more in-depth tutorial is found on :doc:`py:tutorial/venv`.
+Более углубленное изучение виртуальных сред можно найти здесь: :doc:`py:tutorial/venv`.
 
-However, for the quick and dirty:
+В кратце:
 
-1. Go to your project's working directory:
+1. Идем в папку нашего проекта
 
     .. code-block:: shell
 
         $ cd your-bot-source
         $ python3 -m venv bot-env
 
-2. Activate the virtual environment:
+2. Активируем виртуальную среду:
 
     .. code-block:: shell
 
         $ source bot-env/bin/activate
 
-    On Windows you activate it with:
+    Если вы используете Windows:
 
     .. code-block:: shell
 
         $ bot-env\Scripts\activate.bat
 
-3. Use pip like usual:
+3. Дальше используйте pip как обычно:
 
     .. code-block:: shell
 
         $ pip install -U py-cord
 
-Congratulations. You now have a virtual environment all set up.
+Поздравляем. Теперь у вас есть настроенная виртуальная среда.
 
-Basic Concepts
+Основы
 --------------
 
-Pycord revolves around the concept of :ref:`events <discord-api-events>`.
-An event is something you listen to and then respond to. For example, when a message
-happens, you will receive an event about it that you can respond to.
+Pycord держится на основе событий.
+Событие это то, что вы прослушиваете и затем отвечаете на него. Например, когда вы получаете
+сообщение, вы получаете событие о нем, на которое вы можете ответить.
 
-A quick example to showcase how events work:
+Быстрый пример того, как это работает:
 
 .. code-block:: python3
 
@@ -130,4 +130,4 @@ A quick example to showcase how events work:
             print(f'Message from {message.author}: {message.content}')
 
     client = MyClient()
-    client.run('my token goes here')
+    client.run('токен вашего бота')

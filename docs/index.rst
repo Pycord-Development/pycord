@@ -3,47 +3,47 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Pycord
+Добро пожаловать в документацию Pycord!
 =================
 
 .. image:: /images/snake.svg
 .. image:: /images/snake_dark.svg
 
-Pycord is a modern, easy to use, feature-rich, and async ready API wrapper
-for Discord.
+Pycord - это современный, простой, богатый по функционалу, асинхронный инструмент
+для взаимодествия с API Discord.
 
-**Features:**
+**Особенности:**
 
-- Modern Pythonic API using ``async``\/``await`` syntax
-- Sane rate limit handling that prevents 429s
-- Command extension to aid with bot creation
-- Easy to use with an object oriented design
-- Optimised for both speed and memory
+- Современное использование ``async``\/``await`` синтаксиса
+- Умная обработка рейт лимита не превышающая 429с
+- Дополнение команд для удобного создания ботов
+- Прост в использовании в ООП стиле
+- Оптимизирован под скорость и память
 
-Getting started
+Начинаем!
 -----------------
 
-Is this your first time using the library? This is the place to get started!
+Вы впервые пишите ботов с Pycord? Это отличное место чтобы начать!
 
-- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`
-- **Working with Discord:** :doc:`discord` | :doc:`intents`
-- **Examples:** Many examples are available in the :resource:`repository <examples>`.
+- **Первые шаги:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`
+- **Работа с Discord:** :doc:`discord` | :doc:`intents`
+- **Примеры:** Многие примеры можно найти в :resource:`repository <examples>`.
 
-Getting help
+Помощь
 --------------
 
-If you're having trouble with something, these resources might help.
+Если у вас проблемы с чем-либо, здесь вы сможете найти ответ на вопрос:
 
-- Try the :doc:`faq` first, it's got answers to all common questions.
-- Ask us and hang out with us in our :resource:`Discord <discord>` server.
-- If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`.
-- Report bugs in the :resource:`issue tracker <issues>`.
-- Ask in our :resource:`GitHub discussions page <discussions>`.
+- Попробуйте изучить :doc:`faq`, здесь есть большинство ответов на вопросы.
+- Вы можете спросить о чем-либо на нашем сервере: :resource:`Discord <discord>` .
+- Если вы ищите что-то конкретное - попробуйте :ref:`index <genindex>` или :ref:`searching <search>`.
+- Сообщить о баге можно в :resource:`issue tracker <issues>`.
+- Спросить можно также тут :resource:`GitHub discussions page <discussions>`.
 
-Extensions
+Расширения
 ------------
 
-These extensions help you during development when it comes to common tasks.
+Эти расширения помогут вам во время разработки, когда речь идет об обычных задачах.
 
 .. toctree::
   :maxdepth: 1
@@ -53,10 +53,10 @@ These extensions help you during development when it comes to common tasks.
   ext/pages/index.rst
   ext/bridge/index.rst
 
-Manuals
+Руководства
 ---------
 
-These pages go into great detail about everything the API can do.
+На этих страницах подробно описано все, что может делать API.
 
 .. toctree::
   :maxdepth: 1
@@ -67,10 +67,10 @@ These pages go into great detail about everything the API can do.
   discord.ext.pages API Reference <ext/pages/index.rst>
   discord.ext.bridge API Reference <ext/bridge/index.rst>
 
-Meta
+Информация
 ------
 
-If you're looking for something related to the project itself, it's here.
+Если вы ищите что-то, что связанно с Pycord - вы можете найти это здесь.
 
 .. toctree::
   :maxdepth: 1

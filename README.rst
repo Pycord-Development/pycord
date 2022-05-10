@@ -18,21 +18,22 @@ Pycord
    :alt: Latest release
 
 A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+Ответвление discord.py. Pycord - это современный, простой, богатый по функционалу, асинхронный инструмент для работы с Discord API, который написан на Python.
 
-Key Features
+Основные преимущества:
 ------------
 
-- Modern Pythonic API using ``async`` and ``await``.
-- Proper rate limit handling.
-- Optimised for both speed and memory usage.
-- Full Application Command Support
+- Современное использование ``async`` и ``await``.
+- Правильная работа с рейт лимитами.
+- Оптимизирован для скорости и использовании памяти.
+- Полная поддержка любых команд.
 
-Installing
+Установка
 ----------
 
-**Python 3.8 or higher is required**
+**Требуется Python 3.8 или выше**
 
-To install the library without full voice support, you can just run the following command:
+Чтобы установить библиотеку без полной поддержки голосового чата, вы можете просто запустить следующую команду:
 
 .. code:: sh
 
@@ -42,7 +43,7 @@ To install the library without full voice support, you can just run the followin
     # Windows
     py -3 -m pip install -U py-cord
 
-Otherwise to get voice support you should run the following command:
+Чтобы получить поддержку голосового чата вы должны запустить следующую команду:
 
 .. code:: sh
 
@@ -52,7 +53,7 @@ Otherwise to get voice support you should run the following command:
     # Windows
     py -3 -m pip install -U py-cord[voice]
 
-To install additional packages for speedup, run the following command:
+Чтобы установить дополнительные пакеты для ускорения, запустите следующую команду:
 
 .. code:: sh
 
@@ -62,7 +63,7 @@ To install additional packages for speedup, run the following command:
     py -3 -m pip install -U py-cord[speed]
 
 
-To install the development version, do the following:
+Чтобы установить разрабатываемую версию, запустите следующие команды:
 
 .. code:: sh
 
@@ -70,7 +71,7 @@ To install the development version, do the following:
     $ cd pycord
     $ python3 -m pip install -U .[voice]
     
-or if you do not want to clone the repository:
+Или если вы не хотите копировать репозиторий:
 
 .. code:: sh
 
@@ -80,19 +81,19 @@ or if you do not want to clone the repository:
     py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 
 
-Optional Packages
+Необязательные пакеты
 ~~~~~~~~~~~~~~~~~
 
-* `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
-* `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
-* `orjson <https://pypi.org/project/orjson/>`__ (for json speedup)
+* `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (для поддержки голосового чата)
+* `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (для ускорения aiohttp)
+* `orjson <https://pypi.org/project/orjson/>`__ (для ускорения json)
 
-Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
+Примите во внимание, что если вы хотите использовать голосовой чат на Linux, вам необходимо установить следующие пакеты через ваш предпочтительный пакетный менеджер (например, ``apt``, ``dnf``, и т.д.) ДО запуска предыдущих команд:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
 * python-dev (e.g. ``python3.10-dev`` for Python 3.10)
 
-Quick Example
+Быстрый пример
 -------------
 
 .. code:: py
@@ -104,15 +105,15 @@ Quick Example
     @bot.slash_command()
     async def hello(ctx, name: str = None):
         name = name or ctx.author.name
-        await ctx.respond(f"Hello {name}!")
+        await ctx.respond(f"Привет, {name}!")
 
     @bot.user_command(name="Say Hello")
     async def hi(ctx, user):
-        await ctx.respond(f"{ctx.author.mention} says hello to {user.name}!")
+        await ctx.respond(f"{ctx.author.mention} приветствует {user.name}!")
 
-    bot.run("token")
+    bot.run("токен")
 
-Traditional Commands Example
+Традиционный пример команды
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: py
@@ -126,19 +127,19 @@ Traditional Commands Example
 
     @bot.command()
     async def ping(ctx):
-        await ctx.send("pong")
+        await ctx.send("понг")
 
-    bot.run("token")
+    bot.run("токен")
 
-You can find more examples in the examples directory.
+Вы можете найти больше примеров в папке "examples".
 
-Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
+Заметка: Убедитесь, что вы никому не показываете токен вашего бота, он может предоставить полный доступ к вашему боту.
 
-Useful Links
+Полезные ссылки:
 ------------
 
-- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
-- `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
-- `Our Official Discord Server <https://pycord.dev/discord>`_
-- `Official Discord Developers Server <https://discord.gg/discord-developers>`_
-- `Unofficial Discord API Server <https://discord.gg/discord-api>`_
+- `Документация <https://docs.pycord.dev/en/master/index.html> (разрабатывается русская)`_
+- `Учитесь тому, как создавать Дискорд ботов с Pycord <https://guide.pycord.dev> (постараемся тоже перевести)`_
+- `Наш официальный дискорд сервер: <https://pycord.dev/discord>`_
+- `Официальный дискорд сервер разработчиков Discord <https://discord.gg/discord-developers>`_
+- `Неофициальный дискорд сервер Discord API <https://discord.gg/discord-api>`_
