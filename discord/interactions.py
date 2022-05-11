@@ -767,10 +767,9 @@ class InteractionResponse:
                 raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
-            else:
-                if "attachments" not in payload:
-                    # we keep previous attachments when adding new files
-                    payload["attachments"] = [a.to_dict() for a in msg.attachments]
+            if "attachments" not in payload:
+                # we keep previous attachments when adding new files
+                payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
         adapter = async_context.get()
         try:
