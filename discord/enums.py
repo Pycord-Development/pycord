@@ -381,11 +381,11 @@ class AuditLogAction(Enum):
     thread_create = 110
     thread_update = 111
     thread_delete = 112
+    application_command_permission_update = 121
     auto_moderation_rule_create = 140
     auto_moderation_rule_update = 141
     auto_moderation_rule_delete = 142 
     auto_moderation_block_message = 143
-
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -437,6 +437,7 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
+            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
@@ -477,6 +478,8 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
+        elif v < 121:
+            return "application_command_permission"
         elif v < 144:
             return "auto_moderation_rule"
 
@@ -707,8 +710,12 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        # TODO: Improve the error message
-        raise TypeError(f"Invalid class {datatype} used as an input type for an Option")
+        from .commands.context import ApplicationContext
+
+        if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
+            raise TypeError(
+                f"Invalid class {datatype} used as an input type for an Option"
+            )  # TODO: Improve the error message
 
 
 class EmbeddedActivity(Enum):
