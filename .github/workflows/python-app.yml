@@ -36,13 +36,13 @@ jobs:
         run: |
           coverage run -m pytest
           coverage xml
-      - name: Upload code coverage to codecov.io
-        uses: codecov/codecov-action@v2
-        with:
-          #        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          env_vars: OS,PYTHON
-          files: ./coverage.xml
-          flags: pytest # optional
-          name: codecov-umbrella # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+#      - name: Upload code coverage to codecov.io
+#        uses: codecov/codecov-action@v2
+#        with:
+#          #        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+#          env_vars: OS,PYTHON
+#          files: ./coverage.xml
+#          flags: pytest # optional
+#          name: codecov-umbrella # optional
+#          fail_ci_if_error: true # optional (default = false)
+#          verbose: true # optional (default = false)
