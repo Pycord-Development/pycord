@@ -141,13 +141,9 @@ class BridgeExtContext(BridgeContext, Context):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._original_response_message: Optional[Message] = None
 
     async def _respond(self, *args, **kwargs) -> Message:
-        message = await self._get_super("reply")(*args, **kwargs)
-        if self._original_response_message == None:
-            self._original_response_message = message
-        return message
+        return await self._get_super("reply")(*args, **kwargs)
 
     async def _defer(self, *args, **kwargs) -> None:
         return await self._get_super("trigger_typing")(*args, **kwargs)

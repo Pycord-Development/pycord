@@ -256,13 +256,29 @@ class ApplicationContext(discord.abc.Messageable):
     def followup(self) -> Webhook:
         return self.interaction.followup
 
-    async def delete(self):
-        """Calls :attr:`~discord.commands.ApplicationContext.respond`.
-        If the response is done, then calls :attr:`~discord.commands.ApplicationContext.respond` first."""
+    async def delete(self, *, delay: Optional[float] = None) -> None:
+        """|coro|
+
+        Deletes the original interaction response message.
+
+        This is a higher level interface to :meth:`Interaction.delete_original_message`.
+
+        Parameters
+        -----------
+        delay: Optional[:class:`float`]
+            If provided, the number of seconds to wait before deleting the message.
+
+        Raises
+        -------
+        HTTPException
+            Deleting the message failed.
+        Forbidden
+            Deleted a message that is not yours.
+        """
         if not self.interaction.response.is_done():
             await self.defer()
 
-        return await self.interaction.delete_original_message()
+        return await self.interaction.delete_original_message(delay=delay)
 
     @property
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
