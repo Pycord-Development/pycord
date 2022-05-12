@@ -27,6 +27,7 @@ from requests import Request, Session
 
 db = TinyDB('db.json')
 table = Query()
+dbMed = TinyDB('meddb.json')
 
 def get_NFT_image(url):
     ##givenURL will look like https://opensea.io/assets/0x10064373e248bc7253653ca05df73cf226202956/11211
@@ -172,6 +173,106 @@ def main(source, verbose=False):
         await bot.process_commands(message)
 
 
+    @bot.command(pass_context=True, brief="Show meditation Leaderboard")
+    async def meditatedScore(ctx):
+
+        search = dbMed.all()
+        #print(search)
+
+        embed = discord.Embed(title=f"Meditation Leaderboard")
+
+        for x in search:
+            user = await bot.fetch_user(x['meditationUser'])
+            embed.add_field(name=f"{user} :", value=f"{x['meditationNum']}", inline=False) 
+
+
+        await ctx.send(embed=embed)
+
+
+    @bot.command(pass_context=True, brief="Log meditations")
+    async def meditated(ctx):
+        message = ctx.message.content
+        meditationUser = ctx.message.author.id
+        meditationChannel = ctx.message.channel.id
+
+        #print(ctx.message)
+        embed = discord.Embed(title=":pray: Meditation Logged")
+        embed.set_author(
+            name='{0.display_name}'.format(ctx.author),
+            icon_url='{0.avatar.url}'.format(ctx.author)
+        )
+
+        #search if user already there
+        search = dbMed.search(where('meditationUser') == f'{meditationUser}')
+        #if user not already in db
+        if not search:
+            #insert
+            dbMed.insert({'meditationNum': 1, 'meditationUser': f'{meditationUser}', 'meditationChannel': f'{meditationChannel}'})
+        else:
+            currentMeditationCount = (search[0]['meditationNum'])
+            newMedCount = int(currentMeditationCount) + 1
+            #update 
+            dbMed.remove(where('meditationUser') == f"{meditationUser}")
+            dbMed.insert({'meditationNum': f'{newMedCount}', 'meditationUser': f'{meditationUser}', 'meditationChannel': f'{meditationChannel}'})
+        #add to text file
+        #file1 = open("gasPingLog.txt", "a")
+        #file1.write(f"{gasNum} {gasUser} {gasChannel}\n")
+        #file1.close()
+
+
+        await ctx.send(embed=embed)
+
+    # 2. Load config
+    filename = 'config.yaml'
+    with open(filename) as f:
+        config = yaml.load(f, Loader=yaml.Loader)
+
+    async def send_update(fastest, average, slow, **kw):
+        status = f'⚡{fastest} |🐢{slow} | !help'
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing,name=status))
+                                                            
+        for guild in bot.guilds:
+            guser = guild.get_member(bot.user.id)
+            await guser.edit(nick=f'HelperBot|Gas:{average}')
+
+        #print (f"{guild}")
+        print (f"{average}")
+
+        ##search db for gas notification
+        notifyList = db.search((Query()['gasNum']) >= average)
+        print(f"{notifyList}")
+
+        #loop through notifyList post in discord tagging users of that gas number
+
+        for results in notifyList:
+            print(results)
+            user = results['gasUser']
+            channelid = results['gasChannel']
+            gas = results['gasNum']
+
+            channel = bot.get_channel(int(channelid))
+            print(f"<@{user}>, Gwei is now {gas}")
+           
+            #delete from database
+            #db.update(delete, Query()['gasUser'] == f"{user}")
+            db.remove(where('gasUser') == f"{user}")
+            #remove from LIST
+            #notifyList.pop(idx)
+            
+            await channel.send(f"<@{user}>, Gwei is now {gas} or less.")
+
+
+
+        await asyncio.sleep(config['updateFreq'])  # in seconds
+
+    @bot.command(pass_context=True, brief="Get APE price")
+    async def ape(ctx):
+        price = tokenPrice('APE',config)
+        embed = discord.Embed(title="<:apecoin:954387364824899665> Current APE price")
+        embed.add_field(name=f"1 $APE = ", value=f"${price}", inline=False) 
+    
+        await ctx.send(embed=embed)
+
     @bot.command(pass_context=True, brief="Get WOOL price")
     async def wool(ctx):
         price = tokenPrice('WOOL',config)
@@ -179,6 +280,15 @@ def main(source, verbose=False):
         embed.add_field(name=f"1 $WOOL = ", value=f"${price}", inline=False) 
     
         await ctx.send(embed=embed)
+
+    @bot.command(pass_context=True, brief="Get CFTI price")
+    async def cfti(ctx):
+        price = tokenPrice('CFTI',config)
+        embed = discord.Embed(title="<:raidparty:939195769024557186> Current CFTI price")
+        embed.add_field(name=f"1 $CFTI = ", value=f"${price}", inline=False) 
+    
+        await ctx.send(embed=embed)
+
 
     @bot.command(pass_context=True, brief="Get LOOKS price")
     async def looks(ctx):
@@ -197,6 +307,7 @@ def main(source, verbose=False):
         #remove command
         token = trimmed.split("!customToken ")
         token = token[1]
+        token = token.upper()
         print(token)
 
         price = tokenPrice(token,config)
@@ -365,7 +476,7 @@ def main(source, verbose=False):
                                                             
         for guild in bot.guilds:
             guser = guild.get_member(bot.user.id)
-            await guser.edit(nick=f'Gas: 🚶{average}')
+            await guser.edit(nick=f'HelperBot|Gas:{average}')
 
         #print (f"{guild}")
         print (f"{average}")
