@@ -273,7 +273,7 @@ class ApplicationContext(discord.abc.Messageable):
         HTTPException
             Deleting the message failed.
         Forbidden
-            Deleted a message that is not yours.
+            You do not have proper permissions to delete the message.
         """
         if not self.interaction.response.is_done():
             await self.defer()
