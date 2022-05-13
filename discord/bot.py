@@ -572,7 +572,7 @@ class ApplicationCommandMixin(ABC):
         guild_ids: Optional[List[int]] = None,
         register_guild_commands: bool = True,
         check_guilds: Optional[List[int]] = [],
-        delete_exiting: bool = True,
+        delete_existing: bool = True,
     ) -> None:
         """|coro|
 
@@ -612,7 +612,7 @@ class ApplicationCommandMixin(ABC):
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
             ``register_guild_commands`` is set to False, then this parameter is ignored.
-        delete_exiting: :class:`bool`
+        delete_existing: :class:`bool`
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
@@ -627,7 +627,7 @@ class ApplicationCommandMixin(ABC):
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
         registered_commands = await self.register_commands(
-            global_commands, method=method, force=force, delete_existing=delete_exiting
+            global_commands, method=method, force=force, delete_existing=delete_existing
         )
 
         registered_guild_commands = {}
@@ -642,7 +642,7 @@ class ApplicationCommandMixin(ABC):
             for guild_id in set(cmd_guild_ids):
                 guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_exiting
+                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_existing
                 )
 
         global_permissions: List = []

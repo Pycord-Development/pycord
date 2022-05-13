@@ -677,6 +677,8 @@ class InteractionResponse:
         content: Optional[Any] = MISSING,
         embed: Optional[Embed] = MISSING,
         embeds: List[Embed] = MISSING,
+        file: File = MISSING,
+        files: List[File] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         delete_after: Optional[float] = None,
@@ -695,6 +697,11 @@ class InteractionResponse:
         embed: Optional[:class:`Embed`]
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
+        file: :class:`File`
+            A new file to add to the message. This cannot be mixed with ``files`` parameter.
+        files: List[:class:`File`]
+            A list of new files to add to the message. Must be a maximum of 10. This
+            cannot be mixed with the ``file`` parameter.
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
@@ -742,16 +749,44 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+
+        if file is not MISSING and files is not MISSING:
+            raise InvalidArgument("cannot pass both file and files parameter to edit_message()")
+
+        if file is not MISSING:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be a File")
+            else:
+                files = [file]
+                if "attachments" not in payload:
+                    # we keep previous attachments when adding a new file
+                    payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
+        if files is not MISSING:
+            if len(files) > 10:
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument("files parameter must be a list of File")
+            if "attachments" not in payload:
+                # we keep previous attachments when adding new files
+                payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
         adapter = async_context.get()
-        await self._locked_response(
-            adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.message_update.value,
-                data=payload,
+        try:
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.message_update.value,
+                    data=payload,
+                    files=files,
+                )
             )
-        )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view and not view.is_finished():
             state.store_view(view, message_id)

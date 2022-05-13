@@ -29,6 +29,8 @@ class Modal:
 
     Parameters
     ----------
+    children: :class:`InputText`
+        The initial InputText fields that are displayed in the modal dialog.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
@@ -37,15 +39,15 @@ class Modal:
         Must be 100 characters or fewer.
     """
 
-    def __init__(self, title: str, custom_id: Optional[str] = None) -> None:
+    def __init__(self, *children: InputText, title: str, custom_id: Optional[str] = None) -> None:
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
-        if len(str(title)) > 45:
+        if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self.children: List[InputText] = []
-        self._weights = _ModalWeights(self.children)
+        self._children: List[InputText] = list(children)
+        self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
 
@@ -61,6 +63,19 @@ class Modal:
         if not isinstance(value, str):
             raise TypeError(f"expected title to be str, not {value.__class__.__name__}")
         self._title = value
+
+    @property
+    def children(self) -> List[InputText]:
+        """The child components associated with the modal dialog."""
+        return self._children
+
+    @children.setter
+    def children(self, value: List[InputText]):
+        for item in value:
+            if not isinstance(item, InputText):
+                raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
+        self._weights = _ModalWeights(self._children)
+        self._children = value
 
     @property
     def custom_id(self) -> str:
@@ -92,7 +107,7 @@ class Modal:
         def key(item: InputText) -> int:
             return item._rendered_row or 0
 
-        children = sorted(self.children, key=key)
+        children = sorted(self._children, key=key)
         components: List[Dict[str, Any]] = []
         for _, group in groupby(children, key=key):
             children = [item.to_component_dict() for item in group]
@@ -117,14 +132,14 @@ class Modal:
             The item to add to the modal dialog
         """
 
-        if len(self.children) > 5:
+        if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
         if not isinstance(item, InputText):
             raise TypeError(f"expected InputText not {item.__class__!r}")
 
         self._weights.add_item(item)
-        self.children.append(item)
+        self._children.append(item)
 
     def remove_item(self, item: InputText):
         """Removes an InputText component from the modal dialog.
@@ -135,7 +150,7 @@ class Modal:
             The item to remove from the modal dialog.
         """
         try:
-            self.children.remove(item)
+            self._children.remove(item)
         except ValueError:
             pass
 
