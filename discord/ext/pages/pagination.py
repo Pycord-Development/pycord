@@ -488,7 +488,7 @@ class Paginator(discord.ui.View):
             pages if pages is not None else self.pages
         )
         self.show_menu = show_menu if show_menu is not None else self.show_menu
-        if all(isinstance(pg, PageGroup) for pg in pages):
+        if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if self.show_menu else None
             if sum(pg.default is True for pg in self.page_groups) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
