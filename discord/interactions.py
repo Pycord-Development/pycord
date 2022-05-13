@@ -435,16 +435,17 @@ class Interaction:
 
         if self.data is not None:
             data["data"] = self.data
+            if (resolved := self.data.get("resolved")) and self.user is not None:
+                if (users := resolved.get("users")) and (user := users.get(self.user.id)):
+                    data["user"] = user
+                if (members := resolved.get("members")) and (member := members.get(self.user.id)):
+                    data["member"] = member
 
         if self.guild_id is not None:
             data["guild_id"] = self.guild_id
 
         if self.channel_id is not None:
             data["channel_id"] = self.channel_id
-
-        if self.user is not None:
-            user = self.user if isinstance(self.user, User) else self.user._user
-            data["user"] = user._to_minimal_user_json()
 
         if self.locale:
             data["locale"] = self.locale
