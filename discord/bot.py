@@ -60,7 +60,7 @@ from .commands import (
     command,
 )
 from .enums import InteractionType
-from .errors import CheckFailure, DiscordException, Forbidden
+from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
@@ -256,7 +256,8 @@ class ApplicationCommandMixin(ABC):
             else:
                 as_dict = cmd.to_dict()
                 to_check = {
-                    "default_permission": None,
+                    "dm_permission": None,
+                    "default_member_permissions": None,
                     "name": None,
                     "description": None,
                     "name_localizations": None,
@@ -571,7 +572,7 @@ class ApplicationCommandMixin(ABC):
         guild_ids: Optional[List[int]] = None,
         register_guild_commands: bool = True,
         check_guilds: Optional[List[int]] = [],
-        delete_exiting: bool = True,
+        delete_existing: bool = True,
     ) -> None:
         """|coro|
 
@@ -611,11 +612,11 @@ class ApplicationCommandMixin(ABC):
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
             ``register_guild_commands`` is set to False, then this parameter is ignored.
-        delete_exiting: :class:`bool`
+        delete_existing: :class:`bool`
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
-        check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
+        check_guilds = list(set((check_guilds or []) + (self.debug_guilds or [])))
 
         if commands is None:
             commands = self.pending_application_commands
@@ -626,7 +627,7 @@ class ApplicationCommandMixin(ABC):
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
         registered_commands = await self.register_commands(
-            global_commands, method=method, force=force, delete_existing=delete_exiting
+            global_commands, method=method, force=force, delete_existing=delete_existing
         )
 
         registered_guild_commands = {}
@@ -641,11 +642,9 @@ class ApplicationCommandMixin(ABC):
             for guild_id in set(cmd_guild_ids):
                 guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_exiting
+                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_existing
                 )
 
-        # TODO: 2.1: Remove this and favor permissions v2
-        # Global Command Permissions
         global_permissions: List = []
 
         for i in registered_commands:
@@ -659,12 +658,7 @@ class ApplicationCommandMixin(ABC):
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
-                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
-
         for guild_id, commands in registered_guild_commands.items():
-            guild_permissions: List = []
-
             for i in commands:
                 cmd = find(
                     lambda cmd: cmd.name == i["name"]
@@ -678,101 +672,6 @@ class ApplicationCommandMixin(ABC):
                     continue
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
-
-                # Permissions
-                permissions = [
-                    perm.to_dict()
-                    for perm in cmd.permissions
-                    if perm.guild_id is None
-                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
-                ]
-                guild_permissions.append({"id": i["id"], "permissions": permissions})
-
-            for global_command in global_permissions:
-                permissions = [
-                    perm.to_dict()
-                    for perm in global_command["permissions"]
-                    if perm.guild_id is None
-                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
-                ]
-                guild_permissions.append({"id": global_command["id"], "permissions": permissions})
-
-            # Collect & Upsert Permissions for Each Guild
-            # Command Permissions for this Guild
-            guild_cmd_perms: List = []
-
-            # Loop through Commands Permissions available for this Guild
-            for item in guild_permissions:
-                new_cmd_perm = {"id": item["id"], "permissions": []}
-
-                # Replace Role / Owner Names with IDs
-                for permission in item["permissions"]:
-                    if isinstance(permission["id"], str):
-                        # Replace Role Names
-                        if permission["type"] == 1:
-                            role = get(
-                                self._bot.get_guild(guild_id).roles,
-                                name=permission["id"],
-                            )
-
-                            # If not missing
-                            if role is not None:
-                                new_cmd_perm["permissions"].append(
-                                    {
-                                        "id": role.id,
-                                        "type": 1,
-                                        "permission": permission["permission"],
-                                    }
-                                )
-                            else:
-                                raise RuntimeError(
-                                    "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                        guild_id=guild_id, role=permission["id"]
-                                    )
-                                )
-                        # Add owner IDs
-                        elif permission["type"] == 2 and permission["id"] == "owner":
-                            app = await self.application_info()  # type: ignore
-                            if app.team:
-                                for m in app.team.members:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": m.id,
-                                            "type": 2,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                            else:
-                                new_cmd_perm["permissions"].append(
-                                    {
-                                        "id": app.owner.id,
-                                        "type": 2,
-                                        "permission": permission["permission"],
-                                    }
-                                )
-                    # Add the rest
-                    else:
-                        new_cmd_perm["permissions"].append(permission)
-
-                # Make sure we don't have over 10 overwrites
-                if len(new_cmd_perm["permissions"]) > 10:
-                    raise RuntimeError(
-                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).".format(
-                            name=self._application_commands[new_cmd_perm["id"]].name,
-                            guild_id=guild_id,
-                        )
-                    )
-                # Append to guild_cmd_perms
-                guild_cmd_perms.append(new_cmd_perm)
-
-            # Upsert
-            try:
-                await self._bot.http.bulk_upsert_command_permissions(self._bot.user.id, guild_id, guild_cmd_perms)
-            except Forbidden:
-                raise RuntimeError(
-                    f"Failed to add command permissions to guild {guild_id}",
-                    file=sys.stderr,
-                )
 
     async def process_application_commands(self, interaction: Interaction, auto_sync: bool = None) -> None:
         """|coro|
@@ -813,11 +712,10 @@ class ApplicationCommandMixin(ABC):
         except KeyError:
             for cmd in self.application_commands:
                 guild_id = interaction.data.get("guild_id")
-                if guild_id: 
+                if guild_id:
                     guild_id = int(guild_id)
                 if cmd.name == interaction.data["name"] and (
-                    guild_id == cmd.guild_ids
-                    or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
+                    guild_id == cmd.guild_ids or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
                 ):
                     command = cmd
                     break
