@@ -145,7 +145,7 @@ class BridgeExtContext(BridgeContext, Context):
 
     async def _respond(self, *args, **kwargs) -> Message:
         message = await self._get_super("reply")(*args, **kwargs)
-        if self._original_response_message == None:
+        if self._original_response_message is None:
             self._original_response_message = message
         return message
 
@@ -154,6 +154,21 @@ class BridgeExtContext(BridgeContext, Context):
 
     async def _edit(self, *args, **kwargs) -> Message:
         return await self._original_response_message.edit(*args, **kwargs)
+
+    async def delete(self, *, delay: Optional[float] = None, reason: Optional[str] = None) -> None:
+        """|coro|
+
+        Deletes the original response message, if it exists.
+
+        Parameters
+        -----------
+        delay: Optional[:class:`float`]
+            If provided, the number of seconds to wait before deleting the message.
+        reason: Optional[:class:`str`]
+            The reason for deleting the message. Shows up on the audit log.
+        """
+        if self._original_response_message:
+            await self._original_response_message.delete(delay=delay, reason=reason)
 
 
 if TYPE_CHECKING:
