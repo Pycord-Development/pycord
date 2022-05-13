@@ -69,6 +69,15 @@ To install the development version, do the following:
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
+    
+or if you do not want to clone the repository:
+
+.. code:: sh
+
+    # Linux/macOS
+    python3 -m pip install git+https://github.com/Pycord-Development/pycord
+    # Windows
+    py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 
 
 Optional Packages

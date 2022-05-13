@@ -22,9 +22,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import inspect
 from typing import Any, Dict, List, Literal, Optional, Union
+from enum import Enum
 
-from ..enums import ChannelType, SlashCommandOptionType
+from ..enums import ChannelType, SlashCommandOptionType, Enum as DiscordEnum
 
 __all__ = (
     "ThreadOption",
@@ -124,10 +126,18 @@ class Option:
         self.converter = None
         self._raw_type = input_type
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
+        enum_choices = []
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
                 input_type = SlashCommandOptionType.string
+            elif issubclass(input_type, (Enum, DiscordEnum)):
+                enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
+                if len(enum_choices) != len([elem for elem in enum_choices if elem.value.__class__ == enum_choices[0].value.__class__]):
+                    enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
+                    input_type = SlashCommandOptionType.string
+                else:
+                    input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
             else:
                 try:
                     _type = SlashCommandOptionType.from_datatype(input_type)
@@ -158,9 +168,16 @@ class Option:
         self.input_type = input_type
         self.required: bool = kwargs.pop("required", True) if "default" not in kwargs else False
         self.default = kwargs.pop("default", None)
-        self.choices: List[OptionChoice] = [
+        self.choices: List[OptionChoice] = enum_choices or [
             o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", list())
         ]
+
+        if description is not None:
+            self.description = description
+        elif issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
+            self.description = doc
+        else:
+            self.description = "No description provided"
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))

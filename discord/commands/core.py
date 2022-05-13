@@ -32,10 +32,10 @@ import inspect
 import re
 import types
 from collections import OrderedDict
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
-    Awaitable,
     Callable,
     Coroutine,
     Dict,
@@ -46,17 +46,15 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    overload,
 )
 
 from ..channel import _guild_channel_factory
-from ..enums import ChannelType, MessageType, SlashCommandOptionType, try_enum
+from ..enums import MessageType, SlashCommandOptionType, try_enum
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
     ClientException,
-    NotFound,
     ValidationError,
 )
 from ..member import Member
@@ -64,7 +62,7 @@ from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
 from ..user import User
-from ..utils import async_all, find, get_or_fetch, utcnow
+from ..utils import async_all, find, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -100,11 +98,15 @@ else:
 
 
 def wrap_callback(coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
         try:
             ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return
@@ -116,11 +118,15 @@ def wrap_callback(coro):
 
 
 def hooked_wrapped_callback(command, ctx, coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
             ret = await coro(arg)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return
@@ -650,7 +656,13 @@ class SlashCommand(ApplicationCommand):
 
     def _check_required_params(self, params):
         params = iter(params.items())
-        required_params = ["self", "context"] if self.attached_to_group or self.cog else ["context"]
+        required_params = (
+            ["self", "context"]
+            if self.attached_to_group
+            or self.cog
+            or len(self.callback.__qualname__.split(".")) > 1
+            else ["context"]
+        )
         for p in required_params:
             try:
                 next(params)
@@ -671,25 +683,19 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)  # type: ignore # union type
+                    option = Option(option.__args__[0], required=False)
                 else:
-                    option = Option(option.__args__, "No description provided")  # type: ignore # union type
+                    option = Option(option.__args__)
 
             if not isinstance(option, Option):
-                if isinstance(p_obj.default, Option):  # arg: type = Option(...)
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
-                    option = p_obj.default
-                else:  # arg: Option(...) = default
-                    option = Option(option, "No description provided")
+                option = Option(option)
 
-            if (
-                option.default is None
-                and p_obj.default != inspect.Parameter.empty
-                and not isinstance(p_obj.default, Option)
-            ):
-                option.default = p_obj.default
-                option.required = False
-
+            if option.default is None:
+                if p_obj.default == inspect.Parameter.empty:
+                    option.default = None
+                else:
+                    option.default = p_obj.default
+                    option.required = False
             if option.name is None:
                 option.name = p_name
             if option.name != p_name or option._parameter_name is None:
@@ -740,12 +746,6 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
-
-    def _set_cog(self, cog):
-        prev = self.cog
-        super()._set_cog(cog)
-        if (prev is None and cog is not None) or (prev is not None and cog is None):
-            self.options = self._parse_options(self._get_signature_parameters())  # parse again to leave out self
 
     @property
     def is_subcommand(self) -> bool:
@@ -824,6 +824,21 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif op._raw_type in (SlashCommandOptionType.integer,
+                                  SlashCommandOptionType.number,
+                                  SlashCommandOptionType.string,
+                                  SlashCommandOptionType.boolean):
+                pass
+
+            elif issubclass(op._raw_type, Enum):
+                if isinstance(arg, str) and arg.isdigit():
+                    try:
+                        arg = op._raw_type(int(arg))
+                    except ValueError:
+                        arg = op._raw_type(arg)
+                else:
+                    arg = op._raw_type(arg)
 
             kwargs[op._parameter_name] = arg
 
