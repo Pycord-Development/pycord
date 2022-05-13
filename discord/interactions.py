@@ -430,6 +430,8 @@ class Interaction:
             await func
 
     def to_dict(self) -> Dict[str, Any]:
+        """Converts this interaction object into a dict."""
+
         data = {
             "id": self.id,
             "application_id": self.application_id,
