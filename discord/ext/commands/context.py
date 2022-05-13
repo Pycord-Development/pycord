@@ -149,7 +149,6 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         self.subcommand_passed: Optional[str] = subcommand_passed
         self.command_failed: bool = command_failed
         self.current_parameter: Optional[inspect.Parameter] = current_parameter
-        self._original_response_message: Optional[Message] = None
         self._state: ConnectionState = self.message._state
 
     async def invoke(self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
@@ -397,22 +396,4 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @discord.utils.copy_doc(Message.reply)
     async def reply(self, content: Optional[str] = None, **kwargs: Any) -> Message:
-        msg = await self.message.reply(content, **kwargs)
-        if self._original_response_message is None:
-            self._original_response_message = msg
-        return msg
-
-    async def delete(self, *, delay: Optional[float] = None, reason: Optional[str] = None) -> None:
-        """|coro|
-
-        Deletes the original response message, if it exists.
-
-        Parameters
-        -----------
-        delay: Optional[:class:`float`]
-            If provided, the number of seconds to wait before deleting the message.
-        reason: Optional[:class:`str`]
-            The reason for deleting the message. Shows up on the audit log.
-        """
-        if self._original_response_message:
-            await self._original_response_message.delete(delay=delay, reason=reason)
+        return await self.message.reply(content, **kwargs)
