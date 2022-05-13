@@ -391,14 +391,12 @@ class Paginator(discord.ui.View):
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
             if sum(pg.default is True for pg in self.page_groups) > 1:
-                raise ValueError("Only one PageGroup can be the default.")
+                raise ValueError("Only one PageGroup can be set as the default.")
             for pg in self.page_groups:
                 if pg.default:
                     self.default_page_group = self.page_groups.index(pg)
                     break
-            self.pages: Union[
-                List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
-            ] = self.page_groups[self.default_page_group].pages
+            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
 
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
@@ -427,9 +425,12 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: Optional[Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]]] = None,
+        pages: Optional[
+            Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]]
+        ] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
+        show_menu: Optional[bool] = None,
         author_check: Optional[bool] = None,
         menu_placeholder: Optional[str] = None,
         disable_on_timeout: Optional[bool] = None,
@@ -452,6 +453,8 @@ class Paginator(discord.ui.View):
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
             Whether to show the page indicator when using the default buttons.
+        show_menu: :class:`bool`
+            Whether to show a select menu that allows the user to switch between groups of pages.
         author_check: :class:`bool`
             Whether only the original user of the command can change pages.
         menu_placeholder: :class:`str`
@@ -484,6 +487,16 @@ class Paginator(discord.ui.View):
         self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
+        self.show_menu = show_menu if show_menu is not None else self.show_menu
+        if all(isinstance(pg, PageGroup) for pg in pages):
+            self.page_groups = self.pages if self.show_menu else None
+            if sum(pg.default is True for pg in self.page_groups) > 1:
+                raise ValueError("Only one PageGroup can be set as the default.")
+            for pg in self.page_groups:
+                if pg.default:
+                    self.default_page_group = self.page_groups.index(pg)
+                    break
+            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = 0
         # Apply config changes, if specified
@@ -782,6 +795,10 @@ class Paginator(discord.ui.View):
                 self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
+
+    def get_page_group_content(self, page_group: PageGroup) -> List[Page]:
+        """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
+        return [self.get_page_content(page) for page in page_group.pages]
 
     @staticmethod
     def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
