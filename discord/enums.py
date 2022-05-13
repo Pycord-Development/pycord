@@ -775,6 +775,19 @@ class ScheduledEventLocationType(Enum):
     voice = 2
     external = 3
 
+    
+class AutoModRuleTriggerType(Enum):
+    keyword_filter = 1
+    
+
+class AutoModEventType(Enum):
+    message_send = 1
+    
+    
+class AutoModRuleAction(Enum):
+    block_message = 1
+    send_an_alert = 2
+    
 
 T = TypeVar("T")
 
