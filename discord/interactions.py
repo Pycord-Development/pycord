@@ -135,6 +135,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "_message_data",
         "_permissions",
         "_state",
         "_session",
@@ -165,9 +166,13 @@ class Interaction:
 
         self.message: Optional[Message]
         try:
-            self.message = Message(state=self._state, channel=self.channel, data=data["message"])  # type: ignore
+            message_data = data["message"]
         except KeyError:
             self.message = None
+            self._message_data = None
+        else:
+            self.message = Message(state=self._state, channel=self.channel, data=message_data)  # type: ignore
+            self._message_data = message_data
 
         self.user: Optional[Union[User, Member]] = None
         self._permissions: int = 0
@@ -424,6 +429,42 @@ class Interaction:
             utils.delay_task(delay, func)
         else:
             await func
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Converts this interaction object into a dict."""
+
+        data = {
+            "id": self.id,
+            "application_id": self.application_id,
+            "type": self.type.value,
+            "token": self.token,
+            "version": self.version,
+        }
+
+        if self.data is not None:
+            data["data"] = self.data
+            if (resolved := self.data.get("resolved")) and self.user is not None:
+                if (users := resolved.get("users")) and (user := users.get(self.user.id)):
+                    data["user"] = user
+                if (members := resolved.get("members")) and (member := members.get(self.user.id)):
+                    data["member"] = member
+
+        if self.guild_id is not None:
+            data["guild_id"] = self.guild_id
+
+        if self.channel_id is not None:
+            data["channel_id"] = self.channel_id
+
+        if self.locale:
+            data["locale"] = self.locale
+
+        if self.guild_locale:
+            data["guild_locale"] = self.guild_locale
+
+        if self._message_data:
+            data["message"] = self._message_data
+
+        return data
 
 
 class InteractionResponse:
