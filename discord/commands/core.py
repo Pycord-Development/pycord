@@ -49,7 +49,7 @@ from typing import (
 )
 
 from ..channel import _guild_channel_factory
-from ..enums import MessageType, SlashCommandOptionType, try_enum
+from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
@@ -693,6 +693,8 @@ class SlashCommand(ApplicationCommand):
             if option.default is None:
                 if p_obj.default == inspect.Parameter.empty:
                     option.default = None
+                elif issubclass(p_obj.default, (DiscordEnum, Enum)):
+                    option = Option(p_obj.default)
                 else:
                     option.default = p_obj.default
                     option.required = False
