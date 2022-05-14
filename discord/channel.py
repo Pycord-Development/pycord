@@ -713,7 +713,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     def _update(self, guild: Guild, data: TextChannelPayload) -> None:
         super()._update(guild, data)
 
-    def _get_channel(self) -> "TextChannel":
+    async def _get_channel(self) -> "TextChannel":
         return self
 
     def is_news(self) -> bool:
