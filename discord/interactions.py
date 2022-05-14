@@ -165,14 +165,9 @@ class Interaction:
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
         self.message: Optional[Message]
-        try:
-            message_data = data["message"]
-        except KeyError:
-            self.message = None
-            self._message_data = None
-        else:
-            self.message = Message(state=self._state, channel=self.channel, data=message_data)  # type: ignore
-            self._message_data = message_data
+        
+        self.message = Message(state=self._state, channel=self.channel, data=data.get("message"))  # type: ignore
+        self._message_data = data.get("message")
 
         self.user: Optional[Union[User, Member]] = None
         self._permissions: int = 0
