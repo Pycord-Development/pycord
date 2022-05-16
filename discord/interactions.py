@@ -164,15 +164,12 @@ class Interaction:
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
-        self.message: Optional[Message]
-        try:
-            message_data = data["message"]
-        except KeyError:
-            self.message = None
-            self._message_data = None
-        else:
-            self.message = Message(state=self._state, channel=self.channel, data=message_data)  # type: ignore
-            self._message_data = message_data
+        self.message: Optional[Message] = None
+
+        if (message_data := data.get("message")):
+            self.message = Message(state=self._state, channel=self.channel, data=message_data)
+
+        self._message_data = message_data
 
         self.user: Optional[Union[User, Member]] = None
         self._permissions: int = 0
