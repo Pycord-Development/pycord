@@ -693,7 +693,7 @@ class SlashCommand(ApplicationCommand):
             if option.default is None:
                 if p_obj.default == inspect.Parameter.empty:
                     option.default = None
-                elif issubclass(p_obj.default, (DiscordEnum, Enum)):
+                elif inspect.isclass(p_obj.default) and issubclass(p_obj.default, (DiscordEnum, Enum)):
                     option = Option(p_obj.default)
                 else:
                     option.default = p_obj.default
