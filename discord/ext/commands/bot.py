@@ -25,31 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import collections
 import collections.abc
-import importlib.util
-import inspect
 import sys
 import traceback
-import types
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    List,
-    Mapping,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Type, TypeVar, Union
 
 import discord
 
 from . import errors
-from .cog import Cog
 from .context import Context
 from .core import GroupMixin
 from .help import DefaultHelpCommand, HelpCommand
