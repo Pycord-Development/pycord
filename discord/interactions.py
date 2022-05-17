@@ -182,13 +182,7 @@ class Interaction:
             except KeyError:
                 pass
             else:
-                self.user = guild.get_member(int(member["user"]["id"]))
-                if self.user is None:
-                    # NOTE:
-                    # This is a fallback in case the member is not found in the guild's members.
-                    # If this fallback occurs, multiple aspects of the Member
-                    # class will be incorrect such as status and activities.
-                    self.user = Member(state=self._state, guild=guild, data=member)  # type: ignore
+                self.user = guild._update_member(member, int(member["user"]["id"]))
                 self._permissions = int(member.get("permissions", 0))
         else:
             try:

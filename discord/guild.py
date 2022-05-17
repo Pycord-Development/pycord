@@ -101,6 +101,7 @@ if TYPE_CHECKING:
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
     from .types.guild import GuildFeature, MFALevel
+    from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
     from .voice_client import VoiceProtocol
@@ -352,6 +353,19 @@ class Guild(Hashable):
 
     def _add_member(self, member: Member, /) -> None:
         self._members[member.id] = member
+
+    def _update_member(self, payload: MemberPayload, user_id: int, /) -> Member:
+        if user_id in self._members:
+            member = self.get_member(user_id)
+            member._update(payload)
+        else:
+            # NOTE:
+            # This is a fallback in case the member is not found in the guild's members.
+            # If this fallback occurs, multiple aspects of the Member
+            # class will be incorrect such as status and activities.
+            member = Member(guild=self, state=self._state, data=payload)  # type: ignore
+            self._members[user_id] = member
+        return member
 
     def _store_thread(self, payload: ThreadPayload, /) -> Thread:
         thread = Thread(guild=self, state=self._state, data=payload)
