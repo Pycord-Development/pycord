@@ -1198,37 +1198,9 @@ class Message(Hashable):
         *,
         content: Optional[str] = ...,
         embed: Optional[Embed] = ...,
-        file: Optional[File] = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
-    ) -> Message:
-        ...
-
-    @overload
-    async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
-        embed: Optional[Embed] = ...,
-        files: Optional[List[File]] = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
-    ) -> Message:
-        ...
-
-    @overload
-    async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
         embeds: List[Embed] = ...,
-        file: File = ...,
+        file: Optional[File] = ...,
+        files: Optional[List[File]] = ...,
         attachments: List[Attachment] = ...,
         suppress: bool = ...,
         delete_after: Optional[float] = ...,
@@ -1869,7 +1841,7 @@ class PartialMessage(Hashable):
 
         content = fields.pop("content", MISSING)
         if content is not MISSING:
-            fields["content"] = str(content)
+            fields["content"] = str(content) if content is not None else None
 
         embed = fields.pop("embed", MISSING)
         embeds = fields.pop("embeds", MISSING)
@@ -1898,11 +1870,14 @@ class PartialMessage(Hashable):
                 allowed_mentions = allowed_mentions.to_dict()
             fields["allowed_mentions"] = allowed_mentions
         else:
-            fields["allowed_mentions"] = self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            fields["allowed_mentions"] = (
+                self._state.allowed_mentions.to_dict() if self._state.allowed_mentions else None
+            )
 
-        view = fields.pop("view", None)
-        self._state.prevent_view_updates_for(self.id)
-        fields["components"] = view.to_components() if view else []
+        view = fields.pop("view", MISSING)
+        if view is not MISSING:
+            self._state.prevent_view_updates_for(self.id)
+            fields["components"] = view.to_components() if view else []
 
         if fields:
             data = await self._state.http.edit_message(self.channel.id, self.id, **fields)

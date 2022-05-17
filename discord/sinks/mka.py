@@ -47,7 +47,7 @@ class MKASink(Sink):
 
     def format_audio(self, audio):
         """Formats the recorded audio.
-        
+
         Raises
         ------
         MKASinkError

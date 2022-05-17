@@ -67,7 +67,7 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, MemberIterator, BanIterator
+from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .permissions import PermissionOverwrite
@@ -90,6 +90,7 @@ if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
     from .channel import (
         CategoryChannel,
+        ForumChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -573,6 +574,14 @@ class Guild(Hashable):
         return list(self._threads.values())
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the guild.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.id}"
+
+    @property
     def large(self) -> bool:
         """:class:`bool`: Indicates if the guild is a 'large' guild.
 
@@ -605,6 +614,18 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, StageChannel)]
+        r.sort(key=lambda c: (c.position, c.id))
+        return r
+
+    @property
+    def forum_channels(self) -> List[ForumChannel]:
+        """List[:class:`ForumChannel`]: A list of forum channels that belongs to this guild.
+
+        .. versionadded:: 2.0
+
+        This is sorted by the position and are in UI order from top to bottom.
+        """
+        r = [ch for ch in self._channels.values() if isinstance(ch, ForumChannel)]
         r.sort(key=lambda c: (c.position, c.id))
         return r
 
@@ -1343,6 +1364,123 @@ class Guild(Hashable):
         self._channels[channel.id] = channel
         return channel
 
+    async def create_forum_channel(
+        self,
+        name: str,
+        *,
+        reason: Optional[str] = None,
+        category: Optional[CategoryChannel] = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+        overwrites: Dict[Union[Role, Member], PermissionOverwrite] = MISSING,
+    ) -> ForumChannel:
+        """|coro|
+
+        Creates a :class:`ForumChannel` for the guild.
+
+        Note that you need the :attr:`~Permissions.manage_channels` permission
+        to create the channel.
+
+        The ``overwrites`` parameter can be used to create a 'secret'
+        channel upon creation. This parameter expects a :class:`dict` of
+        overwrites with the target (either a :class:`Member` or a :class:`Role`)
+        as the key and a :class:`PermissionOverwrite` as the value.
+
+        .. note::
+
+            Creating a channel of a specified position will not update the position of
+            other channels to follow suit. A follow-up call to :meth:`~ForumChannel.edit`
+            will be required to update the position of the channel in the channel list.
+
+        Examples
+        ----------
+
+        Creating a basic channel:
+
+        .. code-block:: python3
+
+            channel = await guild.create_forum_channel('cool-channel')
+
+        Creating a "secret" channel:
+
+        .. code-block:: python3
+
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                guild.me: discord.PermissionOverwrite(read_messages=True)
+            }
+
+            channel = await guild.create_forum_channel('secret', overwrites=overwrites)
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The channel's name.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
+            A :class:`dict` of target (either a role or a member) to
+            :class:`PermissionOverwrite` to apply upon creation of a channel.
+            Useful for creating secret channels.
+        category: Optional[:class:`CategoryChannel`]
+            The category to place the newly created channel under.
+            The permissions will be automatically synced to category if no
+            overwrites are provided.
+        position: :class:`int`
+            The position in the channel list. This is a number that starts
+            at 0. e.g. the top channel is position 0.
+        topic: :class:`str`
+            The new channel's topic.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            The maximum value possible is `21600`.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        reason: Optional[:class:`str`]
+            The reason for creating this channel. Shows up on the audit log.
+
+        Raises
+        -------
+        Forbidden
+            You do not have the proper permissions to create this channel.
+        HTTPException
+            Creating the channel failed.
+        InvalidArgument
+            The permission overwrite information is not in proper form.
+
+        Returns
+        -------
+        :class:`ForumChannel`
+            The channel that was just created.
+        """
+
+        options = {}
+        if position is not MISSING:
+            options["position"] = position
+
+        if topic is not MISSING:
+            options["topic"] = topic
+
+        if slowmode_delay is not MISSING:
+            options["rate_limit_per_user"] = slowmode_delay
+
+        if nsfw is not MISSING:
+            options["nsfw"] = nsfw
+
+        data = await self._create_channel(
+            name,
+            overwrites=overwrites,
+            channel_type=ChannelType.forum,
+            category=category,
+            reason=reason,
+            **options,
+        )
+        channel = ForumChannel(state=self._state, guild=self, data=data)
+
+        # temporarily add to the cache
+        self._channels[channel.id] = channel
+        return channel
+
     async def create_category(
         self,
         name: str,
@@ -1728,7 +1866,7 @@ class Guild(Hashable):
         return threads
 
     # TODO: Remove Optional typing here when async iterators are refactored
-    def fetch_members(self, *, limit: int = 1000, after: Optional[SnowflakeTime] = None) -> MemberIterator:
+    def fetch_members(self, *, limit: Optional[int] = 1000, after: Optional[SnowflakeTime] = None) -> MemberIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving the guild's members. In order to use this,
         :meth:`Intents.members` must be enabled.
 
@@ -1885,8 +2023,9 @@ class Guild(Hashable):
         channel: GuildChannel = factory(guild=self, state=self._state, data=data)  # type: ignore
         return channel
 
-    def bans(self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None,
-             after: Optional[SnowflakeTime] = None) -> BanIterator:
+    def bans(
+        self, limit: Optional[int] = None, before: Optional[SnowflakeTime] = None, after: Optional[SnowflakeTime] = None
+    ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
