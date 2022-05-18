@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Callable, Dict, Union
+from typing import Callable
 
 from ..permissions import Permissions
 from .core import ApplicationCommand
@@ -56,10 +56,10 @@ def default_permissions(**perms: bool) -> Callable:
 
     .. code-block:: python3
 
-        from discord import has_permissions
+        from discord import default_permissions
 
         @bot.slash_command()
-        @has_permissions(manage_messages=True)
+        @default_permissions(manage_messages=True)
         async def test(ctx):
             await ctx.respond('You can manage messages.')
 

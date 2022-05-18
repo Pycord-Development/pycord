@@ -86,6 +86,7 @@ if TYPE_CHECKING:
     from .client import Client
     from .embeds import Embed
     from .enums import InviteTarget
+    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
@@ -305,6 +306,7 @@ class GuildChannel:
     - :class:`~discord.VoiceChannel`
     - :class:`~discord.CategoryChannel`
     - :class:`~discord.StageChannel`
+    - :class:`~discord.ForumChannel`
 
     This ABC must also implement :class:`~discord.abc.Snowflake`.
 
@@ -327,6 +329,7 @@ class GuildChannel:
     type: ChannelType
     position: int
     category_id: Optional[int]
+    flags: ChannelFlags
     _state: ConnectionState
     _overwrites: List[_Overwrites]
 
