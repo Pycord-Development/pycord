@@ -244,7 +244,7 @@ class Client:
 
         self._handlers: Dict[str, Callable] = {"ready": self._handle_ready}
         self._hooks: Dict[str, Callable] = {"before_identify": self._call_before_identify_hook}
-        self.events: Dict[str, Coro] = {}
+        self.events: Dict[str, List[Coro]] = {}
 
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
@@ -432,9 +432,10 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
-        coro = self.events.get(event)
-        if coro is not None:
-            self._schedule_event(coro, event, *args, **kwargs)
+        coros = self.events.get(event)
+        if coros:
+            for coro in coros:
+                self._schedule_event(coro, event, *args, **kwargs)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
@@ -1136,11 +1137,13 @@ class Client:
             if not asyncio.iscoroutinefunction(coro):
                 raise TypeError("event registered must be a coroutine function")
 
-            actual_event = coro.__name__ if event_name is None else str(event_name)
-            if actual_event.startswith("on_"):
-                actual_event = actual_event.lstrip("on_")
+            actual_event = (coro.__name__ if event_name is None else str(event_name)).lstrip("on_")
 
-            self.events[actual_event] = coro
+            if actual_event not in self.events:
+                self.events[actual_event] = []
+            
+            self.events[actual_event].append(coro)
+            
             _log.debug("%s has successfully been registered as an event", event_name)
             return coro
         return wrapped
