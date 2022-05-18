@@ -432,6 +432,14 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
+        # this is kept in for subclasses of Client like commands.Bot
+        try:
+            coro = getattr(self, event)
+        except AttributeError:
+            pass
+        else:
+            self._schedule_event(coro, event + "_h", *args, **kwargs)
+
         coros = self.events.get(event)
         if coros:
             for coro in coros:
