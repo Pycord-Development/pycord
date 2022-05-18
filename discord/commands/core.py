@@ -805,19 +805,26 @@ class SlashCommand(ApplicationCommand):
                     else:
                         arg = Object(id=int(arg))
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
-                    obj_type = None
-                    kw = {}
-                    if op.input_type is SlashCommandOptionType.user:
-                        obj_type = User
-                    elif op.input_type is SlashCommandOptionType.role:
-                        obj_type = Role
-                        kw["guild"] = ctx.guild
-                    elif op.input_type is SlashCommandOptionType.channel:
-                        obj_type = _guild_channel_factory(_data["type"])[0]
-                        kw["guild"] = ctx.guild
-                    elif op.input_type is SlashCommandOptionType.attachment:
-                        obj_type = Attachment
-                    arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
+                    if op.input_type is SlashCommandOptionType.channel and int(arg) in ctx.guild._channels:
+                        arg = ctx.guild.get_channel(int(arg))
+                    else:
+                        obj_type = None
+                        kw = {}
+                        if op.input_type is SlashCommandOptionType.user:
+                            obj_type = User
+                        elif op.input_type is SlashCommandOptionType.role:
+                            obj_type = Role
+                            kw["guild"] = ctx.guild
+                        elif op.input_type is SlashCommandOptionType.channel:
+                            # NOTE:
+                            # This is a fallback in case the channel is not found in the guild's channels.
+                            # If this fallback occurs, at the very minimum, permissions will be incorrect
+                            # due to a lack of permission_overwrite data.
+                            obj_type = _guild_channel_factory(_data["type"])[0]
+                            kw["guild"] = ctx.guild
+                        elif op.input_type is SlashCommandOptionType.attachment:
+                            obj_type = Attachment
+                        arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
                     # We couldn't resolve the object, so we just return an empty object
                     arg = Object(id=int(arg))
