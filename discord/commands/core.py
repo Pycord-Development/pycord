@@ -1642,20 +1642,18 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
         )
     error = None
-    if not isinstance(name, str) or not re.match(r"^[\w-]{1,32}$", name):
+    if not isinstance(name, str):
         error = TypeError(f'Command names and options must be of type str. Received "{name}"')
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
-            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". For more information, see "
-            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f'Received "{name}"'
+            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
+            r"For more information, see {docs}/interactions/application-commands#application-command-object-"
+            rf'application-command-naming. Received "{name}"'
         )
-    elif not 1 <= len(name) <= 32:
-        error = ValidationError(f'Command names and options must be 1-32 characters long. Received "{name}"')
-    elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
+    elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lowered. See #512.
         error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
 
     if error:
@@ -1667,7 +1665,7 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, " f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
         )
     error = None
     if not isinstance(description, str):
