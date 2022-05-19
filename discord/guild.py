@@ -354,17 +354,19 @@ class Guild(Hashable):
     def _add_member(self, member: Member, /) -> None:
         self._members[member.id] = member
 
-    def _update_member(self, payload: MemberPayload, user_id: int, /) -> Member:
+    def _get_and_update_member(self, payload: MemberPayload, user_id: int, cache_flag: bool, /) -> Member:
+        # we always get the member, and we only update if the cache_flag (this cache flag should
+        # always be MemberCacheFlag.interaction or MemberCacheFlag.option) is set to True
         if user_id in self._members:
             member = self.get_member(user_id)
-            member._update(payload)
+            member._update(payload) if cache_flag else None
         else:
             # NOTE:
             # This is a fallback in case the member is not found in the guild's members.
             # If this fallback occurs, multiple aspects of the Member
             # class will be incorrect such as status and activities.
             member = Member(guild=self, state=self._state, data=payload)  # type: ignore
-            self._members[user_id] = member
+            self._members[user_id] = member if cache_flag else None
         return member
 
     def _store_thread(self, payload: ThreadPayload, /) -> Thread:

@@ -796,7 +796,8 @@ class SlashCommand(ApplicationCommand):
                     if (_user_data := resolved.get("users", {}).get(arg)) is not None:
                         # We resolved the user from the user id
                         _data["user"] = _user_data
-                    arg = ctx.guild._update_member(_data, int(arg))
+                    cache_flag = ctx.interaction._state.member_cache_flags.option
+                    arg = ctx.guild._get_and_update_member(_data, int(arg), cache_flag)
                 elif op.input_type is SlashCommandOptionType.mentionable:
                     if (_data := resolved.get("users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
