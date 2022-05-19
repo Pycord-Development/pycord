@@ -25,19 +25,26 @@ from typing import TypedDict, Literal, List, Dict
 
 from .snowflake import Snowflake
 
-AutoModRuleTriggerType = Literal[1]
+AutoModRuleTriggerType = Literal[1, 2, 3, 4]
 
 AutoModEventType = Literal[1]
 
-AutoModRuleAction = Literal[1, 2]
+AutoModActionType = Literal[1, 2]
+
+class AutoModAction(TypedDict):
+    type: AutoModActionType
+    metadata: Dict  # TODO
+    
 
 class AutoModRule(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
     name: str
-    trigger_type: AutoModRuleTriggerType
+    creator_id: Snowflake
     event_type: AutoModEventType
+    trigger_type: AutoModRuleTriggerType
     actions: List[AutoModRuleAction]
     trigger_metadata: Dict  # TODO: unclear what this is meant to be
     enabled: bool
-    exempt_roles: Snowflake
-    exempt_channels: Snowflake
-    position: int
+    exempt_roles: List[Snowflake]
+    exempt_channels: List[Snowflake]
