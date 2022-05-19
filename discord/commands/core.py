@@ -807,6 +807,8 @@ class SlashCommand(ApplicationCommand):
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
                     if op.input_type is SlashCommandOptionType.channel and int(arg) in ctx.guild._channels:
                         arg = ctx.guild.get_channel(int(arg))
+                        _data["_invoke_flag"] = True
+                        arg._update(ctx.guild, _data)
                     else:
                         obj_type = None
                         kw = {}
