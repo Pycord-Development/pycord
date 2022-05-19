@@ -688,7 +688,11 @@ class SlashCommand(ApplicationCommand):
                     option = Option(option.__args__)
 
             if not isinstance(option, Option):
-                option = Option(option)
+                if isinstance(p_obj.default, Option):
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
+                    option = p_obj.default
+                else:
+                    option = Option(option)
 
             if option.default is None:
                 if p_obj.default == inspect.Parameter.empty:
@@ -767,7 +771,7 @@ class SlashCommand(ApplicationCommand):
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
         if self.guild_only is not None:
-            as_dict["guild_only"] = self.guild_only
+            as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
             as_dict["default_member_permissions"] = self.default_member_permissions.value
@@ -1025,7 +1029,7 @@ class SlashCommandGroup(ApplicationCommand):
             as_dict["type"] = self.input_type.value
 
         if self.guild_only is not None:
-            as_dict["guild_only"] = self.guild_only
+            as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
             as_dict["default_member_permissions"] = self.default_member_permissions.value
@@ -1300,7 +1304,7 @@ class ContextMenuCommand(ApplicationCommand):
         }
 
         if self.guild_only is not None:
-            as_dict["guild_only"] = self.guild_only
+            as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
             as_dict["default_member_permissions"] = self.default_member_permissions.value

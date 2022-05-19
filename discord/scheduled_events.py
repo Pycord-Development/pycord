@@ -99,7 +99,7 @@ class ScheduledEventLocation:
             self.value = value
 
     def __repr__(self) -> str:
-        return f"<ScheduledEventLocation value={self.value} type={self.type}>"
+        return f"<ScheduledEventLocation value={self.value!r} type={self.type}>"
 
     def __str__(self) -> str:
         return str(self.value)
