@@ -2353,6 +2353,32 @@ class HTTPClient:
             "POST",
             "/guilds/{guild_id}/auto-moderation/rules",
             guild_id=guild_id,
+        )
+        return self.request(r, json=payload)
+    
+    def modify_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+        payload,  # TODO: Typehint
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "POST",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r, json=payload)
+    
+    def delete_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
             rule_id=rule_id,
         )
         return self.request(r)
