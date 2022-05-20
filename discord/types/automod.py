@@ -48,3 +48,27 @@ class AutoModRule(TypedDict):
     enabled: bool
     exempt_roles: List[Snowflake]
     exempt_channels: List[Snowflake]
+        
+        
+class _CreateAutoModRuleOptional(TypedDict, total=False):
+    enabled: bool
+    exempt_roles: List[Snowflake]
+    exempt_channels: List[Snowflake]
+        
+        
+class CreateAutoModRule(_CreateAutoModRuleOptional):
+    name: str
+    event_type: AutoModEventType
+    trigger_type: AutoModRuleTriggerType
+    trigger_metadata: Dict  # TODO: unclear what this is meant to be
+    actions: List[AutoModRuleAction]
+        
+
+class EditAutoModRule(TypedDict, total=False):
+    name: str
+    event_type: AutoModEventType
+    trigger_metadata: Dict  # TODO: unclear what this is meant to be
+    actions: List[AutoModRuleAction]
+    enabled: bool
+    exempt_roles: List[Snowflake]
+    exempt_channels: List[Snowflake]
