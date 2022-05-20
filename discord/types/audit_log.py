@@ -41,6 +41,7 @@ from .snowflake import Snowflake
 from .threads import Thread
 from .user import User
 from .webhook import Webhook
+from .automod import AutoModRule
 
 AuditLogEvent = Literal[
     1,
@@ -90,6 +91,11 @@ AuditLogEvent = Literal[
     110,
     111,
     112,
+    121,
+    140,
+    141,
+    142,
+    143,
 ]
 
 
@@ -283,3 +289,4 @@ class AuditLog(TypedDict):
     integrations: List[PartialIntegration]
     threads: List[Thread]
     scheduled_events: List[ScheduledEvent]
+    auto_moderation_rules: List[AutoModRule]
