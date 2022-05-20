@@ -56,13 +56,6 @@ class AutoModRule(Hashable):
     """Represents a guild's auto moderation rule.
 
     .. versionadded:: 2.0
-    
-    Attributes
-    ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
-        The actual location of the scheduled event.
-    type: :class:`ScheduledEventLocationType`
-        The type of location.
     """
 
     __slots__ = (
