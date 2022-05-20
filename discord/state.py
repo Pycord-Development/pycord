@@ -616,6 +616,22 @@ class ConnectionState:
     def parse_application_command_permissions_update(self, data) -> None:
         # unsure what the implementation would be like
         pass
+    
+    def parse_auto_moderation_rule_create(data) -> None:
+        # construct object, dispatch event, cache data
+        pass
+    
+    def parse_auto_moderation_rule_update(data) -> None:
+        # construct object, dispatch event, cache data
+        pass
+    
+    def parse_auto_moderation_rule_delete(data) -> None:
+        # construct object, dispatch event, cache data
+        pass
+    
+    def parse_auto_moderation_action_execution(data) -> None:
+        # construct object, dispatch event, cache data
+        pass
 
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)
