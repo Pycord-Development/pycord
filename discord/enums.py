@@ -777,7 +777,10 @@ class ScheduledEventLocationType(Enum):
 
     
 class AutoModRuleTriggerType(Enum):
-    keyword_filter = 1
+    keyword = 1
+    harmful_links = 2
+    spam = 3
+    default_keyword_list = 4
     
 
 class AutoModEventType(Enum):
@@ -786,7 +789,7 @@ class AutoModEventType(Enum):
     
 class AutoModRuleAction(Enum):
     block_message = 1
-    send_an_alert = 2
+    log_to_channel = 2
     
 
 T = TypeVar("T")
