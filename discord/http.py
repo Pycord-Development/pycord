@@ -2347,7 +2347,7 @@ class HTTPClient:
     def create_auto_moderation_rule(
         self,
         guild_id: Snowflake,
-        payload,  # TODO: Typehint
+        payload: automod.CreateAutoModRule,
     ) -> Response[automod.AutoModRule]:
         r = Route(
             "POST",
@@ -2360,7 +2360,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
-        payload,  # TODO: Typehint
+        payload: automod.ModifyAutoModRule, 
     ) -> Response[automod.AutoModRule]:
         r = Route(
             "POST",
