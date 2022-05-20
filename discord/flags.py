@@ -970,6 +970,33 @@ class Intents(BaseFlags):
         - :meth:`Guild.get_scheduled_event`
         """
         return 1 << 16
+    
+    @flag_value
+    def auto_moderation_configuration(self):
+        """:class:`bool`: Whether guild auto moderation configuration events are enabled.
+
+        This corresponds to the following events:
+
+        - :func:`on_auto_moderation_rule_create`
+        - :func:`on_auto_moderation_rule_update`
+        - :func:`on_auto_moderation_rule_delete`
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :class:`AutoModerationRule`
+        - :meth:`Guild.auto_moderation_rules`
+        """
+        return 1 << 20
+    
+    @flag_value
+    def auto_moderation_execution(self):
+        """:class:`bool`: Whether guild auto moderation execution events are enabled.
+
+        This corresponds to the following events:
+
+        - :func:`on_auto_moderation_action_execution`
+        """
+        return 1 << 21
 
 
 @fill_with_flags()
