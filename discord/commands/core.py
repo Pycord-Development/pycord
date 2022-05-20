@@ -1650,8 +1650,8 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
             r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
-            r"For more information, see {docs}/interactions/application-commands#application-command-object-"
-            rf'application-command-naming. Received "{name}"'
+            f"For more information, see {docs}/interactions/application-commands#application-command-object-"
+            f'application-command-naming. Received "{name}"'
         )
     elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lowered. See #512.
         error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
