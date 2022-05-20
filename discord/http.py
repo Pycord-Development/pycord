@@ -2360,7 +2360,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
-        payload: automod.ModifyAutoModRule, 
+        payload: automod.EditAutoModRule, 
     ) -> Response[automod.AutoModRule]:
         r = Route(
             "POST",
