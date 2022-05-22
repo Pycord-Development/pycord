@@ -694,14 +694,11 @@ class SlashCommand(ApplicationCommand):
                 else:
                     option = Option(option)
 
-            if option.default is None:
-                if p_obj.default == inspect.Parameter.empty:
-                    option.default = None
-                elif isinstance(p_obj.default, type) and issubclass(p_obj.default, (DiscordEnum, Enum)):
+            if option.default is None and not p_obj.default == inspect.Parameter.empty:
+                if isinstance(p_obj.default, type) and issubclass(p_obj.default, (DiscordEnum, Enum)):
                     option = Option(p_obj.default)
-                else:
-                    option.default = p_obj.default
-                    option.required = False
+                elif isinstance(p_obj.default, Option) and not (default := p_obj.default.default) is None:
+                    option.default = default
             if option.name is None:
                 option.name = p_name
             if option.name != p_name or option._parameter_name is None:

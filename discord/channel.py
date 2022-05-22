@@ -721,6 +721,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         """:class:`bool`: Checks if the channel is a news/anouncements channel."""
         return self._type == ChannelType.news.value
 
+    @property
+    def news(self) -> bool:
+        return self.is_news()
+
     async def create_thread(
         self,
         *,
