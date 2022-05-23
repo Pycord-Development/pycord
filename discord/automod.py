@@ -25,13 +25,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Optional, List
 
 from . import utils
 from .enums import (
-    AutoModRuleTriggerType,
+    AutoModTriggerType,
     AutoModEventType,
-    AutoModRuleAction,
+    AutoModActionType,
     try_enum,
 )
 from .errors import ValidationError
@@ -48,8 +48,29 @@ if TYPE_CHECKING:
     from .member import Member
     from .state import ConnectionState
     from .types.automod import AutoModRule as AutoModRulePayload
+    from .types.automod import AutoModAction as AutoModActionPayload
 
 MISSING = utils.MISSING
+
+
+class AutoModAction:
+    """Represents an action for a guild's auto moderation rule.
+    
+    .. versionadded:: 2.0
+    """
+
+    __slots__ = (
+        "type",
+        "metadata",
+    )
+
+    def __init__(self, data: AutoModActionPayload):
+        self.type: AutoModActionType = try_enum(AutoModActionType, data["type"])
+        # TODO: Metadata
+
+    def __repr__(self) -> str:
+        return f"<AutoModAction type={self.type}>"
+
 
 
 class AutoModRule(Hashable):
@@ -68,6 +89,7 @@ class AutoModRule(Hashable):
         "creator_id",
         "event_type",
         "trigger_type",
+        "actions",
         "enabled",
         "exempt_role_ids",
         "exempt_channel_ids",
@@ -89,8 +111,9 @@ class AutoModRule(Hashable):
         self.creator: Optional[Member] = creator
         self.creator_id: Snowflake = int(data["creator_id"])
         self.event_type: AutoModEventType = try_enum(AutoModEventType, data["event_type"])
-        self.trigger_type: AutoModRuleTriggerType = try_enum(AutoModRuleTriggerType, data["trigger_type"])
-        # TODO: trigger_metadata, actions+object
+        self.trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, data["trigger_type"])
+        # TODO: trigger_metadata
+        self.actions: List[AutoModAction] = [AutoModAction(d) for d in data["actions"]]
         self.enabled: bool = data["enabled"]
         self.exempt_role_ids: List[Snowflake] = data["exempt_roles"]
         self.exempt_channel_ids: List[Snowflake] = data["exempt_channels"]

@@ -776,7 +776,7 @@ class ScheduledEventLocationType(Enum):
     external = 3
 
     
-class AutoModRuleTriggerType(Enum):
+class AutoModTriggerType(Enum):
     keyword = 1
     harmful_links = 2
     spam = 3
@@ -787,7 +787,7 @@ class AutoModEventType(Enum):
     message_send = 1
     
     
-class AutoModRuleAction(Enum):
+class AutoModActionType(Enum):
     block_message = 1
     log_to_channel = 2
     

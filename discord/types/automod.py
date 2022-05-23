@@ -25,7 +25,7 @@ from typing import TypedDict, Literal, List, Dict
 
 from .snowflake import Snowflake
 
-AutoModRuleTriggerType = Literal[1, 2, 3, 4]
+AutoModTriggerType = Literal[1, 2, 3, 4]
 
 AutoModEventType = Literal[1]
 
@@ -42,8 +42,8 @@ class AutoModRule(TypedDict):
     name: str
     creator_id: Snowflake
     event_type: AutoModEventType
-    trigger_type: AutoModRuleTriggerType
-    actions: List[AutoModRuleAction]
+    trigger_type: AutoModTriggerType
+    actions: List[AutoModAction]
     trigger_metadata: Dict  # TODO: unclear what this is meant to be
     enabled: bool
     exempt_roles: List[Snowflake]
@@ -59,16 +59,16 @@ class _CreateAutoModRuleOptional(TypedDict, total=False):
 class CreateAutoModRule(_CreateAutoModRuleOptional):
     name: str
     event_type: AutoModEventType
-    trigger_type: AutoModRuleTriggerType
+    trigger_type: AutoModTriggerType
     trigger_metadata: Dict  # TODO: unclear what this is meant to be
-    actions: List[AutoModRuleAction]
+    actions: List[AutoModAction]
         
 
 class EditAutoModRule(TypedDict, total=False):
     name: str
     event_type: AutoModEventType
     trigger_metadata: Dict  # TODO: unclear what this is meant to be
-    actions: List[AutoModRuleAction]
+    actions: List[AutoModAction]
     enabled: bool
     exempt_roles: List[Snowflake]
     exempt_channels: List[Snowflake]
