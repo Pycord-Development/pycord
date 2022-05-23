@@ -2356,7 +2356,7 @@ class HTTPClient:
         )
         return self.request(r, json=payload)
     
-    def modify_auto_moderation_rule(
+    def edit_auto_moderation_rule(
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,

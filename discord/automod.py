@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Optional, List
+from typing import TYPE_CHECKING, Dict, Optional, List, Union
 
 from . import utils
 from .enums import (
@@ -46,6 +46,8 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .guild import Guild
     from .member import Member
+    from .role import Role
+    from .channel import ForumChannel, TextChannel, VoiceChannel
     from .state import ConnectionState
     from .types.automod import AutoModRule as AutoModRulePayload
     from .types.automod import AutoModAction as AutoModActionPayload
@@ -64,9 +66,19 @@ class AutoModAction:
         "metadata",
     )
 
-    def __init__(self, data: AutoModActionPayload):
-        self.type: AutoModActionType = try_enum(AutoModActionType, data["type"])
+    def __init__(self, action_type: AutoModActionType, metadata: Dict):
+        self.type: AutoModActionType = action_type
         # TODO: Metadata
+
+    def to_dict(self) -> Dict:
+        return {
+            "type": self.type.value,
+            "metadata": self.metadata,
+        }
+        
+    @classmethod
+    def from_dict(cls, data: Dict):
+        return cls(try_enum(AutoModActionType, data["type"]), data["metadata"])
 
     def __repr__(self) -> str:
         return f"<AutoModAction type={self.type}>"
@@ -77,6 +89,47 @@ class AutoModRule(Hashable):
     """Represents a guild's auto moderation rule.
 
     .. versionadded:: 2.0
+    
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two rules are equal.
+
+        .. describe:: x != y
+
+            Checks if two rules are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the rule's hash.
+
+        .. describe:: str(x)
+
+            Returns the rule's name.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The rule's ID.
+    guild: :class:`Guild`
+        The guild this rule belongs to.
+    name: :class:`str`
+        The rule's name.
+    creator_id: :class:`int`
+        The ID of the user who created this rule.
+    event_type: :class:`AutoModEventType`
+        Indicates in what context the rule is checked.
+    trigger_type: :class:`AutoModTriggerType`
+        Indicates what type of information is checked to determine whether the rule is triggered.
+    actions: List[:class:`AutoModAction`]
+        The actions to perform when the rule is triggered.
+    enabled: :class:`bool`
+        Whether this rule is enabled.
+    exempt_role_ids: List[:class:`int`]
+        The IDs of the roles that are exempt from this rule.
+    exempt_channel_ids: List[:class:`int`]
+        The IDs of the channels that are exempt from this rule.
     """
 
     __slots__ = (
@@ -85,7 +138,6 @@ class AutoModRule(Hashable):
         "guild",
         "guild_id",
         "name",
-        "creator",
         "creator_id",
         "event_type",
         "trigger_type",
@@ -100,26 +152,129 @@ class AutoModRule(Hashable):
         *,
         state: ConnectionState,
         guild: Guild,
-        creator: Member,
         data: AutoModRulePayload,
     ):
         self._state: ConnectionState = state
-        self.id: Snowflake = int(data["id"])
+        self.id: int = int(data["id"])
         self.guild: Optional[Guild] = guild
-        self.guild_id: Snowflake = int(data["guild_id"])
+        self.guild_id: int = int(data["guild_id"])
         self.name: str = data["name"]
-        self.creator: Optional[Member] = creator
-        self.creator_id: Snowflake = int(data["creator_id"])
+        self.creator_id: int = int(data["creator_id"])
         self.event_type: AutoModEventType = try_enum(AutoModEventType, data["event_type"])
         self.trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, data["trigger_type"])
         # TODO: trigger_metadata
-        self.actions: List[AutoModAction] = [AutoModAction(d) for d in data["actions"]]
+        self.actions: List[AutoModAction] = [AutoModAction.from_dict(d) for d in data["actions"]]
         self.enabled: bool = data["enabled"]
-        self.exempt_role_ids: List[Snowflake] = data["exempt_roles"]
-        self.exempt_channel_ids: List[Snowflake] = data["exempt_channels"]
+        self.exempt_role_ids: List[int] = [int(r) for r in data["exempt_roles"]]
+        self.exempt_channel_ids: List[int] = [int(c) for c in data["exempt_channels"]]
 
     def __repr__(self) -> str:
         return f"<AutoModRule name={self.name} id={self.id}>"
 
     def __str__(self) -> str:
         return self.name
+    
+    @property
+    def creator(self) -> Optional[Member]:
+        """Optional[:class:`Member`]: The member who created this rule."""
+        if self.guild is None:
+            return None
+        return self.guild.get_member(self.creator_id)
+    
+    @property
+    def exempt_roles(self) -> List[Union[Role, Object]]:
+        """List[Union[:class:`Role`, :class:`Object`]]: The roles that are exempt 
+        from this rule.
+        
+        If a role is not found in the guild's cache, 
+        then it will be returned as an :class:`Object`.
+        """
+        if self.guild is None:
+            return []
+        return [self.guild.get_role(role_id) or Object(role_id) for role_id in self.exempt_role_ids]
+    
+    @property
+    def exempt_channels(self) -> List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]:
+        """List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]: The channels 
+        that are exempt from this rule.
+       
+        If a channel is not found in the guild's cache, 
+        then it will be returned as an :class:`Object`.
+        """
+        if self.guild is None:
+            return []
+        return [self.guild.get_channel(channel_id) or Object(channel_id) for channel_id in self.exempt_channel_ids]
+     
+    async def delete(self) -> None:
+        """|coro|
+        
+        Deletes this rule.
+        """
+        await self._state.http.delete_auto_moderation_rule(self.guild_id, self.id)
+    
+    async def edit(
+        self,
+        *,
+        name: str = MISSING,
+        event_type: AutoModEventType = MISSING,
+        # TODO: trigger metadata
+        actions: List[AutoModAction] = MISSING,
+        enabled: bool = MISSING,
+        exempt_roles: List[Snowflake] = MISSING,
+        exempt_channels: List[Snowflake] = MISSING,
+    ) -> Optional[AutoModRule]:
+        """|coro|
+        
+        Edits the rule.
+        
+        Parameters
+        -----------
+        name: :class:`str`
+            The rule's new name.
+        event_type: :class:`AutoModEventType`
+            The new context in which the rule is checked.
+        actions: List[:class:`AutoModAction`]
+            The new actions to perform when the rule is triggered.
+        enabled: :class:`bool`
+            Whether this rule is enabled.
+        exempt_roles: List[:class:`Snowflake`]
+            The roles that will be exempt from this rule.
+        exempt_channels: List[:class:`Snowflake`]
+            The channels that will be exempt from this rule.
+        
+        Raises
+        -------
+        Forbidden
+            You do not have the proper permissions to the action requested.
+        HTTPException
+            The operation failed.
+            
+        Returns
+        --------
+        Optional[:class:`.AutoModRule`]
+            The newly updated rule, if applicable. This is only returned
+            when fields are updated.
+        """
+        http = self._state.http
+        guild_id = self.guild.id
+        payload = {}
+        if name is not MISSING:
+            payload["name"] = name
+        if event_type is not MISSING:
+            payload["event_type"] = event_type.value
+        # TODO: trigger metadata
+        if actions is not MISSING:
+            payload["actions"] = [a.to_dict() for a in actions]
+        if enabled is not MISSING:
+            payload["enabled"] = enabled
+        if exempt_roles is not MISSING:
+            payload["exempt_roles"] = [r.id for r in exempt_roles]
+        if exempt_channels is not MISSING:
+            payload["exempt_channels"] = [c.id for c in exempt_channels]
+            
+        if payload:
+            data = await http.edit_auto_moderation_rule(guild_id, self.id, payload)
+            return AutoModRule(state=self._state, guild=self.guild, data=data)
+        
+        
+    
