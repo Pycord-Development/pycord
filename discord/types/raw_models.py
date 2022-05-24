@@ -28,6 +28,7 @@ from typing import List, TypedDict
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .types.automod import AutoModAction
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -110,4 +111,9 @@ class TypingEvent(_TypingEventOptional):
 class ScheduledEventSubscription(TypedDict, total=False):
     event_id: Snowflake
     user_id: Snowflake
+    guild_id: Snowflake
+
+
+class AutoModActionExecutionEvent(TypedDict):
+    action: AutoModAction
     guild_id: Snowflake

@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from functools import cached_property
 from typing import TYPE_CHECKING, Dict, Optional, List, Union
 
 from . import utils
@@ -68,7 +69,7 @@ class AutoModAction:
 
     def __init__(self, action_type: AutoModActionType, metadata: Dict):
         self.type: AutoModActionType = action_type
-        # TODO: Metadata
+        self.metadata = metadata  # TODO: Metadata
 
     def to_dict(self) -> Dict:
         return {
@@ -112,8 +113,6 @@ class AutoModRule(Hashable):
     ----------
     id: :class:`int`
         The rule's ID.
-    guild: :class:`Guild`
-        The guild this rule belongs to.
     name: :class:`str`
         The rule's name.
     creator_id: :class:`int`
@@ -135,7 +134,6 @@ class AutoModRule(Hashable):
     __slots__ = (
         "_state",
         "id",
-        "guild",
         "guild_id",
         "name",
         "creator_id",
@@ -151,12 +149,10 @@ class AutoModRule(Hashable):
         self,
         *,
         state: ConnectionState,
-        guild: Guild,
         data: AutoModRulePayload,
     ):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
-        self.guild: Optional[Guild] = guild
         self.guild_id: int = int(data["guild_id"])
         self.name: str = data["name"]
         self.creator_id: int = int(data["creator_id"])
@@ -174,14 +170,19 @@ class AutoModRule(Hashable):
     def __str__(self) -> str:
         return self.name
     
-    @property
+    @cached_property
+    def guild(self) -> Optional[Guild]:
+        """Optional[:class:`Guild`]: The guild this rule belongs to."""
+        return self._state._get_guild(self.guild_id)
+    
+    @cached_property
     def creator(self) -> Optional[Member]:
         """Optional[:class:`Member`]: The member who created this rule."""
         if self.guild is None:
             return None
         return self.guild.get_member(self.creator_id)
     
-    @property
+    @cached_property
     def exempt_roles(self) -> List[Union[Role, Object]]:
         """List[Union[:class:`Role`, :class:`Object`]]: The roles that are exempt 
         from this rule.
@@ -193,7 +194,7 @@ class AutoModRule(Hashable):
             return []
         return [self.guild.get_role(role_id) or Object(role_id) for role_id in self.exempt_role_ids]
     
-    @property
+    @cached_property
     def exempt_channels(self) -> List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]:
         """List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]: The channels 
         that are exempt from this rule.
@@ -225,7 +226,7 @@ class AutoModRule(Hashable):
     ) -> Optional[AutoModRule]:
         """|coro|
         
-        Edits the rule.
+        Edits this rule.
         
         Parameters
         -----------
@@ -267,6 +268,7 @@ class AutoModRule(Hashable):
             payload["actions"] = [a.to_dict() for a in actions]
         if enabled is not MISSING:
             payload["enabled"] = enabled
+        # Maybe consider enforcing limits on the number of exempt roles/channels?
         if exempt_roles is not MISSING:
             payload["exempt_roles"] = [r.id for r in exempt_roles]
         if exempt_channels is not MISSING:
@@ -274,7 +276,7 @@ class AutoModRule(Hashable):
             
         if payload:
             data = await http.edit_auto_moderation_rule(guild_id, self.id, payload)
-            return AutoModRule(state=self._state, guild=self.guild, data=data)
+            return AutoModRule(state=self._state, data=data)
         
         
     

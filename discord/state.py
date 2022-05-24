@@ -47,8 +47,10 @@ from typing import (
     Union,
 )
 
+
 from . import utils
 from .activity import BaseActivity
+from .automod import AutoModAction, AutoModRule
 from .channel import *
 from .channel import _channel_factory
 from .emoji import Emoji
@@ -617,21 +619,26 @@ class ConnectionState:
         # unsure what the implementation would be like
         pass
     
-    def parse_auto_moderation_rule_create(data) -> None:
-        # construct object, dispatch event, cache data
-        pass
+    def parse_auto_moderation_rule_create(self, data) -> None:
+        rule = AutoModRule(state=self, data=data)
+        self.dispatch("auto_moderation_rule_create", rule)
     
-    def parse_auto_moderation_rule_update(data) -> None:
-        # construct object, dispatch event, cache data
-        pass
+    def parse_auto_moderation_rule_update(self, data) -> None:
+        # somehow get a 'before' object?
+        rule = AutoModRule(state=self, data=data)
+        self.dispatch("auto_moderation_rule_update", rule)
     
-    def parse_auto_moderation_rule_delete(data) -> None:
-        # construct object, dispatch event, cache data
-        pass
+    def parse_auto_moderation_rule_delete(self, data) -> None:
+        rule = AutoModRule(state=self, data=data)
+        self.dispatch("auto_moderation_rule_delete", rule)
     
-    def parse_auto_moderation_action_execution(data) -> None:
-        # construct object, dispatch event, cache data
-        pass
+    def parse_auto_moderation_action_execution(self, data) -> None:
+        raw = RawAutoModActionExecutionEvent(data)
+        self.dispatch("raw_auto_moderation_action_execution", raw)
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is not None:
+            action = AutoModAction.from_dict(data["action"])
+            self.dispatch("auto_moderation_action_execution", guild, action)
 
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)

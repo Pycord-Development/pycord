@@ -28,6 +28,8 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, List, Optional, Set
 
+from .automod import AutoModAction
+
 from .enums import ChannelType, try_enum
 
 if TYPE_CHECKING:
@@ -47,6 +49,7 @@ if TYPE_CHECKING:
         ScheduledEventSubscription,
         ThreadDeleteEvent,
         TypingEvent,
+        AutoModActionExecutionEvent,   
     )
 
 
@@ -61,6 +64,7 @@ __all__ = (
     "RawThreadDeleteEvent",
     "RawTypingEvent",
     "RawScheduledEventSubscription",
+    "RawAutoModActionExecutionEvent",
 )
 
 
@@ -386,3 +390,23 @@ class RawScheduledEventSubscription(_RawReprMixin):
         self.user_id: int = int(data["user_id"])
         self.guild: Guild = None
         self.event_type: str = event_type
+
+
+class RawAutoModActionExecutionEvent(_RawReprMixin):
+    """Represents the payload for a :func:`raw_auto_moderation_action_execution`
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    action: :class:`AutoModAction`
+        The action that was executed.
+    guild_id: :class:`int`
+        The guild ID that the action was executed in.
+    """
+
+    __slots__ = ("action", "guild_id")
+
+    def __init__(self, data: AutoModActionExecutionEvent) -> None:
+        self.action: AutoModAction = AutoModAction.from_dict(data["action"])
+        self.guild_id: int = int(data["guild_id"])
