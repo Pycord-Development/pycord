@@ -980,11 +980,6 @@ class Intents(BaseFlags):
         - :func:`on_auto_moderation_rule_create`
         - :func:`on_auto_moderation_rule_update`
         - :func:`on_auto_moderation_rule_delete`
-
-        This also corresponds to the following attributes and classes in terms of cache:
-
-        - :class:`AutoModerationRule`
-        - :meth:`Guild.auto_moderation_rules`
         """
         return 1 << 20
     

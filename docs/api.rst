@@ -1399,6 +1399,64 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawScheduledEventSubscription`
 
+.. function:: on_auto_moderation_rule_create(rule)
+
+    Called when an auto moderation rule is created.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The newly created rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_update(rule)
+
+    Called when an auto moderation rule is updated.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The updated rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_delete(rule)
+
+    Called when an auto moderation rule is deleted.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The deleted rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_action_execution(guild, action)
+
+    Called when an auto moderation action is executed.
+    If the guild is not found in the internal cache, then this event will not be
+    called. Consider using :func:`on_raw_auto_moderation_action_execution` instead.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param guild: The guild the action was executed in.
+    :type guild: :class:`Guild`
+    :param action: The action that was executed.
+    :type action: :class:`AutoModAction`
+
+.. function:: on_raw_auto_moderation_action_execution(payload)
+
+    Called when an auto moderation action is executed.
+
+    Unlike :meth:`on_auto_moderation_action_execution`, this event will be
+    called regardless of the state of the internal cache.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawAutoModActionExecution`
+
+
 .. _discord-api-utils:
 
 Utility Functions
