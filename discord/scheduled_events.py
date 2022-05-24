@@ -255,7 +255,7 @@ class ScheduledEvent(Hashable):
         return Asset._from_scheduled_event_cover(
             self._state,
             self.id,
-            self._image,
+            self._cover,
         )
 
     async def edit(
