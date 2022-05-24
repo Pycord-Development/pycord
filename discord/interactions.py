@@ -490,20 +490,26 @@ class InteractionResponse:
         """
         return self._responded
 
-    async def defer(self, *, ephemeral: bool = False) -> None:
+    async def defer(self, *, ephemeral: bool = False, invisible: bool = True) -> None:
         """|coro|
-
         Defers the interaction response.
-
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
-
+        This is can only be used with the following interaction types
+        - :attr:`InteractionType.application_command`
+        - :attr:`InteractionType.component`
+        - :attr:`InteractionType.modal_submit`
         Parameters
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
-
+            This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``.
+        invisible: :class:`bool`
+            Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`)
+            instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`).
+            In the Discord UI, this is represented as the bot thinking of a response. You must
+            eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
+            This parameter does not apply to interactions of type :attr:`InteractionType.application_command`.
         Raises
         -------
         HTTPException
@@ -517,16 +523,18 @@ class InteractionResponse:
         defer_type: int = 0
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
-        if parent.type is InteractionType.component:
-            if ephemeral:
-                data = {"flags": 64}
-                defer_type = InteractionResponseType.deferred_channel_message.value
-            else:
-                defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type in (InteractionType.application_command, InteractionType.modal_submit):
+        if parent.type is InteractionType.component or parent.type is InteractionType.modal_submit:
+            defer_type = (
+                InteractionResponseType.deferred_message_update.value
+                if invisible
+                else InteractionResponseType.deferred_channel_message.value
+            )
+            if not invisible and ephemeral:
+                data = {'flags': 64}
+        elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
-                data = {"flags": 64}
+                data = {'flags': 64}
 
         if defer_type:
             adapter = async_context.get()
