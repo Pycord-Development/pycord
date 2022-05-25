@@ -789,7 +789,13 @@ class AutoModEventType(Enum):
     
 class AutoModActionType(Enum):
     block_message = 1
-    log_to_channel = 2
+    send_alert_message = 2
+    
+    
+class AutoModWordsetType(Enum):
+    profanity = "PROFANITY"
+    sexual_content = "SEXUAL_CONTENT"
+    slurs = "SLURS"
     
 
 T = TypeVar("T")

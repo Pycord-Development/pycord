@@ -3540,7 +3540,7 @@ class Guild(Hashable):
         data = await self._state.http.get_auto_moderation_rules(self.id)
         result = []
         for rule in data:
-            result.append(AutoModRule(state=self._state, guild=self, data=rule))
+            result.append(AutoModRule(state=self._state, data=rule))
         return result
     
     async def fetch_auto_moderation_rule(self, id: int) -> AutoModRule:
@@ -3561,7 +3561,7 @@ class Guild(Hashable):
             The requested auto moderation rule.
         """
         data = await self._state.http.get_auto_moderation_rule(self.id, id)
-        return AutoModRule(state=self._state, guild=self, data=data)
+        return AutoModRule(state=self._state, data=data)
     
     async def create_auto_moderation_rule(
         self,
@@ -3569,7 +3569,7 @@ class Guild(Hashable):
         name: str,
         event_type: AutoModEventType,
         trigger_type: AutoModTriggerType,
-        # TODO: trigger metadata
+        trigger_metadata: AutoModTriggerMetadata, # TODO
         actions: List[AutoModAction],
         enabled: bool = False,
         exempt_roles: List[Snowflake] = None,

@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING, Dict, Optional, List, Union
 
@@ -33,9 +32,9 @@ from .enums import (
     AutoModTriggerType,
     AutoModEventType,
     AutoModActionType,
+    AutoModWordsetType,
     try_enum,
 )
-from .errors import ValidationError
 from .mixins import Hashable
 from .object import Object
 
@@ -50,16 +49,75 @@ if TYPE_CHECKING:
     from .role import Role
     from .channel import ForumChannel, TextChannel, VoiceChannel
     from .state import ConnectionState
-    from .types.automod import AutoModRule as AutoModRulePayload
-    from .types.automod import AutoModAction as AutoModActionPayload
+    from .types.automod import (
+        AutoModRule as AutoModRulePayload,
+        AutoModAction as AutoModActionPayload,
+        AutoModTriggerMetadata as AutoModTriggerMetadataPayload,
+        AutoModActionMetadata as AutoModActionMetadataPayload,
+    )
 
 MISSING = utils.MISSING
+
+
+class AutoModActionMetadata:
+    """Represents an action's metadata.
+    
+    Depending on the action's type, different attributes will be used.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    channel_id: :class:`int`
+        The ID of the channel to send the message to. Only for actions of type :attr:`AutoModActionType.send_alert_message`.
+    """
+    # maybe add a table of action types and attributes?
+
+    __slots__ = (
+        "channel_id",
+    )
+
+    def __init__(self, channel_id: int = MISSING):
+        self.channel_id = channel_id
+
+    def to_dict(self) -> Dict:
+        data = {}
+        if self.channel_id is not MISSING:
+            data["channel_id"] = self.channel_id
+        return data
+        
+    @classmethod
+    def from_dict(cls, data: AutoModActionMetadataPayload):
+        kwargs = {}
+        if data.get("channel_id") is not None:
+            kwargs["channel_id"] = int(data["channel_id"])
+        return cls(**kwargs)
+
+    def __repr__(self) -> str:
+        repr_attrs = (
+            "channel_id",
+        )
+        inner = []
+        for attr in repr_attrs:
+            value = getattr(self, attr)
+            if value is not MISSING:
+                inner.append(f"{attr}={value}")
+        inner = " ".join(inner)
+        return f"<AutoModActionMetadata {inner}>"
+
 
 
 class AutoModAction:
     """Represents an action for a guild's auto moderation rule.
     
     .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    type: :class:`AutoModActionType`
+        The action's type.
+    metadata: :class:`AutoModActionMetadata`
+        The action's metadata.
     """
 
     __slots__ = (
@@ -67,9 +125,9 @@ class AutoModAction:
         "metadata",
     )
 
-    def __init__(self, action_type: AutoModActionType, metadata: Dict):
+    def __init__(self, action_type: AutoModActionType, metadata: AutoModActionMetadata):
         self.type: AutoModActionType = action_type
-        self.metadata = metadata  # TODO: Metadata
+        self.metadata: AutoModActionMetadata = metadata
 
     def to_dict(self) -> Dict:
         return {
@@ -78,12 +136,68 @@ class AutoModAction:
         }
         
     @classmethod
-    def from_dict(cls, data: Dict):
-        return cls(try_enum(AutoModActionType, data["type"]), data["metadata"])
+    def from_dict(cls, data: AutoModActionPayload):
+        return cls(try_enum(AutoModActionType, data["type"]), AutoModActionMetadata.from_dict(data["metadata"]))
 
     def __repr__(self) -> str:
         return f"<AutoModAction type={self.type}>"
 
+
+class AutoModTriggerMetadata:
+    """Represents a rule's trigger metadata.
+    
+    Depending on the trigger type, different attributes will be used.
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    keyword_filter: List[:class:`str`]
+        A list of substrings to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword`.
+    keyword_lists: List[:class:`AutoModWordsetType`]
+        A list of preset wordsets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
+    """
+    # maybe add a table of action types and attributes?
+    # wording for keyword_lists could change
+
+    __slots__ = (
+        "keyword_filter",
+        "keyword_lists",
+    )
+
+    def __init__(self, keyword_filter: List[str] = MISSING, keyword_lists: List[AutoModWordsetType] = MISSING):
+        self.keyword_filter = keyword_filter
+        self.keyword_lists = keyword_lists
+
+    def to_dict(self) -> Dict:
+        data = {}
+        if self.keyword_filter is not MISSING:
+            data["keyword_filter"] = self.keyword_filter
+        if self.keyword_lists is not MISSING:
+            data["keyword_lists"] = [wordset.value for wordset in self.keyword_lists]
+        return data
+        
+    @classmethod
+    def from_dict(cls, data: AutoModActionMetadataPayload):
+        kwargs = {}
+        if data.get("keyword_filter") is not None:
+            kwargs["keyword_filter"] = data["keyword_filter"]
+        if data.get("keyword_lists") is not None:
+            kwargs["keyword_lists"] = [try_enum(AutoModWordsetType, wordset) for wordset in data["keyword_lists"]]
+        return cls(**kwargs)
+
+    def __repr__(self) -> str:
+        repr_attrs = (
+            "keyword_filter",
+            "keyword_lists",
+        )
+        inner = []
+        for attr in repr_attrs:
+            value = getattr(self, attr)
+            if value is not MISSING:
+                inner.append(f"{attr}={value}")
+        inner = " ".join(inner)
+        return f"<AutoModActionMetadata {inner}>"
 
 
 class AutoModRule(Hashable):
@@ -121,6 +235,8 @@ class AutoModRule(Hashable):
         Indicates in what context the rule is checked.
     trigger_type: :class:`AutoModTriggerType`
         Indicates what type of information is checked to determine whether the rule is triggered.
+    trigger_metadata: :class:`AutoModTriggerMetadata`
+        The rule's trigger metadata.
     actions: List[:class:`AutoModAction`]
         The actions to perform when the rule is triggered.
     enabled: :class:`bool`
@@ -139,6 +255,7 @@ class AutoModRule(Hashable):
         "creator_id",
         "event_type",
         "trigger_type",
+        "trigger_metadata",
         "actions",
         "enabled",
         "exempt_role_ids",
@@ -158,7 +275,7 @@ class AutoModRule(Hashable):
         self.creator_id: int = int(data["creator_id"])
         self.event_type: AutoModEventType = try_enum(AutoModEventType, data["event_type"])
         self.trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, data["trigger_type"])
-        # TODO: trigger_metadata
+        self.trigger_metadata: AutoModTriggerMetadata = AutoModTriggerMetadata.from_dict(data["trigger_metadata"])
         self.actions: List[AutoModAction] = [AutoModAction.from_dict(d) for d in data["actions"]]
         self.enabled: bool = data["enabled"]
         self.exempt_role_ids: List[int] = [int(r) for r in data["exempt_roles"]]
@@ -218,7 +335,7 @@ class AutoModRule(Hashable):
         *,
         name: str = MISSING,
         event_type: AutoModEventType = MISSING,
-        # TODO: trigger metadata
+        trigger_metadata: AutoModTriggerMetadata = MISSING,
         actions: List[AutoModAction] = MISSING,
         enabled: bool = MISSING,
         exempt_roles: List[Snowflake] = MISSING,
@@ -234,6 +351,8 @@ class AutoModRule(Hashable):
             The rule's new name.
         event_type: :class:`AutoModEventType`
             The new context in which the rule is checked.
+        trigger_metadata: :class:`AutoModTriggerMetadata`
+            The new trigger metadata.
         actions: List[:class:`AutoModAction`]
             The new actions to perform when the rule is triggered.
         enabled: :class:`bool`
@@ -263,7 +382,8 @@ class AutoModRule(Hashable):
             payload["name"] = name
         if event_type is not MISSING:
             payload["event_type"] = event_type.value
-        # TODO: trigger metadata
+        if trigger_metadata is not MISSING:
+            payload["trigger_metadata"] = trigger_metadata.to_dict()
         if actions is not MISSING:
             payload["actions"] = [a.to_dict() for a in actions]
         if enabled is not MISSING:
