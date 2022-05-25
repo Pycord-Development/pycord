@@ -31,9 +31,21 @@ AutoModEventType = Literal[1]
 
 AutoModActionType = Literal[1, 2]
 
+AutoModWordsetType = Literal["PROFANITY", "SEXUAL_CONTENT", "SLURS"]
+
+
+class AutoModTriggerMetadata(TypedDict, total=False):
+    keyword_filter: List[str]
+    keyword_lists: List[AutoModWordsetType]
+
+        
+class AutoModActionMetadata(TypedDict, total=False):
+    channel_id: Snowflake
+        
+        
 class AutoModAction(TypedDict):
     type: AutoModActionType
-    metadata: Dict  # TODO
+    metadata: AutoModActionMetadata
     
 
 class AutoModRule(TypedDict):
@@ -44,7 +56,7 @@ class AutoModRule(TypedDict):
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
     actions: List[AutoModAction]
-    trigger_metadata: Dict  # TODO: unclear what this is meant to be
+    trigger_metadata: AutoModTriggerMetadata
     enabled: bool
     exempt_roles: List[Snowflake]
     exempt_channels: List[Snowflake]
@@ -60,14 +72,14 @@ class CreateAutoModRule(_CreateAutoModRuleOptional):
     name: str
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
-    trigger_metadata: Dict  # TODO: unclear what this is meant to be
+    trigger_metadata: AutoModTriggerMetadata
     actions: List[AutoModAction]
         
 
 class EditAutoModRule(TypedDict, total=False):
     name: str
     event_type: AutoModEventType
-    trigger_metadata: Dict  # TODO: unclear what this is meant to be
+    trigger_metadata: AutoModTriggerMetadata
     actions: List[AutoModAction]
     enabled: bool
     exempt_roles: List[Snowflake]
