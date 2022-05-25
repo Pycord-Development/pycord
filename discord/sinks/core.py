@@ -127,7 +127,7 @@ class AudioData:
 
     def write(self, data):
         """Writes audio data.
-        
+
         Raises
         ------
         ClientException
@@ -142,7 +142,7 @@ class AudioData:
 
     def cleanup(self):
         """Finishes and cleans up the audio data.
-        
+
         Raises
         ------
         ClientException
@@ -155,7 +155,7 @@ class AudioData:
 
     def on_format(self, encoding):
         """Called when audio data is formatted.
-        
+
         Raises
         ------
         ClientException
@@ -176,7 +176,7 @@ class Sink(Filters):
         such as :class:`~discord.sinks.WaveSink`.
 
     just replace the following like so: ::
-    
+
         vc.start_recording(
             MySubClassedSink(),
             finished_callback,

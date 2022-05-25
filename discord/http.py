@@ -251,6 +251,9 @@ class HTTPClient:
             if reason:
                 headers["X-Audit-Log-Reason"] = _uriquote(reason, safe="/ ")
 
+        if locale := kwargs.pop("locale", None):
+            headers["X-Discord-Locale"] = locale
+
         kwargs["headers"] = headers
         # Proxy support
         if self.proxy is not None:
@@ -1081,6 +1084,55 @@ class HTTPClient:
         route = Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id)
         return self.request(route, json=payload, reason=reason)
 
+    def start_forum_thread(
+        self,
+        channel_id: Snowflake,
+        content: Optional[str],
+        *,
+        name: str,
+        auto_archive_duration: threads.ThreadArchiveDuration,
+        rate_limit_per_user: int,
+        invitable: bool = True,
+        reason: Optional[str] = None,
+        embed: Optional[embed.Embed] = None,
+        embeds: Optional[List[embed.Embed]] = None,
+        nonce: Optional[str] = None,
+        allowed_mentions: Optional[message.AllowedMentions] = None,
+        stickers: Optional[List[sticker.StickerItem]] = None,
+        components: Optional[List[components.Component]] = None,
+    ) -> Response[threads.Thread]:
+        payload = {
+            "name": name,
+            "auto_archive_duration": auto_archive_duration,
+            "invitable": invitable,
+        }
+        if content:
+            payload["content"] = content
+
+        if embed:
+            payload["embeds"] = [embed]
+
+        if embeds:
+            payload["embeds"] = embeds
+
+        if nonce:
+            payload["nonce"] = nonce
+
+        if allowed_mentions:
+            payload["allowed_mentions"] = allowed_mentions
+
+        if components:
+            payload["components"] = components
+
+        if stickers:
+            payload["sticker_ids"] = stickers
+
+        if rate_limit_per_user:
+            payload["rate_limit_per_user"] = rate_limit_per_user
+        # TODO: Once supported by API, remove has_message=true query parameter
+        route = Route("POST", "/channels/{channel_id}/threads?has_message=true", channel_id=channel_id)
+        return self.request(route, json=payload, reason=reason)
+
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(
             Route(
@@ -1342,11 +1394,11 @@ class HTTPClient:
         return self.request(Route("POST", "/guilds/templates/{code}", code=code), json=payload)
 
     def get_bans(
-            self,
-            guild_id: Snowflake,
-            limit: Optional[int] = None,
-            before: Optional[Snowflake] = None,
-            after: Optional[Snowflake] = None,
+        self,
+        guild_id: Snowflake,
+        limit: Optional[int] = None,
+        before: Optional[Snowflake] = None,
+        after: Optional[Snowflake] = None,
     ) -> Response[List[guild.Ban]]:
         params: Dict[str, Union[int, Snowflake]] = {}
 
@@ -1907,8 +1959,12 @@ class HTTPClient:
             "channel_id",
             "topic",
             "privacy_level",
+            "send_start_notification",
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        if payload.get("send_start_notification") is not None:
+            payload["send_start_notification"] = int(payload["send_start_notification"])
 
         return self.request(Route("POST", "/stage-instances"), json=payload, reason=reason)
 
@@ -2059,17 +2115,30 @@ class HTTPClient:
 
     # Application commands (global)
 
-    def get_global_commands(self, application_id: Snowflake) -> Response[List[interactions.ApplicationCommand]]:
+    def get_global_commands(
+        self,
+        application_id: Snowflake,
+        *,
+        with_localizations: bool = True,
+        locale: str = None,
+    ) -> Response[List[interactions.ApplicationCommand]]:
+        params = {"with_localizations": int(with_localizations)}
+
         return self.request(
             Route(
                 "GET",
                 "/applications/{application_id}/commands",
                 application_id=application_id,
-            )
+            ),
+            params=params,
+            locale=locale,
         )
 
     def get_global_command(
-        self, application_id: Snowflake, command_id: Snowflake
+        self,
+        application_id: Snowflake,
+        command_id: Snowflake,
+        locale: str = None,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             "GET",
@@ -2077,7 +2146,7 @@ class HTTPClient:
             application_id=application_id,
             command_id=command_id,
         )
-        return self.request(r)
+        return self.request(r, locale=locale)
 
     def upsert_global_command(self, application_id: Snowflake, payload) -> Response[interactions.ApplicationCommand]:
         r = Route(
@@ -2219,19 +2288,34 @@ class HTTPClient:
         )
         return self.request(r, json=payload)
 
-    def bulk_upsert_command_permissions(
+    # Application commands (permissions)
+
+    def get_command_permissions(
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: List[interactions.EditApplicationCommand],
-    ) -> Response[List[interactions.ApplicationCommand]]:
+        command_id: Snowflake,
+    ) -> Response[interactions.GuildApplicationCommandPermissions]:
         r = Route(
-            "PUT",
+            "GET",
+            "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions",
+            application_id=application_id,
+            guild_id=guild_id,
+        )
+        return self.request(r)
+
+    def get_guild_command_permissions(
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+    ) -> Response[List[interactions.GuildApplicationCommandPermissions]]:
+        r = Route(
+            "GET",
             "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
             application_id=application_id,
             guild_id=guild_id,
         )
-        return self.request(r, json=payload)
+        return self.request(r)
 
     # Interaction responses
 
