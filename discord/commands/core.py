@@ -699,6 +699,9 @@ class SlashCommand(ApplicationCommand):
                     option = Option(p_obj.default)
                 elif isinstance(p_obj.default, Option) and not (default := p_obj.default.default) is None:
                     option.default = default
+                else:
+                    option.default = p_obj.default
+                    option.required = False
             if option.name is None:
                 option.name = p_name
             if option.name != p_name or option._parameter_name is None:
