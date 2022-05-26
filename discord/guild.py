@@ -45,7 +45,7 @@ from typing import (
 
 
 from . import abc, utils
-from .automod import AutoModAction, AutoModRule
+from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .asset import Asset
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
@@ -3580,6 +3580,7 @@ class Guild(Hashable):
             "name": name,
             "event_type": event_type.value,
             "trigger_type": trigger_type.value,
+            "trigger_metadata": trigger_metadata.to_dict(),  
             "actions": [a.to_dict() for a in actions],
             "enabled": enabled,
         }
@@ -3588,4 +3589,4 @@ class Guild(Hashable):
         if exempt_channels:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
         data = await self._state.http.create_auto_moderation_rule(self.id, payload)
-        return AutoModRule(state=self._state, guild=self, data=data)
+        return AutoModRule(state=self._state, data=data)
