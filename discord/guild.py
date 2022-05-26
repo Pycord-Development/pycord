@@ -3530,7 +3530,7 @@ class Guild(Hashable):
         HTTPException
             Getting the auto moderation rules failed.
         Forbidden
-            You do not have the required permissions to get the auto moderation rules.
+            You do not have the Manage Guild permission.
 
         Returns
         --------
@@ -3553,7 +3553,7 @@ class Guild(Hashable):
         HTTPException
             Getting the auto moderation rule failed.
         Forbidden
-            You do not have the required permissions to get the auto moderation rule.
+            You do not have the Manage Guild permission.
             
         Returns
         --------
@@ -3602,7 +3602,7 @@ class Guild(Hashable):
         HTTPException
             Creating the auto moderation rule failed.
         Forbidden
-            You do not have the required permissions to create an auto moderation rule.
+            You do not have the Manage Guild permission.
             
         Returns
         --------

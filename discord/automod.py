@@ -327,6 +327,13 @@ class AutoModRule(Hashable):
         """|coro|
         
         Deletes this rule.
+        
+        Raises
+        -------
+        Forbidden
+            You do not have the Manage Guild permission.
+        HTTPException
+            The operation failed.
         """
         await self._state.http.delete_auto_moderation_rule(self.guild_id, self.id)
     
@@ -365,7 +372,7 @@ class AutoModRule(Hashable):
         Raises
         -------
         Forbidden
-            You do not have the proper permissions to the action requested.
+            You do not have the Manage Guild permission.
         HTTPException
             The operation failed.
             
