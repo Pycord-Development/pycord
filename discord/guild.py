@@ -3569,13 +3569,46 @@ class Guild(Hashable):
         name: str,
         event_type: AutoModEventType,
         trigger_type: AutoModTriggerType,
-        trigger_metadata: AutoModTriggerMetadata, # TODO
+        trigger_metadata: AutoModTriggerMetadata,
         actions: List[AutoModAction],
         enabled: bool = False,
         exempt_roles: List[Snowflake] = None,
         exempt_channels: List[Snowflake] = None,
     ) -> AutoModRule:
-        # TODO: docstring
+        """
+        Creates an auto moderation rule.
+        
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the auto moderation rule.
+        event_type: :class:`AutoModEventType`
+            The type of event that triggers the rule.
+        trigger_type: :class:`AutoModTriggerType`
+            The rule's trigger type.
+        trigger_metadata: :class:`AutoModTriggerMetadata`
+            The rule's trigger metadata.
+        actions: :class:`List[AutoModAction]`
+            The actions to take when the rule is triggered.
+        enabled: :class:`bool`
+            Whether the rule is enabled.
+        exempt_roles: :class:`List[Snowflake]`
+            A list of roles that are exempt from the rule.
+        exempt_channels: :class:`List[Snowflake]`
+            A list of channels that are exempt from the rule.
+            
+        Raises
+        -------
+        HTTPException
+            Creating the auto moderation rule failed.
+        Forbidden
+            You do not have the required permissions to create an auto moderation rule.
+            
+        Returns
+        --------
+        :class:`AutoModRule`
+            The new auto moderation rule.
+        """
         payload = {
             "name": name,
             "event_type": event_type.value,
