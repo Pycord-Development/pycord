@@ -25,4 +25,4 @@ class MyClient(discord.Client):
 
 
 client = MyClient()
-client.run("token")
+client.run("TOKEN")

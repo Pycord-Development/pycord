@@ -2,16 +2,15 @@ from typing import Union
 
 import discord
 from discord import option
-from discord.commands import Option
 
-bot = discord.Bot()
+bot = discord.Bot(debug_guilds=[...])
 
 
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well
 
 
-@bot.slash_command(guild_ids=[...])
+@bot.slash_command()
 @option("name", description="Enter your name")
 @option("gender", description="Choose your gender", choices=["Male", "Female", "Other"])
 @option(
@@ -28,12 +27,12 @@ async def hello(
     ctx: discord.ApplicationContext,
     name: str,
     gender: str,
-    age: str,
+    age: int,
 ):
     await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
 
-@bot.slash_command(guild_ids=[...])
+@bot.slash_command()
 @option(
     "channel",
     [discord.TextChannel, discord.VoiceChannel],

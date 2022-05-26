@@ -1,3 +1,5 @@
+# This example requires the `message_content` privileged intent for access to message content.
+
 import asyncio
 import random
 
@@ -9,7 +11,7 @@ class MyClient(discord.Client):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
 
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         # we do not want the bot to reply to itself
         if message.author.id == self.user.id:
             return
@@ -17,13 +19,13 @@ class MyClient(discord.Client):
         if message.content.startswith("$guess"):
             await message.channel.send("Guess a number between 1 and 10.")
 
-            def is_correct(m):
+            def is_valid_guess(m: discord.Message):
                 return m.author == message.author and m.content.isdigit()
 
             answer = random.randint(1, 10)
 
             try:
-                guess = await self.wait_for("message", check=is_correct, timeout=5.0)
+                guess = await self.wait_for("message", check=is_valid_guess, timeout=5.0)
             except asyncio.TimeoutError:
                 return await message.channel.send(f"Sorry, you took too long it was {answer}.")
 
@@ -33,5 +35,8 @@ class MyClient(discord.Client):
                 await message.channel.send(f"Oops. It is actually {answer}.")
 
 
-client = MyClient()
-client.run("token")
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = MyClient(intents=intents)
+client.run("TOKEN")

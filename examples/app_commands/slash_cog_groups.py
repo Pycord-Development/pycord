@@ -1,8 +1,13 @@
+# This example requires the 'members' privileged intent to use the Member converter,
+
 import discord
 from discord.commands import CommandPermission, SlashCommandGroup
 from discord.ext import commands
 
-bot = discord.Bot(debug_guilds=[...], owner_id=...)  # main file
+intents = discord.Intents.default()
+intents.members = True
+
+bot = discord.Bot(debug_guilds=[...], intents=intents, owner_id=...)  # main file
 
 
 class Example(commands.Cog):
@@ -20,15 +25,15 @@ class Example(commands.Cog):
     )
 
     @greetings.command()
-    async def hello(self, ctx):
+    async def hello(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hello, this is a slash subcommand from a cog!")
 
     @international_greetings.command()
-    async def aloha(self, ctx):
+    async def aloha(self, ctx: discord.ApplicationContext):
         await ctx.respond("Aloha, a Hawaiian greeting")
 
     @secret_greetings.command()
-    async def secret_handshake(self, ctx, member: discord.Member):
+    async def secret_handshake(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
 
