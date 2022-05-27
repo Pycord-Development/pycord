@@ -1,4 +1,4 @@
-# This example requires the 'members' privileged intent to use the Member converter,
+# This example requires the 'members' privileged intent to use the Member converter.
 
 import discord
 

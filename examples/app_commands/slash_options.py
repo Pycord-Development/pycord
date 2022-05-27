@@ -7,7 +7,7 @@ bot = discord.Bot(debug_guilds=[...])
 
 
 # If you use commands.Bot, @bot.slash_command should be used for
-# slash commands. You can use @bot.slash_command with discord.Bot as well
+# slash commands. You can use @bot.slash_command with discord.Bot as well.
 
 
 @bot.slash_command()
@@ -19,8 +19,8 @@ bot = discord.Bot(debug_guilds=[...])
     min_value=1,
     max_value=99,
     default=18,
-    # passing the default value makes an argument optional
-    # you also can create optional argument using:
+    # Passing the default value makes an argument optional.
+    # You also can create optional arguments using:
     # age: Option(int, "Enter your age") = 18
 )
 async def hello(
@@ -32,14 +32,14 @@ async def hello(
     await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
 
-@bot.slash_command()
+@bot.slash_command(name="channel")
 @option(
     "channel",
     [discord.TextChannel, discord.VoiceChannel],
-    # you can specify allowed channel types by passing a list of them like this
+    # You can specify allowed channel types by passing a list of them like this.
     description="Select a channel",
 )
-async def channel(
+async def select_channel(
     ctx: discord.ApplicationContext,
     channel: Union[discord.TextChannel, discord.VoiceChannel],
 ):

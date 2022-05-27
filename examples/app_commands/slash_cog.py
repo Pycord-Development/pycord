@@ -1,3 +1,5 @@
+# This example demonstrates a standalone cog file with the bot instance in a separate file.
+
 import discord
 from discord.ext import commands
 
@@ -17,3 +19,9 @@ class Example(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Example(bot))
+
+
+# The basic bot instance in a separate file should look something like this:
+# bot = commands.Bot()
+# bot.load_extension("slash_cog")
+# bot.run("TOKEN")

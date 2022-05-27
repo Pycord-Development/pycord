@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 
-class MyContext(commands.Context):  # custom context
+class MyContext(commands.Context):  # Custom context
     async def tick(self, value: bool):
         # Reacts to the message with an emoji
         # depending on whether value is True or False.
@@ -24,15 +24,15 @@ class MyContext(commands.Context):  # custom context
 
 
 # You can subclass discord.ApplicationContext to create custom application context if needed
-class MyApplicationContext(discord.ApplicationContext):  # custom application context
+class MyApplicationContext(discord.ApplicationContext):  # Custom application context
     async def success(self, message: str):
         try:
             await self.respond(
-                embed=discord.Embed(  # respond with a green embed with a title of "Success"
+                embed=discord.Embed(  # Respond with a green embed with a title of "Success"
                     title="Success", description=message, colour=discord.Colour.green()
                 )
             )
-        except discord.HTTPException:  # ignore exceptions
+        except discord.HTTPException:  # Ignore exceptions
             pass
 
 
@@ -71,7 +71,7 @@ async def slash_guess(ctx: MyApplicationContext, number: int):
     """Guess a random number from 1 to 6."""
     value = random.randint(1, 6)
     if number == value:
-        await ctx.success("Congratulations! You guessed the number.")  # use the new helper function
+        await ctx.success("Congratulations! You guessed the number.")  # Use the new helper function
     else:
         await ctx.respond("You are wrong! Try again.")
 

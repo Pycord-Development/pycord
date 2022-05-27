@@ -2,11 +2,11 @@ import datetime
 
 import discord
 
-bot = discord.Bot()
+bot = discord.Bot(debug_guilds=[...])
 
 
-@bot.command()
-async def timeout(ctx, member: discord.Member, minutes: int):
+@bot.slash_command()
+async def timeout(ctx: discord.ApplicationContext, member: discord.Member, minutes: int):
     """Apply a timeout to a member."""
 
     duration = datetime.timedelta(minutes=minutes)

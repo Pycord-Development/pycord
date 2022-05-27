@@ -13,7 +13,7 @@ math = discord.SlashCommandGroup("math", "Commands related to mathematics.")
 
 
 @math.command()  # Create a slash command under the math group
-async def add(ctx, num1: int, num2: int):
+async def add(ctx: discord.ApplicationContext, num1: int, num2: int):
     """Get the sum of 2 integers."""
     await ctx.respond(f"The sum of these numbers is **{num1+num2}**")
 

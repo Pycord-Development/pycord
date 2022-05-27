@@ -22,7 +22,7 @@ class MyClient(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            # Check if we're still in the guild and it's cached.
+            # Make sure we're still in the guild, and it's cached.
             return
 
         try:
@@ -51,7 +51,7 @@ class MyClient(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            # Check if we're still in the guild and it's cached.
+            # Make sure we're still in the guild, and it's cached.
             return
 
         try:

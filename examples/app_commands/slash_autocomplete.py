@@ -86,14 +86,16 @@ LOTS_OF_COLORS = [
     "yellowgreen",
 ]
 
-BASIC_ALLOWED = [...]  # this would normally be a list of discord user IDs for the purpose of this example
+BASIC_ALLOWED = [...]  # This would normally be a list of discord user IDs for the purpose of this example
 
 
 async def color_searcher(ctx: discord.AutocompleteContext):
     """
     Returns a list of matching colors from the LOTS_OF_COLORS list.
+
     In this example, we've added logic to only display any results in the
     returned list if the user's ID exists in the BASIC_ALLOWED list.
+
     This is to demonstrate passing a callback in the discord.utils.basic_autocomplete function.
     """
 
@@ -119,7 +121,7 @@ async def get_animals(ctx: discord.AutocompleteContext):
     elif picked_color == "blue":
         return ["blue jay", "blue whale"]
     elif picked_color == "indigo":
-        return ["eastern indigo snake"]  # needs to return an iterable even if only one item
+        return ["eastern indigo snake"]  # Needs to return an iterable even if only one item
     elif picked_color == "violet":
         return ["purple emperor butterfly", "orchid dottyback"]
     else:
@@ -135,9 +137,14 @@ async def autocomplete_example(
     animal: str,
 ):
     """
-    Demonstrates using ctx.options to create options that are dependent on the values of other options.
-    For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
-    For the `animal` option, the callback uses the input from the color option to return an iterable of animals
+    Demonstrates using ctx.options to create options
+    that are dependent on the values of other options.
+
+    For the `color` option, a callback is passed, where additional
+    logic can be added to determine which values are returned.
+
+    For the `animal` option, the callback uses the input
+    from the color option to return an iterable of animals
     """
 
     await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for the animal.")
@@ -163,9 +170,15 @@ async def autocomplete_basic_example(
 ):
     """
     This demonstrates using the discord.utils.basic_autocomplete helper function.
-    For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
+
+    For the `color` option, a callback is passed, where additional
+    logic can be added to determine which values are returned.
+
     For the `animal` option, a static iterable is passed.
-    While a small amount of values for `animal` are used in this example, iterables of any length can be passed to discord.utils.basic_autocomplete
+
+    While a small amount of values for `animal` are used in this example,
+    iterables of any length can be passed to discord.utils.basic_autocomplete
+
     Note that the basic_autocomplete function itself will still only return a maximum of 25 items.
     """
 

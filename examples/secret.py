@@ -21,7 +21,7 @@ async def secret(ctx: commands.Context):
         await ctx.send("Shh!", delete_after=5)
 
 
-def create_overwrites(ctx, *objects):
+def create_overwrites(ctx: commands.Context, *objects: typing.Union[discord.Role, discord.Member]):
     """
     This is just a helper function that creates the overwrites for the
     voice/text channels.
@@ -89,9 +89,9 @@ async def voice(
     await ctx.guild.create_voice_channel(name, overwrites=overwrites, reason="Very secret business.")
 
 
-@secret.command()
+@secret.command(name="emoji")
 @commands.guild_only()
-async def emoji(
+async def clone_emoji(
     ctx: commands.Context,
     emoji: discord.PartialEmoji,
     *roles: discord.Role
@@ -106,7 +106,12 @@ async def emoji(
 
     # The key parameter here is `roles`, which controls
     # what roles are able to use the emoji.
-    await ctx.guild.create_custom_emoji(name=emoji.name, image=emoji_bytes, roles=roles, reason="Very secret business.")
+    await ctx.guild.create_custom_emoji(
+        name=emoji.name,
+        image=emoji_bytes,
+        roles=list(roles),  # This converts the `roles` argument from a tuple to a list.
+        reason="Very secret business."
+    )
 
 
 @bot.event

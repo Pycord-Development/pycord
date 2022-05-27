@@ -108,7 +108,7 @@ class Music(commands.Cog):
     async def stop(self, ctx: commands.Context):
         """Stops and disconnects the bot from voice"""
 
-        await ctx.voice_client.disconnect()
+        await ctx.voice_client.disconnect(force=True)
 
     @play.before_invoke
     @yt.before_invoke

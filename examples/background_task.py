@@ -23,7 +23,7 @@ class MyClient(discord.Client):
     async def my_background_task(self):
         channel = self.get_channel(1234567)  # Your Channel ID goes here
         self.counter += 1
-        await channel.send(self.counter)
+        await channel.send(str(self.counter))
 
     @tasks.loop(time=time(3, 0, tzinfo=timezone.utc))  # Task that runs every day at 3 AM UTC
     async def time_task(self):

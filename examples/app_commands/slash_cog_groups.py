@@ -1,4 +1,4 @@
-# This example requires the 'members' privileged intent to use the Member converter,
+# This example requires the 'members' privileged intent to use the Member converter.
 
 import discord
 from discord.commands import CommandPermission, SlashCommandGroup
@@ -7,12 +7,12 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.members = True
 
-bot = discord.Bot(debug_guilds=[...], intents=intents, owner_id=...)  # main file
+bot = discord.Bot(debug_guilds=[...], intents=intents, owner_id=...)  # Main file
 
 
 class Example(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot_: discord.Bot):
+        self.bot = bot_
 
     greetings = SlashCommandGroup("greetings", "Various greeting from cogs!")
 
@@ -37,5 +37,5 @@ class Example(commands.Cog):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
 
-bot.add_cog(Example(bot))  # put in a setup function for cog files
-bot.run("TOKEN")  # main file
+bot.add_cog(Example(bot))  # Put in a setup function for cog files
+bot.run("TOKEN")  # Main file

@@ -32,14 +32,15 @@ async def add(ctx: commands.Context, left: int, right: int):
 
 @bot.command()
 async def roll(ctx: commands.Context, dice: str):
-    """Rolls a dice in NdN format."""
+    """Rolls a die in NdN format."""
     try:
         rolls, limit = map(int, dice.split("d"))
-    except Exception:
+    except ValueError:
         await ctx.send("Format has to be in NdN!")
         return
 
-    result = ", ".join(str(random.randint(1, limit)) for r in range(rolls))
+    # _ is used in the generation of our result as we don't need the number that comes from the usage of range(rolls).
+    result = ", ".join(str(random.randint(1, limit)) for _ in range(rolls))
     await ctx.send(result)
 
 
@@ -64,10 +65,12 @@ async def joined(ctx: commands.Context, member: discord.Member):
 
 @bot.group()
 async def cool(ctx: commands.Context):
-    """Says if a user is cool.
+    """
+    Says if a user is cool.
 
     In reality this just checks if a subcommand is being invoked.
     """
+
     if ctx.invoked_subcommand is None:
         await ctx.send(f"No, {ctx.subcommand_passed} is not cool")
 

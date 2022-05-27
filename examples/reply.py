@@ -9,7 +9,7 @@ class MyClient(discord.Client):
         print("------")
 
     async def on_message(self, message: discord.Message):
-        # We do not want the bot to reply to itself
+        # Make sure we won't be replying to ourselves.
         if message.author.id == self.user.id:
             return
 
