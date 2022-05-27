@@ -18,7 +18,7 @@ bot = discord.Bot(intents=intents)
 
 
 @bot.slash_command(guild_ids=[...])  # Create a slash command
-async def hello(ctx):
+async def hello(ctx: discord.ApplicationContext):
     """Say hello to the bot"""  # The command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
     # Please note that you MUST respond with ctx.respond(), ctx.defer(), or any other
@@ -27,12 +27,13 @@ async def hello(ctx):
 
 
 @bot.slash_command(name="hi")
-async def global_command(ctx, num: int):  # Takes one integer parameter
+async def global_command(ctx: discord.ApplicationContext, num: int):  # Takes one integer parameter
     await ctx.respond(f"This is a global command, {num}!")
 
 
 @bot.slash_command(guild_ids=[...])
-async def joined(ctx, member: discord.Member = None):  # Passing a default value makes the argument optional
+async def joined(ctx: discord.ApplicationContext, member: discord.Member = None):
+    # Setting a default value for the member parameter makes it optional ^
     user = member or ctx.author
     await ctx.respond(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
 
