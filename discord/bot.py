@@ -165,7 +165,6 @@ class ApplicationCommandMixin(ABC):
             except ValueError:
                 return None
             return self._pending_application_commands.pop(index)
-    
         return self._application_commands.pop(command.id, None)
 
     @property
