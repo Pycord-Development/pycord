@@ -26,12 +26,9 @@ class MyContext(commands.Context):  # Custom context
 # You can subclass discord.ApplicationContext to create custom application context if needed
 class MyApplicationContext(discord.ApplicationContext):  # Custom application context
     async def success(self, message: str):
-        try:
-            await self.respond(
-                embed=discord.Embed(  # Respond with a green embed with a title of "Success"
-                    title="Success", description=message, colour=discord.Colour.green()
-                )
-            )
+        try:  # Respond with a green embed with a title of "Success"
+            embed = discord.Embed(title="Success", description=message, colour=discord.Colour.green())
+            await self.respond(embeds=[embed])
         except discord.HTTPException:  # Ignore exceptions
             pass
 
