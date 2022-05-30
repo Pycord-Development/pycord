@@ -17,6 +17,9 @@ class Google(discord.ui.View):
         # We add the quoted url to the button, and add the button to the view.
         self.add_item(discord.ui.Button(label="Click Here", url=url))
 
+        # Initializing the view and adding the button can actually be done in a one-liner at the start if preferred:
+        # super().__init__(discord.ui.Button(label="Click Here", url=url))
+
 
 bot = discord.Bot(debug_guilds=[...])
 

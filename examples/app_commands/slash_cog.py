@@ -22,6 +22,6 @@ def setup(bot):
 
 
 # The basic bot instance in a separate file should look something like this:
-# bot = commands.Bot()
+# bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"))
 # bot.load_extension("slash_cog")
 # bot.run("TOKEN")

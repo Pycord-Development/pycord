@@ -43,6 +43,9 @@ class DropdownView(discord.ui.View):
         # Adds the dropdown to our View object
         self.add_item(Dropdown(self.bot))
 
+        # Initializing the view and adding the dropdown can actually be done in a one-liner if preferred:
+        # super().__init__(Dropdown(self.bot))
+
 
 bot = discord.Bot(debug_guilds=[...])
 
