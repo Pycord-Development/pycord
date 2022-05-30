@@ -1,7 +1,7 @@
 import discord
 from discord.commands import option
 
-bot = discord.Bot()
+bot = discord.Bot(debug_guilds=[...])
 
 COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
 

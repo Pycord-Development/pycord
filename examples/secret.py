@@ -10,7 +10,7 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=commands.when_mentioned, description="Nothing to see here!", intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), description="Nothing to see here!", intents=intents)
 
 
 # The `hidden` keyword argument hides it from the help command.

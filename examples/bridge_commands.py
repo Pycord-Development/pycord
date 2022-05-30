@@ -3,12 +3,12 @@
 import asyncio
 
 import discord
-from discord.ext import bridge
+from discord.ext import bridge, commands
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = bridge.Bot(command_prefix="!", debug_guilds=[...], intents=intents)
+bot = bridge.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
 
 
 @bot.bridge_command()

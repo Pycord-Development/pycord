@@ -6,7 +6,7 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="!", debug_guilds=[...], intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
 
 
 class MyModal(discord.ui.Modal):

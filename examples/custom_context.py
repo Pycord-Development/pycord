@@ -48,7 +48,7 @@ class MyBot(commands.Bot):
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = MyBot(command_prefix="!", debug_guilds=[...], intents=intents)
+bot = MyBot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
 
 
 @bot.command()
