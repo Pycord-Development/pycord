@@ -1,7 +1,6 @@
 # This example requires the 'message_content' privileged intent for prefixed commands.
 
 import asyncio
-
 import youtube_dl
 
 import discord
