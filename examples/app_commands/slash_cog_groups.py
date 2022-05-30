@@ -1,7 +1,7 @@
 # This example requires the 'members' privileged intent to use the Member converter.
 
 import discord
-from discord.commands import CommandPermission, SlashCommandGroup
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 intents = discord.Intents.default()
@@ -21,7 +21,7 @@ class Example(commands.Cog):
     secret_greetings = SlashCommandGroup(
         "secret_greetings",
         "Secret greetings",
-        permissions=[CommandPermission("owner", 2, True)],  # Ensures the owner_id user can access this, and no one else
+        checks=[commands.is_owner().predicate],  # Ensures the owner_id user can access this group, and no one else
     )
 
     @greetings.command()
@@ -35,6 +35,13 @@ class Example(commands.Cog):
     @secret_greetings.command()
     async def secret_handshake(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.respond(f"{member.mention} secret handshakes you")
+
+    @commands.Cog.listener()
+    async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
+        if isinstance(error, commands.NotOwner):
+            await ctx.respond("You can't use that command!")
+        else:
+            raise error  # Raise other errors so they aren't ignored
 
 
 bot.add_cog(Example(bot))  # Put in a setup function for cog files
