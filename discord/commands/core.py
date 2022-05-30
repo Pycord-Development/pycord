@@ -689,7 +689,6 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
                     option = p_obj.default
                 else:
                     option = Option(option)
