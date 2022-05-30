@@ -47,13 +47,15 @@ class RoleButton(discord.ui.Button):
             # Give the user the role if they don't already have it.
             await user.add_roles(role)
             await interaction.response.send_message(
-                f"🎉 You have been given the role {role.mention}!", ephemeral=True
+                f"🎉 You have been given the role {role.mention}!",
+                ephemeral=True,
             )
         else:
             # Otherwise, take the role away from the user.
             await user.remove_roles(role)
             await interaction.response.send_message(
-                f"❌ The {role.mention} role has been taken from you!", ephemeral=True
+                f"❌ The {role.mention} role has been taken from you!",
+                ephemeral=True,
             )
 
 

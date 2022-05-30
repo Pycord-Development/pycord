@@ -110,7 +110,7 @@ async def clone_emoji(
         name=emoji.name,
         image=emoji_bytes,
         roles=list(roles),  # This converts the `roles` argument from a tuple to a list.
-        reason="Very secret business."
+        reason="Very secret business.",
     )
 
 

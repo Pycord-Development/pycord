@@ -5,7 +5,7 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 @discord.default_permissions(
-    administrator=True
+    administrator=True,
 )  # Only members with this permission can use this command.
 async def admin_only(ctx: discord.ApplicationContext):
     await ctx.respond(f"Hello {ctx.author}, you are an administrator.")
@@ -13,7 +13,8 @@ async def admin_only(ctx: discord.ApplicationContext):
 
 @bot.slash_command()
 @discord.default_permissions(
-    manage_messages=True, ban_members=True
+    manage_messages=True,
+    ban_members=True,
 )  # You can supply multiple permissions that are required to use the command.
 async def staff_only(ctx: discord.ApplicationContext):
     await ctx.respond(f"Hello {ctx.author}, you can manage messages and ban members.")

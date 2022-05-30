@@ -16,11 +16,17 @@ class MyClient(discord.Client):
         if message.author.id == self.user.id:
             return
 
-        if message.content.startswith("$guess"):
+        if message.content.startswith("!guess"):
             await message.channel.send("Guess a number between 1 and 10.")
 
             def is_valid_guess(m: discord.Message):
-                return m.author == message.author and m.content.isdigit()
+                # This function checks three things at once:
+                # - The author of the message we've received via
+                #   the wait_for is the same as the first message.
+                # - The content of the message is a digit.
+                # - The digit received is within the range of 1-10.
+                # If any one of these checks fail, we ignore this message.
+                return m.author == message.author and m.content.isdigit() and 1 <= int(m.content) <= 10
 
             answer = random.randint(1, 10)
 

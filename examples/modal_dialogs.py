@@ -11,20 +11,29 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=
 
 class MyModal(discord.ui.Modal):
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.add_item(discord.ui.InputText(label="Short Input", placeholder="Placeholder Test"))
-        self.add_item(
+        super().__init__(
+            discord.ui.InputText(
+                label="Short Input",
+                placeholder="Placeholder Test",
+            ),
             discord.ui.InputText(
                 label="Longer Input",
                 value="Longer Value\nSuper Long Value",
                 style=discord.InputTextStyle.long,
-            )
+            ),
+            *args,
+            **kwargs,
         )
 
     async def callback(self, interaction: discord.Interaction):
-        embed = discord.Embed(title="Your Modal Results", color=discord.Color.random())
-        embed.add_field(name="First Input", value=self.children[0].value, inline=False)
-        embed.add_field(name="Second Input", value=self.children[1].value, inline=False)
+        embed = discord.Embed(
+            title="Your Modal Results",
+            fields=[
+                discord.EmbedField(name="First Input", value=self.children[0].value, inline=False),
+                discord.EmbedField(name="Second Input", value=self.children[1].value, inline=False),
+            ],
+            color=discord.Color.random(),
+        )
         await interaction.response.send_message(embeds=[embed])
 
 
