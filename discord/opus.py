@@ -534,11 +534,10 @@ class DecodeManager(threading.Thread, _OpusStruct):
 
     def run(self):
         while not self._end_thread.is_set():
-            time.sleep(0.001)
-            
             try:
                 data = self.decode_queue.pop(0)
             except IndexError:
+                time.sleep(0.001)
                 continue
 
             try:
