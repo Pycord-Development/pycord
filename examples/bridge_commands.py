@@ -35,4 +35,13 @@ async def wait(ctx: bridge.BridgeContext, seconds: int = 5):
     await ctx.respond(f"Waited for {seconds} seconds!")
 
 
+@bot.event
+async def on_command_error(ctx: commands.Context, error: commands.CommandError):
+    # This is raised when a choice outside the given choices is selected on a prefixed command.
+    if isinstance(error, commands.BadArgument):
+        await ctx.reply("Hey! The valid choices are 1, 2, or 3!")
+    else:
+        raise error  # Raise other errors so they aren't ignored
+
+
 bot.run("TOKEN")
