@@ -35,8 +35,8 @@ async def hello(
 @bot.slash_command(name="channel")
 @option(
     "channel",
-    [discord.TextChannel, discord.VoiceChannel],
-    # You can specify allowed channel types by passing a list of them like this.
+    Union[discord.TextChannel, discord.VoiceChannel],
+    # You can specify allowed channel types by passing a union of them like this.
     description="Select a channel",
 )
 async def select_channel(
@@ -47,14 +47,22 @@ async def select_channel(
 
 
 @bot.slash_command(name="attach_file")
-@option("attachment", discord.Attachment, description="A file to attach to the message", required=False)
+@option(
+    "attachment",
+    discord.Attachment,
+    description="A file to attach to the message",
+    required=False  # The default value will be None if the user doesn't provide a file.
+)
 async def say(
     ctx: discord.ApplicationContext,
     attachment: discord.Attachment,
 ):
     """This demonstrates how to attach a file with a slash command."""
-    file = await attachment.to_file()
-    await ctx.respond("Here's your file!", file=file)
+    if attachment:
+        file = await attachment.to_file()
+        await ctx.respond("Here's your file!", file=file)
+    else:
+        await ctx.respond("You didn't give me a file to reply with! :sob:")
 
 
 bot.run("TOKEN")
