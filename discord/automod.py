@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from functools import cached_property
+from datetime import timedelta
 from typing import TYPE_CHECKING, Dict, Optional, List, Union
 
 from . import utils
@@ -70,32 +71,42 @@ class AutoModActionMetadata:
     -----------
     channel_id: :class:`int`
         The ID of the channel to send the message to. Only for actions of type :attr:`AutoModActionType.send_alert_message`.
+    timeout_duration: :class:`datetime.timedelta`
+        How long the member that triggered the action should be timed out for. Only for actions of type :attr:`AutoModActionType.timeout`.
     """
     # maybe add a table of action types and attributes?
 
     __slots__ = (
         "channel_id",
+        "timeout_duration",
     )
 
-    def __init__(self, channel_id: int = MISSING):
-        self.channel_id = channel_id
+    def __init__(self, channel_id: int = MISSING, timeout_duration: timedelta = MISSING):
+        self.channel_id: int = channel_id
+        self.timeout_duration: timedelta = timeout_duration
 
     def to_dict(self) -> Dict:
         data = {}
         if self.channel_id is not MISSING:
             data["channel_id"] = self.channel_id
+        if self.timeout_duration is not MISSING:
+            data["duration_seconds"] = self.timeout_duration.total_seconds()
         return data
         
     @classmethod
     def from_dict(cls, data: AutoModActionMetadataPayload):
         kwargs = {}
-        if data.get("channel_id") is not None:
-            kwargs["channel_id"] = int(data["channel_id"])
+        if (channel_id := data.get("channel_id")) is not None:
+            kwargs["channel_id"] = int(channel_id)
+        if (duration_seconds := data.get("duration_seconds")) is not None:
+            # might need an explicit int cast
+            kwargs["timeout_duration"] = timedelta(seconds=duration_seconds)
         return cls(**kwargs)
 
     def __repr__(self) -> str:
         repr_attrs = (
             "channel_id",
+            "timeout_duration",
         )
         inner = []
         for attr in repr_attrs:
@@ -119,6 +130,7 @@ class AutoModAction:
     metadata: :class:`AutoModActionMetadata`
         The action's metadata.
     """
+    # note that AutoModActionType.timeout is only valid for trigger type 1?
 
     __slots__ = (
         "type",

@@ -790,6 +790,7 @@ class AutoModEventType(Enum):
 class AutoModActionType(Enum):
     block_message = 1
     send_alert_message = 2
+    timeout = 3
     
     
 class AutoModWordsetType(Enum):

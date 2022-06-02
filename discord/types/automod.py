@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
-Copyright (c) 2015-2021 Rapptz
+
 Copyright (c) 2021-present Pycord Development
+
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
@@ -29,7 +30,8 @@ AutoModTriggerType = Literal[1, 2, 3, 4]
 
 AutoModEventType = Literal[1]
 
-AutoModActionType = Literal[1, 2]
+AutoModActionType = Literal[1, 2, 3]
+
 
 AutoModWordsetType = Literal["PROFANITY", "SEXUAL_CONTENT", "SLURS"]
 
@@ -41,6 +43,7 @@ class AutoModTriggerMetadata(TypedDict, total=False):
         
 class AutoModActionMetadata(TypedDict, total=False):
     channel_id: Snowflake
+    duration_seconds: int  # documented as snowflake for some reason
         
         
 class AutoModAction(TypedDict):
