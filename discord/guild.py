@@ -366,7 +366,8 @@ class Guild(Hashable):
             # If this fallback occurs, multiple aspects of the Member
             # class will be incorrect such as status and activities.
             member = Member(guild=self, state=self._state, data=payload)  # type: ignore
-            self._members[user_id] = member if cache_flag else None
+            if cache_flag:
+                self._members[user_id] = member
         return member
 
     def _store_thread(self, payload: ThreadPayload, /) -> Thread:
