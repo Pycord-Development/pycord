@@ -1068,16 +1068,12 @@ class MemberCacheFlags(BaseFlags):
 
     @flag_value
     def interaction(self):
-        """:class:`bool`: Whether to cache members obtained through
-        `discord.Interaction` objects.
+        """:class:`bool`: Whether to cache members obtained through interactions.
+
+        This includes members received through
+        :class:`discord.Interaction` and :class:`discord.Option`.
         """
         return 4
-
-    @flag_value
-    def option(self):
-        """:class:`bool`: Whether to cache members obtained through
-        `discord.Option` objects."""
-        return 8
 
     @classmethod
     def from_intents(cls: Type[MemberCacheFlags], intents: Intents) -> MemberCacheFlags:
@@ -1097,7 +1093,6 @@ class MemberCacheFlags(BaseFlags):
 
         self = cls.none()
         self.interaction = True
-        self.option = True
         if intents.members:
             self.joined = True
         if intents.voice_states:
