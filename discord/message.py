@@ -1322,6 +1322,8 @@ class Message(Hashable):
 
         if file is not MISSING or files is not MISSING:
             if file is not MISSING:
+                if not isinstance(file, File):
+                    raise InvalidArgument("file parameter must be of type File")
                 files = [file]
             else:
                 if len(files) > 10:
