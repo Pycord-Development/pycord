@@ -33,7 +33,7 @@ from .enums import (
     AutoModTriggerType,
     AutoModEventType,
     AutoModActionType,
-    AutoModWordsetType,
+    AutoModKeywordPresetType,
     try_enum,
 )
 from .mixins import Hashable
@@ -166,27 +166,27 @@ class AutoModTriggerMetadata:
     -----------
     keyword_filter: List[:class:`str`]
         A list of substrings to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword`.
-    keyword_lists: List[:class:`AutoModWordsetType`]
-        A list of preset wordsets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
+    presets: List[:class:`AutoModKeywordPresetType`]
+        A list of keyword presets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
     """
     # maybe add a table of action types and attributes?
-    # wording for keyword_lists could change
+    # wording for presets could change
 
     __slots__ = (
         "keyword_filter",
-        "keyword_lists",
+        "presets",
     )
 
-    def __init__(self, keyword_filter: List[str] = MISSING, keyword_lists: List[AutoModWordsetType] = MISSING):
+    def __init__(self, keyword_filter: List[str] = MISSING, presets: List[AutoModKeywordPresetType] = MISSING):
         self.keyword_filter = keyword_filter
-        self.keyword_lists = keyword_lists
+        self.presets = presets
 
     def to_dict(self) -> Dict:
         data = {}
         if self.keyword_filter is not MISSING:
             data["keyword_filter"] = self.keyword_filter
-        if self.keyword_lists is not MISSING:
-            data["keyword_lists"] = [wordset.value for wordset in self.keyword_lists]
+        if self.presets is not MISSING:
+            data["presets"] = [wordset.value for wordset in self.presets]
         return data
         
     @classmethod
@@ -194,14 +194,14 @@ class AutoModTriggerMetadata:
         kwargs = {}
         if data.get("keyword_filter") is not None:
             kwargs["keyword_filter"] = data["keyword_filter"]
-        if data.get("keyword_lists") is not None:
-            kwargs["keyword_lists"] = [try_enum(AutoModWordsetType, wordset) for wordset in data["keyword_lists"]]
+        if data.get("presets") is not None:
+            kwargs["presets"] = [try_enum(AutoModKeywordPresetType, wordset) for wordset in data["presets"]]
         return cls(**kwargs)
 
     def __repr__(self) -> str:
         repr_attrs = (
             "keyword_filter",
-            "keyword_lists",
+            "presets",
         )
         inner = []
         for attr in repr_attrs:

@@ -793,10 +793,10 @@ class AutoModActionType(Enum):
     timeout = 3
     
     
-class AutoModWordsetType(Enum):
-    profanity = "PROFANITY"
-    sexual_content = "SEXUAL_CONTENT"
-    slurs = "SLURS"
+class AutoModKeywordPresetType(Enum):
+    profanity = 1
+    sexual_content = 2
+    slurs = 3
     
 
 T = TypeVar("T")

@@ -32,13 +32,12 @@ AutoModEventType = Literal[1]
 
 AutoModActionType = Literal[1, 2, 3]
 
-
-AutoModWordsetType = Literal["PROFANITY", "SEXUAL_CONTENT", "SLURS"]
+AutoModKeywordPresetType = Literal[1, 2, 3]
 
 
 class AutoModTriggerMetadata(TypedDict, total=False):
     keyword_filter: List[str]
-    keyword_lists: List[AutoModWordsetType]
+    presets: List[AutoModKeywordPresetType]
 
         
 class AutoModActionMetadata(TypedDict, total=False):
