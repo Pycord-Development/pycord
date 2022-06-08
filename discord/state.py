@@ -633,13 +633,8 @@ class ConnectionState:
         self.dispatch("auto_moderation_rule_delete", rule)
     
     def parse_auto_moderation_action_execution(self, data) -> None:
-        # should there be a raw event for this?
-        raw = RawAutoModActionExecutionEvent(data)
-        self.dispatch("raw_auto_moderation_action_execution", raw)
-        guild = self._get_guild(int(data["guild_id"]))
-        if guild is not None:
-            action = AutoModAction.from_dict(data["action"])
-            self.dispatch("auto_moderation_action_execution", guild, action)
+        event = AutoModActionExecutionEvent(self, data)
+        self.dispatch("auto_moderation_action_execution", event)
 
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)

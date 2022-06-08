@@ -28,7 +28,7 @@ from typing import List, TypedDict
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
-from .types.automod import AutoModAction, AutoModTriggerType
+from .automod import AutoModAction, AutoModTriggerType
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -122,6 +122,7 @@ class _AutoModActionExecutionEventOptional(TypedDict, total=False):
     matched_content: str
         
 class AutoModActionExecutionEvent(_AutoModActionExecutionEventOptional):
+    user_id: Snowflake
     guild_id: Snowflake
     action: AutoModAction
     rule_id: Snowflake
