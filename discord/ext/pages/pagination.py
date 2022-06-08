@@ -764,7 +764,7 @@ class Paginator(discord.ui.View):
                     button["hidden"] = False
                     button["object"].label = button["label"]
         self.clear_items()
-        if self.show_indicator:
+        if self.use_default_buttons and self.show_indicator:
             self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
         for key, button in self.buttons.items():
             if key != "page_indicator":
