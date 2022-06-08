@@ -32,10 +32,10 @@ import inspect
 import re
 import types
 from collections import OrderedDict
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
-    Awaitable,
     Callable,
     Coroutine,
     Dict,
@@ -46,28 +46,25 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    overload,
 )
 
-from ..role import Role
-from ..object import Object
 from ..channel import _guild_channel_factory
-from ..enums import ChannelType, SlashCommandOptionType
+from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
-    ClientException,
-    ValidationError,
-    NotFound,
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
+    ClientException,
+    ValidationError,
 )
 from ..member import Member
 from ..message import Attachment, Message
+from ..object import Object
+from ..role import Role
 from ..user import User
-from ..utils import async_all, find, get_or_fetch, utcnow
+from ..utils import async_all, find, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
-from .permissions import CommandPermission
 
 __all__ = (
     "_BaseCommand",
@@ -87,6 +84,7 @@ __all__ = (
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
+    from .. import Permissions
     from ..cog import Cog
 
 T = TypeVar("T")
@@ -100,11 +98,15 @@ else:
 
 
 def wrap_callback(coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
         try:
             ret = await coro(*args, **kwargs)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return
@@ -116,11 +118,15 @@ def wrap_callback(coro):
 
 
 def hooked_wrapped_callback(command, ctx, coro):
+    from ..ext.commands.errors import CommandError
+
     @functools.wraps(coro)
     async def wrapped(arg):
         try:
             ret = await coro(arg)
         except ApplicationCommandError:
+            raise
+        except CommandError:
             raise
         except asyncio.CancelledError:
             return
@@ -144,6 +150,20 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
             function = function.func
         else:
             return function
+
+
+def _validate_names(obj):
+    validate_chat_input_name(obj.name)
+    if obj.name_localizations:
+        for locale, string in obj.name_localizations.items():
+            validate_chat_input_name(string, locale=locale)
+
+
+def _validate_descriptions(obj):
+    validate_chat_input_description(obj.description)
+    if obj.description_localizations:
+        for locale, string in obj.description_localizations.items():
+            validate_chat_input_description(string, locale=locale)
 
 
 class _BaseCommand:
@@ -186,6 +206,12 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
         self.parent = kwargs.get("parent")
+
+        # Permissions
+        self.default_member_permissions: Optional["Permissions"] = getattr(
+            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        )
+        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -405,15 +431,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        
+
         This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -430,15 +456,15 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        
+
         This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
-        
+
         Parameters
         -----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
-            
+
         Raises
         -------
         TypeError
@@ -559,16 +585,11 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-
-            If this is not empty then default_permissions will be set to False.
-
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -601,21 +622,16 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        validate_chat_input_name(self.name)
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
-        if self.name_localizations:
-            for locale, string in self.name_localizations.items():
-                validate_chat_input_name(string, locale=locale)
+        _validate_names(self)
 
         description = kwargs.get("description") or (
             inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
         )
-        validate_chat_input_description(description)
+
         self.description: str = description
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
-        if self.description_localizations:
-            for locale, string in self.description_localizations.items():
-                validate_chat_input_description(string, locale=locale)
+        _validate_descriptions(self)
 
         self.attached_to_group: bool = False
 
@@ -638,100 +654,94 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
-        # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
-
-    def _parse_options(self, params) -> List[Option]:
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
+    def _check_required_params(self, params):
         params = iter(params.items())
+        required_params = (
+            ["self", "context"]
+            if self.attached_to_group
+            or self.cog
+            or len(self.callback.__qualname__.split(".")) > 1
+            else ["context"]
+        )
+        for p in required_params:
+            try:
+                next(params)
+            except StopIteration:
+                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.')
 
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+        return params
+
+    def _parse_options(self, params, *, check_params: bool = True) -> List[Option]:
+        if check_params:
+            params = self._check_required_params(params)
 
         final_options = []
         for p_name, p_obj in params:
-
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], "No description provided", required=False)
+                    option = Option(option.__args__[0], required=False)
                 else:
-                    option = Option(option.__args__, "No description provided")
+                    option = Option(option.__args__)
 
             if not isinstance(option, Option):
-                option = Option(option, "No description provided")
+                if isinstance(p_obj.default, Option):
+                    p_obj.default.input_type = option
+                    option = p_obj.default
+                else:
+                    option = Option(option)
 
-            if option.default is None:
-                if p_obj.default == inspect.Parameter.empty:
-                    option.default = None
+            if option.default is None and not p_obj.default == inspect.Parameter.empty:
+                if isinstance(p_obj.default, type) and issubclass(p_obj.default, (DiscordEnum, Enum)):
+                    option = Option(p_obj.default)
+                elif isinstance(p_obj.default, Option) and not (default := p_obj.default.default) is None:
+                    option.default = default
                 else:
                     option.default = p_obj.default
                     option.required = False
-
             if option.name is None:
                 option.name = p_name
-            option._parameter_name = p_name
+            if option.name != p_name or option._parameter_name is None:
+                option._parameter_name = p_name
 
-            validate_chat_input_name(option.name)
-            validate_chat_input_description(option.description)
+            _validate_names(option)
+            _validate_descriptions(option)
 
             final_options.append(option)
 
         return final_options
 
     def _match_option_param_names(self, params, options):
-        if list(params.items())[0][0] == "self":
-            temp = list(params.items())
-            temp.pop(0)
-            params = dict(temp)
-        params = iter(params.items())
+        params = self._check_required_params(params)
 
-        # next we have the 'ctx' as the next parameter
-        try:
-            next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
-
-        check_annotations = [
+        check_annotations: List[Callable[[Option, Type], bool]] = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
             and o.converter is not None,  # pass on converters
             lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
             lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: inspect.isclass(a) and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: isinstance(a, type) and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
-            validate_chat_input_name(o.name)
-            validate_chat_input_description(o.description)
+            _validate_names(o)
+            _validate_descriptions(o)
             try:
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
-                raise ClientException(f"Too many arguments passed to the options kwarg.")
+                raise ClientException("Too many arguments passed to the options kwarg.")
             p_obj = p_obj.annotation
 
-            if not any(c(o, p_obj) for c in check_annotations):
+            if not any(check(o, p_obj) for check in check_annotations):
                 raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
-        left_out_params[""] = ""  # bypass first iter (ctx)
         for k, v in params:
             left_out_params[k] = v
-        options.extend(self._parse_options(left_out_params))
+        options.extend(self._parse_options(left_out_params, check_params=False))
 
         return options
 
@@ -752,7 +762,6 @@ class SlashCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
-            "default_permission": self.default_permission,
         }
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -760,6 +769,12 @@ class SlashCommand(ApplicationCommand):
             as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
+
+        if self.guild_only is not None:
+            as_dict["dm_permission"] = not self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -780,8 +795,9 @@ class SlashCommand(ApplicationCommand):
             ):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
-                        op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
-                        and (_data := resolved.get("members", {}).get(arg)) is not None):
+                    op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
+                    and (_data := resolved.get("members", {}).get(arg)) is not None
+                ):
                     # The option type is a user, we resolved a member from the snowflake and assigned it to _data
                     if (_user_data := resolved.get("users", {}).get(arg)) is not None:
                         # We resolved the user from the user id
@@ -803,7 +819,7 @@ class SlashCommand(ApplicationCommand):
                         obj_type = Role
                         kw["guild"] = ctx.guild
                     elif op.input_type is SlashCommandOptionType.channel:
-                        obj_type = _guild_channel_factory(_data["type"])
+                        obj_type = _guild_channel_factory(_data["type"])[0]
                         kw["guild"] = ctx.guild
                     elif op.input_type is SlashCommandOptionType.attachment:
                         obj_type = Attachment
@@ -814,6 +830,21 @@ class SlashCommand(ApplicationCommand):
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 arg = await converter.convert(converter, ctx, arg)
+
+            elif op._raw_type in (SlashCommandOptionType.integer,
+                                  SlashCommandOptionType.number,
+                                  SlashCommandOptionType.string,
+                                  SlashCommandOptionType.boolean):
+                pass
+
+            elif issubclass(op._raw_type, Enum):
+                if isinstance(arg, str) and arg.isdigit():
+                    try:
+                        arg = op._raw_type(int(arg))
+                    except ValueError:
+                        arg = op._raw_type(arg)
+                else:
+                    arg = op._raw_type(arg)
 
             kwargs[op._parameter_name] = arg
 
@@ -907,6 +938,10 @@ class SlashCommandGroup(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this group belongs to. ``None`` if there
         isn't one.
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
     subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
         The list of all subcommands under this group.
     cog: Optional[:class:`.Cog`]
@@ -969,10 +1004,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = kwargs.get("permissions", [])
-        if self.permissions and self.default_permission:
-            self.default_permission = False
+        self.default_member_permissions: Optional["Permissions"] = kwargs.get("default_member_permissions", None)
+        self.guild_only: Optional[bool] = kwargs.get("guild_only", None)
+
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
         self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
 
@@ -985,7 +1019,6 @@ class SlashCommandGroup(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
-            "default_permission": self.default_permission,
         }
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -994,6 +1027,12 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
+
+        if self.guild_only is not None:
+            as_dict["dm_permission"] = not self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1121,8 +1160,9 @@ class SlashCommandGroup(ApplicationCommand):
             name=self.name,
             description=self.description,
             **{
-                param: value for param, value in self.__original_kwargs__.items()
-                if param not in ('name', 'description')
+                param: value
+                for param, value in self.__original_kwargs__.items()
+                if param not in ("name", "description")
             },
         )
         return self._ensure_assignment_on_copy(ret)
@@ -1151,7 +1191,7 @@ class SlashCommandGroup(ApplicationCommand):
             return self.copy()
 
     def _set_cog(self, cog):
-        self.cog = cog
+        super()._set_cog(cog)
         for subcommand in self.subcommands:
             subcommand._set_cog(cog)
 
@@ -1172,15 +1212,11 @@ class ContextMenuCommand(ApplicationCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    default_permission: :class:`bool`
-        Whether the command is enabled by default when it is added to a guild.
-    permissions: List[:class:`.CommandPermission`]
-        The permissions for this command.
-
-        .. note::
-            If this is not empty then default_permissions will be set to ``False``.
-
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1225,13 +1261,6 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.validate_parameters()
 
-        self.default_permission = kwargs.get("default_permission", True)
-        self.permissions: List[CommandPermission] = getattr(func, "__app_cmd_perms__", []) + kwargs.get(
-            "permissions", []
-        )
-        if self.permissions and self.default_permission:
-            self.default_permission = False
-
         # Context Menu commands can't have parents
         self.parent = None
 
@@ -1272,8 +1301,13 @@ class ContextMenuCommand(ApplicationCommand):
             "name": self.name,
             "description": self.description,
             "type": self.type,
-            "default_permission": self.default_permission,
         }
+
+        if self.guild_only is not None:
+            as_dict["dm_permission"] = not self.guild_only
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = self.default_member_permissions.value
 
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -1418,7 +1452,17 @@ class MessageCommand(ContextMenuCommand):
             message = v
         channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
         if channel is None:
-            data = await ctx.interaction._state.http.start_private_message(int(message["author"]["id"]))
+            author_id = int(message["author"]["id"])
+            self_or_system_message: bool = ctx.bot.user.id == author_id or try_enum(
+                MessageType, message["type"]
+            ) not in (
+                MessageType.default,
+                MessageType.reply,
+                MessageType.application_command,
+                MessageType.thread_starter_message,
+            )
+            user_id = ctx.author.id if self_or_system_message else author_id
+            data = await ctx.interaction._state.http.start_private_message(user_id)
             channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
@@ -1468,9 +1512,9 @@ class MessageCommand(ContextMenuCommand):
 
 def slash_command(**kwargs):
     """Decorator for slash commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`SlashCommand`]
@@ -1481,9 +1525,9 @@ def slash_command(**kwargs):
 
 def user_command(**kwargs):
     """Decorator for user commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`UserCommand`]
@@ -1494,9 +1538,9 @@ def user_command(**kwargs):
 
 def message_command(**kwargs):
     """Decorator for message commands that invokes :func:`application_command`.
-    
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`MessageCommand`]
@@ -1514,9 +1558,9 @@ def application_command(cls=SlashCommand, **attrs):
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
     The ``name`` attribute also defaults to the function name unchanged.
-    
+
     .. versionadded:: 2.0
-    
+
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
@@ -1525,7 +1569,7 @@ def application_command(cls=SlashCommand, **attrs):
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
-        
+
     Raises
     -------
     TypeError
@@ -1544,12 +1588,12 @@ def application_command(cls=SlashCommand, **attrs):
 
 def command(**kwargs):
     """An alias for :meth:`application_command`.
-    
+
     .. note::
         This decorator is overridden by :func:`commands.command`.
-        
+
     .. versionadded:: 2.0
-    
+
     Returns
     --------
     Callable[..., :class:`ApplicationCommand`]
@@ -1595,48 +1639,43 @@ valid_locales = [
 
 # Validation
 def validate_chat_input_name(name: Any, locale: Optional[str] = None):
-    # Must meet the regex ^[\w-]{1,32}$
-    if locale not in valid_locales and locale is not None:
+    # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
+    if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale {locale} is not a valid locale, in command names, "
-            f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(name, str):
-        raise TypeError(
-            f"Chat input command names and options must be of type str."
-            f"Received {name}" + f" in locale {locale}" if locale else ""
+        error = TypeError(f'Command names and options must be of type str. Received "{name}"')
+    elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
+        error = ValidationError(
+            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
+            f"For more information, see {docs}/interactions/application-commands#application-command-object-"
+            f'application-command-naming. Received "{name}"'
         )
-    if not re.match(r"^[\w-]{1,32}$", name):
-        raise ValidationError(
-             'Chat input command names and options must follow the regex '
-            r'"^[\w-]{1,32}$". For more information, see '
-            f"{docs}/interactions/application-commands#application-command-object-application-command-naming. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
-        )
-    if not 1 <= len(name) <= 32:
-        raise ValidationError(
-             "Chat input command names and options must be 1-32 characters long. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
-        )
-    if not name.lower() == name:  # Can't use islower() as it fails if none of the chars can be lower. See #512.
-        raise ValidationError(
-             "Chat input command names and options must be lowercase. "
-            f"Received {name}" + f" in locale {locale}" if locale else ""
-        )
+    elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lowered. See #512.
+        error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
+
+    if error:
+        if locale:
+            error.args = (f"{error.args[0]} in locale {locale}",)
+        raise error
 
 
 def validate_chat_input_description(description: Any, locale: Optional[str] = None):
-    if locale not in valid_locales and locale is not None:
+    if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale {locale} is not a valid locale, in command descriptions, "
-            f"see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
         )
+    error = None
     if not isinstance(description, str):
-        raise TypeError(
-            f"Command description must be of type str. Received {description} " + f" in locale {locale}" if locale else ""
+        error = TypeError(f'Command and option description must be of type str. Received "{description}"')
+    elif not 1 <= len(description) <= 100:
+        error = ValidationError(
+            f'Command and option description must be 1-100 characters long. Received "{description}"'
         )
-    if not 1 <= len(description) <= 100:
-        raise ValidationError(
-             "Command description must be 1-100 characters long. "
-            f"Received {description}" + f" in locale {locale}" if locale else ""
-        )
+
+    if error:
+        if locale:
+            error.args = (f"{error.args[0]} in locale {locale}",)
+        raise error

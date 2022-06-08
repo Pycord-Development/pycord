@@ -49,7 +49,7 @@ class MP3Sink(Sink):
 
     def format_audio(self, audio):
         """Formats the recorded audio.
-        
+
         Raises
         ------
         MP3SinkError
