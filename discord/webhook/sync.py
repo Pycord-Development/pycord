@@ -308,11 +308,16 @@ class WebhookAdapter:
         multipart: Optional[List[Dict[str, Any]]] = None,
         files: Optional[List[File]] = None,
         thread_id: Optional[int] = None,
+        thread_name: Optional[str] = None,
         wait: bool = False,
     ):
         params = {"wait": int(wait)}
         if thread_id:
             params["thread_id"] = thread_id
+
+        if thread_name:
+            payload["thread_name"] = thread_name
+
         route = Route(
             "POST",
             "/webhooks/{webhook_id}/{webhook_token}",
@@ -909,6 +914,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
+        name: Optional[str] = None,
         wait: Literal[True],
     ) -> SyncWebhookMessage:
         ...
@@ -927,6 +933,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
+        name: Optional[str] = None,
         wait: Literal[False] = ...,
     ) -> None:
         ...
@@ -944,6 +951,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
+        name: Optional[str] = None,
         wait: bool = False,
     ) -> Optional[SyncWebhookMessage]:
         """Sends a message using the webhook.
@@ -958,7 +966,7 @@ class SyncWebhook(BaseWebhook):
         ``embeds`` parameter, which must be a :class:`list` of :class:`Embed` objects to send.
 
         Parameters
-        ------------
+        ----------
         content: :class:`str`
             The content of the message to send.
         wait: :class:`bool`
@@ -993,9 +1001,13 @@ class SyncWebhook(BaseWebhook):
             The thread to send this message to.
 
             .. versionadded:: 2.0
+        name: :class:`str`
+            The name of the thread to create. Only works for forum channels.
+
+            .. versionadded:: 2.0
 
         Raises
-        --------
+        ------
         HTTPException
             Sending the message failed.
         NotFound
@@ -1007,10 +1019,11 @@ class SyncWebhook(BaseWebhook):
         ValueError
             The length of ``embeds`` was invalid
         InvalidArgument
-            There was no token associated with this webhook.
+            There was no token associated with this webhook or you specified both
+            a thread to send to and a thread to create (the ``thread`` and ``name`` parameters).
 
         Returns
-        ---------
+        -------
         Optional[:class:`SyncWebhookMessage`]
             If ``wait`` is ``True`` then the message that was sent, otherwise ``None``.
         """
@@ -1021,6 +1034,9 @@ class SyncWebhook(BaseWebhook):
         previous_mentions: Optional[AllowedMentions] = getattr(self._state, "allowed_mentions", None)
         if content is None:
             content = MISSING
+
+        if thread and name:
+            raise InvalidArgument("You cannot specify both a thread and a thread name")
 
         params = handle_message_parameters(
             content=content,
@@ -1047,6 +1063,7 @@ class SyncWebhook(BaseWebhook):
             multipart=params.multipart,
             files=params.files,
             thread_id=thread_id,
+            thread_name=name,
             wait=wait,
         )
         if wait:
