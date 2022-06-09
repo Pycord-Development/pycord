@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING, Callable, Dict, Iterable, List, Optional, Unio
 from .abc import Messageable, _purge_messages_helper
 from .enums import ChannelType, try_enum
 from .errors import ClientException
+from .flags import ChannelFlags
 from .mixins import Hashable
 from .utils import MISSING, _get_as_snowflake, parse_time
 
@@ -40,7 +41,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
-    from .channel import CategoryChannel, TextChannel
+    from .channel import CategoryChannel, ForumChannel, TextChannel
     from .guild import Guild
     from .member import Member
     from .message import Message, PartialMessage
@@ -119,6 +120,10 @@ class Thread(Messageable, Hashable):
     created_at: Optional[:class:`datetime.datetime`]
         An aware timestamp of when the thread was created.
         Only available for threads created after 2022-01-09.
+    flags: :class:`ChannelFlags`
+        Extra features of the thread.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -141,6 +146,7 @@ class Thread(Messageable, Hashable):
         "auto_archive_duration",
         "archive_timestamp",
         "created_at",
+        "flags",
     )
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: ThreadPayload):
@@ -171,6 +177,7 @@ class Thread(Messageable, Hashable):
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
         self.message_count = data["message_count"]
         self.member_count = data["member_count"]
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self._unroll_metadata(data["thread_metadata"])
 
         try:
@@ -194,6 +201,7 @@ class Thread(Messageable, Hashable):
         except KeyError:
             pass
 
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
 
         try:
@@ -207,7 +215,7 @@ class Thread(Messageable, Hashable):
         return self._type
 
     @property
-    def parent(self) -> Optional[TextChannel]:
+    def parent(self) -> Optional[Union[TextChannel, ForumChannel]]:
         """Optional[:class:`TextChannel`]: The parent channel this thread belongs to."""
         return self.guild.get_channel(self.parent_id)  # type: ignore
 
@@ -501,6 +509,7 @@ class Thread(Messageable, Hashable):
         invitable: bool = MISSING,
         slowmode_delay: int = MISSING,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
+        pinned: bool = MISSING,
         reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
@@ -533,6 +542,8 @@ class Thread(Messageable, Hashable):
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         reason: Optional[:class:`str`]
             The reason for editing this thread. Shows up on the audit log.
+        pinned: :class:`bool`
+            Whether to pin the thread or not. This only works if the thread is part of a forum.
 
         Raises
         -------
@@ -559,6 +570,11 @@ class Thread(Messageable, Hashable):
             payload["invitable"] = invitable
         if slowmode_delay is not MISSING:
             payload["rate_limit_per_user"] = slowmode_delay
+        if pinned is not MISSING:
+            # copy the ChannelFlags object to avoid mutating the original
+            flags = ChannelFlags._from_value(self.flags.value)
+            flags.pinned = pinned
+            payload["flags"] = flags.value
 
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload

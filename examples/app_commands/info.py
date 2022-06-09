@@ -24,12 +24,12 @@ async def info(ctx, user: discord.Member = None):
     e.add_field(name="ID", value=user.id, inline=False)  # user ID
     e.add_field(
         name="Joined",
-        value=discord.utils.format_dt(round(user.joined_at.timestamp()), "F"),
+        value=discord.utils.format_dt(user.joined_at, "F"),
         inline=False,
     )  # When the user joined the server
     e.add_field(
         name="Created",
-        value=discord.utils.format_dt(round(user.created_at.timestamp()), "F"),
+        value=discord.utils.format_dt(user.created_at, "F"),
         inline=False,
     )  # When the user's account was created
     colour = user.colour

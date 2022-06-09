@@ -135,6 +135,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "_message_data",
         "_permissions",
         "_state",
         "_session",
@@ -163,11 +164,12 @@ class Interaction:
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
 
-        self.message: Optional[Message]
-        try:
-            self.message = Message(state=self._state, channel=self.channel, data=data["message"])  # type: ignore
-        except KeyError:
-            self.message = None
+        self.message: Optional[Message] = None
+
+        if (message_data := data.get("message")):
+            self.message = Message(state=self._state, channel=self.channel, data=message_data)
+
+        self._message_data = message_data
 
         self.user: Optional[Union[User, Member]] = None
         self._permissions: int = 0
@@ -425,6 +427,42 @@ class Interaction:
         else:
             await func
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Converts this interaction object into a dict."""
+
+        data = {
+            "id": self.id,
+            "application_id": self.application_id,
+            "type": self.type.value,
+            "token": self.token,
+            "version": self.version,
+        }
+
+        if self.data is not None:
+            data["data"] = self.data
+            if (resolved := self.data.get("resolved")) and self.user is not None:
+                if (users := resolved.get("users")) and (user := users.get(self.user.id)):
+                    data["user"] = user
+                if (members := resolved.get("members")) and (member := members.get(self.user.id)):
+                    data["member"] = member
+
+        if self.guild_id is not None:
+            data["guild_id"] = self.guild_id
+
+        if self.channel_id is not None:
+            data["channel_id"] = self.channel_id
+
+        if self.locale:
+            data["locale"] = self.locale
+
+        if self.guild_locale:
+            data["guild_locale"] = self.guild_locale
+
+        if self._message_data:
+            data["message"] = self._message_data
+
+        return data
+
 
 class InteractionResponse:
     """Represents a Discord interaction response.
@@ -452,20 +490,26 @@ class InteractionResponse:
         """
         return self._responded
 
-    async def defer(self, *, ephemeral: bool = False) -> None:
+    async def defer(self, *, ephemeral: bool = False, invisible: bool = True) -> None:
         """|coro|
-
         Defers the interaction response.
-
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
-
+        This is can only be used with the following interaction types
+        - :attr:`InteractionType.application_command`
+        - :attr:`InteractionType.component`
+        - :attr:`InteractionType.modal_submit`
         Parameters
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
-
+            This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``.
+        invisible: :class:`bool`
+            Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`)
+            instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`).
+            In the Discord UI, this is represented as the bot thinking of a response. You must
+            eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
+            This parameter does not apply to interactions of type :attr:`InteractionType.application_command`.
         Raises
         -------
         HTTPException
@@ -479,16 +523,18 @@ class InteractionResponse:
         defer_type: int = 0
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
-        if parent.type is InteractionType.component:
-            if ephemeral:
-                data = {"flags": 64}
-                defer_type = InteractionResponseType.deferred_channel_message.value
-            else:
-                defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type in (InteractionType.application_command, InteractionType.modal_submit):
+        if parent.type is InteractionType.component or parent.type is InteractionType.modal_submit:
+            defer_type = (
+                InteractionResponseType.deferred_message_update.value
+                if invisible
+                else InteractionResponseType.deferred_channel_message.value
+            )
+            if not invisible and ephemeral:
+                data = {'flags': 64}
+        elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
-                data = {"flags": 64}
+                data = {'flags': 64}
 
         if defer_type:
             adapter = async_context.get()
@@ -677,6 +723,8 @@ class InteractionResponse:
         content: Optional[Any] = MISSING,
         embed: Optional[Embed] = MISSING,
         embeds: List[Embed] = MISSING,
+        file: File = MISSING,
+        files: List[File] = MISSING,
         attachments: List[Attachment] = MISSING,
         view: Optional[View] = MISSING,
         delete_after: Optional[float] = None,
@@ -695,6 +743,11 @@ class InteractionResponse:
         embed: Optional[:class:`Embed`]
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
+        file: :class:`File`
+            A new file to add to the message. This cannot be mixed with ``files`` parameter.
+        files: List[:class:`File`]
+            A list of new files to add to the message. Must be a maximum of 10. This
+            cannot be mixed with the ``file`` parameter.
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
@@ -742,16 +795,44 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+
+        if file is not MISSING and files is not MISSING:
+            raise InvalidArgument("cannot pass both file and files parameter to edit_message()")
+
+        if file is not MISSING:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be a File")
+            else:
+                files = [file]
+                if "attachments" not in payload:
+                    # we keep previous attachments when adding a new file
+                    payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
+        if files is not MISSING:
+            if len(files) > 10:
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
+            elif not all(isinstance(file, File) for file in files):
+                raise InvalidArgument("files parameter must be a list of File")
+            if "attachments" not in payload:
+                # we keep previous attachments when adding new files
+                payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
         adapter = async_context.get()
-        await self._locked_response(
-            adapter.create_interaction_response(
-                parent.id,
-                parent.token,
-                session=parent._session,
-                type=InteractionResponseType.message_update.value,
-                data=payload,
+        try:
+            await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.message_update.value,
+                    data=payload,
+                    files=files,
+                )
             )
-        )
+        finally:
+            if files:
+                for file in files:
+                    file.close()
 
         if view and not view.is_finished():
             state.store_view(view, message_id)
