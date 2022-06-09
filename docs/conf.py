@@ -174,7 +174,7 @@ resource_links = {
     "discord": "https://pycord.dev/discord",
     "issues": "https://github.com/Pycord-Development/pycord/issues",
     "discussions": "https://github.com/Pycord-Development/pycord/discussions",
-    "examples": f"https://github.com/Pycord-Development/pycord/tree/{branch}/examples",
+    "examples": f"https://github.com/Pycord-Development/pycord/tree/master/examples",
     "guide": "https://guide.pycord.dev/",
 }
 
