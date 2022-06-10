@@ -1134,6 +1134,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
+        
         .. versionadded:: 2.0
     flags: :class:`ChannelFlags`
         Extra features of the channel.
