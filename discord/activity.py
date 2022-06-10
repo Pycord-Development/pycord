@@ -188,7 +188,7 @@ class Activity(BaseActivity):
 
         - ``id``: A string representing the party ID.
         - ``size``: A list of up to two integer elements denoting (current_size, maximum_size).
-    buttons: List[Union[:class:`dict`, :class:`str`]]
+    buttons: Union[List[:class:`dict`], List[:class:`str`]]
         A list of dictionaries representing custom buttons shown in a rich presence.
         Each dictionary contains the following keys:
 
