@@ -77,6 +77,8 @@ class BridgeCommand:
         """
         self.callback = callback
         self.kwargs = kwargs
+        self.ext_command = None  # will be defined when self.add_to is called
+        self.application_command = None  # will be defined when self.add_to is called
 
     def get_ext_command(self):
         """A method to get the ext.commands version of this command.
@@ -108,8 +110,88 @@ class BridgeCommand:
         bot: Union[:class:`ExtBot`, :class:`ExtAutoShardedBot`]
             The bot to add the command to.
         """
-        bot.add_command(self.get_ext_command())
-        bot.add_application_command(self.get_application_command())
+        self.ext_command = self.get_ext_command()
+        self.application_command = self.get_application_command()
+
+        bot.add_command(self.ext_command)
+        bot.add_application_command(self.application_command)
+
+    def error(self, coro):
+        """A decorator that registers a coroutine as a local error handler.
+
+        This error handler is limited to the command it is defined to.
+        However, higher scope handlers (per-cog and global) are still
+        invoked afterwards as a catch-all. This handler also functions as
+        the handler for both the prefixed and slash versions of the command.
+
+        This error handler takes two parameters, a :class:`.BridgeContext` and
+        a :class:`...DiscordException`.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        self.ext_command.error(coro)
+        self.application_command.error(coro)
+
+        return coro
+
+    def before_invoke(self, coro):
+        """A decorator that registers a coroutine as a pre-invoke hook.
+
+        This hook is called directly before the command is called, making
+        it useful for any sort of set up required. This hook is called
+        for both the prefixed and slash versions of the command.
+
+        This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the pre-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        self.ext_command.before_invoke(coro)
+        self.application_command.before_invoke(coro)
+
+        return coro
+
+    def after_invoke(self, coro):
+        """A decorator that registers a coroutine as a post-invoke hook.
+
+        This hook is called directly after the command is called, making it
+        useful for any sort of clean up required. This hook is called for
+        both the prefixed and slash versions of the command.
+
+        This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the post-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        self.ext_command.after_invoke(coro)
+        self.application_command.after_invoke(coro)
+
+        return coro
 
 
 def bridge_command(**kwargs):
