@@ -220,14 +220,15 @@ class ApplicationContext(discord.abc.Messageable):
         """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
-    @property
-    def respond(self) -> Callable[..., Awaitable[Union[Interaction, WebhookMessage]]]:
-        """Callable[..., Union[:class:`~.Interaction`, :class:`~.Webhook`]]: Sends either a response
-        or a followup response depending on if the interaction has been responded to yet or not."""
-        if not self.interaction.response.is_done():
-            return self.interaction.response.send_message  # self.response
-        else:
-            return self.followup.send  # self.send_followup
+    async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
+        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        try:
+            if not self.interaction.response.is_done():
+                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+            else:
+                return await self.followup.send(*args, **kwargs)  # self.send_followup
+        except discord.errors.InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
 
     @property
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
@@ -255,13 +256,29 @@ class ApplicationContext(discord.abc.Messageable):
     def followup(self) -> Webhook:
         return self.interaction.followup
 
-    async def delete(self):
-        """Calls :attr:`~discord.commands.ApplicationContext.respond`.
-        If the response is done, then calls :attr:`~discord.commands.ApplicationContext.respond` first."""
+    async def delete(self, *, delay: Optional[float] = None) -> None:
+        """|coro|
+
+        Deletes the original interaction response message.
+
+        This is a higher level interface to :meth:`Interaction.delete_original_message`.
+
+        Parameters
+        -----------
+        delay: Optional[:class:`float`]
+            If provided, the number of seconds to wait before deleting the message.
+
+        Raises
+        -------
+        HTTPException
+            Deleting the message failed.
+        Forbidden
+            You do not have proper permissions to delete the message.
+        """
         if not self.interaction.response.is_done():
             await self.defer()
 
-        return await self.interaction.delete_original_message()
+        return await self.interaction.delete_original_message(delay=delay)
 
     @property
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:

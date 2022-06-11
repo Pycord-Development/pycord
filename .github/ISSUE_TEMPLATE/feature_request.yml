@@ -18,6 +18,7 @@ body:
         - discord.ext.commands
         - discord.ext.tasks
         - discord.ext.pages
+        - discord.ext.bridge
         - The documentation
     validations:
       required: true

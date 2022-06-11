@@ -40,11 +40,11 @@ from typing import (
     Dict,
     Generator,
     List,
+    Literal,
     Optional,
     Type,
     TypeVar,
     Union,
-    Literal,
 )
 
 from .client import Client
@@ -60,7 +60,7 @@ from .commands import (
     command,
 )
 from .enums import InteractionType
-from .errors import CheckFailure, DiscordException, Forbidden
+from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
@@ -165,8 +165,7 @@ class ApplicationCommandMixin(ABC):
             except ValueError:
                 return None
             return self._pending_application_commands.pop(index)
-
-        return self._application_commands.pop(int(command.id), None)
+        return self._application_commands.pop(command.id, None)
 
     @property
     def get_command(self):
@@ -248,11 +247,7 @@ class ApplicationCommandMixin(ABC):
                     return True
                 for i, subcommand in enumerate(cmd.subcommands):
                     match_ = next(
-                        (
-                            data
-                            for data in match["options"]
-                            if data["name"] == subcommand.name
-                        ),
+                        (data for data in match["options"] if data["name"] == subcommand.name),
                         MISSING,
                     )
                     if match_ is not MISSING and _check_command(subcommand, match_):
@@ -260,13 +255,21 @@ class ApplicationCommandMixin(ABC):
             else:
                 as_dict = cmd.to_dict()
                 to_check = {
-                    "default_permission": None,
+                    "dm_permission": None,
+                    "default_member_permissions": None,
                     "name": None,
                     "description": None,
                     "name_localizations": None,
                     "description_localizations": None,
-                    "options": ["type", "name", "description", "autocomplete", "choices", "name_localizations",
-                                "description_localizations"],
+                    "options": [
+                        "type",
+                        "name",
+                        "description",
+                        "autocomplete",
+                        "choices",
+                        "name_localizations",
+                        "description_localizations",
+                    ],
                 }
                 for check, value in to_check.items():
                     if type(to_check[check]) == list:
@@ -274,11 +277,7 @@ class ApplicationCommandMixin(ABC):
                         # The API considers False (autocomplete) and [] (choices) to be falsy values
                         falsy_vals = (False, [])
                         for opt in value:
-                            cmd_vals = (
-                                [val.get(opt, MISSING) for val in as_dict[check]]
-                                if check in as_dict
-                                else []
-                            )
+                            cmd_vals = [val.get(opt, MISSING) for val in as_dict[check]] if check in as_dict else []
                             for i, val in enumerate(cmd_vals):
                                 if val in falsy_vals:
                                     cmd_vals[i] = MISSING
@@ -376,15 +375,15 @@ class ApplicationCommandMixin(ABC):
             The command that was registered
         """
         # TODO: Write this
-        raise NotImplementedError("This function has not been implemented yet")
+        raise RuntimeError("This function has not been implemented yet")
 
     async def register_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            guild_id: Optional[int] = None,
-            method: Literal["individual", "bulk", "auto"] = "bulk",
-            force: bool = False,
-            delete_existing: bool = True,
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        guild_id: Optional[int] = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        delete_existing: bool = True,
     ) -> List[interactions.ApplicationCommand]:
         """|coro|
 
@@ -523,8 +522,8 @@ class ApplicationCommandMixin(ABC):
                 else:
                     _log.debug(
                         f"Bulk updating commands %s for guild %s",
-                        {c['command'].name: c['action'] for c in pending_actions},
-                        guild_id
+                        {c["command"].name: c["action"] for c in pending_actions},
+                        guild_id,
                     )
                     registered = await register("bulk", data, _log=False)
             else:
@@ -565,14 +564,14 @@ class ApplicationCommandMixin(ABC):
         return registered
 
     async def sync_commands(
-            self,
-            commands: Optional[List[ApplicationCommand]] = None,
-            method: Literal["individual", "bulk", "auto"] = "bulk",
-            force: bool = False,
-            guild_ids: Optional[List[int]] = None,
-            register_guild_commands: bool = True,
-            check_guilds: Optional[List[int]] = [],
-            delete_exiting: bool = True,
+        self,
+        commands: Optional[List[ApplicationCommand]] = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        guild_ids: Optional[List[int]] = None,
+        register_guild_commands: bool = True,
+        check_guilds: Optional[List[int]] = [],
+        delete_existing: bool = True,
     ) -> None:
         """|coro|
 
@@ -612,11 +611,11 @@ class ApplicationCommandMixin(ABC):
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
             ``register_guild_commands`` is set to False, then this parameter is ignored.
-        delete_exiting: :class:`bool`
+        delete_existing: :class:`bool`
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
-        check_guilds = list(set(check_guilds + (self.debug_guilds or [])))
+        check_guilds = list(set((check_guilds or []) + (self.debug_guilds or [])))
 
         if commands is None:
             commands = self.pending_application_commands
@@ -626,8 +625,9 @@ class ApplicationCommandMixin(ABC):
                 cmd.guild_ids = guild_ids
 
         global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
-        registered_commands = await self.register_commands(global_commands, method=method, force=force,
-                                                           delete_existing=delete_exiting)
+        registered_commands = await self.register_commands(
+            global_commands, method=method, force=force, delete_existing=delete_existing
+        )
 
         registered_guild_commands = {}
 
@@ -641,11 +641,9 @@ class ApplicationCommandMixin(ABC):
             for guild_id in set(cmd_guild_ids):
                 guild_commands = [cmd for cmd in commands if cmd.guild_ids is not None and guild_id in cmd.guild_ids]
                 registered_guild_commands[guild_id] = await self.register_commands(
-                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_exiting
+                    guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_existing
                 )
 
-        # TODO: 2.1: Remove this and favor permissions v2
-        # Global Command Permissions
         global_permissions: List = []
 
         for i in registered_commands:
@@ -659,12 +657,7 @@ class ApplicationCommandMixin(ABC):
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
-                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
-
         for guild_id, commands in registered_guild_commands.items():
-            guild_permissions: List = []
-
             for i in commands:
                 cmd = find(
                     lambda cmd: cmd.name == i["name"]
@@ -678,101 +671,6 @@ class ApplicationCommandMixin(ABC):
                     continue
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
-
-                # Permissions
-                permissions = [
-                    perm.to_dict()
-                    for perm in cmd.permissions
-                    if perm.guild_id is None
-                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
-                ]
-                guild_permissions.append({"id": i["id"], "permissions": permissions})
-
-            for global_command in global_permissions:
-                permissions = [
-                    perm.to_dict()
-                    for perm in global_command["permissions"]
-                    if perm.guild_id is None
-                    or (perm.guild_id == guild_id and cmd.guild_ids is not None and perm.guild_id in cmd.guild_ids)
-                ]
-                guild_permissions.append({"id": global_command["id"], "permissions": permissions})
-
-            # Collect & Upsert Permissions for Each Guild
-            # Command Permissions for this Guild
-            guild_cmd_perms: List = []
-
-            # Loop through Commands Permissions available for this Guild
-            for item in guild_permissions:
-                new_cmd_perm = {"id": item["id"], "permissions": []}
-
-                # Replace Role / Owner Names with IDs
-                for permission in item["permissions"]:
-                    if isinstance(permission["id"], str):
-                        # Replace Role Names
-                        if permission["type"] == 1:
-                            role = get(
-                                self._bot.get_guild(guild_id).roles,
-                                name=permission["id"],
-                            )
-
-                            # If not missing
-                            if role is not None:
-                                new_cmd_perm["permissions"].append(
-                                    {
-                                        "id": role.id,
-                                        "type": 1,
-                                        "permission": permission["permission"],
-                                    }
-                                )
-                            else:
-                                raise RuntimeError(
-                                    "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                        guild_id=guild_id, role=permission["id"]
-                                    )
-                                )
-                        # Add owner IDs
-                        elif permission["type"] == 2 and permission["id"] == "owner":
-                            app = await self.application_info()  # type: ignore
-                            if app.team:
-                                for m in app.team.members:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": m.id,
-                                            "type": 2,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                            else:
-                                new_cmd_perm["permissions"].append(
-                                    {
-                                        "id": app.owner.id,
-                                        "type": 2,
-                                        "permission": permission["permission"],
-                                    }
-                                )
-                    # Add the rest
-                    else:
-                        new_cmd_perm["permissions"].append(permission)
-
-                # Make sure we don't have over 10 overwrites
-                if len(new_cmd_perm["permissions"]) > 10:
-                    raise RuntimeError(
-                        "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).".format(
-                            name=self._application_commands[new_cmd_perm["id"]].name,
-                            guild_id=guild_id,
-                        )
-                    )
-                # Append to guild_cmd_perms
-                guild_cmd_perms.append(new_cmd_perm)
-
-            # Upsert
-            try:
-                await self._bot.http.bulk_upsert_command_permissions(self._bot.user.id, guild_id, guild_cmd_perms)
-            except Forbidden:
-                raise RuntimeError(
-                    f"Failed to add command permissions to guild {guild_id}",
-                    file=sys.stderr,
-                )
 
     async def process_application_commands(self, interaction: Interaction, auto_sync: bool = None) -> None:
         """|coro|
@@ -812,9 +710,11 @@ class ApplicationCommandMixin(ABC):
             command = self._application_commands[interaction.data["id"]]
         except KeyError:
             for cmd in self.application_commands:
+                guild_id = interaction.data.get("guild_id")
+                if guild_id:
+                    guild_id = int(guild_id)
                 if cmd.name == interaction.data["name"] and (
-                    interaction.data.get("guild_id") == cmd.guild_ids
-                    or (isinstance(cmd.guild_ids, list) and interaction.data.get("guild_id") in cmd.guild_ids)
+                    guild_id == cmd.guild_ids or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
                 ):
                     command = cmd
                     break
@@ -828,7 +728,6 @@ class ApplicationCommandMixin(ABC):
                         await self.sync_commands(check_guilds=[guild_id])
                 return self._bot.dispatch("unknown_application_command", interaction)
 
-
         if interaction.type is InteractionType.auto_complete:
             return self.dispatch("application_command_auto_complete", interaction, command)
 
@@ -836,8 +735,7 @@ class ApplicationCommandMixin(ABC):
         ctx.command = command
         await self.invoke_application_command(ctx)
 
-    async def on_application_command_auto_complete(self, interaction: Interaction,
-                                                   command: ApplicationCommand) -> None:
+    async def on_application_command_auto_complete(self, interaction: Interaction, command: ApplicationCommand) -> None:
         async def callback() -> None:
             ctx = await self.get_autocomplete_context(interaction)
             ctx.command = command
@@ -899,7 +797,7 @@ class ApplicationCommandMixin(ABC):
 
     def application_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`command` and adds it to
-        the internal command list via :meth:`add_application_command`.
+        the internal command list via :meth:`~.Bot.add_application_command`.
 
         .. versionadded:: 2.0
 
@@ -935,11 +833,7 @@ class ApplicationCommandMixin(ABC):
         return self.application_command(**kwargs)
 
     def create_group(
-        self,
-        name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
-        **kwargs
+        self, name: str, description: Optional[str] = None, guild_ids: Optional[List[int]] = None, **kwargs
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
         command list via :meth:`~.ApplicationCommandMixin.add_application_command`.

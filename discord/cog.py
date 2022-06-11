@@ -190,7 +190,23 @@ class CogMeta(type):
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
-                elif inspect.iscoroutinefunction(value):
+
+                try:
+                    # a test to see if this value is a BridgeCommand
+                    getattr(value, "add_to")
+
+                    if is_static_method:
+                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                    if elem.startswith(("cog_", "bot_")):
+                        raise TypeError(no_bot_cog.format(base, elem))
+
+                    commands[f"ext_{elem}"] = value.get_ext_command()
+                    commands[f"application_{elem}"] = value.get_application_command()
+                except AttributeError:
+                    # we are confident that the value is not a Bridge Command
+                    pass
+
+                if inspect.iscoroutinefunction(value):
                     try:
                         getattr(value, "__cog_listener__")
                     except AttributeError:
@@ -221,7 +237,11 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if isinstance(command, ApplicationCommand) and command.guild_ids is None and len(new_cls.__cog_guild_ids__) != 0:
+            if (
+                isinstance(command, ApplicationCommand)
+                and command.guild_ids is None
+                and len(new_cls.__cog_guild_ids__) != 0
+            ):
                 command.guild_ids = new_cls.__cog_guild_ids__
             if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)

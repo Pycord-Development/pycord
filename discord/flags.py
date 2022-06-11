@@ -1066,6 +1066,15 @@ class MemberCacheFlags(BaseFlags):
         """
         return 2
 
+    @flag_value
+    def interaction(self):
+        """:class:`bool`: Whether to cache members obtained through interactions.
+
+        This includes members received through
+        :class:`discord.Interaction` and :class:`discord.Option`.
+        """
+        return 4
+
     @classmethod
     def from_intents(cls: Type[MemberCacheFlags], intents: Intents) -> MemberCacheFlags:
         """A factory method that creates a :class:`MemberCacheFlags` based on
@@ -1083,6 +1092,7 @@ class MemberCacheFlags(BaseFlags):
         """
 
         self = cls.none()
+        self.interaction = True
         if intents.members:
             self.joined = True
         if intents.voice_states:
@@ -1198,3 +1208,39 @@ class ApplicationFlags(BaseFlags):
         and has hit the guild limit.
         """
         return 1 << 19
+
+
+@fill_with_flags()
+class ChannelFlags(BaseFlags):
+    r"""Wraps up the Discord Channel flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two ChannelFlags are equal.
+        .. describe:: x != y
+
+            Checks if two ChannelFlags are not equal.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    @flag_value
+    def pinned(self):
+        """:class:`bool`: Returns ``True`` if the thread is pinned to the top of its parent forum channel."""
+        return 1 << 1

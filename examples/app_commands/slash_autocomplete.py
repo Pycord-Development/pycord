@@ -1,5 +1,5 @@
 import discord
-from discord.commands import Option, slash_command
+from discord.commands import option
 
 bot = discord.Bot()
 
@@ -124,10 +124,12 @@ async def get_animals(ctx: discord.AutocompleteContext):
 
 
 @bot.slash_command(name="ac_example")
+@option("color", description="Pick a color!", autocomplete=get_colors)
+@option("animal", description="Pick an animal!", autocomplete=get_animals)
 async def autocomplete_example(
     ctx: discord.ApplicationContext,
-    color: Option(str, "Pick a color!", autocomplete=get_colors),
-    animal: Option(str, "Pick an animal!", autocomplete=get_animals),
+    color: str,
+    animal: str,
 ):
     """Demonstrates using ctx.options to create options that are dependent on the values of other options.
     For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.
@@ -136,18 +138,22 @@ async def autocomplete_example(
 
 
 @bot.slash_command(name="ac_basic_example")
+@option(
+    "color",
+    description="Pick a color from this big list!",
+    autocomplete=discord.utils.basic_autocomplete(color_searcher),
+    # Demonstrates passing a callback to discord.utils.basic_autocomplete
+)
+@option(
+    "animal",
+    description="Pick an animal from this small list",
+    autocomplete=discord.utils.basic_autocomplete(["snail", "python", "cricket", "orca"]),
+    # Demonstrates passing a static iterable discord.utils.basic_autocomplete
+)
 async def autocomplete_basic_example(
     ctx: discord.ApplicationContext,
-    color: Option(
-        str,
-        "Pick a color from this big list",
-        autocomplete=discord.utils.basic_autocomplete(color_searcher),
-    ),  # Demonstrates passing a callback to discord.utils.basic_autocomplete
-    animal: Option(
-        str,
-        "Pick an animal from this small list",
-        autocomplete=discord.utils.basic_autocomplete(["snail", "python", "cricket", "orca"]),
-    ),  # Demonstrates passing a static iterable discord.utils.basic_autocomplete
+    color: str,
+    animal: str,
 ):
     """This demonstrates using the discord.utils.basic_autocomplete helper function.
     For the `color` option, a callback is passed, where additional logic can be added to determine which values are returned.

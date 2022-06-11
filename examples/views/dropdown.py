@@ -9,7 +9,9 @@ from discord.ext import commands
 # Of this class is called when the user changes their choice
 class Dropdown(discord.ui.Select):
     def __init__(self, bot):
-        self.bot = bot # For example, you can use self.bot to retrieve a user or perform other functions in the callback.
+        self.bot = (
+            bot  # For example, you can use self.bot to retrieve a user or perform other functions in the callback.
+        )
         # Alternatively you can use Interaction.client, so you don't need to pass the bot instance.
         # Set the options that will be presented inside the dropdown
         options = [
