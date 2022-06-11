@@ -8,20 +8,20 @@ bot.connections = {}
 
 
 @bot.command()
-@option("encoding", choices=[
-    "mp3",
-    "wav",
-    "pcm",
-    "ogg",
-    "mka",
-    "mkv",
-    "mp4",
-    "m4a",
-])
-async def start(
-    ctx: ApplicationContext,
-    encoding: str
-):
+@option(
+    "encoding",
+    choices=[
+        "mp3",
+        "wav",
+        "pcm",
+        "ogg",
+        "mka",
+        "mkv",
+        "mp4",
+        "m4a",
+    ],
+)
+async def start(ctx: ApplicationContext, encoding: str):
     """
     Record your voice!
     """

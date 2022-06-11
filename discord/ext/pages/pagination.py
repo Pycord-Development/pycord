@@ -230,10 +230,13 @@ class PageGroup:
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
         Also used as the SelectOption value.
-    description: :class:`str`
+    description: Optional[:class:`str`]
         The description shown on the corresponding PaginatorMenu dropdown option.
     emoji: Union[:class:`str`, :class:`discord.Emoji`, :class:`discord.PartialEmoji`]
         The emoji shown on the corresponding PaginatorMenu dropdown option.
+    default: Optional[:class:`bool`]
+        Whether the page group should be the default page group initially shown when the paginator response is sent.
+        Only one ``PageGroup`` can be the default page group.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
@@ -264,8 +267,9 @@ class PageGroup:
         self,
         pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
         label: str,
-        description: str,
+        description: Optional[str] = None,
         emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        default: Optional[bool] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
         author_check: Optional[bool] = None,
@@ -279,9 +283,10 @@ class PageGroup:
         trigger_on_display: Optional[bool] = None,
     ):
         self.label = label
-        self.description = description
+        self.description: Optional[str] = description
         self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
         self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
+        self.default: Optional[bool] = default
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.author_check = author_check
@@ -340,6 +345,8 @@ class Paginator(discord.ui.View):
         The page group select menu associated with this paginator.
     page_groups: Optional[List[:class:`PageGroup`]]
         List of :class:`PageGroup` objects the user can switch between.
+    default_page_group: Optional[:class:`int`]
+        The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`.
     current_page: :class:`int`
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
@@ -379,12 +386,17 @@ class Paginator(discord.ui.View):
         self.show_menu = show_menu
         self.menu_placeholder = menu_placeholder
         self.page_groups: Optional[List[PageGroup]] = None
+        self.default_page_group: int = 0
 
         if all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if show_menu else None
-            self.pages: Union[
-                List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
-            ] = self.page_groups[0].pages
+            if sum(pg.default is True for pg in self.page_groups) > 1:
+                raise ValueError("Only one PageGroup can be set as the default.")
+            for pg in self.page_groups:
+                if pg.default:
+                    self.default_page_group = self.page_groups.index(pg)
+                    break
+            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
 
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
@@ -413,9 +425,12 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: Optional[Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]]] = None,
+        pages: Optional[
+            Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]]
+        ] = None,
         show_disabled: Optional[bool] = None,
         show_indicator: Optional[bool] = None,
+        show_menu: Optional[bool] = None,
         author_check: Optional[bool] = None,
         menu_placeholder: Optional[str] = None,
         disable_on_timeout: Optional[bool] = None,
@@ -438,6 +453,8 @@ class Paginator(discord.ui.View):
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
             Whether to show the page indicator when using the default buttons.
+        show_menu: :class:`bool`
+            Whether to show a select menu that allows the user to switch between groups of pages.
         author_check: :class:`bool`
             Whether only the original user of the command can change pages.
         menu_placeholder: :class:`str`
@@ -470,6 +487,16 @@ class Paginator(discord.ui.View):
         self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
             pages if pages is not None else self.pages
         )
+        self.show_menu = show_menu if show_menu is not None else self.show_menu
+        if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
+            self.page_groups = self.pages if self.show_menu else None
+            if sum(pg.default is True for pg in self.page_groups) > 1:
+                raise ValueError("Only one PageGroup can be set as the default.")
+            for pg in self.page_groups:
+                if pg.default:
+                    self.default_page_group = self.page_groups.index(pg)
+                    break
+            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = 0
         # Apply config changes, if specified
@@ -768,6 +795,10 @@ class Paginator(discord.ui.View):
                 self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
+
+    def get_page_group_content(self, page_group: PageGroup) -> List[Page]:
+        """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
+        return [self.get_page_content(page) for page in page_group.pages]
 
     @staticmethod
     def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
@@ -1123,8 +1154,11 @@ class PaginatorMenu(discord.ui.Select):
                     author_check=page_group.author_check,
                     disable_on_timeout=page_group.disable_on_timeout,
                     use_default_buttons=page_group.use_default_buttons,
+                    default_button_row=page_group.default_button_row,
                     loop_pages=page_group.loop_pages,
                     custom_view=page_group.custom_view,
+                    timeout=page_group.timeout,
                     custom_buttons=page_group.custom_buttons,
+                    trigger_on_display=page_group.trigger_on_display,
                     interaction=interaction,
                 )
