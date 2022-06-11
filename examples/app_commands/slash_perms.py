@@ -7,7 +7,7 @@ bot = discord.Bot()
 @discord.default_permissions(
     administrator=True
 )  # only members with this permission can use this command
-async def admin_only(ctx):
+async def admin_only(ctx: discord.ApplicationContext):
     await ctx.respond(f"Hello {ctx.author}, you are an administrator.")
 
 
@@ -15,7 +15,7 @@ async def admin_only(ctx):
 @discord.default_permissions(
     manage_messages=True, ban_members=True
 )  # you can supply multiple permissions
-async def staff_only(ctx):
+async def staff_only(ctx: discord.ApplicationContext):
     await ctx.respond(f"Hello {ctx.author}, you can manage messages and ban members.")
 
 

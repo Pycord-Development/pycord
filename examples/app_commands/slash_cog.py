@@ -1,3 +1,4 @@
+import discord
 from discord.commands import (  # Importing the decorator that makes slash commands.
     slash_command,
 )
@@ -9,11 +10,11 @@ class Example(commands.Cog):
         self.bot = bot
 
     @slash_command(guild_ids=[...])  # Create a slash command for the supplied guilds.
-    async def hello(self, ctx):
+    async def hello(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hi, this is a slash command from a cog!")
 
     @slash_command()  # Not passing in guild_ids creates a global slash command (might take an hour to register).
-    async def hi(self, ctx):
+    async def hi(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hi, this is a global slash command from a cog!")
 
 

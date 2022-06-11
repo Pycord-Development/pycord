@@ -11,7 +11,7 @@ bot = discord.Bot()
 
 
 @bot.slash_command(guild_ids=[...])  # create a slash command for the supplied guilds
-async def hello(ctx):
+async def hello(ctx: discord.ApplicationContext):
     """Say hello to the bot"""  # the command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
     # Please note that you MUST respond with ctx.respond(), ctx.defer(), or any other
@@ -22,7 +22,7 @@ async def hello(ctx):
 @bot.slash_command(
     name="hi"
 )  # Not passing in guild_ids creates a global slash command (might take an hour to register)
-async def global_command(ctx, num: int):  # Takes one integer parameter
+async def global_command(ctx: discord.ApplicationContext, num: int):  # Takes one integer parameter
     await ctx.respond(f"This is a global command, {num}!")
 
 

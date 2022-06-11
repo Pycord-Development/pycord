@@ -20,15 +20,15 @@ class Example(commands.Cog):
     )
 
     @greetings.command()
-    async def hello(self, ctx):
+    async def hello(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hello, this is a slash subcommand from a cog!")
 
     @international_greetings.command()
-    async def aloha(self, ctx):
+    async def aloha(self, ctx: discord.ApplicationContext):
         await ctx.respond("Aloha, a Hawaiian greeting")
 
     @secret_greetings.command()
-    async def secret_handshake(self, ctx, member: discord.Member):
+    async def secret_handshake(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
 
