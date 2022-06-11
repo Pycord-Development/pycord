@@ -23,7 +23,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
-
+import os
+import pathlib
 import importlib
 import inspect
 import sys
@@ -739,6 +740,34 @@ class CogMixin:
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
+    def load_extension_from_path(
+        self, *paths: t.Union[str, pathlib.Path], recursive: bool = False, must_exist: bool = True
+    ) -> None:
+        if len(paths) > 1 or not paths:
+            for path_ in paths:
+                self.load_extension_from_path(path_, recursive=recursive, must_exist=must_exist)
+            return
+
+        path = paths[0]
+
+        if isinstance(path, str):
+            path = pathlib.Path(path)
+
+        try:
+            path = path.resolve().relative_to(pathlib.Path.cwd())
+        except ValueError:
+            raise ValueError(f"'{path}' must be relative to the working directory") from None
+
+        if not path.is_dir():
+            if must_exist:
+                raise FileNotFoundError(f"'{path}' is not an existing directory")
+            return
+
+        glob = path.rglob if recursive else path.glob
+        for ext_path in glob("[!_]*.py"):
+            ext = str(ext_path.with_suffix("")).replace(os.sep, ".")
+            self.load_extension(ext)
+        
     def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Loads an extension.
 
