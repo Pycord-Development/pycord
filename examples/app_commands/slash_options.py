@@ -28,7 +28,7 @@ async def hello(
     ctx: discord.ApplicationContext,
     name: str,
     gender: str,
-    age: str,
+    age: int,
 ):
     await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
