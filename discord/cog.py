@@ -41,6 +41,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import discord.utils
@@ -741,7 +742,7 @@ class CogMixin:
             raise errors.ExtensionNotFound(name)
 
     def load_extension_from_path(
-        self, *paths: t.Union[str, pathlib.Path], recursive: bool = False, must_exist: bool = True
+        self, *paths: Union[str, pathlib.Path], recursive: bool = False, must_exist: bool = True
     ) -> None:
         if len(paths) > 1 or not paths:
             for path_ in paths:
