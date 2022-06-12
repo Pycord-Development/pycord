@@ -71,6 +71,8 @@ def default_permissions(**perms: bool) -> Callable:
 
     def inner(command: Callable):
         if isinstance(command, ApplicationCommand):
+            if command.parent is not None:
+                raise RuntimeError("Permission restrictions can only be set on top-level commands")
             command.default_member_permissions = Permissions(**perms)
         else:
             command.__default_member_permissions__ = Permissions(**perms)
