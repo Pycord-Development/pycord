@@ -25,344 +25,117 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import inspect
-import os
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Type, TypeVar, Union
-
-from ..components import SelectMenu, SelectOption
-from ..emoji import Emoji
-from ..enums import ComponentType
-from ..interactions import Interaction
-from ..partial_emoji import PartialEmoji
-from ..utils import MISSING
-from .item import Item, ItemCallbackType
-
-__all__ = (
-    "Select",
-    "select",
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    Generic,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
 )
 
+from ..interactions import Interaction
+
+__all__ = ("Item",)
+
 if TYPE_CHECKING:
-    from ..types.components import SelectMenu as SelectMenuPayload
-    from ..types.interactions import ComponentInteractionData
+    from ..components import Component
+    from ..enums import ComponentType
     from .view import View
 
-S = TypeVar("S", bound="Select")
+I = TypeVar("I", bound="Item")
 V = TypeVar("V", bound="View", covariant=True)
+ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 
-class Select(Item[V]):
-    """Represents a UI select menu.
+class Item(Generic[V]):
+    """Represents the base UI item that all UI components inherit from.
 
-    This is usually represented as a drop down menu.
+    The current UI items supported are:
 
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
+    - :class:`discord.ui.Button`
+    - :class:`discord.ui.Select`
 
     .. versionadded:: 2.0
-
-    Parameters
-    ------------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    options: List[:class:`discord.SelectOption`]
-        A list of options that can be selected in this menu.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = (
-        "placeholder",
-        "min_values",
-        "max_values",
-        "options",
-        "disabled",
-    )
+    __item_repr_attributes__: Tuple[str, ...] = ("row",)
 
-    def __init__(
-        self,
-        *,
-        custom_id: Optional[str] = None,
-        placeholder: Optional[str] = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        options: List[SelectOption] = MISSING,
-        disabled: bool = False,
-        row: Optional[int] = None,
-    ) -> None:
-        super().__init__()
-        self._selected_values: List[str] = []
-        if min_values < 0 or min_values > 25:
-            raise ValueError("min_values must be between 0 and 25")
-        if max_values < 1 or max_values > 25:
-            raise ValueError("max_values must be between 1 and 25")
-        if placeholder and len(placeholder) > 150:
-            raise ValueError("placeholder must be 150 characters or fewer")
-        if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+    def __init__(self):
+        self._view: Optional[V] = None
+        self._row: Optional[int] = None
+        self._rendered_row: Optional[int] = None
+        # This works mostly well but there is a gotcha with
+        # the interaction with from_component, since that technically provides
+        # a custom_id most dispatchable items would get this set to True even though
+        # it might not be provided by the library user. However, this edge case doesn't
+        # actually affect the intended purpose of this check because from_component is
+        # only called upon edit and we're mainly interested during initial creation time.
+        self._provided_custom_id: bool = False
 
-        self._provided_custom_id = custom_id is not None
-        custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        options = [] if options is MISSING else options
-        self._underlying = SelectMenu._raw_construct(
-            custom_id=custom_id,
-            type=ComponentType.select,
-            placeholder=placeholder,
-            min_values=min_values,
-            max_values=max_values,
-            options=options,
-            disabled=disabled,
-        )
-        self.row = row
+    def to_component_dict(self) -> Dict[str, Any]:
+        raise NotImplementedError
 
-    @property
-    def custom_id(self) -> str:
-        """:class:`str`: The ID of the select menu that gets received during an interaction."""
-        return self._underlying.custom_id
-
-    @custom_id.setter
-    def custom_id(self, value: str):
-        if not isinstance(value, str):
-            raise TypeError("custom_id must be None or str")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
-        self._underlying.custom_id = value
-
-    @property
-    def placeholder(self) -> Optional[str]:
-        """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any."""
-        return self._underlying.placeholder
-
-    @placeholder.setter
-    def placeholder(self, value: Optional[str]):
-        if value is not None and not isinstance(value, str):
-            raise TypeError("placeholder must be None or str")
-        if value and len(value) > 150:
-            raise ValueError("placeholder must be 150 characters or fewer")
-
-        self._underlying.placeholder = value
-
-    @property
-    def min_values(self) -> int:
-        """:class:`int`: The minimum number of items that must be chosen for this select menu."""
-        return self._underlying.min_values
-
-    @min_values.setter
-    def min_values(self, value: int):
-        if value < 0 or value > 25:
-            raise ValueError("min_values must be between 0 and 25")
-        self._underlying.min_values = int(value)
-
-    @property
-    def max_values(self) -> int:
-        """:class:`int`: The maximum number of items that must be chosen for this select menu."""
-        return self._underlying.max_values
-
-    @max_values.setter
-    def max_values(self, value: int):
-        if value < 1 or value > 25:
-            raise ValueError("max_values must be between 1 and 25")
-        self._underlying.max_values = int(value)
-
-    @property
-    def options(self) -> List[SelectOption]:
-        """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu."""
-        return self._underlying.options
-
-    @options.setter
-    def options(self, value: List[SelectOption]):
-        if not isinstance(value, list):
-            raise TypeError("options must be a list of SelectOption")
-        if not all(isinstance(obj, SelectOption) for obj in value):
-            raise TypeError("all list items must subclass SelectOption")
-
-        self._underlying.options = value
-
-    def add_option(
-        self,
-        *,
-        label: str,
-        value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
-        default: bool = False,
-    ):
-        """Adds an option to the select menu.
-
-        To append a pre-existing :class:`discord.SelectOption` use the
-        :meth:`append_option` method instead.
-
-        Parameters
-        -----------
-        label: :class:`str`
-            The label of the option. This is displayed to users.
-            Can only be up to 100 characters.
-        value: :class:`str`
-            The value of the option. This is not displayed to users.
-            If not given, defaults to the label. Can only be up to 100 characters.
-        description: Optional[:class:`str`]
-            An additional description of the option, if any.
-            Can only be up to 100 characters.
-        emoji: Optional[Union[:class:`str`, :class:`.Emoji`, :class:`.PartialEmoji`]]
-            The emoji of the option, if available. This can either be a string representing
-            the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`.
-        default: :class:`bool`
-            Whether this option is selected by default.
-
-        Raises
-        -------
-        ValueError
-            The number of options exceeds 25.
-        """
-
-        option = SelectOption(
-            label=label,
-            value=value,
-            description=description,
-            emoji=emoji,
-            default=default,
-        )
-
-        self.append_option(option)
-
-    def append_option(self, option: SelectOption):
-        """Appends an option to the select menu.
-
-        Parameters
-        -----------
-        option: :class:`discord.SelectOption`
-            The option to append to the select menu.
-
-        Raises
-        -------
-        ValueError
-            The number of options exceeds 25.
-        """
-
-        if len(self._underlying.options) > 25:
-            raise ValueError("maximum number of options already provided")
-
-        self._underlying.options.append(option)
-
-    @property
-    def disabled(self) -> bool:
-        """:class:`bool`: Whether the select is disabled or not."""
-        return self._underlying.disabled
-
-    @disabled.setter
-    def disabled(self, value: bool):
-        self._underlying.disabled = bool(value)
-
-    @property
-    def values(self) -> List[str]:
-        """List[:class:`str`]: A list of values that have been selected by the user."""
-        return self._selected_values
-
-    @property
-    def width(self) -> int:
-        return 5
-
-    def to_component_dict(self) -> SelectMenuPayload:
-        return self._underlying.to_dict()
-
-    def refresh_component(self, component: SelectMenu) -> None:
-        self._underlying = component
+    def refresh_component(self, component: Component) -> None:
+        return None
 
     def refresh_state(self, data) -> None:
-        self._selected_values = data.get("values", [])
+        return None
 
     @classmethod
-    def from_component(cls: Type[S], component: SelectMenu) -> S:
-        return cls(
-            custom_id=component.custom_id,
-            placeholder=component.placeholder,
-            min_values=component.min_values,
-            max_values=component.max_values,
-            options=component.options,
-            disabled=component.disabled,
-            row=None,
-        )
+    def from_component(cls: Type[I], component: Component) -> I:
+        return cls()
 
     @property
     def type(self) -> ComponentType:
-        return self._underlying.type
+        raise NotImplementedError
 
     def is_dispatchable(self) -> bool:
-        return True
+        return False
 
+    def is_persistent(self) -> bool:
+        return self._provided_custom_id
 
-def select(
-    *,
-    placeholder: Optional[str] = None,
-    custom_id: Optional[str] = None,
-    min_values: int = 1,
-    max_values: int = 1,
-    options: List[SelectOption] = MISSING,
-    disabled: bool = False,
-    row: Optional[int] = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
-    """A decorator that attaches a select menu to a component.
+    def __repr__(self) -> str:
+        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
+        return f"<{self.__class__.__name__} {attrs}>"
 
-    The function being decorated should have three parameters, ``self`` representing
-    the :class:`discord.ui.View`, the :class:`discord.ui.Select` being pressed and
-    the :class:`discord.Interaction` you receive.
+    @property
+    def row(self) -> Optional[int]:
+        return self._row
 
-    In order to get the selected items that the user has chosen within the callback
-    use :attr:`Select.values`.
+    @row.setter
+    def row(self, value: Optional[int]):
+        if value is None:
+            self._row = None
+        elif 5 > value >= 0:
+            self._row = value
+        else:
+            raise ValueError("row cannot be negative or greater than or equal to 5")
 
-    Parameters
-    ------------
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        It is recommended not to set this parameter to prevent conflicts.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    options: List[:class:`discord.SelectOption`]
-        A list of options that can be selected in this menu.
-    disabled: :class:`bool`
-        Whether the select is disabled or not. Defaults to ``False``.
-    """
+    @property
+    def width(self) -> int:
+        return 1
 
-    def decorator(func: ItemCallbackType) -> ItemCallbackType:
-        if not inspect.iscoroutinefunction(func):
-            raise TypeError("select function must be a coroutine function")
+    @property
+    def view(self) -> Optional[V]:
+        """Optional[:class:`View`]: The underlying view for this item."""
+        return self._view
 
-        func.__discord_ui_model_type__ = Select
-        func.__discord_ui_model_kwargs__ = {
-            "placeholder": placeholder,
-            "custom_id": custom_id,
-            "row": row,
-            "min_values": min_values,
-            "max_values": max_values,
-            "options": options,
-            "disabled": disabled,
-        }
-        return func
+    async def callback(self, interaction: Interaction):
+        """|coro|
 
-    return decorator
+        The callback associated with this UI item.
+
+        This can be overridden by subclasses.
+
+        Parameters
+        -----------
+        interaction: :class:`.Interaction`
+            The interaction that triggered this UI item.
+        """
+        pass
