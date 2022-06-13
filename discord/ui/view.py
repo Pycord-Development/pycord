@@ -546,7 +546,7 @@ class ViewStore:
             return
 
         view, item = value
-        item.refresh_state(interaction)
+        item.refresh_state(interaction.data)
         view._dispatch_item(item, interaction)
 
     def is_message_tracked(self, message_id: int):
