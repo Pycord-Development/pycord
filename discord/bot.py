@@ -245,7 +245,7 @@ class ApplicationCommandMixin(ABC):
             if isinstance(cmd, SlashCommandGroup):
                 if len(cmd.subcommands) != len(match.get("options", [])):
                     return True
-                for subcommand in cmd.subcommands:
+                for i, subcommand in enumerate(cmd.subcommands):
                     match_ = next(
                         (data for data in match["options"] if data["name"] == subcommand.name),
                         MISSING,
@@ -570,8 +570,8 @@ class ApplicationCommandMixin(ABC):
         force: bool = False,
         guild_ids: Optional[List[int]] = None,
         register_guild_commands: bool = True,
-        check_guilds: Optional[List[int]] = None,
-        delete_exiting: bool = True,
+        check_guilds: Optional[List[int]] = [],
+        delete_existing: bool = True,
     ) -> None:
         """|coro|
 
@@ -615,8 +615,6 @@ class ApplicationCommandMixin(ABC):
             Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
 
-        if check_guilds is None:
-            check_guilds = []
         check_guilds = list(set((check_guilds or []) + (self.debug_guilds or [])))
 
         if commands is None:
@@ -649,12 +647,13 @@ class ApplicationCommandMixin(ABC):
         global_permissions: List = []
 
         for i in registered_commands:
-            if cmd := get(
+            cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
                 guild_ids=None,
                 type=i["type"],
-            ):
+            )
+            if cmd:
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
@@ -1195,7 +1194,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             bot.add_listener(on_ready)
             bot.add_listener(my_message, 'on_message')
         """
-        name = func.__name__ if name == MISSING else name
+        name = func.__name__ if name is MISSING else name
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Listeners must be coroutines")
@@ -1217,7 +1216,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             ``func.__name__``.
         """
 
-        name = func.__name__ if name == MISSING else name
+        name = func.__name__ if name is MISSING else name
 
         if name in self.extra_events:
             try:

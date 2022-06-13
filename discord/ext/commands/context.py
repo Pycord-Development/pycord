@@ -268,14 +268,16 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         # consider this to be an *incredibly* strange use case. I'd rather go
         # for this common use case rather than waste performance for the
         # odd one.
-        pattern = re.compile(f"<@!?{user.id}>")
+        pattern = re.compile(r"<@!?%s>" % user.id)
         return pattern.sub("@%s" % user.display_name.replace("\\", r"\\"), self.prefix)
 
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
 
-        return None if self.command is None else self.command.cog
+        if self.command is None:
+            return None
+        return self.command.cog
 
     @discord.utils.cached_property
     def guild(self) -> Optional[Guild]:
@@ -352,7 +354,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
         cmd = cmd.copy()
         cmd.context = self
-        if not args:
+        if len(args) == 0:
             await cmd.prepare_help_command(self, None)
             mapping = cmd.get_bot_mapping()
             injected = wrap_callback(cmd.send_bot_help)

@@ -96,7 +96,7 @@ class Cooldown:
 
     def __init__(self, rate: float, per: float) -> None:
         self.rate: int = int(rate)
-        self.per: float = per
+        self.per: float = float(per)
         self._window: float = 0.0
         self._tokens: int = self.rate
         self._last: float = 0.0

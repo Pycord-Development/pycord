@@ -223,12 +223,10 @@ class ApplicationContext(discord.abc.Messageable):
     async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
         """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
         try:
-            return (
-                await self.followup.send(*args, **kwargs)
-                if self.interaction.response.is_done()
-                else await self.interaction.response.send_message(*args, **kwargs)
-            )
-
+            if not self.interaction.response.is_done():
+                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+            else:
+                return await self.followup.send(*args, **kwargs)  # self.send_followup
         except discord.errors.InteractionResponded:
             return await self.followup.send(*args, **kwargs)
 
@@ -289,7 +287,10 @@ class ApplicationContext(discord.abc.Messageable):
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        return None if self.command is None else self.command.cog
+        if self.command is None:
+            return None
+
+        return self.command.cog
 
 
 class AutocompleteContext:
@@ -329,4 +330,7 @@ class AutocompleteContext:
     @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
-        return None if self.command is None else self.command.cog
+        if self.command is None:
+            return None
+
+        return self.command.cog

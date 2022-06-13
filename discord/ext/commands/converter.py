@@ -363,10 +363,14 @@ class PartialMessageConverter(Converter[discord.PartialMessage]):
 
     @staticmethod
     def _resolve_channel(ctx, guild_id, channel_id) -> Optional[PartialMessageableChannel]:
-        if guild_id is None:
+        if guild_id is not None:
+            guild = ctx.bot.get_guild(guild_id)
+            if guild is not None and channel_id is not None:
+                return guild._resolve_channel(channel_id)  # type: ignore
+            else:
+                return None
+        else:
             return ctx.bot.get_channel(channel_id) if channel_id else ctx.channel
-        guild = ctx.bot.get_guild(guild_id)
-        return guild._resolve_channel(channel_id) if guild is not None and channel_id is not None else None
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialMessage:
         guild_id, message_id, channel_id = self._get_id_matches(ctx, argument)
@@ -393,17 +397,18 @@ class MessageConverter(IDConverter[discord.Message]):
 
     async def convert(self, ctx: Context, argument: str) -> discord.Message:
         guild_id, message_id, channel_id = PartialMessageConverter._get_id_matches(ctx, argument)
-        if message := ctx.bot._connection._get_message(message_id):
+        message = ctx.bot._connection._get_message(message_id)
+        if message:
             return message
         channel = PartialMessageConverter._resolve_channel(ctx, guild_id, channel_id)
         if not channel:
             raise ChannelNotFound(channel_id)
         try:
             return await channel.fetch_message(message_id)
-        except discord.NotFound as e:
-            raise MessageNotFound(argument) from e
-        except discord.Forbidden as e:
-            raise ChannelNotReadable(channel) from e
+        except discord.NotFound:
+            raise MessageNotFound(argument)
+        except discord.Forbidden:
+            raise ChannelNotReadable(channel)
 
 
 class GuildChannelConverter(IDConverter[discord.abc.GuildChannel]):
@@ -610,8 +615,8 @@ class ColourConverter(Converter[discord.Colour]):
             value = int(arg, base=16)
             if not (0 <= value <= 0xFFFFFF):
                 raise BadColourArgument(argument)
-        except ValueError as e:
-            raise BadColourArgument(argument) from e
+        except ValueError:
+            raise BadColourArgument(argument)
         else:
             return discord.Color(value=value)
 
@@ -641,7 +646,7 @@ class ColourConverter(Converter[discord.Colour]):
         if argument[0] == "#":
             return self.parse_hex_number(argument[1:])
 
-        if argument.startswith("0x"):
+        if argument[0:2] == "0x":
             rest = argument[2:]
             # Legacy backwards compatible syntax
             if rest.startswith("#"):
@@ -649,7 +654,7 @@ class ColourConverter(Converter[discord.Colour]):
             return self.parse_hex_number(rest)
 
         arg = argument.lower()
-        if arg.startswith("rgb"):
+        if arg[0:3] == "rgb":
             return self.parse_rgb(arg)
 
         arg = arg.replace(" ", "_")
@@ -683,7 +688,8 @@ class RoleConverter(IDConverter[discord.Role]):
         if not guild:
             raise NoPrivateMessage()
 
-        if match := self._get_id_match(argument) or re.match(r"<@&([0-9]{15,20})>$", argument):
+        match = self._get_id_match(argument) or re.match(r"<@&([0-9]{15,20})>$", argument)
+        if match:
             result = guild.get_role(int(match.group(1)))
         else:
             result = discord.utils.get(guild._roles.values(), name=argument)
@@ -739,8 +745,8 @@ class GuildConverter(IDConverter[discord.Guild]):
         if result is None:
             result = discord.utils.get(ctx.bot.guilds, name=argument)
 
-        if result is None:
-            raise GuildNotFound(argument)
+            if result is None:
+                raise GuildNotFound(argument)
         return result
 
 
@@ -795,7 +801,9 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialEmoji:
-        if match := re.match(r"<(a?):([a-zA-Z0-9\_]{1,32}):([0-9]{15,20})>$", argument):
+        match = re.match(r"<(a?):([a-zA-Z0-9\_]{1,32}):([0-9]{15,20})>$", argument)
+
+        if match:
             emoji_animated = bool(match.group(1))
             emoji_name = match.group(2)
             emoji_id = int(match.group(3))
@@ -923,9 +931,10 @@ class clean_content(Converter[str]):
         }
 
         def repl(match: re.Match) -> str:
-            transform_type = match[1]
-            transform_id = int(match[2])
-            return transforms[transform_type](transform_id)
+            type = match[1]
+            id = int(match[2])
+            transformed = transforms[type](id)
+            return transformed
 
         result = re.sub(r"<(@[!&]?|#)([0-9]{15,20})>", repl, argument)
         if self.escape_markdown:
@@ -992,9 +1001,9 @@ class Greedy(List[T]):
 
 def _convert_to_bool(argument: str) -> bool:
     lowered = argument.lower()
-    if lowered in {"yes", "y", "true", "t", "1", "enable", "on"}:
+    if lowered in ("yes", "y", "true", "t", "1", "enable", "on"):
         return True
-    elif lowered in {"no", "n", "false", "f", "0", "disable", "off"}:
+    elif lowered in ("no", "n", "false", "f", "0", "disable", "off"):
         return False
     else:
         raise BadBoolArgument(lowered)

@@ -563,8 +563,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
 
-        data = await self._state.http.create_webhook(self.id, name=name, avatar=avatar, reason=reason)
-
+        data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
 
     async def follow(self, *, destination: TextChannel, reason: Optional[str] = None) -> Webhook:
@@ -732,7 +731,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         name: str,
         message: Optional[Snowflake] = None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
-        channel_type: Optional[ChannelType] = None,
+        type: Optional[ChannelType] = None,
         reason: Optional[str] = None,
     ) -> Thread:
         """|coro|
@@ -755,7 +754,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
-        channel_type: Optional[:class:`ChannelType`]
+        type: Optional[:class:`ChannelType`]
             The type of thread to create. If a ``message`` is passed then this parameter
             is ignored, as a thread created with a message is always a public thread.
             By default this creates a private thread if this is ``None``.
@@ -775,15 +774,15 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             The created thread
         """
 
-        if channel_type is None:
-            channel_type = ChannelType.private_thread
+        if type is None:
+            type = ChannelType.private_thread
 
         if message is None:
             data = await self._state.http.start_thread_without_message(
                 self.id,
                 name=name,
                 auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
-                type=channel_type.value,
+                type=type.value,
                 reason=reason,
             )
         else:
@@ -1410,8 +1409,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
 
-        data = await self._state.http.create_webhook(self.id, name=name, avatar=avatar, reason=reason)
-
+        data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
 
     @property

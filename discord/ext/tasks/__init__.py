@@ -599,7 +599,12 @@ class Loop(Generic[LF]):
         time_now = (
             now if now is not MISSING else datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
         ).timetz()
-        self._time_index = next((idx for idx, time in enumerate(self._time) if time >= time_now), 0)
+        for idx, time in enumerate(self._time):
+            if time >= time_now:
+                self._time_index = idx
+                break
+        else:
+            self._time_index = 0
 
     def _get_time_parameter(
         self,

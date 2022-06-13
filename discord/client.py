@@ -283,7 +283,7 @@ class Client:
         This could be referred to as the Discord WebSocket protocol latency.
         """
         ws = self.ws
-        return ws.latency if ws else float("nan")
+        return float("nan") if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
         """:class:`bool`: Whether the websocket is currently rate limited.
@@ -293,7 +293,9 @@ class Client:
 
         .. versionadded:: 1.6
         """
-        return self.ws.is_ratelimited() if self.ws else False
+        if self.ws:
+            return self.ws.is_ratelimited()
+        return False
 
     @property
     def user(self) -> Optional[ClientUser]:
@@ -401,7 +403,8 @@ class Client:
         _log.debug("Dispatching event %s", event)
         method = f"on_{event}"
 
-        if listeners := self._listeners.get(event):
+        listeners = self._listeners.get(event)
+        if listeners:
             removed = []
             for i, (future, condition) in enumerate(listeners):
                 if future.cancelled():
@@ -415,7 +418,7 @@ class Client:
                     removed.append(i)
                 else:
                     if result:
-                        if not args:
+                        if len(args) == 0:
                             future.set_result(None)
                         elif len(args) == 1:
                             future.set_result(args[0])
@@ -1354,7 +1357,11 @@ class Client:
             The guild created. This is not the same guild that is
             added to cache.
         """
-        icon_base64 = utils._bytes_to_base64_data(icon) if icon != MISSING else None
+        if icon is not MISSING:
+            icon_base64 = utils._bytes_to_base64_data(icon)
+        else:
+            icon_base64 = None
+
         region_value = str(region)
 
         if code:
@@ -1691,7 +1698,8 @@ class Client:
             The channel that was created.
         """
         state = self._connection
-        if found := state._get_private_channel_by_user(user.id):
+        found = state._get_private_channel_by_user(user.id)
+        if found:
             return found
 
         data = await state.http.start_private_message(user.id)

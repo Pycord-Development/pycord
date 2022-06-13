@@ -841,8 +841,10 @@ def create_activity(data: Optional[ActivityPayload]) -> Optional[ActivityTypes]:
             # we removed the name key from data already
             return CustomActivity(name=name, **data)  # type: ignore
     elif game_type is ActivityType.streaming:
-        # the url won't be None here
-        return Streaming(**data) if "url" in data else Activity(**data)
+        if "url" in data:
+            # the url won't be None here
+            return Streaming(**data)  # type: ignore
+        return Activity(**data)
     elif game_type is ActivityType.listening and "sync_id" in data and "session_id" in data:
         return Spotify(**data)
     return Activity(**data)

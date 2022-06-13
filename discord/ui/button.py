@@ -175,7 +175,7 @@ class Button(Item[V]):
 
     @disabled.setter
     def disabled(self, value: bool):
-        self._underlying.disabled = value
+        self._underlying.disabled = bool(value)
 
     @property
     def label(self) -> Optional[str]:

@@ -231,7 +231,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         if not isinstance(ret, str):
             try:
                 ret = list(ret)
-            except TypeError as e:
+            except TypeError:
                 # It's possible that a generator raised this exception.  Don't
                 # replace it with our own error if that's the case.
                 if isinstance(ret, collections.abc.Iterable):
@@ -240,7 +240,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 raise TypeError(
                     "command_prefix must be plain string, iterable of strings, or callable "
                     f"returning either of these, not {ret.__class__.__name__}"
-                ) from e
+                )
 
             if not ret:
                 raise ValueError("Iterable command_prefix must contain at least one prefix")
@@ -298,12 +298,12 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 else:
                     return ctx
 
-            except TypeError as e:
+            except TypeError:
                 if not isinstance(prefix, list):
                     raise TypeError(
                         "get_prefix must return either a string or a list of string, "
                         f"not {prefix.__class__.__name__}"
-                    ) from e
+                    )
 
                 # It's possible a bad command_prefix got us here.
                 for value in prefix:
@@ -311,7 +311,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                         raise TypeError(
                             "Iterable command_prefix or list returned from get_prefix must "
                             f"contain only strings, not {value.__class__.__name__}"
-                        ) from e
+                        )
 
                 # Getting here shouldn't happen
                 raise
