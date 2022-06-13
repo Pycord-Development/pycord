@@ -23,6 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+
 from __future__ import annotations
 
 import asyncio
@@ -91,10 +92,7 @@ T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
-if TYPE_CHECKING:
-    P = ParamSpec("P")
-else:
-    P = TypeVar("P")
+P = ParamSpec("P") if TYPE_CHECKING else TypeVar("P")
 
 
 def wrap_callback(coro):
@@ -262,9 +260,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
 
             if bucket is not None:
-                retry_after = bucket.update_rate_limit(current)
-
-                if retry_after:
+                if retry_after := bucket.update_rate_limit(current):
                     from ..ext.commands.errors import CommandOnCooldown
 
                     raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
@@ -482,10 +478,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         cog = self.cog
         if self._before_invoke is not None:
             # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, "__self__", cog)
             # __self__ only exists for methods, not functions
             # however, if @command.before_invoke is used, it will be a function
-            if instance:
+            if instance := getattr(self._before_invoke, "__self__", cog):
                 await self._before_invoke(instance, ctx)  # type: ignore
             else:
                 await self._before_invoke(ctx)  # type: ignore
@@ -504,8 +499,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     async def call_after_hooks(self, ctx: ApplicationContext) -> None:
         cog = self.cog
         if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, "__self__", cog)
-            if instance:
+            if instance := getattr(self._after_invoke, "__self__", cog):
                 await self._after_invoke(instance, ctx)  # type: ignore
             else:
                 await self._after_invoke(ctx)  # type: ignore
@@ -548,9 +542,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         ``one two three``.
         """
 
-        parent = self.full_parent_name
-
-        if parent:
+        if parent := self.full_parent_name:
             return f"{parent} {self.name}"
         else:
             return self.name
@@ -666,8 +658,8 @@ class SlashCommand(ApplicationCommand):
         for p in required_params:
             try:
                 next(params)
-            except StopIteration:
-                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.')
+            except StopIteration as e:
+                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.') from e
 
         return params
 
@@ -730,8 +722,8 @@ class SlashCommand(ApplicationCommand):
             _validate_descriptions(o)
             try:
                 p_name, p_obj = next(params)
-            except StopIteration:  # not enough params for all the options
-                raise ClientException("Too many arguments passed to the options kwarg.")
+            except StopIteration as e:  # not enough params for all the options
+                raise ClientException("Too many arguments passed to the options kwarg.") from e
             p_obj = p_obj.annotation
 
             if not any(check(o, p_obj) for check in check_annotations):
@@ -875,7 +867,7 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({i["name"]: i["value"] for i in ctx.interaction.data["options"]})
+                values |= {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
@@ -924,7 +916,7 @@ class SlashCommand(ApplicationCommand):
     def _update_copy(self, kwargs: Dict[str, Any]):
         if kwargs:
             kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
+            kw |= self.__original_kwargs__
             copy = self.__class__(self.callback, **kw)
             return self._ensure_assignment_on_copy(copy)
         else:
@@ -999,7 +991,7 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> None:
         validate_chat_input_name(name)
         validate_chat_input_description(description)
-        self.name = str(name)
+        self.name = name
         self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
@@ -1194,7 +1186,7 @@ class SlashCommandGroup(ApplicationCommand):
     def _update_copy(self, kwargs: Dict[str, Any]):
         if kwargs:
             kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
+            kw |= self.__original_kwargs__
             copy = self.__class__(self.callback, **kw)
             return self._ensure_assignment_on_copy(copy)
         else:
@@ -1285,15 +1277,15 @@ class ContextMenuCommand(ApplicationCommand):
         # next we have the 'ctx' as the next parameter
         try:
             next(params)
-        except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+        except StopIteration as e:
+            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.') from e
 
         # next we have the 'user/message' as the next parameter
         try:
             next(params)
-        except StopIteration:
+        except StopIteration as exc:
             cmd = "user" if type(self) == UserCommand else "message"
-            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
+            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.') from exc
 
         # next there should be no more parameters
         try:
@@ -1416,7 +1408,7 @@ class UserCommand(ContextMenuCommand):
     def _update_copy(self, kwargs: Dict[str, Any]):
         if kwargs:
             kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
+            kw |= self.__original_kwargs__
             copy = self.__class__(self.callback, **kw)
             return self._ensure_assignment_on_copy(copy)
         else:
@@ -1513,7 +1505,7 @@ class MessageCommand(ContextMenuCommand):
     def _update_copy(self, kwargs: Dict[str, Any]):
         if kwargs:
             kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
+            kw |= self.__original_kwargs__
             copy = self.__class__(self.callback, **kw)
             return self._ensure_assignment_on_copy(copy)
         else:

@@ -253,7 +253,7 @@ class Emoji(_EmojiTag, AssetMixin):
         """
 
         payload = {}
-        if name is not MISSING:
+        if name != MISSING:
             payload["name"] = name
         if roles is not MISSING:
             payload["roles"] = [role.id for role in roles]

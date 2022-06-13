@@ -528,7 +528,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def _update_copy(self: CommandT, kwargs: Dict[str, Any]) -> CommandT:
         if kwargs:
             kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
+            kw |= self.__original_kwargs__
             copy = self.__class__(self.callback, **kw)
             return self._ensure_assignment_on_copy(copy)
         else:
@@ -704,9 +704,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         For example in commands ``?a b c test``, the root parent is ``a``.
         """
-        if not self.parent:
-            return None
-        return self.parents[-1]
+        return self.parents[-1] if self.parent else None
 
     @property
     def qualified_name(self) -> str:
@@ -740,8 +738,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             # the iterator and resume parsing
             try:
                 next(iterator)
-            except StopIteration:
-                raise discord.ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+            except StopIteration as e:
+                raise discord.ClientException(f'Callback for {self.name} command is missing "self" parameter.') from e
 
         # next we have the 'ctx' as the next parameter
         try:
@@ -782,10 +780,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         cog = self.cog
         if self._before_invoke is not None:
             # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, "__self__", cog)
             # __self__ only exists for methods, not functions
             # however, if @command.before_invoke is used, it will be a function
-            if instance:
+            if instance := getattr(self._before_invoke, "__self__", cog):
                 await self._before_invoke(instance, ctx)  # type: ignore
             else:
                 await self._before_invoke(ctx)  # type: ignore
@@ -804,8 +801,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     async def call_after_hooks(self, ctx: Context) -> None:
         cog = self.cog
         if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, "__self__", cog)
-            if instance:
+            if instance := getattr(self._after_invoke, "__self__", cog):
                 await self._after_invoke(instance, ctx)  # type: ignore
             else:
                 await self._after_invoke(ctx)  # type: ignore
@@ -826,8 +822,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
             bucket = self._buckets.get_bucket(ctx.message, current)
             if bucket is not None:
-                retry_after = bucket.update_rate_limit(current)
-                if retry_after:
+                if retry_after := bucket.update_rate_limit(current):
                     raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
 
     async def prepare(self, ctx: Context) -> None:
@@ -1088,7 +1083,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
                 should_print = param.default if isinstance(param.default, str) else param.default is not None
                 if should_print:
-                    result.append(f"[{name}={param.default}]" if not greedy else f"[{name}={param.default}]...")
+                    result.append(f"[{name}={param.default}]..." if greedy else f"[{name}={param.default}]")
+
                     continue
                 else:
                     result.append(f"[{name}]")
