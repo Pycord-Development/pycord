@@ -8,6 +8,7 @@ from itertools import groupby
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from .input_text import InputText
+from .select import Select
 
 __all__ = (
     "Modal",
@@ -72,7 +73,7 @@ class Modal:
     @children.setter
     def children(self, value: List[InputText]):
         for item in value:
-            if not isinstance(item, InputText):
+            if not (isinstance(item, InputText) or isinstance(item, Select)):
                 raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
@@ -135,8 +136,8 @@ class Modal:
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not isinstance(item, InputText):
-            raise TypeError(f"expected InputText not {item.__class__!r}")
+        if not (isinstance(item, InputText) or isinstance(item, Select)):
+            raise TypeError(f"expected [InputText, Select] not {item.__class__!r}")
 
         self._weights.add_item(item)
         self._children.append(item)
