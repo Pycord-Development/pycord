@@ -74,7 +74,7 @@ class Modal:
     def children(self, value: List[InputText]):
         for item in value:
             if not (isinstance(item, InputText) or isinstance(item, Select)):
-                raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
+                raise TypeError(f"all Modal children must be InputText or Select, not {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
 
