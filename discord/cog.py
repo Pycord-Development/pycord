@@ -770,16 +770,13 @@ class CogMixin:
             ext = str(ext_path.with_suffix("")).replace(os.sep, ".")
             self.load_extension(ext)
         
-    def load_extension(self, name: Union[str , pathlib.Path], *, package: Optional[str] = None) -> None:
+    def load_extension(self, name: t.Union[str , pathlib.Path], *, package: Optional[str] = None) -> None:
         """Loads an extension.
-
         An extension is a python module that contains commands, cogs, or
         listeners.
-
         An extension must have a global function, ``setup`` defined as
         the entry point on what to do when the extension is loaded. This entry
         point must have a single argument, the ``bot``.
-
         Parameters
         ------------
         name: :class:`str`
@@ -790,9 +787,7 @@ class CogMixin:
             The package name to resolve relative imports with.
             This is required when loading an extension using a relative path, e.g ``.foo.test``.
             Defaults to ``None``.
-
             .. versionadded:: 1.7
-
         Raises
         --------
         ExtensionNotFound
@@ -816,7 +811,8 @@ class CogMixin:
                 raise errors.ExtensionNotFound(name)
 
             self._load_from_module_spec(spec, name)
-       except errors.ExtensionNotFound:
+            
+        except errors.ExtensionNotFound:
             self.load_extensions_from_path(name)
 
     def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
