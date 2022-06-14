@@ -770,7 +770,7 @@ class CogMixin:
             ext = str(ext_path.with_suffix("")).replace(os.sep, ".")
             self.load_extension(ext)
         
-    def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def load_extension(self, name: Union[str , pathlib.Path], *, package: Optional[str] = None) -> None:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -806,16 +806,18 @@ class CogMixin:
         ExtensionFailed
             The extension or its setup function had an execution error.
         """
+        try:
+            name = self._resolve_name(name, package)
+            if name in self.__extensions:
+                raise errors.ExtensionAlreadyLoaded(name)
 
-        name = self._resolve_name(name, package)
-        if name in self.__extensions:
-            raise errors.ExtensionAlreadyLoaded(name)
+            spec = importlib.util.find_spec(name)
+            if spec is None:
+                raise errors.ExtensionNotFound(name)
 
-        spec = importlib.util.find_spec(name)
-        if spec is None:
-            raise errors.ExtensionNotFound(name)
-
-        self._load_from_module_spec(spec, name)
+            self._load_from_module_spec(spec, name)
+       except:
+            self.load_extensions_from_path(name)
 
     def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Unloads an extension.
