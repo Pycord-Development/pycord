@@ -741,7 +741,7 @@ class CogMixin:
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
-    def load_extension_from_path(
+    def load_extensions_from_path(
         self, *paths: Union[str, pathlib.Path], recursive: bool = False, must_exist: bool = True
     ) -> None:
         if len(paths) > 1 or not paths:
