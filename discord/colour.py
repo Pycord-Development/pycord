@@ -329,6 +329,7 @@ class Colour:
         .. versionadded:: 2.0
         """
         return cls(0xF47FFF)
+    
     @classmethod
     def embed_background(cls: Type[CT], theme: str = "dark") -> CT:
         """A factory method that returns a :class:`Color` corresponding to the embed colors on discord clients, with a value of
