@@ -23,10 +23,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
-import os
-import pathlib
+
 import importlib
 import inspect
+import os
+import pathlib
 import sys
 import types
 from typing import (
