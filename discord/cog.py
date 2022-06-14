@@ -816,7 +816,7 @@ class CogMixin:
                 raise errors.ExtensionNotFound(name)
 
             self._load_from_module_spec(spec, name)
-       except:
+       except errors.ExtensionNotFound:
             self.load_extensions_from_path(name)
 
     def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
