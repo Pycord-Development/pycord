@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import importlib
 import inspect
+import os
+import pathlib
 import sys
 import types
 from typing import (
@@ -40,6 +42,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import discord.utils
@@ -739,7 +742,13 @@ class CogMixin:
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
-    def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def load_extension(
+        self,
+        name: str,
+        *,
+        package: Optional[str] = None,
+        recursive: bool = False,
+    ) -> Optional[Union[str, List[str]]]:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -748,6 +757,9 @@ class CogMixin:
         An extension must have a global function, ``setup`` defined as
         the entry point on what to do when the extension is loaded. This entry
         point must have a single argument, the ``bot``.
+
+        The extension passed can either be the direct name of a file within
+        the current working directory or a folder that contains multiple extensions.
 
         Parameters
         ------------
@@ -761,6 +773,11 @@ class CogMixin:
             Defaults to ``None``.
 
             .. versionadded:: 1.7
+        recursive: Optional[:class:`bool`]
+            If subdirectories under the given head directory should be recursively loaded.
+            Defaults to ``False``
+
+            .. versionadded:: 2.0
 
         Raises
         --------
@@ -781,10 +798,73 @@ class CogMixin:
             raise errors.ExtensionAlreadyLoaded(name)
 
         spec = importlib.util.find_spec(name)
+        # This indicates that there is neither a cog nor folder here
         if spec is None:
             raise errors.ExtensionNotFound(name)
+        # This indicates we've found a cog file to load
+        elif spec.has_location:
+            self._load_from_module_spec(spec, name)
+            return name.split(".")[-1]  # Isolates the cog file name
+        # This indicates we've been given a folder as the ModuleSpec exists but is not a file
+        else:
+            glob = pathlib.Path(".").rglob if recursive else pathlib.Path(".").glob
+            extensions = []
 
-        self._load_from_module_spec(spec, name)
+            for ext_file in glob(os.path.join(*name.split("."), "[!_]*.py")):
+                parts = list(ext_file.parts[:-1])
+                parts.append(ext_file.stem)
+                self.load_extension(".".join(parts))
+                extensions.append(ext_file.stem)
+
+            return extensions
+
+    def load_extensions(
+        self, *names: str, package: Optional[str] = None, recursive: bool = False,
+    ) -> Optional[List[str]]:
+        """Loads multiple extensions at once.
+
+        This method simplifies the process of loading multiple
+        extensions by handling the looping of ``load_extension``.
+
+        Parameters
+        -----------
+        names: :class:`str`
+           The extension names to load. It must be dot separated like
+           regular Python imports if accessing a sub-module. e.g.
+           ``foo.test`` if you want to import ``foo/test.py``.
+        package: Optional[:class:`str`]
+            The package name to resolve relative imports with.
+            This is required when loading an extension using a relative path, e.g ``.foo.test``.
+            Defaults to ``None``.
+
+            .. versionadded:: 1.7
+        recursive: Optional[:class:`bool`]
+            If subdirectories under the given head directory should be recursively loaded.
+            Defaults to ``False``
+
+            .. versionadded:: 2.0
+
+        Raises
+        --------
+        ExtensionNotFound
+            A given extension could not be imported.
+            This is also raised if the name of the extension could not
+            be resolved using the provided ``package`` parameter.
+        ExtensionAlreadyLoaded
+            A given extension is already loaded.
+        NoEntryPointError
+            A given extension does not have a setup function.
+        ExtensionFailed
+            A given extension or its setup function had an execution error.
+        """
+
+        loaded_extensions = []
+
+        for ext_path in names:
+            loaded = self.load_extension(ext_path, package=package, recursive=recursive)
+            loaded_extensions.append(loaded)
+
+        return loaded_extensions
 
     def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Unloads an extension.
