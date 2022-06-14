@@ -5,7 +5,7 @@ import os
 import sys
 import traceback
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from .input_text import InputText
 from .select import Select
