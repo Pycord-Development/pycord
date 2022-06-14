@@ -158,6 +158,8 @@ class Option:
                         for i in input_type:
                             if i.__name__ == "GuildChannel":
                                 continue
+                            elif i.__name__ == "TextChannel":
+                                self.channel_types.append(ChannelType.news)
                             if isinstance(i, ThreadOption):
                                 self.channel_types.append(i._type)
                                 continue
