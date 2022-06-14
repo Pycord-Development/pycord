@@ -746,7 +746,7 @@ class CogMixin:
     ) -> None:
         if len(paths) > 1 or not paths:
             for path_ in paths:
-                self.load_extension_from_path(path_, recursive=recursive, must_exist=must_exist)
+                self.load_extensions_from_path(path_, recursive=recursive, must_exist=must_exist)
             return
 
         path = paths[0]
