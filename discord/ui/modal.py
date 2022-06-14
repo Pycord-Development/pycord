@@ -30,8 +30,8 @@ class Modal:
 
     Parameters
     ----------
-    children: :class:`InputText`
-        The initial InputText fields that are displayed in the modal dialog.
+    children: Union[:class:`InputText`, :class:`Select`]
+        The initial InputText fields and Select menus that are displayed in the modal dialog.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
@@ -40,14 +40,14 @@ class Modal:
         Must be 100 characters or fewer.
     """
 
-    def __init__(self, *children: InputText, title: str, custom_id: Optional[str] = None) -> None:
+    def __init__(self, *children: Union[InputText, Select], title: str, custom_id: Optional[str] = None) -> None:
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: List[InputText] = list(children)
+        self._children: List[Union[InputText, Select]] = list(children)
         self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
@@ -66,15 +66,15 @@ class Modal:
         self._title = value
 
     @property
-    def children(self) -> List[InputText]:
+    def children(self) -> List[Union[InputText, Select]]:
         """The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
-    def children(self, value: List[InputText]):
+    def children(self, value: List[Union[InputText, Select]]):
         for item in value:
             if not (isinstance(item, InputText) or isinstance(item, Select)):
-                raise TypeError(f"all Modal children must be InputText or Select, not {item.__class__.__name__}")
+                raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
 
@@ -105,7 +105,7 @@ class Modal:
         self.stop()
 
     def to_components(self) -> List[Dict[str, Any]]:
-        def key(item: InputText) -> int:
+        def key(item: Union[InputText, Select]) -> int:
             return item._rendered_row or 0
 
         children = sorted(self._children, key=key)
@@ -124,12 +124,12 @@ class Modal:
 
         return components
 
-    def add_item(self, item: InputText):
-        """Adds an InputText component to the modal dialog.
+    def add_item(self, item: Union[InputText, Select]):
+        """Adds an InputText or Select component to the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[:class:`InputText`, :class:`Select`]
             The item to add to the modal dialog
         """
 
@@ -142,12 +142,12 @@ class Modal:
         self._weights.add_item(item)
         self._children.append(item)
 
-    def remove_item(self, item: InputText):
-        """Removes an InputText component from the modal dialog.
+    def remove_item(self, item: Union[InputText, Select]):
+        """Removes an InputText or Select component from the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[:class:`InputText`, :class:`Select`]
             The item to remove from the modal dialog.
         """
         try:
@@ -192,7 +192,7 @@ class Modal:
 class _ModalWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: List[InputText]):
+    def __init__(self, children: List[Union[InputText, Select]]):
         self.weights: List[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -201,14 +201,14 @@ class _ModalWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: InputText) -> int:
+    def find_open_space(self, item: Union[InputText, Select]) -> int:
         for index, weight in enumerate(self.weights):
             if weight + item.width <= 5:
                 return index
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: InputText) -> None:
+    def add_item(self, item: Union[InputText, Select]) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -220,7 +220,7 @@ class _ModalWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: InputText) -> None:
+    def remove_item(self, item: Union[InputText, Select]) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
