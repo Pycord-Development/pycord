@@ -798,20 +798,23 @@ class CogMixin:
             raise errors.ExtensionAlreadyLoaded(name)
 
         spec = importlib.util.find_spec(name)
-        # This indicates that there is neither a cog nor folder here
+        # This indicates that there is neither an extension nor folder here
         if spec is None:
             raise errors.ExtensionNotFound(name)
-        # This indicates we've found a cog file to load
+        # This indicates we've found an extension file to load
         elif spec.has_location:
             self._load_from_module_spec(spec, name)
-            return name.split(".")[-1]  # Isolates the cog file name
+            return name.split(".")[-1]  # Isolates the extension file name
         # This indicates we've been given a folder as the ModuleSpec exists but is not a file
         else:
             glob = pathlib.Path(".").rglob if recursive else pathlib.Path(".").glob
             extensions = []
 
+            # Split the directory path and join it with a pattern to gather all .py files that don't start with _
             for ext_file in glob(os.path.join(*name.split("."), "[!_]*.py")):
+                # Gets all parts leading to the directory minus the file name
                 parts = list(ext_file.parts[:-1])
+                # Gets the file name without the extension
                 parts.append(ext_file.stem)
                 self.load_extension(".".join(parts))
                 extensions.append(ext_file.stem)
