@@ -133,7 +133,7 @@ class _GuildPreviewUnique(TypedDict):
 
 
 class GuildPreview(_BaseGuildPreview, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class Guild(_BaseGuildPreview, _GuildOptional):
@@ -163,7 +163,7 @@ class InviteGuild(Guild, total=False):
 
 
 class GuildWithCounts(Guild, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class GuildPrune(TypedDict):
