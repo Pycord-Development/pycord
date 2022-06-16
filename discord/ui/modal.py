@@ -136,8 +136,8 @@ class Modal:
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not (isinstance(item, InputText) or isinstance(item, Select)):
-            raise TypeError(f"expected [InputText, Select] not {item.__class__!r}")
+        if not isinstance(item, (InputText, Select)):
+            raise TypeError(f"expected InputText or Select not {item.__class__!r}")
 
         self._weights.add_item(item)
         self._children.append(item)
