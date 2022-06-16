@@ -170,14 +170,18 @@ class Thread(Messageable, Hashable):
     def _from_data(self, data: ThreadPayload):
         self.id = int(data["id"])
         self.parent_id = int(data["parent_id"])
-        self.owner_id = int(data["owner_id"])
         self.name = data["name"]
         self._type = try_enum(ChannelType, data["type"])
-        self.last_message_id = _get_as_snowflake(data, "last_message_id")
-        self.slowmode_delay = data.get("rate_limit_per_user", 0)
-        self.message_count = data["message_count"]
-        self.member_count = data["member_count"]
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+
+        # Type ignore is used here as the linter doesn't expect ThreadPayload to have an '_invoke_flag' key
+        if not data.get("_invoke_flag"):  # type: ignore
+            self.owner_id = int(data["owner_id"])
+            self.last_message_id = _get_as_snowflake(data, "last_message_id")
+            self.slowmode_delay = data.get("rate_limit_per_user", 0)
+            self.message_count = data["message_count"]
+            self.member_count = data["member_count"]
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+
         self._unroll_metadata(data["thread_metadata"])
 
         try:
