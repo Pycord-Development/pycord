@@ -168,11 +168,13 @@ class Thread(Messageable, Hashable):
         return self.name
 
     def _from_data(self, data: ThreadPayload):
+        # These will always exist
         self.id = int(data["id"])
         self.parent_id = int(data["parent_id"])
         self.name = data["name"]
         self._type = try_enum(ChannelType, data["type"])
 
+        # When getting data through SlashCommand._invoke, these don't always exist
         if not data.pop("_invoke_flag", False):
             self.owner_id = int(data["owner_id"])
             self.last_message_id = _get_as_snowflake(data, "last_message_id")
