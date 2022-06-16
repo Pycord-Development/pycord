@@ -42,7 +42,7 @@ class AutoModTriggerMetadata(TypedDict, total=False):
         
 class AutoModActionMetadata(TypedDict, total=False):
     channel_id: Snowflake
-    duration_seconds: int  # documented as snowflake for some reason
+    duration_seconds: int
         
         
 class AutoModAction(TypedDict):
