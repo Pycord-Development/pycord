@@ -73,7 +73,7 @@ class Modal:
     @children.setter
     def children(self, value: List[Union[InputText, Select]]):
         for item in value:
-            if not (isinstance(item, InputText) or isinstance(item, Select)):
+            if not isinstance(item, (InputText, Select)):
                 raise TypeError(f"all Modal children must be InputText or Select, not {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
