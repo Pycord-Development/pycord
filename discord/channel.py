@@ -179,7 +179,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
     def __init__(self, *, state: ConnectionState, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
-        self._type: int = data["type"]
         self._update(guild, data)
 
     @property
@@ -195,16 +194,18 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.topic: Optional[str] = data.get("topic")
-        self.position: int = data.get("position")
-        self.nsfw: bool = data.get("nsfw", False)
-        # Does this need coercion into `int`? No idea yet.
-        self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
-        self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
-        self._type: int = data.get("type", self._type)
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+        self._type: int = data["type"]
+
+        if not data.get("_invoke_flag"):
+            self.topic: Optional[str] = data.get("topic")
+            self.position: int = data.get("position")
+            self.nsfw: bool = data.get("nsfw", False)
+            # Does this need coercion into `int`? No idea yet.
+            self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
+            self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
+            self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def type(self) -> ChannelType:
@@ -1134,6 +1135,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
+        
         .. versionadded:: 2.0
     flags: :class:`ChannelFlags`
         Extra features of the channel.

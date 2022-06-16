@@ -105,6 +105,7 @@ if TYPE_CHECKING:
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
     from .types.guild import GuildFeature, MFALevel
+    from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
     from .voice_client import VoiceProtocol
@@ -325,8 +326,8 @@ class Guild(Hashable):
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
-        None: _GuildLimit(emoji=50, stickers=0, bitrate=96e3, filesize=8388608),
-        0: _GuildLimit(emoji=50, stickers=0, bitrate=96e3, filesize=8388608),
+        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
+        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
         1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=8388608),
         2: _GuildLimit(emoji=150, stickers=30, bitrate=256e3, filesize=52428800),
         3: _GuildLimit(emoji=250, stickers=60, bitrate=384e3, filesize=104857600),
@@ -357,6 +358,22 @@ class Guild(Hashable):
 
     def _add_member(self, member: Member, /) -> None:
         self._members[member.id] = member
+
+    def _get_and_update_member(self, payload: MemberPayload, user_id: int, cache_flag: bool, /) -> Member:
+        # we always get the member, and we only update if the cache_flag (this cache flag should
+        # always be MemberCacheFlag.interaction or MemberCacheFlag.option) is set to True
+        if user_id in self._members:
+            member = self.get_member(user_id)
+            member._update(payload) if cache_flag else None
+        else:
+            # NOTE:
+            # This is a fallback in case the member is not found in the guild's members.
+            # If this fallback occurs, multiple aspects of the Member
+            # class will be incorrect such as status and activities.
+            member = Member(guild=self, state=self._state, data=payload)  # type: ignore
+            if cache_flag:
+                self._members[user_id] = member
+        return member
 
     def _store_thread(self, payload: ThreadPayload, /) -> Thread:
         thread = Thread(guild=self, state=self._state, data=payload)

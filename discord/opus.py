@@ -537,6 +537,7 @@ class DecodeManager(threading.Thread, _OpusStruct):
             try:
                 data = self.decode_queue.pop(0)
             except IndexError:
+                time.sleep(0.001)
                 continue
 
             try:
