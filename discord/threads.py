@@ -173,8 +173,7 @@ class Thread(Messageable, Hashable):
         self.name = data["name"]
         self._type = try_enum(ChannelType, data["type"])
 
-        # Type ignore is used here as the linter doesn't expect ThreadPayload to have an '_invoke_flag' key
-        if not data.get("_invoke_flag"):  # type: ignore
+        if not data.pop("_invoke_flag", False):
             self.owner_id = int(data["owner_id"])
             self.last_message_id = _get_as_snowflake(data, "last_message_id")
             self.slowmode_delay = data.get("rate_limit_per_user", 0)
