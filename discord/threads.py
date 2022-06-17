@@ -175,15 +175,20 @@ class Thread(Messageable, Hashable):
         self._type = try_enum(ChannelType, data["type"])
 
         # This data may be missing depending on how this object is being created
-        try:
-            self.owner_id = int(data["owner_id"])
-            self.last_message_id = _get_as_snowflake(data, "last_message_id")
-            self.slowmode_delay = data.get("rate_limit_per_user", 0)
-            self.message_count = data["message_count"]
-            self.member_count = data["member_count"]
-            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        except KeyError:
-            pass
+        self.owner_id = int(data.get("owner_id")) if data.get("owner_id", None) is not None else None
+        self.owner_id = data.get("owner_id", None)
+        self.last_message_id = _get_as_snowflake(data, "last_message_id")
+        self.slowmode_delay = data.get("rate_limit_per_user", 0)
+        self.message_count = data.get("message_count", None)
+        self.member_count = data.get("member_count", None)
+        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+
+        # Here, we try to fill in potentially missing data
+        if thread := self.guild.get_thread(self.id):
+            self.owner_id = thread.owner_id if self.owner_id is None else self.owner_id
+            self.last_message_id = thread.last_message_id if self.last_message_id is None else self.last_message_id
+            self.message_count = thread.message_count if self.message_count is None else self.message_count
+            self.member_count = thread.member_count if self.member_count is None else self.member_count
 
         self._unroll_metadata(data["thread_metadata"])
 

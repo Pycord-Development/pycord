@@ -834,8 +834,7 @@ class SlashCommand(ApplicationCommand):
                             # For threads, if this fallback occurs, info like thread owner id, message count,
                             # flags, and more will be missing due to a lack of data sent by Discord.
                             obj_type = _threaded_guild_channel_factory(_data["type"])[0]
-                            if op._raw_type is not Thread:
-                                kw["guild"] = ctx.guild
+                            kw["guild"] = ctx.guild
                         elif op.input_type is SlashCommandOptionType.attachment:
                             obj_type = Attachment
                         arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
