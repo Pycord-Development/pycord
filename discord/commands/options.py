@@ -45,6 +45,14 @@ channel_type_map = {
 
 
 class ThreadOption:
+    """Represents a class that can be passed as the input_type for an Option class.
+
+    Parameters
+    -----------
+    thread_type: Literal["public", "private", "news"]
+        The thread type to expect for this options input.
+    """
+
     def __init__(self, thread_type: Literal["public", "private", "news"]):
         type_map = {
             "public": ChannelType.public_thread,
