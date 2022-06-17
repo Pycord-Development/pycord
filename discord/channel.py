@@ -191,14 +191,14 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         return f"<{self.__class__.__name__} {joined}>"
 
     def _update(self, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]) -> None:
-        # These will always exist
+        # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
         self._type: int = data["type"]
 
-        # When getting data through SlashCommand._invoke, these don't always exist
-        if not data.pop("_invoke_flag", False):
+        # This data may be missing depending on how this object is being created/updated
+        if data.get("position", None) is not None:
             self.topic: Optional[str] = data.get("topic")
             self.position: int = data.get("position")
             self.nsfw: bool = data.get("nsfw", False)

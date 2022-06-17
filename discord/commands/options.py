@@ -41,6 +41,7 @@ channel_type_map = {
     "StageChannel": ChannelType.stage_voice,
     "CategoryChannel": ChannelType.category,
     "Thread": ChannelType.public_thread,
+    "ThreadOption": ChannelType.public_thread,
 }
 
 
@@ -157,9 +158,6 @@ class Option:
                                 input_type = (input_type,)
                         for i in input_type:
                             if i.__name__ == "GuildChannel":
-                                continue
-                            if isinstance(i, ThreadOption):
-                                self.channel_types.append(i._type)
                                 continue
 
                             channel_type = channel_type_map[i.__name__]

@@ -48,7 +48,7 @@ from typing import (
     Union,
 )
 
-from ..channel import _guild_channel_factory, _threaded_guild_channel_factory
+from ..channel import _threaded_guild_channel_factory
 from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
     ApplicationCommandError,
@@ -813,13 +813,11 @@ class SlashCommand(ApplicationCommand):
                     else:
                         arg = Object(id=int(arg))
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
-                    if op.input_type is SlashCommandOptionType.channel and int(arg) in ctx.guild._channels:
-                        arg = ctx.guild.get_channel(int(arg))
-                        _data["_invoke_flag"] = True
-                        arg._update(ctx.guild, _data)
-                    elif op.input_type is SlashCommandOptionType.channel and int(arg) in ctx.guild._threads:
-                        arg = ctx.guild.get_thread(int(arg))
-                        arg._update(_data)
+                    if op.input_type is SlashCommandOptionType.channel and (
+                        int(arg) in ctx.guild._channels or int(arg) in ctx.guild._threads
+                    ):
+                        arg = ctx.guild.get_channel_or_thread(int(arg))
+                        arg._update(_data) if isinstance(arg, Thread) else arg._update(ctx.guild, _data)
                     else:
                         obj_type = None
                         kw = {}
@@ -835,12 +833,9 @@ class SlashCommand(ApplicationCommand):
                             # permissions will be incorrect due to a lack of permission_overwrite data.
                             # For threads, if this fallback occurs, info like thread owner id, message count,
                             # flags, and more will be missing due to a lack of data sent by Discord.
-                            if op._raw_type is Thread:
-                                obj_type = _threaded_guild_channel_factory(_data["type"])[0]
-                                _data["_invoke_flag"] = True
-                            else:
-                                obj_type = _guild_channel_factory(_data["type"])[0]
-                            kw["guild"] = ctx.guild
+                            obj_type = _threaded_guild_channel_factory(_data["type"])[0]
+                            if op._raw_type is not Thread:
+                                kw["guild"] = ctx.guild
                         elif op.input_type is SlashCommandOptionType.attachment:
                             obj_type = Attachment
                         arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
