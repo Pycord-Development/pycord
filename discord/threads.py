@@ -184,7 +184,7 @@ class Thread(Messageable, Hashable):
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
 
         # Here, we try to fill in potentially missing data
-        if thread := self.guild.get_thread(self.id):
+        if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
             self.owner_id = thread.owner_id if self.owner_id is None else self.owner_id
             self.last_message_id = thread.last_message_id if self.last_message_id is None else self.last_message_id
             self.message_count = thread.message_count if self.message_count is None else self.message_count

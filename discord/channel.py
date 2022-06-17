@@ -198,7 +198,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self._type: int = data["type"]
 
         # This data may be missing depending on how this object is being created/updated
-        if data.get("position", None) is not None:
+        if not data.pop("_invoke_flag", False):
             self.topic: Optional[str] = data.get("topic")
             self.position: int = data.get("position")
             self.nsfw: bool = data.get("nsfw", False)

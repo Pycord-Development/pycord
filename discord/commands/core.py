@@ -817,6 +817,7 @@ class SlashCommand(ApplicationCommand):
                         int(arg) in ctx.guild._channels or int(arg) in ctx.guild._threads
                     ):
                         arg = ctx.guild.get_channel_or_thread(int(arg))
+                        _data["_invoke_flag"] = True
                         arg._update(_data) if isinstance(arg, Thread) else arg._update(ctx.guild, _data)
                     else:
                         obj_type = None
