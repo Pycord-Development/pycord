@@ -807,19 +807,21 @@ class CogMixin:
             return name.split(".")[-1]  # Isolates the extension file name
         # This indicates we've been given a folder as the ModuleSpec exists but is not a file
         else:
-            glob = pathlib.Path(".").rglob if recursive else pathlib.Path(".").glob
-            extensions = []
+            # Split the directory path and join it to get an os-native Path object
+            path = pathlib.Path(os.path.join(*name.split(".")))
+            glob = path.rglob if recursive else path.glob
+            loaded_extensions = []
 
-            # Split the directory path and join it with a pattern to gather all .py files that don't start with _
-            for ext_file in glob(os.path.join(*name.split("."), "[!_]*.py")):
+            # Glob all files with a pattern to gather all .py files that don't start with _
+            for ext_file in glob("[!_]*.py"):
                 # Gets all parts leading to the directory minus the file name
                 parts = list(ext_file.parts[:-1])
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
-                self.load_extension(".".join(parts))
-                extensions.append(ext_file.stem)
+                loaded = self.load_extension(".".join(parts))
+                loaded_extensions.append(loaded)
 
-            return extensions
+            return loaded_extensions
 
     def load_extensions(
         self, *names: str, package: Optional[str] = None, recursive: bool = False,
@@ -865,7 +867,10 @@ class CogMixin:
 
         for ext_path in names:
             loaded = self.load_extension(ext_path, package=package, recursive=recursive)
-            loaded_extensions.append(loaded)
+            if isinstance(loaded, list):
+                loaded_extensions.extend(loaded)
+            else:
+                loaded_extensions.append(loaded)
 
         return loaded_extensions
 
