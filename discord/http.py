@@ -899,7 +899,7 @@ class HTTPClient:
         *,
         reason: Optional[str] = None,
     ) -> Response[member.Nickname]:
-        r = Route("PATCH", "/guilds/{guild_id}/members/@me/nick", guild_id=guild_id)
+        r = Route("PATCH", "/guilds/{guild_id}/members/@me", guild_id=guild_id)
         payload = {
             "nick": nickname,
         }
@@ -1136,7 +1136,7 @@ class HTTPClient:
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(
             Route(
-                "POST",
+                "PUT",
                 "/channels/{channel_id}/thread-members/@me",
                 channel_id=channel_id,
             )
