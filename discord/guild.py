@@ -157,14 +157,6 @@ class Guild(Hashable):
         All stickers that the guild owns.
 
         .. versionadded:: 2.0
-    region: :class:`VoiceRegion`
-        The region the guild belongs on. There is a chance that the region
-        will be a :class:`str` if the value is not recognised by the enumerator.
-
-        .. note::
-
-            This attribute is deprecated, to get a voice channel's region,
-            use :attr:`.VoiceChannel.rtc_region`.
     afk_timeout: :class:`int`
         The timeout to get sent to the AFK channel.
     afk_channel: Optional[:class:`VoiceChannel`]
@@ -285,7 +277,6 @@ class Guild(Hashable):
         "name",
         "id",
         "unavailable",
-        "region",
         "owner_id",
         "mfa_level",
         "emojis",
@@ -488,7 +479,6 @@ class Guild(Hashable):
             self._member_count: int = member_count
 
         self.name: str = guild.get("name")
-        self.region: VoiceRegion = try_enum(VoiceRegion, guild.get("region"))
         self.verification_level: VerificationLevel = try_enum(VerificationLevel, guild.get("verification_level"))
         self.default_notifications: NotificationLevel = try_enum(
             NotificationLevel, guild.get("default_message_notifications")
@@ -1597,7 +1587,6 @@ class Guild(Hashable):
         splash: Optional[bytes] = MISSING,
         discovery_splash: Optional[bytes] = MISSING,
         community: bool = MISSING,
-        region: Optional[Union[str, VoiceRegion]] = MISSING,
         afk_channel: Optional[VoiceChannel] = MISSING,
         owner: Snowflake = MISSING,
         afk_timeout: int = MISSING,
@@ -1656,8 +1645,6 @@ class Guild(Hashable):
         community: :class:`bool`
             Whether the guild should be a Community guild. If set to ``True``\, both ``rules_channel``
             and ``public_updates_channel`` parameters are required.
-        region: Union[:class:`str`, :class:`VoiceRegion`]
-            The new region for the guild's voice communication.
         afk_channel: Optional[:class:`VoiceChannel`]
             The new channel that is the AFK channel. Could be ``None`` for no AFK channel.
         afk_timeout: :class:`int`
@@ -1783,9 +1770,6 @@ class Guild(Hashable):
                 raise InvalidArgument("To transfer ownership you must be the owner of the guild.")
 
             fields["owner_id"] = owner.id
-
-        if region is not MISSING:
-            fields["region"] = str(region)
 
         if verification_level is not MISSING:
             if not isinstance(verification_level, VerificationLevel):
