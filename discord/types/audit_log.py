@@ -153,7 +153,6 @@ class _AuditLogChange_Bool(TypedDict):
         "mute",
         "nick",
         "enabled_emoticons",
-        "region",
         "rtc_region",
         "available",
         "archived",
