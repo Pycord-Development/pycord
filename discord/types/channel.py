@@ -140,7 +140,8 @@ GuildChannel = Union[
 ]
 
 
-class DMChannel(_BaseChannel):
+class DMChannel(TypedDict):
+    id: Snowflake
     type: Literal[1]
     last_message_id: Optional[Snowflake]
     recipients: List[PartialUser]

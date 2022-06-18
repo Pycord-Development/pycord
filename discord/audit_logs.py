@@ -233,7 +233,6 @@ class AuditLogChanges:
             "default_notifications",
             _enum_transformer(enums.NotificationLevel),
         ),
-        "region": (None, _enum_transformer(enums.VoiceRegion)),
         "rtc_region": (None, _enum_transformer(enums.VoiceRegion)),
         "video_quality_mode": (None, _enum_transformer(enums.VideoQualityMode)),
         "privacy_level": (None, _enum_transformer(enums.StagePrivacyLevel)),
