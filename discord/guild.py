@@ -160,6 +160,11 @@ class Guild(Hashable):
     region: :class:`VoiceRegion`
         The region the guild belongs on. There is a chance that the region
         will be a :class:`str` if the value is not recognised by the enumerator.
+
+        .. note::
+
+            This attribute is deprecated, to get a voice channel's region,
+            use :attr:`.VoiceChannel.rtc_region`.
     afk_timeout: :class:`int`
         The timeout to get sent to the AFK channel.
     afk_channel: Optional[:class:`VoiceChannel`]
