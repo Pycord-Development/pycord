@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import List, Literal, Optional, TypedDict, Union
 
+from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
 from .guild import (
     DefaultMessageNotificationLevel,
@@ -41,7 +42,6 @@ from .snowflake import Snowflake
 from .threads import Thread
 from .user import User
 from .webhook import Webhook
-from .automod import AutoModRule
 
 AuditLogEvent = Literal[
     1,
