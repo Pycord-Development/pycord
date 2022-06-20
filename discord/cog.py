@@ -769,12 +769,14 @@ class CogMixin:
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
-            This is required when loading an extension using a relative path, e.g ``.foo.test``.
+            This is required when loading an extension using a relative
+            path, e.g ``.foo.test``.
             Defaults to ``None``.
 
             .. versionadded:: 1.7
         recursive: Optional[:class:`bool`]
-            If subdirectories under the given head directory should be recursively loaded.
+            If subdirectories under the given head directory should be
+            recursively loaded.
             Defaults to ``False``
 
             .. versionadded:: 2.0
@@ -822,7 +824,7 @@ class CogMixin:
             # Split the directory path and join it to get an os-native Path object
             path = pathlib.Path(os.path.join(*name.split(".")))
             glob = path.rglob if recursive else path.glob
-            loaded_extensions: Dict[str, Union[errors.ExtensionError, bool]] = {} 
+            loaded_extensions: Dict[str, Union[errors.ExtensionError, bool]] = {}
 
             # Glob all files with a pattern to gather all .py files that don't start with _
             for ext_file in glob("[!_]*.py"):
@@ -849,17 +851,19 @@ class CogMixin:
         Parameters
         -----------
         names: :class:`str`
-           The extension names to load. It must be dot separated like
-           regular Python imports if accessing a sub-module. e.g.
+           The extension or folder names to load. It must be dot separated
+           like regular Python imports if accessing a sub-module. e.g.
            ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
-            This is required when loading an extension using a relative path, e.g ``.foo.test``.
+            This is required when loading an extension using a relative
+            path, e.g ``.foo.test``.
             Defaults to ``None``.
 
             .. versionadded:: 1.7
         recursive: Optional[:class:`bool`]
-            If subdirectories under the given head directory should be recursively loaded.
+            If subdirectories under the given head directory should be
+            recursively loaded.
             Defaults to ``False``
 
             .. versionadded:: 2.0
