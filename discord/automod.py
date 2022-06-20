@@ -354,6 +354,11 @@ class AutoModRule(Hashable):
         
         Deletes this rule.
         
+        Parameters
+        -----------
+        reason: Optional[:class:`str`]
+            The reason for deleting this rule. Shows up in the audit log.
+        
         Raises
         -------
         Forbidden
@@ -395,6 +400,8 @@ class AutoModRule(Hashable):
             The roles that will be exempt from this rule.
         exempt_channels: List[:class:`Snowflake`]
             The channels that will be exempt from this rule.
+        reason: Optional[:class:`str`]
+            The reason for editing this rule. Shows up in the audit log.
         
         Raises
         -------
