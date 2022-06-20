@@ -2361,7 +2361,7 @@ class HTTPClient:
         payload: automod.EditAutoModRule, 
     ) -> Response[automod.AutoModRule]:
         r = Route(
-            "POST",
+            "PATCH",
             "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
             guild_id=guild_id,
             rule_id=rule_id,
