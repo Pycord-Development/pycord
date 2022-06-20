@@ -3575,6 +3575,7 @@ class Guild(Hashable):
         enabled: bool = False,
         exempt_roles: List[Snowflake] = None,
         exempt_channels: List[Snowflake] = None,
+        reason: Optional[str] = None,
     ) -> AutoModRule:
         """
         Creates an auto moderation rule.
@@ -3589,14 +3590,16 @@ class Guild(Hashable):
             The rule's trigger type.
         trigger_metadata: :class:`AutoModTriggerMetadata`
             The rule's trigger metadata.
-        actions: :class:`List[AutoModAction]`
+        actions: List[:class:`AutoModAction`]
             The actions to take when the rule is triggered.
         enabled: :class:`bool`
             Whether the rule is enabled.
-        exempt_roles: :class:`List[Snowflake]`
+        exempt_roles: List[:class:`Snowflake`]
             A list of roles that are exempt from the rule.
-        exempt_channels: :class:`List[Snowflake]`
+        exempt_channels: List[:class:`Snowflake`]
             A list of channels that are exempt from the rule.
+        reason: Optional[:class:`str`]
+            The reason for creating the rule. Shows up in the audit log.
             
         Raises
         -------
@@ -3626,4 +3629,4 @@ class Guild(Hashable):
             payload["exempt_channels"] = [c.id for c in exempt_channels]
             
         data = await self._state.http.create_auto_moderation_rule(self.id, payload)
-        return AutoModRule(state=self._state, data=data)
+        return AutoModRule(state=self._state, data=data, reason=reason)
