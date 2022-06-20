@@ -25,10 +25,10 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import List, TypedDict
 
+from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
-from .automod import AutoModAction, AutoModTriggerType
 
 
 class _MessageEventOptional(TypedDict, total=False):
