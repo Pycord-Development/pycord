@@ -349,7 +349,7 @@ class AutoModRule(Hashable):
             return [Object(channel_id) for channel_id in self.exempt_channel_ids]
         return [self.guild.get_channel(channel_id) or Object(channel_id) for channel_id in self.exempt_channel_ids]
      
-    async def delete(self) -> None:
+    async def delete(self, reason: Optional[str] = None) -> None:
         """|coro|
         
         Deletes this rule.
@@ -361,7 +361,7 @@ class AutoModRule(Hashable):
         HTTPException
             The operation failed.
         """
-        await self._state.http.delete_auto_moderation_rule(self.guild_id, self.id)
+        await self._state.http.delete_auto_moderation_rule(self.guild_id, self.id, reason=reason)
     
     async def edit(
         self,
@@ -373,6 +373,7 @@ class AutoModRule(Hashable):
         enabled: bool = MISSING,
         exempt_roles: List[Snowflake] = MISSING,
         exempt_channels: List[Snowflake] = MISSING,
+        reason: Optional[str] = None,
     ) -> Optional[AutoModRule]:
         """|coro|
         
@@ -434,6 +435,6 @@ class AutoModRule(Hashable):
             payload["exempt_channels"] = [c.id for c in exempt_channels]
             
         if payload:
-            data = await http.edit_auto_moderation_rule(self.guild_id, self.id, payload)
+            data = await http.edit_auto_moderation_rule(self.guild_id, self.id, payload, reason=reason)
             return AutoModRule(state=self._state, data=data)
         
