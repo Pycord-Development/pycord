@@ -32,14 +32,15 @@ from .automod import AutoModAction
 from .enums import ChannelType, try_enum
 
 if TYPE_CHECKING:
-    from .state import ConnectionState
     from .abc import MessageableChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .state import ConnectionState
     from .threads import Thread
     from .types.raw_models import (
+        AutoModActionExecutionEvent as AutoModActionExecution,
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MessageDeleteEvent,
@@ -50,7 +51,6 @@ if TYPE_CHECKING:
         ScheduledEventSubscription,
         ThreadDeleteEvent,
         TypingEvent,
-        AutoModActionExecutionEvent as AutoModActionExecution,   
     )
 
 
@@ -459,13 +459,14 @@ class AutoModActionExecutionEvent:
         self.guild_id: int = int(data["guild_id"])
         self.guild: Optional[Guild] = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
+        self.content: str = data["content"]
+        self.matched_keyword: str = data["matched_keyword"]
+        self.matched_content: str = data["matched_content"]
+        
         if self.guild:
             self.member: Optional[Member] = self.guild.get_member(self.user_id)
         else:
             self.member: Optional[Member] = None
-        self.content: str = data["content"]
-        self.matched_keyword: str = data["matched_keyword"]
-        self.matched_content: str = data["matched_content"]
         
         try:
             # I don't see why this would be optional, but it's documented as such
