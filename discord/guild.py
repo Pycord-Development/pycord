@@ -3542,10 +3542,7 @@ class Guild(Hashable):
             The auto moderation rules for this guild.
         """
         data = await self._state.http.get_auto_moderation_rules(self.id)
-        result = []
-        for rule in data:
-            result.append(AutoModRule(state=self._state, data=rule))
-        return result
+        return [AutoModRule(state=self._state, data=rule) for rule in data]
     
     async def fetch_auto_moderation_rule(self, id: int) -> AutoModRule:
         """|coro|
