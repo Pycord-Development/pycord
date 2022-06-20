@@ -47,7 +47,6 @@ from typing import (
     Union,
 )
 
-
 from . import utils
 from .activity import BaseActivity
 from .automod import AutoModAction, AutoModRule

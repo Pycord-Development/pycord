@@ -22,7 +22,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict, Literal, List, Dict
+from typing import Dict, List, Literal, TypedDict
 
 from .snowflake import Snowflake
 
@@ -57,8 +57,8 @@ class AutoModRule(TypedDict):
     creator_id: Snowflake
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
-    actions: List[AutoModAction]
     trigger_metadata: AutoModTriggerMetadata
+    actions: List[AutoModAction]
     enabled: bool
     exempt_roles: List[Snowflake]
     exempt_channels: List[Snowflake]

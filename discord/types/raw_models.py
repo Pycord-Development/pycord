@@ -121,10 +121,11 @@ class _AutoModActionExecutionEventOptional(TypedDict, total=False):
     matched_keyword: str
     matched_content: str
         
+        
 class AutoModActionExecutionEvent(_AutoModActionExecutionEventOptional):
-    user_id: Snowflake
     guild_id: Snowflake
     action: AutoModAction
     rule_id: Snowflake
     rule_trigger_type: AutoModTriggerType
+    user_id: Snowflake
     content: str

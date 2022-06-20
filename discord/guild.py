@@ -43,7 +43,6 @@ from typing import (
     overload,
 )
 
-
 from . import abc, utils
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .asset import Asset
@@ -555,7 +554,6 @@ class Guild(Hashable):
 
         for obj in guild.get("voice_states", []):
             self._update_voice_state(obj, int(obj["channel_id"]))
-                     
     # TODO: refactor/remove?
     def _sync(self, data: GuildPayload) -> None:
         try:
@@ -3634,9 +3632,12 @@ class Guild(Hashable):
             "actions": [a.to_dict() for a in actions],
             "enabled": enabled,
         }
+        
         if exempt_roles:
             payload["exempt_roles"] = [r.id for r in exempt_roles]
+            
         if exempt_channels:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
+            
         data = await self._state.http.create_auto_moderation_rule(self.id, payload)
         return AutoModRule(state=self._state, data=data)

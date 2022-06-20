@@ -24,16 +24,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from functools import cached_property
 from datetime import timedelta
-from typing import TYPE_CHECKING, Dict, Optional, List, Union
+from functools import cached_property
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from . import utils
 from .enums import (
-    AutoModTriggerType,
-    AutoModEventType,
     AutoModActionType,
+    AutoModEventType,
     AutoModKeywordPresetType,
+    AutoModTriggerType,
     try_enum,
 )
 from .mixins import Hashable
@@ -45,16 +45,16 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
+    from .channel import ForumChannel, TextChannel, VoiceChannel
     from .guild import Guild
     from .member import Member
     from .role import Role
-    from .channel import ForumChannel, TextChannel, VoiceChannel
     from .state import ConnectionState
     from .types.automod import (
-        AutoModRule as AutoModRulePayload,
         AutoModAction as AutoModActionPayload,
-        AutoModTriggerMetadata as AutoModTriggerMetadataPayload,
         AutoModActionMetadata as AutoModActionMetadataPayload,
+        AutoModRule as AutoModRulePayload,
+        AutoModTriggerMetadata as AutoModTriggerMetadataPayload,
     )
 
 MISSING = utils.MISSING
@@ -87,20 +87,26 @@ class AutoModActionMetadata:
 
     def to_dict(self) -> Dict:
         data = {}
+        
         if self.channel_id is not MISSING:
             data["channel_id"] = self.channel_id
+            
         if self.timeout_duration is not MISSING:
             data["duration_seconds"] = self.timeout_duration.total_seconds()
+            
         return data
         
     @classmethod
     def from_dict(cls, data: AutoModActionMetadataPayload):
         kwargs = {}
+        
         if (channel_id := data.get("channel_id")) is not None:
             kwargs["channel_id"] = int(channel_id)
+            
         if (duration_seconds := data.get("duration_seconds")) is not None:
             # might need an explicit int cast
             kwargs["timeout_duration"] = timedelta(seconds=duration_seconds)
+            
         return cls(**kwargs)
 
     def __repr__(self) -> str:
@@ -109,11 +115,12 @@ class AutoModActionMetadata:
             "timeout_duration",
         )
         inner = []
+        
         for attr in repr_attrs:
-            value = getattr(self, attr)
-            if value is not MISSING:
+            if (value := getattr(self, attr)) is not MISSING:
                 inner.append(f"{attr}={value}")
         inner = " ".join(inner)
+        
         return f"<AutoModActionMetadata {inner}>"
 
 
@@ -183,19 +190,25 @@ class AutoModTriggerMetadata:
 
     def to_dict(self) -> Dict:
         data = {}
+        
         if self.keyword_filter is not MISSING:
             data["keyword_filter"] = self.keyword_filter
+            
         if self.presets is not MISSING:
             data["presets"] = [wordset.value for wordset in self.presets]
+            
         return data
         
     @classmethod
     def from_dict(cls, data: AutoModActionMetadataPayload):
         kwargs = {}
-        if data.get("keyword_filter") is not None:
-            kwargs["keyword_filter"] = data["keyword_filter"]
-        if data.get("presets") is not None:
-            kwargs["presets"] = [try_enum(AutoModKeywordPresetType, wordset) for wordset in data["presets"]]
+        
+        if (keyword_filter := data.get("keyword_filter")) is not None:
+            kwargs["keyword_filter"] = keyword_filter
+            
+        if (presets := data.get("presets")) is not None:
+            kwargs["presets"] = [try_enum(AutoModKeywordPresetType, wordset) for wordset in presets]
+            
         return cls(**kwargs)
 
     def __repr__(self) -> str:
@@ -204,11 +217,12 @@ class AutoModTriggerMetadata:
             "presets",
         )
         inner = []
+        
         for attr in repr_attrs:
-            value = getattr(self, attr)
-            if value is not MISSING:
+            if (value := getattr(self, attr)) is not MISSING:
                 inner.append(f"{attr}={value}")
         inner = " ".join(inner)
+        
         return f"<AutoModActionMetadata {inner}>"
 
 
@@ -397,19 +411,26 @@ class AutoModRule(Hashable):
         http = self._state.http
         guild_id = self.guild.id
         payload = {}
+        
         if name is not MISSING:
             payload["name"] = name
+            
         if event_type is not MISSING:
             payload["event_type"] = event_type.value
+            
         if trigger_metadata is not MISSING:
             payload["trigger_metadata"] = trigger_metadata.to_dict()
+            
         if actions is not MISSING:
             payload["actions"] = [a.to_dict() for a in actions]
+            
         if enabled is not MISSING:
             payload["enabled"] = enabled
+            
         # Maybe consider enforcing limits on the number of exempt roles/channels?
         if exempt_roles is not MISSING:
             payload["exempt_roles"] = [r.id for r in exempt_roles]
+            
         if exempt_channels is not MISSING:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
             
@@ -417,5 +438,3 @@ class AutoModRule(Hashable):
             data = await http.edit_auto_moderation_rule(guild_id, self.id, payload)
             return AutoModRule(state=self._state, data=data)
         
-        
-    

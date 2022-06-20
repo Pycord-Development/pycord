@@ -1439,8 +1439,6 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The event's data.
     :type payload: :class:`AutoModActionExecutionEvent`
 
-
-
 .. _discord-api-utils:
 
 Utility Functions

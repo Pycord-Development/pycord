@@ -29,7 +29,6 @@ import datetime
 from typing import TYPE_CHECKING, List, Optional, Set
 
 from .automod import AutoModAction
-
 from .enums import ChannelType, try_enum
 
 if TYPE_CHECKING:
@@ -476,12 +475,14 @@ class AutoModActionExecutionEvent:
         except KeyError:
             self.channel_id: Optional[int] = None
             self.channel: Optional[MessageableChannel] = None
+            
         try:
             self.message_id: Optional[int] = int(data["message_id"])
             self.message: Optional[Message] = state._get_message(self.message_id)
         except KeyError:
             self.message_id: Optional[int] = None
             self.message: Optional[Message] = None
+            
         try:
             self.alert_system_message_id: Optional[int] = int(data["alert_system_message_id"])
             self.alert_system_message: Optional[Message] = state._get_message(self.alert_system_message_id)
