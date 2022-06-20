@@ -409,7 +409,6 @@ class AutoModRule(Hashable):
             when fields are updated.
         """
         http = self._state.http
-        guild_id = self.guild.id
         payload = {}
         
         if name is not MISSING:
@@ -435,6 +434,6 @@ class AutoModRule(Hashable):
             payload["exempt_channels"] = [c.id for c in exempt_channels]
             
         if payload:
-            data = await http.edit_auto_moderation_rule(guild_id, self.id, payload)
+            data = await http.edit_auto_moderation_rule(self.guild_id, self.id, payload)
             return AutoModRule(state=self._state, data=data)
         
