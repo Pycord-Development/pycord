@@ -2346,19 +2346,21 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         payload: automod.CreateAutoModRule,
+        reason: Optional[str] = None,
     ) -> Response[automod.AutoModRule]:
         r = Route(
             "POST",
             "/guilds/{guild_id}/auto-moderation/rules",
             guild_id=guild_id,
         )
-        return self.request(r, json=payload)
+        return self.request(r, json=payload, reason=reason)
     
     def edit_auto_moderation_rule(
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
         payload: automod.EditAutoModRule, 
+        reason: Optional[str] = None,
     ) -> Response[automod.AutoModRule]:
         r = Route(
             "PATCH",
@@ -2366,12 +2368,13 @@ class HTTPClient:
             guild_id=guild_id,
             rule_id=rule_id,
         )
-        return self.request(r, json=payload)
+        return self.request(r, json=payload, reason=reason)
     
     def delete_auto_moderation_rule(
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
+        reason: Optional[str] = None,
     ) -> Response[None]:
         r = Route(
             "DELETE",
@@ -2379,7 +2382,7 @@ class HTTPClient:
             guild_id=guild_id,
             rule_id=rule_id,
         )
-        return self.request(r)
+        return self.request(r, reason=reason)
     
     # Interaction responses
 
