@@ -748,7 +748,7 @@ class CogMixin:
         *,
         package: Optional[str] = None,
         recursive: bool = False,
-    ) -> Optional[Union[str, List[str]]]:
+    ) -> Dict[str, Union[Exception, bool]]:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -762,10 +762,10 @@ class CogMixin:
         the current working directory or a folder that contains multiple extensions.
 
         Parameters
-        ------------
+        -----------
         name: :class:`str`
-            The extension name to load. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            The extension or folder name to load. It must be dot separated
+            like regular Python imports if accessing a sub-module. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
@@ -780,7 +780,7 @@ class CogMixin:
             .. versionadded:: 2.0
 
         Raises
-        --------
+        -------
         ExtensionNotFound
             The extension could not be imported.
             This is also raised if the name of the extension could not
@@ -791,26 +791,38 @@ class CogMixin:
             The extension does not have a setup function.
         ExtensionFailed
             The extension or its setup function had an execution error.
+
+        Returns
+        --------
+        Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]]
+            A dictionary that contains keys that represent the loaded extensions name.
+            The values bound to these keys can either be an exception that occurred when
+            loading that extension or a True boolean representing a successful load.
         """
 
         name = self._resolve_name(name, package)
         if name in self.__extensions:
-            raise errors.ExtensionAlreadyLoaded(name)
+            return {name.split(".")[-1]: errors.ExtensionAlreadyLoaded(name)}
 
         spec = importlib.util.find_spec(name)
         # This indicates that there is neither an extension nor folder here
         if spec is None:
-            raise errors.ExtensionNotFound(name)
+            return {name.split(".")[-1]: errors.ExtensionNotFound(name)}
+
         # This indicates we've found an extension file to load
-        elif spec.has_location:
-            self._load_from_module_spec(spec, name)
-            return name.split(".")[-1]  # Isolates the extension file name
+        if spec.has_location:
+            try:
+                self._load_from_module_spec(spec, name)
+            except Exception as exc:
+                return {name.split(".")[-1]: exc}
+            else:
+                return {name.split(".")[-1]: True}
         # This indicates we've been given a folder as the ModuleSpec exists but is not a file
         else:
             # Split the directory path and join it to get an os-native Path object
             path = pathlib.Path(os.path.join(*name.split(".")))
             glob = path.rglob if recursive else path.glob
-            loaded_extensions = []
+            loaded_extensions: Dict[str, Union[errors.ExtensionError, bool]] = {} 
 
             # Glob all files with a pattern to gather all .py files that don't start with _
             for ext_file in glob("[!_]*.py"):
@@ -819,13 +831,16 @@ class CogMixin:
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
                 loaded = self.load_extension(".".join(parts))
-                loaded_extensions.append(loaded)
+                loaded_extensions.update(loaded)
 
             return loaded_extensions
 
     def load_extensions(
-        self, *names: str, package: Optional[str] = None, recursive: bool = False,
-    ) -> Optional[List[str]]:
+        self,
+        *names: str,
+        package: Optional[str] = None,
+        recursive: bool = False,
+    ) -> Dict[str, Union[Exception, bool]]:
         """Loads multiple extensions at once.
 
         This method simplifies the process of loading multiple
@@ -861,16 +876,20 @@ class CogMixin:
             A given extension does not have a setup function.
         ExtensionFailed
             A given extension or its setup function had an execution error.
+
+        Returns
+        --------
+        Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]]
+            A dictionary that contains keys that represent the loaded extensions name.
+            The values bound to these keys can either be an exception that occurred when
+            loading that extension or a True boolean representing a successful load.
         """
 
-        loaded_extensions = []
+        loaded_extensions = {}
 
         for ext_path in names:
             loaded = self.load_extension(ext_path, package=package, recursive=recursive)
-            if isinstance(loaded, list):
-                loaded_extensions.extend(loaded)
-            else:
-                loaded_extensions.append(loaded)
+            loaded_extensions.update(loaded)
 
         return loaded_extensions
 
