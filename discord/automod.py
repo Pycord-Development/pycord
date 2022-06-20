@@ -334,19 +334,19 @@ class AutoModRule(Hashable):
         then it will be returned as an :class:`Object`.
         """
         if self.guild is None:
-            return []
+            return [Object(role_id) for role_id in self.exempt_role_ids]
         return [self.guild.get_role(role_id) or Object(role_id) for role_id in self.exempt_role_ids]
     
     @cached_property
     def exempt_channels(self) -> List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]:
-        """List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]: The channels 
+        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]: The channels 
         that are exempt from this rule.
        
         If a channel is not found in the guild's cache, 
         then it will be returned as an :class:`Object`.
         """
         if self.guild is None:
-            return []
+            return [Object(channel_id) for channel_id in self.exempt_channel_ids]
         return [self.guild.get_channel(channel_id) or Object(channel_id) for channel_id in self.exempt_channel_ids]
      
     async def delete(self) -> None:
