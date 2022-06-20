@@ -206,6 +206,7 @@ class Guild(Hashable):
 
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
+        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
@@ -241,7 +242,6 @@ class Guild(Hashable):
         - ``VERIFIED``: Guild is a verified server.
         - ``VIP_REGIONS``: Guild has VIP voice regions.
         - ``WELCOME_SCREEN_ENABLED``: Guild has enabled the welcome screen.
-        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
 
     premium_tier: :class:`int`
         The premium tier for this guild. Corresponds to "Nitro Server" in the official UI.
