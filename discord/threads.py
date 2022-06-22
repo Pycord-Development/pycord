@@ -176,7 +176,6 @@ class Thread(Messageable, Hashable):
 
         # This data may be missing depending on how this object is being created
         self.owner_id = int(data.get("owner_id")) if data.get("owner_id", None) is not None else None
-        self.owner_id = data.get("owner_id", None)
         self.last_message_id = _get_as_snowflake(data, "last_message_id")
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
         self.message_count = data.get("message_count", None)
