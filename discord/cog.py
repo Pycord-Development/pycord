@@ -748,7 +748,8 @@ class CogMixin:
         *,
         package: Optional[str] = None,
         recursive: bool = False,
-    ) -> Dict[str, Union[Exception, bool]]:
+        store: bool = True,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -777,7 +778,17 @@ class CogMixin:
         recursive: Optional[:class:`bool`]
             If subdirectories under the given head directory should be
             recursively loaded.
-            Defaults to ``False``
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
+        store: Optional[:class:`bool`]
+            If exceptions should be stored or raised. If set to ``True``,
+            all exceptions encountered will be stored in a returned dictionary
+            as a load status. If set to ``False``, if any exceptions are
+            encountered they will be raised and the bot will be closed.
+            If no exceptions are encountered, a list of loaded
+            extension names will be returned.
+            Defaults to ``True``.
 
             .. versionadded:: 2.0
 
@@ -796,35 +807,43 @@ class CogMixin:
 
         Returns
         --------
-        Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]]
-            A dictionary that contains keys that represent the loaded extensions name.
-            The values bound to these keys can either be an exception that occurred when
-            loading that extension or a True boolean representing a successful load.
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing a list of loaded extensions or
+            nothing due to an encountered exception.
         """
 
         name = self._resolve_name(name, package)
+        isolated_name = name.split(".")[-1]  # Isolates the extension file name
+
         if name in self.__extensions:
-            return {name.split(".")[-1]: errors.ExtensionAlreadyLoaded(name)}
-
-        spec = importlib.util.find_spec(name)
+            exc = errors.ExtensionAlreadyLoaded(name)
+            final_out = {isolated_name: exc} if store else exc
         # This indicates that there is neither an extension nor folder here
-        if spec is None:
-            return {name.split(".")[-1]: errors.ExtensionNotFound(name)}
-
-        # This indicates we've found an extension file to load
-        if spec.has_location:
+        elif (spec := importlib.util.find_spec(name)) is None:
+            exc = errors.ExtensionNotFound(name)
+            final_out = {isolated_name: exc} if store else exc
+        # This indicates we've found an extension file to load, and we need to store any exceptions
+        elif spec.has_location and store:
             try:
                 self._load_from_module_spec(spec, name)
             except Exception as exc:
-                return {name.split(".")[-1]: exc}
+                final_out = {isolated_name: exc}
             else:
-                return {name.split(".")[-1]: True}
-        # This indicates we've been given a folder as the ModuleSpec exists but is not a file
+                final_out = {isolated_name: True}
+        # This indicates we've found an extension file to load, and any encountered exceptions can be raised
+        elif spec.has_location:
+            self._load_from_module_spec(spec, name)
+            final_out = [isolated_name]
+        # This indicates we've been given a folder because the ModuleSpec exists but is not a file
         else:
             # Split the directory path and join it to get an os-native Path object
             path = pathlib.Path(os.path.join(*name.split(".")))
             glob = path.rglob if recursive else path.glob
-            loaded_extensions: Dict[str, Union[errors.ExtensionError, bool]] = {}
+            final_out = {} if store else []
 
             # Glob all files with a pattern to gather all .py files that don't start with _
             for ext_file in glob("[!_]*.py"):
@@ -833,16 +852,20 @@ class CogMixin:
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
                 loaded = self.load_extension(".".join(parts))
-                loaded_extensions.update(loaded)
+                final_out.update(loaded) if store else final_out.extend(loaded)
 
-            return loaded_extensions
+        if isinstance(final_out, Exception):
+            raise final_out
+        else:
+            return final_out
 
     def load_extensions(
         self,
         *names: str,
         package: Optional[str] = None,
         recursive: bool = False,
-    ) -> Dict[str, Union[Exception, bool]]:
+        store: bool = True,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads multiple extensions at once.
 
         This method simplifies the process of loading multiple
@@ -864,7 +887,17 @@ class CogMixin:
         recursive: Optional[:class:`bool`]
             If subdirectories under the given head directory should be
             recursively loaded.
-            Defaults to ``False``
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
+        store: Optional[:class:`bool`]
+            If exceptions should be stored or raised. If set to ``True``,
+            all exceptions encountered will be stored in a returned dictionary
+            as a load status. If set to ``False``, if any exceptions are
+            encountered they will be raised and the bot will be closed.
+            If no exceptions are encountered, a list of loaded
+            extension names will be returned.
+            Defaults to ``True``.
 
             .. versionadded:: 2.0
 
@@ -883,17 +916,20 @@ class CogMixin:
 
         Returns
         --------
-        Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]]
-            A dictionary that contains keys that represent the loaded extensions name.
-            The values bound to these keys can either be an exception that occurred when
-            loading that extension or a True boolean representing a successful load.
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing names of loaded extensions or
+            nothing due to an encountered exception.
         """
 
-        loaded_extensions = {}
+        loaded_extensions = {} if store else []
 
         for ext_path in names:
-            loaded = self.load_extension(ext_path, package=package, recursive=recursive)
-            loaded_extensions.update(loaded)
+            loaded = self.load_extension(ext_path, package=package, recursive=recursive, store=store)
+            loaded_extensions.update(loaded) if store else loaded_extensions.extend(loaded)
 
         return loaded_extensions
 
