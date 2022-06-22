@@ -427,7 +427,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param shard_id: The shard ID that has resumed.
     :type shard_id: :class:`int`
 
-.. function:: on_error(event, *args, **kwargs)
+.. function:: on_error(event, error, *args)
 
     Usually when an event raises an uncaught exception, a traceback is
     printed to stderr and the exception is ignored. If you want to
@@ -453,10 +453,10 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     :param event: The name of the event that raised the exception.
     :type event: :class:`str`
+    :param error: The error that was raised.
+    :type error: :class:`Exception` derived
 
     :param args: The positional arguments for the event that raised the
-        exception.
-    :param kwargs: The keyword arguments for the event that raised the
         exception.
 
 .. function:: on_socket_event_type(event_type)
