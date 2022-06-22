@@ -1320,32 +1320,20 @@ class Message(Hashable):
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument("cannot pass both file and files parameter to edit()")
 
-        if file is not MISSING:
+        if file is not MISSING or files is not MISSING:
+            if file is not MISSING:
+                if not isinstance(file, File):
+                    raise InvalidArgument("file parameter must be of type File")
+                files = [file]
+            else:
+                if len(files) > 10:
+                    raise InvalidArgument("files parameter must be a list of up to 10 elements")
+                elif not all(isinstance(file, File) for file in files):
+                    raise InvalidArgument("files parameter must be a list of File")
+                    
             if "attachments" not in payload:
                 # don't want it to remove any attachments when we just add a new file
                 payload["attachments"] = [a.to_dict() for a in self.attachments]
-            if not isinstance(file, File):
-                raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await self._state.http.edit_files(
-                    self.channel.id,
-                    self.id,
-                    files=[file],
-                    **payload,
-                )
-            finally:
-                file.close()
-
-        elif files is not MISSING:
-            if len(files) > 10:
-                raise InvalidArgument("files parameter must be a list of up to 10 elements")
-            elif not all(isinstance(file, File) for file in files):
-                raise InvalidArgument("files parameter must be a list of File")
-            if "attachments" not in payload:
-                # don't want it to remove any attachments when we just add a new file
-                payload["attachments"] = [a.to_dict() for a in self.attachments]
-
             try:
                 data = await self._state.http.edit_files(
                     self.channel.id,
