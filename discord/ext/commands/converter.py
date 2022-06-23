@@ -563,6 +563,25 @@ class CategoryChannelConverter(IDConverter[discord.CategoryChannel]):
         return GuildChannelConverter._resolve_channel(ctx, argument, "categories", discord.CategoryChannel)
 
 
+class ForumChannelConverter(IDConverter[discord.ForumChannel]):
+    """Converts to a :class:`~discord.ForumChannel`.
+
+    All lookups are via the local guild. If in a DM context, then the lookup
+    is done by the global cache.
+
+    The lookup strategy is as follows (in order):
+
+    1. Lookup by ID.
+    2. Lookup by mention.
+    3. Lookup by name
+
+    .. versionadded:: 2.0
+    """
+
+    async def convert(self, ctx: Context, argument: str) -> discord.ForumChannel:
+        return GuildChannelConverter._resolve_channel(ctx, argument, "forum_channels", discord.ForumChannel)
+
+
 class ThreadConverter(IDConverter[discord.Thread]):
     """Coverts to a :class:`~discord.Thread`.
 
