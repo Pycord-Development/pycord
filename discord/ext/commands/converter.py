@@ -1062,6 +1062,7 @@ CONVERTER_MAPPING: Dict[Type[Any], Any] = {
     discord.Emoji: EmojiConverter,
     discord.PartialEmoji: PartialEmojiConverter,
     discord.CategoryChannel: CategoryChannelConverter,
+    discord.ForumChannel: ForumChannelConverter,
     discord.Thread: ThreadConverter,
     discord.abc.GuildChannel: GuildChannelConverter,
     discord.GuildSticker: GuildStickerConverter,
