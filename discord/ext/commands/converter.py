@@ -955,7 +955,7 @@ class clean_content(Converter[str]):
             transformed = transforms[type](id)
             return transformed
 
-        result = re.sub(r"<(?:@[!&]?|#)(\d{15,20})>$", repl, argument)
+        result = re.sub(r"<(@[!&]?|#)(\d{15,20})>", repl, argument)
         if self.escape_markdown:
             result = discord.utils.escape_markdown(result)
         elif self.remove_markdown:
