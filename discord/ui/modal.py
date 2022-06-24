@@ -46,7 +46,7 @@ class Modal:
 
     def __init__(self, *children: InputText, title: str, custom_id: Optional[str] = None,
                  timeout: Optional[float] = None) -> None:
-        self.timeout = timeout
+        self.timeout: Optional[float] = timeout
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: Optional[str] = custom_id or os.urandom(16).hex()
@@ -301,6 +301,7 @@ class ModalStore:
         modal._start_listening_from_store(self)
 
     def remove_modal(self, modal: Modal, user_id):
+        modal.stop()
         self._modals.pop((user_id, modal.custom_id))
 
     async def dispatch(self, user_id: int, custom_id: str, interaction: Interaction):
