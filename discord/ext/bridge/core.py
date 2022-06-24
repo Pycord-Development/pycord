@@ -41,9 +41,8 @@ from ..commands import (
 
 __all__ = ("BridgeCommand", "bridge_command", "BridgeExtCommand", "BridgeSlashCommand")
 
-from ..commands.converter import _convert_to_bool
-
 from ...utils import get
+from ..commands.converter import _convert_to_bool
 
 
 class BridgeSlashCommand(SlashCommand):

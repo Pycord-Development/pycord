@@ -613,6 +613,10 @@ class ConnectionState:
     def parse_resumed(self, data) -> None:
         self.dispatch("resumed")
 
+    def parse_application_command_permissions_update(self, data) -> None:
+        # unsure what the implementation would be like
+        pass
+
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)
         # channel would be the correct type here
@@ -1571,7 +1575,6 @@ class ConnectionState:
                         self._remove_voice_client(guild.id)
                     coro = voice.on_voice_state_update(data)
                     asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
-
 
     def parse_voice_server_update(self, data) -> None:
         try:

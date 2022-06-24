@@ -71,6 +71,10 @@ class TextChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[0]
 
 
+class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
+    type: Literal[15]
+
+
 class NewsChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[5]
 
@@ -132,10 +136,12 @@ GuildChannel = Union[
     CategoryChannel,
     StageChannel,
     ThreadChannel,
+    ForumChannel,
 ]
 
 
-class DMChannel(_BaseChannel):
+class DMChannel(TypedDict):
+    id: Snowflake
     type: Literal[1]
     last_message_id: Optional[Snowflake]
     recipients: List[PartialUser]
