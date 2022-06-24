@@ -1712,6 +1712,7 @@ class PartialMessage(Hashable):
     def __init__(self, *, channel: PartialMessageableChannel, id: int):
         if channel.type not in (
             ChannelType.text,
+            ChannelType.voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,
