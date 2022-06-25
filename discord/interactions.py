@@ -182,7 +182,8 @@ class Interaction:
             except KeyError:
                 pass
             else:
-                self.user = Member(state=self._state, guild=guild, data=member)  # type: ignore
+                cache_flag = self._state.member_cache_flags.interaction
+                self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 self._permissions = int(member.get("permissions", 0))
         else:
             try:
@@ -623,7 +624,7 @@ class InteractionResponse:
             before deleting the message we just sent.
         file: :class:`File`
             The file to upload.
-        files: :class:`List[File]`
+        files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
 
         Raises

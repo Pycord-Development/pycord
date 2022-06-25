@@ -1,14 +1,11 @@
-import os
-
 import discord
-from discord.commands import ApplicationContext, option
 
 bot = discord.Bot(debug_guilds=[...])
 bot.connections = {}
 
 
 @bot.command()
-@option(
+@discord.option(
     "encoding",
     choices=[
         "mp3",
@@ -21,10 +18,8 @@ bot.connections = {}
         "m4a",
     ],
 )
-async def start(ctx: ApplicationContext, encoding: str):
-    """
-    Record your voice!
-    """
+async def start(ctx: discord.ApplicationContext, encoding: str):
+    """Record your voice!"""
 
     voice = ctx.author.voice
 
@@ -70,10 +65,8 @@ async def finished_callback(sink, channel: discord.TextChannel, *args):
 
 
 @bot.command()
-async def stop(ctx):
-    """
-    Stop recording.
-    """
+async def stop(ctx: discord.ApplicationContext):
+    """Stop recording."""
     if ctx.guild.id in bot.connections:
         vc = bot.connections[ctx.guild.id]
         vc.stop_recording()

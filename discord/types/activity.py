@@ -112,4 +112,4 @@ class Activity(_BaseActivity, total=False):
     secrets: ActivitySecrets
     session_id: Optional[str]
     instance: bool
-    buttons: List[ActivityButton]
+    buttons: List[str]
