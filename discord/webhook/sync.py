@@ -1020,7 +1020,7 @@ class SyncWebhook(BaseWebhook):
             The length of ``embeds`` was invalid
         InvalidArgument
             There was no token associated with this webhook or you specified both
-            a thread to send to and a thread to create (the ``thread`` and ``name`` parameters).
+            a thread to send to and a thread to create (the ``thread`` and ``thread_name`` parameters).
 
         Returns
         -------
