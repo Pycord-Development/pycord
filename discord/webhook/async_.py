@@ -1508,7 +1508,7 @@ class Webhook(BaseWebhook):
         InvalidArgument
             Either there was no token associated with this webhook, ``ephemeral`` was passed
             with the improper webhook type, there was no state attached with this webhook when
-            giving it a view, or you specified both ``name`` and ``thread``.
+            giving it a view, or you specified both ``thread_name`` and ``thread``.
 
         Returns
         ---------
