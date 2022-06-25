@@ -914,7 +914,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: Literal[True],
     ) -> SyncWebhookMessage:
         ...
@@ -933,7 +933,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: Literal[False] = ...,
     ) -> None:
         ...
@@ -951,7 +951,7 @@ class SyncWebhook(BaseWebhook):
         embeds: List[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: bool = False,
     ) -> Optional[SyncWebhookMessage]:
         """Sends a message using the webhook.
@@ -1001,7 +1001,7 @@ class SyncWebhook(BaseWebhook):
             The thread to send this message to.
 
             .. versionadded:: 2.0
-        name: :class:`str`
+        thread_name: :class:`str`
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
@@ -1035,7 +1035,7 @@ class SyncWebhook(BaseWebhook):
         if content is None:
             content = MISSING
 
-        if thread and name:
+        if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and a thread name")
 
         params = handle_message_parameters(
@@ -1063,7 +1063,7 @@ class SyncWebhook(BaseWebhook):
             multipart=params.multipart,
             files=params.files,
             thread_id=thread_id,
-            thread_name=name,
+            thread_name=thread_name,
             wait=wait,
         )
         if wait:

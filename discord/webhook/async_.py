@@ -1376,7 +1376,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: Literal[True],
     ) -> WebhookMessage:
         ...
@@ -1397,7 +1397,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: Literal[False] = ...,
     ) -> None:
         ...
@@ -1417,7 +1417,7 @@ class Webhook(BaseWebhook):
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
         thread: Snowflake = MISSING,
-        name: Optional[str] = None,
+        thread_name: Optional[str] = None,
         wait: bool = False,
         delete_after: float = None,
     ) -> Optional[WebhookMessage]:
@@ -1485,7 +1485,7 @@ class Webhook(BaseWebhook):
             The thread to send this webhook to.
 
             .. versionadded:: 2.0
-        name: :class:`str`
+        thread_name: :class:`str`
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
@@ -1523,8 +1523,8 @@ class Webhook(BaseWebhook):
         if content is None:
             content = MISSING
 
-        if thread and name:
-            raise InvalidArgument("You cannot specify both a thread and a thread name")
+        if thread and thread_name:
+            raise InvalidArgument("You cannot specify both a thread and thread_name")
 
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
@@ -1566,7 +1566,7 @@ class Webhook(BaseWebhook):
             multipart=params.multipart,
             files=params.files,
             thread_id=thread_id,
-            thread_name=name,
+            thread_name=thread_name,
             wait=wait,
         )
 
