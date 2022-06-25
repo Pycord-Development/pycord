@@ -710,7 +710,7 @@ class SyncWebhook(BaseWebhook):
             A partial webhook is just a webhook object with an ID and a token.
         """
         m = re.search(
-            r"discord(?:app)?.com/api/webhooks/(?P<id>\d{17,20})/(?P<token>[A-z\d.\-_]{60,68})",
+            r"discord(?:app)?.com/api/webhooks/(?P<id>\d{17,20})/(?P<token>[\w\.\-_]{60,68})",
             url,
         )
         if m is None:

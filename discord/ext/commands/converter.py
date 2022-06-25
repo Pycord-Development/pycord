@@ -137,7 +137,7 @@ class Converter(Protocol[T_co]):
         raise NotImplementedError("Derived classes need to implement this.")
 
 
-_ID_REGEX = re.compile(r"(\d{15,20})$")
+_ID_REGEX = re.compile(r"([0-9]{15,20})$")
 
 
 class IDConverter(Converter[T_co]):
@@ -160,7 +160,7 @@ class ObjectConverter(IDConverter[discord.Object]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Object:
-        match = self._get_id_match(argument) or re.match(r"<(?:@[!&]?|#)(\d{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<(?:@[!&]?|#)([0-9]{15,20})>$", argument)
 
         if match is None:
             raise ObjectNotFound(argument)
@@ -225,7 +225,7 @@ class MemberConverter(IDConverter[discord.Member]):
 
     async def convert(self, ctx: Context, argument: str) -> discord.Member:
         bot = ctx.bot
-        match = self._get_id_match(argument) or re.match(r"<@!?(\d{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<@!?([0-9]{15,20})>$", argument)
         guild = ctx.guild
         result = None
         user_id = None
@@ -280,7 +280,7 @@ class UserConverter(IDConverter[discord.User]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.User:
-        match = self._get_id_match(argument) or re.match(r"<@!?(\d{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<@!?([0-9]{15,20})>$", argument)
         result = None
         state = ctx._state
 
@@ -336,11 +336,11 @@ class PartialMessageConverter(Converter[discord.PartialMessage]):
 
     @staticmethod
     def _get_id_matches(ctx, argument):
-        id_regex = re.compile(r"(?:(?P<channel_id>\d{15,20})-)?(?P<message_id>\d{15,20})$")
+        id_regex = re.compile(r"(?:(?P<channel_id>[0-9]{15,20})-)?(?P<message_id>[0-9]{15,20})$")
         link_regex = re.compile(
             r"https?://(?:(ptb|canary|www)\.)?discord(?:app)?\.com/channels/"
-            r"(?P<guild_id>\d{15,20}|@me)"
-            r"/(?P<channel_id>\d{15,20})/(?P<message_id>\d{15,20})/?$"
+            r"(?P<guild_id>[0-9]{15,20}|@me)"
+            r"/(?P<channel_id>[0-9]{15,20})/(?P<message_id>[0-9]{15,20})/?$"
         )
         match = id_regex.match(argument) or link_regex.match(argument)
         if not match:
@@ -433,7 +433,7 @@ class GuildChannelConverter(IDConverter[discord.abc.GuildChannel]):
     def _resolve_channel(ctx: Context, argument: str, attribute: str, type: Type[CT]) -> CT:
         bot = ctx.bot
 
-        match = IDConverter._get_id_match(argument) or re.match(r"<#(\d{15,20})>$", argument)
+        match = IDConverter._get_id_match(argument) or re.match(r"<#([0-9]{15,20})>$", argument)
         result = None
         guild = ctx.guild
 
@@ -464,7 +464,7 @@ class GuildChannelConverter(IDConverter[discord.abc.GuildChannel]):
     def _resolve_thread(ctx: Context, argument: str, attribute: str, type: Type[TT]) -> TT:
         bot = ctx.bot
 
-        match = IDConverter._get_id_match(argument) or re.match(r"<#(\d{15,20})>$", argument)
+        match = IDConverter._get_id_match(argument) or re.match(r"<#([0-9]{15,20})>$", argument)
         result = None
         guild = ctx.guild
 
@@ -626,7 +626,7 @@ class ColourConverter(Converter[discord.Colour]):
         Added support for ``rgb`` function and 3-digit hex shortcuts
     """
 
-    RGB_REGEX = re.compile(r"rgb\s*\((?P<r>\d{1,3}%?)\s*,\s*(?P<g>\d{1,3}%?)\s*,\s*(?P<b>\d{1,3}%?)\s*\)")
+    RGB_REGEX = re.compile(r"rgb\s*\((?P<r>[0-9]{1,3}%?)\s*,\s*(?P<g>[0-9]{1,3}%?)\s*,\s*(?P<b>[0-9]{1,3}%?)\s*\)")
 
     def parse_hex_number(self, argument):
         arg = "".join(i * 2 for i in argument) if len(argument) == 3 else argument
@@ -707,7 +707,7 @@ class RoleConverter(IDConverter[discord.Role]):
         if not guild:
             raise NoPrivateMessage()
 
-        match = self._get_id_match(argument) or re.match(r"<@&(\d{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<@&([0-9]{15,20})>$", argument)
         if match:
             result = guild.get_role(int(match.group(1)))
         else:
@@ -786,7 +786,7 @@ class EmojiConverter(IDConverter[discord.Emoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Emoji:
-        match = self._get_id_match(argument) or re.match(r"<a?:\w{1,32}:(\d{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<a?:\w{1,32}:([0-9]{15,20})>$", argument)
         result = None
         bot = ctx.bot
         guild = ctx.guild
@@ -820,7 +820,7 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialEmoji:
-        match = re.match(r"<(a?):(\w{1,32}):(\d{15,20})>$", argument)
+        match = re.match(r"<(a?):(\w{1,32}):([0-9]{15,20})>$", argument)
 
         if match:
             emoji_animated = bool(match.group(1))
@@ -955,7 +955,7 @@ class clean_content(Converter[str]):
             transformed = transforms[type](id)
             return transformed
 
-        result = re.sub(r"<(@[!&]?|#)(\d{15,20})>", repl, argument)
+        result = re.sub(r"<(@[!&]?|#)([0-9]{15,20})>", repl, argument)
         if self.escape_markdown:
             result = discord.utils.escape_markdown(result)
         elif self.remove_markdown:
