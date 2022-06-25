@@ -48,7 +48,7 @@ from typing import (
     Union,
 )
 
-from ..channel import _guild_channel_factory
+from ..channel import _threaded_guild_channel_factory
 from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
     ApplicationCommandError,
@@ -61,6 +61,7 @@ from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
+from ..threads import Thread
 from ..user import User
 from ..utils import async_all, find, utcnow
 from .context import ApplicationContext, AutocompleteContext
@@ -689,7 +690,7 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = option
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
                     option = p_obj.default
                 else:
                     option = Option(option)
@@ -802,7 +803,8 @@ class SlashCommand(ApplicationCommand):
                     if (_user_data := resolved.get("users", {}).get(arg)) is not None:
                         # We resolved the user from the user id
                         _data["user"] = _user_data
-                    arg = Member(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                    cache_flag = ctx.interaction._state.member_cache_flags.interaction
+                    arg = ctx.guild._get_and_update_member(_data, int(arg), cache_flag)
                 elif op.input_type is SlashCommandOptionType.mentionable:
                     if (_data := resolved.get("users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
@@ -811,19 +813,32 @@ class SlashCommand(ApplicationCommand):
                     else:
                         arg = Object(id=int(arg))
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
-                    obj_type = None
-                    kw = {}
-                    if op.input_type is SlashCommandOptionType.user:
-                        obj_type = User
-                    elif op.input_type is SlashCommandOptionType.role:
-                        obj_type = Role
-                        kw["guild"] = ctx.guild
-                    elif op.input_type is SlashCommandOptionType.channel:
-                        obj_type = _guild_channel_factory(_data["type"])[0]
-                        kw["guild"] = ctx.guild
-                    elif op.input_type is SlashCommandOptionType.attachment:
-                        obj_type = Attachment
-                    arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
+                    if op.input_type is SlashCommandOptionType.channel and (
+                        int(arg) in ctx.guild._channels or int(arg) in ctx.guild._threads
+                    ):
+                        arg = ctx.guild.get_channel_or_thread(int(arg))
+                        _data["_invoke_flag"] = True
+                        arg._update(_data) if isinstance(arg, Thread) else arg._update(ctx.guild, _data)
+                    else:
+                        obj_type = None
+                        kw = {}
+                        if op.input_type is SlashCommandOptionType.user:
+                            obj_type = User
+                        elif op.input_type is SlashCommandOptionType.role:
+                            obj_type = Role
+                            kw["guild"] = ctx.guild
+                        elif op.input_type is SlashCommandOptionType.channel:
+                            # NOTE:
+                            # This is a fallback in case the channel/thread is not found in the
+                            # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
+                            # permissions will be incorrect due to a lack of permission_overwrite data.
+                            # For threads, if this fallback occurs, info like thread owner id, message count,
+                            # flags, and more will be missing due to a lack of data sent by Discord.
+                            obj_type = _threaded_guild_channel_factory(_data["type"])[0]
+                            kw["guild"] = ctx.guild
+                        elif op.input_type is SlashCommandOptionType.attachment:
+                            obj_type = Attachment
+                        arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
                     # We couldn't resolve the object, so we just return an empty object
                     arg = Object(id=int(arg))
