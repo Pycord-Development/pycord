@@ -601,5 +601,5 @@ class AuditLogEntry(Hashable):
     def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
         return self.guild.get_thread(target_id) or Object(id=target_id)
 
-    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, None]:
+    def _convert_target_scheduled_event(self, target_id: int) -> Optional[ScheduledEvent]:
         return self.guild.get_scheduled_event(target_id) or Object(id=target_id)
