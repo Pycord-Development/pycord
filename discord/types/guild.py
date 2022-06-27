@@ -133,12 +133,11 @@ class _GuildPreviewUnique(TypedDict):
 
 
 class GuildPreview(_BaseGuildPreview, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class Guild(_BaseGuildPreview, _GuildOptional):
     owner_id: Snowflake
-    region: str
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
     verification_level: VerificationLevel
@@ -163,7 +162,7 @@ class InviteGuild(Guild, total=False):
 
 
 class GuildWithCounts(Guild, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class GuildPrune(TypedDict):
