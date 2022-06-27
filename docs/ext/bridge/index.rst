@@ -42,10 +42,10 @@ Example usage:
 .. _discord_ext_bridge_api:
 
 API Reference
--------------
+===============
 
 Bots
-~~~~
+-----
 
 .. attributetable:: discord.ext.bridge.Bot
 
@@ -62,13 +62,8 @@ Bots
 .. autoclass:: discord.ext.bridge.AutoShardedBot
     :members:
 
-    .. automethod:: Bot.add_bridge_command()
-
-    .. automethod:: Bot.bridge_command()
-        :decorator:
-
 Commands
-~~~~~~~~
+---------
 
 .. attributetable:: discord.ext.bridge.BridgeCommand
 
@@ -85,7 +80,7 @@ Commands
     :members:
 
 Context
-~~~~~~~
+--------
 
 .. attributetable:: discord.ext.bridge.BridgeContext
 

@@ -62,19 +62,20 @@ class BridgeExtCommand(Command):
 
 
 class BridgeCommand:
-    def __init__(self, callback, **kwargs):
-        """
-        This is the base class for commands that are compatible with both traditional (prefix-based) commands and slash
-        commands.
+    """
+    This is the base class for commands that are compatible with both traditional (prefix-based) commands and slash
+    commands.
 
-        Parameters
-        ----------
-        callback: Callable[[BridgeContext, ...], Awaitable[Any]]
-            The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
-            and any additional arguments will be passed to the callback. This callback must be a coroutine.
-        kwargs: Optional[Dict[str, Any]]
-            Keyword arguments that are directly passed to the respective command constructors.
-        """
+    Parameters
+    ----------
+    callback: Callable[[BridgeContext, ...], Awaitable[Any]]
+        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
+        and any additional arguments will be passed to the callback. This callback must be a coroutine.
+    kwargs: Optional[Dict[:class:`str`, Any]]
+        Keyword arguments that are directly passed to the respective command constructors.
+    """
+
+    def __init__(self, callback, **kwargs):
         self.callback = callback
         self.kwargs = kwargs
 
@@ -105,7 +106,7 @@ class BridgeCommand:
 
         Parameters
         ----------
-        bot: Union[:class:`ExtBot`, :class:`ExtAutoShardedBot`]
+        bot: Union[:class:`.ExtBot`, :class:`.ExtAutoShardedBot`]
             The bot to add the command to.
         """
         bot.add_command(self.get_ext_command())
@@ -117,7 +118,7 @@ def bridge_command(**kwargs):
 
     Parameters
     ----------
-    kwargs: Optional[Dict[str, Any]]
+    kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors.
     """
 
