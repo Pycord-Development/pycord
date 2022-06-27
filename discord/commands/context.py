@@ -283,8 +283,8 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response.defer
 
     @property
-    @discord.utils.copy_doc(Interaction.followup)
     def followup(self) -> Webhook:
+        """:class:`Webhook`: Returns the follow up webhook for follow up interactions."""
         return self.interaction.followup
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
