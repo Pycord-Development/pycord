@@ -135,44 +135,59 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel(self) -> Optional[InteractionChannel]:
+        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
+        """
         return self.interaction.channel
 
     @cached_property
     def channel_id(self) -> Optional[int]:
+        """`int`: Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel.id`."""
         return self.interaction.channel_id
 
     @cached_property
     def guild(self) -> Optional[Guild]:
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild`.
+        """
         return self.interaction.guild
 
     @cached_property
     def guild_id(self) -> Optional[int]:
+        """`int`: Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild.id`."""
         return self.interaction.guild_id
 
     @cached_property
     def locale(self) -> Optional[str]:
+        """`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.locale`."""
         return self.interaction.locale
 
     @cached_property
     def guild_locale(self) -> Optional[str]:
+        """`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild.locale`."""
         return self.interaction.guild_locale
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
+        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        message contexts, or when :meth:`Intents.guilds` is absent.
+        """
         return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Optional[Message]:
+        """Optional[:class:`.Message`]: Returns the message sent with this context's command. Shorthand for :attr:`.Interaction.message`, if applicable."""
         return self.interaction.message
 
     @cached_property
     def user(self) -> Optional[Union[Member, User]]:
+        """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command. Shorthand for :attr:`.Interaction.user`."""
         return self.interaction.user
 
     author: Optional[Union[Member, User]] = user
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
+        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command. Shorthand for :attr:`.Interaction.Guild.voice_client`, if applicable."""
         if self.interaction.guild is None:
             return None
 
@@ -180,6 +195,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def response(self) -> InteractionResponse:
+        """:class:`.InteractionResponse`: Returns the response object associated with this context's command. Shorthand for :attr:`.Interaction.response`."""
         return self.interaction.response
 
     @property
@@ -216,12 +232,22 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.send_modal)
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
-        """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
     async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
-        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        """|coro|
+
+        Responds to an interaction with the given content.
+
+        If already responded to, this will send a new message to the channel as a class`.WebhookMessage`.
+
+        Returns
+        --------
+        Union[:class:`Interaction`, class:`WebhookMessage`]
+            The result of the response.
+        """
         try:
             if not self.interaction.response.is_done():
                 return await self.interaction.response.send_message(*args, **kwargs)  # self.response
@@ -231,6 +257,7 @@ class ApplicationContext(discord.abc.Messageable):
             return await self.followup.send(*args, **kwargs)
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.send_message)
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message
@@ -240,6 +267,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
+    @discord.utils.copy_doc(Webhook.send)
     def send_followup(self) -> Callable[..., Awaitable[WebhookMessage]]:
         if self.interaction.response.is_done():
             return self.followup.send
@@ -249,10 +277,12 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.defer)
     def defer(self) -> Callable[..., Awaitable[None]]:
         return self.interaction.response.defer
 
     @property
+    @discord.utils.copy_doc(Interaction.followup)
     def followup(self) -> Webhook:
         return self.interaction.followup
 
@@ -281,6 +311,7 @@ class ApplicationContext(discord.abc.Messageable):
         return await self.interaction.delete_original_message(delay=delay)
 
     @property
+    @discord.utils.copy_doc(Interaction.edit_original_message)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_message
 
