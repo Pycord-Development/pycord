@@ -229,7 +229,7 @@ class ApplicationContext(discord.abc.Messageable):
         Returns
         -------
         Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]: The message that was sent, it's type depends on whether
-            the message was an interaction reply or a followup message.
+            The response, its type depending on whether it's an interaction response or a followup.
         """
         try:
             if not self.interaction.response.is_done():
