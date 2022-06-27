@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
-from discord.interactions import InteractionMessage, InteractionResponse
+from discord.interactions import InteractionMessage, InteractionResponse, Interaction
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
