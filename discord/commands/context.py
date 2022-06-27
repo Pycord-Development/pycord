@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
 from discord.interactions import InteractionMessage, InteractionResponse
+from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -267,7 +268,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    @discord.utils.copy_doc(discord.Webhook.send)
+    @discord.utils.copy_doc(Webhook.send)
     def send_followup(self) -> Callable[..., Awaitable[WebhookMessage]]:
         if self.interaction.response.is_done():
             return self.followup.send
