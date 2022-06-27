@@ -144,6 +144,8 @@ class View:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this view.
+    message: Optional[:class:`Message`]
+        The message that this view is attached to. Returns ``None`` if the view has not been sent with a message.
     """
 
     __discord_ui_view__: ClassVar[bool] = True
