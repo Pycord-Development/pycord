@@ -144,12 +144,14 @@ class BridgeExtContext(BridgeContext, Context):
         self._original_response_message: Optional[Message] = None
 
     async def _respond(self, *args, **kwargs) -> Message:
+        kwargs.pop("ephemeral", None)
         message = await self._get_super("reply")(*args, **kwargs)
         if self._original_response_message is None:
             self._original_response_message = message
         return message
 
     async def _defer(self, *args, **kwargs) -> None:
+        kwargs.pop("ephemeral", None)
         return await self._get_super("trigger_typing")(*args, **kwargs)
 
     async def _edit(self, *args, **kwargs) -> Message:
