@@ -145,7 +145,8 @@ class View:
     children: List[:class:`Item`]
         The list of children attached to this view.
     message: Optional[:class:`Message`]
-        The message that this view is attached to. Returns ``None`` if the view has not been sent with a message.
+        The message that this view is attached to. 
+        If ``None`` then the view has not been sent with a message.
     """
 
     __discord_ui_view__: ClassVar[bool] = True
