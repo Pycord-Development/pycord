@@ -181,6 +181,7 @@ class View:
         self.__timeout_expiry: Optional[float] = None
         self.__timeout_task: Optional[asyncio.Task[None]] = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
+        self._message: Message | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -491,6 +492,14 @@ class View:
             if exclusions is None or child not in exclusions:
                 child.disabled = False
 
+    @property
+    def message(self):
+        return self._message
+    
+    @message.setter
+    def message(self, value):
+        print("Setting")
+        self._message = value
 
 class ViewStore:
     def __init__(self, state: ConnectionState):
