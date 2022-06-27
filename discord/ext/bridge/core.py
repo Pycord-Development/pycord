@@ -23,6 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from typing import Any, Union
+import asyncio
 
 import discord.commands.options
 from discord.commands import Option, SlashCommand
@@ -77,8 +78,9 @@ class BridgeCommand:
         """
         self.callback = callback
         self.kwargs = kwargs
-        self.ext_command = None  # will be defined when self.add_to is called
-        self.application_command = None  # will be defined when self.add_to is called
+
+        self.ext_command = BridgeExtCommand(self.callback, **self.kwargs)
+        self.application_command = BridgeSlashCommand(self.callback, **self.kwargs)
 
     def get_ext_command(self):
         """A method to get the ext.commands version of this command.
@@ -88,8 +90,7 @@ class BridgeCommand:
         :class:`BridgeExtCommand`
             The respective traditional (prefix-based) version of the command.
         """
-        command = BridgeExtCommand(self.callback, **self.kwargs)
-        return command
+        return self.ext_command
 
     def get_application_command(self):
         """A method to get the discord.commands version of this command.
@@ -99,8 +100,7 @@ class BridgeCommand:
         :class:`BridgeSlashCommand`
             The respective slash command version of the command.
         """
-        command = BridgeSlashCommand(self.callback, **self.kwargs)
-        return command
+        return self.application_command
 
     def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
         """Adds the command to a bot.
@@ -110,8 +110,6 @@ class BridgeCommand:
         bot: Union[:class:`ExtBot`, :class:`ExtAutoShardedBot`]
             The bot to add the command to.
         """
-        self.ext_command = self.get_ext_command()
-        self.application_command = self.get_application_command()
 
         bot.add_command(self.ext_command)
         bot.add_application_command(self.application_command)
@@ -138,8 +136,11 @@ class BridgeCommand:
             The coroutine passed is not actually a coroutine.
         """
 
-        self.ext_command.error(coro)
-        self.application_command.error(coro)
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The error handler must be a coroutine.")
+
+        self.ext_command.on_error = coro
+        self.application_command.on_error = coro
 
         return coro
 
@@ -163,8 +164,11 @@ class BridgeCommand:
             The coroutine passed is not actually a coroutine.
         """
 
-        self.ext_command.before_invoke(coro)
-        self.application_command.before_invoke(coro)
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The pre-invoke hook must be a coroutine.")
+
+        self.ext_command.before_invoke = coro
+        self.application_command.before_invoke = coro
 
         return coro
 
@@ -188,8 +192,11 @@ class BridgeCommand:
             The coroutine passed is not actually a coroutine.
         """
 
-        self.ext_command.after_invoke(coro)
-        self.application_command.after_invoke(coro)
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The post-invoke hook must be a coroutine.")
+
+        self.ext_command.after_invoke = coro
+        self.application_command.after_invoke = coro
 
         return coro
 
