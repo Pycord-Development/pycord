@@ -29,24 +29,23 @@ async def start(ctx: discord.ApplicationContext, encoding: str):
     vc = await voice.channel.connect()
     bot.connections.update({ctx.guild.id: vc})
 
-    if encoding == "mp3":
-        sink = discord.sinks.MP3Sink()
-    elif encoding == "wav":
-        sink = discord.sinks.WaveSink()
-    elif encoding == "pcm":
-        sink = discord.sinks.PCMSink()
-    elif encoding == "ogg":
-        sink = discord.sinks.OGGSink()
-    elif encoding == "mka":
-        sink = discord.sinks.MKASink()
-    elif encoding == "mkv":
-        sink = discord.sinks.MKVSink()
-    elif encoding == "mp4":
-        sink = discord.sinks.MP4Sink()
-    elif encoding == "m4a":
-        sink = discord.sinks.M4ASink()
-    else:
+    encodings = {
+        "mp3": discord.sinks.MP3Sink,
+        "wav": discord.sinks.WaveSink,
+        "pcm": discord.sinks.PCMSink,
+        "ogg": discord.sinks.OGGSink,
+        "mka": discord.sinks.MKASink,
+        "mkv": discord.sinks.MKVSink,
+        "mp4": discord.sinks.MP4Sink,
+        "m4a": discord.sinks.M4ASink
+    }
+
+    possible_sink = encodings.get(encoding)
+
+    if possible_sink is None:
         return await ctx.respond("Invalid encoding.")
+
+    sink = possible_sink()
 
     vc.start_recording(
         sink,
