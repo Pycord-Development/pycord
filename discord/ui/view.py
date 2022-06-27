@@ -501,7 +501,6 @@ class View:
     
     @message.setter
     def message(self, value):
-        print("Setting")
         self._message = value
 
 class ViewStore:
