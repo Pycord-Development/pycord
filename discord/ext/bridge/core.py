@@ -123,7 +123,7 @@ class BridgeCommand:
         the handler for both the prefixed and slash versions of the command.
 
         This error handler takes two parameters, a :class:`.BridgeContext` and
-        a :class:`...DiscordException`.
+        a :class:`~discord.DiscordException`.
 
         Parameters
         -----------
