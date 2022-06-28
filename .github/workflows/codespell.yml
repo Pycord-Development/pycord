@@ -5,7 +5,7 @@ jobs:
 #    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
       - run: pip install codespell
       - run: codespell --ignore-words-list="groupt,nd,ot"
