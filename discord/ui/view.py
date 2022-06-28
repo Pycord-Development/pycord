@@ -184,7 +184,7 @@ class View:
         self.__timeout_expiry: Optional[float] = None
         self.__timeout_task: Optional[asyncio.Task[None]] = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
-        self._message: Message | None = None
+        self._message: Optional[Message] = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
