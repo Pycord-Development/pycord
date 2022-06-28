@@ -60,7 +60,9 @@ class BridgeContext(ABC):
     """
 
     @abstractmethod
-    async def _respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+    async def _respond(
+        self, *args, **kwargs
+    ) -> Union[Union[Interaction, WebhookMessage], Message]:
         ...
 
     @abstractmethod
@@ -71,7 +73,9 @@ class BridgeContext(ABC):
     async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
         ...
 
-    async def respond(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+    async def respond(
+        self, *args, **kwargs
+    ) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
 
         Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`,
@@ -80,7 +84,9 @@ class BridgeContext(ABC):
         """
         return await self._respond(*args, **kwargs)
 
-    async def reply(self, *args, **kwargs) -> Union[Union[Interaction, WebhookMessage], Message]:
+    async def reply(
+        self, *args, **kwargs
+    ) -> Union[Union[Interaction, WebhookMessage], Message]:
         """|coro|
 
         Alias for :meth:`~.BridgeContext.respond`.
@@ -109,7 +115,7 @@ class BridgeContext(ABC):
         """
         return await self._edit(*args, **kwargs)
 
-    def _get_super(self, attr: str) -> Optional[Any]:
+    def _get_super(self, attr: str) -> Any:
         return getattr(super(), attr)
 
 
@@ -158,10 +164,13 @@ class BridgeExtContext(BridgeContext, Context):
         kwargs.pop("ephemeral", None)
         return await self._get_super("trigger_typing")(*args, **kwargs)
 
-    async def _edit(self, *args, **kwargs) -> Message:
-        return await self._original_response_message.edit(*args, **kwargs)
+    async def _edit(self, *args, **kwargs) -> Optional[Message]:
+        if self._original_response_message:
+            return await self._original_response_message.edit(*args, **kwargs)
 
-    async def delete(self, *, delay: Optional[float] = None, reason: Optional[str] = None) -> None:
+    async def delete(
+        self, *, delay: Optional[float] = None, reason: Optional[str] = None
+    ) -> None:
         """|coro|
 
         Deletes the original response message, if it exists.
@@ -175,9 +184,3 @@ class BridgeExtContext(BridgeContext, Context):
         """
         if self._original_response_message:
             await self._original_response_message.delete(delay=delay, reason=reason)
-
-
-if TYPE_CHECKING:
-    # This is a workaround for mypy not being able to resolve the type of BridgeContext.
-    class BridgeContext(ApplicationContext, Context):
-        ...
