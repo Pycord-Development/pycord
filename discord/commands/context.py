@@ -143,28 +143,28 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel_id(self) -> Optional[int]:
-        """`int`: Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel.id`."""
+        """:class:`int`: Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel.id`."""
         return self.interaction.channel_id
 
     @cached_property
     def guild(self) -> Optional[Guild]:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild`.
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild`.
         """
         return self.interaction.guild
 
     @cached_property
     def guild_id(self) -> Optional[int]:
-        """`int`: Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild.id`."""
+        """:class:`int`: Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild.id`."""
         return self.interaction.guild_id
 
     @cached_property
     def locale(self) -> Optional[str]:
-        """`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.locale`."""
+        """:class:`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.locale`."""
         return self.interaction.locale
 
     @cached_property
     def guild_locale(self) -> Optional[str]:
-        """`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.Guild.locale`."""
+        """:class:`str`: Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild_locale`."""
         return self.interaction.guild_locale
 
     @cached_property
@@ -189,7 +189,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
-        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command. Shorthand for :attr:`.Interaction.Guild.voice_client`, if applicable."""
+        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command. Shorthand for :attr:`.Interaction.guild.voice_client`, if applicable."""
         if self.interaction.guild is None:
             return None
 
