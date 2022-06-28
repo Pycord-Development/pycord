@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Any, Union
+from typing import Any, List, Union
 
 import discord.commands.options
 from discord.commands import Option, SlashCommand
@@ -138,35 +138,42 @@ class MentionableConverter(Converter):
 
 
 def attachment_callback(*args):  # pylint: disable=unused-argument
-    raise ValueError("Attachments are not supported for compatibility commands.")
+    raise ValueError("Attachments are not supported for bridge commands.")
+
+
+BRIDGE_CONVERTER_MAPPING = {
+    SlashCommandOptionType.string: str,
+    SlashCommandOptionType.integer: int,
+    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
+    SlashCommandOptionType.user: UserConverter,
+    SlashCommandOptionType.channel: GuildChannelConverter,
+    SlashCommandOptionType.role: RoleConverter,
+    SlashCommandOptionType.mentionable: MentionableConverter,
+    SlashCommandOptionType.number: float,
+    SlashCommandOptionType.attachment: attachment_callback,
+}
 
 
 class BridgeOption(Option, Converter):
-    async def convert(self, ctx, argument) -> Any:
+    async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
                 converted = await self.converter.convert(ctx, argument)
             else:
-                mapping = {
-                    SlashCommandOptionType.string: str,
-                    SlashCommandOptionType.integer: int,
-                    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
-                    SlashCommandOptionType.user: UserConverter,
-                    SlashCommandOptionType.channel: GuildChannelConverter,
-                    SlashCommandOptionType.role: RoleConverter,
-                    SlashCommandOptionType.mentionable: MentionableConverter,
-                    SlashCommandOptionType.number: float,
-                    SlashCommandOptionType.attachment: attachment_callback,
-                }
-                converter = mapping[self.input_type]
+                converter = BRIDGE_CONVERTER_MAPPING[self.input_type]
                 if issubclass(converter, Converter):
-                    converted = await converter().convert(ctx, argument)
+                    converted = await converter().convert(ctx, argument)  # type: ignore # protocol class
                 else:
                     converted = converter(argument)
+
             if self.choices:
-                choices_names = [choice.name for choice in self.choices]
-                if converted in choices_names:
-                    converted = get(self.choices, name=converted).value
+                choices_names: List[Union[str, int, float]] = [
+                    choice.name for choice in self.choices
+                ]
+                if converted in choices_names and (
+                    choice := get(self.choices, name=converted)
+                ):
+                    converted = choice.value
                 else:
                     choices = [choice.value for choice in self.choices]
                     if converted not in choices:

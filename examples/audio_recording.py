@@ -1,7 +1,4 @@
-import os
-
 import discord
-from discord.commands import ApplicationContext, option
 
 bot = discord.Bot(debug_guilds=[...])
 bot.connections = {}
@@ -53,10 +50,8 @@ async def finished_callback(sink, channel: discord.TextChannel, *args):
 
 
 @bot.command()
-async def stop(ctx):
-    """
-    Stop recording.
-    """
+async def stop(ctx: discord.ApplicationContext):
+    """Stop recording."""
     if ctx.guild.id in bot.connections:
         vc = bot.connections[ctx.guild.id]
         vc.stop_recording()
