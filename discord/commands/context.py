@@ -126,6 +126,7 @@ class ApplicationContext(discord.abc.Messageable):
             The arguments to use.
         \*\*kwargs
             The keyword arguments to use.
+
         Raises
         -------
         TypeError
@@ -221,7 +222,16 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response.send_modal
 
     async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
-        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        """|coro|
+
+        Sends either a response or a message using the followup webhook depending determined by whether the interaction
+        has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
         try:
             if not self.interaction.response.is_done():
                 return await self.interaction.response.send_message(*args, **kwargs)  # self.response
