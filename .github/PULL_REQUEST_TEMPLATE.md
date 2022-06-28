@@ -8,7 +8,7 @@
 
 - [ ] If code changes were made then they have been tested.
 - [ ] I have searched open pull requests for duplicates.
-    - [ ] I have updated the documentation to reflect the changes.
+- [ ] I have updated the documentation to reflect the changes.
 - [ ] If `type: ignore` comments were used, a comment is also left explaining why
 
 ## PR Information
