@@ -36,7 +36,9 @@ __all__ = ("Bot", "AutoShardedBot")
 
 
 class BotBase(ABC):
-    async def get_application_context(self, interaction: Interaction, cls=None) -> BridgeApplicationContext:
+    async def get_application_context(
+        self, interaction: Interaction, cls=None
+    ) -> BridgeApplicationContext:
         cls = cls if cls is not None else BridgeApplicationContext
         # Ignore the type hinting error here. BridgeApplicationContext is a subclass of ApplicationContext, and since
         # we gave it cls, it will be used instead.
