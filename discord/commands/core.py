@@ -240,8 +240,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
     ) -> Union[
-        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-        Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+        Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
     ]:
         return self._callback
 
@@ -249,8 +249,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
         function: Union[
-            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+            Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+            Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
         ],
     ) -> None:
         self._callback = function
