@@ -817,27 +817,26 @@ class CogMixin:
         """
 
         name = self._resolve_name(name, package)
-        isolated_name = name.split(".")[-1]  # Isolates the extension file name
 
         if name in self.__extensions:
             exc = errors.ExtensionAlreadyLoaded(name)
-            final_out = {isolated_name: exc} if store else exc
+            final_out = {name: exc} if store else exc
         # This indicates that there is neither an extension nor folder here
         elif (spec := importlib.util.find_spec(name)) is None:
             exc = errors.ExtensionNotFound(name)
-            final_out = {isolated_name: exc} if store else exc
+            final_out = {name: exc} if store else exc
         # This indicates we've found an extension file to load, and we need to store any exceptions
         elif spec.has_location and store:
             try:
                 self._load_from_module_spec(spec, name)
             except Exception as exc:
-                final_out = {isolated_name: exc}
+                final_out = {name: exc}
             else:
-                final_out = {isolated_name: True}
+                final_out = {name: True}
         # This indicates we've found an extension file to load, and any encountered exceptions can be raised
         elif spec.has_location:
             self._load_from_module_spec(spec, name)
-            final_out = [isolated_name]
+            final_out = [name]
         # This indicates we've been given a folder because the ModuleSpec exists but is not a file
         else:
             # Split the directory path and join it to get an os-native Path object
