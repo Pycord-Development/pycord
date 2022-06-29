@@ -119,6 +119,8 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
+    app_permissions: :class:`Permissions`
+        The applications calculated permissions.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -135,8 +137,10 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "app_permissions",
         "_message_data",
         "_permissions",
+        "_app_permissions",
         "_state",
         "_session",
         "_original_message",
@@ -163,6 +167,7 @@ class Interaction:
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
+        self._app_permissions: int = int(data.get("app_permissions"))
 
         self.message: Optional[Message] = None
 
@@ -232,6 +237,11 @@ class Interaction:
         In a non-guild context where this doesn't apply, an empty permissions object is returned.
         """
         return Permissions(self._permissions)
+
+    @property
+    def app_permissions(self) -> Permissions:
+        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
+        return Permissions(self._app_permissions)
 
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
