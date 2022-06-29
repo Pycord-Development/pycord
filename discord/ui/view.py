@@ -144,6 +144,9 @@ class View:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this view.
+    message: Optional[:class:`Message`]
+        The message that this view is attached to. 
+        If ``None`` then the view has not been sent with a message.
     """
 
     __discord_ui_view__: ClassVar[bool] = True
@@ -181,6 +184,7 @@ class View:
         self.__timeout_expiry: Optional[float] = None
         self.__timeout_task: Optional[asyncio.Task[None]] = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
+        self._message: Optional[Message] = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -491,6 +495,13 @@ class View:
             if exclusions is None or child not in exclusions:
                 child.disabled = False
 
+    @property
+    def message(self):
+        return self._message
+    
+    @message.setter
+    def message(self, value):
+        self._message = value
 
 class ViewStore:
     def __init__(self, state: ConnectionState):
