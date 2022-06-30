@@ -62,6 +62,7 @@ __all__ = (
     "MessageConverter",
     "PartialMessageConverter",
     "TextChannelConverter",
+    "ForumChannelConverter",
     "InviteConverter",
     "GuildConverter",
     "RoleConverter",
