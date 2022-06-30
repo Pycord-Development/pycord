@@ -2074,7 +2074,7 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
     This check raises a special exception, :exc:`.MissingPermissions`
     that is inherited from :exc:`.CheckFailure`.
 
-    If the command is executed withiun a dm, it returns True.
+    If the command is executed within a dm, it returns True.
 
     Parameters
     ------------
