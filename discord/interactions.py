@@ -140,6 +140,7 @@ class Interaction:
         "_state",
         "_session",
         "_original_message",
+        "_cs_app_permissions",
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
