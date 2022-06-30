@@ -29,6 +29,7 @@ import datetime
 import functools
 import inspect
 import types
+
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -67,6 +68,8 @@ from .cooldowns import (
     DynamicCooldownMapping,
     MaxConcurrency,
 )
+from ...channel import PartialMessageable
+
 from .errors import *
 
 if TYPE_CHECKING:
@@ -2121,6 +2124,9 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     def predicate(ctx: Context) -> bool:
         guild = ctx.guild
         me = guild.me if guild is not None else ctx.bot.user
+        if isinstance(ctx.channel, PartialMessageable):
+            return True
+
         permissions = ctx.channel.permissions_for(me)  # type: ignore
 
         missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
