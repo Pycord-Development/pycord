@@ -234,7 +234,7 @@ class Interaction:
         """
         return Permissions(self._permissions)
 
-    @property
+    @utils.cached_slot_property("_cs_app_permissions")
     def app_permissions(self) -> Permissions:
         """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
         return Permissions(self._app_permissions)
