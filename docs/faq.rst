@@ -53,8 +53,8 @@ instead. Similar to this example: ::
     # good
     await asyncio.sleep(10)
 
-Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests:index`.
-While :doc:`requests:index` is an amazing module for non-asynchronous programming, it is not a good choice for
+Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`.
+While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for
 :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which
 is installed on the side with this library.
 
