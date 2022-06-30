@@ -68,7 +68,7 @@ from .cooldowns import (
     DynamicCooldownMapping,
     MaxConcurrency,
 )
-from ...channel import PartialMessageable
+from ...enums import ChannelType
 
 from .errors import *
 
@@ -2124,7 +2124,7 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     def predicate(ctx: Context) -> bool:
         guild = ctx.guild
         me = guild.me if guild is not None else ctx.bot.user
-        if isinstance(ctx.channel, PartialMessageable):
+        if ctx.channel.type == ChannelType.private:
             return True
 
         permissions = ctx.channel.permissions_for(me)  # type: ignore
