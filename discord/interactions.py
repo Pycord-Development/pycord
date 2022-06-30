@@ -54,7 +54,6 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
-        PartialMessageable,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -137,10 +136,9 @@ class Interaction:
         "token",
         "version",
         "custom_id",
-        "app_permissions",
         "_message_data",
         "_permissions",
-        "_app_permissions",
+        "_app_permissions_int",
         "_state",
         "_session",
         "_original_message",
@@ -167,7 +165,7 @@ class Interaction:
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
-        self._app_permissions: int = int(data.get("app_permissions"))
+        self._app_permissions_int: int = int(data.get("app_permissions"))
 
         self.message: Optional[Message] = None
 
@@ -241,7 +239,7 @@ class Interaction:
     @property
     def app_permissions(self) -> Permissions:
         """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
-        return Permissions(self._app_permissions)
+        return Permissions(self._app_permissions_int)
 
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
