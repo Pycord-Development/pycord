@@ -499,13 +499,17 @@ class InteractionResponse:
 
     async def defer(self, *, ephemeral: bool = False, invisible: bool = True) -> None:
         """|coro|
+
         Defers the interaction response.
+
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
-        This is can only be used with the following interaction types
+
+        This is can only be used with the following interaction types:
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
+
         Parameters
         -----------
         ephemeral: :class:`bool`
@@ -517,6 +521,7 @@ class InteractionResponse:
             In the Discord UI, this is represented as the bot thinking of a response. You must
             eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
             This parameter does not apply to interactions of type :attr:`InteractionType.application_command`.
+
         Raises
         -------
         HTTPException
