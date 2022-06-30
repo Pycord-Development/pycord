@@ -2129,7 +2129,10 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
         if ctx.channel.type == ChannelType.private:
             return True
 
-        permissions = ctx.channel.permissions_for(me)  # type: ignore
+        if hasattr(ctx, 'app_permissions'):
+            permissions = ctx.app_permissions
+        else:
+            permissions = ctx.channel.permissions_for(me)  # type: ignore
 
         missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
