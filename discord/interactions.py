@@ -505,7 +505,7 @@ class InteractionResponse:
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
 
-        This is can only be used with the following interaction types:
+        This can only be used with the following interaction types:
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
