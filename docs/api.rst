@@ -152,6 +152,14 @@ Option
 .. autofunction:: discord.commands.Option
     :decorator:
 
+ThreadOption
+~~~~~~~~~~~~~
+
+.. attributetable:: ThreadOption
+
+.. autoclass:: ThreadOption
+    :members:
+
 OptionChoice
 ~~~~~~~~~~~~~
 

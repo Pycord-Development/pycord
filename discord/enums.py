@@ -478,7 +478,7 @@ class AuditLogAction(Enum):
             return "scheduled_event"
         elif v < 113:
             return "thread"
-        elif v < 121:
+        elif v < 122:
             return "application_command_permission"
         elif v < 144:
             return "auto_moderation_rule"

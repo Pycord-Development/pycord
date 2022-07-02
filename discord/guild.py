@@ -355,8 +355,8 @@ class Guild(Hashable):
         self._members[member.id] = member
 
     def _get_and_update_member(self, payload: MemberPayload, user_id: int, cache_flag: bool, /) -> Member:
-        # we always get the member, and we only update if the cache_flag (this cache flag should
-        # always be MemberCacheFlag.interaction or MemberCacheFlag.option) is set to True
+        # we always get the member, and we only update if the cache_flag (this cache
+        # flag should always be MemberCacheFlag.interaction) is set to True
         if user_id in self._members:
             member = self.get_member(user_id)
             member._update(payload) if cache_flag else None

@@ -966,6 +966,9 @@ class ConnectionState:
             guild._remove_thread(thread)  # type: ignore
             self.dispatch("thread_delete", thread)
 
+            if (msg := thread.starting_message) is not None:
+                msg.thread = None
+
     def parse_thread_list_sync(self, data) -> None:
         guild_id = int(data["guild_id"])
         guild: Optional[Guild] = self._get_guild(guild_id)
