@@ -784,6 +784,8 @@ class SlashCommand(ApplicationCommand):
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
+            if op is None:
+                continue
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
@@ -844,7 +846,11 @@ class SlashCommand(ApplicationCommand):
                     arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
-                arg = await converter.convert(converter, ctx, arg)
+                from discord.ext.commands import Converter
+                if isinstance(converter, Converter):
+                    arg = await converter.convert(ctx, arg)
+                elif isinstance(converter, type) and hasattr(converter, "convert"):
+                    arg = await converter().convert(ctx, arg)
 
             elif op._raw_type in (SlashCommandOptionType.integer,
                                   SlashCommandOptionType.number,

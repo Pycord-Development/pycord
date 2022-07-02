@@ -138,6 +138,7 @@ class Option:
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
+                self._raw_type = str
                 input_type = SlashCommandOptionType.string
             elif isinstance(input_type, type) and issubclass(input_type, (Enum, DiscordEnum)):
                 enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
