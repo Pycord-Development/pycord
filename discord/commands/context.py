@@ -137,8 +137,8 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel(self) -> Optional[InteractionChannel]:
-        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
-        """
+        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
+        Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."""
         return self.interaction.channel
 
     @cached_property
@@ -148,8 +148,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def guild(self) -> Optional[Guild]:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild`.
-        """
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild`."""
         return self.interaction.guild
 
     @cached_property
