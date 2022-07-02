@@ -29,6 +29,7 @@ import datetime
 import functools
 import inspect
 import types
+
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -67,6 +68,8 @@ from .cooldowns import (
     DynamicCooldownMapping,
     MaxConcurrency,
 )
+from ...enums import ChannelType
+
 from .errors import *
 
 if TYPE_CHECKING:
@@ -2071,6 +2074,8 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
     This check raises a special exception, :exc:`.MissingPermissions`
     that is inherited from :exc:`.CheckFailure`.
 
+    If the command is executed within a DM, it returns ``True``.
+
     Parameters
     ------------
     perms
@@ -2121,7 +2126,13 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     def predicate(ctx: Context) -> bool:
         guild = ctx.guild
         me = guild.me if guild is not None else ctx.bot.user
-        permissions = ctx.channel.permissions_for(me)  # type: ignore
+        if ctx.channel.type == ChannelType.private:
+            return True
+
+        if hasattr(ctx, 'app_permissions'):
+            permissions = ctx.app_permissions
+        else:
+            permissions = ctx.channel.permissions_for(me)  # type: ignore
 
         missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 

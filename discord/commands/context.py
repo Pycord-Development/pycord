@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from ..member import Member
     from ..message import Message
     from ..user import User
+    from ..permissions import Permissions
     from ..client import ClientUser
     from discord.webhook.async_ import Webhook
 
@@ -157,6 +158,10 @@ class ApplicationContext(discord.abc.Messageable):
     @cached_property
     def guild_locale(self) -> Optional[str]:
         return self.interaction.guild_locale
+
+    @cached_property
+    def app_permissions(self) -> Permissions:
+        return self.interaction.app_permissions
 
     @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
