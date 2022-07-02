@@ -54,6 +54,7 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
+        ForumChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -75,6 +76,7 @@ if TYPE_CHECKING:
         VoiceChannel,
         StageChannel,
         TextChannel,
+        ForumChannel,
         CategoryChannel,
         Thread,
         PartialMessageable,
