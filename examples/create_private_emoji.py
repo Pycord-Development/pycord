@@ -15,7 +15,7 @@ async def add_private_emoji(
         role: discord.Option(discord.Role)
 ):
     if image.content_type not in allowed_content_types:
-        return await ctx.respond(ephemeral=True, content='Invalid attachment type!')
+        return await ctx.respond("Invalid attachment type!", ephemeral=True)
 
     image_file = await image.read()  # Reading attachment's content to get bytes
 
