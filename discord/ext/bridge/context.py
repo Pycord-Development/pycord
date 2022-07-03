@@ -97,7 +97,7 @@ class BridgeContext(ABC):
         """|coro|
 
         Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will
-        be :meth:`~discord.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be
+        be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be
         :attr:`~.ApplicationContext.defer`.
 
         .. note::
