@@ -1,20 +1,19 @@
-from enum import Enum
-
 import discord
 
 bot = discord.Bot(debug_guilds=[...])
 connections = {}
 
 
-class Sinks(Enum):
-    mp3 = discord.sinks.MP3Sink()
-    wav = discord.sinks.WaveSink()
-    pcm = discord.sinks.PCMSink()
-    ogg = discord.sinks.OGGSink()
-    mka = discord.sinks.MKASink()
-    mkv = discord.sinks.MKVSink()
-    mp4 = discord.sinks.MP4Sink()
-    m4a = discord.sinks.M4ASink()
+sinks = {
+    "mp3": discord.sinks.MP3Sink(),
+    "wav": discord.sinks.WaveSink(),
+    "pcm": discord.sinks.PCMSink(),
+    "ogg": discord.sinks.OGGSink(),
+    "mka": discord.sinks.MKASink(),
+    "mkv": discord.sinks.MKVSink(),
+    "mp4": discord.sinks.MP4Sink(),
+    "m4a": discord.sinks.M4ASink()
+}
 
 
 async def finished_callback(sink, channel: discord.TextChannel, *args):
@@ -30,10 +29,12 @@ async def finished_callback(sink, channel: discord.TextChannel, *args):
 
 
 @bot.command()
-async def start(ctx: discord.ApplicationContext, sink: Sinks):
+async def start(ctx: discord.ApplicationContext, sink: discord.Option(str, choices=sinks)):
     """
     Record your voice!
     """
+    sink = sinks.get(sink)
+
     voice = ctx.author.voice
 
     if not voice:
@@ -43,7 +44,7 @@ async def start(ctx: discord.ApplicationContext, sink: Sinks):
     connections.update({ctx.guild.id: vc})
 
     vc.start_recording(
-        sink.value,
+        sink,
         finished_callback,
         ctx.channel,
     )
