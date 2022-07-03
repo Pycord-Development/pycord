@@ -1,5 +1,10 @@
 # Docs: https://docs.pycord.dev/en/master/ext/pages/index.html
-# Note that the below examples use a Slash Command Group in a cog for better organization - it's not required for using ext.pages.
+
+# This example demonstrates a standalone cog file with the bot instance in a separate file.
+
+# Note that the below examples use a Slash Command Group in a cog for
+# better organization and doing so is not required for using ext.pages.
+
 import asyncio
 
 import discord
@@ -18,14 +23,18 @@ class PageTest(commands.Cog):
             ],
             "Page Three",
             discord.Embed(title="Page Four"),
-            discord.Embed(title="Page Five"),
+            discord.Embed(
+                title="Page Five",
+                fields=[
+                    discord.EmbedField(name="Example Field", value="Example Value", inline=False),
+                ],
+            ),
             [
                 discord.Embed(title="Page Six, Embed 1"),
                 discord.Embed(title="Page Seven, Embed 2"),
             ],
         ]
         self.pages[3].set_image(url="https://c.tenor.com/pPKOYQpTO8AAAAAM/monkey-developer.gif")
-        self.pages[4].add_field(name="Example Field", value="Example Value", inline=False)
         self.pages[4].add_field(name="Another Example Field", value="Another Example Value", inline=False)
 
         self.more_pages = [
@@ -56,9 +65,8 @@ class PageTest(commands.Cog):
     def get_pages(self):
         return self.pages
 
-    pagetest = SlashCommandGroup("pagetest", "Commands for testing ext.pages")
+    pagetest = SlashCommandGroup("pagetest", "Commands for testing ext.pages.")
 
-    # These examples use a Slash Command Group in a cog for better organization - it's not required for using ext.pages.
     @pagetest.command(name="default")
     async def pagetest_default(self, ctx: discord.ApplicationContext):
         """Demonstrates using the paginator with the default options."""
@@ -106,7 +114,7 @@ class PageTest(commands.Cog):
     @pagetest.command(name="init")
     async def pagetest_init(self, ctx: discord.ApplicationContext):
         """Demonstrates how to pass a list of custom buttons when creating the Paginator instance."""
-        pagelist = [
+        page_buttons = [
             pages.PaginatorButton("first", label="<<-", style=discord.ButtonStyle.green),
             pages.PaginatorButton("prev", label="<-", style=discord.ButtonStyle.green),
             pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True),
@@ -118,7 +126,7 @@ class PageTest(commands.Cog):
             show_disabled=True,
             show_indicator=True,
             use_default_buttons=False,
-            custom_buttons=pagelist,
+            custom_buttons=page_buttons,
             loop_pages=True,
         )
         await paginator.respond(ctx.interaction, ephemeral=False)
@@ -162,8 +170,9 @@ class PageTest(commands.Cog):
     @pagetest.command(name="custom_view")
     async def pagetest_custom_view(self, ctx: discord.ApplicationContext):
         """Demonstrates passing a custom view to the paginator."""
-        view = discord.ui.View()
-        view.add_item(discord.ui.Button(label="Test Button, Does Nothing", row=1))
+        view = discord.ui.View(
+            discord.ui.Button(label="Test Button, Does Nothing", row=1),
+        )
         view.add_item(
             discord.ui.Select(
                 placeholder="Test Select Menu, Does Nothing",
@@ -194,10 +203,10 @@ class PageTest(commands.Cog):
 
     @pagetest.command(name="cancel")
     async def pagetest_cancel(self, ctx: discord.ApplicationContext):
-        """Demonstrates canceling (stopping) the paginator and showing a custom page when cancelled."""
+        """Demonstrates cancelling (stopping) the paginator and showing a custom page when cancelled."""
         paginator = pages.Paginator(pages=self.get_pages())
         await paginator.respond(ctx.interaction, ephemeral=False)
-        await ctx.respond("Canceling paginator in 5 seconds...")
+        await ctx.respond("Cancelling paginator in 5 seconds...")
         await asyncio.sleep(5)
         cancel_page = discord.Embed(
             title="Paginator Cancelled!",
@@ -215,8 +224,9 @@ class PageTest(commands.Cog):
             pages.PaginatorButton("next", label="->", style=discord.ButtonStyle.green),
             pages.PaginatorButton("last", label="->>", style=discord.ButtonStyle.green),
         ]
-        view = discord.ui.View()
-        view.add_item(discord.ui.Button(label="Test Button, Does Nothing", row=2))
+        view = discord.ui.View(
+            discord.ui.Button(label="Test Button, Does Nothing", row=2)
+        )
         view.add_item(
             discord.ui.Select(
                 placeholder="Test Select Menu, Does Nothing",
@@ -276,10 +286,18 @@ class PageTest(commands.Cog):
 
     @commands.command()
     async def pagetest_target(self, ctx: commands.Context):
-        """Demonstrates sending the paginator to a different target than where it was invoked (prefix-command version)."""
+        """Demonstrates sending the paginator to a different target than where it was invoked (prefix version)."""
         paginator = pages.Paginator(pages=self.get_pages())
         await paginator.send(ctx, target=ctx.author, target_message="Paginator sent!")
 
 
 def setup(bot):
     bot.add_cog(PageTest(bot))
+
+
+# The basic bot instance in a separate file should look something like this:
+# intents = discord.Intents.default()
+# intents.message_content = True  # required for prefixed commands
+# bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), intents=intents)
+# bot.load_extension("paginator")
+# bot.run("TOKEN")

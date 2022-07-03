@@ -144,6 +144,14 @@ class BaseUser(_UserTag):
         }
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the user.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/users/{self.id}"
+    
+    @property
     def public_flags(self) -> PublicUserFlags:
         """:class:`PublicUserFlags`: The publicly available flags the user has."""
         return PublicUserFlags._from_value(self._public_flags)
