@@ -163,7 +163,7 @@ class Option:
                             else:
                                 input_type = (input_type,)
                         for i in input_type:
-                            if isinstance(i, type) and issubclass(i, GuildChannel):
+                            if i is GuildChannel:
                                 continue
                             if isinstance(i, ThreadOption):
                                 self.channel_types.append(i._type)
