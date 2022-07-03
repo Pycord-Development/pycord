@@ -9,7 +9,7 @@
 - [ ] This PR fixes an issue.
 - [ ] This PR adds something new (e.g. new method or parameters).
 - [ ] This PR is a breaking change (e.g. methods or parameters removed/renamed).
-- [ ] This PR is **not** a code change (e.g. documentation, README, typehinting, examples, ...)
+- [ ] This PR is **not** a code change (e.g. documentation, README, typehinting, examples, ...).
 
 ## Checklist
 
