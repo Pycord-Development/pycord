@@ -20,9 +20,9 @@ class MyClient(discord.Client):
         channel = self.get_channel(1234567)  # Your channel ID goes here
         while not self.is_closed():
             counter += 1
-            await channel.send(counter)
+            await channel.send(str(counter))
             await asyncio.sleep(60)  # This asyncio task runs every 60 seconds
 
 
 client = MyClient()
-client.run("token")
+client.run("TOKEN")
