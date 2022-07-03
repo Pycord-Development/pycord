@@ -438,7 +438,7 @@ class Client:
         except AttributeError:
             pass
         else:
-            self._schedule_event(coro, event + "_h", *args, **kwargs)
+            self._schedule_event(coro, event, *args, **kwargs)
 
         coros = self.events.get(event)
         if coros:
@@ -1109,7 +1109,7 @@ class Client:
 
     # event registration
 
-    def event(self, event_name: Optional[Union[str, EventType]] = None) -> Coro:
+    def event(self, coro: Optional[Coro] = None, *, name: Optional[Union[str, EventType]] = None) -> Union[Coro, Callable[..., Any]]:
         """A decorator that registers an event to listen to.
 
         You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
@@ -1121,18 +1121,18 @@ class Client:
 
         .. code-block:: python3
 
-            @client.event()
+            @client.event
             async def on_ready():
                 print('Ready!')
 
-            @client.event(EventType.message)
+            @client.event(name=EventType.message)
             async def hello_message_arrived(message):
                 if message.author != client.user:
                     await message.reply("Nice")
 
         Parameters
         ------------
-        event_name: :type:`Union[str, EventType]`
+        name: Optional[Union[:class:`str`, :class:`EventType`]]
             The event to register this coroutine under. If this is not provided, then
             the name of the coroutine provided will be used instead.
 
@@ -1145,16 +1145,21 @@ class Client:
             if not asyncio.iscoroutinefunction(coro):
                 raise TypeError("event registered must be a coroutine function")
 
-            actual_event = (coro.__name__ if event_name is None else str(event_name)).lstrip("on_")
+            actual_event = (coro.__name__ if name is None else str(name)).lstrip("on_")
 
             if actual_event not in self.events:
                 self.events[actual_event] = []
             
             self.events[actual_event].append(coro)
             
-            _log.debug("%s has successfully been registered as an event", event_name)
+            _log.debug("%s has successfully been registered as an event", actual_event)
             return coro
-        return wrapped
+
+        if coro:
+            # backwards compatibility
+            return wrapped(coro)
+        else:
+            return wrapped
 
     async def change_presence(
         self,
