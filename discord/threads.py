@@ -735,7 +735,13 @@ class Thread(Messageable, Hashable):
         """
 
         members = await self._state.http.get_thread_members(self.id)
-        return [ThreadMember(parent=self, data=data) for data in members]
+
+        thread_members = [ThreadMember(parent=self, data=data) for data in members]
+
+        for member in thread_members:
+            self._add_member(member)
+
+        return thread_members
 
     async def delete(self):
         """|coro|
