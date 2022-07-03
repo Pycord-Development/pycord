@@ -69,7 +69,7 @@ class BridgeCommand:
 
     Parameters
     ----------
-    callback: Callable[[BridgeContext, ...], Awaitable[Any]]
+    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
         The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
     kwargs: Optional[Dict[:class:`str`, Any]]
@@ -108,7 +108,7 @@ class BridgeCommand:
 
         Parameters
         ----------
-        bot: Union[:class:`.ExtBot`, :class:`.ExtAutoShardedBot`]
+        bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
             The bot to add the command to.
         """
 
