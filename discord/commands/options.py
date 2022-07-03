@@ -26,6 +26,8 @@ import inspect
 from typing import Any, Dict, List, Literal, Optional, Union
 from enum import Enum
 
+from ..abc import GuildChannel
+from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel, Thread
 from ..enums import ChannelType, SlashCommandOptionType, Enum as DiscordEnum
 
 __all__ = (
@@ -35,12 +37,12 @@ __all__ = (
     "option",
 )
 
-channel_type_map = {
-    "TextChannel": ChannelType.text,
-    "VoiceChannel": ChannelType.voice,
-    "StageChannel": ChannelType.stage_voice,
-    "CategoryChannel": ChannelType.category,
-    "Thread": ChannelType.public_thread,
+CHANNEL_TYPE_MAP = {
+    TextChannel: ChannelType.text,
+    VoiceChannel: ChannelType.voice,
+    StageChannel: ChannelType.stage_voice,
+    CategoryChannel: ChannelType.category,
+    Thread: ChannelType.public_thread,
 }
 
 
@@ -60,10 +62,6 @@ class ThreadOption:
             "news": ChannelType.news_thread,
         }
         self._type = type_map[thread_type]
-
-    @property
-    def __name__(self):
-        return "ThreadOption"
 
 
 class Option:
@@ -138,6 +136,7 @@ class Option:
         if not isinstance(input_type, SlashCommandOptionType):
             if hasattr(input_type, "convert"):
                 self.converter = input_type
+                self._raw_type = str
                 input_type = SlashCommandOptionType.string
             elif isinstance(input_type, type) and issubclass(input_type, (Enum, DiscordEnum)):
                 enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
@@ -164,13 +163,13 @@ class Option:
                             else:
                                 input_type = (input_type,)
                         for i in input_type:
-                            if i.__name__ == "GuildChannel":
+                            if i is GuildChannel:
                                 continue
                             if isinstance(i, ThreadOption):
                                 self.channel_types.append(i._type)
                                 continue
 
-                            channel_type = channel_type_map[i.__name__]
+                            channel_type = CHANNEL_TYPE_MAP[i]
                             self.channel_types.append(channel_type)
                     input_type = _type
         self.input_type = input_type
