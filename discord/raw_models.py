@@ -28,15 +28,19 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, List, Optional, Set
 
+from .automod import AutoModAction
 from .enums import ChannelType, try_enum
 
 if TYPE_CHECKING:
+    from .abc import MessageableChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .state import ConnectionState
     from .threads import Thread
     from .types.raw_models import (
+        AutoModActionExecutionEvent as AutoModActionExecution,
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MessageDeleteEvent,
@@ -61,6 +65,7 @@ __all__ = (
     "RawThreadDeleteEvent",
     "RawTypingEvent",
     "RawScheduledEventSubscription",
+    "AutoModActionExecutionEvent",
 )
 
 
@@ -386,3 +391,110 @@ class RawScheduledEventSubscription(_RawReprMixin):
         self.user_id: int = int(data["user_id"])
         self.guild: Guild = None
         self.event_type: str = event_type
+
+
+class AutoModActionExecutionEvent:
+    """Represents the payload for a :func:`auto_moderation_action_execution`
+    
+    .. versionadded:: 2.0
+    
+    Attributes
+    -----------
+    action: :class:`AutoModAction`
+        The action that was executed.
+    rule_id: :class:`int`
+        The ID of the rule that the action belongs to.
+    guild_id: :class:`int`
+        The ID of the guild that the action was executed in.
+    guild: Optional[:class:`Guild`]
+        The guild that the action was executed in, if cached.
+    user_id: :class:`int`
+        The ID of the user that triggered the action.
+    member: Optional[:class:`Member`]
+        The member that triggered the action, if cached.
+    channel_id: Optional[:class:`int`]
+        The ID of the channel in which the member's content was posted.
+    channel: Optional[Union[:class:`TextChannel`, :class:`Thread`, :class:`VoiceChannel`]]
+        The channel in which the member's content was posted, if cached.
+    message_id: Optional[:class:`int`]
+        The ID of the message that triggered the action. This is only available if the 
+        message was not blocked.
+    message: Optional[:class:`Message`]
+        The message that triggered the action, if cached.
+    alert_system_message_id: Optional[:class:`int`]
+        The ID of the system auto moderation message that was posted as a result
+        of the action. 
+    alert_system_message: Optional[:class:`Message`]
+        The system auto moderation message that was posted as a result of the action,
+        if cached.
+    content: :class:`str`
+        The content of the message that triggered the action.
+    matched_keyword: :class:`str`
+        The word or phrase configured that was matched in the content.
+    matched_content: :class:`str`
+        The substring in the content that was matched.
+    """
+
+    __slots__ = (
+        "action",
+        "rule_id",
+        "guild_id",
+        "guild",
+        "user_id",
+        "member",
+        "content",
+        "matched_keyword",
+        "matched_content",
+        "channel_id",
+        "channel",
+        "message_id",
+        "message",
+        "alert_system_message_id",
+        "alert_system_message",
+    )
+
+    def __init__(self, state: ConnectionState, data: AutoModActionExecution) -> None:
+        self.action: AutoModAction = AutoModAction.from_dict(data["action"])
+        self.rule_id: int = int(data["rule_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.guild: Optional[Guild] = state._get_guild(self.guild_id)
+        self.user_id: int = int(data["user_id"])
+        self.content: str = data["content"]
+        self.matched_keyword: str = data["matched_keyword"]
+        self.matched_content: str = data["matched_content"]
+        
+        if self.guild:
+            self.member: Optional[Member] = self.guild.get_member(self.user_id)
+        else:
+            self.member: Optional[Member] = None
+        
+        try:
+            # I don't see why this would be optional, but it's documented as such
+            # so we should treat it that way
+            self.channel_id: Optional[int] = int(data["channel_id"])
+            self.channel: Optional[MessageableChannel] = self.guild.get_channel_or_thread(self.channel_id)
+        except KeyError:
+            self.channel_id: Optional[int] = None
+            self.channel: Optional[MessageableChannel] = None
+            
+        try:
+            self.message_id: Optional[int] = int(data["message_id"])
+            self.message: Optional[Message] = state._get_message(self.message_id)
+        except KeyError:
+            self.message_id: Optional[int] = None
+            self.message: Optional[Message] = None
+            
+        try:
+            self.alert_system_message_id: Optional[int] = int(data["alert_system_message_id"])
+            self.alert_system_message: Optional[Message] = state._get_message(self.alert_system_message_id)
+        except KeyError:
+            self.alert_system_message_id: Optional[int] = None
+            self.alert_system_message: Optional[Message] = None
+            
+    def __repr__(self) -> str:
+        return (
+            f"<AutoModActionExecutionEvent action={self.action!r} "
+            f"rule_id={self.rule_id!r} guild_id={self.guild_id!r} "
+            f"user_id={self.user_id!r}>"
+        )
+

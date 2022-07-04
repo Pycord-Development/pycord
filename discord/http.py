@@ -71,6 +71,7 @@ if TYPE_CHECKING:
     from .types import (
         appinfo,
         audit_log,
+        automod,
         channel,
         components,
         embed,
@@ -2315,6 +2316,74 @@ class HTTPClient:
         )
         return self.request(r)
 
+    # Guild Automod Rules
+    
+    def get_auto_moderation_rules(
+        self,
+        guild_id: Snowflake,
+    ) -> Response[List[automod.AutoModRule]]:
+        r = Route(
+            "GET",
+            "/guilds/{guild_id}/auto-moderation/rules",
+            guild_id=guild_id,
+        )
+        return self.request(r)
+    
+    def get_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "GET",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r)
+    
+    def create_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        payload: automod.CreateAutoModRule,
+        reason: Optional[str] = None,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "POST",
+            "/guilds/{guild_id}/auto-moderation/rules",
+            guild_id=guild_id,
+        )
+        return self.request(r, json=payload, reason=reason)
+    
+    def edit_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+        payload: automod.EditAutoModRule, 
+        reason: Optional[str] = None,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "PATCH",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r, json=payload, reason=reason)
+    
+    def delete_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+        reason: Optional[str] = None,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r, reason=reason)
+    
     # Interaction responses
 
     def _edit_webhook_helper(
