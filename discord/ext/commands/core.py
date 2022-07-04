@@ -1598,6 +1598,23 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 # Decorators
 
 
+@overload  # for py 3.10
+def command(
+    name: str = ...,
+    cls: Type[Command[CogT, P, T]] = ...,
+    **attrs: Any,
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[CogT, ContextT, P]], Coro[T],
+            Callable[Concatenate[ContextT, P]], Coro[T],
+        ]
+    ],
+    Command[CogT, P, T],
+]:
+    ...
+
+
 @overload
 def command(
     name: str = ...,
