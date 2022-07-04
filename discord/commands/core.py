@@ -864,8 +864,8 @@ class SlashCommand(ApplicationCommand):
                         arg = op._raw_type(int(arg))
                     except ValueError:
                         arg = op._raw_type(arg)
-                else:
-                    arg = op._raw_type(arg)
+                elif choice := find(lambda c: c.value == arg, op.choices):
+                    arg = getattr(op._raw_type, choice.name)
 
             kwargs[op._parameter_name] = arg
 
