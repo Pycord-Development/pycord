@@ -230,10 +230,10 @@ class Option:
         if not (isinstance(self.max_length, minmax_length_types) and self.max_length is not None):
             raise TypeError(f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"')
 
-        if self.min_length:
+        if self.min_length is not None:
             if self.min_length < 0 or self.min_length > 6000:
                 raise AttributeError("min_length must be between 0 and 6000 (inclusive)")
-        if self.max_length:
+        if self.max_length is not None:
             if self.max_length < 1 or self.max_length > 6000:
                 raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
