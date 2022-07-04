@@ -200,31 +200,28 @@ class Option:
             minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
 
+        if self.input_type == SlashCommandOptionType.string:
+            minmax_length_types = (int, type(None))
+        else:
+            minmax_length_types = (type(None),)
+        minmax_length_typehint = Optional[Union[minmax_length_types]] # type: ignore
+
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
+        self.min_length: minmax_length_typehint = kwargs.pop("min_length", None)
+        self.max_length: minmax_length_typehint = kwargs.pop("max_length", None)
 
         if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
                 and (self.min_value or self.max_value)):
             raise AttributeError("Option does not take min_value or max_value if not of type "
                                  "SlashCommandOptionType.integer or SlashCommandOptionType.number")
-
-        if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
-            raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
-        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
-            raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
-
-        if self.input_type == SlashCommandOptionType.string:
-            minmax_length_types = (int, type(None))
-        else:
-            minmax_length_types = (type(None))
-        minmax_length_typehint = Optional[Union[minmax_length_types]]
-
-        self.min_length: minmax_length_typehint = kwargs.pop("min_length", None)
-        self.max_length: minmax_length_typehint = kwargs.pop("max_length", None)
-
         if input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
             raise AttributeError('Option does not take min_length or max_length if not of type str')
 
+        if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
+            raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
+        if not (isinstance(self.max_value, minmax_types) and self.max_value is not None):
+            raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
         if not isinstance(self.min_length, minmax_length_types) and self.min_length is not None:
             raise TypeError(f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"')
         if not (isinstance(self.max_length, minmax_length_types) and self.max_length is not None):
