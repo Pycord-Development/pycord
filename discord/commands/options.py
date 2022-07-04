@@ -109,12 +109,10 @@ class Option:
         The maximum value that can be entered.
         Only applies to Options with an input_type of ``int`` or ``float``.
     min_length: Optional[:class:`int`]
-        The minimum length of the string that can be entered. Must be greater than or equal to 0 and less than or
-        equal to 6000.
+        The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
         Only applies to Options with an input_type of ``str``.
     max_length: Optional[:class:`int`]
-        The maximum length of the string that can be entered. Must be greater than or equal to 1 and less than or
-        equal to 6000.
+        The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an input_type of ``str``.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
@@ -207,8 +205,8 @@ class Option:
 
         if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
                 and (self.min_value or self.max_value)):
-            raise AttributeError('Option does not take min_value or max_value if not of type '
-                                 'SlashCommandOptionType.integer or SlashCommandOptionType.number')
+            raise AttributeError("Option does not take min_value or max_value if not of type "
+                                 "SlashCommandOptionType.integer or SlashCommandOptionType.number")
 
         if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
             raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
@@ -234,10 +232,10 @@ class Option:
 
         if self.min_length:
             if self.min_length <= 0 or self.min_length > 6000:
-                raise AttributeError('min_length must be 0 <= min_length <= 6000')
+                raise AttributeError("min_length must be between 0 and 6000 (inclusive)")
         if self.max_length:
             if self.max_length <= 1 or self.max_length > 6000:
-                raise AttributeError('max_length must be 1 <= min_length <= 6000')
+                raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
