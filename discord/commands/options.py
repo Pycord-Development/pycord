@@ -227,7 +227,7 @@ class Option:
 
         if not isinstance(self.min_length, minmax_length_types) and self.min_length is not None:
             raise TypeError(f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"')
-        if not (isinstance(self.max_length, minmax_length_types) or self.max_length is None):
+        if not (isinstance(self.max_length, minmax_length_types) and self.max_length is not None):
             raise TypeError(f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"')
 
         if self.min_length:
