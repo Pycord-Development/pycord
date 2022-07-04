@@ -109,10 +109,12 @@ class Option:
         The maximum value that can be entered.
         Only applies to Options with an input_type of ``int`` or ``float``.
     min_length: Optional[:class:`int`]
-        The minimum length of the string that can be entered.
+        The minimum length of the string that can be entered. Must be greater than or equal to 0 and less than or
+        equal to 6000.
         Only applies to Options with an input_type of ``str``.
     max_length: Optional[:class:`int`]
-        The maximum length of the string that can be entered.
+        The maximum length of the string that can be entered. Must be greater than or equal to 1 and less than or
+        equal to 6000.
         Only applies to Options with an input_type of ``str``.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
@@ -203,6 +205,11 @@ class Option:
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
 
+        if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
+                and (self.min_value or self.max_value)):
+            raise AttributeError('Option does not take min_value or max_value if not of type '
+                                 'SlashCommandOptionType.integer or SlashCommandOptionType.number')
+
         if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
             raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
         if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
@@ -217,10 +224,20 @@ class Option:
         self.min_length: minmax_length_typehint = kwargs.pop("min_length", None)
         self.max_length: minmax_length_typehint = kwargs.pop("max_length", None)
 
+        if input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
+            raise AttributeError('Option does not take min_length or max_length if not of type str')
+
         if not isinstance(self.min_length, minmax_length_types) and self.min_length is not None:
             raise TypeError(f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"')
         if not (isinstance(self.max_length, minmax_length_types) or self.max_length is None):
             raise TypeError(f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"')
+
+        if self.min_length:
+            if self.min_length <= 0 or self.min_length > 6000:
+                raise AttributeError('min_length must be 0 <= min_length <= 6000')
+        if self.max_length:
+            if self.max_length <= 1 or self.max_length > 6000:
+                raise AttributeError('max_length must be 1 <= min_length <= 6000')
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
