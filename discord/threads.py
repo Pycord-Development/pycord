@@ -86,6 +86,10 @@ class Thread(Messageable, Hashable):
         The guild the thread belongs to.
     id: :class:`int`
         The thread ID.
+
+        .. note::
+            This ID is the same as the thread starting message ID.
+
     parent_id: :class:`int`
         The parent :class:`TextChannel` ID this thread belongs to.
     owner_id: :class:`int`
@@ -168,16 +172,27 @@ class Thread(Messageable, Hashable):
         return self.name
 
     def _from_data(self, data: ThreadPayload):
+        # This data will always exist
         self.id = int(data["id"])
         self.parent_id = int(data["parent_id"])
-        self.owner_id = int(data["owner_id"])
         self.name = data["name"]
         self._type = try_enum(ChannelType, data["type"])
+
+        # This data may be missing depending on how this object is being created
+        self.owner_id = int(data.get("owner_id")) if data.get("owner_id", None) is not None else None
         self.last_message_id = _get_as_snowflake(data, "last_message_id")
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
-        self.message_count = data["message_count"]
-        self.member_count = data["member_count"]
+        self.message_count = data.get("message_count", None)
+        self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+
+        # Here, we try to fill in potentially missing data
+        if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
+            self.owner_id = thread.owner_id if self.owner_id is None else self.owner_id
+            self.last_message_id = thread.last_message_id if self.last_message_id is None else self.last_message_id
+            self.message_count = thread.message_count if self.message_count is None else self.message_count
+            self.member_count = thread.member_count if self.member_count is None else self.member_count
+
         self._unroll_metadata(data["thread_metadata"])
 
         try:
@@ -249,7 +264,7 @@ class Thread(Messageable, Hashable):
 
     @property
     def last_message(self) -> Optional[Message]:
-        """Fetches the last message from this channel in cache.
+        """Returns the last message from this thread in cache.
 
         The message might not be valid or point to an existing message.
 
@@ -262,7 +277,7 @@ class Thread(Messageable, Hashable):
             attribute.
 
         Returns
-        ---------
+        --------
         Optional[:class:`Message`]
             The last message in this channel or ``None`` if not found.
         """
@@ -278,7 +293,7 @@ class Thread(Messageable, Hashable):
             The parent channel was not cached and returned ``None``.
 
         Returns
-        -------
+        --------
         Optional[:class:`CategoryChannel`]
             The parent channel's category.
         """
@@ -298,7 +313,7 @@ class Thread(Messageable, Hashable):
             The parent channel was not cached and returned ``None``.
 
         Returns
-        -------
+        --------
         Optional[:class:`int`]
             The parent channel's category ID.
         """
@@ -307,6 +322,22 @@ class Thread(Messageable, Hashable):
         if parent is None:
             raise ClientException("Parent channel not found")
         return parent.category_id
+
+    @property
+    def starting_message(self) -> Optional[Message]:
+        """Returns the message that started this thread.
+
+        The message might not be valid or point to an existing message.
+
+        .. note::
+            The ID for this message is the same as the thread ID.
+
+        Returns
+        --------
+        Optional[:class:`Message`]
+            The message that started this thread or ``None`` if not found in the cache.
+        """
+        return self._state._get_message(self.id)
 
     def is_private(self) -> bool:
         """:class:`bool`: Whether the thread is a private thread.
@@ -704,7 +735,13 @@ class Thread(Messageable, Hashable):
         """
 
         members = await self._state.http.get_thread_members(self.id)
-        return [ThreadMember(parent=self, data=data) for data in members]
+
+        thread_members = [ThreadMember(parent=self, data=data) for data in members]
+
+        for member in thread_members:
+            self._add_member(member)
+
+        return thread_members
 
     async def delete(self):
         """|coro|

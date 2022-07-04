@@ -62,6 +62,7 @@ __all__ = (
     "MessageConverter",
     "PartialMessageConverter",
     "TextChannelConverter",
+    "ForumChannelConverter",
     "InviteConverter",
     "GuildConverter",
     "RoleConverter",
@@ -160,7 +161,7 @@ class ObjectConverter(IDConverter[discord.Object]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Object:
-        match = self._get_id_match(argument) or re.match(r"<(?:@(?:!|&)?|#)([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<(?:@[!&]?|#)([0-9]{15,20})>$", argument)
 
         if match is None:
             raise ObjectNotFound(argument)
@@ -563,6 +564,25 @@ class CategoryChannelConverter(IDConverter[discord.CategoryChannel]):
         return GuildChannelConverter._resolve_channel(ctx, argument, "categories", discord.CategoryChannel)
 
 
+class ForumChannelConverter(IDConverter[discord.ForumChannel]):
+    """Converts to a :class:`~discord.ForumChannel`.
+
+    All lookups are via the local guild. If in a DM context, then the lookup
+    is done by the global cache.
+
+    The lookup strategy is as follows (in order):
+
+    1. Lookup by ID.
+    2. Lookup by mention.
+    3. Lookup by name
+
+    .. versionadded:: 2.0
+    """
+
+    async def convert(self, ctx: Context, argument: str) -> discord.ForumChannel:
+        return GuildChannelConverter._resolve_channel(ctx, argument, "forum_channels", discord.ForumChannel)
+
+
 class ThreadConverter(IDConverter[discord.Thread]):
     """Coverts to a :class:`~discord.Thread`.
 
@@ -767,7 +787,7 @@ class EmojiConverter(IDConverter[discord.Emoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Emoji:
-        match = self._get_id_match(argument) or re.match(r"<a?:[a-zA-Z0-9\_]{1,32}:([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<a?:\w{1,32}:([0-9]{15,20})>$", argument)
         result = None
         bot = ctx.bot
         guild = ctx.guild
@@ -801,7 +821,7 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialEmoji:
-        match = re.match(r"<(a?):([a-zA-Z0-9\_]{1,32}):([0-9]{15,20})>$", argument)
+        match = re.match(r"<(a?):(\w{1,32}):([0-9]{15,20})>$", argument)
 
         if match:
             emoji_animated = bool(match.group(1))
@@ -1043,6 +1063,7 @@ CONVERTER_MAPPING: Dict[Type[Any], Any] = {
     discord.Emoji: EmojiConverter,
     discord.PartialEmoji: PartialEmojiConverter,
     discord.CategoryChannel: CategoryChannelConverter,
+    discord.ForumChannel: ForumChannelConverter,
     discord.Thread: ThreadConverter,
     discord.abc.GuildChannel: GuildChannelConverter,
     discord.GuildSticker: GuildStickerConverter,

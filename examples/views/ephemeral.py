@@ -1,23 +1,12 @@
 import discord
-from discord.ext import commands
 
 
-class EphemeralCounterBot(commands.Bot):
-    def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("$"))
-
-    async def on_ready(self):
-        print(f"Logged in as {self.user} (ID: {self.user.id})")
-        print("------")
-
-
-# Define a simple View that gives us a counter button
+# Define a simple View that gives us a counter button.
 class Counter(discord.ui.View):
 
-    # Define the actual button
     # When pressed, this increments the number displayed until it hits 5.
-    # When it hits 5, the counter button is disabled and it turns green.
-    # NOTE: The name of the function does not matter to the library
+    # When it hits 5, the counter button is disabled, and it turns green.
+    # NOTE: The name of the function does not matter to the library.
     @discord.ui.button(label="0", style=discord.ButtonStyle.red)
     async def count(self, button: discord.ui.Button, interaction: discord.Interaction):
         number = int(button.label) if button.label else 0
@@ -30,23 +19,30 @@ class Counter(discord.ui.View):
         await interaction.response.edit_message(view=self)
 
 
-# Define a View that will give us our own personal counter button
+# Define a View that will give us our own personal counter button.
 class EphemeralCounter(discord.ui.View):
-    # When this button is pressed, it will respond with a Counter view that will
+
+    # When this button is pressed, it will respond with a Counter View that will
     # give the button presser their own personal button they can press 5 times.
     @discord.ui.button(label="Click", style=discord.ButtonStyle.blurple)
     async def receive(self, button: discord.ui.Button, interaction: discord.Interaction):
-        # ephemeral=True makes the message hidden from everyone except the button presser
+        # ephemeral=True makes the message hidden from everyone except the button presser.
         await interaction.response.send_message("Enjoy!", view=Counter(), ephemeral=True)
 
 
-bot = EphemeralCounterBot()
+bot = discord.Bot(debug_guilds=[...])
 
 
-@bot.command()
-async def counter(ctx: commands.Context):
+@bot.slash_command()
+async def counter(ctx: discord.ApplicationContext):
     """Starts a counter for pressing."""
-    await ctx.send("Press!", view=EphemeralCounter())
+    await ctx.respond("Press!", view=EphemeralCounter())
 
 
-bot.run("token")
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------")
+
+
+bot.run("TOKEN")

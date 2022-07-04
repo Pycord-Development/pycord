@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import List, Literal, Optional, TypedDict, Union
 
+from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
 from .guild import (
     DefaultMessageNotificationLevel,
@@ -90,6 +91,11 @@ AuditLogEvent = Literal[
     110,
     111,
     112,
+    121,
+    140,
+    141,
+    142,
+    143,
 ]
 
 
@@ -152,7 +158,6 @@ class _AuditLogChange_Bool(TypedDict):
         "mute",
         "nick",
         "enabled_emoticons",
-        "region",
         "rtc_region",
         "available",
         "archived",
@@ -283,3 +288,4 @@ class AuditLog(TypedDict):
     integrations: List[PartialIntegration]
     threads: List[Thread]
     scheduled_events: List[ScheduledEvent]
+    auto_moderation_rules: List[AutoModRule]

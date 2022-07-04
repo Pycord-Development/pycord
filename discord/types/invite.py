@@ -65,11 +65,11 @@ class IncompleteInvite(_InviteMetadata):
 
 
 class Invite(IncompleteInvite, _InviteOptional):
-    ...
+    pass
 
 
 class InviteWithCounts(Invite, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class _GatewayInviteCreateOptional(TypedDict, total=False):
