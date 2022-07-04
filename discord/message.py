@@ -657,6 +657,10 @@ class Message(Hashable):
         The guild that the message belongs to, if applicable.
     interaction: Optional[:class:`MessageInteraction`]
         The interaction associated with the message, if applicable.
+    thread: Optional[:class:`Thread`]
+        The thread created from this message, if applicable.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
@@ -691,6 +695,7 @@ class Message(Hashable):
         "components",
         "guild",
         "interaction",
+        "thread",
     )
 
     if TYPE_CHECKING:
@@ -765,6 +770,12 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
             self.interaction = None
+
+        self.thread: Optional[Thread]
+        try:
+            self.thread = Thread(guild=self.guild, state=self._state, data=data["thread"])
+        except KeyError:
+            self.thread = None
 
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
@@ -1590,13 +1601,16 @@ class Message(Hashable):
         default_auto_archive_duration: ThreadArchiveDuration = getattr(
             self.channel, "default_auto_archive_duration", 1440
         )
+
         data = await self._state.http.start_thread_with_message(
             self.channel.id,
             self.id,
             name=name,
             auto_archive_duration=auto_archive_duration or default_auto_archive_duration,
         )
-        return Thread(guild=self.guild, state=self._state, data=data)
+
+        self.thread = Thread(guild=self.guild, state=self._state, data=data)
+        return self.thread
 
     async def reply(self, content: Optional[str] = None, **kwargs) -> Message:
         """|coro|
@@ -1712,6 +1726,7 @@ class PartialMessage(Hashable):
     def __init__(self, *, channel: PartialMessageableChannel, id: int):
         if channel.type not in (
             ChannelType.text,
+            ChannelType.voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,

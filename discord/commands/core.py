@@ -240,8 +240,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
     ) -> Union[
-        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-        Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+        Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
     ]:
         return self._callback
 
@@ -249,8 +249,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
         function: Union[
-            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+            Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+            Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
         ],
     ) -> None:
         self._callback = function
@@ -784,6 +784,8 @@ class SlashCommand(ApplicationCommand):
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
+            if op is None:
+                continue
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
@@ -844,7 +846,11 @@ class SlashCommand(ApplicationCommand):
                     arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
-                arg = await converter.convert(converter, ctx, arg)
+                from discord.ext.commands import Converter
+                if isinstance(converter, Converter):
+                    arg = await converter.convert(ctx, arg)
+                elif isinstance(converter, type) and hasattr(converter, "convert"):
+                    arg = await converter().convert(ctx, arg)
 
             elif op._raw_type in (SlashCommandOptionType.integer,
                                   SlashCommandOptionType.number,
@@ -858,8 +864,8 @@ class SlashCommand(ApplicationCommand):
                         arg = op._raw_type(int(arg))
                     except ValueError:
                         arg = op._raw_type(arg)
-                else:
-                    arg = op._raw_type(arg)
+                elif choice := find(lambda c: c.value == arg, op.choices):
+                    arg = getattr(op._raw_type, choice.name)
 
             kwargs[op._parameter_name] = arg
 
