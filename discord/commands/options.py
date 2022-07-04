@@ -108,6 +108,12 @@ class Option:
     max_value: Optional[:class:`int`]
         The maximum value that can be entered.
         Only applies to Options with an input_type of ``int`` or ``float``.
+    min_length: Optional[:class:`int`]
+        The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
+        Only applies to Options with an input_type of ``str``.
+    max_length: Optional[:class:`int`]
+        The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
+        Only applies to Options with an input_type of ``str``.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
@@ -194,13 +200,39 @@ class Option:
             minmax_types = (type(None),)
         minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
 
+        if self.input_type == SlashCommandOptionType.string:
+            minmax_length_types = (int, type(None))
+        else:
+            minmax_length_types = (type(None),)
+        minmax_length_typehint = Optional[Union[minmax_length_types]] # type: ignore
+
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
+        self.min_length: minmax_length_typehint = kwargs.pop("min_length", None)
+        self.max_length: minmax_length_typehint = kwargs.pop("max_length", None)
 
-        if not isinstance(self.min_value, minmax_types) and self.min_value is not None:
+        if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
+                and (self.min_value or self.max_value)):
+            raise AttributeError("Option does not take min_value or max_value if not of type "
+                                 "SlashCommandOptionType.integer or SlashCommandOptionType.number")
+        if input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
+            raise AttributeError('Option does not take min_length or max_length if not of type str')
+
+        if self.min_value is not None and not isinstance(self.min_value, minmax_types):
             raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
-        if not (isinstance(self.max_value, minmax_types) or self.min_value is None):
+        if self.max_value is not None and not isinstance(self.max_value, minmax_types):
             raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
+
+        if self.min_length is not None:
+            if not isinstance(self.min_length, minmax_length_types):
+                raise TypeError(f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"')
+            if self.min_length < 0 or self.min_length > 6000:
+                raise AttributeError("min_length must be between 0 and 6000 (inclusive)")
+        if self.max_length is not None:
+            if not isinstance(self.max_length, minmax_length_types):
+                raise TypeError(f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"')
+            if self.max_length < 1 or self.max_length > 6000:
+                raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
@@ -226,6 +258,10 @@ class Option:
             as_dict["min_value"] = self.min_value
         if self.max_value is not None:
             as_dict["max_value"] = self.max_value
+        if self.min_length is not None:
+            as_dict["min_length"] = self.min_length
+        if self.max_length is not None:
+            as_dict["max_length"] = self.max_length
 
         return as_dict
 
