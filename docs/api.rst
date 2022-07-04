@@ -1407,6 +1407,46 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawScheduledEventSubscription`
 
+.. function:: on_auto_moderation_rule_create(rule)
+
+    Called when an auto moderation rule is created.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The newly created rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_update(rule)
+
+    Called when an auto moderation rule is updated.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The updated rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_delete(rule)
+
+    Called when an auto moderation rule is deleted.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The deleted rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_action_execution(guild, action)
+
+    Called when an auto moderation action is executed.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    :attr:`Intents.auto_moderation_execution` must be enabled.
+
+    :param payload: The event's data.
+    :type payload: :class:`AutoModActionExecutionEvent`
+
 .. _discord-api-utils:
 
 Utility Functions

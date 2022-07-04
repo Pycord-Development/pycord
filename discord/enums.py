@@ -232,6 +232,7 @@ class MessageType(Enum):
     thread_starter_message = 21
     guild_invite_reminder = 22
     context_menu_command = 23
+    auto_moderation_action = 24
 
 
 class VoiceRegion(Enum):
@@ -381,6 +382,10 @@ class AuditLogAction(Enum):
     thread_update = 111
     thread_delete = 112
     application_command_permission_update = 121
+    auto_moderation_rule_create = 140
+    auto_moderation_rule_update = 141
+    auto_moderation_rule_delete = 142 
+    auto_moderation_block_message = 143
 
     @property
     def category(self) -> Optional[AuditLogActionCategory]:
@@ -433,6 +438,10 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
             AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
+            AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
+            AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
+            AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
+            AuditLogAction.auto_moderation_block_message: None,
         }
         return lookup[self]
 
@@ -471,6 +480,8 @@ class AuditLogAction(Enum):
             return "thread"
         elif v < 122:
             return "application_command_permission"
+        elif v < 144:
+            return "auto_moderation_rule"
 
 
 class UserFlags(Enum):
@@ -764,6 +775,29 @@ class ScheduledEventLocationType(Enum):
     voice = 2
     external = 3
 
+    
+class AutoModTriggerType(Enum):
+    keyword = 1
+    harmful_link = 2
+    spam = 3
+    keyword_preset = 4
+    
+
+class AutoModEventType(Enum):
+    message_send = 1
+    
+    
+class AutoModActionType(Enum):
+    block_message = 1
+    send_alert_message = 2
+    timeout = 3
+    
+    
+class AutoModKeywordPresetType(Enum):
+    profanity = 1
+    sexual_content = 2
+    slurs = 3
+    
 
 T = TypeVar("T")
 
