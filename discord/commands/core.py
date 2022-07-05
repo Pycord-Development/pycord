@@ -963,10 +963,6 @@ class SlashCommandGroup(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
-        The list of all subcommands under this group.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
@@ -974,6 +970,12 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The description localizations for this command. The values of this should be ``"locale": "description"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
     __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
     type = 1
@@ -1003,7 +1005,7 @@ class SlashCommandGroup(ApplicationCommand):
     def __init__(
         self,
         name: str,
-        description: str,
+        description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
@@ -1070,6 +1072,7 @@ class SlashCommandGroup(ApplicationCommand):
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
+        **kwargs,
     ) -> SlashCommandGroup:
         """
         Creates a new subgroup for this SlashCommandGroup.
@@ -1083,6 +1086,23 @@ class SlashCommandGroup(ApplicationCommand):
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
+        guild_only: :class:`bool`
+            Whether the command should only be usable inside a guild.
+        default_member_permissions: :class:`~discord.Permissions`
+            The default permissions a member needs to be able to run the command.
+        checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+            A list of predicates that verifies if the command could be executed
+            with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+            is necessary to be thrown to signal failure, then one inherited from
+            :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
+            :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+            event.
+        name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+            The name localizations for this command. The values of this should be ``"locale": "name"``. See
+            `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+            The description localizations for this command. The values of this should be ``"locale": "description"``.
+            See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
         Returns
         --------
@@ -1092,9 +1112,9 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.parent is not None:
             # TODO: Improve this error message
-            raise Exception("Subcommands can only be nested once")
+            raise Exception("a subgroup cannot have a subgroup")
 
-        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self)
+        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self, **kwargs)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
