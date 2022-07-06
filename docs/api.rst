@@ -846,7 +846,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     .. versionadded:: 2.0
 
-    :param interaction: The interaction associated to the command that is not found.
+    :param interaction: The interaction associated to the unknown command.
     :type context: :class:`Interaction`
 
 .. function:: on_private_channel_update(before, after)
