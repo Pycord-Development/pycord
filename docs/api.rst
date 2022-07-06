@@ -839,6 +839,15 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     :param exception: The DiscordException associated to the error.
     :type exception: :class:`DiscordException`
+    
+.. function:: on_unknown_application_command(interaction)
+
+    Called when an application command is not found in bot's internal cache.
+
+    .. versionadded:: 2.0
+
+    :param interaction: The interaction associated to the command that is not found.
+    :type context: :class:`Interaction`
 
 .. function:: on_private_channel_update(before, after)
 
