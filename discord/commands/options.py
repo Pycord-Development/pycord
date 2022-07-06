@@ -22,6 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations
+
 import inspect
 from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Type, Union
 from enum import Enum
