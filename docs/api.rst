@@ -842,7 +842,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     
 .. function:: on_unknown_application_command(interaction)
 
-    Called when an application command is not found in bot's internal cache.
+    Called when an application command was not found in the bots internal cache.
 
     .. versionadded:: 2.0
 
