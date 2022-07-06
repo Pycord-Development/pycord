@@ -221,20 +221,17 @@ class Option:
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
-            minmax_typehint = Optional[int]
         elif self.input_type == SlashCommandOptionType.number:
             minmax_types = (int, float, type(None))
-            minmax_typehint = Optional[Union[int, float]]
         else:
             minmax_types = (type(None),)
-            minmax_typehint = type(None)
+        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
 
         if self.input_type == SlashCommandOptionType.string:
             minmax_length_types = (int, type(None))
-            minmax_length_typehint = Optional[int]
         else:
             minmax_length_types = (type(None),)
-            minmax_length_typehint = type(None)
+        minmax_length_typehint = Optional[Union[minmax_length_types]] # type: ignore
 
         self.min_value: minmax_typehint = kwargs.pop("min_value", None)
         self.max_value: minmax_typehint = kwargs.pop("max_value", None)
