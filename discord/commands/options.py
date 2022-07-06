@@ -23,12 +23,39 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import inspect
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Type, Union
 from enum import Enum
 
-from ..abc import GuildChannel
+from ..abc import GuildChannel, Mentionable
 from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel, Thread
 from ..enums import ChannelType, SlashCommandOptionType, Enum as DiscordEnum
+
+if TYPE_CHECKING:
+    from ..ext.commands import Converter
+    from ..user import User
+    from ..member import Member
+    from ..message import Attachment
+    from ..role import Role
+
+    InputType = Union[
+        Type[str],
+        Type[bool],
+        Type[int],
+        Type[float],
+        Type[GuildChannel],
+        Type[Thread],
+        Type["ThreadOption"],
+        Type[Member],
+        Type[User],
+        Type[Attachment],
+        Type[Role],
+        Type[Mentionable],
+        SlashCommandOptionType,
+        Converter,
+        Type[Converter],
+        Type[Enum],
+        Type[DiscordEnum],
+    ]
 
 __all__ = (
     "ThreadOption",
@@ -129,7 +156,7 @@ class Option:
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
-    def __init__(self, input_type: Any = str, /, description: Optional[str] = None, **kwargs) -> None:
+    def __init__(self, input_type: InputType = str, /, description: Optional[str] = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         if self.name is not None:
             self.name = str(self.name)
@@ -187,7 +214,7 @@ class Option:
 
         if description is not None:
             self.description = description
-        elif issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
+        elif isinstance(self._raw_type, type) and issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
             self.description = doc
         else:
             self.description = "No description provided"
