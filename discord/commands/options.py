@@ -46,7 +46,6 @@ if TYPE_CHECKING:
         Type[float],
         Type[GuildChannel],
         Type[Thread],
-        Type["ThreadOption"],
         Type[Member],
         Type[User],
         Type[Attachment],
@@ -200,10 +199,6 @@ class Option:
                         for i in input_type:
                             if i is GuildChannel:
                                 continue
-                            if isinstance(i, ThreadOption):
-                                self.channel_types.append(i._type)
-                                continue
-
                             channel_type = CHANNEL_TYPE_MAP[i]
                             self.channel_types.append(channel_type)
                     input_type = _type
