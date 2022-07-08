@@ -330,7 +330,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to the channel. Useful for creating secret channels.
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
@@ -1482,7 +1482,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to the channel. Useful for creating secret channels.
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1822,7 +1822,7 @@ class StageChannel(VocalGuildChannel):
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to the channel. Useful for creating secret channels.
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1986,7 +1986,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to the channel. Useful for creating secret channels.
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
 
         Raises
         ------
