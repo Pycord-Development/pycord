@@ -183,6 +183,7 @@ class Option:
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
         if not isinstance(input_type, SlashCommandOptionType):
+            from ..ext.commands import Converter
             if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
                 self._raw_type = str
