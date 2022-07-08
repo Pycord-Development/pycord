@@ -86,7 +86,7 @@ class OggPage:
                 partial = True
             else:
                 packetlen += seg
-                yield self.data[offset: offset + packetlen], True
+                yield self.data[offset : offset + packetlen], True
                 offset += packetlen
                 packetlen = 0
                 partial = False

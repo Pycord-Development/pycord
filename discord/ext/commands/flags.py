@@ -528,7 +528,7 @@ class FlagConverter(metaclass=FlagsMeta):
 
             flag = flags.get(key)
             if last_position and last_flag is not None:
-                value = argument[last_position: begin - 1].lstrip()
+                value = argument[last_position : begin - 1].lstrip()
                 if not value:
                     raise MissingFlagArgument(last_flag)
 

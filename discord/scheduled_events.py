@@ -86,10 +86,10 @@ class ScheduledEventLocation:
     )
 
     def __init__(
-            self,
-            *,
-            state: ConnectionState,
-            value: Union[str, int, StageChannel, VoiceChannel],
+        self,
+        *,
+        state: ConnectionState,
+        value: Union[str, int, StageChannel, VoiceChannel],
     ):
         self._state = state
         self.value: Union[str, StageChannel, VoiceChannel, Object]
@@ -185,12 +185,12 @@ class ScheduledEvent(Hashable):
     )
 
     def __init__(
-            self,
-            *,
-            state: ConnectionState,
-            guild: Guild,
-            creator: Optional[Member],
-            data: ScheduledEventPayload,
+        self,
+        *,
+        state: ConnectionState,
+        guild: Guild,
+        creator: Optional[Member],
+        data: ScheduledEventPayload,
     ):
         self._state: ConnectionState = state
 
@@ -258,17 +258,17 @@ class ScheduledEvent(Hashable):
         )
 
     async def edit(
-            self,
-            *,
-            reason: Optional[str] = None,
-            name: str = MISSING,
-            description: str = MISSING,
-            status: Union[int, ScheduledEventStatus] = MISSING,
-            location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
-            start_time: datetime.datetime = MISSING,
-            end_time: datetime.datetime = MISSING,
-            cover: Optional[bytes] = MISSING,
-            privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        self,
+        *,
+        reason: Optional[str] = None,
+        name: str = MISSING,
+        description: str = MISSING,
+        status: Union[int, ScheduledEventStatus] = MISSING,
+        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
+        start_time: datetime.datetime = MISSING,
+        end_time: datetime.datetime = MISSING,
+        cover: Optional[bytes] = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> Optional[ScheduledEvent]:
         """|coro|
 
@@ -462,12 +462,12 @@ class ScheduledEvent(Hashable):
         return await self.edit(status=ScheduledEventStatus.canceled, reason=reason)
 
     def subscribers(
-            self,
-            *,
-            limit: int = 100,
-            as_member: bool = False,
-            before: Optional[Union[Snowflake, datetime.datetime]] = None,
-            after: Optional[Union[Snowflake, datetime.datetime]] = None,
+        self,
+        *,
+        limit: int = 100,
+        as_member: bool = False,
+        before: Optional[Union[Snowflake, datetime.datetime]] = None,
+        after: Optional[Union[Snowflake, datetime.datetime]] = None,
     ) -> AsyncIterator:
         """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
 

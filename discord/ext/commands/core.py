@@ -1607,8 +1607,8 @@ def command(
 ) -> Callable[
     [
         Union[
-            Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
-            Callable[[Concatenate[ContextT, P]], Coro[T]],
+            Callable[Concatenate[CogT, ContextT, P]], Coro[T],
+            Callable[Concatenate[ContextT, P]], Coro[T],
         ]
     ],
     Command[CogT, P, T],
