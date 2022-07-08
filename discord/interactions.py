@@ -54,7 +54,7 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
-        PartialMessageable,
+        ForumChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -76,6 +76,7 @@ if TYPE_CHECKING:
         VoiceChannel,
         StageChannel,
         TextChannel,
+        ForumChannel,
         CategoryChannel,
         Thread,
         PartialMessageable,
@@ -137,9 +138,11 @@ class Interaction:
         "custom_id",
         "_message_data",
         "_permissions",
+        "_app_permissions",
         "_state",
         "_session",
         "_original_message",
+        "_cs_app_permissions",
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
@@ -163,6 +166,7 @@ class Interaction:
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
+        self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Optional[Message] = None
 
@@ -182,7 +186,8 @@ class Interaction:
             except KeyError:
                 pass
             else:
-                self.user = Member(state=self._state, guild=guild, data=member)  # type: ignore
+                cache_flag = self._state.member_cache_flags.interaction
+                self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 self._permissions = int(member.get("permissions", 0))
         else:
             try:
@@ -231,6 +236,11 @@ class Interaction:
         In a non-guild context where this doesn't apply, an empty permissions object is returned.
         """
         return Permissions(self._permissions)
+
+    @utils.cached_slot_property("_cs_app_permissions")
+    def app_permissions(self) -> Permissions:
+        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
+        return Permissions(self._app_permissions)
 
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
@@ -490,7 +500,7 @@ class InteractionResponse:
         """
         return self._responded
 
-    async def defer(self, *, ephemeral: bool = False) -> None:
+    async def defer(self, *, ephemeral: bool = False, invisible: bool = True) -> None:
         """|coro|
 
         Defers the interaction response.
@@ -498,11 +508,22 @@ class InteractionResponse:
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
 
+        This can only be used with the following interaction types:
+        - :attr:`InteractionType.application_command`
+        - :attr:`InteractionType.component`
+        - :attr:`InteractionType.modal_submit`
+
         Parameters
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            If ``True`` for interactions of type :attr:`InteractionType.component`, this will defer ephemerally.
+            This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``.
+        invisible: :class:`bool`
+            Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`)
+            instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`).
+            In the Discord UI, this is represented as the bot thinking of a response. You must
+            eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
+            This parameter does not apply to interactions of type :attr:`InteractionType.application_command`.
 
         Raises
         -------
@@ -517,16 +538,18 @@ class InteractionResponse:
         defer_type: int = 0
         data: Optional[Dict[str, Any]] = None
         parent = self._parent
-        if parent.type is InteractionType.component:
-            if ephemeral:
-                data = {"flags": 64}
-                defer_type = InteractionResponseType.deferred_channel_message.value
-            else:
-                defer_type = InteractionResponseType.deferred_message_update.value
-        elif parent.type in (InteractionType.application_command, InteractionType.modal_submit):
+        if parent.type is InteractionType.component or parent.type is InteractionType.modal_submit:
+            defer_type = (
+                InteractionResponseType.deferred_message_update.value
+                if invisible
+                else InteractionResponseType.deferred_channel_message.value
+            )
+            if not invisible and ephemeral:
+                data = {'flags': 64}
+        elif parent.type is InteractionType.application_command:
             defer_type = InteractionResponseType.deferred_channel_message.value
             if ephemeral:
-                data = {"flags": 64}
+                data = {'flags': 64}
 
         if defer_type:
             adapter = async_context.get()
@@ -615,7 +638,7 @@ class InteractionResponse:
             before deleting the message we just sent.
         file: :class:`File`
             The file to upload.
-        files: :class:`List[File]`
+        files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
 
         Raises
