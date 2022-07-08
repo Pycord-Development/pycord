@@ -224,7 +224,7 @@ class CogMeta(type):
         listeners_as_list = []
         for listener in listeners.values():
             for listener_name in listener.__cog_listener_names__:
-                # I use __name__ instead of just storing the value so I can inject
+                # I use __name__ instead of just storing the value, so I can inject
                 # the self attribute when the time comes to add them to the bot
                 listeners_as_list.append((listener_name, listener.__name__))
 
@@ -347,7 +347,7 @@ class Cog(metaclass=CogMeta):
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
-        """Return None if the method is not overridden. Otherwise returns the overridden method."""
+        """Return None if the method is not overridden. Otherwise, returns the overridden method."""
         return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
@@ -415,8 +415,11 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+            The invocation context.
         """
         return True
 
@@ -425,8 +428,12 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check`
         check.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
         """
         return True
 
@@ -435,8 +442,12 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :func:`~discord.ext.commands.check`
         for every command and subcommand in this cog.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
         """
         return True
 
@@ -664,9 +675,9 @@ class CogMixin:
     def _remove_module_references(self, name: str) -> None:
         # find all references to the module
         # remove the cogs registered from the module
-        for cogname, cog in self.__cogs.copy().items():
+        for cog_name, cog in self.__cogs.copy().items():
             if _is_submodule(name, cog.__module__):
-                self.remove_cog(cogname)
+                self.remove_cog(cog_name)
 
         # remove all the commands from the module
         if self._supports_prefixed_commands:
@@ -766,7 +777,7 @@ class CogMixin:
         -----------
         name: :class:`str`
             The extension or folder name to load. It must be dot separated
-            like regular Python imports if accessing a sub-module. e.g.
+            like regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
@@ -874,7 +885,7 @@ class CogMixin:
         -----------
         names: :class:`str`
            The extension or folder names to load. It must be dot separated
-           like regular Python imports if accessing a sub-module. e.g.
+           like regular Python imports if accessing a submodule. e.g.
            ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
@@ -947,7 +958,7 @@ class CogMixin:
         ------------
         name: :class:`str`
             The extension name to unload. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
@@ -979,13 +990,13 @@ class CogMixin:
         This replaces the extension with the same extension, only refreshed. This is
         equivalent to a :meth:`unload_extension` followed by a :meth:`load_extension`
         except done in an atomic way. That is, if an operation fails mid-reload then
-        the bot will roll-back to the prior working state.
+        the bot will roll back to the prior working state.
 
         Parameters
         ------------
         name: :class:`str`
             The extension name to reload. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.

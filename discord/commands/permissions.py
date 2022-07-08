@@ -48,7 +48,7 @@ def default_permissions(**perms: bool) -> Callable:
 
     Parameters
     ------------
-    perms
+    perms: :class:`bool`
         An argument list of permissions to check for.
 
     Example

@@ -211,21 +211,21 @@ class Template:
         .. versionadded:: 1.7
 
         .. versionchanged:: 2.0
-            The template is no longer edited in-place, instead it is returned.
+            The template is no longer synced in-place, instead it is returned.
 
         Raises
         -------
         HTTPException
-            Editing the template failed.
+            Syncing the template failed.
         Forbidden
-            You don't have permissions to edit the template.
+            You don't have permissions to sync the template.
         NotFound
             This template does not exist.
 
         Returns
         --------
         :class:`Template`
-            The newly edited template.
+            The newly synced template.
         """
 
         data = await self._state.http.sync_template(self.source_guild.id, self.code)
@@ -293,9 +293,9 @@ class Template:
         Raises
         -------
         HTTPException
-            Editing the template failed.
+            Deleting the template failed.
         Forbidden
-            You don't have permissions to edit the template.
+            You don't have permissions to delete the template.
         NotFound
             This template does not exist.
         """
