@@ -49,7 +49,7 @@ from typing import (
 
 from . import utils
 from .activity import BaseActivity
-from .automod import AutoModAction, AutoModRule
+from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
 from .emoji import Emoji
@@ -1789,7 +1789,7 @@ class AutoShardedConnectionState(ConnectionState):
         except AttributeError:
             pass  # already been deleted somehow
 
-        # regular users cannot shard so we won't worry about it here.
+        # regular users cannot shard, so we won't worry about it here.
 
         # clear the current task
         self._ready_task = None

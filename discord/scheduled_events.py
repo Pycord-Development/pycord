@@ -86,10 +86,10 @@ class ScheduledEventLocation:
     )
 
     def __init__(
-        self,
-        *,
-        state: ConnectionState,
-        value: Union[str, int, StageChannel, VoiceChannel],
+            self,
+            *,
+            state: ConnectionState,
+            value: Union[str, int, StageChannel, VoiceChannel],
     ):
         self._state = state
         self.value: Union[str, StageChannel, VoiceChannel, Object]
@@ -155,7 +155,7 @@ class ScheduledEvent(Hashable):
         The location of the event.
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
-        The number of users that have marked themselves as interested for the event.
+        The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -185,12 +185,12 @@ class ScheduledEvent(Hashable):
     )
 
     def __init__(
-        self,
-        *,
-        state: ConnectionState,
-        guild: Guild,
-        creator: Optional[Member],
-        data: ScheduledEventPayload,
+            self,
+            *,
+            state: ConnectionState,
+            guild: Guild,
+            creator: Optional[Member],
+            data: ScheduledEventPayload,
     ):
         self._state: ConnectionState = state
 
@@ -200,8 +200,7 @@ class ScheduledEvent(Hashable):
         self.description: Optional[str] = data.get("description", None)
         self._cover: Optional[str] = data.get("image", None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
-        end_time = data.get("scheduled_end_time", None)
-        if end_time != None:
+        if (end_time := data.get("scheduled_end_time", None)) is not None:
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
@@ -259,17 +258,17 @@ class ScheduledEvent(Hashable):
         )
 
     async def edit(
-        self,
-        *,
-        reason: Optional[str] = None,
-        name: str = MISSING,
-        description: str = MISSING,
-        status: Union[int, ScheduledEventStatus] = MISSING,
-        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
-        start_time: datetime.datetime = MISSING,
-        end_time: datetime.datetime = MISSING,
-        cover: Optional[bytes] = MISSING,
-        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+            self,
+            *,
+            reason: Optional[str] = None,
+            name: str = MISSING,
+            description: str = MISSING,
+            status: Union[int, ScheduledEventStatus] = MISSING,
+            location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
+            start_time: datetime.datetime = MISSING,
+            end_time: datetime.datetime = MISSING,
+            cover: Optional[bytes] = MISSING,
+            privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> Optional[ScheduledEvent]:
         """|coro|
 
@@ -334,9 +333,7 @@ class ScheduledEvent(Hashable):
             payload["privacy_level"] = int(privacy_level)
 
         if cover is not MISSING:
-            if cover is None:
-                payload["image"]
-            else:
+            if cover is not None:
                 payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:
@@ -465,12 +462,12 @@ class ScheduledEvent(Hashable):
         return await self.edit(status=ScheduledEventStatus.canceled, reason=reason)
 
     def subscribers(
-        self,
-        *,
-        limit: int = 100,
-        as_member: bool = False,
-        before: Optional[Union[Snowflake, datetime.datetime]] = None,
-        after: Optional[Union[Snowflake, datetime.datetime]] = None,
+            self,
+            *,
+            limit: int = 100,
+            as_member: bool = False,
+            before: Optional[Union[Snowflake, datetime.datetime]] = None,
+            after: Optional[Union[Snowflake, datetime.datetime]] = None,
     ) -> AsyncIterator:
         """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
 

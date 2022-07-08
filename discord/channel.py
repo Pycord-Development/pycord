@@ -329,9 +329,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
@@ -720,7 +719,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self
 
     def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news/anouncements channel."""
+        """:class:`bool`: Checks if the channel is a news/announcements channel."""
         return self._type == ChannelType.news.value
 
     @property
@@ -759,7 +758,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         type: Optional[:class:`ChannelType`]
             The type of thread to create. If a ``message`` is passed then this parameter
             is ignored, as a thread created with a message is always a public thread.
-            By default this creates a private thread if this is ``None``.
+            By default, this creates a private thread if this is ``None``.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
 
@@ -846,10 +845,16 @@ class ForumChannel(_TextChannel):
             The content of the message to send.
         embed: :class:`~discord.Embed`
             The rich embed for the content.
+        embeds: List[:class:`~discord.Embed`]
+            A list of embeds to upload. Must be a maximum of 10.
         file: :class:`~discord.File`
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
+        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+            A list of stickers to upload. Must be a maximum of 3.
+        delete_message_after: :class:`int`
+            The time to wait before deleting the thread.
         nonce: :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
@@ -862,10 +867,6 @@ class ForumChannel(_TextChannel):
             are used instead.
         view: :class:`discord.ui.View`
             A Discord UI View to add to the message.
-        embeds: List[:class:`~discord.Embed`]
-            A list of embeds to upload. Must be a maximum of 10.
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
-            A list of stickers to upload. Must be a maximum of 3.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
@@ -894,7 +895,7 @@ class ForumChannel(_TextChannel):
         message_content = str(content) if content is not None else None
 
         if embed is not None and embeds is not None:
-            raise InvalidArgument("cannot pass both embed and embeds parameter to create_post()")
+            raise InvalidArgument("cannot pass both embed and embeds parameter to create_thread()")
 
         if embed is not None:
             embed = embed.to_dict()
@@ -1079,7 +1080,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
     def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
         base = super().permissions_for(obj)
 
-        # voice channels cannot be edited by people who can't connect to them
+        # Voice channels cannot be edited by people who can't connect to them.
         # It also implicitly denies all other voice perms
         if not base.connect:
             denied = Permissions.voice()
@@ -1480,9 +1481,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1760,9 +1760,9 @@ class StageChannel(VocalGuildChannel):
 
         Raises
         -------
-        :exc:`.NotFound`
+        NotFound
             The stage instance or channel could not be found.
-        :exc:`.HTTPException`
+        HTTPException
             Getting the stage instance failed.
 
         Returns
@@ -1821,9 +1821,8 @@ class StageChannel(VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1986,9 +1985,8 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             To mark the category as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
 
         Raises
         ------
@@ -2024,7 +2022,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
 
         def comparator(channel):
-            return (not isinstance(channel, _TextChannel), channel.position)
+            return not isinstance(channel, _TextChannel), channel.position
 
         ret = [c for c in self.guild.channels if c.category_id == self.id]
         ret.sort(key=comparator)

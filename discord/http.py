@@ -32,7 +32,6 @@ import weakref
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Coroutine,
     Dict,
     Iterable,
@@ -523,22 +522,23 @@ class HTTPClient:
 
         attachments = []
         form.append({"name": "payload_json"})
-        for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
-            form.append(
-                {
-                    "name": f"files[{index}]",
-                    "value": file.fp,
-                    "filename": file.filename,
-                    "content_type": "application/octet-stream",
-                }
-            )
+        if files:
+            for index, file in enumerate(files):
+                attachments.append(
+                    {
+                        "id": index,
+                        "filename": file.filename,
+                        "description": file.description,
+                    }
+                )
+                form.append(
+                    {
+                        "name": f"files[{index}]",
+                        "value": file.fp,
+                        "filename": file.filename,
+                        "content_type": "application/octet-stream",
+                    }
+                )
         payload["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
         return self.request(route, form=form, files=files)
@@ -2494,7 +2494,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         token: str,
-        files: List[File] = [],
+        files: List[File] = None,
         content: Optional[str] = None,
         tts: bool = False,
         embeds: Optional[List[embed.Embed]] = None,

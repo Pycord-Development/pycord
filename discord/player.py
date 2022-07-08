@@ -112,7 +112,7 @@ class AudioSource:
         raise NotImplementedError
 
     def is_opus(self) -> bool:
-        """Checks if the audio source is already encoded in Opus."""
+        """:class:`bool`: Checks if the audio source is already encoded in Opus."""
         return False
 
     def cleanup(self) -> None:
@@ -183,7 +183,6 @@ class FFmpegAudio(AudioSource):
             self._pipe_thread.start()
 
     def _spawn_process(self, args: Any, **subprocess_kwargs: Any) -> subprocess.Popen:
-        process = None
         try:
             process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs)
         except FileNotFoundError:
@@ -670,7 +669,7 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
 
     @property
     def volume(self) -> float:
-        """Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."""
+        """:class:`float`: Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."""
         return self._volume
 
     @volume.setter

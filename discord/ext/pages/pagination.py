@@ -220,12 +220,14 @@ class PageGroup:
 
     .. note::
 
-        If multiple ``PageGroup`` objects have different options, they should all be set explicitly when creating each instance.
+        If multiple ``PageGroup`` objects have different options,
+        they should all be set explicitly when creating each instance.
 
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: Union[List[:class:`str`], List[:class:`Page`],
+    List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
@@ -305,9 +307,11 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`],
+    List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
-        If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed.
+        If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``,
+        only the first page group will be displayed.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
@@ -329,7 +333,8 @@ class Paginator(discord.ui.View):
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination components.
-        If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed.
+        If the currently displayed page has a `custom_view` assigned, it will replace these
+        view components when that page is displayed.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
@@ -346,7 +351,8 @@ class Paginator(discord.ui.View):
     page_groups: Optional[List[:class:`PageGroup`]]
         List of :class:`PageGroup` objects the user can switch between.
     default_page_group: Optional[:class:`int`]
-        The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`.
+        The index of the default page group shown when the paginator is initially sent.
+        Defined by setting ``default`` to ``True`` on a :class:`PageGroup`.
     current_page: :class:`int`
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
@@ -447,8 +453,10 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
-            The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`],
+        List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
+            The list of :class:`PageGroup` objects, :class:`Page` objects, strings,
+            embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
@@ -600,11 +608,12 @@ class Paginator(discord.ui.View):
 
             .. note::
 
-                Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
+                Page numbers are zero-indexed when referenced internally,
+                but appear as one-indexed when shown to the user.
 
         interaction: Optional[:class:`discord.Interaction`]
-            The interaction to use when editing the message. If not provided, the message will be edited using the paginator's
-            stored :attr:`message` attribute instead.
+            The interaction to use when editing the message. If not provided, the message will be
+            edited using the paginator's stored :attr:`message` attribute instead.
 
         Returns
         -------
@@ -854,11 +863,13 @@ class Paginator(discord.ui.View):
             A target where the paginated message should be sent, if different from the original :class:`Context`
         target_message: Optional[:class:`str`]
             An optional message shown when the paginator message is sent elsewhere.
-        reference: Optional[Union[:class:`discord.Message`, :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
-            A reference to the :class:`~discord.Message` to which you are replying with the paginator. This can be created using
-            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
-            whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user`
-            attribute of ``allowed_mentions`` or by setting ``mention_author``.
+        reference: Optional[Union[:class:`discord.Message`,
+        :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
+            A reference to the :class:`~discord.Message` to which you are replying with the paginator.
+            This can be created using :meth:`~discord.Message.to_reference` or passed directly as a
+            :class:`~discord.Message`. You can control whether this mentions the author of the referenced message
+            using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
+            setting ``mention_author``.
         allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
@@ -1012,10 +1023,12 @@ class Paginator(discord.ui.View):
 
             .. warning::
 
-                If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent).
+                If your paginator is ephemeral, it cannot have a timeout
+                longer than 15 minutes (and cannot be persistent).
 
         target: Optional[:class:`~discord.abc.Messageable`]
-            A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
+            A target where the paginated message should be sent,
+            if different from the original :class:`discord.Interaction`
         target_message: :class:`str`
             The content of the interaction response shown when the paginator message is sent elsewhere.
 
@@ -1063,7 +1076,8 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
+                # convert from WebhookMessage to Message reference to bypass
+                # 15min webhook token timeout (non-ephemeral messages only)
                 if not ephemeral:
                     msg = await msg.channel.fetch_message(msg.id)
             else:

@@ -389,7 +389,8 @@ class Role(Hashable):
             Can now pass ``int`` to ``colour`` keyword-only parameter.
 
         .. versionchanged:: 2.0
-            Edits are no longer in-place, the newly edited role is returned instead. Added ``icon`` and ``unicode_emoji``.
+            Edits are no longer in-place, the newly edited role is returned instead.
+            Added ``icon`` and ``unicode_emoji``.
 
         Parameters
         -----------
@@ -405,11 +406,12 @@ class Role(Hashable):
             Indicates if the role should be mentionable by others.
         position: :class:`int`
             The new role's position. This must be below your top role's
-            position or it will fail.
+            position, or it will fail.
         reason: Optional[:class:`str`]
             The reason for editing this role. Shows up on the audit log.
         icon: Optional[:class:`bytes`]
-            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported. If this argument is passed, ``unicode_emoji`` is set to None.
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
+            If this argument is passed, ``unicode_emoji`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
             Could be ``None`` to denote removal of the icon.
         unicode_emoji: Optional[:class:`str`]
