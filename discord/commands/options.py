@@ -114,8 +114,9 @@ class Option:
 
     Attributes
     ----------
-    input_type: :class:`Any`
-        The type of input that is expected for this option.
+    input_type: Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, :class:`Converter`, Type[:class:`Converter`], Type[:class:`Enum`], Type[:class:`DiscordEnum`]]
+        The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`,
+        an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`.
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
