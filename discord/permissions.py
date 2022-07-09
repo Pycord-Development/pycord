@@ -97,6 +97,18 @@ class Permissions(BaseFlags):
              Checks if a permission is a strict subset of another permission.
         .. describe:: x > y
 
+            Adds two permissions together.
+        .. describe:: x + y
+
+            Subtracts two permissions from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two permissions.
+        .. describe:: x & y
+
+            Returns the inverse of a permission.
+        .. describe:: ~x
+
              Checks if a permission is a strict superset of another permission.
         .. describe:: hash(x)
 
@@ -149,10 +161,57 @@ class Permissions(BaseFlags):
         """Returns ``True`` if the permissions on other are a strict superset of those on self."""
         return self.is_superset(other) and self != other
 
+    def __and__(self, other):
+        if isinstance(other, Permissions):
+            return self.__class__(self.value & other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__(self.value & other.flag)
+        elif isinstance(other, int):
+            return self.__class__(self.value & other)
+        else:
+            raise TypeError(f"'&' not supported between instances of '{type(self)}' and '{type(other)}'")
+
+    def __or__(self, other):
+        if isinstance(other, Permissions):
+            return self.__class__(self.value | other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__(self.value | other.flag)
+        elif isinstance(other, int):
+            return self.__class__(self.value | other)
+        else:
+            raise TypeError(f"'|' not supported between instances of '{type(self)}' and '{type(other)}'")
+
+    def __add__(self, other):
+        try:
+            return self.__or__(other)
+        except TypeError:
+            raise TypeError(f"'+' not supported between instances of '{type(self)}' and '{type(other)}'")
+
+    def __sub__(self, other):
+        try:
+            if isinstance(other, Permissions or int):
+                return self.__and__(~other)
+            elif isinstance(other, flag_value):
+                return self.__and__(~other.flag)
+        except TypeError:
+            raise TypeError(f"'-' not supported between instances of '{type(self)}' and '{type(other)}'")
+
+    def __invert__(self):
+        if isinstance(self, Permissions):
+            return self.__class__(~self.value)
+        else:
+            raise TypeError(f"'~' not supported for '{type(self)}'")
+
+    __rand__ = __and__
+    __ror__ = __or__
+    __radd__ = __add__
+    __rsub__ = __sub__
     __le__: Callable[[Permissions], bool] = is_subset
     __ge__: Callable[[Permissions], bool] = is_superset
     __lt__: Callable[[Permissions], bool] = is_strict_subset
     __gt__: Callable[[Permissions], bool] = is_strict_superset
+
+
 
     @classmethod
     def none(cls: Type[P]) -> P:
