@@ -39,6 +39,7 @@ from typing import (
     overload,
 )
 
+import discord
 from .enums import UserFlags
 
 __all__ = (
@@ -140,6 +141,44 @@ class BaseFlags:
             if isinstance(value, flag_value):
                 yield (name, self._has_flag(value.flag))
 
+    def __and__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value & other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value & other.flag)
+        else:
+            raise TypeError(f"'&' not supported between instances of {type(self)} and {type(other)}")
+
+    def __or__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value | other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value | other.flag)
+        else:
+            raise TypeError(f"'|' not supported between instances of {type(self)} and {type(other)}")
+
+    def __add__(self, other):
+        try:
+            return self | other
+        except TypeError:
+            raise TypeError(f"'+' not supported between instances of {type(self)} and {type(other)}")
+
+    def __sub__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value & ~other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value & ~other.flag)
+        else:
+            raise TypeError(f"'-' not supported between instances of {type(self)} and {type(other)}")
+
+    def __invert__(self):
+        return self.__class__._from_value(~self.value)
+
+    __rand__: Callable[[BaseFlags], bool] = __and__
+    __ror__: Callable[[BaseFlags], bool] = __or__
+    __radd__: Callable[[BaseFlags], bool] = __add__
+    __rsub__: Callable[[BaseFlags], bool] = __sub__
+
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
 
@@ -176,6 +215,19 @@ class SystemChannelFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
+
 
     Attributes
     -----------
@@ -249,6 +301,19 @@ class MessageFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flags.
+        .. describe:: ~x
+
 
     .. versionadded:: 1.3
 
@@ -345,6 +410,19 @@ class PublicUserFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
+
 
     .. versionadded:: 1.4
 
@@ -489,6 +567,19 @@ class Intents(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
+
 
     Attributes
     -----------
@@ -970,7 +1061,7 @@ class Intents(BaseFlags):
         - :meth:`Guild.get_scheduled_event`
         """
         return 1 << 16
-    
+
     @flag_value
     def auto_moderation_configuration(self):
         """:class:`bool`: Whether guild auto moderation configuration events are enabled.
@@ -982,7 +1073,7 @@ class Intents(BaseFlags):
         - :func:`on_auto_moderation_rule_delete`
         """
         return 1 << 20
-    
+
     @flag_value
     def auto_moderation_execution(self):
         """:class:`bool`: Whether guild auto moderation execution events are enabled.
@@ -1029,6 +1120,18 @@ class MemberCacheFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
 
     Attributes
     -----------
@@ -1155,6 +1258,18 @@ class ApplicationFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
+
     .. versionadded:: 2.0
 
     Attributes
@@ -1252,6 +1367,18 @@ class ChannelFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
+
+            Adds two flags together.
+        .. describe:: x + y
+
+            Subtracts two flags from each other.
+        .. describe:: x - y
+
+            Returns the intersection of two flags.
+        .. describe:: x & y
+
+            Returns the inverse of a flag.
+        .. describe:: ~x
 
     .. versionadded:: 2.0
 
