@@ -183,16 +183,16 @@ class Permissions(BaseFlags):
 
     def __add__(self, other):
         try:
-            return self.__or__(other)
+            return self | other
         except TypeError:
             raise TypeError(f"'+' not supported between instances of '{type(self)}' and '{type(other)}'")
 
     def __sub__(self, other):
         try:
             if isinstance(other, Permissions or int):
-                return self.__and__(~other)
+                return self & ~other
             elif isinstance(other, flag_value):
-                return self.__and__(~other.flag)
+                return self & ~other.flag
         except TypeError:
             raise TypeError(f"'-' not supported between instances of '{type(self)}' and '{type(other)}'")
 
