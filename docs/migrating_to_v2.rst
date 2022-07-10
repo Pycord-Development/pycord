@@ -51,6 +51,7 @@ Timezone-aware Time
     timestamp = datetime(2021, 3, 14, 15, 9, 2, tzinfo=timezone.utc)
     )
 
+
 Note that newly-added :meth:`discord.utils.utcnow()` can be used as an alias of :meth:`datetime.datetime.now(datetime.timezone.utc)`.
 
 .. _migrating_2_0_model_state:
@@ -96,6 +97,7 @@ Webhook Changes
 - ``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary.
 - ``adapter`` arguments of ``Webhook.partial`` and ``Webhook.from_url`` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
+
 .. code-block:: python
     webhook = discord.SyncWebhook.from_url(
     f"https://discord.com/api/webhooks/{id}/{token}"
@@ -111,6 +113,7 @@ async with aiohttp.ClientSession() as session:
     session=session
   )
   await webhook.send("Hello from Pycord 2.0")
+
 
 .. _migrating_2_0_thread_introduced:
 
