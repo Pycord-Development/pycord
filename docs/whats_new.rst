@@ -17,7 +17,8 @@ v2.0.0
 ------
 - Voice receive API
 - Support for Input Text and Modal components
-- Slash command Attachments option
+- Slash commands, User commands, and Message commands
+- Buttons and Select Menus
 - Discord API version changed from 9 to 10
 - Message Content privileged intent
 - Application Command Localization
@@ -28,7 +29,6 @@ v2.0.0
 - :meth:`Client.get_message`
 - Library-level enforcement of component field limits
 - Support providing option channel types as list
-- Change :attr:`Modal.children` to be a property + allow instantiating with list of InputText components
 - Enum options
 - Application permissions v2
 - ``arg: type = Option(...)`` Option format
