@@ -16,7 +16,6 @@ in specific versions.
 v2.0.0
 ------
 - Voice receive API
-- `Bot.register_commands` renamed to :meth:`Bot.sync_commands`
 - Support for Input Text and Modal components
 - Slash command Attachments option
 - Discord API version changed from 9 to 10
@@ -25,17 +24,14 @@ v2.0.0
 - Guild Ban List Paginated
 - Fully deprecated/removed store channels
 - discord.ext.bridge (Ability to have both slash and prefix commands)
+- discord.ext.pages (Paginators)
 - :meth:`Client.get_message`
-- :meth:`Modal.on_error`
 - Library-level enforcement of component field limits
 - Support providing option channel types as list
-- [ext.pages] Files parameter to Page object
-- [ext.bridge] :meth:`BridgeExtContext.delete()` method
-- disable_all_items method to View
 - Change :attr:`Modal.children` to be a property + allow instantiating with list of InputText components
 - Enum options
 - Application permissions v2
-- `arg: type = Option(...)` Option format
+- ``arg: type = Option(...)`` Option format
 - Forum channels
 - Methods and attributes that returned :class:`TextChannel`, etc can now return :class:`Thread`.
 - Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with `_url` (i.e. `avatar_url`) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns None in case the default avatar is used.
@@ -53,7 +49,7 @@ v2.0.0
 - `missing_perms` attributes and arguments are renamed to `missing_permissions`.
 - Many method arguments now reject :class:`None`.
 - Many arguments are now specified as positional-only or keyword-only; e.g. :meth:`utils.oauth_url` now takes keyword-only arguments, and methods starting with `get_` or `fetch_` take positional-only arguments.
-- `Complete list of breaking changes <https://gist.github.com/BobDotCom/81bfea226e330675e7f1e282b24b371e>`
+- `Complete list of breaking changes <https://gist.github.com/BobDotCom/81bfea226e330675e7f1e282b24b371e>`_
 
 .. _vp1p7p3:
 
