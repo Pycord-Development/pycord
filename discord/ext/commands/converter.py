@@ -62,6 +62,7 @@ __all__ = (
     "MessageConverter",
     "PartialMessageConverter",
     "TextChannelConverter",
+    "ForumChannelConverter",
     "InviteConverter",
     "GuildConverter",
     "RoleConverter",
@@ -160,7 +161,7 @@ class ObjectConverter(IDConverter[discord.Object]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Object:
-        match = self._get_id_match(argument) or re.match(r"<(?:@(?:!|&)?|#)([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<(?:@[!&]?|#)([0-9]{15,20})>$", argument)
 
         if match is None:
             raise ObjectNotFound(argument)
@@ -786,7 +787,7 @@ class EmojiConverter(IDConverter[discord.Emoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Emoji:
-        match = self._get_id_match(argument) or re.match(r"<a?:[a-zA-Z0-9\_]{1,32}:([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<a?:\w{1,32}:([0-9]{15,20})>$", argument)
         result = None
         bot = ctx.bot
         guild = ctx.guild
@@ -820,7 +821,7 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialEmoji:
-        match = re.match(r"<(a?):([a-zA-Z0-9\_]{1,32}):([0-9]{15,20})>$", argument)
+        match = re.match(r"<(a?):(\w{1,32}):([0-9]{15,20})>$", argument)
 
         if match:
             emoji_animated = bool(match.group(1))
