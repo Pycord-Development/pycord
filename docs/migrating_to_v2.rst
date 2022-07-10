@@ -46,6 +46,7 @@ Timezone-aware Time
 ``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing ``datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``.
 
 .. code-block:: python
+
     embed = discord.Embed(
     title = "Pi Day 2021 in UTC",
     timestamp = datetime(2021, 3, 14, 15, 9, 2, tzinfo=timezone.utc)
@@ -98,14 +99,16 @@ Webhook Changes
 - ``adapter`` arguments of ``Webhook.partial`` and ``Webhook.from_url`` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
 
-::
+.. code-block:: python
+
     webhook = discord.SyncWebhook.from_url(
     f"https://discord.com/api/webhooks/{id}/{token}"
     )
     webhook.send("Hello from pycord 2.0")
 
 
-::
+.. code-block:: python
+    
     async with aiohttp.ClientSession() as session:
     webhook = discord.Webhook.partial(
         id,
