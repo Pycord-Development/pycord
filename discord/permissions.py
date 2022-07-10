@@ -166,8 +166,6 @@ class Permissions(BaseFlags):
     __lt__: Callable[[Permissions], bool] = is_strict_subset
     __gt__: Callable[[Permissions], bool] = is_strict_superset
 
-
-
     @classmethod
     def none(cls: Type[P]) -> P:
         """A factory method that creates a :class:`Permissions` with all
