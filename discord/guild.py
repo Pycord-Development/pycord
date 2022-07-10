@@ -44,6 +44,7 @@ from typing import (
 )
 
 from . import abc, utils
+from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .asset import Asset
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
@@ -51,6 +52,8 @@ from .colour import Colour
 from .emoji import Emoji
 from .enums import (
     AuditLogAction,
+    AutoModEventType,
+    AutoModTriggerType,
     ChannelType,
     ContentFilter,
     NotificationLevel,
@@ -203,6 +206,7 @@ class Guild(Hashable):
 
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
+        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
@@ -545,7 +549,6 @@ class Guild(Hashable):
 
         for obj in guild.get("voice_states", []):
             self._update_voice_state(obj, int(obj["channel_id"]))
-
     # TODO: refactor/remove?
     def _sync(self, data: GuildPayload) -> None:
         try:
@@ -3520,3 +3523,110 @@ class Guild(Hashable):
     def scheduled_events(self) -> List[ScheduledEvent]:
         """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
         return list(self._scheduled_events.values())
+    
+    async def fetch_auto_moderation_rules(self) -> List[AutoModRule]:
+        """|coro|
+
+        Retrieves a list of auto moderation rules for this guild.
+
+        Raises
+        -------
+        HTTPException
+            Getting the auto moderation rules failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+
+        Returns
+        --------
+        List[:class:`AutoModRule`]
+            The auto moderation rules for this guild.
+        """
+        data = await self._state.http.get_auto_moderation_rules(self.id)
+        return [AutoModRule(state=self._state, data=rule) for rule in data]
+    
+    async def fetch_auto_moderation_rule(self, id: int) -> AutoModRule:
+        """|coro|
+        
+        Retrieves a :class:`AutoModRule` from rule ID.
+        
+        Raises
+        -------
+        HTTPException
+            Getting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+            
+        Returns
+        --------
+        :class:`AutoModRule`
+            The requested auto moderation rule.
+        """
+        data = await self._state.http.get_auto_moderation_rule(self.id, id)
+        return AutoModRule(state=self._state, data=data)
+    
+    async def create_auto_moderation_rule(
+        self,
+        *,
+        name: str,
+        event_type: AutoModEventType,
+        trigger_type: AutoModTriggerType,
+        trigger_metadata: AutoModTriggerMetadata,
+        actions: List[AutoModAction],
+        enabled: bool = False,
+        exempt_roles: List[Snowflake] = None,
+        exempt_channels: List[Snowflake] = None,
+        reason: Optional[str] = None,
+    ) -> AutoModRule:
+        """
+        Creates an auto moderation rule.
+        
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the auto moderation rule.
+        event_type: :class:`AutoModEventType`
+            The type of event that triggers the rule.
+        trigger_type: :class:`AutoModTriggerType`
+            The rule's trigger type.
+        trigger_metadata: :class:`AutoModTriggerMetadata`
+            The rule's trigger metadata.
+        actions: List[:class:`AutoModAction`]
+            The actions to take when the rule is triggered.
+        enabled: :class:`bool`
+            Whether the rule is enabled.
+        exempt_roles: List[:class:`Snowflake`]
+            A list of roles that are exempt from the rule.
+        exempt_channels: List[:class:`Snowflake`]
+            A list of channels that are exempt from the rule.
+        reason: Optional[:class:`str`]
+            The reason for creating the rule. Shows up in the audit log.
+            
+        Raises
+        -------
+        HTTPException
+            Creating the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+            
+        Returns
+        --------
+        :class:`AutoModRule`
+            The new auto moderation rule.
+        """
+        payload = {
+            "name": name,
+            "event_type": event_type.value,
+            "trigger_type": trigger_type.value,
+            "trigger_metadata": trigger_metadata.to_dict(),  
+            "actions": [a.to_dict() for a in actions],
+            "enabled": enabled,
+        }
+        
+        if exempt_roles:
+            payload["exempt_roles"] = [r.id for r in exempt_roles]
+            
+        if exempt_channels:
+            payload["exempt_channels"] = [c.id for c in exempt_channels]
+            
+        data = await self._state.http.create_auto_moderation_rule(self.id, payload)
+        return AutoModRule(state=self._state, data=data, reason=reason)

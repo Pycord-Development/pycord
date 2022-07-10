@@ -166,7 +166,7 @@ class Interaction:
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
-        self._app_permissions: int = int(data.get("app_permissions"))
+        self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Optional[Message] = None
 
