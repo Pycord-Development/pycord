@@ -98,21 +98,21 @@ Webhook Changes
 - ``adapter`` arguments of ``Webhook.partial`` and ``Webhook.from_url`` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
 
-.. code-block:: python
+::
     webhook = discord.SyncWebhook.from_url(
     f"https://discord.com/api/webhooks/{id}/{token}"
     )
     webhook.send("Hello from pycord 2.0")
 
 
-.. code-block:: python
-async with aiohttp.ClientSession() as session:
-  webhook = discord.Webhook.partial(
-    id,
-    token,
-    session=session
-  )
-  await webhook.send("Hello from Pycord 2.0")
+::
+    async with aiohttp.ClientSession() as session:
+    webhook = discord.Webhook.partial(
+        id,
+        token,
+        session=session
+    )
+    await webhook.send("Hello from Pycord 2.0")
 
 
 .. _migrating_2_0_thread_introduced:
@@ -214,73 +214,6 @@ Many method arguments now reject `None` or return `None`.
 - :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s `name` arguments no longer accept `None`.
 - The following `Context` attributes can now be `None`: `prefix`, `command`, `invoked_with`, `invoked_subcommand`.
 - :attr:`Command.help` can now be `None`.
-
-.. _migrating_2_0_voice:
-
-Voice Changes
--------------
-
-Voice sending has gone through a complete redesign.
-
-In particular:
-
-- Connection is done through :meth:`VoiceChannel.connect` instead of ``Client.join_voice_channel``.
-- You no longer create players and operate on them (you no longer store them).
-- You instead request :class:`VoiceClient` to play an :class:`AudioSource` via :meth:`VoiceClient.play`.
-- There are different built-in :class:`AudioSource`\s.
-
-  - :class:`FFmpegPCMAudio` is the equivalent of ``create_ffmpeg_player``
-
-- create_ffmpeg_player/create_stream_player/create_ytdl_player have all been removed.
-
-  - The goal is to create :class:`AudioSource` instead.
-
-- Using :meth:`VoiceClient.play` will not return an ``AudioPlayer``.
-
-  - Instead, it's "flattened" like :class:`User` -> :class:`Member` is.
-
-- The ``after`` parameter now takes a single parameter (the error).
-
-Basically:
-
-Before: ::
-
-    vc = await client.join_voice_channel(channel)
-    player = vc.create_ffmpeg_player('testing.mp3', after=lambda: print('done'))
-    player.start()
-
-    player.is_playing()
-    player.pause()
-    player.resume()
-    player.stop()
-    # ...
-
-After: ::
-
-    vc = await channel.connect()
-    vc.play(discord.FFmpegPCMAudio('testing.mp3'), after=lambda e: print('done', e))
-    vc.is_playing()
-    vc.pause()
-    vc.resume()
-    vc.stop()
-    # ...
-
-With the changed :class:`AudioSource` design, you can now change the source that the :class:`VoiceClient` is
-playing at runtime via :attr:`VoiceClient.source`.
-
-For example, you can add a :class:`PCMVolumeTransformer` to allow changing the volume: ::
-
-    vc.source = discord.PCMVolumeTransformer(vc.source)
-    vc.source.volume = 0.6
-
-An added benefit of the redesign is that it will be much more resilient towards reconnections:
-
-- The voice websocket will now automatically re-connect and re-do the handshake when disconnected.
-- The initial connect handshake will now retry up to 5 times so you no longer get as many ``asyncio.TimeoutError``.
-- Audio will now stop and resume when a disconnect is found.
-
-  - This includes changing voice regions etc.
-
 
 .. _migrating_2_0_miscelaneous_changes:
 
