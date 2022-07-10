@@ -220,7 +220,7 @@ class PageGroup:
 
     .. note::
 
-        If multiple ``PageGroup`` objects have different options,
+        If multiple :class:`PageGroup` objects have different options,
         they should all be set explicitly when creating each instance.
 
 

@@ -238,7 +238,7 @@ class Guild(Hashable):
         - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel
                                      in a sidebar similar to thread view.
         - ``THREAD_DEFAULT_AUTO_ARCHIVE_DURATION``: Unknown, presumably used for testing changes to the thread default
-                                                    auto archive duration...
+                                                    auto archive duration.
         - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer
                                        members and a bot. Also gives the premium thread features.
         - ``THREE_DAY_THREAD_ARCHIVE``: Guild has access to the three-day archive time for threads.
@@ -469,7 +469,7 @@ class Guild(Hashable):
         self._roles[role.id] = role
 
     def _remove_role(self, role_id: int, /) -> Role:
-        # this raises KeyError if it fails...
+        # this raises KeyError if it fails.
         role = self._roles.pop(role_id)
 
         # since it didn't, we can change the positions now

@@ -1789,8 +1789,6 @@ class AutoShardedConnectionState(ConnectionState):
         except AttributeError:
             pass  # already been deleted somehow
 
-        # regular users cannot shard, so we won't worry about it here.
-
         # clear the current task
         self._ready_task = None
 

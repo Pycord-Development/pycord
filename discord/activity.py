@@ -508,7 +508,7 @@ class Streaming(BaseActivity):
         """Optional[:class:`str`]: If provided, the twitch name of the user streaming.
 
         This corresponds to the ``large_image`` key of the :attr:`Streaming.assets`
-        dictionary if it starts with ``twitch:``. Typically, set by the Discord client.
+        dictionary if it starts with ``twitch:``. Typically, this is set by the Discord client.
         """
 
         try:

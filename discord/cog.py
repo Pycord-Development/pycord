@@ -419,6 +419,7 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
+        ctx: :class:`.Context`
             The invocation context.
         """
         return True
