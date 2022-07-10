@@ -1,13 +1,18 @@
+# This example requires the 'members' privileged intent to use the Member converter.
+
 import discord
-from discord.commands import CommandPermission, SlashCommandGroup
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-bot = discord.Bot(debug_guilds=[...], owner_id=...)  # main file
+intents = discord.Intents.default()
+intents.members = True
+
+bot = discord.Bot(debug_guilds=[...], intents=intents, owner_id=...)  # Main file
 
 
 class Example(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot_: discord.Bot):
+        self.bot = bot_
 
     greetings = SlashCommandGroup("greetings", "Various greeting from cogs!")
 
@@ -16,21 +21,28 @@ class Example(commands.Cog):
     secret_greetings = SlashCommandGroup(
         "secret_greetings",
         "Secret greetings",
-        permissions=[CommandPermission("owner", 2, True)],  # Ensures the owner_id user can access this, and no one else
+        checks=[commands.is_owner().predicate],  # Ensures the owner_id user can access this group, and no one else
     )
 
     @greetings.command()
-    async def hello(self, ctx):
+    async def hello(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hello, this is a slash subcommand from a cog!")
 
     @international_greetings.command()
-    async def aloha(self, ctx):
+    async def aloha(self, ctx: discord.ApplicationContext):
         await ctx.respond("Aloha, a Hawaiian greeting")
 
     @secret_greetings.command()
-    async def secret_handshake(self, ctx, member: discord.Member):
+    async def secret_handshake(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
+    @commands.Cog.listener()
+    async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
+        if isinstance(error, commands.NotOwner):
+            await ctx.respond("You can't use that command!")
+        else:
+            raise error  # Raise other errors so they aren't ignored
 
-bot.add_cog(Example(bot))  # put in a setup function for cog files
-bot.run("TOKEN")  # main file
+
+bot.add_cog(Example(bot))  # Put in a setup function for cog files
+bot.run("TOKEN")  # Main file

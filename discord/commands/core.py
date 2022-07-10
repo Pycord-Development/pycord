@@ -48,7 +48,7 @@ from typing import (
     Union,
 )
 
-from ..channel import _guild_channel_factory
+from ..channel import _threaded_guild_channel_factory
 from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
     ApplicationCommandError,
@@ -61,6 +61,7 @@ from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
+from ..threads import Thread
 from ..user import User
 from ..utils import async_all, find, utcnow
 from .context import ApplicationContext, AutocompleteContext
@@ -239,8 +240,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
     ) -> Union[
-        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-        Callable[Concatenate[ApplicationContext, P], Coro[T]],
+        Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+        Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
     ]:
         return self._callback
 
@@ -248,8 +249,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
         function: Union[
-            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
-            Callable[Concatenate[ApplicationContext, P], Coro[T]],
+            Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
+            Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
         ],
     ) -> None:
         self._callback = function
@@ -689,7 +690,7 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = option
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
                     option = p_obj.default
                 else:
                     option = Option(option)
@@ -783,6 +784,8 @@ class SlashCommand(ApplicationCommand):
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
             op = find(lambda x: x.name == arg["name"], self.options)
+            if op is None:
+                continue
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
@@ -812,10 +815,12 @@ class SlashCommand(ApplicationCommand):
                     else:
                         arg = Object(id=int(arg))
                 elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
-                    if op.input_type is SlashCommandOptionType.channel and int(arg) in ctx.guild._channels:
-                        arg = ctx.guild.get_channel(int(arg))
+                    if op.input_type is SlashCommandOptionType.channel and (
+                        int(arg) in ctx.guild._channels or int(arg) in ctx.guild._threads
+                    ):
+                        arg = ctx.guild.get_channel_or_thread(int(arg))
                         _data["_invoke_flag"] = True
-                        arg._update(ctx.guild, _data)
+                        arg._update(_data) if isinstance(arg, Thread) else arg._update(ctx.guild, _data)
                     else:
                         obj_type = None
                         kw = {}
@@ -826,10 +831,12 @@ class SlashCommand(ApplicationCommand):
                             kw["guild"] = ctx.guild
                         elif op.input_type is SlashCommandOptionType.channel:
                             # NOTE:
-                            # This is a fallback in case the channel is not found in the guild's channels.
-                            # If this fallback occurs, at the very minimum, permissions will be incorrect
-                            # due to a lack of permission_overwrite data.
-                            obj_type = _guild_channel_factory(_data["type"])[0]
+                            # This is a fallback in case the channel/thread is not found in the
+                            # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
+                            # permissions will be incorrect due to a lack of permission_overwrite data.
+                            # For threads, if this fallback occurs, info like thread owner id, message count,
+                            # flags, and more will be missing due to a lack of data sent by Discord.
+                            obj_type = _threaded_guild_channel_factory(_data["type"])[0]
                             kw["guild"] = ctx.guild
                         elif op.input_type is SlashCommandOptionType.attachment:
                             obj_type = Attachment
@@ -839,7 +846,11 @@ class SlashCommand(ApplicationCommand):
                     arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
-                arg = await converter.convert(converter, ctx, arg)
+                from discord.ext.commands import Converter
+                if isinstance(converter, Converter):
+                    arg = await converter.convert(ctx, arg)
+                elif isinstance(converter, type) and hasattr(converter, "convert"):
+                    arg = await converter().convert(ctx, arg)
 
             elif op._raw_type in (SlashCommandOptionType.integer,
                                   SlashCommandOptionType.number,
@@ -853,8 +864,8 @@ class SlashCommand(ApplicationCommand):
                         arg = op._raw_type(int(arg))
                     except ValueError:
                         arg = op._raw_type(arg)
-                else:
-                    arg = op._raw_type(arg)
+                elif choice := find(lambda c: c.value == arg, op.choices):
+                    arg = getattr(op._raw_type, choice.name)
 
             kwargs[op._parameter_name] = arg
 
@@ -952,10 +963,6 @@ class SlashCommandGroup(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    subcommands: List[Union[:class:`SlashCommand`, :class:`SlashCommandGroup`]]
-        The list of all subcommands under this group.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
         with the given :class:`.ApplicationContext` as the sole parameter. If an exception
@@ -963,6 +970,12 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The description localizations for this command. The values of this should be ``"locale": "description"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
     __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
     type = 1
@@ -992,7 +1005,7 @@ class SlashCommandGroup(ApplicationCommand):
     def __init__(
         self,
         name: str,
-        description: str,
+        description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
@@ -1059,6 +1072,7 @@ class SlashCommandGroup(ApplicationCommand):
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[List[int]] = None,
+        **kwargs,
     ) -> SlashCommandGroup:
         """
         Creates a new subgroup for this SlashCommandGroup.
@@ -1072,6 +1086,23 @@ class SlashCommandGroup(ApplicationCommand):
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
+        guild_only: :class:`bool`
+            Whether the command should only be usable inside a guild.
+        default_member_permissions: :class:`~discord.Permissions`
+            The default permissions a member needs to be able to run the command.
+        checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+            A list of predicates that verifies if the command could be executed
+            with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+            is necessary to be thrown to signal failure, then one inherited from
+            :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
+            :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+            event.
+        name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+            The name localizations for this command. The values of this should be ``"locale": "name"``. See
+            `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+            The description localizations for this command. The values of this should be ``"locale": "description"``.
+            See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
         Returns
         --------
@@ -1081,9 +1112,9 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.parent is not None:
             # TODO: Improve this error message
-            raise Exception("Subcommands can only be nested once")
+            raise Exception("a subgroup cannot have a subgroup")
 
-        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self)
+        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self, **kwargs)
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
