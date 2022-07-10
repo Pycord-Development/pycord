@@ -650,7 +650,7 @@ class GuildChannel:
         # (or otherwise) are then OR'd together.
         # After the role permissions are resolved, the member permissions
         # have to take into effect.
-        # After all that is done... you have to do the following:
+        # After all that is done, you have to do the following:
 
         # If manage permissions is True, then all permissions are set to True.
 
