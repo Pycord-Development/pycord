@@ -800,6 +800,69 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
 
 class ForumChannel(_TextChannel):
+    """Represents a Discord forum channel.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two channels are equal.
+
+        .. describe:: x != y
+
+            Checks if two channels are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the channel's hash.
+
+        .. describe:: str(x)
+
+            Returns the channel's name.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The channel name.
+    guild: :class:`Guild`
+        The guild the channel belongs to.
+    id: :class:`int`
+        The channel ID.
+    category_id: Optional[:class:`int`]
+        The category channel ID this channel belongs to, if applicable.
+    topic: Optional[:class:`str`]
+        The channel's topic. ``None`` if it doesn't exist.
+
+        .. note::
+
+            :attr:`guidelines` exists as an alternative to this attribute.
+    position: Optional[:class:`int`]
+        The position in the channel list. This is a number that starts at 0. e.g. the
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
+    last_message_id: Optional[:class:`int`]
+        The last message ID of the message sent to this channel. It may
+        *not* point to an existing or valid message.
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages
+        in this channel. A value of `0` denotes that it is disabled.
+        Bots and users with :attr:`~Permissions.manage_channels` or
+        :attr:`~Permissions.manage_messages` bypass slowmode.
+    nsfw: :class:`bool`
+        If the channel is marked as "not safe for work".
+
+        .. note::
+
+            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
+    default_auto_archive_duration: :class:`int`
+        The default auto archive duration in minutes for threads created in this channel.
+
+        .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
+    """
+
     def __init__(self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload):
         super().__init__(state=state, guild=guild, data=data)
 

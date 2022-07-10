@@ -4414,6 +4414,22 @@ TextChannel
     .. automethod:: typing
         :async-with:
 
+ForumChannel
+~~~~~~~~~~~~~
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+    :exclude-members: history, typing
+
+    .. automethod:: history
+        :async-for:
+
+    .. automethod:: typing
+        :async-with:
+
 Thread
 ~~~~~~~~
 
