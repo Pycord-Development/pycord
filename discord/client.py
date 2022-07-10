@@ -384,7 +384,7 @@ class Client:
             pass
         except Exception as exc:
             try:
-                await self.on_error(event_name, exc, *args)
+                await self.on_error(event_name, exc, *args, **kwargs)
             except asyncio.CancelledError:
                 pass
 
