@@ -1,7 +1,7 @@
 from typing import Union
 
 import discord
-from discord import option
+from discord.commands import option
 
 bot = discord.Bot(debug_guilds=[...])
 
