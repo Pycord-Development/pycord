@@ -315,4 +315,4 @@ The following were changed in types:
 Parting Words
 -------------
 
-The v2.0 of the library implemented a lot of new features. To implement newer features, such as slash commands, they can be seen on our `guide <https://guide.pycord.dev/>`_.
+The v2.0 of the library implemented a lot of new features. To implement newer features, such as slash commands, they can be seen on our :resource:`guide <guide>`.
