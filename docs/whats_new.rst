@@ -49,7 +49,7 @@ v2.0.0
 - `missing_perms` attributes and arguments are renamed to `missing_permissions`.
 - Many method arguments now reject :class:`None`.
 - Many arguments are now specified as positional-only or keyword-only; e.g. :meth:`utils.oauth_url` now takes keyword-only arguments, and methods starting with `get_` or `fetch_` take positional-only arguments.
-- :doc:`_migrating_2_0`.
+- :doc:`migrating_to_v2`.
 
 .. _vp1p7p3:
 
