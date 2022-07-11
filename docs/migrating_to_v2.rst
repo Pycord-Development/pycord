@@ -13,7 +13,7 @@ Python Version Change
 ---------------------
 
 In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher,
-the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.7 and below
+the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below
 is dropped**.
 
 Major Model Changes
@@ -26,8 +26,8 @@ Dropped User Accounts Support
 
 Before v2.0, user accounts were supported. This is against the spirit of the library and has been removed. Thus, these features that were only applicable to them are removed:
 
-- ``bot`` argument of ``Client.start/run``
-- ``afk`` argument of ``Client.change_presence``
+- ``bot`` argument of :meth:`Client.start` and :meth:`Client.run`
+- ``afk`` argument of :meth:`Client.change_presence`
 - Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``
 - ``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``
 - ``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)
@@ -234,13 +234,13 @@ The following were removed:
 - ``MemberCacheFlags.online``
 - ``guild_subscriptions`` argument of :class:`Client`
 - ``fetch_offline_members`` argument of :class:`Client`
-- ``HelpCommand.clean_prefix`` moved to :attr:`Context.clean_prefix`
+- ``HelpCommand.clean_prefix`` moved to :attr:`ext.commands.Context.clean_prefix`
 - ``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`.
 
 The following were renamed:
 
 - :attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the different color.
-- ``missing_perms`` arguments and attributes of :class:`MissingPermissions` and :class:`BotMissingPermissions` are renamed to ``missing_permissions``.
+- ``missing_perms`` arguments and attributes of :class:`ext.commands.MissingPermissions` and :class:`ext.commands.BotMissingPermissions` are renamed to ``missing_permissions``.
 
 The following were changed in behavior:
 
