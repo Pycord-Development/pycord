@@ -95,9 +95,9 @@ Asset-related attributes that previously returned hash strings (e.g. :attr:`User
 Webhook Changes
 ~~~~~~~~~~~~~~~
 
-- ``Webhook`` and ``WebhookMessage`` are now always asynchronouns. For synchronouns use (``requests``), use ``SyncWebhook`` and ``SyncWebhookMessage``.
+- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronouns. For synchronouns use (``requests``), use :class:`SyncWebhook`` and :class:`SyncWebhookMessage`.
 - ``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary.
-- ``adapter`` arguments of ``Webhook.partial`` and ``Webhook.from_url`` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
+- ``adapter`` arguments of :meth:`Webhook.partial`` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
 
 .. code-block:: python
@@ -251,7 +251,7 @@ The following were changed in behavior:
 
 The following were changed in types:
 
-- :attr:`Command.clean_params` is now a :class:`dict`, not :class:`OrderedDict`.
+- :attr:`ext.commands.Command.clean_params` is now a :class:`dict`, not :class:`OrderedDict`.
 - ``Reaction.custom_emoji`` is now a method called :attr:`Reaction.is_custom_emoji` for consistency.
 - :attr:`IntegrationAccount.id` is now :class:`str`, instead of :class:`int`, due to Discord changes.
 - :attr:`AuditLogDiff.type` is now Union[:class:`ChannelType`, :class:`StickerType`], instead of :class:`ChannelType`.
