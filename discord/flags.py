@@ -568,7 +568,7 @@ class Intents(BaseFlags):
                to be, for example, constructed as a dict or a list of pairs.
 
         .. describe:: x + y
-         Adds two flags together.
+        Adds two flags together.
 
         .. describe:: x - y
         Subtracts two flags from each other.
