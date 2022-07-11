@@ -86,6 +86,10 @@ class Thread(Messageable, Hashable):
         The guild the thread belongs to.
     id: :class:`int`
         The thread ID.
+
+        .. note::
+            This ID is the same as the thread starting message ID.
+
     parent_id: :class:`int`
         The parent :class:`TextChannel` ID this thread belongs to.
     owner_id: :class:`int`
@@ -260,7 +264,7 @@ class Thread(Messageable, Hashable):
 
     @property
     def last_message(self) -> Optional[Message]:
-        """Fetches the last message from this channel in cache.
+        """Returns the last message from this thread in cache.
 
         The message might not be valid or point to an existing message.
 
@@ -273,7 +277,7 @@ class Thread(Messageable, Hashable):
             attribute.
 
         Returns
-        ---------
+        --------
         Optional[:class:`Message`]
             The last message in this channel or ``None`` if not found.
         """
@@ -289,7 +293,7 @@ class Thread(Messageable, Hashable):
             The parent channel was not cached and returned ``None``.
 
         Returns
-        -------
+        --------
         Optional[:class:`CategoryChannel`]
             The parent channel's category.
         """
@@ -309,7 +313,7 @@ class Thread(Messageable, Hashable):
             The parent channel was not cached and returned ``None``.
 
         Returns
-        -------
+        --------
         Optional[:class:`int`]
             The parent channel's category ID.
         """
@@ -318,6 +322,22 @@ class Thread(Messageable, Hashable):
         if parent is None:
             raise ClientException("Parent channel not found")
         return parent.category_id
+
+    @property
+    def starting_message(self) -> Optional[Message]:
+        """Returns the message that started this thread.
+
+        The message might not be valid or point to an existing message.
+
+        .. note::
+            The ID for this message is the same as the thread ID.
+
+        Returns
+        --------
+        Optional[:class:`Message`]
+            The message that started this thread or ``None`` if not found in the cache.
+        """
+        return self._state._get_message(self.id)
 
     def is_private(self) -> bool:
         """:class:`bool`: Whether the thread is a private thread.
@@ -715,7 +735,13 @@ class Thread(Messageable, Hashable):
         """
 
         members = await self._state.http.get_thread_members(self.id)
-        return [ThreadMember(parent=self, data=data) for data in members]
+
+        thread_members = [ThreadMember(parent=self, data=data) for data in members]
+
+        for member in thread_members:
+            self._add_member(member)
+
+        return thread_members
 
     async def delete(self):
         """|coro|

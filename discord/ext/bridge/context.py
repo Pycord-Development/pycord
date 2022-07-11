@@ -37,12 +37,12 @@ __all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
 
 class BridgeContext(ABC):
     """
-    The base context class for compatibility commands. This class is an :class:`ABC` (abstract base class), which is
-    subclassed by :class:`BridgeExtContext` and :class:`BridgeApplicationContext`. The methods in this class are meant
-    to give parity between the two contexts, while still allowing for all of their functionality.
+    The base context class for compatibility commands. This class is an :term:`abstract base class` (also known as an
+    ``abc``), which is subclassed by :class:`BridgeExtContext` and :class:`BridgeApplicationContext`. The methods in
+    this class are meant to give parity between the two contexts, while still allowing for all of their functionality.
 
     When this is passed to a command, it will either be passed as :class:`BridgeExtContext`, or
-    :class:`BridgeApplicationContext`. Since they are two separate classes, it is quite simple to use :meth:`isinstance`
+    :class:`BridgeApplicationContext`. Since they are two separate classes, it is quite simple to use :func:`isinstance`
     to make different functionality for each context. For example, if you want to respond to a command with the command
     type that it was invoked with, you can do the following:
 
@@ -79,7 +79,7 @@ class BridgeContext(ABC):
         """|coro|
 
         Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`,
-        this will be :meth:`~.ExtContext.reply` while in :class:`BridgeApplicationContext`, this will be
+        this will be :meth:`~.Context.reply` while in :class:`BridgeApplicationContext`, this will be
         :meth:`~.ApplicationContext.respond`.
         """
         return await self._respond(*args, **kwargs)
@@ -97,8 +97,8 @@ class BridgeContext(ABC):
         """|coro|
 
         Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will
-        be :meth:`~.ExtContext.trigger_typing` while in :class:`BridgeApplicationContext`, this will be
-        :meth:`~.ApplicationContext.defer`.
+        be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be
+        :attr:`~.ApplicationContext.defer`.
 
         .. note::
             There is no ``trigger_typing`` alias for this method. ``trigger_typing`` will always provide the same
@@ -111,7 +111,7 @@ class BridgeContext(ABC):
 
         Edits the original response message with the respective approach to the current context. In
         :class:`BridgeExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be
-        edited here. In :class:`BridgeApplicationContext`, this will be :meth:`~.ApplicationContext.edit`.
+        edited here. In :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.edit`.
         """
         return await self._edit(*args, **kwargs)
 
@@ -122,10 +122,14 @@ class BridgeContext(ABC):
 class BridgeApplicationContext(BridgeContext, ApplicationContext):
     """
     The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and
-    :class:`ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`.
+    :class:`~.ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`.
 
     .. versionadded:: 2.0
     """
+
+    def __init__(self, *args, **kwargs):
+        # This is needed in order to represent the correct class init signature on the docs
+        super().__init__(*args, **kwargs)
 
     async def _respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
         return await self._get_super("respond")(*args, **kwargs)
@@ -140,7 +144,7 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
 class BridgeExtContext(BridgeContext, Context):
     """
     The ext.commands context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and
-    :class:`Context`. This class is meant to be used with :class:`BridgeCommand`.
+    :class:`~.Context`. This class is meant to be used with :class:`BridgeCommand`.
 
     .. versionadded:: 2.0
     """
