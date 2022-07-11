@@ -234,14 +234,10 @@ class Guild(Hashable):
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``SEVEN_DAY_THREAD_ARCHIVE``: Guild has access to the seven-day archive time for threads.
         - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel
                                      in a sidebar similar to thread view.
-        - ``THREAD_DEFAULT_AUTO_ARCHIVE_DURATION``: Unknown, presumably used for testing changes to the thread default
-                                                    auto archive duration.
         - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer
                                        members and a bot. Also gives the premium thread features.
-        - ``THREE_DAY_THREAD_ARCHIVE``: Guild has access to the three-day archive time for threads.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
