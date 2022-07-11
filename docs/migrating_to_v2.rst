@@ -53,7 +53,7 @@ Timezone-aware Time
     )
 
 
-Note that newly-added :meth:`utils.utcnow()` can be used as an alias of `datetime.datetime.now(datetime.timezone.utc)`.
+Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``.
 
 .. _migrating_2_0_model_state:
 
@@ -200,7 +200,7 @@ Sticker Changes
 
 - ``Sticker.preview_image`` was removed as Discord no longer provides the data.
 - ``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker).
-- :attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[``Sticker``]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
+- :attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[:class:`Sticker`]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
 - ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via ``Sticker.url``, just like new :class:`Emoji`.
 - Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`.
 
