@@ -97,17 +97,17 @@ class Permissions(BaseFlags):
              Checks if a permission is a strict subset of another permission.
         .. describe:: x > y
 
-            Adds two permissions together.
-        .. describe:: x + y
+         .. describe:: x + y
+         Adds two permissions together.
 
-            Subtracts two permissions from each other.
         .. describe:: x - y
+        Subtracts two permissions from each other.
 
-            Returns the intersection of two permissions.
         .. describe:: x & y
+        Returns the intersection of two permissions.
 
-            Returns the inverse of a permission.
         .. describe:: ~x
+        Returns the inverse of a permission.
 
              Checks if a permission is a strict superset of another permission.
         .. describe:: hash(x)
