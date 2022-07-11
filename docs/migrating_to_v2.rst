@@ -53,7 +53,7 @@ Timezone-aware Time
     )
 
 
-Note that newly-added :meth:`discord.utils.utcnow()` can be used as an alias of :meth:`datetime.datetime.now(datetime.timezone.utc)`.
+Note that newly-added :meth:`utils.utcnow()` can be used as an alias of :meth:`datetime.datetime.now(datetime.timezone.utc)`.
 
 .. _migrating_2_0_model_state:
 
@@ -61,6 +61,7 @@ Asset Changes
 ~~~~~~~~~~~~~
 
 Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now returns :class:`Asset`. :attr:`Asset.key` returns the hash from now on.
+
 - ``Class.x_url`` and ``Class.x_url_as`` are removed. :meth:`Asset.replace` or :meth:`Asset.with_x` methods can be used to get specific asset sizes or types.
 - :attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis.
 - ``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed.
@@ -128,8 +129,8 @@ The following methods and attributes can return :class:`Thread` objects:
 - :attr:`Message.channel`
 - :meth:`Client.fetch_channel`
 - :meth:`Guild.fetch_channel`
-- :attr:`discord.ext.commands.ChannelNotReadable.argument`
-- :attr:`discord.ext.commands.NSFWChannelRequired.channel`
+- :attr:`ext.commands.ChannelNotReadable.argument`
+- :attr:`ext.commands.NSFWChannelRequired.channel`
 - :meth:`Client.get_channel`
 
 .. _migrating_2_0_permission_changes:
@@ -159,14 +160,14 @@ Positional-Keyword Argument Split
 
 The following are now positional only:
 
-- ``permissions_for``
+- :meth:`abc.GuildChannel.permissions_for`
 - :meth:`Guild.get_channel`
 - :meth:`Guild.get_role`
 - :meth:`Guild.get_member_named`
 - :meth:`Guild.fetch_member`
 - :meth:`Guild.fetch_emoji`
 - :meth:`abc.Messageable.fetch_message`
-- ``get_partial_message``
+- :meth:`PartialMessageable.get_partial_message`
 
 The following are now keyword only:
 
@@ -198,7 +199,7 @@ Sticker Changes
 -``Sticker.preview_image`` was removed as Discord no longer provides the data.
 - ``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker).
 - :attr:`Message.stickers` is now List[:class:`StickerItem`]` instead of List[``Sticker``]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
-- ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via `Sticker.url`, just like new `Emoji`.
+- ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via ``Sticker.url``, just like new :class:`Emoji`.
 - Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`.
 
 .. _migrating_2_0_type_changes:
@@ -216,7 +217,7 @@ Many method arguments now reject ``None`` or return ``None``.
 - :attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``.
 - :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``.
 - The following ``Context`` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
-- :attr:`discord.ext.commands.Command.help` can now be ``None``.
+- :attr:`ext.commands.Command.help` can now be ``None``.
 
 .. _migrating_2_0_miscelaneous_changes:
 
@@ -232,19 +233,22 @@ The following were removed:
 - ``guild_subscriptions`` argument of :class:`Client`
 - ``fetch_offline_members`` argument of :class:`Client`
 - ``HelpCommand.clean_prefix`` moved to :attr:`Context.clean_prefix`
-- ``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with ``highest``.
+- ``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`.
 
 The following were renamed:
+
 - :attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the different color.
 - ``missing_perms`` arguments and attributes of :class:`MissingPermissions` and :class:`BotMissingPermissions` are renamed to ``missing_permissions``.
 
 The following were changed in behavior:
+
 - :class:`Embed` that has a value is always considered truthy. Previously it only considered text fields.
 - :meth:`Bot.add_cog` now raises when a cog with the same name is already registered. ``override`` argument can be used to bring back the 1.x behavior.
 - :meth:`StageChannel.edit` can no longer edit ``topic``. Use :meth:`StageInstance.edit` instead.
 - ``StageChannel.clone`` no longer clones its topic.
 
 The following were changed in types:
+
 - :attr:`Command.clean_params` is now a :class:`dict`, not :class:`OrderedDict`.
 - ``Reaction.custom_emoji`` is now a method called :attr:`Reaction.is_custom_emoji` for consistency.
 - :attr:`IntegrationAccount.id` is now :class:`str`, instead of :class:`int`, due to Discord changes.
