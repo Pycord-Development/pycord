@@ -30,7 +30,7 @@ v2.0.0
 - Guild Ban List Paginated (:issue:`1217`)
 - Forum channels (:issue:`1249`)
 - Methods and attributes that returned :class:`TextChannel`, etc., can now return :class:`Thread`.
-- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with ``_url`` (i.e., ``avatar_url``) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the default avatar is used.
+- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with ``_url`` (i.e.: ``avatar_url``) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the default avatar is used.
 - :func:`on_presence_update` replaces ``on_member_update`` for updates to :attr:`Member.status` and :attr:`Member.activities`.
 - :class:`datetime` is now timezone-aware.
 - Sticker changes: ``StickerType`` has been renamed to :class:`StickerFormatType`, and the type of :attr:`Message.stickers` is altered. ``Sticker.preview_image``, ``Sticker.image`` and ``Sticker.tags`` are removed.
