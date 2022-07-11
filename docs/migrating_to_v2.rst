@@ -19,12 +19,12 @@ has been dropped**.
 Major Model Changes
 -------------------
 
-Below are major changes that have happened in v2.0
+Below are major changes that have happened in v2.0:
 
 Dropped User Accounts Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before v2.0, user accounts were supported. This is against the spirit of the library and has been removed. Thus, these features that were only applicable to them are removed:
+Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:
 
 - ``bot`` argument of :meth:`Client.start` and :meth:`Client.run`
 - ``afk`` argument of :meth:`Client.change_presence`
@@ -111,12 +111,12 @@ Webhook Changes
 .. code-block:: python
     
     async with aiohttp.ClientSession() as session:
-    webhook = discord.Webhook.partial(
-        id,
-        token,
-        session=session
-    )
-    await webhook.send("Hello from Pycord 2.0")
+        webhook = discord.Webhook.partial(
+            id,
+            token,
+            session=session
+        )
+        await webhook.send("Hello from Pycord 2.0")
 
 
 .. _migrating_2_0_thread_introduced:
@@ -201,7 +201,7 @@ Sticker Changes
 - ``Sticker.preview_image`` was removed as Discord no longer provides the data.
 - ``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker).
 - :attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[:class:`Sticker`]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
-- ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via ``Sticker.url``, just like new :class:`Emoji`.
+- ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via :attr:`Sticker.url`, just like new :class:`Emoji`.
 - Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`.
 
 .. _migrating_2_0_type_changes:
