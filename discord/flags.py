@@ -208,6 +208,21 @@ class SystemChannelFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -215,18 +230,6 @@ class SystemChannelFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
 
     Attributes
     -----------
@@ -293,6 +296,21 @@ class MessageFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -300,19 +318,6 @@ class MessageFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
-
 
     .. versionadded:: 1.3
 
@@ -401,6 +406,21 @@ class PublicUserFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two PublicUserFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
@@ -409,19 +429,6 @@ class PublicUserFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
-
 
     .. versionadded:: 1.4
 
@@ -559,6 +566,21 @@ class Intents(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -566,19 +588,6 @@ class Intents(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
-
 
     Attributes
     -----------
@@ -1112,6 +1121,21 @@ class MemberCacheFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -1119,18 +1143,6 @@ class MemberCacheFlags(BaseFlags):
 
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
 
     Attributes
     -----------
@@ -1248,6 +1260,21 @@ class ApplicationFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two ApplicationFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
@@ -1256,18 +1283,6 @@ class ApplicationFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
 
     .. versionadded:: 2.0
 
@@ -1358,6 +1373,21 @@ class ChannelFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two ChannelFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
@@ -1366,18 +1396,6 @@ class ChannelFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
-
-        .. describe:: x + y
-        Adds two flags together.
-
-        .. describe:: x - y
-        Subtracts two flags from each other.
-
-        .. describe:: x & y
-        Returns the intersection of two flags.
-
-        .. describe:: ~x
-        Returns the inverse of a flag.
 
     .. versionadded:: 2.0
 
