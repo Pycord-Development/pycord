@@ -29,13 +29,13 @@ v2.0.0
 - Application Command Localization (:issue:`1185`)
 - Guild Ban List Paginated (:issue:`1217`)
 - Forum channels (:issue:`1249`)
-- Methods and attributes that returned :class:`TextChannel`, etc can now return :class:`Thread`.
-- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with ``_url`` (i.e. ``avatar_url``) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the default avatar is used.
+- Methods and attributes that returned :class:`TextChannel`, etc., can now return :class:`Thread`.
+- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with ``_url`` (i.e., ``avatar_url``) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the default avatar is used.
 - :func:`on_presence_update` replaces ``on_member_update`` for updates to :attr:`Member.status` and :attr:`Member.activities`.
 - :class:`datetime` is now timezone-aware.
-- Sticker changes: ``StickerType`` has been renamed to :class:`StickerFormatType`, and the type of :attr:`Message.stickers` is changed. ``Sticker.preview_image``, ``Sticker.image`` and ``Sticker.tags`` are removed.
+- Sticker changes: ``StickerType`` has been renamed to :class:`StickerFormatType`, and the type of :attr:`Message.stickers` is altered. ``Sticker.preview_image``, ``Sticker.image`` and ``Sticker.tags`` are removed.
 - Webhooks are changed significantly; ``WebhookAdapter`` is removed, and synchronous requests using requests is now inside :class:`SyncWebhook`.
-- ``edit`` method no longer updates cache and instead returns modified instance.
+- ``edit`` method no longer updates the cache and instead returns modified instance.
 - User accounts (userbots) are no longer supported.
 - ``Client.logout`` is removed; use :meth:`Client.close` instead.
 - ``on_private_channel_create/delete`` events are removed.
@@ -45,7 +45,7 @@ v2.0.0
 - ``missing_perms`` attributes and arguments are renamed to ``missing_permissions``.
 - Many method arguments now reject :class:`None`.
 - Many arguments are now specified as positional-only or keyword-only; e.g. :meth:`utils.oauth_url` now takes keyword-only arguments, and methods starting with ``get_`` or ``fetch_`` take positional-only arguments.
-- :doc:`migrating_to_v2`.
+- :doc:`migrating_to_v2`
 
 .. _vp1p7p3:
 
