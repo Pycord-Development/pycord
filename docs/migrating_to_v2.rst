@@ -66,7 +66,7 @@ Asset-related attributes that previously returned hash strings (e.g. :attr:`User
 - :attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis.
 - ``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed.
 - Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`
-- ``User.avatar`` returns `None` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior.
+- ``User.avatar`` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior.
 
 +------------------------------------------------------------+----------------------------------------------------------------------+
 | Before                                                     | After                                                                |
@@ -105,7 +105,7 @@ Webhook Changes
     webhook = discord.SyncWebhook.from_url(
         f"https://discord.com/api/webhooks/{id}/{token}"
     )
-    webhook.send("Hello from pycord 2.0")
+    webhook.send("Hello from Pycord 2.0")
 
 
 .. code-block:: python
@@ -130,7 +130,7 @@ The following methods and attributes can return :class:`Thread` objects:
 - :meth:`Client.fetch_channel`
 - :meth:`Guild.fetch_channel`
 - :attr:`ext.commands.ChannelNotReadable.argument`
-- :attr:`ext.commands.NSFWChannelRequired.channel`
+- :class:`ext.commands.NSFWChannelRequired`'s ``channel`` argument
 - :meth:`Client.get_channel`
 
 .. _migrating_2_0_permission_changes:
@@ -183,7 +183,7 @@ Event Changes
 
 - :func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`.
 - ``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes.
-- ``on_socket_raw_receive`` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, ``on_socket_raw_receive`` was dispatched on all messages with the compressed, encoded :class:`bytes`.
+- :func:`on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, :func:`on_socket_raw_receive` was dispatched on all messages with the compressed, encoded :class:`bytes`.
 
 
 .. _migrating_2_0_messagetype_for_replies:
@@ -198,9 +198,9 @@ Message.type For Replies
 Sticker Changes
 ---------------
 
--``Sticker.preview_image`` was removed as Discord no longer provides the data.
+- ``Sticker.preview_image`` was removed as Discord no longer provides the data.
 - ``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker).
-- :attr:`Message.stickers` is now List[:class:`StickerItem`]` instead of List[``Sticker``]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
+- :attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[``Sticker``]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
 - ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via ``Sticker.url``, just like new :class:`Emoji`.
 - Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`.
 
@@ -218,7 +218,7 @@ Many method arguments now reject ``None`` or return ``None``.
 - :attr:`Template.edit`'s ``name`` argument no longer accepts ``None``.
 - :attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``.
 - :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``.
-- The following ``Context`` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
+- The following :class:`.ext.commands.Context` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
 - :attr:`ext.commands.Command.help` can now be ``None``.
 
 .. _migrating_2_0_miscelaneous_changes:
@@ -247,7 +247,7 @@ The following were changed in behavior:
 - :class:`Embed` that has a value is always considered truthy. Previously it only considered text fields.
 - :meth:`Bot.add_cog` now raises when a cog with the same name is already registered. ``override`` argument can be used to bring back the 1.x behavior.
 - :meth:`StageChannel.edit` can no longer edit ``topic``. Use :meth:`StageInstance.edit` instead.
-- ``StageChannel.clone`` no longer clones its topic.
+- :meth:`StageChannel.clone` no longer clones its topic.
 
 The following were changed in types:
 
