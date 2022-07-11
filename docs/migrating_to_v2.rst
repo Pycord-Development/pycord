@@ -128,8 +128,8 @@ The following methods and attributes can return :class:`Thread` objects:
 - :attr:`Message.channel`
 - :meth:`Client.fetch_channel`
 - :meth:`Guild.fetch_channel`
-- :attr:`ChannelNotReadable.argument`
-- :attr:`NSFWChannelRequired.channel`
+- :attr:`discord.ext.commands.ChannelNotReadable.argument`
+- :attr:`discord.ext.commands.NSFWChannelRequired.channel`
 - :meth:`Client.get_channel`
 
 .. _migrating_2_0_permission_changes:
@@ -206,7 +206,7 @@ Sticker Changes
 Type Changes
 ------------
 
-Many method arguments now reject `None` or return `None`.
+Many method arguments now reject ``None`` or return ``None``.
 
 - :attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases.
 - :attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar.
@@ -216,7 +216,7 @@ Many method arguments now reject `None` or return `None`.
 - :attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``.
 - :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``.
 - The following ``Context`` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
-- :attr:`Command.help` can now be ``None``.
+- :attr:`discord.ext.commands.Command.help` can now be ``None``.
 
 .. _migrating_2_0_miscelaneous_changes:
 
