@@ -211,6 +211,7 @@ class Guild(Hashable):
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
+        - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
         - ``HUB``: Hubs contain a directory channel that let you find school-related,
                    student-run servers for your school or university.
