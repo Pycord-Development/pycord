@@ -195,7 +195,7 @@ Message.type For Replies
 Sticker Changes
 ---------------
 
-- :attr:`Sticker.preview_image` was removed as Discord no longer provides the data.
+-``Sticker.preview_image`` was removed as Discord no longer provides the data.
 - ``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker).
 - :attr:`Message.stickers` is now List[:class:`StickerItem`]` instead of List[``Sticker``]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method.
 - ``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via `Sticker.url`, just like new `Emoji`.
