@@ -97,8 +97,8 @@ class Permissions(BaseFlags):
              Checks if a permission is a strict subset of another permission.
         .. describe:: x > y
 
-         .. describe:: x + y
-         Adds two permissions together.
+        .. describe:: x + y
+        Adds two permissions together.
 
         .. describe:: x - y
         Subtracts two permissions from each other.
