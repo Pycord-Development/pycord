@@ -179,8 +179,8 @@ Event Changes
 -------------
 
 - :func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`.
-- `on_private_channel_create/delete` will no longer be dispatched due to Discord changes.
-- `on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to `str`. Previously, when received a multi-part zlib-compressed binary message, `on_socket_raw_receive` was dispatched on all messages with the compressed, encoded `bytes`.
+- ``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes.
+- ``on_socket_raw_receive`` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, ``on_socket_raw_receive`` was dispatched on all messages with the compressed, encoded :class:`bytes`.
 
 
 .. _migrating_2_0_messagetype_for_replies:
