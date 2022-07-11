@@ -43,7 +43,7 @@ Before v2.0, user accounts were supported. This is against the spirit of the lib
 Timezone-aware Time
 ~~~~~~~~~~~~~~~~~~~
 
-``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing ``datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``.
+``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``.
 
 .. code-block:: python
 
@@ -53,7 +53,7 @@ Timezone-aware Time
     )
 
 
-Note that newly-added :meth:`utils.utcnow()` can be used as an alias of :meth:`datetime.datetime.now(datetime.timezone.utc)`.
+Note that newly-added :meth:`utils.utcnow()` can be used as an alias of `datetime.datetime.now(datetime.timezone.utc)`.
 
 .. _migrating_2_0_model_state:
 
@@ -66,7 +66,7 @@ Asset-related attributes that previously returned hash strings (e.g. :attr:`User
 - :attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis.
 - ``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed.
 - Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`
-- ``User.avatar`` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior.
+- :attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior.
 
 +------------------------------------------------------------+----------------------------------------------------------------------+
 | Before                                                     | After                                                                |
@@ -95,9 +95,9 @@ Asset-related attributes that previously returned hash strings (e.g. :attr:`User
 Webhook Changes
 ~~~~~~~~~~~~~~~
 
-- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronouns. For synchronouns use (``requests``), use :class:`SyncWebhook`` and :class:`SyncWebhookMessage`.
+- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronouns. For synchronouns use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`.
 - ``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary.
-- ``adapter`` arguments of :meth:`Webhook.partial`` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
+- ``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
 
 .. code-block:: python
@@ -245,14 +245,14 @@ The following were renamed:
 The following were changed in behavior:
 
 - :class:`Embed` that has a value is always considered truthy. Previously it only considered text fields.
-- :meth:`Bot.add_cog` now raises when a cog with the same name is already registered. ``override`` argument can be used to bring back the 1.x behavior.
+- :meth:`Bot.add_cog` now raises an error when a cog with the same name is already registered. ``override`` argument can be used to bring back the 1.x behavior.
 - :meth:`StageChannel.edit` can no longer edit ``topic``. Use :meth:`StageInstance.edit` instead.
 - :meth:`StageChannel.clone` no longer clones its topic.
 
 The following were changed in types:
 
 - :attr:`ext.commands.Command.clean_params` is now a :class:`dict`, not :class:`OrderedDict`.
-- ``Reaction.custom_emoji`` is now a method called :attr:`Reaction.is_custom_emoji` for consistency.
+- ``Reaction.custom_emoji`` is now :attr:`Reaction.is_custom_emoji` for consistency.
 - :attr:`IntegrationAccount.id` is now :class:`str`, instead of :class:`int`, due to Discord changes.
 - :attr:`AuditLogDiff.type` is now Union[:class:`ChannelType`, :class:`StickerType`], instead of :class:`ChannelType`.
 
