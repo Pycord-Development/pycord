@@ -138,7 +138,7 @@ The following methods and attributes can return :class:`Thread` objects:
 Permission Changes
 ------------------
 
-``Permissions_in`` has been removed in favor of checking the permissions of the channel for said user.
+``permissions_in`` has been removed in favor of checking the permissions of the channel for said user.
 
 +---------------------------+--------------------------------------+
 | Before                    | After                                |
