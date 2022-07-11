@@ -145,6 +145,8 @@ class View:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this view.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     message: Optional[:class:`Message`]
         The message that this view is attached to. 
         If ``None`` then the view has not been sent with a message.
@@ -165,8 +167,9 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
+    def __init__(self, *items: Item, timeout: Optional[float] = 180.0, disable_on_timeout: bool = False):
         self.timeout = timeout
+        self.disable_on_timeout = disable_on_timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
             item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
@@ -342,7 +345,10 @@ class View:
 
         A callback that is called when a view's timeout elapses without being explicitly stopped.
         """
-        pass
+        if self.disable_on_timeout:
+            if self._message:
+                self.disable_all_items()
+                await self._message.edit(view=self)
 
     async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
