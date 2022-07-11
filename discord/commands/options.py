@@ -187,7 +187,7 @@ class Option:
 
         if description is not None:
             self.description = description
-        elif issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
+        elif inspect.isclass(self._raw_type) and issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
             self.description = doc
         else:
             self.description = "No description provided"
