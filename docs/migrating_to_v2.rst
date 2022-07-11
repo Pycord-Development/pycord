@@ -224,6 +224,7 @@ Miscellaneous Changes
 ---------------------
 
 The following were removed:
+
 - ``Client.request_offline_members``
 - ``Client.logout``
 - ``ExtensionNotFound.original``
