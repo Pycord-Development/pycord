@@ -48,8 +48,8 @@ Timezone-aware Time
 .. code-block:: python
 
     embed = discord.Embed(
-    title = "Pi Day 2021 in UTC",
-    timestamp = datetime(2021, 3, 14, 15, 9, 2, tzinfo=timezone.utc)
+        title = "Pi Day 2021 in UTC",
+        timestamp = datetime(2021, 3, 14, 15, 9, 2, tzinfo=timezone.utc)
     )
 
 
