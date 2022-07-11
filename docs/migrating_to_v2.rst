@@ -208,15 +208,15 @@ Type Changes
 
 Many method arguments now reject `None` or return `None`.
 
-- :attr:`DMChannel.recipient` is now optional, and will return `None` in many cases.
-- :attr:`User.avatar` returns `None` if the avatar is not set and is instead the default avatar.
-- :attr:`Guild.create_text_channel`'s ``topic`` argument no longer accepts `None`.
-- :attr:`Guild.vanity_invite` can now return `None`.
-- :attr:`Template.edit`'s `name` argument no longer accepts `None`.
-- :attr:`Member.edit`'s `roles` argument no longer accepts `None`.
-- :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s `name` arguments no longer accept `None`.
-- The following `Context` attributes can now be `None`: `prefix`, `command`, `invoked_with`, `invoked_subcommand`.
-- :attr:`Command.help` can now be `None`.
+- :attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases.
+- :attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar.
+- :attr:`Guild.create_text_channel`'s ``topic`` argument no longer accepts ``None``.
+- :attr:`Guild.vanity_invite` can now return ``None``.
+- :attr:`Template.edit`'s ``name`` argument no longer accepts ``None``.
+- :attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``.
+- :attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``.
+- The following ``Context`` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
+- :attr:`Command.help` can now be ``None``.
 
 .. _migrating_2_0_miscelaneous_changes:
 
