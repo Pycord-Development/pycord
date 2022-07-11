@@ -36,10 +36,10 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
     overload,
 )
 
-import discord
 from .enums import UserFlags
 
 __all__ = (
@@ -174,10 +174,10 @@ class BaseFlags:
     def __invert__(self):
         return self.__class__._from_value(~self.value)
 
-    __rand__: Callable[[BaseFlags], bool] = __and__
-    __ror__: Callable[[BaseFlags], bool] = __or__
-    __radd__: Callable[[BaseFlags], bool] = __add__
-    __rsub__: Callable[[BaseFlags], bool] = __sub__
+    __rand__: Callable[[Union[BaseFlags, flag_value]], bool] = __and__
+    __ror__: Callable[[Union[BaseFlags, flag_value]], bool] = __or__
+    __radd__: Callable[[Union[BaseFlags, flag_value]], bool] = __add__
+    __rsub__: Callable[[Union[BaseFlags, flag_value]], bool] = __sub__
 
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
@@ -216,18 +216,17 @@ class SystemChannelFlags(BaseFlags):
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
-
+        Returns the inverse of a flag.
 
     Attributes
     -----------
@@ -302,17 +301,17 @@ class MessageFlags(BaseFlags):
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flags.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
 
     .. versionadded:: 1.3
@@ -411,17 +410,17 @@ class PublicUserFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
 
     .. versionadded:: 1.4
@@ -568,17 +567,17 @@ class Intents(BaseFlags):
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
 
     Attributes
@@ -1121,17 +1120,17 @@ class MemberCacheFlags(BaseFlags):
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
     Attributes
     -----------
@@ -1258,17 +1257,17 @@ class ApplicationFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
     .. versionadded:: 2.0
 
@@ -1368,17 +1367,17 @@ class ChannelFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-            Adds two flags together.
         .. describe:: x + y
+         Adds two flags together.
 
-            Subtracts two flags from each other.
         .. describe:: x - y
+        Subtracts two flags from each other.
 
-            Returns the intersection of two flags.
         .. describe:: x & y
+        Returns the intersection of two flags.
 
-            Returns the inverse of a flag.
         .. describe:: ~x
+        Returns the inverse of a flag.
 
     .. versionadded:: 2.0
 
