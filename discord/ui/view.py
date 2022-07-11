@@ -43,6 +43,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Union,
 )
 
 from ..components import ActionRow as ActionRowComponent
@@ -56,7 +57,7 @@ __all__ = ("View",)
 
 
 if TYPE_CHECKING:
-    from ..interactions import Interaction
+    from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
@@ -184,7 +185,7 @@ class View:
         self.__timeout_expiry: Optional[float] = None
         self.__timeout_task: Optional[asyncio.Task[None]] = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
-        self._message: Optional[Message] = None
+        self._message: Optional[Union[Message, InteractionMessage]] = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
