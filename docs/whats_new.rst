@@ -39,7 +39,7 @@ v2.0.0
 - User accounts (userbots) are no longer supported.
 - ``Client.logout`` is removed; use :meth:`Client.close` instead.
 - ``on_private_channel_create/delete`` events are removed.
-- ``User.permissions_in`` is removed; use :meth:`abc.GuildChannel.permissions_in` instead.
+- ``User.permissions_in`` is removed; use :meth:`abc.GuildChannel.permissions_for` instead.
 - ``Message.type`` for replies are now :attr:`MessageType.reply`.
 - ``Reaction.custom_emoji`` property is changed to :meth:`Reaction.is_custom_emoji` method.
 - ``missing_perms`` attributes and arguments are renamed to ``missing_permissions``.
