@@ -16,9 +16,9 @@ in specific versions.
 v2.0.0
 ------
 - Voice receive API
-- Support for Input Text and Modal components
 - Slash commands, User commands, and Message commands
 - Buttons and Select Menus
+- Input Text and Modal components
 - Discord API version changed from 9 to 10
 - Message Content privileged intent
 - Application Command Localization
@@ -28,10 +28,7 @@ v2.0.0
 - discord.ext.pages (Paginators)
 - :meth:`Client.get_message`
 - Library-level enforcement of component field limits
-- Support providing option channel types as list
-- Enum options
 - Application permissions v2
-- ``arg: type = Option(...)`` Option format
 - Forum channels
 - Methods and attributes that returned :class:`TextChannel`, etc can now return :class:`Thread`.
 - Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with `_url` (i.e. `avatar_url`) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns None in case the default avatar is used.
