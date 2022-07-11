@@ -1258,7 +1258,7 @@ class ApplicationFlags(BaseFlags):
             Note that aliases are not shown.
 
         .. describe:: x + y
-         Adds two flags together.
+        Adds two flags together.
 
         .. describe:: x - y
         Subtracts two flags from each other.
