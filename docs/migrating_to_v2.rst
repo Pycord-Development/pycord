@@ -7,7 +7,7 @@ Migrating to v2.0
 
 v2.0 introduced new Discord features and depcreated some old ones.
 
-Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` instance, :class:`ui.View`, and a new :class:`ApplicationContext` class. If interested in creating them, please check out our :resource:`guide <guide>`.
+Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`.
 
 Python Version Change
 ---------------------
@@ -239,7 +239,7 @@ The following were removed:
 
 The following were renamed:
 
-- :attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the different color.
+- :attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color.
 - ``missing_perms`` arguments and attributes of :class:`ext.commands.MissingPermissions` and :class:`ext.commands.BotMissingPermissions` are renamed to ``missing_permissions``.
 
 The following were changed in behavior:
