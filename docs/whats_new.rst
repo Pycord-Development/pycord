@@ -15,21 +15,20 @@ in specific versions.
 
 v2.0.0
 ------
-- Voice receive API
-- Slash commands, User commands, and Message commands
-- Buttons and Select Menus
-- Input Text and Modal components
-- Discord API version changed from 9 to 10
-- Message Content privileged intent
-- Application Command Localization
-- Guild Ban List Paginated
 - Fully deprecated/removed store channels
-- discord.ext.bridge (Ability to have both slash and prefix commands)
-- discord.ext.pages (Paginators)
-- :meth:`Client.get_message`
-- Library-level enforcement of component field limits
-- Application permissions v2
-- Forum channels
+- Buttons and Select Menus
+- Slash commands, User commands, and Message commands (:pr:31)
+- Message Content privileged intent (:pr:332)
+- Voice receive API (:pr:532)
+- discord.ext.pages (Paginators) (:pr:589)
+- Input Text and Modal components (:pr:630)
+- Discord API version changed from 9 to 10 (:pr:1012)
+- Application permissions v2 (:pr:1129)
+- discord.ext.bridge (slash and prefixed commands) (:pr:1131)
+- :meth:`Client.get_message`(:pr:1141)
+- Application Command Localization (:pr:1185)
+- Guild Ban List Paginated (:pull:1217)
+- Forum channels (:issue:1249)
 - Methods and attributes that returned :class:`TextChannel`, etc can now return :class:`Thread`.
 - Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with `_url` (i.e. `avatar_url`) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns None in case the default avatar is used.
 - :func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`.
