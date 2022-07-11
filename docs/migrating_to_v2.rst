@@ -102,7 +102,7 @@ Webhook Changes
 .. code-block:: python
 
     webhook = discord.SyncWebhook.from_url(
-    f"https://discord.com/api/webhooks/{id}/{token}"
+        f"https://discord.com/api/webhooks/{id}/{token}"
     )
     webhook.send("Hello from pycord 2.0")
 
