@@ -5,7 +5,7 @@
 Migrating to v2.0
 =================
 
-v2.0 introduced new discord features and depcreated some old ones.
+v2.0 introduced new Discord features and depcreated some old ones.
 
 Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` instance, :class:`ui.View`, and a new :class:`ApplicationContext` class. If interested in creating them, please check out our :resource:`guide <guide>`.
 
