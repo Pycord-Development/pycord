@@ -65,6 +65,9 @@ BridgeCommandGroup
 .. automethod:: discord.ext.bridge.bridge_group()
     :decorator:
 
+.. automethod:: discord.ext.bridge.map_to()
+    :decorator:
+
 Command Subclasses
 ~~~~~~~~~~~~~~~~~~
 .. autoclass:: discord.ext.bridge.BridgeExtCommand

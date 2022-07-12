@@ -48,7 +48,8 @@ __all__ = (
     "bridge_command",
     "bridge_group",
     "BridgeExtCommand",
-    "BridgeSlashCommand"
+    "BridgeSlashCommand",
+    "map_to",
 )
 
 
@@ -202,6 +203,8 @@ class BridgeCommandGroup(BridgeCommand):
         The prefix-based version of this command group.
     subcommands: List[:class:`.BridgeCommand`]
         List of bridge commands in this group
+    mapped: Optional[:class:`.SlashCommand`]
+        If :func:`map_to` is used, the mapped slash command.
 
     Parameters
     ----------
@@ -216,10 +219,9 @@ class BridgeCommandGroup(BridgeCommand):
         self.slash_variant = SlashCommandGroup(self.ext_variant.name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
-        map_to = kwargs.pop("map_to", None)
-        self.map_to = None
-        if map_to:
-            kwargs["name"] = map_to
+        self.mapped = None
+        if (map_to := getattr(callback, "__custom_map_to__")):
+            kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
 
     def command(self, *args, **kwargs):
@@ -264,6 +266,38 @@ def bridge_group(**kwargs):
     """
     def decorator(callback):
         return BridgeCommandGroup(callback, **kwargs)
+
+    return decorator
+
+def map_to(name, description = None):
+    """To be used with bridge command groups, map the main command to a slash subcommand.
+
+    Example
+    -------
+
+    .. code-block:: python3
+
+        @bot.bridge_group()
+        @bridge.map_to("show")
+        async def config(ctx: BridgeContext):
+            ...
+
+        @config.command()
+        async def toggle(ctx: BridgeContext):
+            ...
+
+    Prefixed commands will not be affected, but slash commands will appear as:
+
+    .. code-block::
+
+        /config show
+        /config toggle
+
+    """
+
+    def decorator(callback):
+        callback.__custom_map_to__ = {"name": name, "description": description}
+        return callback
 
     return decorator
 
