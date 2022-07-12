@@ -22,6 +22,16 @@ is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is no
 Installing
 -----------
 
+.. note::
+
+    For new features in upcoming versions, you will need to install the pre-release a stable version is released. ::
+
+        python3 -m pip install -U py-cord --pre
+
+    For Windows users, this command should be used to install the pre-release: ::
+
+        py -3 -m pip install -U py-cord --pre
+
 You can get the library directly from PyPI: ::
 
     python3 -m pip install -U py-cord
