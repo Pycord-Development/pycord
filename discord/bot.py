@@ -644,8 +644,6 @@ class ApplicationCommandMixin(ABC):
                     guild_commands, guild_id=guild_id, method=method, force=force, delete_existing=delete_existing
                 )
 
-        global_permissions: List = []
-
         for i in registered_commands:
             cmd = get(
                 self.pending_application_commands,

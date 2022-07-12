@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any, Optional, Union
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -50,10 +50,10 @@ class BridgeContext(ABC):
 
         @bot.bridge_command()
         async def example(ctx: BridgeContext):
-            if isinstance(ctx, BridgeExtContext):
-                command_type = "Traditional (prefix-based) command"
-            elif isinstance(ctx, BridgeApplicationContext):
+            if ctx.is_app:
                 command_type = "Application command"
+            else:
+                command_type = "Traditional (prefix-based) command"
             await ctx.send(f"This command was invoked with a(n) {command_type}.")
 
     .. versionadded:: 2.0
@@ -140,6 +140,10 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
     async def _edit(self, *args, **kwargs) -> InteractionMessage:
         return await self._get_super("edit")(*args, **kwargs)
 
+    @property
+    def is_app(self) -> bool:
+        return True
+
 
 class BridgeExtContext(BridgeContext, Context):
     """
@@ -184,3 +188,7 @@ class BridgeExtContext(BridgeContext, Context):
         """
         if self._original_response_message:
             await self._original_response_message.delete(delay=delay, reason=reason)
+
+    @property
+    def is_app(self) -> bool:
+        return True
