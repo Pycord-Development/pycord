@@ -1,7 +1,7 @@
 .. currentmodule:: discord
 
 API Reference
-==============
+=============
 
 The reference manual that follows details the API of Pycord's bridge command extension module.
 
@@ -14,10 +14,10 @@ The reference manual that follows details the API of Pycord's bridge command ext
 .. _ext_bridge_api:
 
 Bots
------
+----
 
 Bot
-~~~~
+~~~
 
 .. attributetable:: discord.ext.bridge.Bot
 
@@ -32,9 +32,8 @@ Bot
     .. automethod:: Bot.bridge_group()
         :decorator:
 
-
 AutoShardedBot
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.bridge.AutoShardedBot
 
@@ -42,7 +41,7 @@ AutoShardedBot
     :members:
 
 Commands
----------
+--------
 
 BridgeCommand
 ~~~~~~~~~~~~~~
@@ -66,12 +65,19 @@ BridgeCommandGroup
 .. automethod:: discord.ext.bridge.bridge_group()
     :decorator:
 
+Command Subclasses
+~~~~~~~~~~~~~~~~~~
+.. autoclass:: discord.ext.bridge.BridgeExtCommand
+    :members:
+
+.. autoclass:: discord.ext.bridge.BridgeSlashCommand
+    :members:
 
 Context
---------
+-------
 
 BridgeContext
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.bridge.BridgeContext
 
@@ -80,7 +86,7 @@ BridgeContext
     :exclude-members: _respond, _defer, _edit, _get_super
 
 BridgeContext Subclasses
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.bridge.BridgeApplicationContext
 

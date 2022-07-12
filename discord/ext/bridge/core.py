@@ -28,8 +28,10 @@ import discord.commands.options
 from discord.commands import Option, SlashCommand, SlashCommandGroup
 from discord.enums import SlashCommandOptionType
 
+from ...utils import get
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
+from ..commands.converter import _convert_to_bool
 from ..commands import (
     Command,
     Group,
@@ -38,6 +40,7 @@ from ..commands import (
     RoleConverter,
     UserConverter,
 )
+
 
 __all__ = (
     "BridgeCommand",
@@ -48,8 +51,6 @@ __all__ = (
     "BridgeSlashCommand"
 )
 
-from ...utils import get
-from ..commands.converter import _convert_to_bool
 
 def filter_params(params, **kwargs):
     for param, nparam in kwargs.items():
@@ -62,15 +63,15 @@ def filter_params(params, **kwargs):
     return kwargs
 
 class BridgeSlashCommand(SlashCommand):
-    """A subclass of :class:`.SlashCommand` that is used to implement bridge commands."""
+    """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, brief="desription")
+        kwargs = filter_params(kwargs, brief="description")
         super().__init__(func, **kwargs)
 
 
 class BridgeExtCommand(Command):
-    """A subclass of :class:`.ext.commands.Command` that is used to implement bridge commands."""
+    """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         kwargs = filter_params(kwargs, description="brief")
@@ -230,7 +231,7 @@ class BridgeCommandGroup(BridgeCommand):
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
         """
         def wrap(callback):
-            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="desription"))(callback)
+            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"))(callback)
             ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"))(callback)
             command = BridgeCommand(callback, slash_variant=slash, ext_variant=ext)
             self.subcommands.append(command)
