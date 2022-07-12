@@ -24,16 +24,12 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import inspect
-import discord.commands.options
-from discord.commands import Option, SlashCommand, SlashCommandGroup
-from discord import SlashCommandOptionType, Attachment
-from discord.ext.commands.errors import MissingRequiredArgument
 from typing import Any, List, Union
 
+import discord.commands.options
+from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
 from ...utils import get
-from ..commands import BadArgument
-from ..commands import Bot as ExtBot
-from ..commands.converter import _convert_to_bool, get_converter, run_converters
+from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Context,
     Command,
@@ -42,6 +38,8 @@ from ..commands import (
     GuildChannelConverter,
     RoleConverter,
     UserConverter,
+    BadArgument,
+    Bot as ExtBot,
 )
 
 
@@ -191,19 +189,20 @@ class BridgeCommand(BaseBridgeCommand):
         self.ext_variant = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
     def add_to(self, bot: ExtBot) -> None:
-        """Adds the command to a bot.
-
-        Parameters
-        ----------
-        bot: :class:`.Bot`
-            The bot to add the command to.
-        """
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
 
 
 class BridgeCommandGroup(BridgeCommand):
     """Compatibility class between prefixed-based commands and slash commands.
+
+    Parameters
+    ----------
+    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
+        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
+        and any additional arguments will be passed to the callback. This callback must be a coroutine.
+    kwargs: Optional[Dict[:class:`str`, Any]]
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
 
     Attributes
     ----------
@@ -215,14 +214,6 @@ class BridgeCommandGroup(BridgeCommand):
         List of bridge commands in this group
     mapped: Optional[:class:`.SlashCommand`]
         If :func:`map_to` is used, the mapped slash command.
-
-    Parameters
-    ----------
-    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
-        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
-        and any additional arguments will be passed to the callback. This callback must be a coroutine.
-    kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
     def __init__(self, callback, *args, **kwargs):
         self.ext_variant = Group(callback, *args, **kwargs)
@@ -279,6 +270,7 @@ def bridge_group(**kwargs):
 
     return decorator
 
+
 def map_to(name, description = None):
     """To be used with bridge command groups, map the main command to a slash subcommand.
 
@@ -303,6 +295,12 @@ def map_to(name, description = None):
         /config show
         /config toggle
 
+    Parameters
+    ----------
+    name: :class:`str`
+        The new name of the mapped command.
+    description: Optional[:class:`str`]
+        The new description of the mapped command.
     """
 
     def decorator(callback):
@@ -326,7 +324,7 @@ class AttachmentConverter(Converter):
         try:
             attach = ctx.message.attachments[0]
         except KeyError:
-            raise MissingRequiredArgument("At least 1 attachment is needed")
+            raise BadArgument("At least 1 attachment is needed")
         else:
             return attach
 

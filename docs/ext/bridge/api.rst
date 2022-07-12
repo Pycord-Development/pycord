@@ -50,6 +50,7 @@ BridgeCommand
 
 .. autoclass:: discord.ext.bridge.BridgeCommand
     :members:
+    :exclude-members: add_to
 
 .. automethod:: discord.ext.bridge.bridge_command()
     :decorator:
