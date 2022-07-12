@@ -22,17 +22,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Any, List, Union
 
+import inspect
 import discord.commands.options
 from discord.commands import Option, SlashCommand, SlashCommandGroup
-from discord.enums import SlashCommandOptionType
+from discord import SlashCommandOptionType, Attachment
+from discord.ext.commands.errors import MissingRequiredArgument
+from typing import Any, List, Union
 
 from ...utils import get
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
-from ..commands.converter import _convert_to_bool
+from ..commands.converter import _convert_to_bool, get_converter, run_converters
 from ..commands import (
+    Context,
     Command,
     Group,
     Converter,
@@ -77,6 +80,13 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         kwargs = filter_params(kwargs, description="brief")
         super().__init__(func, **kwargs)
+
+    async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
+        if param.annotation is Attachment:
+            # skip the parameter checks for bridge attachments
+            return await run_converters(ctx, AttachmentConverter, None, param)
+        else:
+            return await super().transform(ctx, param)
 
 
 class BaseBridgeCommand:
@@ -220,7 +230,7 @@ class BridgeCommandGroup(BridgeCommand):
         self.subcommands: List[BridgeCommand] = []
 
         self.mapped = None
-        if (map_to := getattr(callback, "__custom_map_to__")):
+        if (map_to := getattr(callback, "__custom_map_to__", None)):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
 
@@ -311,9 +321,14 @@ class MentionableConverter(Converter):
         except BadArgument:
             return await UserConverter().convert(ctx, argument)
 
-# TODO:
-def attachment_callback(*args):  # pylint: disable=unused-argument
-    raise ValueError("Attachments are not supported for bridge commands.")
+class AttachmentConverter(Converter):
+    async def convert(self, ctx: Context, arg: str):
+        try:
+            attach = ctx.message.attachments[0]
+        except KeyError:
+            raise MissingRequiredArgument("At least 1 attachment is needed")
+        else:
+            return attach
 
 
 BRIDGE_CONVERTER_MAPPING = {
@@ -325,7 +340,7 @@ BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.role: RoleConverter,
     SlashCommandOptionType.mentionable: MentionableConverter,
     SlashCommandOptionType.number: float,
-    SlashCommandOptionType.attachment: attachment_callback,
+    SlashCommandOptionType.attachment: AttachmentConverter,
 }
 
 
