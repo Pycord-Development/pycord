@@ -191,4 +191,4 @@ class BridgeExtContext(BridgeContext, Context):
 
     @property
     def is_app(self) -> bool:
-        return True
+        return False
