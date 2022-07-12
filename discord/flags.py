@@ -36,6 +36,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
     overload,
 )
 
@@ -140,6 +141,44 @@ class BaseFlags:
             if isinstance(value, flag_value):
                 yield (name, self._has_flag(value.flag))
 
+    def __and__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value & other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value & other.flag)
+        else:
+            raise TypeError(f"'&' not supported between instances of {type(self)} and {type(other)}")
+
+    def __or__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value | other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value | other.flag)
+        else:
+            raise TypeError(f"'|' not supported between instances of {type(self)} and {type(other)}")
+
+    def __add__(self, other):
+        try:
+            return self | other
+        except TypeError:
+            raise TypeError(f"'+' not supported between instances of {type(self)} and {type(other)}")
+
+    def __sub__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__._from_value(self.value & ~other.value)
+        elif isinstance(other, flag_value):
+            return self.__class__._from_value(self.value & ~other.flag)
+        else:
+            raise TypeError(f"'-' not supported between instances of {type(self)} and {type(other)}")
+
+    def __invert__(self):
+        return self.__class__._from_value(~self.value)
+
+    __rand__: Callable[[Union[BaseFlags, flag_value]], bool] = __and__
+    __ror__: Callable[[Union[BaseFlags, flag_value]], bool] = __or__
+    __radd__: Callable[[Union[BaseFlags, flag_value]], bool] = __add__
+    __rsub__: Callable[[Union[BaseFlags, flag_value]], bool] = __sub__
+
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
 
@@ -169,6 +208,21 @@ class SystemChannelFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -242,6 +296,21 @@ class MessageFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -337,6 +406,21 @@ class PublicUserFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two PublicUserFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
@@ -482,6 +566,21 @@ class Intents(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -970,7 +1069,7 @@ class Intents(BaseFlags):
         - :meth:`Guild.get_scheduled_event`
         """
         return 1 << 16
-    
+
     @flag_value
     def auto_moderation_configuration(self):
         """:class:`bool`: Whether guild auto moderation configuration events are enabled.
@@ -982,7 +1081,7 @@ class Intents(BaseFlags):
         - :func:`on_auto_moderation_rule_delete`
         """
         return 1 << 20
-    
+
     @flag_value
     def auto_moderation_execution(self):
         """:class:`bool`: Whether guild auto moderation execution events are enabled.
@@ -1022,6 +1121,21 @@ class MemberCacheFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
                Return the flag's hash.
@@ -1146,6 +1260,21 @@ class ApplicationFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two ApplicationFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
@@ -1244,6 +1373,21 @@ class ChannelFlags(BaseFlags):
         .. describe:: x != y
 
             Checks if two ChannelFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
         .. describe:: hash(x)
 
             Return the flag's hash.
