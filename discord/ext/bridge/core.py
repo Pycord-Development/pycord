@@ -28,7 +28,7 @@ from typing import Any, List, Union
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from ...utils import get
+from ...utils import get, filter_params
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Context,
@@ -54,16 +54,6 @@ __all__ = (
     "map_to",
 )
 
-
-def filter_params(params, **kwargs):
-    for param, nparam in kwargs.items():
-        if param in params:
-            if nparam is None:
-                params.pop(param)
-            else:
-                kwargs[nparam] = params.pop(param)
-
-    return kwargs
 
 class BridgeSlashCommand(SlashCommand):
     """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
@@ -228,6 +218,13 @@ class BridgeCommand(BaseBridgeCommand):
         self.ext_variant = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
     def add_to(self, bot: ExtBot) -> None:
+        """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
+
+        Parameters
+        ----------
+        bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
+            The bot to add the command to.
+        """
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
 
