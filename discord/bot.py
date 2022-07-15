@@ -394,7 +394,7 @@ class ApplicationCommandMixin(ABC):
         Parameters
         ----------
         commands: Optional[List[:class:`~.ApplicationCommand`]]
-            A list of commands to register. If this is not set (None), then all commands will be registered.
+            A list of commands to register. If this is not set (``None``), then all commands will be registered.
         guild_id: Optional[int]
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
@@ -684,8 +684,8 @@ class ApplicationCommandMixin(ABC):
         you should invoke this coroutine as well.
 
         This function finds a registered command matching the interaction id from
-        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no
-        matching command was found, it replies to the interaction with a default message.
+        application commands and invokes it. If no matching command was 
+        found, it replies to the interaction with a default message.
 
         .. versionadded:: 2.0
 
@@ -836,7 +836,7 @@ class ApplicationCommandMixin(ABC):
         self, name: str, description: Optional[str] = None, guild_ids: Optional[List[int]] = None, **kwargs
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
-        command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        command list via :meth:`add_application_command`.
 
         .. versionadded:: 2.0
 
@@ -869,7 +869,7 @@ class ApplicationCommandMixin(ABC):
         guild_ids: Optional[List[int]] = None,
     ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
-        and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        and adds it to the internal command list via :meth:`add_application_command`.
 
         .. versionadded:: 2.0
 

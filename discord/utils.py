@@ -922,7 +922,7 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[List[T]]:
 
     Returns
     --------
-    Union[:class:`Iterator`, :class:`AsyncIterator`]
+    Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
         A new iterator which yields chunks of a given size.
     """
     if max_size <= 0:

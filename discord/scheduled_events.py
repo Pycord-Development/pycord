@@ -65,9 +65,9 @@ class ScheduledEventLocation:
     +------------------------+---------------------------------------------------+
     |     Type of Input      |                   Location Type                   |
     +========================+===================================================+
-    | :class:`StageChannel`: | :attr:`ScheduledEventLocationType.stage_instance` |
-    | :class:`VoiceChannel`: | :attr:`ScheduledEventLocationType.voice`          |
-    | :class:`str`:          | :attr:`ScheduledEventLocationType.external`       |
+    | :class:`StageChannel`  | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`  | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`           | :attr:`ScheduledEventLocationType.external`       |
     +------------------------+---------------------------------------------------+
 
     .. versionadded:: 2.0

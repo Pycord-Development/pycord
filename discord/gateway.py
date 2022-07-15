@@ -53,7 +53,7 @@ __all__ = (
 
 
 class ReconnectWebSocket(Exception):
-    """Signals to safely reconnect the websocket."""
+    """Signals to safely reconnect the WebSocket."""
 
     def __init__(self, shard_id, *, resume=True):
         self.shard_id = shard_id
@@ -705,7 +705,7 @@ class DiscordWebSocket:
 
 
 class DiscordVoiceWebSocket:
-    """Implements the websocket protocol for handling voice connections.
+    """Implements the WebSocket protocol for handling voice connections.
 
     Attributes
     -----------

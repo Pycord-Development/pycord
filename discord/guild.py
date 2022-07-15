@@ -2000,13 +2000,13 @@ class Guild(Hashable):
 
         Raises
         -------
-        :exc:`.InvalidData`
+        InvalidData
             An unknown channel type was received from Discord
             or the guild the channel belongs to is not the same
             as the one in this object points to.
-        :exc:`.HTTPException`
+        HTTPException
             Retrieving the channel failed.
-        :exc:`.NotFound`
+        NotFound
             Invalid Channel ID.
         :exc:`.Forbidden`
             You do not have permission to fetch this channel.
@@ -3594,9 +3594,9 @@ class Guild(Hashable):
             The actions to take when the rule is triggered.
         enabled: :class:`bool`
             Whether the rule is enabled.
-        exempt_roles: List[:class:`Snowflake`]
+        exempt_roles: List[:class:`.abc.Snowflake`]
             A list of roles that are exempt from the rule.
-        exempt_channels: List[:class:`Snowflake`]
+        exempt_channels: List[:class:`abc.Snowflake`]
             A list of channels that are exempt from the rule.
         reason: Optional[:class:`str`]
             The reason for creating the rule. Shows up in the audit log.

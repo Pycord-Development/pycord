@@ -509,6 +509,7 @@ class InteractionResponse:
         and a secondary action will be done later.
 
         This can only be used with the following interaction types:
+        
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`

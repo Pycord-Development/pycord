@@ -469,7 +469,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_socket_event_type(event_type)
 
-    Called whenever a websocket event is received from the WebSocket.
+    Called whenever a WebSocket event is received from the WebSocket.
 
     This is mainly useful for logging how many events you are receiving
     from the Discord gateway.
@@ -797,7 +797,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     Called when an interaction happened.
 
-    This currently happens due to slash command invocations or components being used.
+    This currently happens due to application command invocations or components being used.
 
     .. warning::
 
@@ -1152,7 +1152,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     - Changed name
     - Changed AFK channel
     - Changed AFK timeout
-    - etc
+    - etc.
 
     This requires :attr:`Intents.guilds` to be enabled.
 
@@ -1220,7 +1220,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     This requires :attr:`Intents.guilds` to be enabled.
 
-    :param guild: The :class:`Guild` that has changed availability.
+    :param guild: The guild that has changed availability.
+    :type guild: :class:`Guild`
 
 .. function:: on_voice_state_update(member, before, after)
 
@@ -4478,6 +4479,15 @@ CategoryChannel
     :members:
     :inherited-members:
 
+ForumChannel
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
 DMChannel
 ~~~~~~~~~
 
@@ -4621,6 +4631,22 @@ GuildSticker
 .. attributetable:: GuildSticker
 
 .. autoclass:: GuildSticker()
+    :members:
+
+AutoModRule
+~~~~~~~~~~~~
+
+.. attributetable:: AutoModRule
+
+.. autoclass:: AutoModRule()
+    :members:
+
+AutoModActionExecutionEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutoModActionExecutionEvent
+
+.. autoclass:: AutoModActionExecutionEvent()
     :members:
 
 RawTypingEvent

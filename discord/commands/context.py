@@ -144,7 +144,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel_id(self) -> Optional[int]:
-        """:class:`int`: Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel.id`."""
+        """:class:`int`: Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.channel.id`."""
         return self.interaction.channel_id
 
     @cached_property
@@ -154,7 +154,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def guild_id(self) -> Optional[int]:
-        """:class:`int`: Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild.id`."""
+        """:class:`int`: Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.guild.id`."""
         return self.interaction.guild_id
 
     @cached_property
@@ -193,7 +193,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
-        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command. Shorthand for :attr:`.Interaction.guild.voice_client`, if applicable."""
+        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command. Shorthand for :attr:`.guild.voice_client`, if applicable."""
         if self.interaction.guild is None:
             return None
 
@@ -332,7 +332,7 @@ class ApplicationContext(discord.abc.Messageable):
 class AutocompleteContext:
     """Represents context for a slash command's option autocomplete.
 
-    This class is not created manually and is instead passed to an Option's autocomplete callback.
+    This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback.
 
     .. versionadded:: 2.0
 

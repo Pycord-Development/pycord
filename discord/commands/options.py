@@ -133,16 +133,16 @@ class Option:
         The default value for this option. If provided, ``required`` will be considered ``False``.
     min_value: Optional[:class:`int`]
         The minimum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     max_value: Optional[:class:`int`]
         The maximum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     min_length: Optional[:class:`int`]
         The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.

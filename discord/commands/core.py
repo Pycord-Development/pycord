@@ -1558,7 +1558,7 @@ def slash_command(**kwargs):
 
     Returns
     --------
-    Callable[..., :class:`SlashCommand`]
+    Callable[..., :class:`.SlashCommand`]
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
@@ -1584,7 +1584,7 @@ def message_command(**kwargs):
 
     Returns
     --------
-    Callable[..., :class:`MessageCommand`]
+    Callable[..., :class:`.MessageCommand`]
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
@@ -1631,13 +1631,13 @@ def command(**kwargs):
     """An alias for :meth:`application_command`.
 
     .. note::
-        This decorator is overridden by :func:`commands.command`.
+        This decorator is overridden by :func:`ext.commands.command`.
 
     .. versionadded:: 2.0
 
     Returns
     --------
-    Callable[..., :class:`ApplicationCommand`]
+    Callable[..., :class:`.ApplicationCommand`]
         A decorator that converts the provided method into an :class:`.ApplicationCommand`.
     """
     return application_command(**kwargs)
