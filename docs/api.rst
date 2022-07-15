@@ -4633,12 +4633,12 @@ GuildSticker
 .. autoclass:: GuildSticker()
     :members:
 
-AutoModRule
-~~~~~~~~~~~~
+AutoModActionMetadata
+~~~~~~~~~~~~~~~~~~~~~~
 
-.. attributetable:: AutoModRule
+.. attributetable:: AutoModActionMetadata
 
-.. autoclass:: AutoModRule()
+.. autoclass:: AutoModActionMetadata()
     :members:
 
 AutoModAction
@@ -4647,6 +4647,14 @@ AutoModAction
 .. attributetable:: AutoModAction
 
 .. autoclass:: AutoModAction()
+    :members:
+
+AutoModRule
+~~~~~~~~~~~~
+
+.. attributetable:: AutoModRule
+
+.. autoclass:: AutoModRule()
     :members:
 
 AutoModActionExecutionEvent
