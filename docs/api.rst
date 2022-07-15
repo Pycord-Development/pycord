@@ -4641,6 +4641,14 @@ AutoModRule
 .. autoclass:: AutoModRule()
     :members:
 
+AutoModAction
+~~~~~~~~~~~~~
+
+.. attributetable:: AutoModAction
+
+.. autoclass:: AutoModAction()
+    :members:
+
 AutoModActionExecutionEvent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
