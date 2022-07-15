@@ -4633,22 +4633,6 @@ GuildSticker
 .. autoclass:: GuildSticker()
     :members:
 
-AutoModActionMetadata
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: AutoModActionMetadata
-
-.. autoclass:: AutoModActionMetadata()
-    :members:
-
-AutoModAction
-~~~~~~~~~~~~~
-
-.. attributetable:: AutoModAction
-
-.. autoclass:: AutoModAction()
-    :members:
-
 AutoModRule
 ~~~~~~~~~~~~
 
