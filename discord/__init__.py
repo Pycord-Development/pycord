@@ -25,6 +25,7 @@ from .activity import *
 from .appinfo import *
 from .asset import *
 from .audit_logs import *
+from .automod import *
 from .bot import *
 from .channel import *
 from .client import *
