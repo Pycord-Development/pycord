@@ -24,7 +24,7 @@ Installing
 
 .. note::
 
-    For new features in upcoming versions, you will need to install the pre-release a stable version is released. ::
+    For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::
 
         python3 -m pip install -U py-cord --pre
 
