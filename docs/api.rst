@@ -4641,14 +4641,6 @@ AutoModRule
 .. autoclass:: AutoModRule()
     :members:
 
-AutoModActionExecutionEvent
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: AutoModActionExecutionEvent
-
-.. autoclass:: AutoModActionExecutionEvent()
-    :members:
-
 RawTypingEvent
 ~~~~~~~~~~~~~~~~~~~~~~~
 
