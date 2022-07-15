@@ -15,45 +15,37 @@ in specific versions.
 
 v2.0.0
 ------
-- Voice receive API
-- `Bot.register_commands` renamed to :meth:`Bot.sync_commands`
-- Support for Input Text and Modal components
-- Slash command Attachments option
-- Discord API version changed from 9 to 10
-- Message Content privileged intent
-- Application Command Localization
-- Guild Ban List Paginated
 - Fully deprecated/removed store channels
-- discord.ext.bridge (Ability to have both slash and prefix commands)
-- :meth:`Client.get_message`
-- :meth:`Modal.on_error`
-- Library-level enforcement of component field limits
-- Support providing option channel types as list
-- [ext.pages] Files parameter to Page object
-- [ext.bridge] :meth:`BridgeExtContext.delete()` method
-- disable_all_items method to View
-- Change :attr:`Modal.children` to be a property + allow instantiating with list of InputText components
-- Enum options
-- Application permissions v2
-- `arg: type = Option(...)` Option format
-- Forum channels
-- Methods and attributes that returned :class:`TextChannel`, etc can now return :class:`Thread`.
-- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with `_url` (i.e. `avatar_url`) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns None in case the default avatar is used.
-- :func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`.
-- :class:`datetime` is now timezone-aware.
-- Sticker changes: `StickerType` has been renamed to :class:`StickerFormatType`, and the type of :attr:`Message.stickers` is changed. `Sticker.preview_image`, `Sticker.image` and `Sticker.tags` are removed.
-- Webhooks are changed significantly; `WebhookAdapter` is removed, and synchronous requests using requests is now inside :class:`SyncWebhook`.
-- `edit` method no longer updates cache and instead returns modified instance.
+- Buttons and Select Menus
+- Slash commands, User commands, and Message commands (:issue:`31`)
+- Message Content privileged intent (:issue:`332`)
+- Voice receive API (:issue:`532`)
+- discord.ext.pages (Paginators) (:issue:`589`)
+- Input Text and Modal components (:issue:`630`)
+- Discord API version changed from 9 to 10 (:issue:`1012`)
+- Application permissions v2 (:issue:`1129`)
+- discord.ext.bridge (slash and prefixed commands) (:issue:`1131`)
+- :meth:`Client.get_message` (:issue:`1141`)
+- Application Command Localization (:issue:`1185`)
+- Guild Ban List Paginated (:issue:`1217`)
+- Forum channels (:issue:`1249`)
+- Methods and attributes that returned :class:`TextChannel`, etc., can now return :class:`Thread`.
+- Attributes that returned :class:`Asset` are renamed, e.g. attributes ending with ``_url`` (i.e.: ``avatar_url``) are changed to :attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the default avatar is used.
+- :func:`on_presence_update` replaces ``on_member_update`` for updates to :attr:`Member.status` and :attr:`Member.activities`.
+- :class:`datetime.datetime` objects used in the library are now timezone-aware.
+- Sticker changes: ``StickerType`` has been renamed to :class:`StickerFormatType`, and the type of :attr:`Message.stickers` is altered. ``Sticker.preview_image``, ``Sticker.image`` and ``Sticker.tags`` are removed.
+- Webhooks are changed significantly; ``WebhookAdapter`` is removed, and synchronous requests using requests is now inside :class:`SyncWebhook`.
+- ``edit`` method no longer updates the cache and instead returns modified instance.
 - User accounts (userbots) are no longer supported.
-- `Client.logout` is removed; use :meth:`Client.close` instead.
-- `on_private_channel_create/delete events` are removed.
-- `User.permissions_in` is removed; use `abc.GuildChannel.permissions_in` instead.
-- `Message.type` for replies are now :attr:`MessageType.reply`.
-- `Reaction.custom_emoji` property is changed to :meth:`Reaction.is_custom_emoji` method.
-- `missing_perms` attributes and arguments are renamed to `missing_permissions`.
+- ``Client.logout`` is removed; use :meth:`Client.close` instead.
+- ``on_private_channel_create/delete`` events are removed.
+- ``User.permissions_in`` is removed; use :meth:`abc.GuildChannel.permissions_for` instead.
+- ``Message.type`` for replies are now :attr:`MessageType.reply`.
+- ``Reaction.custom_emoji`` property is changed to :meth:`Reaction.is_custom_emoji` method.
+- ``missing_perms`` attributes and arguments are renamed to ``missing_permissions``.
 - Many method arguments now reject :class:`None`.
-- Many arguments are now specified as positional-only or keyword-only; e.g. :meth:`utils.oauth_url` now takes keyword-only arguments, and methods starting with `get_` or `fetch_` take positional-only arguments.
-- `Complete list of breaking changes <https://gist.github.com/BobDotCom/81bfea226e330675e7f1e282b24b371e>`
+- Many arguments are now specified as positional-only or keyword-only; e.g. :meth:`utils.oauth_url` now takes keyword-only arguments, and methods starting with ``get_`` or ``fetch_`` take positional-only arguments.
+- :doc:`migrating_to_v2`
 
 .. _vp1p7p3:
 
