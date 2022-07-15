@@ -78,3 +78,4 @@ If you're looking for something related to the project itself, it's here.
   whats_new
   version_guarantees
   migrating_to_v1
+  migrating_to_v2
