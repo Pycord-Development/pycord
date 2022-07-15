@@ -4633,14 +4633,6 @@ GuildSticker
 .. autoclass:: GuildSticker()
     :members:
 
-AutoModRule
-~~~~~~~~~~~~
-
-.. attributetable:: AutoModRule
-
-.. autoclass:: AutoModRule()
-    :members:
-
 RawTypingEvent
 ~~~~~~~~~~~~~~~~~~~~~~~
 
