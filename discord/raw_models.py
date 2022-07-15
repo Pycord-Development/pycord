@@ -394,7 +394,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
 
 
 class AutoModActionExecutionEvent:
-    """Represents the payload for a :func:`on_auto_moderation_action_execution`
+    """Represents the payload for an :func:`on_auto_moderation_action_execution`
     
     .. versionadded:: 2.0
     
