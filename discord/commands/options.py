@@ -22,13 +22,41 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations
+
 import inspect
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Type, Union
 from enum import Enum
 
-from ..abc import GuildChannel
+from ..abc import GuildChannel, Mentionable
 from ..channel import TextChannel, VoiceChannel, StageChannel, CategoryChannel, Thread
 from ..enums import ChannelType, SlashCommandOptionType, Enum as DiscordEnum
+
+if TYPE_CHECKING:
+    from ..ext.commands import Converter
+    from ..user import User
+    from ..member import Member
+    from ..message import Attachment
+    from ..role import Role
+
+    InputType = Union[
+        Type[str],
+        Type[bool],
+        Type[int],
+        Type[float],
+        Type[GuildChannel],
+        Type[Thread],
+        Type[Member],
+        Type[User],
+        Type[Attachment],
+        Type[Role],
+        Type[Mentionable],
+        SlashCommandOptionType,
+        Converter,
+        Type[Converter],
+        Type[Enum],
+        Type[DiscordEnum],
+    ]
 
 __all__ = (
     "ThreadOption",
@@ -88,8 +116,9 @@ class Option:
 
     Attributes
     ----------
-    input_type: :class:`Any`
-        The type of input that is expected for this option.
+    input_type: Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]
+        The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`,
+        an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`.
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
@@ -132,87 +161,83 @@ class Option:
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
 
-    def __init__(self, input_type: Any = str, /, description: Optional[str] = None, **kwargs) -> None:
+    input_type: SlashCommandOptionType
+    converter: Optional[Union[Converter, Type[Converter]]] = None
+
+    def __init__(self, input_type: InputType = str, /, description: Optional[str] = None, **kwargs) -> None:
         self.name: Optional[str] = kwargs.pop("name", None)
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
-        self.description = description or "No description provided"
-        self.converter = None
-        self._raw_type = input_type
-        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
+
         enum_choices = []
+        input_type_is_class = isinstance(input_type, type)
+        if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
+            description = inspect.getdoc(input_type)
+            enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
+            value_class = enum_choices[0].value.__class__
+            if all(isinstance(elem.value, value_class) for elem in enum_choices):
+                self.input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
+            else:
+                enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
+                self.input_type = SlashCommandOptionType.string
+        self.description = description or "No description provided"
+
+        self._raw_type: Union[InputType, tuple] = input_type
+        self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
+
         if not isinstance(input_type, SlashCommandOptionType):
-            if hasattr(input_type, "convert"):
+            from ..ext.commands import Converter
+            if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
                 self._raw_type = str
-                input_type = SlashCommandOptionType.string
-            elif isinstance(input_type, type) and issubclass(input_type, (Enum, DiscordEnum)):
-                enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
-                if len(enum_choices) != len([elem for elem in enum_choices if elem.value.__class__ == enum_choices[0].value.__class__]):
-                    enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
-                    input_type = SlashCommandOptionType.string
-                else:
-                    input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
+                self.input_type = SlashCommandOptionType.string
             else:
                 try:
-                    _type = SlashCommandOptionType.from_datatype(input_type)
+                    self.input_type = SlashCommandOptionType.from_datatype(input_type)
                 except TypeError as exc:
                     from ..ext.commands.converter import CONVERTER_MAPPING
 
                     if input_type not in CONVERTER_MAPPING:
                         raise exc
                     self.converter = CONVERTER_MAPPING[input_type]
-                    input_type = SlashCommandOptionType.string
+                    self._raw_type = str
+                    self.input_type = SlashCommandOptionType.string
                 else:
-                    if _type == SlashCommandOptionType.channel:
-                        if not isinstance(input_type, tuple):
-                            if hasattr(input_type, "__args__"):  # Union
-                                input_type = input_type.__args__
+                    if self.input_type == SlashCommandOptionType.channel:
+                        if not isinstance(self._raw_type, tuple):
+                            if hasattr(input_type, "__args__"):
+                                self._raw_type = input_type.__args__  # type: ignore # Union.__args__
                             else:
-                                input_type = (input_type,)
-                        for i in input_type:
-                            if i is GuildChannel:
-                                continue
-                            if isinstance(i, ThreadOption):
-                                self.channel_types.append(i._type)
-                                continue
-
-                            channel_type = CHANNEL_TYPE_MAP[i]
-                            self.channel_types.append(channel_type)
-                    input_type = _type
-        self.input_type = input_type
+                                self._raw_type = (input_type,)
+                        self.channel_types = [CHANNEL_TYPE_MAP[t] for t in self._raw_type if t is not GuildChannel]
         self.required: bool = kwargs.pop("required", True) if "default" not in kwargs else False
         self.default = kwargs.pop("default", None)
         self.choices: List[OptionChoice] = enum_choices or [
             o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", list())
         ]
 
-        if description is not None:
-            self.description = description
-        elif issubclass(self._raw_type, Enum) and (doc := inspect.getdoc(self._raw_type)) is not None:
-            self.description = doc
-        else:
-            self.description = "No description provided"
-
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
+            minmax_typehint = Optional[int]
         elif self.input_type == SlashCommandOptionType.number:
             minmax_types = (int, float, type(None))
+            minmax_typehint = Optional[Union[int, float]]
         else:
             minmax_types = (type(None),)
-        minmax_typehint = Optional[Union[minmax_types]]  # type: ignore
+            minmax_typehint = type(None)
 
         if self.input_type == SlashCommandOptionType.string:
             minmax_length_types = (int, type(None))
+            minmax_length_typehint = Optional[int]
         else:
             minmax_length_types = (type(None),)
-        minmax_length_typehint = Optional[Union[minmax_length_types]] # type: ignore
+            minmax_length_typehint = type(None)
 
-        self.min_value: minmax_typehint = kwargs.pop("min_value", None)
-        self.max_value: minmax_typehint = kwargs.pop("max_value", None)
-        self.min_length: minmax_length_typehint = kwargs.pop("min_length", None)
-        self.max_length: minmax_length_typehint = kwargs.pop("max_length", None)
+        self.min_value: Optional[Union[int, float]] = kwargs.pop("min_value", None)
+        self.max_value: Optional[Union[int, float]] = kwargs.pop("max_value", None)
+        self.min_length: Optional[int] = kwargs.pop("min_length", None)
+        self.max_length: Optional[int] = kwargs.pop("max_length", None)
 
         if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
                 and (self.min_value or self.max_value)):

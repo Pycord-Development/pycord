@@ -1090,18 +1090,22 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         return self.guild.id, self.id
 
     def _update(self, guild: Guild, data: Union[VoiceChannelPayload, StageChannelPayload]) -> None:
+        # This data will always exist
         self.guild = guild
         self.name: str = data["name"]
-        rtc = data.get("rtc_region")
-        self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
-        self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
-        self.position: int = data.get("position")
-        self.bitrate: int = data.get("bitrate")
-        self.user_limit: int = data.get("user_limit")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+
+        # This data may be missing depending on how this object is being created/updated
+        if not data.pop("_invoke_flag", False):
+            rtc = data.get("rtc_region")
+            self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
+            self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
+            self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+            self.position: int = data.get("position")
+            self.bitrate: int = data.get("bitrate")
+            self.user_limit: int = data.get("user_limit")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def _sorting_bucket(self) -> int:
@@ -1984,13 +1988,17 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return f"<CategoryChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
+        # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.nsfw: bool = data.get("nsfw", False)
-        self.position: int = data.get("position")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+
+        # This data may be missing depending on how this object is being created/updated
+        if not data.pop("_invoke_flag", False):
+            self.nsfw: bool = data.get("nsfw", False)
+            self.position: int = data.get("position")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def _sorting_bucket(self) -> int:
