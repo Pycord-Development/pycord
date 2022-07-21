@@ -723,6 +723,7 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
+            view.message = await self._parent.original_message()
             self._parent._state.store_view(view)
 
         self._responded = True
