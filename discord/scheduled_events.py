@@ -200,7 +200,7 @@ class ScheduledEvent(Hashable):
         self.description: Optional[str] = data.get("description", None)
         self._cover: Optional[str] = data.get("image", None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
-        if (end_time := data.get("scheduled_end_time", None)) is not None:
+        if end_time := data.get("scheduled_end_time", None):
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
