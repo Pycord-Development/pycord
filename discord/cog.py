@@ -748,7 +748,7 @@ class CogMixin:
         *,
         package: Optional[str] = None,
         recursive: bool = False,
-        store: bool = True,
+        store: bool = False,
     ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads an extension.
 
@@ -788,7 +788,7 @@ class CogMixin:
             encountered they will be raised and the bot will be closed.
             If no exceptions are encountered, a list of loaded
             extension names will be returned.
-            Defaults to ``True``.
+            Defaults to ``False``.
 
             .. versionadded:: 2.0
 
@@ -863,7 +863,7 @@ class CogMixin:
         *names: str,
         package: Optional[str] = None,
         recursive: bool = False,
-        store: bool = True,
+        store: bool = False,
     ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads multiple extensions at once.
 
@@ -896,7 +896,7 @@ class CogMixin:
             encountered they will be raised and the bot will be closed.
             If no exceptions are encountered, a list of loaded
             extension names will be returned.
-            Defaults to ``True``.
+            Defaults to ``False``.
 
             .. versionadded:: 2.0
 
