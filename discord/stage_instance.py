@@ -102,10 +102,9 @@ class StageInstance(Hashable):
         self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data["privacy_level"])
         self.discoverable_disabled: bool = data.get("discoverable_disabled", False)
 
-        if (event_id := data.get("guild_scheduled_event_id", None)) is not None:
+        self.scheduled_event = None
+        if event_id := data.get("guild_scheduled_event_id", None):
             self.scheduled_event = self.guild.get_scheduled_event(int(event_id))
-        else:
-            self.scheduled_event = None
 
     def __repr__(self) -> str:
         return f"<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
