@@ -211,7 +211,11 @@ class ApplicationCommandMixin(ABC):
                     return
                 return command
 
-    async def get_desynced_commands(self, guild_id: Optional[int] = None, prefetched=None) -> List[Dict[str, Any]]:
+    async def get_desynced_commands(
+        self,
+        guild_id: Optional[int] = None,
+        prefetched: Optional[List[ApplicationCommand]] = None
+    ) -> List[Dict[str, Any]]:
         """|coro|
 
         Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
@@ -228,12 +232,12 @@ class ApplicationCommandMixin(ABC):
         ----------
         guild_id: Optional[:class:`int`]
             The guild id to get the desynced commands for, else global commands if unspecified.
-        prefetched
+        prefetched: Optional[List[:class:`.ApplicationCommand`]]
             If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage.
 
         Returns
         -------
-        List[Dict[str, Any]]
+        List[Dict[:class:`str`, Any]]
             A list of the desynced commands. Each will come with at least the ``cmd`` and ``action`` keys, which
             respectively contain the command and the action to perform. Other keys may also be present depending on
             the action, including ``id``.
@@ -355,8 +359,8 @@ class ApplicationCommandMixin(ABC):
     ) -> None:
         """|coro|
 
-        Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed, the command will
-        be registered as a guild command for those guilds.
+        Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed,
+        the command will be registered as a guild command for those guilds.
 
         Parameters
         ----------
@@ -923,7 +927,7 @@ class ApplicationCommandMixin(ABC):
         Returns the invocation context from the interaction.
 
         This is a more low-level counter-part for :meth:`.process_application_commands`
-        to allow users more fine grained control over the processing.
+        to allow users more fine-grained control over the processing.
 
         Parameters
         -----------
@@ -951,7 +955,7 @@ class ApplicationCommandMixin(ABC):
         Returns the autocomplete context from the interaction.
 
         This is a more low-level counter-part for :meth:`.process_application_commands`
-        to allow users more fine grained control over the processing.
+        to allow users more fine-grained control over the processing.
 
         Parameters
         -----------
@@ -1004,10 +1008,7 @@ class ApplicationCommandMixin(ABC):
 class BotBase(ApplicationCommandMixin, CogMixin, ABC):
     _supports_prefixed_commands = False
 
-    # TODO I think
     def __init__(self, description=None, *args, **options):
-        # super(Client, self).__init__(*args, **kwargs)
-        # I replaced ^ with v and it worked
         super().__init__(*args, **options)
         self.extra_events = {}  # TYPE: Dict[str, List[CoroFunc]]
         self.__cogs = {}  # TYPE: Dict[str, Cog]
@@ -1046,7 +1047,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         The default command error handler provided by the bot.
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
 
         This only fires if you do not specify any listeners for command error.
@@ -1070,7 +1071,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
     def check(self, func):
         """A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is
-        applied on a per command basis except it is run before any command checks have been verified and applies to
+        applied on a per-command basis except it is run before any command checks have been verified and applies to
         every command the bot has.
 
         .. note::
@@ -1124,10 +1125,10 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             the :meth:`.Bot.add_check` call or using :meth:`.check_once`.
 
         """
-        l = self._check_once if call_once else self._checks
+        checks = self._check_once if call_once else self._checks
 
         try:
-            l.remove(func)
+            checks.remove(func)
         except ValueError:
             pass
 
@@ -1372,7 +1373,7 @@ class Bot(BotBase, Client):
     anything that you can do with a :class:`discord.Client` you can do with
     this bot.
 
-    This class also subclasses :class:`.ApplicationCommandMixin` to provide the functionality
+    This class also subclasses ``ApplicationCommandMixin`` to provide the functionality
     to manage commands.
 
     .. versionadded:: 2.0
@@ -1399,7 +1400,7 @@ class Bot(BotBase, Client):
 
         .. versionadded:: 2.0
     auto_sync_commands: :class:`bool`
-        Whether or not to automatically sync slash commands. This will call sync_commands in on_connect, and in
+        Whether to automatically sync slash commands. This will call sync_commands in on_connect, and in
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
         .. versionadded:: 2.0

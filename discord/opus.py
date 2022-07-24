@@ -36,21 +36,18 @@ import struct
 import sys
 import threading
 import time
-import traceback
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
     List,
     Literal,
-    Optional,
     Tuple,
     TypedDict,
     TypeVar,
-    overload,
 )
 
-from .errors import DiscordException, InvalidArgument
+from .errors import DiscordException
 from .sinks import RawData
 
 if TYPE_CHECKING:
@@ -101,7 +98,8 @@ class DecoderStruct(ctypes.Structure):
 EncoderStructPtr = ctypes.POINTER(EncoderStruct)
 DecoderStructPtr = ctypes.POINTER(DecoderStruct)
 
-## Some constants from opus_defines.h
+# Some constants from opus_defines.h
+
 # Error codes
 OK = 0
 BAD_ARG = -1

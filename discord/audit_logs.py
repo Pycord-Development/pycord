@@ -412,7 +412,7 @@ class AuditLogEntry(Hashable):
         The reason this action was done.
     extra: Any
         Extra information that this entry has that might be useful.
-        For most actions, this is ``None``. However in some cases it
+        For most actions, this is ``None``. However, in some cases it
         contains extra information. See :class:`AuditLogAction` for
         which actions have this field filled out.
     """

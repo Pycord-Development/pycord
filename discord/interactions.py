@@ -113,7 +113,7 @@ class Interaction:
     data: :class:`dict`
         The raw interaction data.
     locale: :class:`str`
-        The users locale.
+        The user's locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
@@ -168,7 +168,7 @@ class Interaction:
 
         self.message: Optional[Message] = None
 
-        if (message_data := data.get("message")):
+        if message_data := data.get("message"):
             self.message = Message(state=self._state, channel=self.channel, data=message_data)
 
         self._message_data = message_data
@@ -195,7 +195,7 @@ class Interaction:
 
     @property
     def client(self) -> Client:
-        """Returns the client that sent the interaction."""
+        """:class:`Client`: Returns the client that sent the interaction."""
         return self._state._get_client()
 
     @property
@@ -213,7 +213,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_channel")
     def channel(self) -> Optional[InteractionChannel]:
-        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the interaction was sent from.
+        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]:
+        The channel the interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
         no data to complete them. These are :class:`PartialMessageable` instead.
@@ -251,7 +252,7 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the follow up webhook for follow up interactions."""
+        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
         payload = {
             "id": self.application_id,
             "type": 3,
@@ -436,7 +437,14 @@ class Interaction:
             await func
 
     def to_dict(self) -> Dict[str, Any]:
-        """Converts this interaction object into a dict."""
+        """
+        Converts this interaction object into a dict.
+
+        Returns
+        --------
+        Dict[:class:`str`, Any]
+            A dictionary of :class:`str` interaction keys bound to the respective value.
+        """
 
         data = {
             "id": self.id,
@@ -507,6 +515,7 @@ class InteractionResponse:
         and a secondary action will be done later.
 
         This can only be used with the following interaction types:
+
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
@@ -515,9 +524,11 @@ class InteractionResponse:
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``.
+            This only applies to :attr:`InteractionType.application_command` interactions,
+            or if ``invisible`` is ``False``.
         invisible: :class:`bool`
-            Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`)
+            Indicates whether the deferred type should be 'invisible'
+            (:attr:`InteractionResponseType.deferred_message_update`)
             instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`).
             In the Discord UI, this is represented as the bot thinking of a response. You must
             eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
@@ -626,7 +637,7 @@ class InteractionResponse:
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
-            If a view is sent with an ephemeral message and it has no timeout set then the timeout
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
             is set to 15 minutes.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
@@ -649,6 +660,11 @@ class InteractionResponse:
             The length of ``embeds`` was invalid.
         InteractionResponded
             This interaction has already been responded to before.
+
+        Returns
+        --------
+        :class:`.Interaction`
+            The interaction object associated with the sent message.
         """
         if self._responded:
             raise InteractionResponded(self._parent)
@@ -950,7 +966,7 @@ class InteractionResponse:
         """
         async with self._response_lock:
             if self.is_done():
-                coro.close()  # cleanup unawaited coroutine
+                coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
             await coro
 

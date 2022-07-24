@@ -22,7 +22,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Dict, List, Literal, TypedDict
+from typing import List, Literal, TypedDict
 
 from .snowflake import Snowflake
 

@@ -444,7 +444,7 @@ class Client:
 
         The default error handler provided by the client.
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
         Check :func:`~discord.on_error` for more details.
         """
@@ -592,7 +592,7 @@ class Client:
 
                 # We should only get this when an unhandled close code happens,
                 # such as a clean disconnect (1000) or a bad state (bad token, no sharding, etc)
-                # sometimes, discord sends us 1000 for unknown reasons so we should reconnect
+                # sometimes, discord sends us 1000 for unknown reasons, so we should reconnect
                 # regardless and rely on is_closed instead
                 if isinstance(exc, ConnectionClosed):
                     if exc.code == 4014:
@@ -1073,7 +1073,7 @@ class Client:
         Raises
         -------
         asyncio.TimeoutError
-            If a timeout is provided and it was reached.
+            Raised if a timeout is provided and reached.
 
         Returns
         --------
@@ -1542,7 +1542,8 @@ class Client:
 
         .. note::
 
-            This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled, consider :meth:`get_user` instead.
+            This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled,
+            consider :meth:`get_user` instead.
 
         Parameters
         -----------

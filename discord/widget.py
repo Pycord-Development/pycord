@@ -266,7 +266,9 @@ class Widget:
             elif connected_channel:
                 connected_channel = WidgetChannel(id=connected_channel, name="", position=0)
 
-            self.members.append(WidgetMember(state=self._state, data=member, connected_channel=connected_channel))  # type: ignore
+            self.members.append(
+                WidgetMember(state=self._state, data=member, connected_channel=connected_channel)
+            )  # type: ignore
 
     def __str__(self) -> str:
         return self.json_url

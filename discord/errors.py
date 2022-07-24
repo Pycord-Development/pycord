@@ -208,7 +208,7 @@ class InvalidArgument(ClientException):
     """Exception that's raised when an argument to a function
     is invalid some way (e.g. wrong value or wrong type).
 
-    This could be considered the analogous of ``ValueError`` and
+    This could be considered the parallel of ``ValueError`` and
     ``TypeError`` except inherited from :exc:`ClientException` and thus
     :exc:`DiscordException`.
     """
@@ -256,11 +256,11 @@ class ConnectionClosed(ClientException):
 
 
 class PrivilegedIntentsRequired(ClientException):
-    """Exception that's raised when the gateway is requesting privileged intents
-    but they're not ticked in the developer page yet.
+    """Exception that's raised when the gateway is requesting privileged intents, but
+    they're not ticked in the developer page yet.
 
     Go to https://discord.com/developers/applications/ and enable the intents
-    that are required. Currently these are as follows:
+    that are required. Currently, these are as follows:
 
     - :attr:`Intents.members`
     - :attr:`Intents.presences`
