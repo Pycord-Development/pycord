@@ -459,7 +459,7 @@ class AutoModActionExecutionEvent:
         self.guild_id: int = int(data["guild_id"])
         self.guild: Optional[Guild] = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
-        self.content: str = data.get("content", None)
+        self.content: Optional[str] = data.get("content", None)
         self.matched_keyword: str = data["matched_keyword"]
         self.matched_content: str = data.get("matched_content", None)
         
