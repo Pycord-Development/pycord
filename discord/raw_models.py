@@ -461,7 +461,7 @@ class AutoModActionExecutionEvent:
         self.user_id: int = int(data["user_id"])
         self.content: Optional[str] = data.get("content", None)
         self.matched_keyword: str = data["matched_keyword"]
-        self.matched_content: str = data.get("matched_content", None)
+        self.matched_content: Optional[str] = data.get("matched_content", None)
         
         if self.guild:
             self.member: Optional[Member] = self.guild.get_member(self.user_id)
