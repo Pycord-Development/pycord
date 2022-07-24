@@ -241,7 +241,7 @@ class View:
 
         Parameters
         -----------
-        message: :class:`discord.Message`
+        message: :class:`.Message`
             The message with components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
@@ -465,8 +465,8 @@ class View:
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
 
-        A view is considered finished when :meth:`stop` is called
-        or it times out.
+        A view is considered finished when :meth:`stop`
+        is called, or it times out.
 
         Returns
         --------
@@ -482,7 +482,7 @@ class View:
 
         Parameters
         -----------
-        exclusions: Optional[List[:class:`ui.Item`]]
+        exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
@@ -495,7 +495,7 @@ class View:
 
         Parameters
         -----------
-        exclusions: Optional[List[:class:`ui.Item`]]
+        exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
@@ -509,6 +509,7 @@ class View:
     @message.setter
     def message(self, value):
         self._message = value
+
 
 class ViewStore:
     def __init__(self, state: ConnectionState):

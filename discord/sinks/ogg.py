@@ -22,7 +22,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 import io
-import os
 import subprocess
 
 from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters

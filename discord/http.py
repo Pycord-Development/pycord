@@ -32,7 +32,6 @@ import weakref
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Coroutine,
     Dict,
     Iterable,
@@ -2494,7 +2493,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         token: str,
-        files: List[File] = [],
+        files: Optional[List[File]] = None,
         content: Optional[str] = None,
         tts: bool = False,
         embeds: Optional[List[embed.Embed]] = None,

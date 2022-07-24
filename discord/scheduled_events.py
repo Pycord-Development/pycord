@@ -155,7 +155,7 @@ class ScheduledEvent(Hashable):
         The location of the event.
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
-        The number of users that have marked themselves as interested for the event.
+        The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -200,8 +200,7 @@ class ScheduledEvent(Hashable):
         self.description: Optional[str] = data.get("description", None)
         self._cover: Optional[str] = data.get("image", None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
-        end_time = data.get("scheduled_end_time", None)
-        if end_time != None:
+        if end_time := data.get("scheduled_end_time", None):
             end_time = datetime.datetime.fromisoformat(end_time)
         self.end_time: Optional[datetime.datetime] = end_time
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
@@ -334,9 +333,7 @@ class ScheduledEvent(Hashable):
             payload["privacy_level"] = int(privacy_level)
 
         if cover is not MISSING:
-            if cover is None:
-                payload["image"]
-            else:
+            if cover is not None:
                 payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:

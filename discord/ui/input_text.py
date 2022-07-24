@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Optional
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
-from ..utils import MISSING
 
 __all__ = ("InputText",)
 
