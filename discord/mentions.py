@@ -118,14 +118,17 @@ class AllowedMentions:
         if self.everyone:
             parse.append("everyone")
 
-        if self.users is True:
+        # In the following operations, the comparison operator
+        # must be used instead of the "is" operator as the program
+        # has to invoke _Fakebool.__eq__ to prevent false results.
+        if self.users == True:
             parse.append("users")
-        elif self.users is not False:
+        elif self.users != False:
             data["users"] = [x.id for x in self.users]
 
-        if self.roles is True:
+        if self.roles == True:
             parse.append("roles")
-        elif self.roles is not False:
+        elif self.roles != False:
             data["roles"] = [x.id for x in self.roles]
 
         if self.replied_user:
