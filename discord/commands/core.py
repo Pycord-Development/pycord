@@ -586,6 +586,8 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
+    mention: :class:`str` 
+        Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
@@ -757,7 +759,11 @@ class SlashCommand(ApplicationCommand):
     @property
     def is_subcommand(self) -> bool:
         return self.parent is not None
-
+    
+    @property
+    def mention(self) -> str:
+        return f"</{self.qualified_name}:{self.id}>"
+    
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
