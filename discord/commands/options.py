@@ -75,7 +75,9 @@ CHANNEL_TYPE_MAP = {
 
 
 class ThreadOption:
-    """Represents a class that can be passed as the input_type for an Option class.
+    """Represents a class that can be passed as the ``input_type`` for an :class:`Option` class.
+
+    .. versionadded:: 2.0
 
     Parameters
     -----------
@@ -144,8 +146,9 @@ class Option:
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Optional[:class:`Any`]
-        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
-        single argument of :class:`AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
+        that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
+        Must resolve to an iterable of :class:`str`.
 
         .. note::
 
@@ -250,12 +253,14 @@ class Option:
 
         if self.min_length is not None:
             if not isinstance(self.min_length, minmax_length_types):
-                raise TypeError(f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"')
+                raise TypeError(f'Expected {minmax_length_typehint} for min_length,'
+                                f' got "{type(self.min_length).__name__}"')
             if self.min_length < 0 or self.min_length > 6000:
                 raise AttributeError("min_length must be between 0 and 6000 (inclusive)")
         if self.max_length is not None:
             if not isinstance(self.max_length, minmax_length_types):
-                raise TypeError(f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"')
+                raise TypeError(f'Expected {minmax_length_typehint} for max_length,'
+                                f' got "{type(self.max_length).__name__}"')
             if self.max_length < 1 or self.max_length > 6000:
                 raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
@@ -330,7 +335,10 @@ class OptionChoice:
 
 
 def option(name, type=None, **kwargs):
-    """A decorator that can be used instead of typehinting Option"""
+    """A decorator that can be used instead of typehinting :class:`Option`.
+
+    .. versionadded:: 2.0
+    """
 
     def decorator(func):
         nonlocal type

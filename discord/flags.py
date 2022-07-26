@@ -49,6 +49,7 @@ __all__ = (
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
+    "ChannelFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
@@ -139,7 +140,7 @@ class BaseFlags:
                 continue
 
             if isinstance(value, flag_value):
-                yield (name, self._has_flag(value.flag))
+                yield name, self._has_flag(value.flag)
 
     def __and__(self, other):
         if isinstance(other, self.__class__):
@@ -880,7 +881,8 @@ class Intents(BaseFlags):
         - :func:`on_reaction_remove` (only for guilds)
         - :func:`on_reaction_clear` (only for guilds)
 
-        Without the :attr:`message_content` intent enabled, the following fields are either an empty string or empty array:
+        Without the :attr:`message_content` intent enabled,
+        the following fields are either an empty string or empty array:
 
         - :attr:`Message.content`
         - :attr:`Message.embeds`
@@ -1042,8 +1044,8 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content of the guild messages.
-            Bots in over 100 guilds will need to apply to Discord for verification.
+            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content
+            of the guild messages. Bots in over 100 guilds will need to apply to Discord for verification.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
 
         """
@@ -1103,8 +1105,8 @@ class MemberCacheFlags(BaseFlags):
 
     Due to a quirk in how Discord works, in order to ensure proper cleanup
     of cache resources it is recommended to have :attr:`Intents.members`
-    enabled. Otherwise the library cannot know when a member leaves a guild and
-    is thus unable to cleanup after itself.
+    enabled. Otherwise, the library cannot know when a member leaves a guild and
+    is thus unable to clean up after itself.
 
     To construct an object you can pass keyword arguments denoting the flags
     to enable or disable.

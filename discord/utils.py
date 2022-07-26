@@ -98,13 +98,13 @@ DISCORD_EPOCH = 1420070400000
 
 
 class _MissingSentinel:
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return False
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "..."
 
 
@@ -270,8 +270,8 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
 
 def deprecated(
     instead: Optional[str] = None,
-) -> Callable[[Callable[P, T]], Callable[P, T]]:
-    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
+) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
             warnings.simplefilter("always", DeprecationWarning)  # turn off filter
@@ -372,7 +372,7 @@ def time_snowflake(dt: datetime.datetime, high: bool = False) -> int:
         A datetime object to convert to a snowflake.
         If naive, the timezone is assumed to be local time.
     high: :class:`bool`
-        Whether or not to set the lower 22 bit to high or low.
+        Whether to set the lower 22 bit to high or low.
 
     Returns
     --------
@@ -739,7 +739,7 @@ _MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(
 
 # regular expression for finding and escaping links in markdown
 # note: technically, brackets are allowed in link text.
-# perhaps more concerningly, parentheses are also allowed in link destination.
+# perhaps more concerning, parentheses are also allowed in link destination.
 # this regular expression matches neither of those.
 # this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
 _MARKDOWN_ESCAPE_LINKS = r"""
@@ -1078,8 +1078,8 @@ def format_dt(dt: datetime.datetime, /, style: Optional[TimestampStyle] = None) 
 
 
 def generate_snowflake(dt: Optional[datetime.datetime] = None) -> int:
-    """Returns a numeric snowflake pretending to be created at the given date but more accurate and random than time_snowflake.
-    If dt is not passed, it makes one from the current time using utcnow.
+    """Returns a numeric snowflake pretending to be created at the given date but more accurate and random
+    than :func:`time_snowflake`. If dt is not passed, it makes one from the current time using utcnow.
 
     Parameters
     -----------
@@ -1105,8 +1105,8 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 
 def basic_autocomplete(values: Values) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
-    will return any options that start with the value from the user, case insensitive. If the ``values`` parameter is callable,
-    it will be called with the AutocompleteContext.
+    will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
+    callable, it will be called with the AutocompleteContext.
 
     This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute.
 
@@ -1133,13 +1133,18 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
     Parameters
     -----------
-    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`],
+    Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`],
+    Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`],
+    Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`],
+    Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
 
     Returns
     --------
-    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`],
+    Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
     """
 

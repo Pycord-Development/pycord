@@ -74,7 +74,7 @@ class MP4Sink(Sink):
             mp4_file,
         ]
         if os.path.exists(mp4_file):
-            os.remove(mp4_file)  # process will get stuck asking whether or not to overwrite, if file already exists.
+            os.remove(mp4_file)  # process will get stuck asking whether to overwrite, if file already exists.
         try:
             process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
         except FileNotFoundError:

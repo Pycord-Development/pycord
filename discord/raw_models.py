@@ -184,7 +184,8 @@ class RawReactionActionEvent(_RawReprMixin):
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being used.
     member: Optional[:class:`Member`]
-        The member who added the reaction. Only available if `event_type` is `REACTION_ADD` and the reaction is inside a guild.
+        The member who added the reaction. Only available if `event_type` is `REACTION_ADD`
+        and the reaction is inside a guild.
 
         .. versionadded:: 1.3
 
@@ -389,7 +390,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
         self.event_id: int = int(data["guild_scheduled_event_id"])
         self.user_id: int = int(data["user_id"])
-        self.guild: Guild = None
+        self.guild: Optional[Guild] = None
         self.event_type: str = event_type
 
 
@@ -459,9 +460,9 @@ class AutoModActionExecutionEvent:
         self.guild_id: int = int(data["guild_id"])
         self.guild: Optional[Guild] = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
-        self.content: str = data["content"]
+        self.content: Optional[str] = data.get("content", None)
         self.matched_keyword: str = data["matched_keyword"]
-        self.matched_content: str = data["matched_content"]
+        self.matched_content: Optional[str] = data.get("matched_content", None)
         
         if self.guild:
             self.member: Optional[Member] = self.guild.get_member(self.user_id)
@@ -469,8 +470,8 @@ class AutoModActionExecutionEvent:
             self.member: Optional[Member] = None
         
         try:
-            # I don't see why this would be optional, but it's documented as such
-            # so we should treat it that way
+            # I don't see why this would be optional, but it's documented
+            # as such, so we should treat it that way
             self.channel_id: Optional[int] = int(data["channel_id"])
             self.channel: Optional[MessageableChannel] = self.guild.get_channel_or_thread(self.channel_id)
         except KeyError:
@@ -497,4 +498,3 @@ class AutoModActionExecutionEvent:
             f"rule_id={self.rule_id!r} guild_id={self.guild_id!r} "
             f"user_id={self.user_id!r}>"
         )
-
