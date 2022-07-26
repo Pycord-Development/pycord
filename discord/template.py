@@ -27,7 +27,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
 
-from .enums import VoiceRegion
 from .guild import Guild
 from .utils import MISSING, _bytes_to_base64_data, parse_time
 
@@ -167,7 +166,7 @@ class Template:
             f" creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>"
         )
 
-    async def create_guild(self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None) -> Guild:
+    async def create_guild(self, name: str, icon: Any = None) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild` using the template.
@@ -178,9 +177,6 @@ class Template:
         ----------
         name: :class:`str`
             The name of the guild.
-        region: :class:`.VoiceRegion`
-            The region for the voice communication server.
-            Defaults to :attr:`.VoiceRegion.us_west`.
         icon: :class:`bytes`
             The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
             for more details on what is expected.
@@ -201,10 +197,7 @@ class Template:
         if icon is not None:
             icon = _bytes_to_base64_data(icon)
 
-        region = region or VoiceRegion.us_west
-        region_value = region.value
-
-        data = await self._state.http.create_from_template(self.code, name, region_value, icon)
+        data = await self._state.http.create_from_template(self.code, name, icon)
         return Guild(data=data, state=self._state)
 
     async def sync(self) -> Template:
@@ -218,21 +211,21 @@ class Template:
         .. versionadded:: 1.7
 
         .. versionchanged:: 2.0
-            The template is no longer edited in-place, instead it is returned.
+            The template is no longer synced in-place, instead it is returned.
 
         Raises
         -------
         HTTPException
-            Editing the template failed.
+            Syncing the template failed.
         Forbidden
-            You don't have permissions to edit the template.
+            You don't have permissions to sync the template.
         NotFound
             This template does not exist.
 
         Returns
         --------
         :class:`Template`
-            The newly edited template.
+            The newly synced template.
         """
 
         data = await self._state.http.sync_template(self.source_guild.id, self.code)
@@ -300,9 +293,9 @@ class Template:
         Raises
         -------
         HTTPException
-            Editing the template failed.
+            Deleting the template failed.
         Forbidden
-            You don't have permissions to edit the template.
+            You don't have permissions to delete the template.
         NotFound
             This template does not exist.
         """

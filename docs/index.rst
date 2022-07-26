@@ -65,7 +65,7 @@ These pages go into great detail about everything the API can do.
   discord.ext.commands API Reference <ext/commands/api.rst>
   discord.ext.tasks API Reference <ext/tasks/index.rst>
   discord.ext.pages API Reference <ext/pages/index.rst>
-  discord.ext.bridge API Reference <ext/bridge/index.rst>
+  discord.ext.bridge API Reference <ext/bridge/api.rst>
 
 Meta
 ------
@@ -78,3 +78,4 @@ If you're looking for something related to the project itself, it's here.
   whats_new
   version_guarantees
   migrating_to_v1
+  migrating_to_v2

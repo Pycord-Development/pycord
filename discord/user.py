@@ -144,6 +144,14 @@ class BaseUser(_UserTag):
         }
 
     @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the user.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/users/{self.id}"
+    
+    @property
     def public_flags(self) -> PublicUserFlags:
         """:class:`PublicUserFlags`: The publicly available flags the user has."""
         return PublicUserFlags._from_value(self._public_flags)
@@ -161,7 +169,9 @@ class BaseUser(_UserTag):
 
     @property
     def default_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the default avatar for a given user. This is calculated by the user's discriminator."""
+        """:class:`Asset`: Returns the default avatar for a given user.
+        This is calculated by the user's discriminator.
+        """
         return Asset._from_default_avatar(self._state, int(self.discriminator) % len(DefaultAvatar))
 
     @property
@@ -342,7 +352,7 @@ class ClientUser(BaseUser):
 
     def _update(self, data: UserPayload) -> None:
         super()._update(data)
-        # There's actually an Optional[str] phone field as well but I won't use it
+        # There's actually an Optional[str] phone field as well, but I won't use it
         self.verified = data.get("verified", False)
         self.locale = data.get("locale")
         self._flags = data.get("flags", 0)

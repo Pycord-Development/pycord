@@ -100,65 +100,6 @@ if TYPE_CHECKING:
 
 
 class _TextChannel(discord.abc.GuildChannel, Hashable):
-    """Represents a Discord text channel.
-
-    .. container:: operations
-
-        .. describe:: x == y
-
-            Checks if two channels are equal.
-
-        .. describe:: x != y
-
-            Checks if two channels are not equal.
-
-        .. describe:: hash(x)
-
-            Returns the channel's hash.
-
-        .. describe:: str(x)
-
-            Returns the channel's name.
-
-    Attributes
-    -----------
-    name: :class:`str`
-        The channel name.
-    guild: :class:`Guild`
-        The guild the channel belongs to.
-    id: :class:`int`
-        The channel ID.
-    category_id: Optional[:class:`int`]
-        The category channel ID this channel belongs to, if applicable.
-    topic: Optional[:class:`str`]
-        The channel's topic. ``None`` if it doesn't exist.
-    position: Optional[:class:`int`]
-        The position in the channel list. This is a number that starts at 0. e.g. the
-        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
-    last_message_id: Optional[:class:`int`]
-        The last message ID of the message sent to this channel. It may
-        *not* point to an existing or valid message.
-    slowmode_delay: :class:`int`
-        The number of seconds a member must wait between sending messages
-        in this channel. A value of `0` denotes that it is disabled.
-        Bots and users with :attr:`~Permissions.manage_channels` or
-        :attr:`~Permissions.manage_messages` bypass slowmode.
-    nsfw: :class:`bool`
-        If the channel is marked as "not safe for work".
-
-        .. note::
-
-            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
-    default_auto_archive_duration: :class:`int`
-        The default auto archive duration in minutes for threads created in this channel.
-
-        .. versionadded:: 2.0
-    flags: :class:`ChannelFlags`
-        Extra features of the channel.
-
-        .. versionadded:: 2.0
-    """
-
     __slots__ = (
         "name",
         "id",
@@ -179,7 +120,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
     def __init__(self, *, state: ConnectionState, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
-        self._type: int = data["type"]
         self._update(guild, data)
 
     @property
@@ -192,19 +132,23 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         return f"<{self.__class__.__name__} {joined}>"
 
     def _update(self, guild: Guild, data: Union[TextChannelPayload, ForumChannelPayload]) -> None:
+        # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.topic: Optional[str] = data.get("topic")
-        self.position: int = data.get("position")
-        self.nsfw: bool = data.get("nsfw", False)
-        # Does this need coercion into `int`? No idea yet.
-        self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
-        self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
-        self._type: int = data.get("type", self._type)
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+        self._type: int = data["type"]
+
+        # This data may be missing depending on how this object is being created/updated
+        if not data.pop("_invoke_flag", False):
+            self.topic: Optional[str] = data.get("topic")
+            self.position: int = data.get("position")
+            self.nsfw: bool = data.get("nsfw", False)
+            # Does this need coercion into `int`? No idea yet.
+            self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
+            self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
+            self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def type(self) -> ChannelType:
@@ -326,9 +270,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
@@ -703,6 +646,65 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
 
 class TextChannel(discord.abc.Messageable, _TextChannel):
+    """Represents a Discord text channel.
+
+        .. container:: operations
+
+            .. describe:: x == y
+
+                Checks if two channels are equal.
+
+            .. describe:: x != y
+
+                Checks if two channels are not equal.
+
+            .. describe:: hash(x)
+
+                Returns the channel's hash.
+
+            .. describe:: str(x)
+
+                Returns the channel's name.
+
+        Attributes
+        -----------
+        name: :class:`str`
+            The channel name.
+        guild: :class:`Guild`
+            The guild the channel belongs to.
+        id: :class:`int`
+            The channel ID.
+        category_id: Optional[:class:`int`]
+            The category channel ID this channel belongs to, if applicable.
+        topic: Optional[:class:`str`]
+            The channel's topic. ``None`` if it doesn't exist.
+        position: Optional[:class:`int`]
+            The position in the channel list. This is a number that starts at 0. e.g. the
+            top channel is position 0. Can be ``None`` if the channel was received in an interaction.
+        last_message_id: Optional[:class:`int`]
+            The last message ID of the message sent to this channel. It may
+            *not* point to an existing or valid message.
+        slowmode_delay: :class:`int`
+            The number of seconds a member must wait between sending messages
+            in this channel. A value of `0` denotes that it is disabled.
+            Bots and users with :attr:`~Permissions.manage_channels` or
+            :attr:`~Permissions.manage_messages` bypass slowmode.
+        nsfw: :class:`bool`
+            If the channel is marked as "not safe for work".
+
+            .. note::
+
+                To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
+        default_auto_archive_duration: :class:`int`
+            The default auto archive duration in minutes for threads created in this channel.
+
+            .. versionadded:: 2.0
+        flags: :class:`ChannelFlags`
+            Extra features of the channel.
+
+            .. versionadded:: 2.0
+        """
+
     def __init__(self, *, state: ConnectionState, guild: Guild, data: TextChannelPayload):
         super().__init__(state=state, guild=guild, data=data)
 
@@ -717,11 +719,12 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self
 
     def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news/anouncements channel."""
+        """:class:`bool`: Checks if the channel is a news/announcements channel."""
         return self._type == ChannelType.news.value
 
     @property
     def news(self) -> bool:
+        """Equivalent to :meth:`is_news`."""
         return self.is_news()
 
     async def create_thread(
@@ -756,7 +759,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         type: Optional[:class:`ChannelType`]
             The type of thread to create. If a ``message`` is passed then this parameter
             is ignored, as a thread created with a message is always a public thread.
-            By default this creates a private thread if this is ``None``.
+            By default, this creates a private thread if this is ``None``.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
 
@@ -797,6 +800,69 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
 
 class ForumChannel(_TextChannel):
+    """Represents a Discord forum channel.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two channels are equal.
+
+        .. describe:: x != y
+
+            Checks if two channels are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the channel's hash.
+
+        .. describe:: str(x)
+
+            Returns the channel's name.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The channel name.
+    guild: :class:`Guild`
+        The guild the channel belongs to.
+    id: :class:`int`
+        The channel ID.
+    category_id: Optional[:class:`int`]
+        The category channel ID this channel belongs to, if applicable.
+    topic: Optional[:class:`str`]
+        The channel's topic. ``None`` if it doesn't exist.
+
+        .. note::
+
+            :attr:`guidelines` exists as an alternative to this attribute.
+    position: Optional[:class:`int`]
+        The position in the channel list. This is a number that starts at 0. e.g. the
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
+    last_message_id: Optional[:class:`int`]
+        The last message ID of the message sent to this channel. It may
+        *not* point to an existing or valid message.
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages
+        in this channel. A value of `0` denotes that it is disabled.
+        Bots and users with :attr:`~Permissions.manage_channels` or
+        :attr:`~Permissions.manage_messages` bypass slowmode.
+    nsfw: :class:`bool`
+        If the channel is marked as "not safe for work".
+
+        .. note::
+
+            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
+    default_auto_archive_duration: :class:`int`
+        The default auto archive duration in minutes for threads created in this channel.
+
+        .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
+    """
+
     def __init__(self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload):
         super().__init__(state=state, guild=guild, data=data)
 
@@ -843,10 +909,16 @@ class ForumChannel(_TextChannel):
             The content of the message to send.
         embed: :class:`~discord.Embed`
             The rich embed for the content.
+        embeds: List[:class:`~discord.Embed`]
+            A list of embeds to upload. Must be a maximum of 10.
         file: :class:`~discord.File`
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
+        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+            A list of stickers to upload. Must be a maximum of 3.
+        delete_message_after: :class:`int`
+            The time to wait before deleting the thread.
         nonce: :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
@@ -859,10 +931,6 @@ class ForumChannel(_TextChannel):
             are used instead.
         view: :class:`discord.ui.View`
             A Discord UI View to add to the message.
-        embeds: List[:class:`~discord.Embed`]
-            A list of embeds to upload. Must be a maximum of 10.
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
-            A list of stickers to upload. Must be a maximum of 3.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
@@ -891,7 +959,7 @@ class ForumChannel(_TextChannel):
         message_content = str(content) if content is not None else None
 
         if embed is not None and embeds is not None:
-            raise InvalidArgument("cannot pass both embed and embeds parameter to create_post()")
+            raise InvalidArgument("cannot pass both embed and embeds parameter to create_thread()")
 
         if embed is not None:
             embed = embed.to_dict()
@@ -1022,18 +1090,22 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         return self.guild.id, self.id
 
     def _update(self, guild: Guild, data: Union[VoiceChannelPayload, StageChannelPayload]) -> None:
+        # This data will always exist
         self.guild = guild
         self.name: str = data["name"]
-        rtc = data.get("rtc_region")
-        self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
-        self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
-        self.position: int = data.get("position")
-        self.bitrate: int = data.get("bitrate")
-        self.user_limit: int = data.get("user_limit")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+
+        # This data may be missing depending on how this object is being created/updated
+        if not data.pop("_invoke_flag", False):
+            rtc = data.get("rtc_region")
+            self.rtc_region: Optional[VoiceRegion] = try_enum(VoiceRegion, rtc) if rtc is not None else None
+            self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
+            self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+            self.position: int = data.get("position")
+            self.bitrate: int = data.get("bitrate")
+            self.user_limit: int = data.get("user_limit")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def _sorting_bucket(self) -> int:
@@ -1076,7 +1148,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
     def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
         base = super().permissions_for(obj)
 
-        # voice channels cannot be edited by people who can't connect to them
+        # Voice channels cannot be edited by people who can't connect to them.
         # It also implicitly denies all other voice perms
         if not base.connect:
             denied = Permissions.voice()
@@ -1134,6 +1206,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
+        
         .. versionadded:: 2.0
     flags: :class:`ChannelFlags`
         Extra features of the channel.
@@ -1476,9 +1549,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1756,9 +1828,9 @@ class StageChannel(VocalGuildChannel):
 
         Raises
         -------
-        :exc:`.NotFound`
+        NotFound
             The stage instance or channel could not be found.
-        :exc:`.HTTPException`
+        HTTPException
             Getting the stage instance failed.
 
         Returns
@@ -1817,9 +1889,8 @@ class StageChannel(VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
@@ -1917,13 +1988,17 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return f"<CategoryChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
+        # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: Optional[int] = utils._get_as_snowflake(data, "parent_id")
-        self.nsfw: bool = data.get("nsfw", False)
-        self.position: int = data.get("position")
-        self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
-        self._fill_overwrites(data)
+
+        # This data may be missing depending on how this object is being created/updated
+        if not data.pop("_invoke_flag", False):
+            self.nsfw: bool = data.get("nsfw", False)
+            self.position: int = data.get("position")
+            self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self._fill_overwrites(data)
 
     @property
     def _sorting_bucket(self) -> int:
@@ -1982,9 +2057,8 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             To mark the category as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
-        overwrites: :class:`Mapping`
-            A :class:`Mapping` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply to the channel.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
 
         Raises
         ------
@@ -2020,7 +2094,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
 
         def comparator(channel):
-            return (not isinstance(channel, _TextChannel), channel.position)
+            return not isinstance(channel, _TextChannel), channel.position
 
         ret = [c for c in self.guild.channels if c.category_id == self.id]
         ret.sort(key=comparator)

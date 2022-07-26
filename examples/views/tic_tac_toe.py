@@ -1,3 +1,5 @@
+# This example requires the 'message_content' privileged intent for prefixed commands.
+
 from typing import List
 
 import discord
@@ -9,7 +11,7 @@ from discord.ext import commands
 # what the type of `self.view` is. It is not required.
 class TicTacToeButton(discord.ui.Button["TicTacToe"]):
     def __init__(self, x: int, y: int):
-        # A label is required, but we don't need one so a zero-width space is used
+        # A label is required, but we don't need one so a zero-width space is used.
         # The row parameter tells the View which row to place the button under.
         # A View can only contain up to 5 rows -- each row can only have 5 buttons.
         # Since a Tic Tac Toe grid is 3x3 that means we have 3 rows and 3 columns.
@@ -17,8 +19,8 @@ class TicTacToeButton(discord.ui.Button["TicTacToe"]):
         self.x = x
         self.y = y
 
-    # This function is called whenever this particular button is pressed
-    # This is part of the "meat" of the game logic
+    # This function is called whenever this particular button is pressed.
+    # This is part of the "meat" of the game logic.
     async def callback(self, interaction: discord.Interaction):
         assert self.view is not None
         view: TicTacToe = self.view
@@ -57,10 +59,10 @@ class TicTacToeButton(discord.ui.Button["TicTacToe"]):
         await interaction.response.edit_message(content=content, view=view)
 
 
-# This is our actual board View
+# This is our actual board View.
 class TicTacToe(discord.ui.View):
-    # This tells the IDE or linter that all our children will be TicTacToeButtons
-    # This is not required
+    # This tells the IDE or linter that all our children will be TicTacToeButtons.
+    # This is not required.
     children: List[TicTacToeButton]
     X = -1
     O = 1
@@ -75,15 +77,16 @@ class TicTacToe(discord.ui.View):
             [0, 0, 0],
         ]
 
-        # Our board is made up of 3 by 3 TicTacToeButtons
+        # Our board is made up of 3 by 3 TicTacToeButtons.
         # The TicTacToeButton maintains the callbacks and helps steer
         # the actual game.
         for x in range(3):
             for y in range(3):
                 self.add_item(TicTacToeButton(x, y))
 
-    # This method checks for the board winner -- it is used by the TicTacToeButton
+    # This method checks for the board winner and is used by the TicTacToeButton.
     def check_board_winner(self):
+        # Check horizontal
         for across in self.board:
             value = sum(across)
             if value == 3:
@@ -94,11 +97,11 @@ class TicTacToe(discord.ui.View):
         # Check vertical
         for line in range(3):
             value = self.board[0][line] + self.board[1][line] + self.board[2][line]
-            if value == -3:
+            if value == 3:
+                return self.O
+            elif value == -3:
                 return self.X
 
-            elif value == 3:
-                return self.O
         # Check diagonals
         diag = self.board[0][2] + self.board[1][1] + self.board[2][0]
         if diag == 3:
@@ -109,32 +112,33 @@ class TicTacToe(discord.ui.View):
         diag = self.board[0][0] + self.board[1][1] + self.board[2][2]
         if diag == -3:
             return self.X
-
         elif diag == 3:
             return self.O
-        # If we're here, we need to check if a tie was made
+
+        # If we're here, we need to check if a tie has been reached.
         if all(i != 0 for row in self.board for i in row):
             return self.Tie
 
         return None
 
 
-class TicTacToeBot(commands.Bot):
-    def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("$"))
+intents = discord.Intents.default()
+intents.message_content = True
 
-    async def on_ready(self):
-        print(f"Logged in as {self.user} (ID: {self.user.id})")
-        print("------")
-
-
-bot = TicTacToeBot()
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), intents=intents)
 
 
 @bot.command()
 async def tic(ctx: commands.Context):
     """Starts a tic-tac-toe game with yourself."""
-    await ctx.send("Tic Tac Toe: X goes first", view=TicTacToe())
+    # Setting the reference message to ctx.message makes the bot reply to the member's message.
+    await ctx.send("Tic Tac Toe: X goes first", view=TicTacToe(), reference=ctx.message)
 
 
-bot.run("token")
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------")
+
+
+bot.run("TOKEN")

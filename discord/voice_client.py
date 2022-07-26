@@ -31,7 +31,7 @@ Some documentation to refer to:
 - We pull the token, endpoint and server_id from VOICE_SERVER_UPDATE.
 - Then we initiate the voice web socket (vWS) pointing to the endpoint.
 - We send opcode 0 with the user_id, server_id, session_id and token using the vWS.
-- The vWS sends back opcode 2 with an ssrc, port, modes(array) and hearbeat_interval.
+- The vWS sends back opcode 2 with an ssrc, port, modes(array) and heartbeat_interval.
 - We send a UDP discovery packet to endpoint:port and receive our IP and our port in LE.
 - Then we send our IP and port via vWS with opcode 1.
 - When that's all done, we receive opcode 4 from the vWS.
@@ -464,7 +464,7 @@ class VoiceClient(VoiceProtocol):
                 await self.ws.poll_event()
             except (ConnectionClosed, asyncio.TimeoutError) as exc:
                 if isinstance(exc, ConnectionClosed):
-                    # The following close codes are undocumented so I will document them here.
+                    # The following close codes are undocumented, so I will document them here.
                     # 1000 - normal closure (obviously)
                     # 4014 - voice channel has been deleted.
                     # 4015 - voice server has crashed
@@ -534,7 +534,7 @@ class VoiceClient(VoiceProtocol):
         await self.channel.guild.change_voice_state(channel=channel)
 
     def is_connected(self) -> bool:
-        """Indicates if the voice client is connected to voice."""
+        """:class:`bool`: Indicates if the voice client is connected to voice."""
         return self._connected.is_set()
 
     # audio related
@@ -617,7 +617,7 @@ class VoiceClient(VoiceProtocol):
         or an error occurred.
 
         If an error happens while the audio player is running, the exception is
-        caught and the audio player is then stopped.  If no after callback is
+        caught and the audio player is then stopped. If no after callback is
         passed, any caught exception will be displayed as if it were raised.
 
         Parameters
@@ -738,7 +738,7 @@ class VoiceClient(VoiceProtocol):
         """Stops the recording.
         Must be already recording.
 
-        .. versionadded:: 2.1
+        .. versionadded:: 2.0
 
         Raises
         ------
@@ -819,11 +819,11 @@ class VoiceClient(VoiceProtocol):
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])
 
     def is_playing(self) -> bool:
-        """Indicates if we're currently playing audio."""
+        """:class:`bool`: Indicates if we're currently playing audio."""
         return self._player is not None and self._player.is_playing()
 
     def is_paused(self) -> bool:
-        """Indicates if we're playing audio, but if we're paused."""
+        """:class:`bool`: Indicates if we're playing audio, but if we're paused."""
         return self._player is not None and self._player.is_paused()
 
     def stop(self) -> None:
@@ -882,6 +882,8 @@ class VoiceClient(VoiceProtocol):
 
         self.checked_add("sequence", 1, 65535)
         if encode:
+            if not self.encoder:
+                self.encoder = opus.Encoder()
             encoded_data = self.encoder.encode(data, self.encoder.SAMPLES_PER_FRAME)
         else:
             encoded_data = data

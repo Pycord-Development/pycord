@@ -158,7 +158,13 @@ class EmbedField:
         return self
 
     def to_dict(self) -> Dict[str, Union[str, bool]]:
-        """Converts this EmbedField object into a dict."""
+        """Converts this EmbedField object into a dict.
+
+        Returns
+        --------
+        Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]
+            A dictionary of :class:`str` embed field keys bound to the respective value.
+        """
         return {
             "name": self.name,
             "value": self.value,
@@ -286,6 +292,11 @@ class Embed:
         -----------
         data: :class:`dict`
             The dictionary to convert into an embed.
+
+        Returns
+        --------
+        :class:`Embed`
+            The converted embed object.
         """
         # we are bypassing __init__ here since it doesn't apply here
         self: E = cls.__new__(cls)
@@ -341,7 +352,13 @@ class Embed:
         return self
 
     def copy(self: E) -> E:
-        """Returns a shallow copy of the embed."""
+        """Creates a shallow copy of the :class:`Embed` object.
+
+        Returns
+        --------
+        :class:`Embed`
+            The copied embed object.
+        """
         return self.__class__.from_dict(self.to_dict())
 
     def __len__(self) -> int:
@@ -818,7 +835,13 @@ class Embed:
         return self
 
     def to_dict(self) -> EmbedData:
-        """Converts this embed object into a dict."""
+        """Converts this embed object into a dict.
+
+        Returns
+        --------
+        Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]
+            A dictionary of :class:`str` embed keys bound to the respective value.
+        """
 
         # add in the raw data into the dict
         result = {

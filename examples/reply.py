@@ -1,3 +1,5 @@
+# This example requires the `message_content` privileged intent for access to message content.
+
 import discord
 
 
@@ -6,8 +8,8 @@ class MyClient(discord.Client):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
 
-    async def on_message(self, message):
-        # We do not want the bot to reply to itself
+    async def on_message(self, message: discord.Message):
+        # Make sure we won't be replying to ourselves.
         if message.author.id == self.user.id:
             return
 
@@ -15,5 +17,8 @@ class MyClient(discord.Client):
             await message.reply("Hello!", mention_author=True)
 
 
-client = MyClient()
-client.run("token")
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = MyClient(intents=intents)
+client.run("TOKEN")

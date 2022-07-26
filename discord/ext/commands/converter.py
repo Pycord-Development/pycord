@@ -62,6 +62,7 @@ __all__ = (
     "MessageConverter",
     "PartialMessageConverter",
     "TextChannelConverter",
+    "ForumChannelConverter",
     "InviteConverter",
     "GuildConverter",
     "RoleConverter",
@@ -160,7 +161,7 @@ class ObjectConverter(IDConverter[discord.Object]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Object:
-        match = self._get_id_match(argument) or re.match(r"<(?:@(?:!|&)?|#)([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<(?:@[!&]?|#)([0-9]{15,20})>$", argument)
 
         if match is None:
             raise ObjectNotFound(argument)
@@ -275,8 +276,8 @@ class UserConverter(IDConverter[discord.User]):
          Raise :exc:`.UserNotFound` instead of generic :exc:`.BadArgument`
 
     .. versionchanged:: 1.6
-        This converter now lazily fetches users from the HTTP APIs if an ID is passed
-        and it's not available in cache.
+        This converter now lazily fetches users from the HTTP APIs if an ID is
+        passed, and it's not available in cache.
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.User:
@@ -392,7 +393,8 @@ class MessageConverter(IDConverter[discord.Message]):
     3. Lookup by message URL
 
     .. versionchanged:: 1.5
-         Raise :exc:`.ChannelNotFound`, :exc:`.MessageNotFound` or :exc:`.ChannelNotReadable` instead of generic :exc:`.BadArgument`
+         Raise :exc:`.ChannelNotFound`, :exc:`.MessageNotFound` or :exc:`.ChannelNotReadable`
+         instead of generic :exc:`.BadArgument`
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Message:
@@ -561,6 +563,25 @@ class CategoryChannelConverter(IDConverter[discord.CategoryChannel]):
 
     async def convert(self, ctx: Context, argument: str) -> discord.CategoryChannel:
         return GuildChannelConverter._resolve_channel(ctx, argument, "categories", discord.CategoryChannel)
+
+
+class ForumChannelConverter(IDConverter[discord.ForumChannel]):
+    """Converts to a :class:`~discord.ForumChannel`.
+
+    All lookups are via the local guild. If in a DM context, then the lookup
+    is done by the global cache.
+
+    The lookup strategy is as follows (in order):
+
+    1. Lookup by ID.
+    2. Lookup by mention.
+    3. Lookup by name
+
+    .. versionadded:: 2.0
+    """
+
+    async def convert(self, ctx: Context, argument: str) -> discord.ForumChannel:
+        return GuildChannelConverter._resolve_channel(ctx, argument, "forum_channels", discord.ForumChannel)
 
 
 class ThreadConverter(IDConverter[discord.Thread]):
@@ -767,7 +788,7 @@ class EmojiConverter(IDConverter[discord.Emoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Emoji:
-        match = self._get_id_match(argument) or re.match(r"<a?:[a-zA-Z0-9\_]{1,32}:([0-9]{15,20})>$", argument)
+        match = self._get_id_match(argument) or re.match(r"<a?:\w{1,32}:([0-9]{15,20})>$", argument)
         result = None
         bot = ctx.bot
         guild = ctx.guild
@@ -801,7 +822,7 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.PartialEmoji:
-        match = re.match(r"<(a?):([a-zA-Z0-9\_]{1,32}):([0-9]{15,20})>$", argument)
+        match = re.match(r"<(a?):(\w{1,32}):([0-9]{15,20})>$", argument)
 
         if match:
             emoji_animated = bool(match.group(1))
@@ -1043,6 +1064,7 @@ CONVERTER_MAPPING: Dict[Type[Any], Any] = {
     discord.Emoji: EmojiConverter,
     discord.PartialEmoji: PartialEmojiConverter,
     discord.CategoryChannel: CategoryChannelConverter,
+    discord.ForumChannel: ForumChannelConverter,
     discord.Thread: ThreadConverter,
     discord.abc.GuildChannel: GuildChannelConverter,
     discord.GuildSticker: GuildStickerConverter,
@@ -1124,8 +1146,8 @@ async def run_converters(ctx: Context, converter, argument: str, param: inspect.
         _NoneType = type(None)
         union_args = converter.__args__
         for conv in union_args:
-            # if we got to this part in the code, then the previous conversions have failed
-            # so we should just undo the view, return the default, and allow parsing to continue
+            # if we got to this part in the code, then the previous conversions have failed, so
+            # we should just undo the view, return the default, and allow parsing to continue
             # with the other parameters
             if conv is _NoneType and param.kind != param.VAR_POSITIONAL:
                 ctx.view.undo()

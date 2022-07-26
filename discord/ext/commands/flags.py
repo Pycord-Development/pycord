@@ -129,7 +129,7 @@ def flag(
     name: :class:`str`
         The flag name. If not given, defaults to the attribute name.
     aliases: List[:class:`str`]
-        Aliases to the flag name. If not given no aliases are set.
+        Aliases to the flag name. If not given, no aliases are set.
     default: Any
         The default parameter. This could be either a value or a callable that takes
         :class:`Context` as its sole parameter. If not given then it defaults to
@@ -342,9 +342,9 @@ class FlagsMeta(type):
             aliases = {key.casefold(): value.casefold() for key, value in aliases.items()}
             regex_flags = re.IGNORECASE
 
-        keys = list(re.escape(k) for k in flags)
+        keys = [re.escape(k) for k in flags]
         keys.extend(re.escape(a) for a in aliases)
-        keys = sorted(keys, key=lambda t: len(t), reverse=True)
+        keys = sorted(keys, key=len, reverse=True)
 
         joined = "|".join(keys)
         pattern = re.compile(
@@ -469,14 +469,14 @@ class FlagConverter(metaclass=FlagsMeta):
     -----------
     case_insensitive: :class:`bool`
         A class parameter to toggle case insensitivity of the flag parsing.
-        If ``True`` then flags are parsed in a case insensitive manner.
+        If ``True`` then flags are parsed in a case-insensitive manner.
         Defaults to ``False``.
     prefix: :class:`str`
-        The prefix that all flags must be prefixed with. By default
+        The prefix that all flags must be prefixed with. By default,
         there is no prefix.
     delimiter: :class:`str`
         The delimiter that separates a flag's argument from the flag's name.
-        By default this is ``:``.
+        By default, this is ``:``.
     """
 
     @classmethod
@@ -490,7 +490,7 @@ class FlagConverter(metaclass=FlagsMeta):
 
     def __iter__(self) -> Iterator[Tuple[str, Any]]:
         for flag in self.__class__.__commands_flags__.values():
-            yield (flag.name, getattr(self, flag.attribute))
+            yield flag.name, getattr(self, flag.attribute)
 
     @classmethod
     async def _construct_default(cls: Type[F], ctx: Context) -> F:
@@ -603,9 +603,9 @@ class FlagConverter(metaclass=FlagsMeta):
                         setattr(self, flag.attribute, flag.default)
                     continue
 
-            if flag.max_args > 0 and len(values) > flag.max_args:
+            if 0 < flag.max_args < len(values):
                 if flag.override:
-                    values = values[-flag.max_args :]
+                    values = values[-flag.max_args:]
                 else:
                     raise TooManyFlags(flag, values)
 

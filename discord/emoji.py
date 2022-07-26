@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 class Emoji(_EmojiTag, AssetMixin):
     """Represents a custom emoji.
 
-    Depending on the way this object was created, some of the attributes can
+    Depending on the way this object was created, some attributes can
     have a value of ``None``.
 
     .. container:: operations
@@ -131,7 +131,7 @@ class Emoji(_EmojiTag, AssetMixin):
             if attr[0] != "_":
                 value = getattr(self, attr, None)
                 if value is not None:
-                    yield (attr, value)
+                    yield attr, value
 
     def __str__(self) -> str:
         if self.animated:

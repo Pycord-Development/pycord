@@ -78,6 +78,8 @@ flags: int
 buttons: list[dict]
     label: str (max: 32)
     url: str (max: 512)
+NOTE: Bots cannot access a user's activity button URLs. When received through the
+gateway, the type of the buttons field will be list[str].
 
 There are also activity flags which are mostly uninteresting for the library atm.
 
@@ -95,7 +97,6 @@ if TYPE_CHECKING:
     from .types.activity import Activity as ActivityPayload
     from .types.activity import (
         ActivityAssets,
-        ActivityButton,
         ActivityParty,
         ActivityTimestamps,
     )
@@ -164,7 +165,7 @@ class Activity(BaseActivity):
         The user's current state. For example, "In Game".
     details: Optional[:class:`str`]
         The detail of the user's current activity.
-    timestamps: :class:`dict`
+    timestamps: Dict[:class:`str`, :class:`int`]
         A dictionary of timestamps. It contains the following optional keys:
 
         - ``start``: Corresponds to when the user started doing the
@@ -172,7 +173,7 @@ class Activity(BaseActivity):
         - ``end``: Corresponds to when the user will finish doing the
           activity in milliseconds since Unix epoch.
 
-    assets: :class:`dict`
+    assets: Dict[:class:`str`, :class:`str`]
         A dictionary representing the images and their hover text of an activity.
         It contains the following optional keys:
 
@@ -181,17 +182,22 @@ class Activity(BaseActivity):
         - ``small_image``: A string representing the ID for the small image asset.
         - ``small_text``: A string representing the text when hovering over the small image asset.
 
-    party: :class:`dict`
+    party: Dict[:class:`str`, Union[:class:`str`, List[:class:`int`]]]
         A dictionary representing the activity party. It contains the following optional keys:
 
         - ``id``: A string representing the party ID.
         - ``size``: A list of up to two integer elements denoting (current_size, maximum_size).
-    buttons: List[:class:`dict`]
-        An list of dictionaries representing custom buttons shown in a rich presence.
+    buttons: Union[List[Dict[:class:`str`, :class:`str`]], List[:class:`str`]]
+        A list of dictionaries representing custom buttons shown in a rich presence.
         Each dictionary contains the following keys:
 
         - ``label``: A string representing the text shown on the button.
         - ``url``: A string representing the URL opened upon clicking the button.
+
+        .. note::
+
+            Bots cannot access a user's activity button URLs. Therefore, the type of this attribute
+            will be List[:class:`str`] when received through the gateway.
 
         .. versionadded:: 2.0
 
@@ -230,7 +236,7 @@ class Activity(BaseActivity):
         self.flags: int = kwargs.pop("flags", 0)
         self.sync_id: Optional[str] = kwargs.pop("sync_id", None)
         self.session_id: Optional[str] = kwargs.pop("session_id", None)
-        self.buttons: List[ActivityButton] = kwargs.pop("buttons", [])
+        self.buttons: List[str] = kwargs.pop("buttons", [])
 
         activity_type = kwargs.pop("type", -1)
         self.type: ActivityType = (
@@ -468,8 +474,8 @@ class Streaming(BaseActivity):
 
     url: :class:`str`
         The stream's URL.
-    assets: :class:`dict`
-        A dictionary comprising of similar keys than those in :attr:`Activity.assets`.
+    assets: Dict[:class:`str`, :class:`str`]
+        A dictionary comprised of similar keys than those in :attr:`Activity.assets`.
     """
 
     __slots__ = ("platform", "name", "game", "url", "details", "assets")
@@ -502,7 +508,7 @@ class Streaming(BaseActivity):
         """Optional[:class:`str`]: If provided, the twitch name of the user streaming.
 
         This corresponds to the ``large_image`` key of the :attr:`Streaming.assets`
-        dictionary if it starts with ``twitch:``. Typically set by the Discord client.
+        dictionary if it starts with ``twitch:``. Typically this is set by the Discord client.
         """
 
         try:

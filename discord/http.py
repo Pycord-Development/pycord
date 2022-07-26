@@ -32,7 +32,6 @@ import weakref
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Coroutine,
     Dict,
     Iterable,
@@ -71,6 +70,7 @@ if TYPE_CHECKING:
     from .types import (
         appinfo,
         audit_log,
+        automod,
         channel,
         components,
         embed,
@@ -899,7 +899,7 @@ class HTTPClient:
         *,
         reason: Optional[str] = None,
     ) -> Response[member.Nickname]:
-        r = Route("PATCH", "/guilds/{guild_id}/members/@me/nick", guild_id=guild_id)
+        r = Route("PATCH", "/guilds/{guild_id}/members/@me", guild_id=guild_id)
         payload = {
             "nick": nickname,
         }
@@ -1136,7 +1136,7 @@ class HTTPClient:
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(
             Route(
-                "POST",
+                "PUT",
                 "/channels/{channel_id}/thread-members/@me",
                 channel_id=channel_id,
             )
@@ -1294,10 +1294,9 @@ class HTTPClient:
     def delete_guild(self, guild_id: Snowflake) -> Response[None]:
         return self.request(Route("DELETE", "/guilds/{guild_id}", guild_id=guild_id))
 
-    def create_guild(self, name: str, region: str, icon: Optional[str]) -> Response[guild.Guild]:
+    def create_guild(self, name: str, icon: Optional[str]) -> Response[guild.Guild]:
         payload = {
             "name": name,
-            "region": region,
         }
         if icon:
             payload["icon"] = icon
@@ -1307,7 +1306,6 @@ class HTTPClient:
     def edit_guild(self, guild_id: Snowflake, *, reason: Optional[str] = None, **fields: Any) -> Response[guild.Guild]:
         valid_keys = (
             "name",
-            "region",
             "icon",
             "afk_timeout",
             "owner_id",
@@ -1384,13 +1382,13 @@ class HTTPClient:
             )
         )
 
-    def create_from_template(self, code: str, name: str, region: str, icon: Optional[str]) -> Response[guild.Guild]:
+    def create_from_template(self, code: str, name: str, icon: Optional[str]) -> Response[guild.Guild]:
         payload = {
             "name": name,
-            "region": region,
         }
         if icon:
             payload["icon"] = icon
+
         return self.request(Route("POST", "/guilds/templates/{code}", code=code), json=payload)
 
     def get_bans(
@@ -2317,6 +2315,74 @@ class HTTPClient:
         )
         return self.request(r)
 
+    # Guild Automod Rules
+    
+    def get_auto_moderation_rules(
+        self,
+        guild_id: Snowflake,
+    ) -> Response[List[automod.AutoModRule]]:
+        r = Route(
+            "GET",
+            "/guilds/{guild_id}/auto-moderation/rules",
+            guild_id=guild_id,
+        )
+        return self.request(r)
+    
+    def get_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "GET",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r)
+    
+    def create_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        payload: automod.CreateAutoModRule,
+        reason: Optional[str] = None,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "POST",
+            "/guilds/{guild_id}/auto-moderation/rules",
+            guild_id=guild_id,
+        )
+        return self.request(r, json=payload, reason=reason)
+    
+    def edit_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+        payload: automod.EditAutoModRule, 
+        reason: Optional[str] = None,
+    ) -> Response[automod.AutoModRule]:
+        r = Route(
+            "PATCH",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r, json=payload, reason=reason)
+    
+    def delete_auto_moderation_rule(
+        self,
+        guild_id: Snowflake,
+        rule_id: Snowflake,
+        reason: Optional[str] = None,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/guilds/{guild_id}/auto-moderation/rules/{rule_id}",
+            guild_id=guild_id,
+            rule_id=rule_id,
+        )
+        return self.request(r, reason=reason)
+    
     # Interaction responses
 
     def _edit_webhook_helper(
@@ -2427,7 +2493,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         token: str,
-        files: List[File] = [],
+        files: Optional[List[File]] = None,
         content: Optional[str] = None,
         tts: bool = False,
         embeds: Optional[List[embed.Embed]] = None,

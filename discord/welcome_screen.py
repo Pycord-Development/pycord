@@ -57,9 +57,9 @@ class WelcomeScreenChannel:
     channel: :class:`abc.Snowflake`
         The channel that is being referenced.
     description: :class:`str`
-        The description of channel that is shown on the welcome screen.
-    emoji: :class:`Union[Emoji, PartialEmoji, str]`
-        The emoji of channel that is shown on welcome screen.
+        The description of the channel that is shown on the welcome screen.
+    emoji: :class:`Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]`
+        The emoji of the channel that is shown on welcome screen.
     """
 
     def __init__(
@@ -177,7 +177,8 @@ class WelcomeScreen:
                 description='This is a very cool community server!',
                 welcome_channels=[
                     WelcomeChannel(channel=rules_channel, description='Read the rules!', emoji='👨‍🏫'),
-                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!', emoji=custom_emoji),
+                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!',
+                                   emoji=custom_emoji),
                 ]
             )
 
@@ -189,7 +190,7 @@ class WelcomeScreen:
 
         description: Optional[:class:`str`]
             The new description of welcome screen.
-        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
+        welcome_channels: Optional[List[:class:`WelcomeScreenChannel`]]
             The welcome channels. The order of the channels would be same as the passed list order.
         enabled: Optional[:class:`bool`]
             Whether the welcome screen should be displayed.

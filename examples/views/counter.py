@@ -1,23 +1,26 @@
+# This example requires the `message_content` privileged intent for prefixed commands.
+
 import discord
 from discord.ext import commands
 
 
 class CounterBot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("$"))
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(command_prefix=commands.when_mentioned_or("!"), intents=intents)
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
 
 
-# Define a simple View that gives us a counter button
+# Define a simple View that gives us a counter button.
 class Counter(discord.ui.View):
 
-    # Define the actual button
     # When pressed, this increments the number displayed until it hits 5.
-    # When it hits 5, the counter button is disabled and it turns green.
-    # NOTE: The name of the function does not matter to the library
+    # When it hits 5, the counter button is disabled, and it turns green.
+    # NOTE: The name of the function does not matter to the library.
     @discord.ui.button(label="0", style=discord.ButtonStyle.red)
     async def count(self, button: discord.ui.Button, interaction: discord.Interaction):
         number = int(button.label) if button.label else 0
@@ -39,4 +42,4 @@ async def counter(ctx: commands.Context):
     await ctx.send("Press!", view=Counter())
 
 
-bot.run("token")
+bot.run("TOKEN")

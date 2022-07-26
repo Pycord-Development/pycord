@@ -70,4 +70,4 @@ class _FullWebhook(TypedDict, total=False):
 
 
 class Webhook(PartialWebhook, _FullWebhook):
-    ...
+    pass

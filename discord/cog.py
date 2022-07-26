@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import importlib
 import inspect
+import os
+import pathlib
 import sys
 import types
 from typing import (
@@ -40,6 +42,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import discord.utils
@@ -221,7 +224,7 @@ class CogMeta(type):
         listeners_as_list = []
         for listener in listeners.values():
             for listener_name in listener.__cog_listener_names__:
-                # I use __name__ instead of just storing the value so I can inject
+                # I use __name__ instead of just storing the value, so I can inject
                 # the self attribute when the time comes to add them to the bot
                 listeners_as_list.append((listener_name, listener.__name__))
 
@@ -344,7 +347,7 @@ class Cog(metaclass=CogMeta):
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
-        """Return None if the method is not overridden. Otherwise returns the overridden method."""
+        """Return None if the method is not overridden. Otherwise, returns the overridden method."""
         return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
@@ -412,8 +415,12 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
         """
         return True
 
@@ -422,8 +429,12 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check`
         check.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
         """
         return True
 
@@ -432,8 +443,12 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :func:`~discord.ext.commands.check`
         for every command and subcommand in this cog.
 
-        This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context`.
+        This function **can** be a coroutine.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
         """
         return True
 
@@ -661,9 +676,9 @@ class CogMixin:
     def _remove_module_references(self, name: str) -> None:
         # find all references to the module
         # remove the cogs registered from the module
-        for cogname, cog in self.__cogs.copy().items():
+        for cog_name, cog in self.__cogs.copy().items():
             if _is_submodule(name, cog.__module__):
-                self.remove_cog(cogname)
+                self.remove_cog(cog_name)
 
         # remove all the commands from the module
         if self._supports_prefixed_commands:
@@ -739,7 +754,14 @@ class CogMixin:
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
-    def load_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def load_extension(
+        self,
+        name: str,
+        *,
+        package: Optional[str] = None,
+        recursive: bool = False,
+        store: bool = False,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -749,21 +771,41 @@ class CogMixin:
         the entry point on what to do when the extension is loaded. This entry
         point must have a single argument, the ``bot``.
 
+        The extension passed can either be the direct name of a file within
+        the current working directory or a folder that contains multiple extensions.
+
         Parameters
-        ------------
+        -----------
         name: :class:`str`
-            The extension name to load. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            The extension or folder name to load. It must be dot separated
+            like regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
-            This is required when loading an extension using a relative path, e.g ``.foo.test``.
+            This is required when loading an extension using a relative
+            path, e.g ``.foo.test``.
             Defaults to ``None``.
 
             .. versionadded:: 1.7
+        recursive: Optional[:class:`bool`]
+            If subdirectories under the given head directory should be
+            recursively loaded.
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
+        store: Optional[:class:`bool`]
+            If exceptions should be stored or raised. If set to ``True``,
+            all exceptions encountered will be stored in a returned dictionary
+            as a load status. If set to ``False``, if any exceptions are
+            encountered they will be raised and the bot will be closed.
+            If no exceptions are encountered, a list of loaded
+            extension names will be returned.
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
 
         Raises
-        --------
+        -------
         ExtensionNotFound
             The extension could not be imported.
             This is also raised if the name of the extension could not
@@ -774,17 +816,133 @@ class CogMixin:
             The extension does not have a setup function.
         ExtensionFailed
             The extension or its setup function had an execution error.
+
+        Returns
+        --------
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing a list of loaded extensions or
+            nothing due to an encountered exception.
         """
 
         name = self._resolve_name(name, package)
+
         if name in self.__extensions:
-            raise errors.ExtensionAlreadyLoaded(name)
+            exc = errors.ExtensionAlreadyLoaded(name)
+            final_out = {name: exc} if store else exc
+        # This indicates that there is neither an extension nor folder here
+        elif (spec := importlib.util.find_spec(name)) is None:
+            exc = errors.ExtensionNotFound(name)
+            final_out = {name: exc} if store else exc
+        # This indicates we've found an extension file to load, and we need to store any exceptions
+        elif spec.has_location and store:
+            try:
+                self._load_from_module_spec(spec, name)
+            except Exception as exc:
+                final_out = {name: exc}
+            else:
+                final_out = {name: True}
+        # This indicates we've found an extension file to load, and any encountered exceptions can be raised
+        elif spec.has_location:
+            self._load_from_module_spec(spec, name)
+            final_out = [name]
+        # This indicates we've been given a folder because the ModuleSpec exists but is not a file
+        else:
+            # Split the directory path and join it to get an os-native Path object
+            path = pathlib.Path(os.path.join(*name.split(".")))
+            glob = path.rglob if recursive else path.glob
+            final_out = {} if store else []
 
-        spec = importlib.util.find_spec(name)
-        if spec is None:
-            raise errors.ExtensionNotFound(name)
+            # Glob all files with a pattern to gather all .py files that don't start with _
+            for ext_file in glob("[!_]*.py"):
+                # Gets all parts leading to the directory minus the file name
+                parts = list(ext_file.parts[:-1])
+                # Gets the file name without the extension
+                parts.append(ext_file.stem)
+                loaded = self.load_extension(".".join(parts))
+                final_out.update(loaded) if store else final_out.extend(loaded)
 
-        self._load_from_module_spec(spec, name)
+        if isinstance(final_out, Exception):
+            raise final_out
+        else:
+            return final_out
+
+    def load_extensions(
+        self,
+        *names: str,
+        package: Optional[str] = None,
+        recursive: bool = False,
+        store: bool = False,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+        """Loads multiple extensions at once.
+
+        This method simplifies the process of loading multiple
+        extensions by handling the looping of ``load_extension``.
+
+        Parameters
+        -----------
+        names: :class:`str`
+           The extension or folder names to load. It must be dot separated
+           like regular Python imports if accessing a submodule. e.g.
+           ``foo.test`` if you want to import ``foo/test.py``.
+        package: Optional[:class:`str`]
+            The package name to resolve relative imports with.
+            This is required when loading an extension using a relative
+            path, e.g ``.foo.test``.
+            Defaults to ``None``.
+
+            .. versionadded:: 1.7
+        recursive: Optional[:class:`bool`]
+            If subdirectories under the given head directory should be
+            recursively loaded.
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
+        store: Optional[:class:`bool`]
+            If exceptions should be stored or raised. If set to ``True``,
+            all exceptions encountered will be stored in a returned dictionary
+            as a load status. If set to ``False``, if any exceptions are
+            encountered they will be raised and the bot will be closed.
+            If no exceptions are encountered, a list of loaded
+            extension names will be returned.
+            Defaults to ``False``.
+
+            .. versionadded:: 2.0
+
+        Raises
+        --------
+        ExtensionNotFound
+            A given extension could not be imported.
+            This is also raised if the name of the extension could not
+            be resolved using the provided ``package`` parameter.
+        ExtensionAlreadyLoaded
+            A given extension is already loaded.
+        NoEntryPointError
+            A given extension does not have a setup function.
+        ExtensionFailed
+            A given extension or its setup function had an execution error.
+
+        Returns
+        --------
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing names of loaded extensions or
+            nothing due to an encountered exception.
+        """
+
+        loaded_extensions = {} if store else []
+
+        for ext_path in names:
+            loaded = self.load_extension(ext_path, package=package, recursive=recursive, store=store)
+            loaded_extensions.update(loaded) if store else loaded_extensions.extend(loaded)
+
+        return loaded_extensions
 
     def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
         """Unloads an extension.
@@ -801,7 +959,7 @@ class CogMixin:
         ------------
         name: :class:`str`
             The extension name to unload. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.
@@ -833,13 +991,13 @@ class CogMixin:
         This replaces the extension with the same extension, only refreshed. This is
         equivalent to a :meth:`unload_extension` followed by a :meth:`load_extension`
         except done in an atomic way. That is, if an operation fails mid-reload then
-        the bot will roll-back to the prior working state.
+        the bot will roll back to the prior working state.
 
         Parameters
         ------------
         name: :class:`str`
             The extension name to reload. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
+            regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
         package: Optional[:class:`str`]
             The package name to resolve relative imports with.

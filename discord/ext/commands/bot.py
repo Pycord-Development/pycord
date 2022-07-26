@@ -156,7 +156,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         The default command error handler provided by the bot.
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
 
         This only fires if you do not specify any listeners for command error.
@@ -253,7 +253,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         Returns the invocation context from the message.
 
         This is a more low-level counter-part for :meth:`.process_commands`
-        to allow users more fine grained control over the processing.
+        to allow users more fine-grained control over the processing.
 
         The returned context is not guaranteed to be a valid invocation
         context, :attr:`.Context.valid` must be checked to make sure it is.
@@ -430,9 +430,9 @@ class Bot(BotBase, discord.Bot):
             when passing an empty string, it should always be last as no prefix
             after it will be matched.
     case_insensitive: :class:`bool`
-        Whether the commands should be case insensitive. Defaults to ``False``. This
+        Whether the commands should be case-insensitive. Defaults to ``False``. This
         attribute does not carry over to groups. You must set it to every group if
-        you require group commands to be case insensitive as well.
+        you require group commands to be case-insensitive as well.
     help_command: Optional[:class:`.HelpCommand`]
         The help command implementation to use. This can be dynamically
         set at runtime. To remove the help command pass ``None``. For more

@@ -44,6 +44,7 @@ from typing import (
 )
 
 from . import abc, utils
+from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .asset import Asset
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
@@ -51,6 +52,8 @@ from .colour import Colour
 from .emoji import Emoji
 from .enums import (
     AuditLogAction,
+    AutoModEventType,
+    AutoModTriggerType,
     ChannelType,
     ContentFilter,
     NotificationLevel,
@@ -101,6 +104,7 @@ if TYPE_CHECKING:
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
     from .types.guild import GuildFeature, MFALevel
+    from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
     from .voice_client import VoiceProtocol
@@ -156,9 +160,6 @@ class Guild(Hashable):
         All stickers that the guild owns.
 
         .. versionadded:: 2.0
-    region: :class:`VoiceRegion`
-        The region the guild belongs on. There is a chance that the region
-        will be a :class:`str` if the value is not recognised by the enumerator.
     afk_timeout: :class:`int`
         The timeout to get sent to the AFK channel.
     afk_channel: Optional[:class:`VoiceChannel`]
@@ -188,7 +189,7 @@ class Guild(Hashable):
     description: Optional[:class:`str`]
         The guild's description.
     mfa_level: :class:`int`
-        Indicates the guild's two factor authorisation level. If this value is 0 then
+        Indicates the guild's two-factor authorisation level. If this value is 0 then
         the guild does not require 2FA for their administrative members. If the value is
         1 then they do.
     verification_level: :class:`VerificationLevel`
@@ -205,14 +206,15 @@ class Guild(Hashable):
 
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
+        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
-        - ``FEATURABLE``: Guild is able to be featured in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
-        - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
+        - ``HUB``: Hubs contain a directory channel that let you find school-related,
+                   student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
@@ -224,17 +226,17 @@ class Guild(Hashable):
         - ``NEWS``: Guild can create news channels.
         - ``NEW_THREAD_PERMISSIONS``: Guild has new thread permissions.
         - ``PARTNERED``: Guild is a partnered server.
-        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
+        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord
+                                       Staff Member "Jethro" for their personal server).
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
         - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``SEVEN_DAY_THREAD_ARCHIVE``: Guild has access to the seven day archive time for threads.
-        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
-        - ``THREAD_DEFAULT_AUTO_ARCHIVE_DURATION``: Unknown, presumably used for testing changes to the thread default auto archive duration..
-        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or less members and a bot. Also gives the premium thread features.
-        - ``THREE_DAY_THREAD_ARCHIVE``: Guild has access to the three day archive time for threads.
+        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel
+                                     in a sidebar similar to thread view.
+        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer
+                                       members and a bot. Also gives the premium thread features.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
@@ -279,7 +281,6 @@ class Guild(Hashable):
         "name",
         "id",
         "unavailable",
-        "region",
         "owner_id",
         "mfa_level",
         "emojis",
@@ -320,8 +321,8 @@ class Guild(Hashable):
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[Dict[Optional[int], _GuildLimit]] = {
-        None: _GuildLimit(emoji=50, stickers=0, bitrate=96e3, filesize=8388608),
-        0: _GuildLimit(emoji=50, stickers=0, bitrate=96e3, filesize=8388608),
+        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
+        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
         1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=8388608),
         2: _GuildLimit(emoji=150, stickers=30, bitrate=256e3, filesize=52428800),
         3: _GuildLimit(emoji=250, stickers=60, bitrate=384e3, filesize=104857600),
@@ -352,6 +353,22 @@ class Guild(Hashable):
 
     def _add_member(self, member: Member, /) -> None:
         self._members[member.id] = member
+
+    def _get_and_update_member(self, payload: MemberPayload, user_id: int, cache_flag: bool, /) -> Member:
+        # we always get the member, and we only update if the cache_flag (this cache
+        # flag should always be MemberCacheFlag.interaction) is set to True
+        if user_id in self._members:
+            member = self.get_member(user_id)
+            member._update(payload) if cache_flag else None
+        else:
+            # NOTE:
+            # This is a fallback in case the member is not found in the guild's members.
+            # If this fallback occurs, multiple aspects of the Member
+            # class will be incorrect such as status and activities.
+            member = Member(guild=self, state=self._state, data=payload)  # type: ignore
+            if cache_flag:
+                self._members[user_id] = member
+        return member
 
     def _store_thread(self, payload: ThreadPayload, /) -> Thread:
         thread = Thread(guild=self, state=self._state, data=payload)
@@ -447,7 +464,7 @@ class Guild(Hashable):
         self._roles[role.id] = role
 
     def _remove_role(self, role_id: int, /) -> Role:
-        # this raises KeyError if it fails..
+        # this raises KeyError if it fails.
         role = self._roles.pop(role_id)
 
         # since it didn't, we can change the positions now
@@ -466,7 +483,6 @@ class Guild(Hashable):
             self._member_count: int = member_count
 
         self.name: str = guild.get("name")
-        self.region: VoiceRegion = try_enum(VoiceRegion, guild.get("region"))
         self.verification_level: VerificationLevel = try_enum(VerificationLevel, guild.get("verification_level"))
         self.default_notifications: NotificationLevel = try_enum(
             NotificationLevel, guild.get("default_message_notifications")
@@ -529,7 +545,9 @@ class Guild(Hashable):
         self._large: Optional[bool] = None if member_count is None else self._member_count >= 250
 
         self.owner_id: Optional[int] = utils._get_as_snowflake(guild, "owner_id")
-        self.afk_channel: Optional[VocalGuildChannel] = self.get_channel(utils._get_as_snowflake(guild, "afk_channel_id"))  # type: ignore
+        self.afk_channel: Optional[VocalGuildChannel] = self.get_channel(
+            utils._get_as_snowflake(guild, "afk_channel_id")
+        )  # type: ignore
 
         for obj in guild.get("voice_states", []):
             self._update_voice_state(obj, int(obj["channel_id"]))
@@ -562,7 +580,7 @@ class Guild(Hashable):
 
     @property
     def channels(self) -> List[GuildChannel]:
-        """List[:class:`abc.GuildChannel`]: A list of channels that belongs to this guild."""
+        """List[:class:`abc.GuildChannel`]: A list of channels that belong to this guild."""
         return list(self._channels.values())
 
     @property
@@ -597,7 +615,7 @@ class Guild(Hashable):
 
     @property
     def voice_channels(self) -> List[VoiceChannel]:
-        """List[:class:`VoiceChannel`]: A list of voice channels that belongs to this guild.
+        """List[:class:`VoiceChannel`]: A list of voice channels that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -607,7 +625,7 @@ class Guild(Hashable):
 
     @property
     def stage_channels(self) -> List[StageChannel]:
-        """List[:class:`StageChannel`]: A list of stage channels that belongs to this guild.
+        """List[:class:`StageChannel`]: A list of stage channels that belong to this guild.
 
         .. versionadded:: 1.7
 
@@ -619,7 +637,7 @@ class Guild(Hashable):
 
     @property
     def forum_channels(self) -> List[ForumChannel]:
-        """List[:class:`ForumChannel`]: A list of forum channels that belongs to this guild.
+        """List[:class:`ForumChannel`]: A list of forum channels that belong to this guild.
 
         .. versionadded:: 2.0
 
@@ -645,7 +663,7 @@ class Guild(Hashable):
 
     @property
     def text_channels(self) -> List[TextChannel]:
-        """List[:class:`TextChannel`]: A list of text channels that belongs to this guild.
+        """List[:class:`TextChannel`]: A list of text channels that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -655,7 +673,7 @@ class Guild(Hashable):
 
     @property
     def categories(self) -> List[CategoryChannel]:
-        """List[:class:`CategoryChannel`]: A list of categories that belongs to this guild.
+        """List[:class:`CategoryChannel`]: A list of categories that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -689,7 +707,7 @@ class Guild(Hashable):
 
         def key(t: ByCategoryItem) -> Tuple[Tuple[int, int], List[GuildChannel]]:
             k, v = t
-            return ((k.position, k.id) if k else (-1, -1), v)
+            return (k.position, k.id) if k else (-1, -1), v
 
         _get = self._channels.get
         as_list: List[ByCategoryItem] = [(_get(k), v) for k, v in grouped.items()]  # type: ignore
@@ -1004,12 +1022,12 @@ class Guild(Hashable):
         """Returns the first member found that matches the name provided.
 
         The name can have an optional discriminator argument, e.g. "Jake#0001"
-        or "Jake" will both do the lookup. However the former will give a more
+        or "Jake" will both do the lookup. However, the former will give a more
         precise result. Note that the discriminator must have all 4 digits
         for this to work.
 
         If a nickname is passed, then it is looked up via the nickname. Note
-        however, that a nickname + discriminator combo will not lookup the nickname
+        however, that a nickname + discriminator combo will not look up the nickname
         but rather the username + discriminator combo due to nickname + discriminator
         not being unique.
 
@@ -1138,10 +1156,8 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
-            A :class:`dict` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply upon creation of a channel.
-            Useful for creating secret channels.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
@@ -1222,10 +1238,8 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
-            A :class:`dict` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply upon creation of a channel.
-            Useful for creating secret channels.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
@@ -1315,10 +1329,8 @@ class Guild(Hashable):
             The channel's name.
         topic: :class:`str`
             The new channel's topic.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
-            A :class:`dict` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply upon creation of a channel.
-            Useful for creating secret channels.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
@@ -1418,10 +1430,8 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
-            A :class:`dict` of target (either a role or a member) to
-            :class:`PermissionOverwrite` to apply upon creation of a channel.
-            Useful for creating secret channels.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
@@ -1575,7 +1585,6 @@ class Guild(Hashable):
         splash: Optional[bytes] = MISSING,
         discovery_splash: Optional[bytes] = MISSING,
         community: bool = MISSING,
-        region: Optional[Union[str, VoiceRegion]] = MISSING,
         afk_channel: Optional[VoiceChannel] = MISSING,
         owner: Snowflake = MISSING,
         afk_timeout: int = MISSING,
@@ -1634,8 +1643,6 @@ class Guild(Hashable):
         community: :class:`bool`
             Whether the guild should be a Community guild. If set to ``True``\, both ``rules_channel``
             and ``public_updates_channel`` parameters are required.
-        region: Union[:class:`str`, :class:`VoiceRegion`]
-            The new region for the guild's voice communication.
         afk_channel: Optional[:class:`VoiceChannel`]
             The new channel that is the AFK channel. Could be ``None`` for no AFK channel.
         afk_timeout: :class:`int`
@@ -1761,9 +1768,6 @@ class Guild(Hashable):
                 raise InvalidArgument("To transfer ownership you must be the owner of the guild.")
 
             fields["owner_id"] = owner.id
-
-        if region is not MISSING:
-            fields["region"] = str(region)
 
         if verification_level is not MISSING:
             if not isinstance(verification_level, VerificationLevel):
@@ -1926,7 +1930,8 @@ class Guild(Hashable):
 
         .. note::
 
-            This method is an API call. If you have :attr:`Intents.members` and member cache enabled, consider :meth:`get_member` instead.
+            This method is an API call. If you have :attr:`Intents.members` and
+            member cache enabled, consider :meth:`get_member` instead.
 
         Parameters
         -----------
@@ -1991,16 +1996,16 @@ class Guild(Hashable):
 
         Raises
         -------
-        :exc:`.InvalidData`
+        Forbidden
+            You do not have permission to fetch this channel.
+        NotFound
+            Invalid Channel ID.
+        HTTPException
+            Retrieving the channel failed.
+        InvalidData
             An unknown channel type was received from Discord
             or the guild the channel belongs to is not the same
             as the one in this object points to.
-        :exc:`.HTTPException`
-            Retrieving the channel failed.
-        :exc:`.NotFound`
-            Invalid Channel ID.
-        :exc:`.Forbidden`
-            You do not have permission to fetch this channel.
 
         Returns
         --------
@@ -2091,7 +2096,7 @@ class Guild(Hashable):
         Prunes the guild from its inactive members.
 
         The inactive members are denoted if they have not logged on in
-        ``days`` number of days and they have no roles.
+        ``days`` number of days and have no roles.
 
         You must have the :attr:`~Permissions.kick_members` permission
         to use this.
@@ -2806,7 +2811,7 @@ class Guild(Hashable):
 
         Parameters
         -----------
-        positions
+        positions: Dict[:class:`Role`, :class:`int`]
             A :class:`dict` of :class:`Role` to :class:`int` to change the positions
             of each given role.
         reason: Optional[:class:`str`]
@@ -3261,7 +3266,7 @@ class Guild(Hashable):
         HTTPException
             Retrieving the welcome screen failed somehow.
         NotFound
-            The guild doesn't has a welcome screen or community feature is disabled.
+            The guild doesn't have a welcome screen or community feature is disabled.
 
 
         Returns
@@ -3298,10 +3303,9 @@ class Guild(Hashable):
 
         Parameters
         -----------
-
         description: Optional[:class:`str`]
             The new description of welcome screen.
-        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
+        welcome_channels: Optional[List[:class:`WelcomeScreenChannel`]]
             The welcome channels. The order of the channels would be same as the passed list order.
         enabled: Optional[:class:`bool`]
             Whether the welcome screen should be displayed.
@@ -3310,7 +3314,6 @@ class Guild(Hashable):
 
         Raises
         -------
-
         HTTPException
             Editing the welcome screen failed somehow.
         Forbidden
@@ -3320,7 +3323,6 @@ class Guild(Hashable):
 
         Returns
         --------
-
         :class:`WelcomeScreen`
             The edited welcome screen.
         """
@@ -3352,9 +3354,9 @@ class Guild(Hashable):
         Parameters
         -----------
         with_user_count: Optional[:class:`bool`]
-            If the scheduled event should be fetch with the number of
-            users that are interested in the event.
-            Defaults to ``True``
+            If the scheduled event should be fetched with the number of
+            users that are interested in the events.
+            Defaults to ``True``.
 
         Raises
         -------
@@ -3366,7 +3368,7 @@ class Guild(Hashable):
         Returns
         --------
         List[:class:`ScheduledEvent`]
-            The fetched scheduled events
+            The fetched scheduled events.
         """
         data = await self._state.http.get_scheduled_events(self.id, with_user_count=with_user_count)
         result = []
@@ -3386,12 +3388,17 @@ class Guild(Hashable):
 
         .. note::
 
-            This method is an API call. If you have :attr:`Intents.scheduled_events`, consider :meth:`get_scheduled_event` instead.
+            This method is an API call. If you have :attr:`Intents.scheduled_events`,
+            consider :meth:`get_scheduled_event` instead.
 
         Parameters
         -----------
         event_id: :class:`int`
             The event's ID to fetch with.
+        with_user_count: Optional[:class:`bool`]
+            If the scheduled vent should be fetched with the number of
+            users that are interested in the event.
+            Defaults to ``True``.
 
         Raises
         -------
@@ -3479,13 +3486,11 @@ class Guild(Hashable):
         Optional[:class:`ScheduledEvent`]
             The created scheduled event.
         """
-        payload: Dict[str, Union[str, int]] = {}
-
-        payload["name"] = name
-
-        payload["scheduled_start_time"] = start_time.isoformat()
-
-        payload["privacy_level"] = int(privacy_level)
+        payload: Dict[str, Union[str, int]] = {
+            "name": name,
+            "scheduled_start_time": start_time.isoformat(),
+            "privacy_level": int(privacy_level)
+        }
 
         if not isinstance(location, ScheduledEventLocation):
             location = ScheduledEventLocation(state=self._state, value=location)
@@ -3514,3 +3519,110 @@ class Guild(Hashable):
     def scheduled_events(self) -> List[ScheduledEvent]:
         """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
         return list(self._scheduled_events.values())
+    
+    async def fetch_auto_moderation_rules(self) -> List[AutoModRule]:
+        """|coro|
+
+        Retrieves a list of auto moderation rules for this guild.
+
+        Raises
+        -------
+        HTTPException
+            Getting the auto moderation rules failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+
+        Returns
+        --------
+        List[:class:`AutoModRule`]
+            The auto moderation rules for this guild.
+        """
+        data = await self._state.http.get_auto_moderation_rules(self.id)
+        return [AutoModRule(state=self._state, data=rule) for rule in data]
+    
+    async def fetch_auto_moderation_rule(self, id: int) -> AutoModRule:
+        """|coro|
+        
+        Retrieves a :class:`AutoModRule` from rule ID.
+        
+        Raises
+        -------
+        HTTPException
+            Getting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+            
+        Returns
+        --------
+        :class:`AutoModRule`
+            The requested auto moderation rule.
+        """
+        data = await self._state.http.get_auto_moderation_rule(self.id, id)
+        return AutoModRule(state=self._state, data=data)
+    
+    async def create_auto_moderation_rule(
+        self,
+        *,
+        name: str,
+        event_type: AutoModEventType,
+        trigger_type: AutoModTriggerType,
+        trigger_metadata: AutoModTriggerMetadata,
+        actions: List[AutoModAction],
+        enabled: bool = False,
+        exempt_roles: List[Snowflake] = None,
+        exempt_channels: List[Snowflake] = None,
+        reason: Optional[str] = None,
+    ) -> AutoModRule:
+        """
+        Creates an auto moderation rule.
+        
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the auto moderation rule.
+        event_type: :class:`AutoModEventType`
+            The type of event that triggers the rule.
+        trigger_type: :class:`AutoModTriggerType`
+            The rule's trigger type.
+        trigger_metadata: :class:`AutoModTriggerMetadata`
+            The rule's trigger metadata.
+        actions: List[:class:`AutoModAction`]
+            The actions to take when the rule is triggered.
+        enabled: :class:`bool`
+            Whether the rule is enabled.
+        exempt_roles: List[:class:`.abc.Snowflake`]
+            A list of roles that are exempt from the rule.
+        exempt_channels: List[:class:`.abc.Snowflake`]
+            A list of channels that are exempt from the rule.
+        reason: Optional[:class:`str`]
+            The reason for creating the rule. Shows up in the audit log.
+            
+        Raises
+        -------
+        HTTPException
+            Creating the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+            
+        Returns
+        --------
+        :class:`AutoModRule`
+            The new auto moderation rule.
+        """
+        payload = {
+            "name": name,
+            "event_type": event_type.value,
+            "trigger_type": trigger_type.value,
+            "trigger_metadata": trigger_metadata.to_dict(),  
+            "actions": [a.to_dict() for a in actions],
+            "enabled": enabled,
+        }
+        
+        if exempt_roles:
+            payload["exempt_roles"] = [r.id for r in exempt_roles]
+            
+        if exempt_channels:
+            payload["exempt_channels"] = [c.id for c in exempt_channels]
+            
+        data = await self._state.http.create_auto_moderation_rule(self.id, payload)
+        return AutoModRule(state=self._state, data=data, reason=reason)

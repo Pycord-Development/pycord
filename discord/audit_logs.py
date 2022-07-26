@@ -233,7 +233,6 @@ class AuditLogChanges:
             "default_notifications",
             _enum_transformer(enums.NotificationLevel),
         ),
-        "region": (None, _enum_transformer(enums.VoiceRegion)),
         "rtc_region": (None, _enum_transformer(enums.VoiceRegion)),
         "video_quality_mode": (None, _enum_transformer(enums.VideoQualityMode)),
         "privacy_level": (None, _enum_transformer(enums.StagePrivacyLevel)),
@@ -413,7 +412,7 @@ class AuditLogEntry(Hashable):
         The reason this action was done.
     extra: Any
         Extra information that this entry has that might be useful.
-        For most actions, this is ``None``. However in some cases it
+        For most actions, this is ``None``. However, in some cases it
         contains extra information. See :class:`AuditLogAction` for
         which actions have this field filled out.
     """
@@ -602,5 +601,5 @@ class AuditLogEntry(Hashable):
     def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
         return self.guild.get_thread(target_id) or Object(id=target_id)
 
-    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, None]:
+    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, Object]:
         return self.guild.get_scheduled_event(target_id) or Object(id=target_id)

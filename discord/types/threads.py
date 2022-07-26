@@ -41,14 +41,15 @@ class ThreadMember(TypedDict):
 
 
 class _ThreadMetadataOptional(TypedDict, total=False):
-    locked: bool
     invitable: bool
+    create_timestamp: str
 
 
 class ThreadMetadata(_ThreadMetadataOptional):
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
+    locked: bool
 
 
 class _ThreadOptional(TypedDict, total=False):

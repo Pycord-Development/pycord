@@ -29,6 +29,7 @@ import datetime
 import functools
 import inspect
 import types
+
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -67,6 +68,8 @@ from .cooldowns import (
     DynamicCooldownMapping,
     MaxConcurrency,
 )
+from ...enums import ChannelType
+
 from .errors import *
 
 if TYPE_CHECKING:
@@ -320,8 +323,14 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def __init__(
         self,
         func: Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
+            Callable[
+                [Concatenate[CogT, ContextT, P]],
+                Coro[T]
+            ],
+            Callable[
+                [Concatenate[ContextT, P]],
+                Coro[T]
+            ],
         ],
         **kwargs: Any,
     ):
@@ -414,15 +423,30 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     @property
     def callback(
         self,
-    ) -> Union[Callable[Concatenate[CogT, Context, P], Coro[T]], Callable[Concatenate[Context, P], Coro[T]],]:
+    ) -> Union[
+        Callable[
+            [Concatenate[CogT, Context, P]],
+            Coro[T]
+        ],
+        Callable[
+            [Concatenate[Context, P]],
+            Coro[T]
+        ],
+    ]:
         return self._callback
 
     @callback.setter
     def callback(
         self,
         function: Union[
-            Callable[Concatenate[CogT, Context, P], Coro[T]],
-            Callable[Concatenate[Context, P], Coro[T]],
+            Callable[
+                [Concatenate[CogT, Context, P]],
+                Coro[T]
+            ],
+            Callable[
+                [Concatenate[Context, P]],
+                Coro[T]
+            ],
         ],
     ) -> None:
         self._callback = function
@@ -565,7 +589,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         view.skip_ws()
 
         # The greedy converter is simple -- it keeps going until it fails in which case,
-        # it undos the view ready for the next parameter to use instead
+        # it undoes the view ready for the next parameter to use instead
         if isinstance(converter, Greedy):
             if param.kind in (param.POSITIONAL_OR_KEYWORD, param.POSITIONAL_ONLY):
                 return await self._transform_greedy_pos(ctx, param, required, converter.converter)
@@ -864,7 +888,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         Parameters
         -----------
         ctx: :class:`.Context`
-            The invocation context to use when checking the commands cooldown status.
+            The invocation context to use when checking the command's cooldown status.
 
         Returns
         --------
@@ -1084,7 +1108,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if origin is Literal:
                 name = "|".join(f'"{v}"' if isinstance(v, str) else str(v) for v in annotation.__args__)
             if param.default is not param.empty:
-                # We don't want None or '' to trigger the [name=value] case and instead it should
+                # We don't want None or '' to trigger the [name=value] case, and instead it should
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
                 should_print = param.default if isinstance(param.default, str) else param.default is not None
                 if should_print:
@@ -1175,7 +1199,7 @@ class GroupMixin(Generic[CogT]):
         A mapping of command name to :class:`.Command`
         objects.
     case_insensitive: :class:`bool`
-        Whether the commands should be case insensitive. Defaults to ``False``.
+        Whether the commands should be case-insensitive. Defaults to ``False``.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -1264,7 +1288,7 @@ class GroupMixin(Generic[CogT]):
             return None
 
         if name in command.aliases:
-            # we're removing an alias so we don't want to remove the rest
+            # we're removing an alias, so we don't want to remove the rest
             return command
 
         # we're not removing the alias so let's delete the rest of them.
@@ -1343,8 +1367,14 @@ class GroupMixin(Generic[CogT]):
     ) -> Callable[
         [
             Union[
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-                Callable[Concatenate[ContextT, P], Coro[T]],
+                Callable[
+                    [Concatenate[CogT, ContextT, P]],
+                    Coro[T]
+                ],
+                Callable[
+                    [Concatenate[ContextT, P]],
+                    Coro[T]
+                ],
             ]
         ],
         Command[CogT, P, T],
@@ -1358,7 +1388,15 @@ class GroupMixin(Generic[CogT]):
         cls: Type[CommandT] = ...,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
+    ) -> Callable[
+        [
+            Callable[
+                 [Concatenate[ContextT, P]],
+                 Coro[Any]
+            ]
+        ],
+        CommandT
+    ]:
         ...
 
     def command(
@@ -1367,7 +1405,15 @@ class GroupMixin(Generic[CogT]):
         cls: Type[CommandT] = MISSING,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
+    ) -> Callable[
+        [
+            Callable[
+                [Concatenate[ContextT, P]],
+                Coro[Any]
+            ]
+        ],
+            CommandT
+    ]:
         """A shortcut decorator that invokes :func:`.command` and adds it to
         the internal command list via :meth:`~.GroupMixin.add_command`.
 
@@ -1377,7 +1423,7 @@ class GroupMixin(Generic[CogT]):
             A decorator that converts the provided method into a Command, adds it to the bot, then returns it.
         """
 
-        def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> CommandT:
+        def decorator(func: Callable[[Concatenate[ContextT, P]], Coro[Any]]) -> CommandT:
             kwargs.setdefault("parent", self)
             result = command(name=name, cls=cls, *args, **kwargs)(func)
             self.add_command(result)
@@ -1395,8 +1441,8 @@ class GroupMixin(Generic[CogT]):
     ) -> Callable[
         [
             Union[
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-                Callable[Concatenate[ContextT, P], Coro[T]],
+                Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
+                Callable[[Concatenate[ContextT, P]], Coro[T]],
             ]
         ],
         Group[CogT, P, T],
@@ -1410,7 +1456,7 @@ class GroupMixin(Generic[CogT]):
         cls: Type[GroupT] = ...,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
+    ) -> Callable[[Callable[[Concatenate[ContextT, P]], Coro[Any]]], GroupT]:
         ...
 
     def group(
@@ -1419,7 +1465,7 @@ class GroupMixin(Generic[CogT]):
         cls: Type[GroupT] = MISSING,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
+    ) -> Callable[[Callable[[Concatenate[ContextT, P]], Coro[Any]]], GroupT]:
         """A shortcut decorator that invokes :func:`.group` and adds it to
         the internal command list via :meth:`~.GroupMixin.add_command`.
 
@@ -1429,7 +1475,7 @@ class GroupMixin(Generic[CogT]):
             A decorator that converts the provided method into a Group, adds it to the bot, then returns it.
         """
 
-        def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> GroupT:
+        def decorator(func: Callable[[Concatenate[ContextT, P]], Coro[Any]]) -> GroupT:
             kwargs.setdefault("parent", self)
             result = group(name=name, cls=cls, *args, **kwargs)(func)
             self.add_command(result)
@@ -1457,7 +1503,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         that the checks and the parsing dictated by its parameters
         will be executed. Defaults to ``False``.
     case_insensitive: :class:`bool`
-        Indicates if the group's commands should be case insensitive.
+        Indicates if the group's commands should be case-insensitive.
         Defaults to ``False``.
     """
 
@@ -1553,6 +1599,23 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 # Decorators
 
 
+@overload  # for py 3.10
+def command(
+    name: str = ...,
+    cls: Type[Command[CogT, P, T]] = ...,
+    **attrs: Any,
+) -> Callable[
+    [
+        Union[
+            Callable[Concatenate[CogT, ContextT, P]], Coro[T],
+            Callable[Concatenate[ContextT, P]], Coro[T],
+        ]
+    ],
+    Command[CogT, P, T],
+]:
+    ...
+
+
 @overload
 def command(
     name: str = ...,
@@ -1561,8 +1624,8 @@ def command(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
+            Callable[[Concatenate[ContextT, P]], Coro[T]],
         ]
     ],
     Command[CogT, P, T],
@@ -1578,8 +1641,8 @@ def command(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
-            Callable[Concatenate[ContextT, P], Coro[Any]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[Any]],
+            Callable[[Concatenate[ContextT, P]], Coro[Any]],
         ]
     ],
     CommandT,
@@ -1592,8 +1655,8 @@ def command(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
+            Callable[[Concatenate[ContextT, P]], Coro[Any]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
         ]
     ],
     Union[Command[CogT, P, T], CommandT],
@@ -1613,10 +1676,10 @@ def command(
     Parameters
     -----------
     name: :class:`str`
-        The name to create the command with. By default this uses the
+        The name to create the command with. By default, this uses the
         function name unchanged.
     cls
-        The class to construct with. By default this is :class:`.Command`.
+        The class to construct with. By default, this is :class:`.Command`.
         You usually do not change this.
     attrs
         Keyword arguments to pass into the construction of the class denoted
@@ -1632,8 +1695,8 @@ def command(
 
     def decorator(
         func: Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
+            Callable[[Concatenate[ContextT, P]], Coro[Any]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[Any]],
         ]
     ) -> CommandT:
         if isinstance(func, Command):
@@ -1651,8 +1714,8 @@ def group(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
+            Callable[[Concatenate[ContextT, P]], Coro[T]],
         ]
     ],
     Group[CogT, P, T],
@@ -1668,8 +1731,8 @@ def group(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
-            Callable[Concatenate[ContextT, P], Coro[Any]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[Any]],
+            Callable[[Concatenate[ContextT, P]], Coro[Any]],
         ]
     ],
     GroupT,
@@ -1684,8 +1747,8 @@ def group(
 ) -> Callable[
     [
         Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
+            Callable[[Concatenate[ContextT, P]], Coro[Any]],
+            Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
         ]
     ],
     Union[Group[CogT, P, T], GroupT],
@@ -1998,7 +2061,7 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
     .. versionchanged:: 1.1
 
         Raise :exc:`.BotMissingAnyRole` or :exc:`.NoPrivateMessage`
-        instead of generic checkfailure
+        instead of generic :exc:`.CheckFailure`.
     """
 
     def predicate(ctx):
@@ -2028,6 +2091,8 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
 
     This check raises a special exception, :exc:`.MissingPermissions`
     that is inherited from :exc:`.CheckFailure`.
+
+    If the command is executed within a DM, it returns ``True``.
 
     Parameters
     ------------
@@ -2079,7 +2144,13 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     def predicate(ctx: Context) -> bool:
         guild = ctx.guild
         me = guild.me if guild is not None else ctx.bot.user
-        permissions = ctx.channel.permissions_for(me)  # type: ignore
+        if ctx.channel.type == ChannelType.private:
+            return True
+
+        if hasattr(ctx, 'app_permissions'):
+            permissions = ctx.app_permissions
+        else:
+            permissions = ctx.channel.permissions_for(me)  # type: ignore
 
         missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
@@ -2361,14 +2432,14 @@ def before_invoke(coro) -> Callable[[T], T]:
         @bot.command()
         @commands.before_invoke(record_usage)
         async def who(ctx): # Output: <User> used who at <Time>
-            await ctx.send('i am a bot')
+            await ctx.send('I am a bot')
 
         class What(commands.Cog):
 
             @commands.before_invoke(record_usage)
             @commands.command()
             async def when(self, ctx): # Output: <User> used when at <Time>
-                await ctx.send(f'and i have existed since {ctx.bot.user.created_at}')
+                await ctx.send(f'and I have existed since {ctx.bot.user.created_at}')
 
             @commands.command()
             async def where(self, ctx): # Output: <Nothing>

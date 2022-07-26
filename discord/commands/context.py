@@ -24,10 +24,11 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, TypeVar, Union
 
 import discord.abc
-from discord.interactions import InteractionMessage
+from discord.interactions import InteractionMessage, InteractionResponse, Interaction
+from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -43,6 +44,7 @@ if TYPE_CHECKING:
     from ..member import Member
     from ..message import Message
     from ..user import User
+    from ..permissions import Permissions
     from ..client import ClientUser
     from discord.webhook.async_ import Webhook
 
@@ -126,6 +128,7 @@ class ApplicationContext(discord.abc.Messageable):
             The arguments to use.
         \*\*kwargs
             The keyword arguments to use.
+
         Raises
         -------
         TypeError
@@ -135,44 +138,78 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel(self) -> Optional[InteractionChannel]:
+        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
+        Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."""
         return self.interaction.channel
 
     @cached_property
     def channel_id(self) -> Optional[int]:
+        """:class:`int`: Returns the ID of the channel associated with this context's command.
+        Shorthand for :attr:`.Interaction.channel_id`.
+        """
         return self.interaction.channel_id
 
     @cached_property
     def guild(self) -> Optional[Guild]:
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.guild`.
+        """
         return self.interaction.guild
 
     @cached_property
     def guild_id(self) -> Optional[int]:
+        """:class:`int`: Returns the ID of the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.guild_id`.
+        """
         return self.interaction.guild_id
 
     @cached_property
     def locale(self) -> Optional[str]:
+        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.locale`.
+        """
         return self.interaction.locale
 
     @cached_property
     def guild_locale(self) -> Optional[str]:
+        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.guild_locale`.
+        """
         return self.interaction.guild_locale
 
     @cached_property
+    def app_permissions(self) -> Permissions:
+        return self.interaction.app_permissions
+
+    @cached_property
     def me(self) -> Optional[Union[Member, ClientUser]]:
+        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        message contexts, or when :meth:`Intents.guilds` is absent.
+        """
         return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Optional[Message]:
+        """Optional[:class:`.Message`]: Returns the message sent with this context's command.
+        Shorthand for :attr:`.Interaction.message`, if applicable.
+        """
         return self.interaction.message
 
     @cached_property
     def user(self) -> Optional[Union[Member, User]]:
+        """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command.
+        Shorthand for :attr:`.Interaction.user`.
+        """
         return self.interaction.user
 
     author: Optional[Union[Member, User]] = user
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
+        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command.
+        Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable.
+        """
         if self.interaction.guild is None:
             return None
 
@@ -180,17 +217,20 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def response(self) -> InteractionResponse:
+        """:class:`.InteractionResponse`: Returns the response object associated with this context's command.
+        Shorthand for :attr:`.Interaction.response`."""
         return self.interaction.response
 
     @property
-    def selected_options(self) -> Optional[List[Dict]]:
+    def selected_options(self) -> Optional[List[Dict[str, Any]]]:
         """The options and values that were selected by the user when sending the command.
 
         Returns
         -------
-        Optional[List[Dict]]
-            A dictionary containing the options and values that were selected by the user when the command was processed, if applicable.
-            Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command.
+        Optional[List[Dict[:class:`str`, Any]]]
+            A dictionary containing the options and values that were selected by the user when the command
+            was processed, if applicable. Returns ``None`` if the command has not yet been invoked,
+            or if there are no options defined for that command.
         """
         return self.interaction.data.get("options", None)
 
@@ -216,12 +256,21 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.send_modal)
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
-        """Sends a modal dialog to the user who invoked the interaction."""
         return self.interaction.response.send_modal
 
     async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
-        """Sends either a response or a followup response depending if the interaction has been responded to yet or not."""
+        """|coro|
+
+        Sends either a response or a message using the followup webhook determined by whether the interaction
+        has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
         try:
             if not self.interaction.response.is_done():
                 return await self.interaction.response.send_message(*args, **kwargs)  # self.response
@@ -231,6 +280,7 @@ class ApplicationContext(discord.abc.Messageable):
             return await self.followup.send(*args, **kwargs)
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.send_message)
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message
@@ -240,6 +290,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
+    @discord.utils.copy_doc(Webhook.send)
     def send_followup(self) -> Callable[..., Awaitable[WebhookMessage]]:
         if self.interaction.response.is_done():
             return self.followup.send
@@ -249,11 +300,13 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
+    @discord.utils.copy_doc(InteractionResponse.defer)
     def defer(self) -> Callable[..., Awaitable[None]]:
         return self.interaction.response.defer
 
     @property
     def followup(self) -> Webhook:
+        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
         return self.interaction.followup
 
     async def delete(self, *, delay: Optional[float] = None) -> None:
@@ -281,12 +334,15 @@ class ApplicationContext(discord.abc.Messageable):
         return await self.interaction.delete_original_message(delay=delay)
 
     @property
+    @discord.utils.copy_doc(Interaction.edit_original_message)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_message
 
     @property
     def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        ``None`` if it does not exist.
+        """
         if self.command is None:
             return None
 
@@ -312,7 +368,7 @@ class AutocompleteContext:
         The option the user is currently typing.
     value: :class:`.str`
         The content of the focused option.
-    options: :class:`.dict`
+    options: Dict[:class:`str`, Any]
         A name to value mapping of the options that the user has selected before this option.
     """
 
@@ -329,7 +385,9 @@ class AutocompleteContext:
 
     @property
     def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. ``None`` if it does not exist."""
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        ``None`` if it does not exist.
+        """
         if self.command is None:
             return None
 

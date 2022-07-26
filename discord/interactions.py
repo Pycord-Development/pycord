@@ -54,7 +54,7 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
-        PartialMessageable,
+        ForumChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -76,6 +76,7 @@ if TYPE_CHECKING:
         VoiceChannel,
         StageChannel,
         TextChannel,
+        ForumChannel,
         CategoryChannel,
         Thread,
         PartialMessageable,
@@ -114,7 +115,7 @@ class Interaction:
     data: :class:`dict`
         The raw interaction data.
     locale: :class:`str`
-        The users locale.
+        The user's locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
@@ -137,9 +138,11 @@ class Interaction:
         "custom_id",
         "_message_data",
         "_permissions",
+        "_app_permissions",
         "_state",
         "_session",
         "_original_message",
+        "_cs_app_permissions",
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
@@ -163,10 +166,11 @@ class Interaction:
         self.locale: Optional[str] = data.get("locale")
         self.guild_locale: Optional[str] = data.get("guild_locale")
         self.custom_id: Optional[str] = self.data.get("custom_id") if self.data is not None else None
+        self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Optional[Message] = None
 
-        if (message_data := data.get("message")):
+        if message_data := data.get("message"):
             self.message = Message(state=self._state, channel=self.channel, data=message_data)
 
         self._message_data = message_data
@@ -182,7 +186,8 @@ class Interaction:
             except KeyError:
                 pass
             else:
-                self.user = Member(state=self._state, guild=guild, data=member)  # type: ignore
+                cache_flag = self._state.member_cache_flags.interaction
+                self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 self._permissions = int(member.get("permissions", 0))
         else:
             try:
@@ -192,7 +197,7 @@ class Interaction:
 
     @property
     def client(self) -> Client:
-        """Returns the client that sent the interaction."""
+        """:class:`Client`: Returns the client that sent the interaction."""
         return self._state._get_client()
 
     @property
@@ -210,7 +215,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_channel")
     def channel(self) -> Optional[InteractionChannel]:
-        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the interaction was sent from.
+        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]:
+        The channel the interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
         no data to complete them. These are :class:`PartialMessageable` instead.
@@ -232,6 +238,11 @@ class Interaction:
         """
         return Permissions(self._permissions)
 
+    @utils.cached_slot_property("_cs_app_permissions")
+    def app_permissions(self) -> Permissions:
+        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
+        return Permissions(self._app_permissions)
+
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
         """:class:`InteractionResponse`: Returns an object responsible for handling responding to the interaction.
@@ -243,7 +254,7 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the follow up webhook for follow up interactions."""
+        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
         payload = {
             "id": self.application_id,
             "type": 3,
@@ -428,7 +439,14 @@ class Interaction:
             await func
 
     def to_dict(self) -> Dict[str, Any]:
-        """Converts this interaction object into a dict."""
+        """
+        Converts this interaction object into a dict.
+
+        Returns
+        --------
+        Dict[:class:`str`, Any]
+            A dictionary of :class:`str` interaction keys bound to the respective value.
+        """
 
         data = {
             "id": self.id,
@@ -492,24 +510,32 @@ class InteractionResponse:
 
     async def defer(self, *, ephemeral: bool = False, invisible: bool = True) -> None:
         """|coro|
+
         Defers the interaction response.
+
         This is typically used when the interaction is acknowledged
         and a secondary action will be done later.
-        This is can only be used with the following interaction types
+
+        This can only be used with the following interaction types:
+
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
+
         Parameters
         -----------
         ephemeral: :class:`bool`
             Indicates whether the deferred message will eventually be ephemeral.
-            This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``.
+            This only applies to :attr:`InteractionType.application_command` interactions,
+            or if ``invisible`` is ``False``.
         invisible: :class:`bool`
-            Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`)
+            Indicates whether the deferred type should be 'invisible'
+            (:attr:`InteractionResponseType.deferred_message_update`)
             instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`).
             In the Discord UI, this is represented as the bot thinking of a response. You must
             eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away.
             This parameter does not apply to interactions of type :attr:`InteractionType.application_command`.
+
         Raises
         -------
         HTTPException
@@ -613,7 +639,7 @@ class InteractionResponse:
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
-            If a view is sent with an ephemeral message and it has no timeout set then the timeout
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
             is set to 15 minutes.
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
@@ -623,7 +649,7 @@ class InteractionResponse:
             before deleting the message we just sent.
         file: :class:`File`
             The file to upload.
-        files: :class:`List[File]`
+        files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
 
         Raises
@@ -636,6 +662,11 @@ class InteractionResponse:
             The length of ``embeds`` was invalid.
         InteractionResponded
             This interaction has already been responded to before.
+
+        Returns
+        --------
+        :class:`.Interaction`
+            The interaction object associated with the sent message.
         """
         if self._responded:
             raise InteractionResponded(self._parent)
@@ -710,6 +741,7 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
+            view.message = await self._parent.original_message()
             self._parent._state.store_view(view)
 
         self._responded = True
@@ -936,7 +968,7 @@ class InteractionResponse:
         """
         async with self._response_lock:
             if self.is_done():
-                coro.close()  # cleanup unawaited coroutine
+                coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
             await coro
 

@@ -1,4 +1,4 @@
-# This example requires the 'members' privileged intents
+# This example requires the 'members' privileged intent for access to .get_member.
 
 import discord
 
@@ -7,7 +7,7 @@ class MyClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.role_message_id = 0  # ID of the message that can be reacted to to add/remove a role.
+        self.role_message_id = 0  # ID of the message that can be reacted to for adding/removing a role.
         self.emoji_to_role = {
             discord.PartialEmoji(name="🔴"): 0,  # ID of the role associated with unicode emoji '🔴'.
             discord.PartialEmoji(name="🟡"): 0,  # ID of the role associated with unicode emoji '🟡'.
@@ -22,7 +22,7 @@ class MyClient(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            # Check if we're still in the guild and it's cached.
+            # Make sure we're still in the guild, and it's cached.
             return
 
         try:
@@ -51,7 +51,7 @@ class MyClient(discord.Client):
 
         guild = self.get_guild(payload.guild_id)
         if guild is None:
-            # Check if we're still in the guild and it's cached.
+            # Make sure we're still in the guild, and it's cached.
             return
 
         try:
@@ -84,4 +84,4 @@ intents = discord.Intents.default()
 intents.members = True
 
 client = MyClient(intents=intents)
-client.run("token")
+client.run("TOKEN")
