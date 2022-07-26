@@ -1167,7 +1167,7 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
 
 def filter_params(params, **kwargs):
-    """Mainly used in ext.bridge, filter out and replace certain keyword parameters
+    """A helper function to filter out and replace certain keyword parameters
 
     Parameters
     -----------

@@ -257,7 +257,7 @@ class BridgeCommandGroup(BridgeCommand):
         self.subcommands: List[BridgeCommand] = []
 
         self.mapped = None
-        if (map_to := getattr(callback, "__custom_map_to__", None)):
+        if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
 

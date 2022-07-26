@@ -58,6 +58,7 @@ class BridgeContext(ABC):
 
     .. versionadded:: 2.0
     """
+    is_app: bool
 
     @abstractmethod
     async def _respond(
@@ -126,6 +127,7 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
 
     .. versionadded:: 2.0
     """
+    is_app = True
 
     def __init__(self, *args, **kwargs):
         # This is needed in order to represent the correct class init signature on the docs
@@ -140,10 +142,6 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
     async def _edit(self, *args, **kwargs) -> InteractionMessage:
         return await self._get_super("edit")(*args, **kwargs)
 
-    @property
-    def is_app(self) -> bool:
-        return True
-
 
 class BridgeExtContext(BridgeContext, Context):
     """
@@ -152,6 +150,7 @@ class BridgeExtContext(BridgeContext, Context):
 
     .. versionadded:: 2.0
     """
+    is_app = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -188,7 +187,3 @@ class BridgeExtContext(BridgeContext, Context):
         """
         if self._original_response_message:
             await self._original_response_message.delete(delay=delay, reason=reason)
-
-    @property
-    def is_app(self) -> bool:
-        return False
