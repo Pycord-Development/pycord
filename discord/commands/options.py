@@ -239,11 +239,11 @@ class Option:
         self.min_length: Optional[int] = kwargs.pop("min_length", None)
         self.max_length: Optional[int] = kwargs.pop("max_length", None)
 
-        if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
+        if (self.input_type != SlashCommandOptionType.integer and self.input_type != SlashCommandOptionType.number
                 and (self.min_value or self.max_value)):
             raise AttributeError("Option does not take min_value or max_value if not of type "
                                  "SlashCommandOptionType.integer or SlashCommandOptionType.number")
-        if input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
+        if self.input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
             raise AttributeError('Option does not take min_length or max_length if not of type str')
 
         if self.min_value is not None and not isinstance(self.min_value, minmax_types):
