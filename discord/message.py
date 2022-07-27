@@ -139,7 +139,7 @@ class Attachment(Hashable):
             Returns the hash of the attachment.
 
     .. versionchanged:: 1.7
-        Attachment can now be casted to :class:`str` and is hashable.
+        Attachment can now be cast to :class:`str` and is hashable.
 
     Attributes
     ------------
@@ -235,7 +235,7 @@ class Attachment(Hashable):
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
 
         Raises
@@ -274,7 +274,7 @@ class Attachment(Hashable):
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
 
         Raises
@@ -310,7 +310,7 @@ class Attachment(Hashable):
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
 
             .. versionadded:: 1.4
@@ -511,7 +511,8 @@ class MessageReference:
         return f"https://discord.com/channels/{guild_id}/{self.channel_id}/{self.message_id}"
 
     def __repr__(self) -> str:
-        return f"<MessageReference message_id={self.message_id!r} channel_id={self.channel_id!r} guild_id={self.guild_id!r}>"
+        return (f"<MessageReference message_id={self.message_id!r}"
+                f" channel_id={self.channel_id!r} guild_id={self.guild_id!r}>")
 
     def to_dict(self) -> MessageReferencePayload:
         result: MessageReferencePayload = {"message_id": self.message_id} if self.message_id is not None else {}
@@ -577,7 +578,8 @@ class Message(Hashable):
         This is not stored long term within Discord's servers and is only used ephemerally.
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`,
+    :class:`GroupChannel`, :class:`PartialMessageable`]
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
     reference: Optional[:class:`~discord.MessageReference`]
@@ -603,7 +605,7 @@ class Message(Hashable):
 
         .. warning::
 
-            The order of the mentions list is not in any particular order so you should
+            The order of the mentions list is not in any particular order, so you should
             not rely on it. This is a Discord limitation, not one with the library.
     channel_mentions: List[:class:`abc.GuildChannel`]
         A list of :class:`abc.GuildChannel` that were mentioned. If the message is in a private message
@@ -785,7 +787,8 @@ class Message(Hashable):
 
     def __repr__(self) -> str:
         name = self.__class__.__name__
-        return f"<{name} id={self.id} channel={self.channel!r} type={self.type!r} author={self.author!r} flags={self.flags!r}>"
+        return (f"<{name} id={self.id} channel={self.channel!r} type={self.type!r}"
+                f" author={self.author!r} flags={self.flags!r}>")
 
     def _try_patch(self, data, key, transform=None) -> None:
         try:
@@ -1031,7 +1034,9 @@ class Message(Hashable):
 
     @property
     def edited_at(self) -> Optional[datetime.datetime]:
-        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the edited time of the message."""
+        """Optional[:class:`datetime.datetime`]:
+        An aware UTC datetime object containing the edited time of the message.
+        """
         return self._edited_timestamp
 
     @property
@@ -1061,7 +1066,7 @@ class Message(Hashable):
         regardless of the :attr:`Message.type`.
 
         In the case of :attr:`MessageType.default` and :attr:`MessageType.reply`\,
-        this just returns the regular :attr:`Message.content`. Otherwise this
+        this just returns the regular :attr:`Message.content`. Otherwise, this
         returns an English message denoting the contents of the system message.
         """
 
@@ -1119,19 +1124,22 @@ class Message(Hashable):
             if not self.content:
                 return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**"
             else:
-                return f"{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 1!**"
+                return (f"{self.author.name} just boosted the server **{self.content}** times!"
+                        f" {self.guild} has achieved **Level 1!**")
 
         if self.type is MessageType.premium_guild_tier_2:
             if not self.content:
                 return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**"
             else:
-                return f"{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 2!**"
+                return (f"{self.author.name} just boosted the server **{self.content}** times!"
+                        f" {self.guild} has achieved **Level 2!**")
 
         if self.type is MessageType.premium_guild_tier_3:
             if not self.content:
                 return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**"
             else:
-                return f"{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 3!**"
+                return (f"{self.author.name} just boosted the server **{self.content}** times!"
+                        f" {self.guild} has achieved **Level 3!**")
 
         if self.type is MessageType.channel_follow_add:
             return f"{self.author.name} has added {self.content} to this channel"
@@ -1141,16 +1149,19 @@ class Message(Hashable):
             return f"{self.author.name} is live! Now streaming {self.author.activity.name}"  # type: ignore
 
         if self.type is MessageType.guild_discovery_disqualified:
-            return "This server has been removed from Server Discovery because it no longer passes all the requirements. Check Server Settings for more details."
+            return ("This server has been removed from Server Discovery because it no longer passes all the"
+                    " requirements. Check Server Settings for more details.")
 
         if self.type is MessageType.guild_discovery_requalified:
             return "This server is eligible for Server Discovery again and has been automatically relisted!"
 
         if self.type is MessageType.guild_discovery_grace_period_initial_warning:
-            return "This server has failed Discovery activity requirements for 1 week. If this server fails for 4 weeks in a row, it will be automatically removed from Discovery."
+            return ("This server has failed Discovery activity requirements for 1 week. If this server fails for"
+                    " 4 weeks in a row, it will be automatically removed from Discovery.")
 
         if self.type is MessageType.guild_discovery_grace_period_final_warning:
-            return "This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails for 1 more week, it will be removed from Discovery."
+            return ("This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails"
+                    " for 1 more week, it will be removed from Discovery.")
 
         if self.type is MessageType.thread_created:
             return f"{self.author.name} started a thread: **{self.content}**. See all **threads**."
@@ -1173,7 +1184,7 @@ class Message(Hashable):
 
         Deletes the message.
 
-        Your own messages could be deleted without any proper permissions. However to
+        Your own messages could be deleted without any proper permissions. However, to
         delete other people's messages, you need the :attr:`~Permissions.manage_messages`
         permission.
 
@@ -1627,7 +1638,7 @@ class Message(Hashable):
         ~discord.Forbidden
             You do not have the proper permissions to send the message.
         ~discord.InvalidArgument
-            The ``files`` list is not of the appropriate size or
+            The ``files`` list is not of the appropriate size, or
             you specified both ``file`` and ``files``.
 
         Returns

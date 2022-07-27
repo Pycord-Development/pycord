@@ -509,9 +509,9 @@ class AsyncWebhookAdapter:
     ) -> Response[None]:
         r = Route(
             "DELETE",
-            "/webhooks/{webhook_id}/{wehook_token}/messages/@original",
+            "/webhooks/{webhook_id}/{webhook_token}/messages/@original",
             webhook_id=application_id,
-            wehook_token=token,
+            webhook_token=token,
         )
         return self.request(r, session=session)
 
@@ -1001,7 +1001,7 @@ class Webhook(BaseWebhook):
 
         .. describe:: hash(x)
 
-            Returns the webhooks's hash.
+            Returns the webhook's hash.
 
     .. versionchanged:: 1.4
         Webhooks are now comparable and hashable.
@@ -1301,8 +1301,8 @@ class Webhook(BaseWebhook):
         NotFound
             This webhook does not exist.
         InvalidArgument
-            This webhook does not have a token associated with it
-            or it tried editing a channel without authentication.
+            This webhook does not have a token associated with it, or
+            it tried editing a channel without authentication.
         """
         if self.token is None and self.auth_token is None:
             raise InvalidArgument("This webhook does not have a token associated with it")
@@ -1455,7 +1455,7 @@ class Webhook(BaseWebhook):
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user.
             This is only available to :attr:`WebhookType.application` webhooks.
-            If a view is sent with an ephemeral message and it has no timeout set
+            If a view is sent with an ephemeral message, and it has no timeout set
             then the timeout is set to 15 minutes.
 
             .. versionadded:: 2.0

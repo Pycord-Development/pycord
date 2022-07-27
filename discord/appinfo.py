@@ -67,7 +67,7 @@ class AppInfo:
         Whether the bot can be invited by anyone or if it is locked
         to the application owner.
     bot_require_code_grant: :class:`bool`
-        Whether the bot requires the completion of the full oauth2 code
+        Whether the bot requires the completion of the full OAuth2 code
         grant flow to join.
     rpc_origins: Optional[List[:class:`str`]]
         A list of RPC origin URLs, if RPC is enabled.
@@ -188,7 +188,7 @@ class AppInfo:
     @property
     def guild(self) -> Optional[Guild]:
         """Optional[:class:`Guild`]: If this application is a game sold on Discord,
-        this field will be the guild to which it has been linked
+        this field will be the guild to which it has been linked.
 
         .. versionadded:: 1.3
         """

@@ -53,7 +53,7 @@ __all__ = (
 
 
 class ReconnectWebSocket(Exception):
-    """Signals to safely reconnect the websocket."""
+    """Signals to safely reconnect the WebSocket."""
 
     def __init__(self, shard_id, *, resume=True):
         self.shard_id = shard_id
@@ -253,7 +253,7 @@ class DiscordWebSocket:
     HELLO
         Receive only. Tells the client the heartbeat interval.
     HEARTBEAT_ACK
-        Receive only. Confirms receiving of a heartbeat. Not having it implies
+        Receive only. Confirms receiving of a heartbeat. Not having one implies
         a connection issue.
     GUILD_SYNC
         Send only. Requests a guild sync.
@@ -467,8 +467,8 @@ class DiscordWebSocket:
 
         if op != self.DISPATCH:
             if op == self.RECONNECT:
-                # "reconnect" can only be handled by the Client
-                # so we terminate our connection and raise an
+                # "reconnect" can only be handled by the Client, so we
+                # terminate our connection and raise an
                 # internal exception signalling to reconnect.
                 _log.debug("Received RECONNECT opcode.")
                 await self.close()
@@ -705,7 +705,7 @@ class DiscordWebSocket:
 
 
 class DiscordVoiceWebSocket:
-    """Implements the websocket protocol for handling voice connections.
+    """Implements the WebSocket protocol for handling voice connections.
 
     Attributes
     -----------

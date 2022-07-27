@@ -67,13 +67,13 @@ class BucketType(Enum):
         elif self is BucketType.channel:
             return msg.channel.id
         elif self is BucketType.member:
-            return ((msg.guild and msg.guild.id), msg.author.id)
+            return (msg.guild and msg.guild.id), msg.author.id
         elif self is BucketType.category:
             return (msg.channel.category or msg.channel).id  # type: ignore
         elif self is BucketType.role:
             # we return the channel id of a private-channel as there are only roles in guilds
             # and that yields the same result as for a guild with only the @everyone role
-            # NOTE: PrivateChannel doesn't actually have an id attribute but we assume we are
+            # NOTE: PrivateChannel doesn't actually have an id attribute, but we assume we are
             # receiving a DMChannel or GroupChannel which inherit from PrivateChannel and do
             return (msg.channel if isinstance(msg.channel, PrivateChannel) else msg.author.top_role).id  # type: ignore
 
@@ -231,7 +231,7 @@ class CooldownMapping:
     def _verify_cache_integrity(self, current: Optional[float] = None) -> None:
         # we want to delete all cache objects that haven't been used
         # in a cooldown window. e.g. if we have a  command that has a
-        # cooldown of 60s and it has not been used in 60s then that key should be deleted
+        # cooldown of 60s, and it has not been used in 60s then that key should be deleted
         current = current or time.time()
         dead_keys = [k for k, v in self._cache.items() if current > v._last + v.per]
         for k in dead_keys:
