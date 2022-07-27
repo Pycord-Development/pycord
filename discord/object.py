@@ -47,7 +47,7 @@ class Object(Hashable):
     as a substitute instead. Note that even though this is the case, not all
     objects (if any) actually inherit from this class.
 
-    There are also some cases where some websocket events are received
+    There are also some cases where some WebSocket events are received
     in :issue:`strange order <21>` and when such events happened you would
     receive this class rather than the actual data class. These cases are
     extremely rare.

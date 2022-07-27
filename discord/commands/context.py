@@ -352,7 +352,7 @@ class ApplicationContext(discord.abc.Messageable):
 class AutocompleteContext:
     """Represents context for a slash command's option autocomplete.
 
-    This class is not created manually and is instead passed to an Option's autocomplete callback.
+    This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback.
 
     .. versionadded:: 2.0
 

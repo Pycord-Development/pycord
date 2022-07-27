@@ -1996,16 +1996,16 @@ class Guild(Hashable):
 
         Raises
         -------
-        Forbidden
-            You do not have permission to fetch this channel.
-        NotFound
-            Invalid Channel ID.
-        HTTPException
-            Retrieving the channel failed.
         InvalidData
             An unknown channel type was received from Discord
             or the guild the channel belongs to is not the same
             as the one in this object points to.
+        HTTPException
+            Retrieving the channel failed.
+        NotFound
+            Invalid Channel ID.
+        :exc:`.Forbidden`
+            You do not have permission to fetch this channel.
 
         Returns
         --------
