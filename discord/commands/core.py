@@ -1641,7 +1641,7 @@ def command(**kwargs):
     """An alias for :meth:`application_command`.
 
     .. note::
-        This decorator is overridden by :func:`commands.command`.
+        This decorator is overridden by :func:`ext.commands.command`.
 
     .. versionadded:: 2.0
 

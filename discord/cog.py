@@ -131,8 +131,8 @@ class CogMeta(type):
                     pass # hidden -> False
 
     guild_ids: Optional[List[:class:`int`]]
-        A shortcut to command_attrs, what guild_ids should all application commands have
-        in the cog. You can override this by setting guild_ids per command.
+        A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have
+        in the cog. You can override this by setting ``guild_ids`` per command.
 
         .. versionadded:: 2.0
     """
@@ -415,7 +415,8 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 
-        This function **can** be a coroutine.
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
         -----------
@@ -429,7 +430,8 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :meth:`.Bot.check`
         check.
 
-        This function **can** be a coroutine.
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
         -----------
@@ -443,7 +445,8 @@ class Cog(metaclass=CogMeta):
         """A special method that registers as a :func:`~discord.ext.commands.check`
         for every command and subcommand in this cog.
 
-        This function **can** be a coroutine.
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
         -----------
@@ -464,7 +467,7 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.ApplicationContext`
             The invocation context where the error happened.
         error: :class:`ApplicationCommandError`
             The error that happened.
@@ -481,7 +484,7 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.ApplicationContext`
             The invocation context.
         """
         pass
@@ -496,7 +499,7 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.ApplicationContext`
             The invocation context.
         """
         pass
