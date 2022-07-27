@@ -206,9 +206,9 @@ class Thread(Messageable, Hashable):
         self.archived = data["archived"]
         self.auto_archive_duration = data["auto_archive_duration"]
         self.archive_timestamp = parse_time(data["archive_timestamp"])
-        self.locked = data.get("locked", False)
+        self.locked = data["locked"]
         self.invitable = data.get("invitable", True)
-        self.created_at = parse_time(data.get("create_timestamp"))
+        self.created_at = parse_time(data.get("create_timestamp", None))
 
     def _update(self, data):
         try:
@@ -426,7 +426,7 @@ class Thread(Messageable, Hashable):
         ClientException
             The number of messages to delete was more than 100.
         Forbidden
-            You do not have proper permissions to delete the messages or
+            You do not have proper permissions to delete the messages, or
             you're not using a bot account.
         NotFound
             If single delete, then the message was already deleted.
@@ -675,10 +675,10 @@ class Thread(Messageable, Hashable):
 
         Adds a user to this thread.
 
-        You must have :attr:`~Permissions.send_messages` and :attr:`~Permissions.use_threads`
-        to add a user to a public thread. If the thread is private then :attr:`~Permissions.send_messages`
-        and either :attr:`~Permissions.use_private_threads` or :attr:`~Permissions.manage_messages`
-        is required to add a user to the thread.
+        You must have :attr:`~Permissions.send_messages_in_threads`
+        to add a user to a public thread. If the thread is private and
+        :attr:`invitable` is ``False``, then
+        :attr:`~Permissions.manage_threads` is required.
 
         Parameters
         -----------

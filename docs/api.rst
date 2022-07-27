@@ -149,7 +149,7 @@ Option
 .. autoclass:: Option
     :members:
     
-.. autofunction:: discord.commands.Option
+.. autofunction:: discord.commands.option
     :decorator:
 
 ThreadOption
@@ -469,7 +469,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
 .. function:: on_socket_event_type(event_type)
 
-    Called whenever a websocket event is received from the WebSocket.
+    Called whenever a WebSocket event is received from the WebSocket.
 
     This is mainly useful for logging how many events you are receiving
     from the Discord gateway.
@@ -797,7 +797,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     Called when an interaction happened.
 
-    This currently happens due to slash command invocations or components being used.
+    This currently happens due to application command invocations or components being used.
 
     .. warning::
 
@@ -1152,7 +1152,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     - Changed name
     - Changed AFK channel
     - Changed AFK timeout
-    - etc
+    - etc.
 
     This requires :attr:`Intents.guilds` to be enabled.
 
@@ -1220,7 +1220,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     This requires :attr:`Intents.guilds` to be enabled.
 
-    :param guild: The :class:`Guild` that has changed availability.
+    :param guild: The guild that has changed availability.
+    :type guild: :class:`Guild`
 
 .. function:: on_voice_state_update(member, before, after)
 
@@ -1599,21 +1600,13 @@ of :class:`enum.Enum`.
 
     .. attribute:: directory
 
-        A guild directory entry.
-
-        Used in hub guilds.
-
-        In Experiment.
+        A guild directory entry, used in hub guilds, currently in experiment.
 
         .. versionadded:: 2.0
 
     .. attribute:: forum
 
-        User can only write in threads.
-
-        Similar functionality to a forum.
-
-        In Experiment.
+        User can only write in threads, similar functionality to a forum, currently in experiment.
 
         .. versionadded:: 2.0
 
@@ -1855,6 +1848,9 @@ of :class:`enum.Enum`.
     .. attribute:: auto_complete
 
         Represents a autocomplete interaction for slash commands.
+    .. attribute:: modal_submit
+
+        Represents a modal based interaction.
 
 .. class:: InteractionResponseType
 
@@ -1890,7 +1886,14 @@ of :class:`enum.Enum`.
         See also :meth:`InteractionResponse.edit_message`
     .. attribute:: auto_complete_result
 
-        Responds to autocomplete requests.
+        Responds to the interaction by sending the autocomplete choices.
+
+        See also :meth:`InteractionResponse.send_autocomplete_result`
+    .. attribute:: modal
+
+        Responds to the interaction by sending a modal dialog.
+
+        See also :meth:`InteractionResponse.send_modal`
 
 .. class:: ComponentType
 
@@ -2397,7 +2400,7 @@ of :class:`enum.Enum`.
         A member has updated. This triggers in the following situations:
 
         - A nickname was changed
-        - They were server muted or deafened (or it was undo'd)
+        - They were server muted or deafened (or it was undone)
 
         When this is the action, the type of :attr:`~AuditLogEntry.target` is
         the :class:`Member` or :class:`User` who got updated.
@@ -2812,9 +2815,9 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.description`
         - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
-        - :attr:`~AuditLogDiff.location`
-        - :attr:`~AuditLogDiff.status`
-        - :attr:`~AuditLogDiff.location_type`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
 
         .. versionadded:: 2.0
 
@@ -2832,9 +2835,9 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.description`
         - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
-        - :attr:`~AuditLogDiff.location`
-        - :attr:`~AuditLogDiff.status`
-        - :attr:`~AuditLogDiff.location_type`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
 
         .. versionadded:: 2.0
 
@@ -2852,9 +2855,9 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.description`
         - :attr:`~AuditLogDiff.channel`
         - :attr:`~AuditLogDiff.privacy_level`
-        - :attr:`~AuditLogDiff.location`
-        - :attr:`~AuditLogDiff.status`
-        - :attr:`~AuditLogDiff.location_type`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
 
         .. versionadded:: 2.0
 
@@ -3591,12 +3594,6 @@ AuditLogDiff
 
         :type: Union[:class:`Member`, :class:`User`]
 
-    .. attribute:: region
-
-        The guild's voice region. See also :attr:`Guild.region`.
-
-        :type: :class:`VoiceRegion`
-
     .. attribute:: afk_channel
 
         The guild's AFK channel.
@@ -3753,7 +3750,7 @@ AuditLogDiff
 
         The privacy level of the stage instance or scheduled event.
 
-        :type: :class:`StagePrivacyLevel` or :class:`ScheduledEventPrivacyLevel`
+        :type: Union[:class:`StagePrivacyLevel`, :class:`ScheduledEventPrivacyLevel`]
 
     .. attribute:: roles
 
@@ -4418,6 +4415,15 @@ TextChannel
     .. automethod:: typing
         :async-with:
 
+ForumChannel
+~~~~~~~~~~~~~
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
 Thread
 ~~~~~~~~
 
@@ -4475,6 +4481,15 @@ CategoryChannel
 .. attributetable:: CategoryChannel
 
 .. autoclass:: CategoryChannel()
+    :members:
+    :inherited-members:
+
+ForumChannel
+~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
     :members:
     :inherited-members:
 
@@ -4621,6 +4636,22 @@ GuildSticker
 .. attributetable:: GuildSticker
 
 .. autoclass:: GuildSticker()
+    :members:
+
+AutoModRule
+~~~~~~~~~~~~
+
+.. attributetable:: AutoModRule
+
+.. autoclass:: AutoModRule()
+    :members:
+
+AutoModActionExecutionEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutoModActionExecutionEvent
+
+.. autoclass:: AutoModActionExecutionEvent()
     :members:
 
 RawTypingEvent
@@ -4918,6 +4949,14 @@ PublicUserFlags
 .. attributetable:: PublicUserFlags
 
 .. autoclass:: PublicUserFlags()
+    :members:
+
+ChannelFlags
+~~~~~~~~~~~~~
+
+.. attributetable:: ChannelFlags
+
+.. autoclass:: ChannelFlags()
     :members:
 
 .. _discord_ui_kit:

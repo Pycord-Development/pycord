@@ -74,7 +74,7 @@ class M4ASink(Sink):
             m4a_file,
         ]
         if os.path.exists(m4a_file):
-            os.remove(m4a_file)  # process will get stuck asking whether or not to overwrite, if file already exists.
+            os.remove(m4a_file)  # process will get stuck asking whether to overwrite, if file already exists.
         try:
             process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
         except FileNotFoundError:

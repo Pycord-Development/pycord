@@ -43,7 +43,6 @@ import aiohttp
 
 from .backoff import ExponentialBackoff
 from .client import Client
-from .enums import Status
 from .errors import (
     ClientException,
     ConnectionClosed,
@@ -355,7 +354,7 @@ class AutoShardedClient(Client):
             elif not isinstance(self.shard_ids, (list, tuple)):
                 raise ClientException("shard_ids parameter must be a list or a tuple.")
 
-        # instead of a single websocket, we have multiple
+        # instead of a single websocket, we have multiple.
         # the key is the shard_id
         self.__shards = {}
         self._connection._get_websocket = self._get_websocket
@@ -392,7 +391,8 @@ class AutoShardedClient(Client):
 
     @property
     def latencies(self) -> List[Tuple[int, float]]:
-        """List[Tuple[:class:`int`, :class:`float`]]: A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """List[Tuple[:class:`int`, :class:`float`]]:
+        A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
         """
@@ -549,7 +549,8 @@ class AutoShardedClient(Client):
             if me is None:
                 continue
 
-            # Member.activities is typehinted as Tuple[ActivityType, ...], we may be setting it as Tuple[BaseActivity, ...]
+            # Member.activities is typehinted as Tuple[ActivityType, ...],
+            # we may be setting it as Tuple[BaseActivity, ...]
             me.activities = activities  # type: ignore
             me.status = status_enum
 

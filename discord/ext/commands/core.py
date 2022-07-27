@@ -589,7 +589,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         view.skip_ws()
 
         # The greedy converter is simple -- it keeps going until it fails in which case,
-        # it undos the view ready for the next parameter to use instead
+        # it undoes the view ready for the next parameter to use instead
         if isinstance(converter, Greedy):
             if param.kind in (param.POSITIONAL_OR_KEYWORD, param.POSITIONAL_ONLY):
                 return await self._transform_greedy_pos(ctx, param, required, converter.converter)
@@ -888,7 +888,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         Parameters
         -----------
         ctx: :class:`.Context`
-            The invocation context to use when checking the commands cooldown status.
+            The invocation context to use when checking the command's cooldown status.
 
         Returns
         --------
@@ -1108,7 +1108,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if origin is Literal:
                 name = "|".join(f'"{v}"' if isinstance(v, str) else str(v) for v in annotation.__args__)
             if param.default is not param.empty:
-                # We don't want None or '' to trigger the [name=value] case and instead it should
+                # We don't want None or '' to trigger the [name=value] case, and instead it should
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
                 should_print = param.default if isinstance(param.default, str) else param.default is not None
                 if should_print:
@@ -1199,7 +1199,7 @@ class GroupMixin(Generic[CogT]):
         A mapping of command name to :class:`.Command`
         objects.
     case_insensitive: :class:`bool`
-        Whether the commands should be case insensitive. Defaults to ``False``.
+        Whether the commands should be case-insensitive. Defaults to ``False``.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -1288,7 +1288,7 @@ class GroupMixin(Generic[CogT]):
             return None
 
         if name in command.aliases:
-            # we're removing an alias so we don't want to remove the rest
+            # we're removing an alias, so we don't want to remove the rest
             return command
 
         # we're not removing the alias so let's delete the rest of them.
@@ -1389,7 +1389,8 @@ class GroupMixin(Generic[CogT]):
         *args: Any,
         **kwargs: Any,
     ) -> Callable[
-            [Callable[
+        [
+            Callable[
                  [Concatenate[ContextT, P]],
                  Coro[Any]
             ]
@@ -1502,7 +1503,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         that the checks and the parsing dictated by its parameters
         will be executed. Defaults to ``False``.
     case_insensitive: :class:`bool`
-        Indicates if the group's commands should be case insensitive.
+        Indicates if the group's commands should be case-insensitive.
         Defaults to ``False``.
     """
 
@@ -1675,10 +1676,10 @@ def command(
     Parameters
     -----------
     name: :class:`str`
-        The name to create the command with. By default this uses the
+        The name to create the command with. By default, this uses the
         function name unchanged.
     cls
-        The class to construct with. By default this is :class:`.Command`.
+        The class to construct with. By default, this is :class:`.Command`.
         You usually do not change this.
     attrs
         Keyword arguments to pass into the construction of the class denoted
@@ -2060,7 +2061,7 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
     .. versionchanged:: 1.1
 
         Raise :exc:`.BotMissingAnyRole` or :exc:`.NoPrivateMessage`
-        instead of generic checkfailure
+        instead of generic :exc:`.CheckFailure`.
     """
 
     def predicate(ctx):
@@ -2431,14 +2432,14 @@ def before_invoke(coro) -> Callable[[T], T]:
         @bot.command()
         @commands.before_invoke(record_usage)
         async def who(ctx): # Output: <User> used who at <Time>
-            await ctx.send('i am a bot')
+            await ctx.send('I am a bot')
 
         class What(commands.Cog):
 
             @commands.before_invoke(record_usage)
             @commands.command()
             async def when(self, ctx): # Output: <User> used when at <Time>
-                await ctx.send(f'and i have existed since {ctx.bot.user.created_at}')
+                await ctx.send(f'and I have existed since {ctx.bot.user.created_at}')
 
             @commands.command()
             async def where(self, ctx): # Output: <Nothing>
