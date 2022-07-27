@@ -135,16 +135,16 @@ class Option:
         The default value for this option. If provided, ``required`` will be considered ``False``.
     min_value: Optional[:class:`int`]
         The minimum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     max_value: Optional[:class:`int`]
         The maximum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     min_length: Optional[:class:`int`]
         The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
         that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
@@ -239,11 +239,11 @@ class Option:
         self.min_length: Optional[int] = kwargs.pop("min_length", None)
         self.max_length: Optional[int] = kwargs.pop("max_length", None)
 
-        if (input_type != SlashCommandOptionType.integer and input_type != SlashCommandOptionType.number
+        if (self.input_type != SlashCommandOptionType.integer and self.input_type != SlashCommandOptionType.number
                 and (self.min_value or self.max_value)):
             raise AttributeError("Option does not take min_value or max_value if not of type "
                                  "SlashCommandOptionType.integer or SlashCommandOptionType.number")
-        if input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
+        if self.input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
             raise AttributeError('Option does not take min_length or max_length if not of type str')
 
         if self.min_value is not None and not isinstance(self.min_value, minmax_types):

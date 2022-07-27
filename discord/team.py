@@ -51,11 +51,11 @@ class Team:
     id: :class:`int`
         The team ID.
     name: :class:`str`
-        The team name
+        The team name.
     owner_id: :class:`int`
         The team's owner ID.
     members: List[:class:`TeamMember`]
-        A list of the members in the team
+        A list of the members in the team.
 
         .. versionadded:: 1.3
     """
@@ -119,7 +119,7 @@ class TeamMember(BaseUser):
     discriminator: :class:`str`
         The team member's discriminator. This is given when the username has conflicts.
     avatar: Optional[:class:`str`]
-        The avatar hash the team member has. Could be None.
+        The avatar hash the team member has. Could be ``None``.
     bot: :class:`bool`
         Specifies if the user is a bot account.
     team: :class:`Team`
