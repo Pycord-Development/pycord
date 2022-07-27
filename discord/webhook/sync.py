@@ -577,7 +577,7 @@ class SyncWebhook(BaseWebhook):
 
         .. describe:: hash(x)
 
-            Returns the webhooks's hash.
+            Returns the webhook's hash.
 
     .. versionchanged:: 1.4
         Webhooks are now comparable and hashable.
@@ -836,8 +836,8 @@ class SyncWebhook(BaseWebhook):
         NotFound
             This webhook does not exist.
         InvalidArgument
-            This webhook does not have a token associated with it
-            or it tried editing a channel without authentication.
+            This webhook does not have a token associated with it, or
+            it tried editing a channel without authentication.
 
         Returns
         --------
@@ -1019,7 +1019,7 @@ class SyncWebhook(BaseWebhook):
         ValueError
             The length of ``embeds`` was invalid
         InvalidArgument
-            There was no token associated with this webhook or you specified both
+            There was no token associated with this webhook, or you specified both
             a thread to send to and a thread to create (the ``thread`` and ``thread_name`` parameters).
 
         Returns

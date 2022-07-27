@@ -94,7 +94,7 @@ class StringView:
         return False
 
     def read_rest(self):
-        result = self.buffer[self.index :]
+        result = self.buffer[self.index:]
         self.previous = self.index
         self.index = self.end
         return result
@@ -152,7 +152,7 @@ class StringView:
                     raise ExpectedClosingQuoteError(close_quote)
                 return "".join(result)
 
-            # currently we accept strings in the format of "hello world"
+            # currently, we accept strings in the format of "hello world"
             # to embed a quote inside the string you must escape it: "a \"world\""
             if current == "\\":
                 next_char = self.get()

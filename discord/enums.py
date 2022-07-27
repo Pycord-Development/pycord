@@ -73,6 +73,10 @@ __all__ = (
     "ScheduledEventLocationType",
     "InputTextStyle",
     "SlashCommandOptionType",
+    "AutoModTriggerType",
+    "AutoModEventType",
+    "AutoModActionType",
+    "AutoModKeywordPresetType",
 )
 
 

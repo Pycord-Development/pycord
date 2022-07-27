@@ -249,7 +249,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
             Due to a Discord API limitation, a user's Spotify activity may not appear
             if they are listening to a song with a title longer
-            than 128 characters. See :issue:`1738` for more information.
+            than 128 characters.
 
     guild: :class:`Guild`
         The guild that the member belongs to.
@@ -568,7 +568,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
             Due to a Discord API limitation, this may be ``None`` if
             the user is listening to a song on Spotify with a title longer
-            than 128 characters. See :issue:`1738` for more information.
+            than 128 characters.
 
         .. note::
 

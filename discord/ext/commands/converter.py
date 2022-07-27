@@ -276,8 +276,8 @@ class UserConverter(IDConverter[discord.User]):
          Raise :exc:`.UserNotFound` instead of generic :exc:`.BadArgument`
 
     .. versionchanged:: 1.6
-        This converter now lazily fetches users from the HTTP APIs if an ID is passed
-        and it's not available in cache.
+        This converter now lazily fetches users from the HTTP APIs if an ID is
+        passed, and it's not available in cache.
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.User:
@@ -393,7 +393,8 @@ class MessageConverter(IDConverter[discord.Message]):
     3. Lookup by message URL
 
     .. versionchanged:: 1.5
-         Raise :exc:`.ChannelNotFound`, :exc:`.MessageNotFound` or :exc:`.ChannelNotReadable` instead of generic :exc:`.BadArgument`
+         Raise :exc:`.ChannelNotFound`, :exc:`.MessageNotFound` or :exc:`.ChannelNotReadable`
+         instead of generic :exc:`.BadArgument`
     """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Message:
@@ -1145,8 +1146,8 @@ async def run_converters(ctx: Context, converter, argument: str, param: inspect.
         _NoneType = type(None)
         union_args = converter.__args__
         for conv in union_args:
-            # if we got to this part in the code, then the previous conversions have failed
-            # so we should just undo the view, return the default, and allow parsing to continue
+            # if we got to this part in the code, then the previous conversions have failed, so
+            # we should just undo the view, return the default, and allow parsing to continue
             # with the other parameters
             if conv is _NoneType and param.kind != param.VAR_POSITIONAL:
                 ctx.view.undo()

@@ -216,7 +216,7 @@ class StreamIntegration(Integration):
 
     @property
     def role(self) -> Optional[Role]:
-        """Optional[:class:`Role`] The role which the integration uses for subscribers."""
+        """Optional[:class:`Role`]: The role which the integration uses for subscribers."""
         return self.guild.get_role(self._role_id)  # type: ignore
 
     async def edit(

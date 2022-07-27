@@ -59,7 +59,7 @@ class File:
         The filename to display when uploading to Discord.
         If this is not given then it defaults to ``fp.name`` or if ``fp`` is
         a string then the ``filename`` will default to the string given.
-    description: Optional[:class`str`]
+    description: Optional[:class:`str`]
         The description of a file, used by Discord to display alternative text on images.
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
@@ -102,7 +102,7 @@ class File:
 
         # aiohttp only uses two methods from IOBase
         # read and close, since I want to control when the files
-        # close, I need to stub it so it doesn't close unless
+        # close, I need to stub it, so it doesn't close unless
         # I tell it to
         self._closer = self.fp.close
         self.fp.close = lambda: None
