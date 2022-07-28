@@ -620,7 +620,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, VoiceChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or len(self._channels), c.id))
         return r
 
     @property
@@ -632,7 +632,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, StageChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or len(self._channels), c.id))
         return r
 
     @property
@@ -644,7 +644,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, ForumChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or len(self._channels), c.id))
         return r
 
     @property
@@ -668,7 +668,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, TextChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or len(self._channels), c.id))
         return r
 
     @property
@@ -678,7 +678,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, CategoryChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or len(self._channels), c.id))
         return r
 
     def by_category(self) -> List[ByCategoryItem]:
