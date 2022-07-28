@@ -1429,8 +1429,8 @@ AutoMod Event Reference
     :param payload: The event's data.
     :type payload: :class:`AutoModActionExecutionEvent`
 
-Other Event Reference
-~~~~~~~~~~~~~~~~~~~~~
+Other Events Reference
+~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_interaction(interaction)
 
     Called when an interaction happened.
