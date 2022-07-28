@@ -366,6 +366,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     errors. In order to turn a function into a coroutine they must be ``async def``
     functions.
 
+Connection Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. function:: on_connect()
 
     Called when the client has successfully connected to Discord. This is not
@@ -401,6 +404,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param shard_id: The shard ID that has disconnected.
     :type shard_id: :class:`int`
 
+Bot State Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_ready()
 
     Called when the client is done preparing the data received from Discord. Usually after login is successful
@@ -467,6 +472,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param kwargs: The keyword arguments for the event that raised the
         exception.
 
+Socket Event Reference
+~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_socket_event_type(event_type)
 
     Called whenever a WebSocket event is received from the WebSocket.
@@ -518,6 +525,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
                     WebSocket library. It can be :class:`bytes` to denote a binary
                     message or :class:`str` to denote a regular text message.
 
+Typing Event Reference
+~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_typing(channel, user, when)
 
     Called when someone begins typing a message.
@@ -551,6 +560,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw typing payload.
     :type payload: :class:`RawTypingEvent`
 
+Message Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_message(message)
 
     Called when a :class:`Message` is created and sent.
@@ -568,6 +579,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param message: The current message.
     :type message: :class:`Message`
 
+Message Deletion Event Reference
+````````````````````````````````
 .. function:: on_message_delete(message)
 
     Called when a message is deleted. If the message is not found in the
@@ -626,6 +639,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawBulkMessageDeleteEvent`
 
+Message Update Event Reference
+``````````````````````````````
 .. function:: on_message_edit(before, after)
 
     Called when a :class:`Message` receives an update event. If the message is not found
@@ -678,6 +693,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessageUpdateEvent`
 
+Reaction Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_reaction_add(reaction, user)
 
     Called when a message has a reaction added to it. Similar to :func:`on_message_edit`,
@@ -793,23 +810,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawReactionClearEmojiEvent`
 
-.. function:: on_interaction(interaction)
-
-    Called when an interaction happened.
-
-    This currently happens due to application command invocations or components being used.
-
-    .. warning::
-
-        This is a low level function that is not generally meant to be used.
-        If you are working with components, consider using the callbacks associated
-        with the :class:`~discord.ui.View` instead as it provides a nicer user experience.
-
-    .. versionadded:: 2.0
-
-    :param interaction: The interaction data.
-    :type interaction: :class:`Interaction`
-
+Application Command Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_application_command(context)
 
     Called when an application command is received.
@@ -849,6 +851,11 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param interaction: The interaction associated to the unknown command.
     :type interaction: :class:`Interaction`
 
+Channel Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Channel Update Event Reference
+``````````````````````````````
 .. function:: on_private_channel_update(before, after)
 
     Called whenever a private group DM is updated. e.g. changed name or topic.
@@ -868,18 +875,6 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type channel: :class:`abc.PrivateChannel`
     :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
     :type last_pin: Optional[:class:`datetime.datetime`]
-
-.. function:: on_guild_channel_delete(channel)
-              on_guild_channel_create(channel)
-
-    Called whenever a guild channel is deleted or created.
-
-    Note that you can get the guild from :attr:`~abc.GuildChannel.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param channel: The guild channel that got created or deleted.
-    :type channel: :class:`abc.GuildChannel`
 
 .. function:: on_guild_channel_update(before, after)
 
@@ -903,6 +898,20 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
     :type last_pin: Optional[:class:`datetime.datetime`]
 
+.. function:: on_guild_channel_delete(channel)
+              on_guild_channel_create(channel)
+
+    Called whenever a guild channel is deleted or created.
+
+    Note that you can get the guild from :attr:`~abc.GuildChannel.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param channel: The guild channel that got created or deleted.
+    :type channel: :class:`abc.GuildChannel`
+
+Thread Event Reference
+~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_thread_join(thread)
 
     Called whenever a thread is joined.
@@ -999,6 +1008,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param after: The updated thread's new info.
     :type after: :class:`Thread`
 
+Integration Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_guild_integrations_update(guild)
 
     Called whenever an integration is created, modified, or removed from a guild.
@@ -1043,15 +1054,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawIntegrationDeleteEvent`
 
-.. function:: on_webhooks_update(channel)
-
-    Called whenever a webhook is created, modified, or removed from a guild channel.
-
-    This requires :attr:`Intents.webhooks` to be enabled.
-
-    :param channel: The channel that had its webhooks updated.
-    :type channel: :class:`abc.GuildChannel`
-
+Member Event Reference
+~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_member_join(member)
               on_member_remove(member)
 
@@ -1099,23 +1103,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param after: The updated member's updated info.
     :type after: :class:`Member`
 
-.. function:: on_user_update(before, after)
-
-    Called when a :class:`User` updates their profile.
-
-    This is called when one or more of the following things change:
-
-    - avatar
-    - username
-    - discriminator
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    :param before: The updated user's old info.
-    :type before: :class:`User`
-    :param after: The updated user's updated info.
-    :type after: :class:`User`
-
+Guild Event Reference
+~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_guild_join(guild)
 
     Called when a :class:`Guild` is either created by the :class:`Client` or when the
@@ -1223,27 +1212,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param guild: The guild that has changed availability.
     :type guild: :class:`Guild`
 
-.. function:: on_voice_state_update(member, before, after)
-
-    Called when a :class:`Member` changes their :class:`VoiceState`.
-
-    The following, but not limited to, examples illustrate when this event is called:
-
-    - A member joins a voice or stage channel.
-    - A member leaves a voice or stage channel.
-    - A member is muted or deafened by their own accord.
-    - A member is muted or deafened by a guild administrator.
-
-    This requires :attr:`Intents.voice_states` to be enabled.
-
-    :param member: The member whose voice states changed.
-    :type member: :class:`Member`
-    :param before: The voice state prior to the changes.
-    :type before: :class:`VoiceState`
-    :param after: The voice state after the changes.
-    :type after: :class:`VoiceState`
-
-.. function:: on_stage_instance_create(stage_instance)
+Stage Channel Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. function:: on_stage_instance_create(stage_instance) 
               on_stage_instance_delete(stage_instance)
 
     Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`.
@@ -1269,6 +1240,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param after: The stage instance after the update.
     :type after: :class:`StageInstance`
 
+Bans Event Reference
+~~~~~~~~~~~~~~~~~~~~
 .. function:: on_member_ban(guild, user)
 
     Called when user gets banned from a :class:`Guild`.
@@ -1293,6 +1266,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param user: The user that got unbanned.
     :type user: :class:`User`
 
+Invites Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_invite_create(invite)
 
     Called when an :class:`Invite` is created.
@@ -1330,16 +1305,11 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param invite: The invite that was deleted.
     :type invite: :class:`Invite`
 
-.. function:: on_group_join(channel, user)
-              on_group_remove(channel, user)
 
-    Called when someone joins or leaves a :class:`GroupChannel`.
 
-    :param channel: The group that the user joined or left.
-    :type channel: :class:`GroupChannel`
-    :param user: The user that joined or left.
-    :type user: :class:`User`
 
+Scheduled Events Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_scheduled_event_create(event)
 
     Called when an :class:`ScheduledEvent` is created.
@@ -1417,6 +1387,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawScheduledEventSubscription`
 
+AutoMod Event Reference
+~~~~~~~~~~~~~~~~~~~~~~~
 .. function:: on_auto_moderation_rule_create(rule)
 
     Called when an auto moderation rule is created.
@@ -1456,6 +1428,98 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     :param payload: The event's data.
     :type payload: :class:`AutoModActionExecutionEvent`
+
+Other Event Reference
+~~~~~~~~~~~~~~~~~~~~~
+.. function:: on_interaction(interaction)
+
+    Called when an interaction happened.
+
+    This currently happens due to application command invocations or components being used.
+
+    warning::
+
+        This is a low level function that is not generally meant to be used.
+        If you are working with components, consider using the callbacks associated
+        with the :class:`~discord.ui.View` instead as it provides a nicer user experience.
+
+    .. versionadded:: 2.0
+
+    :param interaction: The interaction data.
+    :type interaction: :class:`Interaction`
+
+.. function:: on_user_update(before, after)
+
+    Called when a :class:`User` updates their profile.
+
+    This is called when one or more of the following things change:
+
+    - avatar
+    - username
+    - discriminator
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param before: The updated user's old info.
+    :type before: :class:`User`
+    :param after: The updated user's updated info.
+    :type after: :class:`User`
+
+.. function:: on_webhooks_update(channel)
+
+    Called whenever a webhook is created, modified, or removed from a guild channel.
+
+    This requires :attr:`Intents.webhooks` to be enabled.
+
+    :param channel: The channel that had its webhooks updated.
+    :type channel: :class:`abc.GuildChannel`
+
+.. function:: on_group_join(channel, user)
+              on_group_remove(channel, user)
+
+    Called when someone joins or leaves a :class:`GroupChannel`.
+
+    :param channel: The group that the user joined or left.
+    :type channel: :class:`GroupChannel`
+    :param user: The user that joined or left.
+    :type user: :class:`User`
+
+.. function:: on_voice_state_update(member, before, after)
+
+    Called when a :class:`Member` changes their :class:`VoiceState`.
+
+    The following, but not limited to, examples illustrate when this event is called:
+
+    - A member joins a voice or stage channel.
+    - A member leaves a voice or stage channel.
+    - A member is muted or deafened by their own accord.
+    - A member is muted or deafened by a guild administrator.
+
+    This requires :attr:`Intents.voice_states` to be enabled.
+
+    :param member: The member whose voice states changed.
+    :type member: :class:`Member`
+    :param before: The voice state prior to the changes.
+    :type before: :class:`VoiceState`
+    :param after: The voice state after the changes.
+    :type after: :class:`VoiceState`
+
+.. function:: on_user_update(before, after) 
+
+    Called when a :class:`User` updates their profile.
+
+    This is called when one or more of the following things change:
+
+    - avatar
+    - username
+    - discriminator
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param before: The updated user's old info.
+    :type before: :class:`User`
+    :param after: The updated user's updated info.
+    :type after: :class:`User`
 
 .. _discord-api-utils:
 
