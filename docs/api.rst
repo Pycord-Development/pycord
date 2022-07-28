@@ -1504,23 +1504,6 @@ Other Events Reference
     :param after: The voice state after the changes.
     :type after: :class:`VoiceState`
 
-.. function:: on_user_update(before, after) 
-
-    Called when a :class:`User` updates their profile.
-
-    This is called when one or more of the following things change:
-
-    - avatar
-    - username
-    - discriminator
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    :param before: The updated user's old info.
-    :type before: :class:`User`
-    :param after: The updated user's updated info.
-    :type after: :class:`User`
-
 .. _discord-api-utils:
 
 Utility Functions
