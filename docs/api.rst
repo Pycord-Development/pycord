@@ -1437,7 +1437,7 @@ Other Events Reference
 
     This currently happens due to application command invocations or components being used.
 
-    warning::
+    .. warning::
 
         This is a low level function that is not generally meant to be used.
         If you are working with components, consider using the callbacks associated
