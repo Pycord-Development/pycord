@@ -186,7 +186,9 @@ class Option:
         self._raw_type: Union[InputType, tuple] = input_type
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
-        if not isinstance(input_type, SlashCommandOptionType):
+        if isinstance(input_type, SlashCommandOptionType):
+            self.input_type = input_type
+        else:
             from ..ext.commands import Converter
             if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
