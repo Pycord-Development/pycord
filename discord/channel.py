@@ -2094,7 +2094,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
 
         def comparator(channel):
-            return not isinstance(channel, _TextChannel), channel.position
+            return not isinstance(channel, _TextChannel), (channel.position or -1)
 
         ret = [c for c in self.guild.channels if c.category_id == self.id]
         ret.sort(key=comparator)
@@ -2104,14 +2104,14 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     def text_channels(self) -> List[TextChannel]:
         """List[:class:`TextChannel`]: Returns the text channels that are under this category."""
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, TextChannel)]
-        ret.sort(key=lambda c: (c.position, c.id))
+        ret.sort(key=lambda c: (c.position or -1, c.id))
         return ret
 
     @property
     def voice_channels(self) -> List[VoiceChannel]:
         """List[:class:`VoiceChannel`]: Returns the voice channels that are under this category."""
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, VoiceChannel)]
-        ret.sort(key=lambda c: (c.position, c.id))
+        ret.sort(key=lambda c: (c.position or -1, c.id))
         return ret
 
     @property
@@ -2121,7 +2121,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         .. versionadded:: 1.7
         """
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, StageChannel)]
-        ret.sort(key=lambda c: (c.position, c.id))
+        ret.sort(key=lambda c: (c.position or -1, c.id))
         return ret
 
     @property
@@ -2131,7 +2131,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         .. versionadded:: 2.0
         """
         ret = [c for c in self.guild.channels if c.category_id == self.id and isinstance(c, ForumChannel)]
-        ret.sort(key=lambda c: (c.position, c.id))
+        ret.sort(key=lambda c: (c.position or -1, c.id))
         return ret
 
     async def create_text_channel(self, name: str, **options: Any) -> TextChannel:
