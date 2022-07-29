@@ -1,7 +1,7 @@
 .. currentmodule:: discord
 
 API Reference
-==============
+=============
 
 The reference manual that follows details the API of Pycord's bridge command extension module.
 
@@ -9,7 +9,6 @@ The reference manual that follows details the API of Pycord's bridge command ext
 
     Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge
     commands in guilds requires :attr:`Intents.message_context` to be enabled.
-
 
 .. _ext_bridge_api:
 
@@ -29,6 +28,9 @@ Bot
     .. automethod:: Bot.bridge_command()
         :decorator:
 
+    .. automethod:: Bot.bridge_group()
+        :decorator:
+
 AutoShardedBot
 ~~~~~~~~~~~~~~~
 
@@ -39,6 +41,14 @@ AutoShardedBot
 
 Commands
 ---------
+
+BaseBridgeCommand
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.bridge.BaseBridgeCommand
+
+.. autoclass:: discord.ext.bridge.BaseBridgeCommand
+    :members:
 
 BridgeCommand
 ~~~~~~~~~~~~~~
@@ -51,8 +61,22 @@ BridgeCommand
 .. automethod:: discord.ext.bridge.bridge_command()
     :decorator:
 
-BridgeCommand Subclasses
-~~~~~~~~~~~~~~~~~~~~~~~~~
+BridgeCommandGroup
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.bridge.BridgeCommandGroup
+
+.. autoclass:: discord.ext.bridge.BridgeCommandGroup
+    :members:
+
+.. automethod:: discord.ext.bridge.bridge_group()
+    :decorator:
+
+.. automethod:: discord.ext.bridge.map_to()
+    :decorator:
+
+Command Subclasses
+~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: discord.ext.bridge.BridgeExtCommand
     :members:

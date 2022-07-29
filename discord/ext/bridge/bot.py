@@ -30,7 +30,7 @@ from discord.message import Message
 from ..commands import AutoShardedBot as ExtAutoShardedBot
 from ..commands import Bot as ExtBot
 from .context import BridgeApplicationContext, BridgeExtContext
-from .core import BridgeCommand, bridge_command
+from .core import BridgeCommand, BridgeCommandGroup, bridge_command, bridge_group
 
 __all__ = ("Bot", "AutoShardedBot")
 
@@ -70,6 +70,22 @@ class BotBase(ABC):
 
         def decorator(func) -> BridgeCommand:
             result = bridge_command(**kwargs)(func)
+            self.add_bridge_command(result)
+            return result
+
+        return decorator
+
+    def bridge_group(self, **kwargs):
+        """A decorator that is used to wrap a function as a bridge command group.
+
+        Parameters
+        ----------
+        kwargs: Optional[Dict[:class:`str`, Any]]
+            Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
+        """
+
+        def decorator(func) -> BridgeCommandGroup:
+            result = bridge_group(**kwargs)(func)
             self.add_bridge_command(result)
             return result
 

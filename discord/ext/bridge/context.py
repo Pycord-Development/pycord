@@ -50,14 +50,15 @@ class BridgeContext(ABC):
 
         @bot.bridge_command()
         async def example(ctx: BridgeContext):
-            if isinstance(ctx, BridgeExtContext):
-                command_type = "Traditional (prefix-based) command"
-            elif isinstance(ctx, BridgeApplicationContext):
+            if ctx.is_app:
                 command_type = "Application command"
+            else:
+                command_type = "Traditional (prefix-based) command"
             await ctx.send(f"This command was invoked with a(n) {command_type}.")
 
     .. versionadded:: 2.0
     """
+    is_app: bool
 
     @abstractmethod
     async def _respond(
@@ -126,6 +127,7 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
 
     .. versionadded:: 2.0
     """
+    is_app = True
 
     def __init__(self, *args, **kwargs):
         # This is needed in order to represent the correct class init signature on the docs
@@ -148,6 +150,7 @@ class BridgeExtContext(BridgeContext, Context):
 
     .. versionadded:: 2.0
     """
+    is_app = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
