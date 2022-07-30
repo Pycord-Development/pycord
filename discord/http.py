@@ -811,7 +811,8 @@ class HTTPClient:
             message_id=message_id,
         )
         return self.request(r, reason=reason)
-
+     def get_application(self, application_id: Snowflake, /) -> Response[appinfo.PartialAppInfo]:
+        return self.request(Route('GET', '/applications/{application_id}/rpc', application_id=application_id))
     def unpin_message(
         self, channel_id: Snowflake, message_id: Snowflake, reason: Optional[str] = None
     ) -> Response[None]:
