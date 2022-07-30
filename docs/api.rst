@@ -1348,8 +1348,8 @@ Stage Instances
     :param after: The stage instance after the update.
     :type after: :class:`StageInstance`
 
-Thread Event Reference
-~~~~~~~~~~~~~~~~~~~~~~
+Threads
+~~~~~~~
 .. function:: on_thread_join(thread)
 
     Called whenever a thread is joined.
