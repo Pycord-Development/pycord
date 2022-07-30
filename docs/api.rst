@@ -366,8 +366,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     errors. In order to turn a function into a coroutine they must be ``async def``
     functions.
 
-Application Command Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Application Commands
+~~~~~~~~~~~~~~~~~~~~
 .. function:: on_application_command(context)
 
     Called when an application command is received.
