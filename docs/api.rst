@@ -856,8 +856,8 @@ Invites
     :param invite: The invite that was deleted.
     :type invite: :class:`Invite`
 
-Member/User Event Reference
-~~~~~~~~~~~~~~~~~~~~~~
+Members/Users
+~~~~~~~~~~~~~
 .. function:: on_member_join(member)
               on_member_remove(member)
 
@@ -942,8 +942,8 @@ Member/User Event Reference
     :param after: The updated user's updated info.
     :type after: :class:`User`
 
-Message Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~
+Messages
+~~~~~~~~
 .. function:: on_message(message)
 
     Called when a :class:`Message` is created and sent.
