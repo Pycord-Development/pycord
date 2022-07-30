@@ -1320,8 +1320,8 @@ Socket Event Reference
                     WebSocket library. It can be :class:`bytes` to denote a binary
                     message or :class:`str` to denote a regular text message.
 
-Stage Channel Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Stage Instances
+~~~~~~~~~~~~~~~~
 .. function:: on_stage_instance_create(stage_instance) 
               on_stage_instance_delete(stage_instance)
 
