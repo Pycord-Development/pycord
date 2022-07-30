@@ -1188,8 +1188,8 @@ Reaction Event Reference
     :param payload: The raw event payload data.
     :type payload: :class:`RawReactionClearEmojiEvent`
 
-Scheduled Events Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Scheduled Events
+~~~~~~~~~~~~~~~~
 .. function:: on_scheduled_event_create(event)
 
     Called when an :class:`ScheduledEvent` is created.
