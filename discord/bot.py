@@ -311,7 +311,6 @@ class ApplicationCommandMixin(ABC):
 
         registered_commands: List[interactions.ApplicationCommand] = []
         if prefetched is not None:
-            # TODO: fix this not correlating with the defines below (it's a list of Application Command objects, not a list of the Application Command Typed Dict)
             registered_commands = prefetched
         elif self._bot.user:
             if guild_id is None:
