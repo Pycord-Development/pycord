@@ -531,8 +531,8 @@ Channels
     :param channel: The guild channel that got created or deleted.
     :type channel: :class:`abc.GuildChannel`
 
-Connection Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connection
+~~~~~~~~~~
 .. function:: on_error(event, *args, **kwargs)
 
     Usually when an event raises an uncaught exception, a traceback is
@@ -633,6 +633,57 @@ Connection Event Reference
 
     :param shard_id: The shard ID that has resumed.
     :type shard_id: :class:`int`
+
+.. function:: on_socket_event_type(event_type)
+
+    Called whenever a WebSocket event is received from the WebSocket.
+
+    This is mainly useful for logging how many events you are receiving
+    from the Discord gateway.
+
+    .. versionadded:: 2.0
+
+    :param event_type: The event type from Discord that is received, e.g. ``'READY'``.
+    :type event_type: :class:`str`
+
+.. function:: on_socket_raw_receive(msg)
+
+    Called whenever a message is completely received from the WebSocket, before
+    it's processed and parsed. This event is always dispatched when a
+    complete message is received and the passed data is not parsed in any way.
+
+    This is only really useful for grabbing the WebSocket stream and
+    debugging purposes.
+
+    This requires setting the ``enable_debug_events`` setting in the :class:`Client`.
+
+    .. note::
+
+        This is only for the messages received from the client
+        WebSocket. The voice WebSocket will not trigger this event.
+
+    :param msg: The message passed in from the WebSocket library.
+    :type msg: :class:`str`
+
+.. function:: on_socket_raw_send(payload)
+
+    Called whenever a send operation is done on the WebSocket before the
+    message is sent. The passed parameter is the message that is being
+    sent to the WebSocket.
+
+    This is only really useful for grabbing the WebSocket stream and
+    debugging purposes.
+
+    This requires setting the ``enable_debug_events`` setting in the :class:`Client`.
+
+    .. note::
+
+        This is only for the messages sent from the client
+        WebSocket. The voice WebSocket will not trigger this event.
+
+    :param payload: The message that is about to be passed on to the
+                    WebSocket library. It can be :class:`bytes` to denote a binary
+                    message or :class:`str` to denote a regular text message.
 
 Guilds
 ~~~~~~
@@ -1071,8 +1122,8 @@ Messages
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessageUpdateEvent`
 
-Reaction Event Reference
-````````````````````````
+Reactions
+`````````
 .. function:: on_reaction_add(reaction, user)
 
     Called when a message has a reaction added to it. Similar to :func:`on_message_edit`,
@@ -1266,59 +1317,6 @@ Scheduled Events
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawScheduledEventSubscription`
-
-Socket Event Reference
-~~~~~~~~~~~~~~~~~~~~~~
-.. function:: on_socket_event_type(event_type)
-
-    Called whenever a WebSocket event is received from the WebSocket.
-
-    This is mainly useful for logging how many events you are receiving
-    from the Discord gateway.
-
-    .. versionadded:: 2.0
-
-    :param event_type: The event type from Discord that is received, e.g. ``'READY'``.
-    :type event_type: :class:`str`
-
-.. function:: on_socket_raw_receive(msg)
-
-    Called whenever a message is completely received from the WebSocket, before
-    it's processed and parsed. This event is always dispatched when a
-    complete message is received and the passed data is not parsed in any way.
-
-    This is only really useful for grabbing the WebSocket stream and
-    debugging purposes.
-
-    This requires setting the ``enable_debug_events`` setting in the :class:`Client`.
-
-    .. note::
-
-        This is only for the messages received from the client
-        WebSocket. The voice WebSocket will not trigger this event.
-
-    :param msg: The message passed in from the WebSocket library.
-    :type msg: :class:`str`
-
-.. function:: on_socket_raw_send(payload)
-
-    Called whenever a send operation is done on the WebSocket before the
-    message is sent. The passed parameter is the message that is being
-    sent to the WebSocket.
-
-    This is only really useful for grabbing the WebSocket stream and
-    debugging purposes.
-
-    This requires setting the ``enable_debug_events`` setting in the :class:`Client`.
-
-    .. note::
-
-        This is only for the messages sent from the client
-        WebSocket. The voice WebSocket will not trigger this event.
-
-    :param payload: The message that is about to be passed on to the
-                    WebSocket library. It can be :class:`bytes` to denote a binary
-                    message or :class:`str` to denote a regular text message.
 
 Stage Instances
 ~~~~~~~~~~~~~~~~
