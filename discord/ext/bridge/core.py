@@ -62,7 +62,6 @@ class BridgeSlashCommand(SlashCommand):
         kwargs = filter_params(kwargs, brief="description")
         super().__init__(func, **kwargs)
 
-
 class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
@@ -76,6 +75,10 @@ class BridgeExtCommand(Command):
             return await run_converters(ctx, AttachmentConverter, None, param)
         else:
             return await super().transform(ctx, param)
+
+class BridgeExtGroup(BridgeExtCommand, Group):
+    """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
+    pass
 
 
 class BaseBridgeCommand:
@@ -252,7 +255,7 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
     def __init__(self, callback, *args, **kwargs):
-        self.ext_variant = Group(callback, *args, **kwargs)
+        self.ext_variant = BridgeExtGroup(callback, *args, **kwargs)
         self.slash_variant = SlashCommandGroup(self.ext_variant.name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
@@ -260,6 +263,13 @@ class BridgeCommandGroup(BridgeCommand):
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
+
+    @discord.utils.copy_doc(BridgeCommand.add_to)
+    def add_to(self, bot: ExtBot) -> None:
+        if self.slash_variant.subcommands:
+            bot.add_application_command(self.slash_variant)
+
+        bot.add_command(self.ext_variant)
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.

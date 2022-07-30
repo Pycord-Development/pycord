@@ -81,6 +81,9 @@ Command Subclasses
 .. autoclass:: discord.ext.bridge.BridgeExtCommand
     :members:
 
+.. autoclass:: discord.ext.bridge.BridgeExtGroup
+    :members:
+
 .. autoclass:: discord.ext.bridge.BridgeSlashCommand
     :members:
 
