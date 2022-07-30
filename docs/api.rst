@@ -752,8 +752,8 @@ Guilds
     :param channel: The channel that had its webhooks updated.
     :type channel: :class:`abc.GuildChannel`
 
-Integration Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Integrations
+~~~~~~~~~~~~
 .. function:: on_guild_integrations_update(guild)
 
     Called whenever an integration is created, modified, or removed from a guild.
