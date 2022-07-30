@@ -865,7 +865,7 @@ class CogMixin:
                 parts = list(ext_file.parts[:-1])
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
-                loaded = self.load_extension(".".join(parts))
+                loaded = self.load_extension(".".join(parts), package=package, recursive=recursive, store=store)
                 final_out.update(loaded) if store else final_out.extend(loaded)
 
         if isinstance(final_out, Exception):
