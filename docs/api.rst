@@ -449,8 +449,8 @@ AutoMod Event Reference
     :param payload: The event's data.
     :type payload: :class:`AutoModActionExecutionEvent`
 
-Bans Event Reference
-~~~~~~~~~~~~~~~~~~~~
+Bans
+~~~~
 .. function:: on_member_ban(guild, user)
 
     Called when user gets banned from a :class:`Guild`.
