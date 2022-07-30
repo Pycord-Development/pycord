@@ -634,8 +634,8 @@ Connection Event Reference
     :param shard_id: The shard ID that has resumed.
     :type shard_id: :class:`int`
 
-Guild Event Reference
-~~~~~~~~~~~~~~~~~~~~~
+Guilds
+~~~~~~
 .. function:: on_guild_join(guild)
 
     Called when a :class:`Guild` is either created by the :class:`Client` or when the
