@@ -556,6 +556,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         else:
             return self.name
 
+    def to_dict(self) -> Dict[str, Any]:
+        raise NotImplementedError
+
     def __str__(self) -> str:
         return self.qualified_name
 
