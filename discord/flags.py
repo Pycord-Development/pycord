@@ -281,6 +281,13 @@ class SystemChannelFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 8
+    @flag_value
+    def app_commands_badge(self):
+        """:class:`bool`: Returns ``True`` if the application has registered a global application
+        command. This shows up as a badge in the the bot's profile.
+         .. versionadded:: 2.0
+        """
+        return 1 << 23
 
 
 @fill_with_flags()
