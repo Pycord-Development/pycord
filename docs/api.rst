@@ -798,8 +798,8 @@ Integrations
     :param payload: The raw event payload data.
     :type payload: :class:`RawIntegrationDeleteEvent`
 
-Interactions Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Interactions
+~~~~~~~~~~~~
 .. function:: on_interaction(interaction)
 
     Called when an interaction happened.
