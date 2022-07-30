@@ -51,6 +51,8 @@ __all__ = (
     "bridge_group",
     "BridgeExtCommand",
     "BridgeSlashCommand",
+    "BridgeExtGroup",
+    "BridgeSlashGroup",
     "map_to",
 )
 
@@ -61,6 +63,7 @@ class BridgeSlashCommand(SlashCommand):
     def __init__(self, func, **kwargs):
         kwargs = filter_params(kwargs, brief="description")
         super().__init__(func, **kwargs)
+
 
 class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
@@ -75,6 +78,12 @@ class BridgeExtCommand(Command):
             return await run_converters(ctx, AttachmentConverter, None, param)
         else:
             return await super().transform(ctx, param)
+
+
+class BridgeSlashGroup(BridgeSlashCommand, SlashCommandGroup):
+    """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."""
+    pass
+
 
 class BridgeExtGroup(BridgeExtCommand, Group):
     """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
