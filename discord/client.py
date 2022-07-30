@@ -49,7 +49,7 @@ import aiohttp
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
-from .appinfo import AppInfo
+from .appinfo import AppInfo, PartialAppInfo
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import Emoji
@@ -482,6 +482,26 @@ class Client:
             await asyncio.sleep(5.0)
 
     # login state management
+    async def fetch_application(self, application_id: int, /) -> PartialAppInfo:
+        """|coro|
+        Retrieves a :class:`.PartialAppInfo` from an application ID.
+        Parameters
+        -----------
+        application_id: :class:`int`
+            The application ID to retrieve information from.
+        Raises
+        -------
+        NotFound
+            An application with this ID does not exist.
+        HTTPException
+            Retrieving the application failed.
+        Returns
+        --------
+        :class:`.PartialAppInfo`
+            The application information.
+        """
+        data = await self.http.get_application(application_id)
+        return PartialAppInfo(state=self._connection, data=data)
 
     async def login(self, token: str) -> None:
         """|coro|
