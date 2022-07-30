@@ -482,6 +482,7 @@ class Client:
             await asyncio.sleep(5.0)
 
     # login state management
+
     async def login(self, token: str) -> None:
         """|coro|
 
