@@ -1479,18 +1479,6 @@ Typing
     :param payload: The raw typing payload.
     :type payload: :class:`RawTypingEvent`
 
-Other Events Reference
-~~~~~~~~~~~~~~~~~~~~~~
-.. function:: on_group_join(channel, user)
-              on_group_remove(channel, user)
-
-    Called when someone joins or leaves a :class:`GroupChannel`.
-
-    :param channel: The group that the user joined or left.
-    :type channel: :class:`GroupChannel`
-    :param user: The user that joined or left.
-    :type user: :class:`User`
-
 .. _discord-api-utils:
 
 Utility Functions
