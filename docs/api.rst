@@ -475,8 +475,8 @@ Bans
     :param user: The user that got unbanned.
     :type user: :class:`User`
 
-Channel Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~
+Channels
+~~~~~~~~
 .. function:: on_private_channel_update(before, after)
 
     Called whenever a private group DM is updated. e.g. changed name or topic.
