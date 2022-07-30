@@ -1446,8 +1446,8 @@ Threads
     :param after: The updated thread's new info.
     :type after: :class:`Thread`
 
-Typing Event Reference
-~~~~~~~~~~~~~~~~~~~~~~
+Typing
+~~~~~~
 .. function:: on_typing(channel, user, when)
 
     Called when someone begins typing a message.
