@@ -407,8 +407,8 @@ Application Commands
     :param interaction: The interaction associated to the unknown command.
     :type interaction: :class:`Interaction`
 
-AutoMod Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~
+AutoMod
+~~~~~~~
 .. function:: on_auto_moderation_rule_create(rule)
 
     Called when an auto moderation rule is created.
