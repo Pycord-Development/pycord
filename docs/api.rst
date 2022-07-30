@@ -817,8 +817,8 @@ Interactions
     :param interaction: The interaction data.
     :type interaction: :class:`Interaction`
 
-Invites Event Reference
-~~~~~~~~~~~~~~~~~~~~~~~
+Invites
+~~~~~~~
 .. function:: on_invite_create(invite)
 
     Called when an :class:`Invite` is created.
