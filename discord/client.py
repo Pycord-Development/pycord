@@ -793,16 +793,19 @@ class Client:
     async def fetch_application(self, application_id: int, /) -> PartialAppInfo:
         """|coro|
         Retrieves a :class:`.PartialAppInfo` from an application ID.
+
         Parameters
         -----------
         application_id: :class:`int`
             The application ID to retrieve information from.
+
         Raises
         -------
         NotFound
             An application with this ID does not exist.
         HTTPException
             Retrieving the application failed.
+
         Returns
         --------
         :class:`.PartialAppInfo`
