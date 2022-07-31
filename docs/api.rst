@@ -758,7 +758,7 @@ Guilds
 
 .. function:: on_guild_emojis_update(guild, before, after)
 
-    Called when a :class:`Guild` adds or removes :class:`Emoji`.
+    Called when a :class:`Guild` adds or removes an :class:`Emoji`.
 
     This requires :attr:`Intents.emojis_and_stickers` to be enabled.
 
