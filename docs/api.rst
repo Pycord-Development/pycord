@@ -600,6 +600,7 @@ Connection
 
     :param shard_id: The shard ID that has disconnected.
     :type shard_id: :class:`int`
+
 .. function:: on_ready()
 
     Called when the client is done preparing the data received from Discord. Usually after login is successful
