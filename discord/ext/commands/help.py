@@ -175,8 +175,8 @@ class Paginator:
         return self._pages
 
     def __repr__(self):
-        fmt = "<Paginator prefix: {0.prefix!r} suffix: {0.suffix!r} linesep: {0.linesep!r} max_size: {0.max_size} count: {0._count}>"
-        return fmt.format(self)
+        return (f"<Paginator prefix: {self.prefix!r} suffix: {self.suffix!r} linesep: {self.linesep!r} "
+                f"max_size: {self.max_size} count: {self._count}>")
 
 
 def _not_overridden(f):
@@ -253,7 +253,7 @@ class _HelpCommandImpl(Command):
         if self.cog is None:
             return
 
-        # revert back into their original methods
+        # revert into their original methods
         cog = self.cog
         cog.get_commands = cog.get_commands.__wrapped__
         cog.walk_commands = cog.walk_commands.__wrapped__
@@ -387,7 +387,7 @@ class HelpCommand:
 
         If the help command was used regularly then this returns
         the :attr:`Context.invoked_with` attribute. Otherwise, if
-        it the help command was called using :meth:`Context.send_help`
+        the help command was called using :meth:`Context.send_help`
         then it returns the internal command name of the help command.
 
         Returns
@@ -458,7 +458,7 @@ class HelpCommand:
 
         When a cog is set for the help command, it is as-if the help command
         belongs to that cog. All cog special methods will apply to the help
-        command and it will be automatically unset on unload.
+        command, and it will be automatically unset on unload.
 
         To unbind the cog from the help command, you can set it to ``None``.
 
@@ -557,7 +557,7 @@ class HelpCommand:
         if sort and key is None:
             key = lambda c: c.name
 
-        # Ignore Application Commands cause they dont have hidden/docs
+        # Ignore Application Commands because they don't have hidden/docs
         prefix_commands = [
             command for command in commands if not isinstance(command, discord.commands.ApplicationCommand)
         ]
@@ -569,7 +569,7 @@ class HelpCommand:
             return sorted(iterator, key=key) if sort else list(iterator)
 
         if self.verify_checks is None and not self.context.guild:
-            # if verify_checks is None and we're in a DM, don't verify
+            # if verify_checks is None, and we're in a DM, don't verify
             return sorted(iterator, key=key) if sort else list(iterator)
 
         # if we're here then we need to check every command if it can run
@@ -611,7 +611,7 @@ class HelpCommand:
 
         You can override this method to customise the behaviour.
 
-        By default this returns the context's channel.
+        By default, this returns the context's channel.
 
         Returns
         -------
@@ -653,7 +653,7 @@ class HelpCommand:
         Useful to override if you need some specific behaviour when the error handler
         is called.
 
-        By default this method does nothing and just propagates to the default
+        By default, this method does nothing and just propagates to the default
         error handlers.
 
         Parameters
@@ -672,7 +672,7 @@ class HelpCommand:
         This function is called when the help command is called with no arguments.
 
         It should be noted that this method does not return anything -- rather the
-        actual message sending should be done inside this method. Well behaved subclasses
+        actual message sending should be done inside this method. Well-behaved subclasses
         should use :meth:`get_destination` to know where to send, as this is a customisation
         point for other users.
 
@@ -701,7 +701,7 @@ class HelpCommand:
         This function is called when the help command is called with a cog as the argument.
 
         It should be noted that this method does not return anything -- rather the
-        actual message sending should be done inside this method. Well behaved subclasses
+        actual message sending should be done inside this method. Well-behaved subclasses
         should use :meth:`get_destination` to know where to send, as this is a customisation
         point for other users.
 
@@ -729,7 +729,7 @@ class HelpCommand:
         This function is called when the help command is called with a group as the argument.
 
         It should be noted that this method does not return anything -- rather the
-        actual message sending should be done inside this method. Well behaved subclasses
+        actual message sending should be done inside this method. Well-behaved subclasses
         should use :meth:`get_destination` to know where to send, as this is a customisation
         point for other users.
 
@@ -756,7 +756,7 @@ class HelpCommand:
         Handles the implementation of the single command page in the help command.
 
         It should be noted that this method does not return anything -- rather the
-        actual message sending should be done inside this method. Well behaved subclasses
+        actual message sending should be done inside this method. Well-behaved subclasses
         should use :meth:`get_destination` to know where to send, as this is a customisation
         point for other users.
 

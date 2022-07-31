@@ -54,7 +54,7 @@ class AllowedMentions:
     """A class that represents what mentions are allowed in a message.
 
     This class can be set during :class:`Client` initialisation to apply
-    to every message sent. It can also be applied on a per message basis
+    to every message sent. It can also be applied on a per-message basis
     via :meth:`abc.Messageable.send` for more fine-grained control.
 
     Attributes
@@ -118,6 +118,9 @@ class AllowedMentions:
         if self.everyone:
             parse.append("everyone")
 
+        # In the following operations, the comparison operator
+        # must be used instead of the "is" operator as the program
+        # has to invoke _Fakebool.__eq__ to prevent false results.
         if self.users == True:
             parse.append("users")
         elif self.users != False:

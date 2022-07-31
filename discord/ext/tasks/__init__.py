@@ -398,7 +398,7 @@ class Loop(Generic[LF]):
     def add_exception_type(self, *exceptions: Type[BaseException]) -> None:
         r"""Adds exception types to be handled during the reconnect logic.
 
-        By default the exception types handled are those handled by
+        By default, the exception types handled are those handled by
         :meth:`discord.Client.connect`\, which includes a lot of internet disconnection
         errors.
 
@@ -538,7 +538,7 @@ class Loop(Generic[LF]):
 
         The coroutine must take only one argument the exception raised (except ``self`` in a class context).
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
 
         .. versionadded:: 1.4
@@ -627,7 +627,8 @@ class Loop(Generic[LF]):
         for index, t in enumerate(time):
             if not isinstance(t, dt):
                 raise TypeError(
-                    f"Expected a sequence of {dt!r} for ``time``, received {type(t).__name__!r} at index {index} instead."
+                    f"Expected a sequence of {dt!r} for ``time``, received {type(t).__name__!r}"
+                    f" at index {index} instead."
                 )
             ret.append(t if t.tzinfo is not None else t.replace(tzinfo=utc))
 

@@ -104,7 +104,7 @@ class Modal:
 
     @property
     def title(self) -> str:
-        """The title of the modal dialog."""
+        """:class:`str`: The title of the modal dialog."""
         return self._title
 
     @title.setter
@@ -117,7 +117,7 @@ class Modal:
 
     @property
     def children(self) -> List[InputText]:
-        """The child components associated with the modal dialog."""
+        """List[:class:`InputText`]: The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
@@ -130,7 +130,7 @@ class Modal:
 
     @property
     def custom_id(self) -> str:
-        """The ID of the modal dialog that gets received during an interaction."""
+        """:class:`str`: The ID of the modal dialog that gets received during an interaction."""
         return self._custom_id
 
     @custom_id.setter
