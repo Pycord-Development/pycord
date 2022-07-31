@@ -719,7 +719,7 @@ Guilds
 
 .. function:: on_guild_update(before, after)
 
-    Called when a :class:`Guild` updates, for example:
+    Called when a :class:`Guild` is updated, for example:
 
     - Changed name
     - Changed AFK channel
@@ -771,7 +771,7 @@ Guilds
 
 .. function:: on_guild_stickers_update(guild, before, after)
 
-    Called when a :class:`Guild` updates its stickers.
+    Called when a :class:`Guild` adds or removes a sticker.
 
     This requires :attr:`Intents.emojis_and_stickers` to be enabled.
 
