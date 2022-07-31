@@ -1,7 +1,7 @@
 .. currentmodule:: discord
 
 API Reference
-=============
+==============
 
 The reference manual that follows details the API of Pycord's bridge command extension module.
 
@@ -9,6 +9,7 @@ The reference manual that follows details the API of Pycord's bridge command ext
 
     Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge
     commands in guilds requires :attr:`Intents.message_context` to be enabled.
+
 
 .. _ext_bridge_api:
 
