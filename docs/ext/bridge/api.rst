@@ -43,14 +43,6 @@ AutoShardedBot
 Commands
 ---------
 
-BaseBridgeCommand
-~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: discord.ext.bridge.BaseBridgeCommand
-
-.. autoclass:: discord.ext.bridge.BaseBridgeCommand
-    :members:
-
 BridgeCommand
 ~~~~~~~~~~~~~~
 
