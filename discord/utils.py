@@ -1188,11 +1188,11 @@ def filter_params(params, **kwargs):
         # and values of 'param2' are completely removed.
 
     """
-    for param, nparam in kwargs.items():
-        if param in params:   
-            if nparam is None:
-                params.pop(param)
+    for old_param, new_param in kwargs.items():
+        if old_param in params:   
+            if new_param is None:
+                params.pop(old_param)
             else:
-                params[nparam] = params.pop(param)
+                params[new_param] = params.pop(old_param)
 
     return params

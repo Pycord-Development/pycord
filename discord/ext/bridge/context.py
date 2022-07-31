@@ -58,7 +58,6 @@ class BridgeContext(ABC):
 
     .. versionadded:: 2.0
     """
-    is_app: bool
 
     @abstractmethod
     async def _respond(
@@ -119,6 +118,11 @@ class BridgeContext(ABC):
     def _get_super(self, attr: str) -> Any:
         return getattr(super(), attr)
 
+    @property
+    def is_app(self) -> bool:
+        """bool: Whether the context is an :class:`BridgeApplicationContext` or not."""
+        return isinstance(self, BridgeApplicationContext)
+
 
 class BridgeApplicationContext(BridgeContext, ApplicationContext):
     """
@@ -127,7 +131,6 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
 
     .. versionadded:: 2.0
     """
-    is_app = True
 
     def __init__(self, *args, **kwargs):
         # This is needed in order to represent the correct class init signature on the docs
@@ -150,7 +153,6 @@ class BridgeExtContext(BridgeContext, Context):
 
     .. versionadded:: 2.0
     """
-    is_app = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

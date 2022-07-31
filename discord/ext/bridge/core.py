@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import inspect
-from typing import Any, List, Union
+from typing import Any, List, Union, Optional
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
@@ -90,9 +90,27 @@ class BridgeExtGroup(BridgeExtCommand, Group):
     pass
 
 
-class BaseBridgeCommand:
-    ext_variant: Union[BridgeExtCommand, Group]
-    slash_variant: Union[BridgeSlashCommand, SlashCommandGroup]
+class BridgeCommand:
+    """Compatibility class between prefixed-based commands and slash commands.
+
+    Attributes
+    ----------
+    slash_variant: :class:`.BridgeSlashCommand`
+        The slash command version of this bridge command.
+    ext_variant: :class:`.BridgeExtCommand`
+        The prefix-based version of this bridge command.
+
+    Parameters
+    ----------
+    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
+        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
+        and any additional arguments will be passed to the callback. This callback must be a coroutine.
+    kwargs: Optional[Dict[:class:`str`, Any]]
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+    """
+    def __init__(self, callback, **kwargs):
+        self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
+        self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
     @property
     def name_localizations(self):
@@ -131,6 +149,17 @@ class BaseBridgeCommand:
     @description_localizations.setter
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
+
+    def add_to(self, bot: ExtBot) -> None:
+        """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
+
+        Parameters
+        ----------
+        bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
+            The bot to add the command to.
+        """
+        bot.add_application_command(self.slash_variant)
+        bot.add_command(self.ext_variant)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -207,40 +236,6 @@ class BaseBridgeCommand:
         return coro
 
 
-class BridgeCommand(BaseBridgeCommand):
-    """Compatibility class between prefixed-based commands and slash commands.
-
-    Attributes
-    ----------
-    slash_variant: :class:`.BridgeSlashCommand`
-        The slash command version of this bridge command.
-    ext_variant: :class:`.BridgeExtCommand`
-        The prefix-based version of this bridge command.
-
-    Parameters
-    ----------
-    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
-        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
-        and any additional arguments will be passed to the callback. This callback must be a coroutine.
-    kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
-    """
-    def __init__(self, callback, **kwargs):
-        self.slash_variant = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
-        self.ext_variant = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
-
-    def add_to(self, bot: ExtBot) -> None:
-        """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
-
-        Parameters
-        ----------
-        bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
-            The bot to add the command to.
-        """
-        bot.add_application_command(self.slash_variant)
-        bot.add_command(self.ext_variant)
-
-
 class BridgeCommandGroup(BridgeCommand):
     """Compatibility class between prefixed-based commands and slash commands.
 
@@ -264,11 +259,11 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
     def __init__(self, callback, *args, **kwargs):
-        self.ext_variant = BridgeExtGroup(callback, *args, **kwargs)
-        self.slash_variant = SlashCommandGroup(self.ext_variant.name, *args, **kwargs)
+        self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
+        self.slash_variant: SlashCommandGroup = SlashCommandGroup(self.ext_variant.name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
-        self.mapped = None
+        self.mapped: Optional[SlashCommand] = None
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
