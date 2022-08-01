@@ -44,7 +44,6 @@ from ..commands import (
 
 
 __all__ = (
-    "BaseBridgeCommand",
     "BridgeCommand",
     "BridgeCommandGroup",
     "bridge_command",
