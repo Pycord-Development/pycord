@@ -169,6 +169,7 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
+        self._raw_type: Union[InputType, tuple] = input_type
 
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
@@ -177,13 +178,12 @@ class Option:
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
-                self.input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
+                input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
             else:
                 enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
-                self.input_type = SlashCommandOptionType.string
-        self.description = description or "No description provided"
+                input_type = SlashCommandOptionType.string
 
-        self._raw_type: Union[InputType, tuple] = input_type
+        self.description = description or "No description provided"
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
         if isinstance(input_type, SlashCommandOptionType):
