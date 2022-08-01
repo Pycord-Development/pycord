@@ -619,7 +619,7 @@ class SlashCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
+    def __init__(self, func: Callable, **kwargs) -> None:
         super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
@@ -686,7 +686,7 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], required=False)
+                    option = Option(option.__args__[0], default=None)
                 else:
                     option = Option(option.__args__)
 
@@ -1016,10 +1016,10 @@ class SlashCommandGroup(ApplicationCommand):
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
     ) -> None:
-        validate_chat_input_name(name)
-        validate_chat_input_description(description)
-        self.name = str(name)
-        self.description = description
+        self.name = name
+        self.description = description or "No description provided"
+        validate_chat_input_name(self.name)
+        validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids

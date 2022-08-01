@@ -186,7 +186,9 @@ class Option:
         self._raw_type: Union[InputType, tuple] = input_type
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
-        if not isinstance(input_type, SlashCommandOptionType):
+        if isinstance(input_type, SlashCommandOptionType):
+            self.input_type = input_type
+        else:
             from ..ext.commands import Converter
             if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
@@ -343,7 +345,10 @@ def option(name, type=None, **kwargs):
     def decorator(func):
         nonlocal type
         type = type or func.__annotations__.get(name, str)
-        func.__annotations__[name] = Option(type, **kwargs)
+        if parameter := kwargs.get("parameter_name"):
+            func.__annotations__[parameter] = Option(type, name=name ,**kwargs)
+        else:
+            func.__annotations__[name] = Option(type, **kwargs)
         return func
 
     return decorator
