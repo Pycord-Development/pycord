@@ -43,6 +43,7 @@ import aiohttp
 
 from .backoff import ExponentialBackoff
 from .client import Client
+from .enums import Status
 from .errors import (
     ClientException,
     ConnectionClosed,
@@ -55,7 +56,6 @@ from .state import AutoShardedConnectionState
 
 if TYPE_CHECKING:
     from .activity import BaseActivity
-    from .enums import Status
     from .gateway import DiscordWebSocket
 
     EI = TypeVar("EI", bound="EventItem")
