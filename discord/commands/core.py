@@ -1065,9 +1065,9 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def command(self, **kwargs) -> Callable[[Callable], SlashCommand]:
-        def wrap(func) -> SlashCommand:
-            command = SlashCommand(func, parent=self, **kwargs)
+    def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
+        def wrap(func) -> T:
+            command = cls(func, parent=self, **kwargs)
             self.subcommands.append(command)
             return command
 

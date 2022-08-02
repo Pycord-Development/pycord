@@ -111,7 +111,6 @@ class BridgeExtGroup(BridgeExtCommand, Group):
     """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
     pass
 
-
 class BridgeCommand:
     """Compatibility class between prefixed-based commands and slash commands.
 
@@ -299,8 +298,8 @@ class BridgeCommandGroup(BridgeCommand):
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
         """
         def wrap(callback):
-            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"))(callback)
-            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"))(callback)
+            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"), cls=BridgeSlashCommand)(callback)
+            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"), cls=BridgeExtGroup)(callback)
             command = BridgeCommand(callback, slash_variant=slash, ext_variant=ext)
             self.subcommands.append(command)
             return command
