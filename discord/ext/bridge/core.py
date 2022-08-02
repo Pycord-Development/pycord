@@ -23,15 +23,16 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations
+
 import inspect
-from typing import Any, List, Union, Optional
+from typing import TYPE_CHECKING, Any, List, Union, Optional
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from ...utils import get, filter_params
+from ...utils import get, filter_params, find
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
-    Context,
     Command,
     Group,
     Converter,
@@ -41,6 +42,10 @@ from ..commands import (
     BadArgument,
     Bot as ExtBot,
 )
+
+if TYPE_CHECKING:
+    from .context import BridgeApplicationContext
+    from ..commands import Context
 
 
 __all__ = (
@@ -79,9 +84,27 @@ class BridgeExtCommand(Command):
             return await super().transform(ctx, param)
 
 
-class BridgeSlashGroup(BridgeSlashCommand, SlashCommandGroup):
+class BridgeSlashGroup(SlashCommandGroup):
     """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."""
-    pass
+    __slots__ = ("module",)
+
+    def __init__(self, callback, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.callback = callback
+        self.__command = None
+
+    async def _invoke(self, ctx: BridgeApplicationContext) -> None:
+        if not (options := ctx.interaction.data.get("options")):
+            if not self.__command:
+                self.__command = BridgeSlashCommand(self.callback)
+            ctx.command = self.__command
+            return await ctx.command.invoke(ctx)
+        option = options[0]
+        resolved = ctx.interaction.data.get("resolved", None)
+        command = find(lambda x: x.name == option["name"], self.subcommands)
+        option["resolved"] = resolved
+        ctx.interaction.data = option
+        await command.invoke(ctx)
 
 
 class BridgeExtGroup(BridgeExtCommand, Group):
@@ -259,20 +282,13 @@ class BridgeCommandGroup(BridgeCommand):
     """
     def __init__(self, callback, *args, **kwargs):
         self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(self.ext_variant.name, *args, **kwargs)
+        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, self.ext_variant.name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
         self.mapped: Optional[SlashCommand] = None
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
-
-    @discord.utils.copy_doc(BridgeCommand.add_to)
-    def add_to(self, bot: ExtBot) -> None:
-        if self.slash_variant.subcommands:
-            bot.add_application_command(self.slash_variant)
-
-        bot.add_command(self.ext_variant)
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.
