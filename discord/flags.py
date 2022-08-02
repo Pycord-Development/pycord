@@ -698,8 +698,8 @@ class Intents(BaseFlags):
 
         .. note::
 
-            This intent is privileged, meaning that bots in 100 guilds that require this intent
-            would need to request this intent on the Developer Portal.
+            This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
         """
         return 1 << 1
 
@@ -827,8 +827,8 @@ class Intents(BaseFlags):
 
         .. note::
 
-            This intent is privileged, meaning that bots in 100 guilds that require this intent
-            would need to request this intent on the Developer Portal.
+            This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
         """
         return 1 << 8
 
@@ -1054,8 +1054,8 @@ class Intents(BaseFlags):
         .. note::
 
             As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
-            of the guild messages. This intent is privileged, meaning that bots in 100 guilds that require this intent
-            would need to request this intent on the Developer Portal.
+            of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
 
         """
