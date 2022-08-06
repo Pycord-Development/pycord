@@ -2431,9 +2431,9 @@ class Guild(Hashable):
         Parameters
         -----------
         name: :class:`str`
-            The sticker name. Must be at least 2 characters.
+            The sticker name. Must be 2 to 30 characters.
         description: Optional[:class:`str`]
-            The sticker's description. Can be ``None``.
+            The sticker's description. If used, must be 2 to 100 characters.
         emoji: :class:`str`
             The name of a unicode emoji that represents the sticker's expression.
         file: :class:`File`
@@ -2447,18 +2447,24 @@ class Guild(Hashable):
             You are not allowed to create stickers.
         HTTPException
             An error occurred creating a sticker.
+        TypeError
+            The parameters for the sticker are not correctly formatted.
 
         Returns
         --------
         :class:`GuildSticker`
             The created sticker.
         """
+        if not (2 <= len(name) <= 30):
+            raise TypeError("\"name\" parameter must be 2 to 30 characters long.")
+
+        if description and not (2 <= len(description) <= 100):
+            raise TypeError("\"description\" parameter must be 2 to 200 characters long.")
+
         payload = {
             "name": name,
+            "description": description or ""
         }
-
-        if description:
-            payload["description"] = description
 
         try:
             emoji = unicodedata.name(emoji)
