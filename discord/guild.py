@@ -2433,7 +2433,7 @@ class Guild(Hashable):
         name: :class:`str`
             The sticker name. Must be 2 to 30 characters.
         description: Optional[:class:`str`]
-            The sticker's description. Must be 2 to 100 characters.
+            The sticker's description. If used, must be 2 to 100 characters.
         emoji: :class:`str`
             The name of a unicode emoji that represents the sticker's expression.
         file: :class:`File`
