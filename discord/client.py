@@ -49,7 +49,7 @@ import aiohttp
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
-from .appinfo import AppInfo
+from .appinfo import AppInfo, PartialAppInfo
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import Emoji
@@ -212,7 +212,7 @@ class Client:
     Attributes
     -----------
     ws
-        The websocket gateway the client is currently connected to. Could be ``None``.
+        The WebSocket gateway the client is currently connected to. Could be ``None``.
     loop: :class:`asyncio.AbstractEventLoop`
         The event loop that the client uses for asynchronous operations.
     """
@@ -286,7 +286,7 @@ class Client:
         return float("nan") if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """:class:`bool`: Whether the WebSocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -444,7 +444,7 @@ class Client:
 
         The default error handler provided by the client.
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
         Check :func:`~discord.on_error` for more details.
         """
@@ -517,7 +517,7 @@ class Client:
     async def connect(self, *, reconnect: bool = True) -> None:
         """|coro|
 
-        Creates a websocket connection and lets the websocket listen
+        Creates a WebSocket connection and lets the WebSocket listen
         to messages from Discord. This is a loop that runs the entire
         event system and miscellaneous aspects of the library. Control
         is not resumed until the WebSocket connection is terminated.
@@ -533,10 +533,10 @@ class Client:
         Raises
         -------
         :exc:`GatewayNotFound`
-            If the gateway to connect to Discord is not found. Usually if this
+            The gateway to connect to Discord is not found. Usually if this
             is thrown then there is a Discord API outage.
         :exc:`ConnectionClosed`
-            The websocket connection has been terminated.
+            The WebSocket connection has been terminated.
         """
 
         backoff = ExponentialBackoff()
@@ -592,7 +592,7 @@ class Client:
 
                 # We should only get this when an unhandled close code happens,
                 # such as a clean disconnect (1000) or a bad state (bad token, no sharding, etc)
-                # sometimes, discord sends us 1000 for unknown reasons so we should reconnect
+                # sometimes, discord sends us 1000 for unknown reasons, so we should reconnect
                 # regardless and rely on is_closed instead
                 if isinstance(exc, ConnectionClosed):
                     if exc.code == 4014:
@@ -720,7 +720,7 @@ class Client:
     # properties
 
     def is_closed(self) -> bool:
-        """:class:`bool`: Indicates if the websocket connection is closed."""
+        """:class:`bool`: Indicates if the WebSocket connection is closed."""
         return self._closed
 
     @property
@@ -789,6 +789,30 @@ class Client:
     def users(self) -> List[User]:
         """List[:class:`~discord.User`]: Returns a list of all the users the bot can see."""
         return list(self._connection._users.values())
+
+    async def fetch_application(self, application_id: int, /) -> PartialAppInfo:
+        """|coro|
+        Retrieves a :class:`.PartialAppInfo` from an application ID.
+
+        Parameters
+        -----------
+        application_id: :class:`int`
+            The application ID to retrieve information from.
+
+        Raises
+        -------
+        NotFound
+            An application with this ID does not exist.
+        HTTPException
+            Retrieving the application failed.
+
+        Returns
+        --------
+        :class:`.PartialAppInfo`
+            The application information.
+        """
+        data = await self.http.get_application(application_id)
+        return PartialAppInfo(state=self._connection, data=data)
 
     def get_channel(self, id: int, /) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
         """Returns a channel or thread with the given ID.
@@ -1073,7 +1097,7 @@ class Client:
         Raises
         -------
         asyncio.TimeoutError
-            If a timeout is provided and it was reached.
+            Raised if a timeout is provided and reached.
 
         Returns
         --------
@@ -1542,7 +1566,8 @@ class Client:
 
         .. note::
 
-            This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled, consider :meth:`get_user` instead.
+            This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled,
+            consider :meth:`get_user` instead.
 
         Parameters
         -----------
@@ -1722,7 +1747,7 @@ class Client:
             A view was not passed.
         ValueError
             The view is not persistent. A persistent view has no timeout
-            and all their components have an explicitly provided custom_id.
+            and all their components have an explicitly provided ``custom_id``.
         """
 
         if not isinstance(view, View):

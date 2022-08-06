@@ -300,7 +300,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         Parameters
         -----------
         ctx: :class:`.ApplicationContext`
-            The invocation context to use when checking the commands cooldown status.
+            The invocation context to use when checking the command's cooldown status.
 
         Returns
         --------
@@ -364,7 +364,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
         predicates = self.checks
         if self.parent is not None:
-            # parent checks should be ran first
+            # parent checks should be run first
             predicates = self.parent.checks + predicates
 
         if not predicates:
@@ -586,6 +586,8 @@ class SlashCommand(ApplicationCommand):
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to. ``None`` if there
         isn't one.
+    mention: :class:`str` 
+        Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
@@ -617,7 +619,7 @@ class SlashCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func: Callable, *args, **kwargs) -> None:
+    def __init__(self, func: Callable, **kwargs) -> None:
         super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
@@ -684,7 +686,7 @@ class SlashCommand(ApplicationCommand):
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], required=False)
+                    option = Option(option.__args__[0], default=None)
                 else:
                     option = Option(option.__args__)
 
@@ -757,7 +759,11 @@ class SlashCommand(ApplicationCommand):
     @property
     def is_subcommand(self) -> bool:
         return self.parent is not None
-
+    
+    @property
+    def mention(self) -> str:
+        return f"</{self.qualified_name}:{self.id}>"
+    
     def to_dict(self) -> Dict:
         as_dict = {
             "name": self.name,
@@ -1010,10 +1016,10 @@ class SlashCommandGroup(ApplicationCommand):
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
     ) -> None:
-        validate_chat_input_name(name)
-        validate_chat_input_description(description)
-        self.name = str(name)
-        self.description = description
+        self.name = name
+        self.description = description or "No description provided"
+        validate_chat_input_name(self.name)
+        validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
@@ -1288,8 +1294,7 @@ class ContextMenuCommand(ApplicationCommand):
 
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
 
-        # Discord API doesn't support setting descriptions for context menu commands
-        # so it must be empty
+        # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
         if not isinstance(self.name, str):
             raise TypeError("Name of a command must be a string.")
@@ -1558,7 +1563,7 @@ def slash_command(**kwargs):
 
     Returns
     --------
-    Callable[..., :class:`SlashCommand`]
+    Callable[..., :class:`.SlashCommand`]
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
     return application_command(cls=SlashCommand, **kwargs)
@@ -1571,7 +1576,7 @@ def user_command(**kwargs):
 
     Returns
     --------
-    Callable[..., :class:`UserCommand`]
+    Callable[..., :class:`.UserCommand`]
         A decorator that converts the provided method into a :class:`.UserCommand`.
     """
     return application_command(cls=UserCommand, **kwargs)
@@ -1584,7 +1589,7 @@ def message_command(**kwargs):
 
     Returns
     --------
-    Callable[..., :class:`MessageCommand`]
+    Callable[..., :class:`.MessageCommand`]
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
     return application_command(cls=MessageCommand, **kwargs)
@@ -1594,7 +1599,7 @@ def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
-    By default the ``description`` attribute is received automatically from the
+    By default, the ``description`` attribute is received automatically from the
     docstring of the function and is cleaned up with the use of
     ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
     into :class:`str` using utf-8 encoding.
@@ -1605,7 +1610,7 @@ def application_command(cls=SlashCommand, **attrs):
     Parameters
     -----------
     cls: :class:`.ApplicationCommand`
-        The class to construct with. By default this is :class:`.SlashCommand`.
+        The class to construct with. By default, this is :class:`.SlashCommand`.
         You usually do not change this.
     attrs
         Keyword arguments to pass into the construction of the class denoted
@@ -1615,6 +1620,11 @@ def application_command(cls=SlashCommand, **attrs):
     -------
     TypeError
         If the function is not a coroutine or is already a command.
+
+    Returns
+    --------
+    Callable[..., :class:`.ApplicationCommand`]
+        A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it.
     """
 
     def decorator(func: Callable) -> cls:
@@ -1631,13 +1641,13 @@ def command(**kwargs):
     """An alias for :meth:`application_command`.
 
     .. note::
-        This decorator is overridden by :func:`commands.command`.
+        This decorator is overridden by :func:`ext.commands.command`.
 
     .. versionadded:: 2.0
 
     Returns
     --------
-    Callable[..., :class:`ApplicationCommand`]
+    Callable[..., :class:`.ApplicationCommand`]
         A decorator that converts the provided method into an :class:`.ApplicationCommand`.
     """
     return application_command(**kwargs)

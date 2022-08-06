@@ -43,6 +43,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Union,
 )
 
 from ..components import ActionRow as ActionRowComponent
@@ -56,7 +57,7 @@ __all__ = ("View",)
 
 
 if TYPE_CHECKING:
-    from ..interactions import Interaction
+    from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
@@ -144,6 +145,8 @@ class View:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this view.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     message: Optional[:class:`Message`]
         The message that this view is attached to. 
         If ``None`` then the view has not been sent with a message.
@@ -164,8 +167,9 @@ class View:
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
+    def __init__(self, *items: Item, timeout: Optional[float] = 180.0, disable_on_timeout: bool = False):
         self.timeout = timeout
+        self.disable_on_timeout = disable_on_timeout
         self.children: List[Item] = []
         for func in self.__view_children_items__:
             item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
@@ -184,7 +188,7 @@ class View:
         self.__timeout_expiry: Optional[float] = None
         self.__timeout_task: Optional[asyncio.Task[None]] = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
-        self._message: Optional[Message] = None
+        self._message: Optional[Union[Message, InteractionMessage]] = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -237,7 +241,7 @@ class View:
 
         Parameters
         -----------
-        message: :class:`discord.Message`
+        message: :class:`.Message`
             The message with components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
@@ -343,7 +347,10 @@ class View:
 
         A callback that is called when a view's timeout elapses without being explicitly stopped.
         """
-        pass
+        if self.disable_on_timeout:
+            if self._message:
+                self.disable_all_items()
+                await self._message.edit(view=self)
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -472,8 +479,8 @@ class View:
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
 
-        A view is considered finished when :meth:`stop` is called
-        or it times out.
+        A view is considered finished when :meth:`stop`
+        is called, or it times out.
 
         Returns
         --------
@@ -489,7 +496,7 @@ class View:
 
         Parameters
         -----------
-        exclusions: Optional[List[:class:`ui.Item`]]
+        exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
@@ -502,7 +509,7 @@ class View:
 
         Parameters
         -----------
-        exclusions: Optional[List[:class:`ui.Item`]]
+        exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
@@ -516,6 +523,7 @@ class View:
     @message.setter
     def message(self, value):
         self._message = value
+
 
 class ViewStore:
     def __init__(self, state: ConnectionState):

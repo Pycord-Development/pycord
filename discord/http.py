@@ -32,7 +32,6 @@ import weakref
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Coroutine,
     Dict,
     Iterable,
@@ -2494,7 +2493,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         token: str,
-        files: List[File] = [],
+        files: Optional[List[File]] = None,
         content: Optional[str] = None,
         tts: bool = False,
         embeds: Optional[List[embed.Embed]] = None,
@@ -2612,6 +2611,9 @@ class HTTPClient:
 
     def application_info(self) -> Response[appinfo.AppInfo]:
         return self.request(Route("GET", "/oauth2/applications/@me"))
+
+    def get_application(self, application_id: Snowflake, /) -> Response[appinfo.PartialAppInfo]:
+        return self.request(Route('GET', '/applications/{application_id}/rpc', application_id=application_id))
 
     async def get_gateway(self, *, encoding: str = "json", zlib: bool = True) -> str:
         try:

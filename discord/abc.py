@@ -175,14 +175,6 @@ async def _purge_messages_helper(
     return ret
 
 
-class _Undefined:
-    def __repr__(self) -> str:
-        return "see-below"
-
-
-_undefined: Any = _Undefined()
-
-
 @runtime_checkable
 class Snowflake(Protocol):
     """An ABC that details the common operations on a Discord model.
@@ -382,7 +374,7 @@ class GuildChannel:
         payload = []
         for index, c in enumerate(channels):
             d: Dict[str, Any] = {"id": c.id, "position": index}
-            if parent_id is not _undefined and c.id == self.id:
+            if parent_id is not MISSING and c.id == self.id:
                 d.update(parent_id=parent_id, lock_permissions=lock_permissions)
             payload.append(d)
 
@@ -392,7 +384,7 @@ class GuildChannel:
         try:
             parent = options.pop("category")
         except KeyError:
-            parent_id = _undefined
+            parent_id = MISSING
         else:
             parent_id = parent and parent.id
 
@@ -420,7 +412,7 @@ class GuildChannel:
         try:
             position = options.pop("position")
         except KeyError:
-            if parent_id is not _undefined:
+            if parent_id is not MISSING:
                 if lock_permissions:
                     category = self.guild.get_channel(parent_id)
                     if category:
@@ -603,7 +595,7 @@ class GuildChannel:
 
     @property
     def permissions_synced(self) -> bool:
-        """:class:`bool`: Whether or not the permissions for this channel are synced with the
+        """:class:`bool`: Whether the permissions for this channel are synced with the
         category it belongs to.
 
         If there is no category then this is ``False``.
@@ -658,7 +650,7 @@ class GuildChannel:
         # (or otherwise) are then OR'd together.
         # After the role permissions are resolved, the member permissions
         # have to take into effect.
-        # After all that is done.. you have to do the following:
+        # After all that is done, you have to do the following:
 
         # If manage permissions is True, then all permissions are set to True.
 
@@ -781,7 +773,7 @@ class GuildChannel:
         self,
         target: Union[Member, Role],
         *,
-        overwrite: Optional[Union[PermissionOverwrite, _Undefined]] = ...,
+        overwrite: Optional[PermissionOverwrite] = ...,
         reason: Optional[str] = ...,
     ) -> None:
         ...
@@ -796,7 +788,7 @@ class GuildChannel:
     ) -> None:
         ...
 
-    async def set_permissions(self, target, *, overwrite=_undefined, reason=None, **permissions):
+    async def set_permissions(self, target, *, overwrite=MISSING, reason=None, **permissions):
         r"""|coro|
 
         Sets the channel specific permission overwrites for a target in the
@@ -874,7 +866,7 @@ class GuildChannel:
         else:
             raise InvalidArgument("target parameter must be either Member or Role")
 
-        if overwrite is _undefined:
+        if overwrite is MISSING:
             if len(permissions) == 0:
                 raise InvalidArgument("No overwrite provided.")
             try:
@@ -1046,7 +1038,7 @@ class GuildChannel:
         Raises
         -------
         InvalidArgument
-            An invalid position was given or a bad mix of arguments were passed.
+            An invalid position was given or a bad mix of arguments was passed.
         Forbidden
             You do not have permissions to move the channel.
         HTTPException
@@ -1152,20 +1144,22 @@ class GuildChannel:
             .. versionadded:: 2.0
 
         target_user: Optional[:class:`User`]
-            The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.
+            The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`.
+            The user must be streaming in the channel.
 
             .. versionadded:: 2.0
 
         target_application_id: Optional[:class:`int`]
-            The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.
+            The id of the embedded application for the invite, required if `target_type` is
+            `TargetType.embedded_application`.
 
             .. versionadded:: 2.0
 
-        target_event: Optional[:class:`ScheduledEvent`]
+        target_event: Optional[:class:`.ScheduledEvent`]
             The scheduled event object to link to the event.
-            Shortcut to :meth:`Invite.set_scheduled_event`
+            Shortcut to :meth:`.Invite.set_scheduled_event`
 
-            See :meth:`Invite.set_scheduled_event` for more
+            See :meth:`.Invite.set_scheduled_event` for more
             info on event invite linking.
 
             .. versionadded:: 2.0
@@ -1383,11 +1377,13 @@ class Messageable:
 
             .. versionadded:: 1.4
 
-        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
+        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`,
+        :class:`~discord.PartialMessage`]
             A reference to the :class:`~discord.Message` to which you are replying, this can be created using
             :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
-            whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user`
-            attribute of ``allowed_mentions`` or by setting ``mention_author``.
+            whether this mentions the author of the referenced message using the
+            :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
+            setting ``mention_author``.
 
             .. versionadded:: 1.6
 
@@ -1732,7 +1728,7 @@ class Messageable:
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
             When using this argument, the maximum limit is 101. Note that if the limit is an
-            even number then this will return at most limit + 1 messages.
+            even number, then this will return at most limit + 1 messages.
         oldest_first: Optional[:class:`bool`]
             If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if
             ``after`` is specified, otherwise ``False``.
