@@ -620,7 +620,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, VoiceChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -632,7 +632,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, StageChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -644,7 +644,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, ForumChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -668,7 +668,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, TextChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -678,7 +678,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, CategoryChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     def by_category(self) -> List[ByCategoryItem]:
@@ -707,13 +707,13 @@ class Guild(Hashable):
 
         def key(t: ByCategoryItem) -> Tuple[Tuple[int, int], List[GuildChannel]]:
             k, v = t
-            return (k.position, k.id) if k else (-1, -1), v
+            return (k.position or -1, k.id) if k else (-1, -1), v
 
         _get = self._channels.get
         as_list: List[ByCategoryItem] = [(_get(k), v) for k, v in grouped.items()]  # type: ignore
         as_list.sort(key=key)
         for _, channels in as_list:
-            channels.sort(key=lambda c: (c._sorting_bucket, c.position, c.id))
+            channels.sort(key=lambda c: (c._sorting_bucket, c.position or -1, c.id))
         return as_list
 
     def _resolve_channel(self, id: Optional[int], /) -> Optional[Union[GuildChannel, Thread]]:
