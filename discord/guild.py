@@ -2453,9 +2453,15 @@ class Guild(Hashable):
         :class:`GuildSticker`
             The created sticker.
         """
+        if not (2 <= len(name) <= 30):
+            raise TypeError("\"name\" parameter must be 2 to 30 characters long.")
+
+        if description and not (2 <= len(description) <= 100):
+            raise TypeError("\"description\" parameter must be 2 to 200 characters long.")
+
         payload = {
             "name": name,
-            "description": description
+            "description": description or ""
         }
 
         try:
