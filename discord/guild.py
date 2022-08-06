@@ -2447,6 +2447,8 @@ class Guild(Hashable):
             You are not allowed to create stickers.
         HTTPException
             An error occurred creating a sticker.
+        TypeError
+            The parameters for the sticker are not correctly formatted.
 
         Returns
         --------
