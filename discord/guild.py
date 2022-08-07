@@ -1552,7 +1552,7 @@ class Guild(Hashable):
             via :meth:`delete`.
 
         Raises
-        --------
+        -------
         HTTPException
             Leaving the guild failed.
         """
@@ -1565,14 +1565,35 @@ class Guild(Hashable):
         guild.
 
         Raises
-        --------
+        -------
         HTTPException
             Deleting the guild failed.
         Forbidden
             You do not have permissions to delete the guild.
         """
-
         await self._state.http.delete_guild(self.id)
+
+    async def set_mfa_required(self, toggle: bool, *, reason: str = None):
+        """|coro|
+        
+        Set whether it is required to have MFA enabled on your account
+        to perform moderation actions. You must be the guild owner to do this.
+
+        Parameters
+        -----------
+        toggle: :class:`bool`
+            Whether or not it should be required.
+        reason: :class:`str`
+            The reason to show up in the audit log.
+
+        Raises
+        -------
+        HTTPException
+            The operation failed.
+        Forbidden
+            You are not the owner of the guild.
+        """
+        await self._state.http.edit_guild_mfa(self.id, toggle, reason=reason)
 
     async def edit(
         self,
