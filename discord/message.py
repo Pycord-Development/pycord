@@ -760,7 +760,7 @@ class Message(Hashable):
                     if ref.channel_id == channel.id:
                         chan = channel
                     else:
-                        chan, _ = state._get_guild_channel(resolved)
+                        chan, _ = state._get_guild_channel(resolved, guild_id=self.guild.id)
 
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
