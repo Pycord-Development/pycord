@@ -1372,6 +1372,13 @@ class ApplicationFlags(BaseFlags):
         """
         return 1 << 19
 
+    @flag_value
+    def application_command_badge(self):
+        """:class:`bool`: Returns ``True`` if the application has at least one registered application
+        command, and by extension has the badge.
+        """
+        return 1 << 23
+
 
 @fill_with_flags()
 class ChannelFlags(BaseFlags):
