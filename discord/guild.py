@@ -1582,7 +1582,7 @@ class Guild(Hashable):
         Parameters
         -----------
         toggle: :class:`bool`
-            Whether or not it should be required.
+            Whether it should be required.
         reason: :class:`str`
             The reason to show up in the audit log.
 
