@@ -216,6 +216,7 @@ class Guild(Hashable):
         - ``HUB``: Hubs contain a directory channel that let you find school-related,
                    student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
+        - ``INVITES_DISABLED``: Guild's invites have been temporarily disabled.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
         - ``MEMBER_PROFILES``: Unknown.
