@@ -374,8 +374,6 @@ class SelectOption:
     description: Optional[:class:`str`]
         An additional description of the option, if any.
         Can only be up to 100 characters.
-    emoji: Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]
-        The emoji of the option, if available.
     default: :class:`bool`
         Whether this option is selected by default.
     """
@@ -384,7 +382,7 @@ class SelectOption:
         "label",
         "value",
         "description",
-        "emoji",
+        "_emoji",
         "default",
     )
 
@@ -399,22 +397,16 @@ class SelectOption:
     ) -> None:
         if len(label) > 100:
             raise ValueError("label must be 100 characters or fewer")
+
         if value is not MISSING and len(value) > 100:
             raise ValueError("value must be 100 characters or fewer")
+
         if description is not None and len(description) > 100:
             raise ValueError("description must be 100 characters or fewer")
+
         self.label = label
         self.value = label if value is MISSING else value
         self.description = description
-
-        if emoji is not None:
-            if isinstance(emoji, str):
-                emoji = PartialEmoji.from_str(emoji)
-            elif isinstance(emoji, _EmojiTag):
-                emoji = emoji._to_partial()
-            else:
-                raise TypeError(f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}")
-
         self.emoji = emoji
         self.default = default
 
@@ -429,6 +421,23 @@ class SelectOption:
         if self.description:
             return f"{base}\n{self.description}"
         return base
+
+    @property
+    def emoji(self) -> Optional[Union[str, Emoji, PartialEmoji]]:
+        """Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]: The emoji of the option, if available."""
+        return self._emoji
+
+    @emoji.setter
+    def emoji(self, value) -> None:
+        if value is not None:
+            if isinstance(value, str):
+                value = PartialEmoji.from_str(value)
+            elif isinstance(value, _EmojiTag):
+                value = value._to_partial()
+            else:
+                raise TypeError(f"expected emoji to be str, Emoji, or PartialEmoji not {value.__class__}")
+
+        self._emoji = value
 
     @classmethod
     def from_dict(cls, data: SelectOptionPayload) -> SelectOption:
