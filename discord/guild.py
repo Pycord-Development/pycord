@@ -2907,8 +2907,9 @@ class Guild(Hashable):
         self,
         user: Snowflake,
         *,
+        delete_message_days: Optional[int] = 0,
+        delete_message_seconds: Optional[int] = 0,
         reason: Optional[str] = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] = 1,
     ) -> None:
         """|coro|
 
@@ -2923,9 +2924,13 @@ class Guild(Hashable):
         -----------
         user: :class:`abc.Snowflake`
             The user to ban from their guild.
-        delete_message_days: :class:`int`
-            The number of days worth of messages to delete from the user
-            in the guild. The minimum is 0 and the maximum is 7.
+        delete_message_seconds: Optional[:class:`int`]
+            The number of seconds worth of messages to delete from
+            the user in the guild. The minimum is 0 and the maximum
+            is 604800 (i.e. 7 days). The default is 0.
+        delete_message_days: Optional[:class:`int`]
+            Alias to ``delete_message_seconds`` but can be used for
+            days instead of seconds.
         reason: Optional[:class:`str`]
             The reason the user got banned.
 
@@ -2936,7 +2941,17 @@ class Guild(Hashable):
         HTTPException
             Banning failed.
         """
-        await self._state.http.ban(user.id, self.id, delete_message_days, reason=reason)
+        if delete_message_seconds and delete_message_days:
+            raise TypeError("delete_message_seconds and delete_message_days are mutually exclusive.")
+
+        if delete_message_days:
+            # transform into seconds so this isn't a breaking change
+            delete_message_seconds = delete_message_days * 24 * 60 * 60
+
+        if not (0 <= delete_message_seconds <= 604800):
+            raise TypeError("delete_message_seconds must be between 0 and 604800 seconds.")
+
+        await self._state.http.ban(user.id, self.id, delete_message_seconds, reason=reason)
 
     async def unban(self, user: Snowflake, *, reason: Optional[str] = None) -> None:
         """|coro|
