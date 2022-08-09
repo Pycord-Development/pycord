@@ -43,6 +43,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    overload,
 )
 
 import discord.utils
@@ -757,6 +758,17 @@ class CogMixin:
         except ImportError:
             raise errors.ExtensionNotFound(name)
 
+    @overload
+    def load_extension(
+        self,
+        name: str,
+        *,
+        package: Optional[str] = None,
+        recursive: bool = False,
+    ) -> List[str]:
+        ...
+
+    @overload
     def load_extension(
         self,
         name: str,
@@ -764,6 +776,11 @@ class CogMixin:
         package: Optional[str] = None,
         recursive: bool = False,
         store: bool = False,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+        ...
+
+    def load_extension(
+        self, name, *, package = None, recursive = False, store = False
     ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads an extension.
 
@@ -873,12 +890,27 @@ class CogMixin:
         else:
             return final_out
 
+    @overload
+    def load_extensions(
+        self,
+        *names: str,
+        package: Optional[str] = None,
+        recursive: bool = False,
+    ) -> List[str]:
+        ...
+
+    @overload
     def load_extensions(
         self,
         *names: str,
         package: Optional[str] = None,
         recursive: bool = False,
         store: bool = False,
+    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+        ...
+
+    def load_extensions(
+        self, *names, package = None, recursive = False, store = False
     ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
         """Loads multiple extensions at once.
 
