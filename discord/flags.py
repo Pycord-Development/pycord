@@ -282,15 +282,6 @@ class SystemChannelFlags(BaseFlags):
         """
         return 8
 
-    @flag_value
-    def app_commands_badge(self):
-        """:class:`bool`: Returns ``True`` if the application has registered a global application
-        command. This shows up as a badge in the bot's profile.
-
-         .. versionadded:: 2.1
-        """
-        return 1 << 23
-
 
 @fill_with_flags()
 class MessageFlags(BaseFlags):
@@ -1371,6 +1362,15 @@ class ApplicationFlags(BaseFlags):
         and has hit the guild limit.
         """
         return 1 << 19
+
+    @flag_value
+    def app_commands_badge(self):
+        """:class:`bool`: Returns ``True`` if the application has registered at least one global application
+        command, and by extension has the badge.
+
+        .. versionadded:: 2.1
+        """
+        return 1 << 23
 
 
 @fill_with_flags()
