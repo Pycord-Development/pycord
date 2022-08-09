@@ -1334,10 +1334,10 @@ class HTTPClient:
             reason=reason,
         )
 
-    def edit_guild_mfa(self, guild_id: Snowflake, toggle: bool, *, reason: Optional[str]) -> Response[guild.GuildMFAModify]:
+    def edit_guild_mfa(self, guild_id: Snowflake, required: bool, *, reason: Optional[str]) -> Response[guild.GuildMFAModify]:
         return self.request(
             Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),
-            json={"level": int(toggle)},
+            json={"level": int(required)},
             reason=reason
         )
 

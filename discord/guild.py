@@ -1573,7 +1573,7 @@ class Guild(Hashable):
         """
         await self._state.http.delete_guild(self.id)
 
-    async def set_mfa_required(self, toggle: bool, *, reason: str = None):
+    async def set_mfa_required(self, required: bool, *, reason: str = None) -> None:
         """|coro|
         
         Set whether it is required to have MFA enabled on your account
@@ -1581,8 +1581,8 @@ class Guild(Hashable):
 
         Parameters
         -----------
-        toggle: :class:`bool`
-            Whether it should be required.
+        required: :class:`bool`
+            Whether MFA should be required to perform moderation actions.
         reason: :class:`str`
             The reason to show up in the audit log.
 
@@ -1593,7 +1593,7 @@ class Guild(Hashable):
         Forbidden
             You are not the owner of the guild.
         """
-        await self._state.http.edit_guild_mfa(self.id, toggle, reason=reason)
+        await self._state.http.edit_guild_mfa(self.id, required, reason=reason)
 
     async def edit(
         self,
