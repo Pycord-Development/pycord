@@ -335,6 +335,7 @@ class DiscordWebSocket:
         ws._connection = client._connection
         ws._discord_parsers = client._connection.parsers
         ws._dispatch = client.dispatch
+        ws._properties = client.ws_properties
         ws.gateway = gateway
         ws.call_hooks = client._connection.call_hooks
         ws._initial_identify = initial
@@ -404,6 +405,8 @@ class DiscordWebSocket:
                 "v": 3,
             },
         }
+
+        payload["d"]["properties"].update(self._properties)
 
         if self.shard_id is not None and self.shard_count is not None:
             payload["d"]["shard"] = [self.shard_id, self.shard_count]

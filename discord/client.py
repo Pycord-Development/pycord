@@ -229,6 +229,7 @@ class Client:
         self._listeners: Dict[str, List[Tuple[asyncio.Future, Callable[..., bool]]]] = {}
         self.shard_id: Optional[int] = options.get("shard_id")
         self.shard_count: Optional[int] = options.get("shard_count")
+        self.ws_properties: Dict[str, str] = options.get("ws_properties", {})
 
         connector: Optional[aiohttp.BaseConnector] = options.pop("connector", None)
         proxy: Optional[str] = options.pop("proxy", None)
