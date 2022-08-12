@@ -2907,8 +2907,8 @@ class Guild(Hashable):
         self,
         user: Snowflake,
         *,
-        delete_message_days: Optional[int] = 0,
-        delete_message_seconds: Optional[int] = 0,
+        delete_message_days: Optional[int] = None,
+        delete_message_seconds: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> None:
         """|coro|
