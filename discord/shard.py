@@ -221,7 +221,11 @@ class Shard:
     async def reconnect(self) -> None:
         self._cancel_task()
         try:
-            coro = DiscordWebSocket.from_client(self._client, shard_id=self.id)
+            coro = DiscordWebSocket.from_client(
+                self._client,
+                gateway=self.ws.resume_gateway_url,
+                shard_id=self.id,
+            )
             self.ws = await asyncio.wait_for(coro, timeout=60.0)
         except self._handled_exceptions as e:
             await self._handle_disconnect(e)
