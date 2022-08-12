@@ -100,7 +100,7 @@ class Modal:
             return
 
         self._stopped.set_result(True)
-        self.loop.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}")
+        self.loop.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.custom_id}")
 
     @property
     def title(self) -> str:
