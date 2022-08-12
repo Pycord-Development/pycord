@@ -387,7 +387,7 @@ class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):
         try:
             attach = ctx.message.attachments[0]
-        except KeyError:
+        except IndexError:
             raise BadArgument("At least 1 attachment is needed")
         else:
             return attach
