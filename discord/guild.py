@@ -620,7 +620,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, VoiceChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -632,7 +632,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, StageChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -644,7 +644,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, ForumChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -668,7 +668,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, TextChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     @property
@@ -678,7 +678,7 @@ class Guild(Hashable):
         This is sorted by the position and are in UI order from top to bottom.
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, CategoryChannel)]
-        r.sort(key=lambda c: (c.position, c.id))
+        r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
     def by_category(self) -> List[ByCategoryItem]:
@@ -707,13 +707,13 @@ class Guild(Hashable):
 
         def key(t: ByCategoryItem) -> Tuple[Tuple[int, int], List[GuildChannel]]:
             k, v = t
-            return (k.position, k.id) if k else (-1, -1), v
+            return (k.position or -1, k.id) if k else (-1, -1), v
 
         _get = self._channels.get
         as_list: List[ByCategoryItem] = [(_get(k), v) for k, v in grouped.items()]  # type: ignore
         as_list.sort(key=key)
         for _, channels in as_list:
-            channels.sort(key=lambda c: (c._sorting_bucket, c.position, c.id))
+            channels.sort(key=lambda c: (c._sorting_bucket, c.position or -1, c.id))
         return as_list
 
     def _resolve_channel(self, id: Optional[int], /) -> Optional[Union[GuildChannel, Thread]]:
@@ -1552,7 +1552,7 @@ class Guild(Hashable):
             via :meth:`delete`.
 
         Raises
-        --------
+        -------
         HTTPException
             Leaving the guild failed.
         """
@@ -1565,14 +1565,35 @@ class Guild(Hashable):
         guild.
 
         Raises
-        --------
+        -------
         HTTPException
             Deleting the guild failed.
         Forbidden
             You do not have permissions to delete the guild.
         """
-
         await self._state.http.delete_guild(self.id)
+
+    async def set_mfa_required(self, required: bool, *, reason: str = None) -> None:
+        """|coro|
+        
+        Set whether it is required to have MFA enabled on your account
+        to perform moderation actions. You must be the guild owner to do this.
+
+        Parameters
+        -----------
+        required: :class:`bool`
+            Whether MFA should be required to perform moderation actions.
+        reason: :class:`str`
+            The reason to show up in the audit log.
+
+        Raises
+        -------
+        HTTPException
+            The operation failed.
+        Forbidden
+            You are not the owner of the guild.
+        """
+        await self._state.http.edit_guild_mfa(self.id, required, reason=reason)
 
     async def edit(
         self,
@@ -2431,9 +2452,9 @@ class Guild(Hashable):
         Parameters
         -----------
         name: :class:`str`
-            The sticker name. Must be at least 2 characters.
+            The sticker name. Must be 2 to 30 characters.
         description: Optional[:class:`str`]
-            The sticker's description. Can be ``None``.
+            The sticker's description. If used, must be 2 to 100 characters.
         emoji: :class:`str`
             The name of a unicode emoji that represents the sticker's expression.
         file: :class:`File`
@@ -2447,18 +2468,24 @@ class Guild(Hashable):
             You are not allowed to create stickers.
         HTTPException
             An error occurred creating a sticker.
+        TypeError
+            The parameters for the sticker are not correctly formatted.
 
         Returns
         --------
         :class:`GuildSticker`
             The created sticker.
         """
+        if not (2 <= len(name) <= 30):
+            raise TypeError("\"name\" parameter must be 2 to 30 characters long.")
+
+        if description and not (2 <= len(description) <= 100):
+            raise TypeError("\"description\" parameter must be 2 to 200 characters long.")
+
         payload = {
             "name": name,
+            "description": description or ""
         }
-
-        if description:
-            payload["description"] = description
 
         try:
             emoji = unicodedata.name(emoji)
