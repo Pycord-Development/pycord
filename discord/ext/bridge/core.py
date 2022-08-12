@@ -23,14 +23,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations
-
 import inspect
-from typing import TYPE_CHECKING, Any, List, Union, Optional
+from typing import Any, List, Union, Optional
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from ...utils import get, filter_params, find
+from .context import BridgeApplicationContext
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
@@ -40,12 +38,10 @@ from ..commands import (
     RoleConverter,
     UserConverter,
     BadArgument,
+    Context,
     Bot as ExtBot,
 )
-
-if TYPE_CHECKING:
-    from .context import BridgeApplicationContext
-    from ..commands import Context
+from ...utils import get, filter_params, find
 
 
 __all__ = (
