@@ -721,7 +721,7 @@ class ApplicationCommandMixin(ABC):
             if interaction.data:
                 command = self._application_commands[interaction.data["id"]]
         except KeyError:
-            for cmd in self.application_commands:
+            for cmd in self.application_commands + self.pending_application_commands:
                 if interaction.data:
                     guild_id = interaction.data.get("guild_id")
                     if guild_id:

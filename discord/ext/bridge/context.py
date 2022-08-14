@@ -50,10 +50,10 @@ class BridgeContext(ABC):
 
         @bot.bridge_command()
         async def example(ctx: BridgeContext):
-            if isinstance(ctx, BridgeExtContext):
-                command_type = "Traditional (prefix-based) command"
-            elif isinstance(ctx, BridgeApplicationContext):
+            if ctx.is_app:
                 command_type = "Application command"
+            else:
+                command_type = "Traditional (prefix-based) command"
             await ctx.send(f"This command was invoked with a(n) {command_type}.")
 
     .. versionadded:: 2.0
@@ -117,6 +117,11 @@ class BridgeContext(ABC):
 
     def _get_super(self, attr: str) -> Any:
         return getattr(super(), attr)
+
+    @property
+    def is_app(self) -> bool:
+        """bool: Whether the context is an :class:`BridgeApplicationContext` or not."""
+        return isinstance(self, BridgeApplicationContext)
 
 
 class BridgeApplicationContext(BridgeContext, ApplicationContext):
