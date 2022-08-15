@@ -178,15 +178,18 @@ class Interaction:
 
         # TODO: there's a potential data loss here
         if self.guild_id:
-            guild = self.guild or Object(id=self.guild_id)
+            guild = self.guild or self._state._get_guild(self.guild_id)
             try:
                 member = data["member"]  # type: ignore
             except KeyError:
                 pass
             else:
-                cache_flag = self._state.member_cache_flags.interaction
-                self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 self._permissions = int(member.get("permissions", 0))
+                if guild:
+                    cache_flag = self._state.member_cache_flags.interaction
+                    self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
+                else:
+                    self.user = Member(state=self._state, data=member, guild=guild)
         else:
             try:
                 self.user = User(state=self._state, data=data["user"])
