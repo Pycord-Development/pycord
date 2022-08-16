@@ -178,7 +178,7 @@ class Interaction:
 
         # TODO: there's a potential data loss here
         if self.guild_id:
-            guild = self.guild or self._state._get_guild(self.guild_id)
+            guild = self.guild or self._state._get_guild(self.guild_id) or Object(id=self.guild_id)
             try:
                 member = data["member"]  # type: ignore
             except KeyError:
