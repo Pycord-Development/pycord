@@ -25,7 +25,7 @@ async def guess_number(ctx: discord.ApplicationContext):
     def is_valid_guess(m: discord.Message):
         # This function checks three things at once:
         # - The author of the message we've received via
-        #   the wait_for is the same as the first message.
+        #   the wait_for is the same as command author.
         # - The content of the message is a digit.
         # - The digit received is within the range of 1-10.
         # If any one of these checks fail, we ignore this message.
