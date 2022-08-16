@@ -42,7 +42,7 @@ class BridgeContext(ABC):
     this class are meant to give parity between the two contexts, while still allowing for all of their functionality.
 
     When this is passed to a command, it will either be passed as :class:`BridgeExtContext`, or
-    :class:`BridgeApplicationContext`. Since they are two separate classes, it's easy to use `cts.is_app` 
+    :class:`BridgeApplicationContext`. Since they are two separate classes, it's easy to use the :attr:`BridgeContext.is_app` attribute.
     to make different functionality for each context. For example, if you want to respond to a command with the command
     type that it was invoked with, you can do the following:
 
