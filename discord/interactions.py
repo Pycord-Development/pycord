@@ -185,7 +185,7 @@ class Interaction:
                 pass
             else:
                 self._permissions = int(member.get("permissions", 0))
-                if guild:
+                if not isinstance(guild, Object):
                     cache_flag = self._state.member_cache_flags.interaction
                     self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 else:
