@@ -147,7 +147,7 @@ class View:
         The list of children attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`Message`]
+    message: Optional[:class:`.Message`]
         The message that this view is attached to. 
         If ``None`` then the view has not been sent with a message.
     """
