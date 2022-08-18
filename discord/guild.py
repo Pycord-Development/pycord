@@ -2907,8 +2907,8 @@ class Guild(Hashable):
         self,
         user: Snowflake,
         *,
-        delete_message_days: Optional[int] = None,
         delete_message_seconds: Optional[int] = None,
+        delete_message_days: Optional[int] = None,
         reason: Optional[str] = None,
     ) -> None:
         """|coro|
@@ -2929,8 +2929,8 @@ class Guild(Hashable):
             the user in the guild. The minimum is 0 and the maximum
             is 604800 (i.e. 7 days). The default is 0.
         delete_message_days: Optional[:class:`int`]
-            Alias to ``delete_message_seconds`` but can be used for
-            days instead of seconds.
+            ***Deprecated parameter***, same as ``delete_message_seconds`` but
+            is used for days instead.
         reason: Optional[:class:`str`]
             The reason the user got banned.
 
@@ -2944,14 +2944,10 @@ class Guild(Hashable):
         if delete_message_seconds and delete_message_days:
             raise TypeError("delete_message_seconds and delete_message_days are mutually exclusive.")
 
-        if delete_message_days:
-            # transform into seconds so this isn't a breaking change
-            delete_message_seconds = delete_message_days * 24 * 60 * 60
-
         if not (0 <= delete_message_seconds <= 604800):
             raise TypeError("delete_message_seconds must be between 0 and 604800 seconds.")
 
-        await self._state.http.ban(user.id, self.id, delete_message_seconds, reason=reason)
+        await self._state.http.ban(user.id, self.id, delete_message_seconds, delete_message_days, reason=reason)
 
     async def unban(self, user: Snowflake, *, reason: Optional[str] = None) -> None:
         """|coro|
