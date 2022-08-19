@@ -689,8 +689,8 @@ class Intents(BaseFlags):
 
         .. note::
 
-            Currently, this requires opting in explicitly via the developer portal as well.
-            Bots in over 100 guilds will need to apply to Discord for verification.
+            This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
         """
         return 1 << 1
 
@@ -818,8 +818,8 @@ class Intents(BaseFlags):
 
         .. note::
 
-            Currently, this requires opting in explicitly via the developer portal as well.
-            Bots in over 100 guilds will need to apply to Discord for verification.
+            This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
         """
         return 1 << 8
 
@@ -1044,8 +1044,9 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of April 2022 requires opting in explicitly via the developer portal to receive the actual content
-            of the guild messages. Bots in over 100 guilds will need to apply to Discord for verification.
+            As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
+            of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
+            intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
 
         """
@@ -1361,6 +1362,15 @@ class ApplicationFlags(BaseFlags):
         and has hit the guild limit.
         """
         return 1 << 19
+
+    @flag_value
+    def app_commands_badge(self):
+        """:class:`bool`: Returns ``True`` if the application has registered at least one global application
+        command, and by extension has the badge.
+
+        .. versionadded:: 2.1
+        """
+        return 1 << 23
 
 
 @fill_with_flags()

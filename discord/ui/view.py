@@ -147,7 +147,7 @@ class View:
         The list of children attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`Message`]
+    message: Optional[:class:`.Message`]
         The message that this view is attached to. 
         If ``None`` then the view has not been sent with a message.
     """
@@ -323,6 +323,8 @@ class View:
 
         The default implementation of this returns ``True``.
 
+        If this returns ``False``, :meth:`on_check_failure` is called.
+
         .. note::
 
             If an exception occurs within the body then the check
@@ -349,6 +351,18 @@ class View:
             if self._message:
                 self.disable_all_items()
                 await self._message.edit(view=self)
+
+    async def on_check_failure(self, interaction: Interaction) -> None:
+        """|coro|
+        A callback that is called when a :meth:`View.interaction_check` returns ``False``.
+        This can be used to send a response when a check failure occurs.
+
+        Parameters
+        -----------
+        interaction: :class:`~discord.Interaction`
+            The interaction that occurred.
+        """
+        pass
 
     async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
@@ -377,7 +391,7 @@ class View:
 
             allow = await self.interaction_check(interaction)
             if not allow:
-                return
+                return await self.on_check_failure(interaction)
 
             await item.callback(interaction)
         except Exception as e:

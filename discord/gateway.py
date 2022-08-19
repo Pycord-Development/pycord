@@ -53,7 +53,7 @@ __all__ = (
 
 
 class ReconnectWebSocket(Exception):
-    """Signals to safely reconnect the websocket."""
+    """Signals to safely reconnect the WebSocket."""
 
     def __init__(self, shard_id, *, resume=True):
         self.shard_id = shard_id
@@ -292,6 +292,7 @@ class DiscordWebSocket:
         # ws related stuff
         self.session_id = None
         self.sequence = None
+        self.resume_gateway_url = None
         self._zlib = zlib.decompressobj()
         self._buffer = bytearray()
         self._close_code = None
@@ -511,6 +512,7 @@ class DiscordWebSocket:
             self._trace = trace = data.get("_trace", [])
             self.sequence = msg["s"]
             self.session_id = data["session_id"]
+            self.resume_gateway_url = data["resume_gateway_url"]
             # pass back shard ID to ready handler
             data["__shard_id__"] = self.shard_id
             _log.info(
@@ -705,7 +707,7 @@ class DiscordWebSocket:
 
 
 class DiscordVoiceWebSocket:
-    """Implements the websocket protocol for handling voice connections.
+    """Implements the WebSocket protocol for handling voice connections.
 
     Attributes
     -----------

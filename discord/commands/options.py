@@ -135,16 +135,16 @@ class Option:
         The default value for this option. If provided, ``required`` will be considered ``False``.
     min_value: Optional[:class:`int`]
         The minimum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     max_value: Optional[:class:`int`]
         The maximum value that can be entered.
-        Only applies to Options with an input_type of ``int`` or ``float``.
+        Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
     min_length: Optional[:class:`int`]
         The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
-        Only applies to Options with an input_type of ``str``.
+        Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Optional[:class:`Any`]
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
         that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
@@ -169,6 +169,7 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
+        self._raw_type: Union[InputType, tuple] = input_type
 
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
@@ -177,16 +178,17 @@ class Option:
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
-                self.input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
+                input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
             else:
                 enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
-                self.input_type = SlashCommandOptionType.string
-        self.description = description or "No description provided"
+                input_type = SlashCommandOptionType.string
 
-        self._raw_type: Union[InputType, tuple] = input_type
+        self.description = description or "No description provided"
         self.channel_types: List[ChannelType] = kwargs.pop("channel_types", [])
 
-        if not isinstance(input_type, SlashCommandOptionType):
+        if isinstance(input_type, SlashCommandOptionType):
+            self.input_type = input_type
+        else:
             from ..ext.commands import Converter
             if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
@@ -343,7 +345,10 @@ def option(name, type=None, **kwargs):
     def decorator(func):
         nonlocal type
         type = type or func.__annotations__.get(name, str)
-        func.__annotations__[name] = Option(type, **kwargs)
+        if parameter := kwargs.get("parameter_name"):
+            func.__annotations__[parameter] = Option(type, name=name ,**kwargs)
+        else:
+            func.__annotations__[name] = Option(type, **kwargs)
         return func
 
     return decorator
