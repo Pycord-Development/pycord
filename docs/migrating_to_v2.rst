@@ -121,6 +121,19 @@ Webhook Changes
 
 .. _migrating_2_0_thread_introduced:
 
+Intents Required
+----------------
+
+:class:`Client` and its subclasses default the ``intents`` argument to be :meth:`Intents.none()`, instead of :meth:`Intents.default()`.
+Therefore, you should pass :class:`Intents` to the constructor if you want to use intents.
+See :doc:`intents`.
+
+
+.. code-block:: python
+
+    client = discord.Client(intents=discord.Intents.all())
+    client.run(token)
+
 Threads Introduced
 ------------------
 
