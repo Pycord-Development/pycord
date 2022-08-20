@@ -7,5 +7,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: pip install codespell
-      - run: codespell --ignore-words-list="groupt,nd,ot"
+      - run: pip install codespell==2.1.0
+      - run: codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" --exclude-file=".github/workflows/codespell.yml"
