@@ -722,6 +722,8 @@ class BanIterator(_AsyncIterator["BanEntry"]):
         if not data:
             # no data, terminate
             return
+        if self.limit:
+            self.limit -= self.retrieve
 
         if len(data) < 1000:
             self.limit = 0  # terminate loop
