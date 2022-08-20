@@ -619,7 +619,7 @@ class SlashCommand(ApplicationCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func: Callable, **kwargs) -> None:
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
@@ -1016,10 +1016,10 @@ class SlashCommandGroup(ApplicationCommand):
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
     ) -> None:
-        self.name = name
-        self.description = description or "No description provided"
-        validate_chat_input_name(self.name)
-        validate_chat_input_description(self.description)
+        validate_chat_input_name(name)
+        validate_chat_input_description(description)
+        self.name = str(name)
+        self.description = description
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
@@ -1065,9 +1065,9 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def command(self, **kwargs) -> Callable[[Callable], SlashCommand]:
-        def wrap(func) -> SlashCommand:
-            command = SlashCommand(func, parent=self, **kwargs)
+    def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
+        def wrap(func) -> T:
+            command = cls(func, parent=self, **kwargs)
             self.subcommands.append(command)
             return command
 

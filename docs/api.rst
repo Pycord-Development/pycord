@@ -1494,6 +1494,8 @@ Utility Functions
 
 .. autofunction:: discord.utils.basic_autocomplete
 
+.. autofunction:: discord.utils.filter_params
+
 .. _discord-api-enums:
 
 Enumerations
