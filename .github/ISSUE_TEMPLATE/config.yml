@@ -6,6 +6,3 @@ contact_links:
   - name: Discord Server
     about: Use our official Discord server to ask for help and questions as well.
     url: https://pycord.dev/discord
-  - name: Vulnerability Report
-    about: You found a vulnerability? We have to handle that confidential, so either write one of the core devs a dm or write an mail to admin@pycord.dev.
-    url: https://pycord.dev/discord
