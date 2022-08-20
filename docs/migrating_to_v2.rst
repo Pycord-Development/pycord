@@ -119,7 +119,7 @@ Webhook Changes
         await webhook.send("Hello from Pycord 2.0")
 
 
-.. _migrating_2_0_thread_introduced:
+.. _migrating_2_0_intents_required:
 
 Intents Required
 ----------------
@@ -133,6 +133,9 @@ See :doc:`intents`.
 
     client = discord.Client(intents=discord.Intents.all())
     client.run(token)
+
+
+.. _migrating_2_0_thread_introduced:
 
 Threads Introduced
 ------------------
