@@ -119,20 +119,15 @@ Webhook Changes
         await webhook.send("Hello from Pycord 2.0")
 
 
-.. _migrating_2_0_intents_required:
+.. _migrating_2_0_intents_changes:
 
-Intents Required
-----------------
+Intents Changes
+---------------
 
-:class:`Client` and its subclasses default the ``intents`` argument to be :meth:`Intents.none()`, instead of :meth:`Intents.default()`.
-Therefore, you should pass :class:`Intents` to the constructor if you want to use intents.
-See :doc:`intents`.
-
-
-.. code-block:: python
-
-    client = discord.Client(intents=discord.Intents.all())
-    client.run(token)
+:attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`,
+:attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be ``None``, directly causing
+:class:`ext.commands.Commands` to not run.
+See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information.
 
 
 .. _migrating_2_0_thread_introduced:
