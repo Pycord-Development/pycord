@@ -221,7 +221,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
-            check = self.name == other.name and self.guild_ids == self.guild_ids
+            check = self.name == other.name and self.guild_ids == other.guild_ids
         return isinstance(other, self.__class__) and self.parent == other.parent and check
 
     async def __call__(self, ctx, *args, **kwargs):
@@ -854,9 +854,10 @@ class SlashCommand(ApplicationCommand):
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 from discord.ext.commands import Converter
                 if isinstance(converter, Converter):
-                    arg = await converter.convert(ctx, arg)
-                elif isinstance(converter, type) and hasattr(converter, "convert"):
-                    arg = await converter().convert(ctx, arg)
+                    if isinstance(converter, type):
+                        arg = await converter().convert(ctx, arg)
+                    else:
+                        arg = await converter.convert(ctx, arg)
 
             elif op._raw_type in (SlashCommandOptionType.integer,
                                   SlashCommandOptionType.number,
