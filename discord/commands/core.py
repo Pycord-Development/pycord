@@ -221,7 +221,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
-            check = self.name == other.name and self.guild_ids == self.guild_ids
+            check = self.name == other.name and self.guild_ids == other.guild_ids
         return isinstance(other, self.__class__) and self.parent == other.parent and check
 
     async def __call__(self, ctx, *args, **kwargs):
