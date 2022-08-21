@@ -28,7 +28,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING
 
-from .automod import AutoModAction
+from .automod import AutoModAction, AutoModTriggerType
 from .enums import ChannelType, try_enum
 
 if TYPE_CHECKING:
@@ -443,6 +443,7 @@ class AutoModActionExecutionEvent:
     __slots__ = (
         "action",
         "rule_id",
+        "rule_trigger_type",
         "guild_id",
         "guild",
         "user_id",
@@ -461,6 +462,7 @@ class AutoModActionExecutionEvent:
     def __init__(self, state: ConnectionState, data: AutoModActionExecution) -> None:
         self.action: AutoModAction = AutoModAction.from_dict(data["action"])
         self.rule_id: int = int(data["rule_id"])
+        self.rule_trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, int(data["rule_trigger_type"]))
         self.guild_id: int = int(data["guild_id"])
         self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
