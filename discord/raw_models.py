@@ -409,6 +409,8 @@ class AutoModActionExecutionEvent:
         The action that was executed.
     rule_id: :class:`int`
         The ID of the rule that the action belongs to.
+    rule_trigger_type: :class:`AutoModTriggerType`
+        The category of trigger the rule belongs to.
     guild_id: :class:`int`
         The ID of the guild that the action was executed in.
     guild: Optional[:class:`Guild`]
