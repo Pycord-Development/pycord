@@ -5,7 +5,7 @@
 Migrating to v2.0
 =================
 
-v2.0 introduced new Discord features and depcreated some old ones.
+v2.0 introduced new Discord features and deprecated some old ones.
 
 Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`.
 
@@ -95,7 +95,7 @@ Asset-related attributes that previously returned hash strings (e.g. :attr:`User
 Webhook Changes
 ~~~~~~~~~~~~~~~
 
-- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronouns. For synchronouns use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`.
+- :class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`.
 - ``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary.
 - ``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``.
 
@@ -117,6 +117,17 @@ Webhook Changes
             session=session
         )
         await webhook.send("Hello from Pycord 2.0")
+
+
+.. _migrating_2_0_intents_changes:
+
+Intents Changes
+---------------
+
+:attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`,
+:attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string
+or an empty array), directly causing :class:`ext.commands.Command`s to not run.
+See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information.
 
 
 .. _migrating_2_0_thread_introduced:
@@ -221,7 +232,7 @@ Many method arguments now reject ``None`` or return ``None``.
 - The following :class:`.ext.commands.Context` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``.
 - :attr:`ext.commands.Command.help` can now be ``None``.
 
-.. _migrating_2_0_miscelaneous_changes:
+.. _migrating_2_0_miscellaneous_changes:
 
 Miscellaneous Changes
 ---------------------
