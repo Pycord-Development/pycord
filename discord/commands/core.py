@@ -1017,10 +1017,10 @@ class SlashCommandGroup(ApplicationCommand):
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
     ) -> None:
-        validate_chat_input_name(name)
-        validate_chat_input_description(description)
         self.name = str(name)
-        self.description = description
+        self.description = description or "No description provided"
+        validate_chat_input_name(self.name)
+        validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
