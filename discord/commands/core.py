@@ -63,7 +63,7 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import async_all, find, utcnow
+from ..utils import async_all, find, utcnow, maybe_coroutine
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -366,6 +366,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if self.parent is not None:
             # parent checks should be run first
             predicates = self.parent.checks + predicates
+
+        cog = self.cog
+        if cog is not None:
+            local_check = cog._get_overridden_method(cog.cog_check)
+            if local_check is not None:
+                ret = await maybe_coroutine(local_check, ctx)
+                if not ret:
+                    return False
 
         if not predicates:
             # since we have no checks, then we just return True.
