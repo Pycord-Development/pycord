@@ -173,7 +173,6 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     __original_kwargs__: Dict[str, Any]
-    cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
@@ -186,6 +185,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             buckets = cooldown
         else:
             raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+
         self._buckets: CooldownMapping = buckets
 
         max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
@@ -203,6 +203,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         except AttributeError:
             checks = kwargs.get("checks", [])
 
+        self.cog = None
         self.checks = checks
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
@@ -646,13 +647,7 @@ class SlashCommand(ApplicationCommand):
 
         self.attached_to_group: bool = False
 
-        self.cog = None
-
-        params = self._get_signature_parameters()
-        if kwop := kwargs.get("options", None):
-            self.options: List[Option] = self._match_option_param_names(params, kwop)
-        else:
-            self.options: List[Option] = self._parse_options(params)
+        self.options: List[Option] = kwargs.get("options", [])
 
         try:
             checks = func.__commands_checks__
@@ -665,13 +660,21 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
+        self._is_in_cog = None
+
+    def _validate_parameters(self):
+        params = self._get_signature_parameters()
+        if kwop := self.options:
+            self.options: List[Option] = self._match_option_param_names(params, kwop)
+        else:
+            self.options: List[Option] = self._parse_options(params)
+
     def _check_required_params(self, params):
         params = iter(params.items())
         required_params = (
             ["self", "context"]
             if self.attached_to_group
-            or self.cog
-            or ("<locals>" not in self.callback.__qualname__ and len(self.callback.__qualname__.split(".")) > 1)
+            or self.is_in_cog
             else ["context"]
         )
         for p in required_params:
@@ -763,6 +766,15 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    @property
+    def is_in_cog(self):
+        return self._is_in_cog
+
+    @is_in_cog.setter
+    def is_in_cog(self, val):
+        self._is_in_cog = val
+        self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
