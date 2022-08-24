@@ -1408,7 +1408,7 @@ class Messageable:
 
             .. versionadded:: 2.0
         suppress: :class:`bool`
-            Indicates if message should suppress embeds.
+            Whether to suppress embeds for the message.
 
         Raises
         --------
