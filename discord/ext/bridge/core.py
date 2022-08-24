@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import inspect
-from typing import Any, List, Union, Optional
+from typing import Any, List, Union, Optional, Callable
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
@@ -54,6 +54,7 @@ __all__ = (
     "BridgeExtGroup",
     "BridgeSlashGroup",
     "map_to",
+    "guild_only",
 )
 
 
@@ -311,7 +312,7 @@ def bridge_command(**kwargs):
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
-    def decorator(callback):
+    def decorator(callback: Callable):
         return BridgeCommand(callback, **kwargs)
 
     return decorator
@@ -325,7 +326,7 @@ def bridge_group(**kwargs):
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
     """
-    def decorator(callback):
+    def decorator(callback: Callable):
         return BridgeCommandGroup(callback, **kwargs)
 
     return decorator
@@ -363,11 +364,30 @@ def map_to(name, description = None):
         The new description of the mapped command.
     """
 
-    def decorator(callback):
+    def decorator(callback: Callable):
         callback.__custom_map_to__ = {"name": name, "description": description}
         return callback
 
     return decorator
+
+
+def guild_only():
+    """Works with :class:`ApplicationCommand`, :class:`~ext.commands.Command`, and :class:`BridgeCommand`,
+    adds a :func:`~ext.commands.check` that locks the command to only run in guilds, and for application commands,
+    registers the command as guild only client-side (on discord).
+    
+    Basically a utility function that wraps both :func:`~ext.commands.guild_only` and :func:`permissions.guild_only`.
+    """
+
+    def predicate(callback: Callable):
+        # ignored if not an ApplicationCommand either way 
+        callback.__guild_only__ = True
+
+        from ..commands import guild_only
+
+        return guild_only()(callback)
+
+    return predicate
 
 
 class MentionableConverter(Converter):
