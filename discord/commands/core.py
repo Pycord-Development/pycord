@@ -63,7 +63,7 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import async_all, find, utcnow, maybe_coroutine
+from ..utils import async_all, find, utcnow, maybe_coroutine, MISSING
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -173,6 +173,7 @@ class _BaseCommand:
 
 class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     __original_kwargs__: Dict[str, Any]
+    cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
@@ -203,7 +204,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         except AttributeError:
             checks = kwargs.get("checks", [])
 
-        self.cog = None
         self.checks = checks
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
@@ -660,7 +660,7 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
-        self._is_in_cog = None
+        self._cog = MISSING
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
@@ -674,7 +674,7 @@ class SlashCommand(ApplicationCommand):
         required_params = (
             ["self", "context"]
             if self.attached_to_group
-            or self.is_in_cog
+            or self.cog
             else ["context"]
         )
         for p in required_params:
@@ -768,12 +768,12 @@ class SlashCommand(ApplicationCommand):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
     @property
-    def is_in_cog(self):
-        return self._is_in_cog
+    def cog(self):
+        return self._cog
 
-    @is_in_cog.setter
-    def is_in_cog(self, val):
-        self._is_in_cog = val
+    @cog.setter
+    def cog(self, val):
+        self._cog = val
         self._validate_parameters()
 
     @property
@@ -967,6 +967,10 @@ class SlashCommand(ApplicationCommand):
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
+
+    def _set_cog(self, cog):
+        super()._set_cog(cog)
+        self._validate_parameters()
 
 
 class SlashCommandGroup(ApplicationCommand):

@@ -241,10 +241,8 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if isinstance(command, ApplicationCommand):
-                command.is_in_cog = True
-                if isinstance(command, ApplicationCommand) and not command.guild_ids and new_cls.__cog_guild_ids__:
-                    command.guild_ids = new_cls.__cog_guild_ids__
+            if isinstance(command, ApplicationCommand) and not command.guild_ids and new_cls.__cog_guild_ids__:
+                command.guild_ids = new_cls.__cog_guild_ids__
 
             if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
