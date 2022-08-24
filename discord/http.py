@@ -449,7 +449,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
-        suppress: Optional[bool] = False,
+        flags: Optional[int] = 0,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -481,8 +481,8 @@ class HTTPClient:
         if stickers:
             payload["sticker_ids"] = stickers
             
-        if suppress:
-            payload["flags"] = 4
+        if flags:
+            payload["flags"] = flags
 
         return self.request(r, json=payload)
 
@@ -503,7 +503,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
-        suppress: Optional[bool] = False,
+        flags: Optional[int] = 0,
     ) -> Response[message.Message]:
         form = []
 
@@ -524,8 +524,8 @@ class HTTPClient:
             payload["components"] = components
         if stickers:
             payload["sticker_ids"] = stickers
-        if suppress:
-            payload["flags"] = 4
+        if flags:
+            payload["flags"] = flags
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -563,7 +563,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
-        suppress: Optional[bool] = False,
+        flags: Optional[int] = 0,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -578,7 +578,7 @@ class HTTPClient:
             message_reference=message_reference,
             stickers=stickers,
             components=components,
-            suppress=suppress,
+            flags=flags,
         )
 
     def edit_multipart_helper(

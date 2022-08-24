@@ -50,6 +50,7 @@ from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
 from .file import File
+from .flags import MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
@@ -1442,6 +1443,11 @@ class Messageable:
             if len(embeds) > 10:
                 raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
             embeds = [embed.to_dict() for embed in embeds]
+            
+        if suppress is not None:
+            flags = MessageFlags.suppress_embeds
+        else:
+            flags = MessageFlags.DEFAULT_VALUE
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1493,7 +1499,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    suppress=suppress,
+                    flags=flags,
                 )
             finally:
                 file.close()
@@ -1517,7 +1523,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    suppress=suppress,
+                    flags=flags,
                 )
             finally:
                 for f in files:
@@ -1534,7 +1540,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
-                suppress=suppress,
+                flags=flags,
             )
 
         ret = state.create_message(channel=channel, data=data)
