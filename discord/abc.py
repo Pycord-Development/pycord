@@ -1444,7 +1444,7 @@ class Messageable:
                 raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
             embeds = [embed.to_dict() for embed in embeds]
             
-        if suppress is not None:
+        if suppress:
             flags = MessageFlags.suppress_embeds
         else:
             flags = MessageFlags.DEFAULT_VALUE
