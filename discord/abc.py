@@ -1256,6 +1256,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1274,6 +1275,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1292,6 +1294,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1310,6 +1313,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1329,6 +1333,7 @@ class Messageable:
         reference=None,
         mention_author=None,
         view=None,
+        suppress=None
     ):
         """|coro|
 
@@ -1401,6 +1406,8 @@ class Messageable:
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
+        suppress: :class:`bool`
+            Indicates if message should suppress embeds.
 
         Raises
         --------
@@ -1486,6 +1493,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    suppress=suppress,
                 )
             finally:
                 file.close()
@@ -1509,6 +1517,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    suppress=suppress,
                 )
             finally:
                 for f in files:
@@ -1525,6 +1534,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
+                suppress=suppress,
             )
 
         ret = state.create_message(channel=channel, data=data)
