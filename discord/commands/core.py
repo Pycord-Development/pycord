@@ -671,7 +671,7 @@ class SlashCommand(ApplicationCommand):
             ["self", "context"]
             if self.attached_to_group
             or self.cog
-            or len(self.callback.__qualname__.split(".")) > 1
+            or ("<locals>" not in self.callback.__qualname__ and len(self.callback.__qualname__.split(".")) > 1)
             else ["context"]
         )
         for p in required_params:
