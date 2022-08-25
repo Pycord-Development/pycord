@@ -857,9 +857,10 @@ class SlashCommand(ApplicationCommand):
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
                 from discord.ext.commands import Converter
                 if isinstance(converter, Converter):
-                    arg = await converter.convert(ctx, arg)
-                elif isinstance(converter, type) and hasattr(converter, "convert"):
-                    arg = await converter().convert(ctx, arg)
+                    if isinstance(converter, type):
+                        arg = await converter().convert(ctx, arg)
+                    else:
+                        arg = await converter.convert(ctx, arg)
 
             elif op._raw_type in (SlashCommandOptionType.integer,
                                   SlashCommandOptionType.number,

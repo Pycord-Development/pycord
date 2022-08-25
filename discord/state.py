@@ -1392,7 +1392,7 @@ class ConnectionState:
 
         creator = None if not data.get("creator", None) else guild.get_member(data.get("creator_id"))
         scheduled_event = ScheduledEvent(state=self, guild=guild, creator=creator, data=data)
-        old_event = guild.get_scheduled_event(data["id"])
+        old_event = guild.get_scheduled_event(int(data["id"]))
         guild._add_scheduled_event(scheduled_event)
         self.dispatch("scheduled_event_update", old_event, scheduled_event)
 
