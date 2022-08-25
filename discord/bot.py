@@ -439,7 +439,7 @@ class ApplicationCommandMixin(ABC):
             }
 
             def _register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
-                return registration_methods[method](self._bot.user.id if self._bot.user else 0, *args, **kwargs)
+                return registration_methods[method](self._bot.user and self._bot.user.id, *args, **kwargs)
 
         else:
             pending = list(
@@ -456,7 +456,7 @@ class ApplicationCommandMixin(ABC):
             }
 
             def _register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
-                return registration_methods[method](self._bot.user.id if self._bot.user else 0, guild_id, *args, **kwargs)
+                return registration_methods[method](self._bot.user and self._bot.user.id, guild_id, *args, **kwargs)
 
         def register(method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs):
             if kwargs.pop("_log", True):
@@ -464,20 +464,22 @@ class ApplicationCommandMixin(ABC):
                     _log.debug(f"Bulk updating commands {[c['name'] for c in args[0]]} for guild {guild_id}")
                 # TODO: Find where "cmd" is defined
                 elif method == "upsert":
-                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")
+                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")  # type: ignore
                 elif method == "edit":
-                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")
+                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")  # type: ignore
                 elif method == "delete":
-                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")
+                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")  # type: ignore
             return _register(method, *args, **kwargs)
 
         pending_actions = []
 
         if not force:
-            if guild_id is None:
-                prefetched_commands = await self._bot.http.get_global_commands(self.user.id)
-            else:
-                prefetched_commands = await self._bot.http.get_guild_commands(self.user.id, guild_id)
+            prefetched_commands: List[interactions.ApplicationCommand] = []
+            if self._bot.user:
+                if guild_id is None:
+                    prefetched_commands = await self._bot.http.get_global_commands(self._bot.user.id)
+                else:
+                    prefetched_commands = await self._bot.http.get_guild_commands(self._bot.user.id, guild_id)
             desynced = await self.get_desynced_commands(guild_id=guild_id, prefetched=prefetched_commands)
 
             for cmd in desynced:
@@ -673,7 +675,7 @@ class ApplicationCommandMixin(ABC):
                         and cmd.type == i.get("type")
                         and cmd.guild_ids is not None
                         # TODO: fix this type error (guild_id is not defined in ApplicationCommand Typed Dict)
-                        and int(i["guild_id"]) in cmd.guild_ids,
+                        and int(i["guild_id"]) in cmd.guild_ids,  # type: ignore
                         self.pending_application_commands,
                     )
                     if not cmd:
@@ -710,29 +712,30 @@ class ApplicationCommandMixin(ABC):
         """
         if auto_sync is None:
             auto_sync = self._bot.auto_sync_commands
+        # TODO: find out why the isinstance check below doesn't stop the type errors below
         if interaction.type not in (
             InteractionType.application_command,
             InteractionType.auto_complete,
-        ):
+        ) and isinstance(interaction.data, interactions.ComponentInteractionData):
             return
 
         command: Optional[ApplicationCommand] = None
         try:
             if interaction.data:
-                command = self._application_commands[interaction.data["id"]]
+                command = self._application_commands[interaction.data["id"]]  # type: ignore 
         except KeyError:
             for cmd in self.application_commands + self.pending_application_commands:
                 if interaction.data:
                     guild_id = interaction.data.get("guild_id")
                     if guild_id:
                         guild_id = int(guild_id)
-                    if cmd.name == interaction.data["name"] and (
+                    if cmd.name == interaction.data["name"] and (  # type: ignore
                         guild_id == cmd.guild_ids or (isinstance(cmd.guild_ids, list) and guild_id in cmd.guild_ids)
                     ):
                         command = cmd
                         break
             else:
-                if auto_sync:
+                if auto_sync and interaction.data:
                     guild_id = interaction.data.get("guild_id")
                     if guild_id is None:
                         await self.sync_commands()
