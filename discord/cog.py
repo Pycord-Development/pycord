@@ -204,8 +204,8 @@ class CogMeta(type):
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
 
-                    commands[f"ext_{elem}"] = value.get_ext_command()
-                    commands[f"application_{elem}"] = value.get_application_command()
+                    commands[f"ext_{elem}"] = value.ext_variant
+                    commands[f"application_{elem}"] = value.slash_variant
                 except AttributeError:
                     # we are confident that the value is not a Bridge Command
                     pass
