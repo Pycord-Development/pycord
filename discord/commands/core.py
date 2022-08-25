@@ -63,7 +63,7 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import async_all, find, utcnow
+from ..utils import async_all, find, utcnow, maybe_coroutine, MISSING
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -186,6 +186,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             buckets = cooldown
         else:
             raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+
         self._buckets: CooldownMapping = buckets
 
         max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
@@ -221,7 +222,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
             check = self.id == other.id
         else:
-            check = self.name == other.name and self.guild_ids == self.guild_ids
+            check = self.name == other.name and self.guild_ids == other.guild_ids
         return isinstance(other, self.__class__) and self.parent == other.parent and check
 
     async def __call__(self, ctx, *args, **kwargs):
@@ -366,6 +367,14 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if self.parent is not None:
             # parent checks should be run first
             predicates = self.parent.checks + predicates
+
+        cog = self.cog
+        if cog is not None:
+            local_check = cog._get_overridden_method(cog.cog_check)
+            if local_check is not None:
+                ret = await maybe_coroutine(local_check, ctx)
+                if not ret:
+                    return False
 
         if not predicates:
             # since we have no checks, then we just return True.
@@ -638,13 +647,7 @@ class SlashCommand(ApplicationCommand):
 
         self.attached_to_group: bool = False
 
-        self.cog = None
-
-        params = self._get_signature_parameters()
-        if kwop := kwargs.get("options", None):
-            self.options: List[Option] = self._match_option_param_names(params, kwop)
-        else:
-            self.options: List[Option] = self._parse_options(params)
+        self.options: List[Option] = kwargs.get("options", [])
 
         try:
             checks = func.__commands_checks__
@@ -657,13 +660,21 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
+        self._cog = MISSING
+
+    def _validate_parameters(self):
+        params = self._get_signature_parameters()
+        if kwop := self.options:
+            self.options: List[Option] = self._match_option_param_names(params, kwop)
+        else:
+            self.options: List[Option] = self._parse_options(params)
+
     def _check_required_params(self, params):
         params = iter(params.items())
         required_params = (
             ["self", "context"]
             if self.attached_to_group
             or self.cog
-            or len(self.callback.__qualname__.split(".")) > 1
             else ["context"]
         )
         for p in required_params:
@@ -755,6 +766,15 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    @property
+    def cog(self):
+        return self._cog
+
+    @cog.setter
+    def cog(self, val):
+        self._cog = val
+        self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -948,6 +968,10 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
+    def _set_cog(self, cog):
+        super()._set_cog(cog)
+        self._validate_parameters()
+
 
 class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
@@ -1017,10 +1041,10 @@ class SlashCommandGroup(ApplicationCommand):
         parent: Optional[SlashCommandGroup] = None,
         **kwargs,
     ) -> None:
-        validate_chat_input_name(name)
-        validate_chat_input_description(description)
         self.name = str(name)
-        self.description = description
+        self.description = description or "No description provided"
+        validate_chat_input_name(self.name)
+        validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
         self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
         self.guild_ids = guild_ids
