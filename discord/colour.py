@@ -115,7 +115,7 @@ class Colour:
 
     def to_rgb(self) -> Tuple[int, int, int]:
         """Tuple[:class:`int`, :class:`int`, :class:`int`]: Returns an (r, g, b) tuple representing the colour."""
-        return (self.r, self.g, self.b)
+        return self.r, self.g, self.b
 
     @classmethod
     def from_rgb(cls: Type[CT], r: int, g: int, b: int) -> CT:
@@ -332,10 +332,12 @@ class Colour:
 
     @classmethod
     def embed_background(cls: Type[CT], theme: str = "dark") -> CT:
-        """A factory method that returns a :class:`Color` corresponding to the embed colors on discord clients, with a value of
-        ``0x2F3136`` (dark)
-        ``0xf2f3f5`` (light)
-        ``0x000000`` (amoled).
+        """A factory method that returns a :class:`Color` corresponding to the
+        embed colors on discord clients, with a value of:
+
+        - ``0x2F3136`` (dark)
+        - ``0xf2f3f5`` (light)
+        - ``0x000000`` (amoled).
 
         .. versionadded:: 2.0
 

@@ -183,3 +183,7 @@ class _RolePositionRequired(TypedDict):
 
 class RolePositionUpdate(_RolePositionRequired, total=False):
     position: Optional[Snowflake]
+
+
+class GuildMFAModify(TypedDict):
+    level: Literal[0, 1]

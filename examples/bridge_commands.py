@@ -15,24 +15,41 @@ bot = bridge.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[.
 async def ping(ctx: bridge.BridgeContext):
     await ctx.respond("Pong!")
 
-
 @bot.bridge_command()
-@discord.option(name="value", choices=[1, 2, 3])
+@discord.option("value", choices=[1, 2, 3])
 async def choose(ctx: bridge.BridgeContext, value: int):
     await ctx.respond(f"You chose: {value}!")
-
 
 @bot.bridge_command()
 async def welcome(ctx: bridge.BridgeContext, member: discord.Member):
     await ctx.respond(f"Welcome {member.mention}!")
 
-
 @bot.bridge_command()
-@discord.option(name="seconds", choices=range(1, 11))
+@discord.option("seconds", choices=range(1, 11))
 async def wait(ctx: bridge.BridgeContext, seconds: int = 5):
     await ctx.defer()
     await asyncio.sleep(seconds)
     await ctx.respond(f"Waited for {seconds} seconds!")
+
+@bot.bridge_group(invoke_without_command=True)
+@bridge.map_to("help")
+async def specialcmd(ctx: bridge.BridgeContext):
+    # with the `map_to` decorator, the main command becomes
+    # accessible through the slash command `/specialcmd help`
+    await ctx.respond("This is a special command!")
+
+@specialcmd.command()
+async def file(ctx: bridge.BridgeContext, attachment: discord.Attachment):
+    await ctx.respond(f"The name of that file is `{attachment.filename}`")
+
+    url_msg = f"psss, here's its url: {attachment.url}"
+
+    if ctx.is_app:
+        # the command was run from a slash
+        # command, so we can use a followup
+        await ctx.followup.send(url_msg, ephemeral=True)
+    else:
+        await ctx.author.send(url_msg)
 
 
 @bot.event

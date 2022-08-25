@@ -22,50 +22,100 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Any, List, Union
-import asyncio
+
+import inspect
+from typing import Any, List, Union, Optional
 
 import discord.commands.options
-from discord.commands import Option, SlashCommand
-from discord.enums import SlashCommandOptionType
-
-from ..commands import AutoShardedBot as ExtAutoShardedBot
-from ..commands import BadArgument
-from ..commands import Bot as ExtBot
+from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
+from .context import BridgeApplicationContext
+from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
+    Group,
     Converter,
     GuildChannelConverter,
     RoleConverter,
     UserConverter,
+    BadArgument,
+    Context,
+    Bot as ExtBot,
 )
+from ...utils import get, filter_params, find
 
-__all__ = ("BridgeCommand", "bridge_command", "BridgeExtCommand", "BridgeSlashCommand")
 
-from ...utils import get
-from ..commands.converter import _convert_to_bool
+__all__ = (
+    "BridgeCommand",
+    "BridgeCommandGroup",
+    "bridge_command",
+    "bridge_group",
+    "BridgeExtCommand",
+    "BridgeSlashCommand",
+    "BridgeExtGroup",
+    "BridgeSlashGroup",
+    "map_to",
+)
 
 
 class BridgeSlashCommand(SlashCommand):
-    """
-    A subclass of :class:`.SlashCommand` that is used to implement bridge commands.
-    """
+    """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
-    ...
+    def __init__(self, func, **kwargs):
+        kwargs = filter_params(kwargs, brief="description")
+        super().__init__(func, **kwargs)
 
 
 class BridgeExtCommand(Command):
-    """
-    A subclass of :class:`.ext.commands.Command` that is used to implement bridge commands.
-    """
+    """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
-    ...
+    def __init__(self, func, **kwargs):
+        kwargs = filter_params(kwargs, description="brief")
+        super().__init__(func, **kwargs)
 
+    async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
+        if param.annotation is Attachment:
+            # skip the parameter checks for bridge attachments
+            return await run_converters(ctx, AttachmentConverter, None, param)
+        else:
+            return await super().transform(ctx, param)
+
+
+class BridgeSlashGroup(SlashCommandGroup):
+    """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."""
+    __slots__ = ("module",)
+
+    def __init__(self, callback, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.callback = callback
+        self.__command = None
+
+    async def _invoke(self, ctx: BridgeApplicationContext) -> None:
+        if not (options := ctx.interaction.data.get("options")):
+            if not self.__command:
+                self.__command = BridgeSlashCommand(self.callback)
+            ctx.command = self.__command
+            return await ctx.command.invoke(ctx)
+        option = options[0]
+        resolved = ctx.interaction.data.get("resolved", None)
+        command = find(lambda x: x.name == option["name"], self.subcommands)
+        option["resolved"] = resolved
+        ctx.interaction.data = option
+        await command.invoke(ctx)
+
+
+class BridgeExtGroup(BridgeExtCommand, Group):
+    """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
+    pass
 
 class BridgeCommand:
-    """
-    This is the base class for commands that are compatible with both traditional (prefix-based) commands and slash
-    commands.
+    """Compatibility class between prefixed-based commands and slash commands.
+
+    Attributes
+    ----------
+    slash_variant: :class:`.BridgeSlashCommand`
+        The slash command version of this bridge command.
+    ext_variant: :class:`.BridgeExtCommand`
+        The prefix-based version of this bridge command.
 
     Parameters
     ----------
@@ -73,47 +123,60 @@ class BridgeCommand:
         The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
     kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors.
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
-
     def __init__(self, callback, **kwargs):
-        self.callback = callback
-        self.kwargs = kwargs
+        self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
+        self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
-        self.ext_command = BridgeExtCommand(self.callback, **self.kwargs)
-        self.application_command = BridgeSlashCommand(self.callback, **self.kwargs)
+    @property
+    def name_localizations(self):
+        """Dict[:class:`str`, :class:`str`]: Returns name_localizations from :attr:`slash_variant`
 
-    def get_ext_command(self):
-        """A method to get the ext.commands version of this command.
+        You can edit/set name_localizations directly with
 
-        Returns
-        -------
-        :class:`BridgeExtCommand`
-            The respective traditional (prefix-based) version of the command.
+        .. code-block:: python3
+
+            bridge_command.name_localizations["en-UK"] = ...  # or any other locale
+            # or
+            bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
+
         """
-        return self.ext_command
+        return self.slash_variant.name_localizations
 
-    def get_application_command(self):
-        """A method to get the discord.commands version of this command.
+    @name_localizations.setter
+    def name_localizations(self, value):
+        self.slash_variant.name_localizations = value
 
-        Returns
-        -------
-        :class:`BridgeSlashCommand`
-            The respective slash command version of the command.
+    @property
+    def description_localizations(self):
+        """Dict[:class:`str`, :class:`str`]: Returns description_localizations from :attr:`slash_variant`
+
+        You can edit/set description_localizations directly with
+
+        .. code-block:: python3
+
+            bridge_command.description_localizations["en-UK"] = ...  # or any other locale
+            # or
+            bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
+
         """
-        return self.application_command
+        return self.slash_variant.description_localizations
 
-    def add_to(self, bot: Union[ExtBot, ExtAutoShardedBot]) -> None:
-        """Adds the command to a bot.
+    @description_localizations.setter
+    def description_localizations(self, value):
+        self.slash_variant.description_localizations = value
+
+    def add_to(self, bot: ExtBot) -> None:
+        """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
 
         Parameters
         ----------
         bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
             The bot to add the command to.
         """
-
-        bot.add_command(self.ext_command)
-        bot.add_application_command(self.application_command)
+        bot.add_application_command(self.slash_variant)
+        bot.add_command(self.ext_variant)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -136,12 +199,8 @@ class BridgeCommand:
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The error handler must be a coroutine.")
-
-        self.ext_command.on_error = coro
-        self.application_command.on_error = coro
+        self.slash_variant.error(coro)
+        self.ext_variant.on_error = coro
 
         return coro
 
@@ -164,12 +223,8 @@ class BridgeCommand:
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The pre-invoke hook must be a coroutine.")
-
-        self.ext_command.before_invoke = coro
-        self.application_command.before_invoke = coro
+        self.slash_variant.before_invoke(coro)
+        self.ext_variant._before_invoke = coro
 
         return coro
 
@@ -192,27 +247,125 @@ class BridgeCommand:
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The post-invoke hook must be a coroutine.")
-
-        self.ext_command.after_invoke = coro
-        self.application_command.after_invoke = coro
+        self.slash_variant.after_invoke(coro)
+        self.ext_variant._after_invoke = coro
 
         return coro
 
 
+class BridgeCommandGroup(BridgeCommand):
+    """Compatibility class between prefixed-based commands and slash commands.
+
+    Parameters
+    ----------
+    callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
+        The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
+        and any additional arguments will be passed to the callback. This callback must be a coroutine.
+    kwargs: Optional[Dict[:class:`str`, Any]]
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+
+    Attributes
+    ----------
+    slash_variant: :class:`.SlashCommandGroup`
+        The slash command version of this command group.
+    ext_variant: :class:`.ext.commands.Group`
+        The prefix-based version of this command group.
+    subcommands: List[:class:`.BridgeCommand`]
+        List of bridge commands in this group
+    mapped: Optional[:class:`.SlashCommand`]
+        If :func:`map_to` is used, the mapped slash command.
+    """
+    def __init__(self, callback, *args, **kwargs):
+        self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
+        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, self.ext_variant.name, *args, **kwargs)
+        self.subcommands: List[BridgeCommand] = []
+
+        self.mapped: Optional[SlashCommand] = None
+        if map_to := getattr(callback, "__custom_map_to__", None):
+            kwargs.update(map_to)
+            self.mapped = self.slash_variant.command(**kwargs)(callback)
+
+    def command(self, *args, **kwargs):
+        """A decorator to register a function as a subcommand.
+
+        Parameters
+        ----------
+        kwargs: Optional[Dict[:class:`str`, Any]]
+            Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+        """
+        def wrap(callback):
+            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"), cls=BridgeSlashCommand)(callback)
+            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"), cls=BridgeExtGroup)(callback)
+            command = BridgeCommand(callback, slash_variant=slash, ext_variant=ext)
+            self.subcommands.append(command)
+            return command
+
+        return wrap
+
+
 def bridge_command(**kwargs):
-    """A decorator that is used to wrap a function as a command.
+    """A decorator that is used to wrap a function as a bridge command.
 
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors.
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+    """
+    def decorator(callback):
+        return BridgeCommand(callback, **kwargs)
+
+    return decorator
+
+
+def bridge_group(**kwargs):
+    """A decorator that is used to wrap a function as a bridge command group.
+
+    Parameters
+    ----------
+    kwargs: Optional[Dict[:class:`str`, Any]]
+        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
+    """
+    def decorator(callback):
+        return BridgeCommandGroup(callback, **kwargs)
+
+    return decorator
+
+
+def map_to(name, description = None):
+    """To be used with bridge command groups, map the main command to a slash subcommand.
+
+    Example
+    -------
+
+    .. code-block:: python3
+
+        @bot.bridge_group()
+        @bridge.map_to("show")
+        async def config(ctx: BridgeContext):
+            ...
+
+        @config.command()
+        async def toggle(ctx: BridgeContext):
+            ...
+
+    Prefixed commands will not be affected, but slash commands will appear as:
+
+    .. code-block::
+
+        /config show
+        /config toggle
+
+    Parameters
+    ----------
+    name: :class:`str`
+        The new name of the mapped command.
+    description: Optional[:class:`str`]
+        The new description of the mapped command.
     """
 
     def decorator(callback):
-        return BridgeCommand(callback, **kwargs)
+        callback.__custom_map_to__ = {"name": name, "description": description}
+        return callback
 
     return decorator
 
@@ -226,9 +379,14 @@ class MentionableConverter(Converter):
         except BadArgument:
             return await UserConverter().convert(ctx, argument)
 
-
-def attachment_callback(*args):  # pylint: disable=unused-argument
-    raise ValueError("Attachments are not supported for bridge commands.")
+class AttachmentConverter(Converter):
+    async def convert(self, ctx: Context, arg: str):
+        try:
+            attach = ctx.message.attachments[0]
+        except IndexError:
+            raise BadArgument("At least 1 attachment is needed")
+        else:
+            return attach
 
 
 BRIDGE_CONVERTER_MAPPING = {
@@ -240,7 +398,7 @@ BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.role: RoleConverter,
     SlashCommandOptionType.mentionable: MentionableConverter,
     SlashCommandOptionType.number: float,
-    SlashCommandOptionType.attachment: attachment_callback,
+    SlashCommandOptionType.attachment: AttachmentConverter,
 }
 
 

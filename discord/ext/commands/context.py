@@ -66,7 +66,7 @@ else:
 class Context(discord.abc.Messageable, Generic[BotT]):
     r"""Represents the context in which a command is being invoked under.
 
-    This class contains a lot of meta data to help you understand more about
+    This class contains a lot of metadata to help you understand more about
     the invocation context. This class is not created manually and is instead
     passed around to commands as the first parameter.
 
@@ -264,7 +264,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             return ""
 
         user = self.me
-        # this breaks if the prefix mention is not the bot itself but I
+        # this breaks if the prefix mention is not the bot itself, but I
         # consider this to be an *incredibly* strange use case. I'd rather go
         # for this common use case rather than waste performance for the
         # odd one.
@@ -273,7 +273,8 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command. None if it does not exist."""
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        None if it does not exist."""
 
         if self.command is None:
             return None
@@ -281,7 +282,8 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @discord.utils.cached_property
     def guild(self) -> Optional[Guild]:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command. None if not available."""
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
+        None if not available."""
         return self.message.guild
 
     @discord.utils.cached_property

@@ -56,7 +56,6 @@ from .state import AutoShardedConnectionState
 
 if TYPE_CHECKING:
     from .activity import BaseActivity
-    from .enums import Status
     from .gateway import DiscordWebSocket
 
     EI = TypeVar("EI", bound="EventItem")
@@ -222,7 +221,11 @@ class Shard:
     async def reconnect(self) -> None:
         self._cancel_task()
         try:
-            coro = DiscordWebSocket.from_client(self._client, shard_id=self.id)
+            coro = DiscordWebSocket.from_client(
+                self._client,
+                gateway=self.ws.resume_gateway_url,
+                shard_id=self.id,
+            )
             self.ws = await asyncio.wait_for(coro, timeout=60.0)
         except self._handled_exceptions as e:
             await self._handle_disconnect(e)
@@ -355,7 +358,7 @@ class AutoShardedClient(Client):
             elif not isinstance(self.shard_ids, (list, tuple)):
                 raise ClientException("shard_ids parameter must be a list or a tuple.")
 
-        # instead of a single websocket, we have multiple
+        # instead of a single websocket, we have multiple.
         # the key is the shard_id
         self.__shards = {}
         self._connection._get_websocket = self._get_websocket
@@ -392,7 +395,8 @@ class AutoShardedClient(Client):
 
     @property
     def latencies(self) -> List[Tuple[int, float]]:
-        """List[Tuple[:class:`int`, :class:`float`]]: A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """List[Tuple[:class:`int`, :class:`float`]]:
+        A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
         """
@@ -549,7 +553,8 @@ class AutoShardedClient(Client):
             if me is None:
                 continue
 
-            # Member.activities is typehinted as Tuple[ActivityType, ...], we may be setting it as Tuple[BaseActivity, ...]
+            # Member.activities is typehinted as Tuple[ActivityType, ...],
+            # we may be setting it as Tuple[BaseActivity, ...]
             me.activities = activities  # type: ignore
             me.status = status_enum
 

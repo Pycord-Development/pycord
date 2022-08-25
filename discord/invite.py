@@ -505,7 +505,7 @@ class Invite(Hashable):
 
         .. note::
 
-            Scheduled events aren't actually associated to invites on the API.
+            Scheduled events aren't actually associated with invites on the API.
             Any guild channel invite can have an event attached to it. Using
             :meth:`abc.GuildChannel.create_invite`, :meth:`Client.fetch_invite`,
             or this method, you can link scheduled events.

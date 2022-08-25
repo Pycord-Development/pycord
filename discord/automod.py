@@ -70,9 +70,11 @@ class AutoModActionMetadata:
     Attributes
     -----------
     channel_id: :class:`int`
-        The ID of the channel to send the message to. Only for actions of type :attr:`AutoModActionType.send_alert_message`.
+        The ID of the channel to send the message to.
+        Only for actions of type :attr:`AutoModActionType.send_alert_message`.
     timeout_duration: :class:`datetime.timedelta`
-        How long the member that triggered the action should be timed out for. Only for actions of type :attr:`AutoModActionType.timeout`.
+        How long the member that triggered the action should be timed out for.
+        Only for actions of type :attr:`AutoModActionType.timeout`.
     """
     # maybe add a table of action types and attributes?
 
@@ -122,7 +124,6 @@ class AutoModActionMetadata:
         inner = " ".join(inner)
         
         return f"<AutoModActionMetadata {inner}>"
-
 
 
 class AutoModAction:
@@ -200,7 +201,7 @@ class AutoModTriggerMetadata:
         return data
         
     @classmethod
-    def from_dict(cls, data: AutoModActionMetadataPayload):
+    def from_dict(cls, data: AutoModTriggerMetadataPayload):
         kwargs = {}
         
         if (keyword_filter := data.get("keyword_filter")) is not None:
@@ -339,8 +340,8 @@ class AutoModRule(Hashable):
     
     @cached_property
     def exempt_channels(self) -> List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]:
-        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]: The channels 
-        that are exempt from this rule.
+        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]:
+        The channels that are exempt from this rule.
        
         If a channel is not found in the guild's cache, 
         then it will be returned as an :class:`Object`.

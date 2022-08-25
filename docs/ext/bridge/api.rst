@@ -29,6 +29,9 @@ Bot
     .. automethod:: Bot.bridge_command()
         :decorator:
 
+    .. automethod:: Bot.bridge_group()
+        :decorator:
+
 AutoShardedBot
 ~~~~~~~~~~~~~~~
 
@@ -51,14 +54,30 @@ BridgeCommand
 .. automethod:: discord.ext.bridge.bridge_command()
     :decorator:
 
-BridgeCommand Subclasses
-~~~~~~~~~~~~~~~~~~~~~~~~~
+BridgeCommandGroup
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.bridge.BridgeCommandGroup
+
+.. autoclass:: discord.ext.bridge.BridgeCommandGroup
+    :members:
+
+.. automethod:: discord.ext.bridge.bridge_group()
+    :decorator:
+
+.. automethod:: discord.ext.bridge.map_to()
+    :decorator:
+
+Command Subclasses
+~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: discord.ext.bridge.BridgeExtCommand
-    :members:
+
+.. autoclass:: discord.ext.bridge.BridgeExtGroup
 
 .. autoclass:: discord.ext.bridge.BridgeSlashCommand
-    :members:
+
+.. autoclass:: discord.ext.bridge.BridgeSlashGroup
 
 Context
 --------
