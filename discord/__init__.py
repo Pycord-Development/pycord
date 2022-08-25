@@ -13,7 +13,7 @@ __title__ = "pycord"
 __author__ = "Pycord Development"
 __license__ = "MIT"
 __copyright__ = "Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development"
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 
 
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
@@ -77,7 +77,7 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=1, micro=0, releaselevel="final", serial=0)
+version_info: VersionInfo = VersionInfo(major=2, minor=1, micro=1, releaselevel="final", serial=0)
 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
