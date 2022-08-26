@@ -1850,3 +1850,404 @@ class Connectable(Protocol):
 class Mentionable:
     # TODO: documentation, methods if needed
     pass
+
+import functools
+from typing import Coroutine, TypeVar
+from .utils import async_all
+from .errors import ApplicationCommandError, ApplicationCommandInvokeError
+from .ext.commands import (
+    DisabledCommand,
+    CheckFailure,
+    CommandOnCooldown,
+    CooldownMapping,
+    BucketType,
+    MaxConcurrency,
+    CommandError
+)
+
+
+if TYPE_CHECKING:
+    from typing_extensions import ParamSpec
+    from .cog import Cog
+
+    P = ParamSpec("P")
+else:
+    P = TypeVar("P")
+
+def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
+    partial = functools.partial
+    while True:
+        if hasattr(function, "__wrapped__"):
+            function = function.__wrapped__
+        elif isinstance(function, partial):
+            function = function.func
+        else:
+            return function
+
+def hooked_wrapped_callback(command: Invokable, ctx: ContextT, coro: CallbackT):
+    @functools.wraps(coro)
+    async def wrapped(arg):
+        try:
+            ret = await coro(arg)
+        except (ApplicationCommandError, CommandError):
+            raise
+        except asyncio.CancelledError:
+            return
+        except Exception as exc:
+            raise ApplicationCommandInvokeError(exc) from exc
+        finally:
+            if command._max_concurrency is not None:
+                await command._max_concurrency.release(ctx)
+            await command.call_after_hooks(ctx)
+
+        return ret
+
+    return wrapped
+
+
+CallbackT = TypeVar("CallbackT")
+ErrorT = TypeVar("ErrorT")
+HookT = TypeVar("HookT")
+ContextT = TypeVar("ContextT")
+MaybeCoro = Union[Any, Coroutine[Any]]
+Check = Union[
+    Callable[[ContextT], MaybeCoro[bool]],
+    Callable[[Cog, ContextT], MaybeCoro[bool]]
+]
+
+class Invokable:
+    _callback: CallbackT
+    cog: Optional[Cog]
+    parent: Optional[Invokable]
+    module: Any
+
+    name: str
+    enabled: bool
+
+    checks: List[Check]
+    _buckets: CooldownMapping
+    _max_concurrency: Optional[MaxConcurrency]
+    on_error: Optional[ErrorT]
+    _before_invoke: Optional[HookT]
+    _after_invoke: Optional[HookT]
+
+    def __init__(self, func: CallbackT, **kwargs):
+        self.callback = func
+        self.cog = None
+        self.module = None
+        self.enabled = kwargs.get("enabled", True)
+
+        # checks
+        if checks := getattr(func, "__commands_checks__", []):
+            checks.reverse()
+
+        checks += kwargs.get("checks", [])  # combine all the checks we find (kwargs or decorator)
+        self.checks = checks
+
+        # cooldowns
+        cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
+
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+
+        self._buckets = buckets
+
+        # max concurrency
+        self._max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
+
+        # hooks
+        self._before_invoke = None
+        if hook := getattr(func, "__before_invoke__", None):
+            self.before_invoke(hook)
+
+        self._after_invoke = None
+        if hook := getattr(func, "__after_invoke__", None):
+            self.after_invoke(hook)
+
+    @property
+    def callback(self) -> CallbackT:
+        return self._callback
+
+    @callback.setter
+    def callback(self, func: CallbackT) -> None:
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+
+        self._callback = func
+        unwrap = unwrap_function(func)
+        self.module = unwrap.__module__
+
+    async def __call__(self, ctx: ContextT, *args: P.args, **kwargs: P.kwargs):
+        """|coro|
+
+        Calls the internal callback that the command holds.
+
+        .. note::
+
+            This bypasses all mechanisms -- including checks, converters,
+            invoke hooks, cooldowns, etc. You must take care to pass
+            the proper arguments and types to this function.
+
+        """
+        if self.cog is not None:
+            return await self.callback(self.cog, ctx, *args, **kwargs)
+        return await self.callback(ctx, *args, **kwargs)
+
+    def error(self, coro: ErrorT) -> ErrorT:
+        """A decorator that registers a coroutine as a local error handler.
+
+        A local error handler is an :func:`.on_command_error` event limited to
+        a single command. However, the :func:`.on_command_error` is still
+        invoked afterwards as the catch-all.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The error handler must be a coroutine.")
+
+        self.on_error = coro
+        return coro
+
+    def has_error_handler(self) -> bool:
+        """:class:`bool`: Checks whether the command has an error handler registered."""
+        return hasattr(self, "on_error")
+
+    def before_invoke(self, coro: HookT) -> HookT:
+        """A decorator that registers a coroutine as a pre-invoke hook.
+
+        A pre-invoke hook is called directly before the command is
+        called. This makes it a useful function to set up database
+        connections or any type of set up required.
+
+        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+
+        See :meth:`.Bot.before_invoke` for more info.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the pre-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The pre-invoke hook must be a coroutine.")
+
+        self._before_invoke = coro
+        return coro
+
+    def after_invoke(self, coro: HookT) -> HookT:
+        """A decorator that registers a coroutine as a post-invoke hook.
+
+        A post-invoke hook is called directly after the command is
+        called. This makes it a useful function to clean-up database
+        connections or any type of clean up required.
+
+        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+
+        See :meth:`.Bot.after_invoke` for more info.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the post-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The post-invoke hook must be a coroutine.")
+
+        self._after_invoke = coro
+        return coro
+
+    # might require more of a library wide refactoring
+
+    # async def can_run(self, ctx: ContextT) -> bool:
+    #     """|coro|
+
+    #     Checks if the command can be executed by checking all the predicates
+    #     inside the :attr:`~Command.checks` attribute. This also checks whether the
+    #     command is disabled.
+
+    #     .. versionchanged:: 1.3
+    #         Checks whether the command is disabled or not
+
+    #     Parameters
+    #     -----------
+    #     ctx: :class:`.Context`
+    #         The ctx of the command currently being invoked.
+
+    #     Raises
+    #     -------
+    #     :class:`CommandError`
+    #         Any command error that was raised during a check call will be propagated
+    #         by this function.
+
+    #     Returns
+    #     --------
+    #     :class:`bool`
+    #         A boolean indicating if the command can be invoked.
+    #     """
+    #     if not self.enabled:
+    #         raise DisabledCommand(f"{self.name} command is disabled")
+
+    #     original = ctx.command
+    #     ctx.command = self
+
+    #     predicates = self.checks
+    #     if self.parent is not None:
+    #         # parent checks should be run first
+    #         predicates = self.parent.checks + predicates        
+
+    def add_check(self, func: Check) -> None:
+        """Adds a check to the command.
+
+        This is the non-decorator interface to :func:`.check`.
+
+        Parameters
+        -----------
+        func: Callable
+            The function that will be used as a check.
+        """
+
+        self.checks.append(func)
+
+    def remove_check(self, func: Check) -> None:
+        """Removes a check from the command.
+
+        This function is idempotent and will not raise an exception
+        if the function is not in the command's checks.
+
+        Parameters
+        -----------
+        func: Callable
+            The function to remove from the checks.
+        """
+
+        try:
+            self.checks.remove(func)
+        except ValueError:
+            pass
+
+
+    @property
+    def qualified_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified command name.
+
+        This is the full parent name with the command name as well.
+        For example, in ``?one two three`` the qualified name would be
+        ``one two three``.
+        """
+        if not self.parent:
+            return self.name
+
+        return f"{self.parent.qualified_name}"
+
+    def _prepare_cooldowns(self, ctx: ContextT):
+        if not self._buckets.valid:
+            return
+
+        current = datetime.datetime.now().timestamp()
+        bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
+
+        if bucket:
+            retry_after = bucket.update_rate_limit(current)
+
+            if retry_after:
+                raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+
+    async def call_before_hooks(self, ctx) -> None:
+        # now that we're done preparing we can call the pre-command hooks
+        # first, call the command local hook:
+        cog = self.cog
+        if self._before_invoke is not None:
+            # should be cog if @commands.before_invoke is used
+            instance = getattr(self._before_invoke, "__self__", cog)
+            # __self__ only exists for methods, not functions
+            # however, if @command.before_invoke is used, it will be a function
+            if instance:
+                await self._before_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._before_invoke(ctx)  # type: ignore
+
+        # call the cog local hook if applicable:
+        if cog is not None:
+            hook = cog.__class__._get_overridden_method(cog.cog_before_invoke)
+            if hook is not None:
+                await hook(ctx)
+
+        # call the bot global hook if necessary
+        hook = ctx.bot._before_invoke
+        if hook is not None:
+            await hook(ctx)
+
+    async def call_after_hooks(self, ctx: Context) -> None:
+        cog = self.cog
+        if self._after_invoke is not None:
+            instance = getattr(self._after_invoke, "__self__", cog)
+            if instance:
+                await self._after_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._after_invoke(ctx)  # type: ignore
+
+        # call the cog local hook if applicable:
+        if cog is not None:
+            hook = Cog._get_overridden_method(cog.cog_after_invoke)
+            if hook is not None:
+                await hook(ctx)
+
+        hook = ctx.bot._after_invoke
+        if hook is not None:
+            await hook(ctx)
+
+    async def _parse_arguments(self, ctx: ContextT) -> None:
+        return
+
+    async def prepare(self, ctx: ContextT) -> None:
+        ctx.command = self
+
+        if not await self.can_run(ctx):
+            raise CheckFailure(f"The check functions for command {self.qualified_name} failed.")
+
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore
+
+        try:
+            self._prepare_cooldowns(ctx)
+            await self._parse_arguments(ctx)
+
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore
+            raise
+
+    async def invoke(self, ctx: Context) -> None:
+        await self.prepare(ctx)
+
+        # terminate the invoked_subcommand chain.
+        # since we're in a regular command (and not a group) then
+        # the invoked subcommand is None.
+        # ctx.invoked_subcommand = None
+        # ctx.subcommand_passed = None
+        injected = hooked_wrapped_callback(self, ctx, self.callback)
+        await injected(*ctx.args, **ctx.kwargs)
