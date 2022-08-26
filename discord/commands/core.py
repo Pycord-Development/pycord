@@ -968,10 +968,6 @@ class SlashCommand(ApplicationCommand):
         else:
             return self.copy()
 
-    def _set_cog(self, cog):
-        super()._set_cog(cog)
-        self._validate_parameters()
-
 
 class SlashCommandGroup(ApplicationCommand):
     r"""A class that implements the protocol for a slash command group.
@@ -1090,10 +1086,16 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        if command.cog is MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
