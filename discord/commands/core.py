@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import datetime
 import functools
 import inspect
 import re
@@ -53,7 +52,6 @@ from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as Disco
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
-    CheckFailure,
     ClientException,
     ValidationError,
 )
@@ -63,8 +61,8 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from .invokable import Invokable
-from ..utils import async_all, find, maybe_coroutine, MISSING
+from .invokable import Invokable, _BaseCommand
+from ..utils import find, MISSING
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -166,10 +164,6 @@ def _validate_descriptions(obj):
     if obj.description_localizations:
         for locale, string in obj.description_localizations.items():
             validate_chat_input_description(string, locale=locale)
-
-
-class _BaseCommand:
-    __slots__ = ()
 
 
 class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):

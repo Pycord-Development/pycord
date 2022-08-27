@@ -34,7 +34,6 @@ if TYPE_CHECKING:
 
     CallbackT = TypeVar("CallbackT")
     ErrorT = TypeVar("ErrorT")
-    HookT = TypeVar("HookT")
     ContextT = TypeVar("ContextT")
 
     T = TypeVar("T")
@@ -42,8 +41,12 @@ if TYPE_CHECKING:
     MaybeCoro = Union[T, Coro[T]]
 
     Check = Union[
-        Callable[[ContextT], MaybeCoro[bool]],
-        Callable[[Cog, ContextT], MaybeCoro[bool]]
+        Callable[[Cog, ContextT], MaybeCoro[bool]],  # TODO: replace with stardized context superclass
+        Callable[[ContextT], MaybeCoro[bool]],       # as well as for the others
+    ]
+    Hook = Union[
+        Callable[[Cog, ContextT], Coro[Any]],
+        Callable[[ContextT], Coro[Any]]
     ]
 
 
@@ -98,13 +101,12 @@ def hooked_wrapped_callback(command: Invokable, ctx: ContextT, coro: CallbackT):
     return wrapped
 
 
+class _BaseCommand:
+    __slots__ = ()
+
+
 class Invokable:
-    checks: List[Check]
-    _buckets: CooldownMapping
-    _max_concurrency: Optional[MaxConcurrency]
     on_error: Optional[ErrorT]
-    _before_invoke: Optional[HookT]
-    _after_invoke: Optional[HookT]
 
     def __init__(self, func: CallbackT, **kwargs):
         self.module: Any = None
@@ -120,7 +122,7 @@ class Invokable:
             checks.reverse()
 
         checks += kwargs.get("checks", [])  # combine all the checks we find (kwargs or decorator)
-        self.checks = checks
+        self.checks: List[Check] = checks
 
         # cooldowns
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
@@ -132,17 +134,17 @@ class Invokable:
         else:
             raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
 
-        self._buckets = buckets
+        self._buckets: CooldownMapping = buckets
 
         # max concurrency
-        self._max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
+        self._max_concurrency: Optional[MaxConcurrency] = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
 
         # hooks
-        self._before_invoke = None
+        self._before_invoke: Optional[Hook] = None
         if hook := getattr(func, "__before_invoke__", None):
             self.before_invoke(hook)
 
-        self._after_invoke = None
+        self._after_invoke: Optional[Hook] = None
         if hook := getattr(func, "__after_invoke__", None):
             self.after_invoke(hook)
 
@@ -232,7 +234,7 @@ class Invokable:
         """:class:`bool`: Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
-    def before_invoke(self, coro: HookT) -> HookT:
+    def before_invoke(self, coro: Hook) -> Hook:
         """A decorator that registers a coroutine as a pre-invoke hook.
 
         A pre-invoke hook is called directly before the command is
@@ -259,7 +261,7 @@ class Invokable:
         self._before_invoke = coro
         return coro
 
-    def after_invoke(self, coro: HookT) -> HookT:
+    def after_invoke(self, coro: Hook) -> Hook:
         """A decorator that registers a coroutine as a post-invoke hook.
 
         A post-invoke hook is called directly after the command is
