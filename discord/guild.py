@@ -213,8 +213,7 @@ class Guild(Hashable):
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
-        - ``HUB``: Hubs contain a directory channel that let you find school-related,
-                   student-run servers for your school or university.
+        - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
@@ -226,17 +225,14 @@ class Guild(Hashable):
         - ``NEWS``: Guild can create news channels.
         - ``NEW_THREAD_PERMISSIONS``: Guild has new thread permissions.
         - ``PARTNERED``: Guild is a partnered server.
-        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord
-                                       Staff Member "Jethro" for their personal server).
+        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
         - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel
-                                     in a sidebar similar to thread view.
-        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer
-                                       members and a bot. Also gives the premium thread features.
+        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
+        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
@@ -1156,7 +1152,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1238,7 +1234,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1329,7 +1325,7 @@ class Guild(Hashable):
             The channel's name.
         topic: :class:`str`
             The new channel's topic.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1430,7 +1426,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -2025,7 +2021,7 @@ class Guild(Hashable):
             Retrieving the channel failed.
         NotFound
             Invalid Channel ID.
-        :exc:`.Forbidden`
+        Forbidden
             You do not have permission to fetch this channel.
 
         Returns

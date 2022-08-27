@@ -340,8 +340,8 @@ class AutoModRule(Hashable):
     
     @cached_property
     def exempt_channels(self) -> List[Union[Union[TextChannel, ForumChannel, VoiceChannel], Object]]:
-        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]:
-        The channels that are exempt from this rule.
+        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]: The
+        channels that are exempt from this rule.
        
         If a channel is not found in the guild's cache, 
         then it will be returned as an :class:`Object`.

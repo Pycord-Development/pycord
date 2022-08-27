@@ -578,8 +578,7 @@ class Message(Hashable):
         This is not stored long term within Discord's servers and is only used ephemerally.
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`,
-    :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
     reference: Optional[:class:`~discord.MessageReference`]
@@ -1034,8 +1033,8 @@ class Message(Hashable):
 
     @property
     def edited_at(self) -> Optional[datetime.datetime]:
-        """Optional[:class:`datetime.datetime`]:
-        An aware UTC datetime object containing the edited time of the message.
+        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the
+        edited time of the message.
         """
         return self._edited_timestamp
 
