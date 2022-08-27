@@ -111,7 +111,7 @@ class Invokable:
     def __init__(self, func: CallbackT, **kwargs):
         self.module: Any = None
         self.cog: Optional[Cog]
-        self.parent: Optional[Invokable] = kwargs.get("parent")
+        self.parent: Optional[Invokable] = (parent := kwargs.get("parent")) if isinstance(parent, _BaseCommand) else None
         self.callback: CallbackT = func
 
         self.name: str = str(kwargs.get("name", func.__name__))
@@ -188,6 +188,11 @@ class Invokable:
 
         return f"{self.parent.qualified_name} {self.name}"
 
+    @property
+    def cog_name(self) -> Optional[str]:
+        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
+        return type(self.cog).__cog_name__ if self.cog is not None else None
+
     def __str__(self) -> str:
         return self.qualified_name
 
@@ -206,6 +211,13 @@ class Invokable:
         if self.cog is not None:
             return await self.callback(self.cog, ctx, *args, **kwargs)
         return await self.callback(ctx, *args, **kwargs)
+
+    def update(self, **kwargs: Any) -> None:
+        """Updates the :class:`Command` instance with updated attribute.
+        
+        Similar to creating a new instance except it updates the current.
+        """
+        self.__init__(self.callback, **dict(self.__original_kwargs__, **kwargs))
 
     def error(self, coro: ErrorT) -> ErrorT:
         """A decorator that registers a coroutine as a local error handler.

@@ -395,15 +395,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         self.params = get_signature_parameters(func, globalns)
 
-    def update(self, **kwargs: Any) -> None:
-        """Updates :class:`Command` instance with updated attribute.
-
-        This works similarly to the :func:`.command` decorator in terms
-        of parameters in that they are passed to the :class:`Command` or
-        subclass constructors, sans the name and callback.
-        """
-        self.__init__(self.callback, **dict(self.__original_kwargs__, **kwargs))
-
     async def dispatch_error(self, ctx: Context, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
@@ -629,12 +620,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         finally:
             if call_hooks:
                 await self.call_after_hooks(ctx)
-
-    # TODO:
-    @property
-    def cog_name(self) -> Optional[str]:
-        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
-        return type(self.cog).__cog_name__ if self.cog is not None else None
 
     @property
     def short_doc(self) -> str:
