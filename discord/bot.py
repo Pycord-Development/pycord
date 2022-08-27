@@ -1069,7 +1069,6 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     # global check registration
-    # TODO: Remove these from commands.Bot
 
     def check(self, func):
         """A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is

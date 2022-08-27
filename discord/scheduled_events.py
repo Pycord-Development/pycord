@@ -35,7 +35,6 @@ from .enums import (
     ScheduledEventStatus,
     try_enum,
 )
-from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
@@ -351,7 +350,7 @@ class ScheduledEvent(Hashable):
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
             end_time = self.end_time
             if end_time is None:
-                raise ValidationError("end_time needs to be passed if location type is external.")
+                raise TypeError("end_time needs to be passed if location type is external.")
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()

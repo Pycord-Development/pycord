@@ -5,14 +5,15 @@ import datetime
 import functools
 from typing import (
     TYPE_CHECKING,
-    Any,
+    Generic,
+    TypeVar,
     Callable,
     Coroutine,
+    Optional,
+    Union,
+    Any,
     Dict,
     List,
-    Optional,
-    TypeVar,
-    Union,
 )
 
 from .. import utils
@@ -33,8 +34,7 @@ if TYPE_CHECKING:
     P = ParamSpec("P")
 
     CallbackT = TypeVar("CallbackT")
-    ErrorT = TypeVar("ErrorT")
-    ContextT = TypeVar("ContextT")
+    ContextT = TypeVar("ContextT", bound="Context")  # TODO: yes
 
     T = TypeVar("T")
     Coro = Coroutine[Any, Any, T]
@@ -44,10 +44,19 @@ if TYPE_CHECKING:
         Callable[[Cog, ContextT], MaybeCoro[bool]],  # TODO: replace with stardized context superclass
         Callable[[ContextT], MaybeCoro[bool]],       # as well as for the others
     ]
+
+    Error = Union[
+        Callable[[Cog, "Context[Any]", CommandError], Coro[Any]],
+        Callable[["Context[Any]", CommandError], Coro[Any]],
+    ]
+    ErrorT = TypeVar("ErrorT", bound="Error")
+
     Hook = Union[
         Callable[[Cog, ContextT], Coro[Any]],
         Callable[[ContextT], Coro[Any]]
     ]
+    HookT = TypeVar("HookT", bound="Hook")
+
 
 
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
@@ -106,8 +115,6 @@ class _BaseCommand:
 
 
 class Invokable:
-    on_error: Optional[ErrorT]
-
     def __init__(self, func: CallbackT, **kwargs):
         self.module: Any = None
         self.cog: Optional[Cog]
@@ -147,6 +154,8 @@ class Invokable:
         self._after_invoke: Optional[Hook] = None
         if hook := getattr(func, "__after_invoke__", None):
             self.after_invoke(hook)
+
+        self.on_error: Optional[Error]
 
     @property
     def callback(self) -> CallbackT:
@@ -246,7 +255,7 @@ class Invokable:
         """:class:`bool`: Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
-    def before_invoke(self, coro: Hook) -> Hook:
+    def before_invoke(self, coro: HookT) -> HookT:
         """A decorator that registers a coroutine as a pre-invoke hook.
 
         A pre-invoke hook is called directly before the command is
@@ -273,7 +282,7 @@ class Invokable:
         self._before_invoke = coro
         return coro
 
-    def after_invoke(self, coro: Hook) -> Hook:
+    def after_invoke(self, coro: HookT) -> HookT:
         """A decorator that registers a coroutine as a post-invoke hook.
 
         A post-invoke hook is called directly after the command is

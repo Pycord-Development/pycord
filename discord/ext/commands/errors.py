@@ -104,9 +104,6 @@ __all__ = (
 )
 
 
-from ...errors import CommandError
-
-
 class ConversionError(CommandError):
     """Exception raised when a Converter class raises non-CommandError.
 
