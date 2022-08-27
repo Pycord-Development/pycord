@@ -38,6 +38,7 @@ if TYPE_CHECKING:
         _ResponseType = ClientResponse
 
     from .interactions import Interaction
+    from .commands.cooldowns import BucketType, Cooldown
 
 __all__ = (
     "DiscordException",
@@ -302,6 +303,65 @@ class InteractionResponded(ClientException):
         super().__init__("This interaction has already been responded to before")
 
 
+# command errors
+
+class CommandError(DiscordException):
+    r"""The base exception type for all command related errors.
+
+    This inherits from :exc:`discord.DiscordException`.
+
+    This exception and exceptions inherited from it are handled
+    in a special way as they are caught and passed into a special event
+    from :class:`.Bot`\, :func:`.on_command_error`.
+    """
+
+    def __init__(self, message: Optional[str] = None, *args: Any) -> None:
+        if message is not None:
+            # clean-up @everyone and @here mentions
+            m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
+            super().__init__(m, *args)
+        else:
+            super().__init__(*args)
+
+
+class ApplicationCommandError(CommandError):
+    r"""The base exception type for all application command related errors.
+
+    This inherits from :exc:`DiscordException`.
+
+    This exception and exceptions inherited from it are handled
+    in a special way as they are caught and passed into a special event
+    from :class:`.Bot`\, :func:`.on_command_error`.
+    """
+    pass
+
+
+class CheckFailure(CommandError):
+    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
+
+    This inherits from :exc:`CommandError`
+    """
+
+    pass
+
+
+class ApplicationCommandInvokeError(ApplicationCommandError):
+    """Exception raised when the command being invoked raised an exception.
+
+    This inherits from :exc:`ApplicationCommandError`
+
+    Attributes
+    -----------
+    original: :exc:`Exception`
+        The original exception that was raised. You can also get this via
+        the ``__cause__`` attribute.
+    """
+
+    def __init__(self, e: Exception) -> None:
+        self.original: Exception = e
+        super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")
+
+
 class ExtensionError(DiscordException):
     """Base exception for extension related errors.
 
@@ -390,31 +450,56 @@ class ExtensionNotFound(ExtensionError):
         super().__init__(msg, name=name)
 
 
-class ApplicationCommandError(DiscordException):
-    r"""The base exception type for all application command related errors.
+class MaxConcurrencyReached(CommandError):
+    """Exception raised when the command being invoked has reached its maximum concurrency.
 
-    This inherits from :exc:`DiscordException`.
+    This inherits from :exc:`CommandError`.
 
-    This exception and exceptions inherited from it are handled
-    in a special way as they are caught and passed into a special event
-    from :class:`.Bot`\, :func:`.on_command_error`.
-    """
-    pass
-
-
-class CheckFailure(ApplicationCommandError):
-    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
-
-    This inherits from :exc:`ApplicationCommandError`
+    Attributes
+    ------------
+    number: :class:`int`
+        The maximum number of concurrent invokers allowed.
+    per: :class:`.BucketType`
+        The bucket type passed to the :func:`.max_concurrency` decorator.
     """
 
-    pass
+    def __init__(self, number: int, per: BucketType) -> None:
+        self.number: int = number
+        self.per: BucketType = per
+        name = per.name
+        suffix = f"per {name}" if per.name != "default" else "globally"
+        plural = "%s times %s" if number > 1 else "%s time %s"
+        fmt = plural % (number, suffix)
+        super().__init__(f"Too many people are using this command. It can only be used {fmt} concurrently.")
 
 
-class ApplicationCommandInvokeError(ApplicationCommandError):
+class CommandOnCooldown(CommandError):
+    """Exception raised when the command being invoked is on cooldown.
+
+    This inherits from :exc:`CommandError`
+
+    Attributes
+    -----------
+    cooldown: :class:`.Cooldown`
+        A class with attributes ``rate`` and ``per`` similar to the
+        :func:`.cooldown` decorator.
+    type: :class:`BucketType`
+        The type associated with the cooldown.
+    retry_after: :class:`float`
+        The amount of seconds to wait before you can retry again.
+    """
+
+    def __init__(self, cooldown: Cooldown, retry_after: float, type: BucketType) -> None:
+        self.cooldown: Cooldown = cooldown
+        self.retry_after: float = retry_after
+        self.type: BucketType = type
+        super().__init__(f"You are on cooldown. Try again in {retry_after:.2f}s")
+
+
+class CommandInvokeError(CommandError):
     """Exception raised when the command being invoked raised an exception.
 
-    This inherits from :exc:`ApplicationCommandError`
+    This inherits from :exc:`CommandError`
 
     Attributes
     -----------
@@ -425,4 +510,13 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
 
     def __init__(self, e: Exception) -> None:
         self.original: Exception = e
-        super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")
+        super().__init__(f"Command raised an exception: {e.__class__.__name__}: {e}")
+
+
+class DisabledCommand(CommandError):
+    """Exception raised when the command being invoked is disabled.
+
+    This inherits from :exc:`CommandError`
+    """
+
+    pass

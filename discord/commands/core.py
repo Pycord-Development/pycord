@@ -63,8 +63,8 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..abc import Invokable
-from ..utils import async_all, find, utcnow, maybe_coroutine, MISSING
+from .invokable import Invokable
+from ..utils import async_all, find, maybe_coroutine, MISSING
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -84,7 +84,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing_extensions import ParamSpec
 
     from .. import Permissions
     from ..cog import Cog
@@ -197,95 +197,6 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
         else:
             check = self.name == other.name and self.guild_ids == other.guild_ids
         return isinstance(other, self.__class__) and self.parent == other.parent and check
-
-    async def invoke(self, ctx: ApplicationContext) -> None:
-        await self.prepare(ctx)
-
-        injected = hooked_wrapped_callback(self, ctx, self._invoke)
-        await injected(ctx)
-
-    async def can_run(self, ctx: ApplicationContext) -> bool:
-        if not await ctx.bot.can_run(ctx):
-            raise CheckFailure(f"The global check functions for command {self.name} failed.")
-
-        predicates = self.checks
-        if self.parent is not None:
-            # parent checks should be run first
-            predicates = self.parent.checks + predicates
-
-        cog = self.cog
-        if cog is not None:
-            local_check = cog._get_overridden_method(cog.cog_check)
-            if local_check is not None:
-                ret = await maybe_coroutine(local_check, ctx)
-                if not ret:
-                    return False
-
-        if not predicates:
-            # since we have no checks, then we just return True.
-            return True
-
-        return await async_all(predicate(ctx) for predicate in predicates)  # type: ignore
-
-    async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
-        ctx.command_failed = True
-        cog = self.cog
-        try:
-            coro = self.on_error
-        except AttributeError:
-            pass
-        else:
-            injected = wrap_callback(coro)
-            if cog is not None:
-                await injected(cog, ctx, error)
-            else:
-                await injected(ctx, error)
-
-        try:
-            if cog is not None:
-                local = cog.__class__._get_overridden_method(cog.cog_command_error)
-                if local is not None:
-                    wrapped = wrap_callback(local)
-                    await wrapped(ctx, error)
-        finally:
-            ctx.bot.dispatch("application_command_error", ctx, error)
-
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`SlashCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-           other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-           # _max_concurrency won't be None at this point
-           other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
@@ -608,7 +519,7 @@ class SlashCommand(ApplicationCommand):
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
-        ctx.args = []
+        ctx.args = [ctx] if self.cog is None else [self.cog, ctx]
         ctx.kwargs = kwargs
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
@@ -862,7 +773,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         return inner
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
+    async def invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
         resolved = ctx.interaction.data.get("resolved", None)
         command = find(lambda x: x.name == option["name"], self.subcommands)
@@ -888,48 +799,6 @@ class SlashCommandGroup(ApplicationCommand):
             if isinstance(command, SlashCommandGroup):
                 yield from command.walk_commands()
             yield command
-
-    def copy(self):
-        """Creates a copy of this command group.
-
-        Returns
-        --------
-        :class:`SlashCommandGroup`
-            A new instance of this command group.
-        """
-        ret = self.__class__(
-            name=self.name,
-            description=self.description,
-            **{
-                param: value
-                for param, value in self.__original_kwargs__.items()
-                if param not in ("name", "description")
-            },
-        )
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other.parent = self.parent
-
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-
-        if self.subcommands != other.subcommands:
-            other.subcommands = self.subcommands.copy()
-
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
     def _set_cog(self, cog):
         super()._set_cog(cog)
@@ -982,22 +851,14 @@ class ContextMenuCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
 
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
-        if not isinstance(self.name, str):
-            raise TypeError("Name of a command must be a string.")
 
         self.cog = None
         self.id = None
-
-        self._before_invoke = None
-        self._after_invoke = None
 
         self.validate_parameters()
 
@@ -1031,10 +892,6 @@ class ContextMenuCommand(ApplicationCommand):
             raise ClientException(f"Callback for {self.name} command has too many parameters.")
         except StopIteration:
             pass
-
-    @property
-    def qualified_name(self):
-        return self.name
 
     def to_dict(self) -> Dict[str, Union[str, int]]:
         as_dict = {

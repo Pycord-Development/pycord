@@ -230,7 +230,6 @@ class ApplicationCommandMixin(ABC):
 
         .. versionadded:: 2.0
 
-
         Parameters
         ----------
         guild_id: Optional[:class:`int`]
