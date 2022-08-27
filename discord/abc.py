@@ -1855,15 +1855,13 @@ import functools
 from typing import Coroutine, TypeVar
 from .utils import async_all
 from .errors import ApplicationCommandError, ApplicationCommandInvokeError
-from .ext.commands import (
-    DisabledCommand,
-    CheckFailure,
-    CommandOnCooldown,
+from .ext.commands.cooldowns import (
     CooldownMapping,
     BucketType,
-    MaxConcurrency,
-    CommandError
 )
+
+CheckFailure = CommandOnCooldown = MaxConcurrency = CommandError = Exception
+
 
 
 if TYPE_CHECKING:
@@ -1936,6 +1934,8 @@ class Invokable:
         self.cog = None
         self.module = None
         self.enabled = kwargs.get("enabled", True)
+        self.name = kwargs.get("name", func.__name__)
+        self.parent = kwargs.get("parent")
 
         # checks
         if checks := getattr(func, "__commands_checks__", []):
@@ -1980,6 +1980,36 @@ class Invokable:
         self._callback = func
         unwrap = unwrap_function(func)
         self.module = unwrap.__module__
+
+    @property
+    def cooldown(self):
+        return self._buckets._cooldown
+
+    @property
+    def full_parent_name(self) -> Optional[str]:
+        """:class:`str`: Retrieves the fully qualified parent command name.
+
+        This the base command name required to execute it. For example,
+        in ``/one two three`` the parent name would be ``one two``.
+        """
+        if self.parent:
+            return self.parent.qualified_name
+
+    @property
+    def qualified_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified command name.
+
+        This is the full parent name with the command name as well.
+        For example, in ``?one two three`` the qualified name would be
+        ``one two three``.
+        """
+        if not self.parent:
+            return self.name
+
+        return f"{self.parent.qualified_name} {self.name}"
+
+    def __str__(self) -> str:
+        return self.qualified_name
 
     async def __call__(self, ctx: ContextT, *args: P.args, **kwargs: P.kwargs):
         """|coro|
@@ -2147,20 +2177,6 @@ class Invokable:
         except ValueError:
             pass
 
-
-    @property
-    def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
-
-        This is the full parent name with the command name as well.
-        For example, in ``?one two three`` the qualified name would be
-        ``one two three``.
-        """
-        if not self.parent:
-            return self.name
-
-        return f"{self.parent.qualified_name}"
-
     def _prepare_cooldowns(self, ctx: ContextT):
         if not self._buckets.valid:
             return
@@ -2174,7 +2190,68 @@ class Invokable:
             if retry_after:
                 raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
 
-    async def call_before_hooks(self, ctx) -> None:
+    def is_on_cooldown(self, ctx: ContextT) -> bool:
+        """Checks whether the command is currently on cooldown.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to use when checking the command's cooldown status.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command is on cooldown.
+        """
+        if not self._buckets.valid:
+            return False
+
+        bucket = self._buckets.get_bucket(ctx)
+        current = utils.utcnow().timestamp()
+        return bucket.get_tokens(current) == 0
+
+    def reset_cooldown(self, ctx) -> None:
+        """Resets the cooldown on this command.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to reset the cooldown under.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
+            bucket.reset()
+
+    def get_cooldown_retry_after(self, ctx) -> float:
+        """Retrieves the amount of seconds before this command can be tried again.
+
+        .. note::
+
+            This uses the current time instead of the interaction time.
+
+        Parameters
+        -----------
+        ctx: :class:`.ApplicationContext`
+            The invocation context to retrieve the cooldown from.
+
+        Returns
+        --------
+        :class:`float`
+            The amount of time left on this command's cooldown in seconds.
+            If this is ``0.0`` then the command isn't on cooldown.
+        """
+        if self._buckets.valid:
+            bucket = self._buckets.get_bucket(ctx)
+            current = utils.utcnow().timestamp()
+            return bucket.get_retry_after(current)
+
+        return 0.0
+
+    async def call_before_hooks(self, ctx: ContextT) -> None:
         # now that we're done preparing we can call the pre-command hooks
         # first, call the command local hook:
         cog = self.cog
@@ -2199,7 +2276,7 @@ class Invokable:
         if hook is not None:
             await hook(ctx)
 
-    async def call_after_hooks(self, ctx: Context) -> None:
+    async def call_after_hooks(self, ctx: ContextT) -> None:
         cog = self.cog
         if self._after_invoke is not None:
             instance = getattr(self._after_invoke, "__self__", cog)
@@ -2241,7 +2318,7 @@ class Invokable:
                 await self._max_concurrency.release(ctx)  # type: ignore
             raise
 
-    async def invoke(self, ctx: Context) -> None:
+    async def invoke(self, ctx: ContextT) -> None:
         await self.prepare(ctx)
 
         # terminate the invoked_subcommand chain.

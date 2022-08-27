@@ -63,6 +63,7 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
+from ..abc import Invokable
 from ..utils import async_all, find, utcnow, maybe_coroutine, MISSING
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
@@ -171,40 +172,12 @@ class _BaseCommand:
     __slots__ = ()
 
 
-class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
+class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     __original_kwargs__: Dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
-
-        cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
-
-        if cooldown is None:
-            buckets = CooldownMapping(cooldown, BucketType.default)
-        elif isinstance(cooldown, CooldownMapping):
-            buckets = cooldown
-        else:
-            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
-
-        self._buckets: CooldownMapping = buckets
-
-        max_concurrency = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
-
-        self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
-
-        self._callback = None
-        self.module = None
-
-        self.name: str = kwargs.get("name", func.__name__)
-
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
+        super().__init__(func, **kwargs)
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
         self.parent = kwargs.get("parent")
@@ -225,133 +198,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             check = self.name == other.name and self.guild_ids == other.guild_ids
         return isinstance(other, self.__class__) and self.parent == other.parent and check
 
-    async def __call__(self, ctx, *args, **kwargs):
-        """|coro|
-        Calls the command's callback.
-
-        This method bypasses all checks that a command has and does not
-        convert the arguments beforehand, so take care to pass the correct
-        arguments in.
-        """
-        if self.cog is not None:
-            return await self.callback(self.cog, ctx, *args, **kwargs)
-        return await self.callback(ctx, *args, **kwargs)
-
-    @property
-    def callback(
-        self,
-    ) -> Union[
-        Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
-        Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
-    ]:
-        return self._callback
-
-    @callback.setter
-    def callback(
-        self,
-        function: Union[
-            Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
-            Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
-        ],
-    ) -> None:
-        self._callback = function
-        unwrap = unwrap_function(function)
-        self.module = unwrap.__module__
-
-    def _prepare_cooldowns(self, ctx: ApplicationContext):
-        if self._buckets.valid:
-            current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
-
-            if bucket is not None:
-                retry_after = bucket.update_rate_limit(current)
-
-                if retry_after:
-                    from ..ext.commands.errors import CommandOnCooldown
-
-                    raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
-
-    async def prepare(self, ctx: ApplicationContext) -> None:
-        # This should be same across all 3 types
-        ctx.command = self
-
-        if not await self.can_run(ctx):
-            raise CheckFailure(f"The check functions for the command {self.name} failed")
-
-        if hasattr(self, "_max_concurrency"):
-            if self._max_concurrency is not None:
-                # For this application, context can be duck-typed as a Message
-                await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
-
-            try:
-                self._prepare_cooldowns(ctx)
-                await self.call_before_hooks(ctx)
-            except:
-                if self._max_concurrency is not None:
-                    await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
-                raise
-
-    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
-        """Checks whether the command is currently on cooldown.
-
-        .. note::
-
-            This uses the current time instead of the interaction time.
-
-        Parameters
-        -----------
-        ctx: :class:`.ApplicationContext`
-            The invocation context to use when checking the command's cooldown status.
-
-        Returns
-        --------
-        :class:`bool`
-            A boolean indicating if the command is on cooldown.
-        """
-        if not self._buckets.valid:
-            return False
-
-        bucket = self._buckets.get_bucket(ctx)
-        current = utcnow().timestamp()
-        return bucket.get_tokens(current) == 0
-
-    def reset_cooldown(self, ctx: ApplicationContext) -> None:
-        """Resets the cooldown on this command.
-
-        Parameters
-        -----------
-        ctx: :class:`.ApplicationContext`
-            The invocation context to reset the cooldown under.
-        """
-        if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
-            bucket.reset()
-
-    def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
-        """Retrieves the amount of seconds before this command can be tried again.
-
-        .. note::
-
-            This uses the current time instead of the interaction time.
-
-        Parameters
-        -----------
-        ctx: :class:`.ApplicationContext`
-            The invocation context to retrieve the cooldown from.
-
-        Returns
-        --------
-        :class:`float`
-            The amount of time left on this command's cooldown in seconds.
-            If this is ``0.0`` then the command isn't on cooldown.
-        """
-        if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)
-            current = utcnow().timestamp()
-            return bucket.get_retry_after(current)
-
-        return 0.0
-
     async def invoke(self, ctx: ApplicationContext) -> None:
         await self.prepare(ctx)
 
@@ -359,7 +205,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         await injected(ctx)
 
     async def can_run(self, ctx: ApplicationContext) -> bool:
-
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(f"The global check functions for command {self.name} failed.")
 
@@ -405,168 +250,45 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         finally:
             ctx.bot.dispatch("application_command_error", ctx, error)
 
+    def copy(self):
+        """Creates a copy of this command.
+
+        Returns
+        --------
+        :class:`SlashCommand`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
+
+    def _ensure_assignment_on_copy(self, other):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        if self._buckets.valid and not other._buckets.valid:
+           other._buckets = self._buckets.copy()
+        if self._max_concurrency != other._max_concurrency:
+           # _max_concurrency won't be None at this point
+           other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
-
-    def error(self, coro):
-        """A decorator that registers a coroutine as a local error handler.
-
-        A local error handler is an :func:`.on_command_error` event limited to
-        a single command. However, the :func:`.on_command_error` is still
-        invoked afterwards as the catch-all.
-
-        Parameters
-        -----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the local error handler.
-
-        Raises
-        -------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The error handler must be a coroutine.")
-
-        self.on_error = coro
-        return coro
-
-    def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered."""
-        return hasattr(self, "on_error")
-
-    def before_invoke(self, coro):
-        """A decorator that registers a coroutine as a pre-invoke hook.
-        A pre-invoke hook is called directly before the command is
-        called. This makes it a useful function to set up database
-        connections or any type of set up required.
-
-        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
-        See :meth:`.Bot.before_invoke` for more info.
-
-        Parameters
-        -----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the pre-invoke hook.
-
-        Raises
-        -------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The pre-invoke hook must be a coroutine.")
-
-        self._before_invoke = coro
-        return coro
-
-    def after_invoke(self, coro):
-        """A decorator that registers a coroutine as a post-invoke hook.
-        A post-invoke hook is called directly after the command is
-        called. This makes it a useful function to clean-up database
-        connections or any type of clean up required.
-
-        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
-        See :meth:`.Bot.after_invoke` for more info.
-
-        Parameters
-        -----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the post-invoke hook.
-
-        Raises
-        -------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The post-invoke hook must be a coroutine.")
-
-        self._after_invoke = coro
-        return coro
-
-    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
-        # now that we're done preparing we can call the pre-command hooks
-        # first, call the command local hook:
-        cog = self.cog
-        if self._before_invoke is not None:
-            # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, "__self__", cog)
-            # __self__ only exists for methods, not functions
-            # however, if @command.before_invoke is used, it will be a function
-            if instance:
-                await self._before_invoke(instance, ctx)  # type: ignore
-            else:
-                await self._before_invoke(ctx)  # type: ignore
-
-        # call the cog local hook if applicable:
-        if cog is not None:
-            hook = cog.__class__._get_overridden_method(cog.cog_before_invoke)
-            if hook is not None:
-                await hook(ctx)
-
-        # call the bot global hook if necessary
-        hook = ctx.bot._before_invoke
-        if hook is not None:
-            await hook(ctx)
-
-    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
-        cog = self.cog
-        if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, "__self__", cog)
-            if instance:
-                await self._after_invoke(instance, ctx)  # type: ignore
-            else:
-                await self._after_invoke(ctx)  # type: ignore
-
-        # call the cog local hook if applicable:
-        if cog is not None:
-            hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
-            if hook is not None:
-                await hook(ctx)
-
-        hook = ctx.bot._after_invoke
-        if hook is not None:
-            await hook(ctx)
-
-    @property
-    def cooldown(self):
-        return self._buckets._cooldown
-
-    @property
-    def full_parent_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified parent command name.
-
-        This the base command name required to execute it. For example,
-        in ``/one two three`` the parent name would be ``one two``.
-        """
-        entries = []
-        command = self
-        while command.parent is not None and hasattr(command.parent, "name"):
-            command = command.parent
-            entries.append(command.name)
-
-        return " ".join(reversed(entries))
-
-    @property
-    def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
-
-        This is the full parent name with the command name as well.
-        For example, in ``/one two three`` the qualified name would be
-        ``one two three``.
-        """
-
-        parent = self.full_parent_name
-
-        if parent:
-            return f"{parent} {self.name}"
-        else:
-            return self.name
-
-    def __str__(self) -> str:
-        return self.qualified_name
 
     def _set_cog(self, cog):
         self.cog = cog
@@ -630,9 +352,6 @@ class SlashCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
 
         self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
         _validate_names(self)
@@ -648,17 +367,6 @@ class SlashCommand(ApplicationCommand):
         self.attached_to_group: bool = False
 
         self.options: List[Option] = kwargs.get("options", [])
-
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
-
-        self._before_invoke = None
-        self._after_invoke = None
 
         self._cog = MISSING
 
@@ -805,7 +513,7 @@ class SlashCommand(ApplicationCommand):
 
         return as_dict
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
         # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -900,12 +608,8 @@ class SlashCommand(ApplicationCommand):
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
-        if self.cog is not None:
-            await self.callback(self.cog, ctx, **kwargs)
-        elif self.parent is not None and self.attached_to_group is True:
-            await self.callback(self.parent, ctx, **kwargs)
-        else:
-            await self.callback(ctx, **kwargs)
+        ctx.args = []
+        ctx.kwargs = kwargs
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = {i.name: i.default for i in self.options}
@@ -930,43 +634,6 @@ class SlashCommand(ApplicationCommand):
 
                 choices = [o if isinstance(o, OptionChoice) else OptionChoice(o) for o in result][:25]
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
-
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`SlashCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
     def _set_cog(self, cog):
         super()._set_cog(cog)
@@ -1446,43 +1113,6 @@ class UserCommand(ContextMenuCommand):
         else:
             await self.callback(ctx, target)
 
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`UserCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
 
 class MessageCommand(ContextMenuCommand):
     r"""A class that implements the protocol for message context menu commands.
@@ -1542,43 +1172,6 @@ class MessageCommand(ContextMenuCommand):
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        --------
-        :class:`MessageCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
 
 def slash_command(**kwargs):
