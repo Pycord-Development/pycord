@@ -83,10 +83,15 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
 - Fix required parameters validation error ([#1589](https://github.com/Pycord-Development/pycord/pull/1589))
 
 ### Security
-- Fix for application-based bots without the bot scope ([#1568](https://github.com/Pycord-Development/pycord/pull/1568)
-  and [#1584](https://github.com/Pycord-Development/pycord/pull/1584))
+- Improved fix for application-based bots without the bot scope
+  ([#1584](https://github.com/Pycord-Development/pycord/pull/1584))
+
+## [2.0.1] - 2022-08-16
+### Security
+- Fix for application-based bots without the bot scope ([#1568](https://github.com/Pycord-Development/pycord/pull/1568))
 
 
 [Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...HEAD
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.1...v2.1.0
+[2.0.1]: https://https://github.com/Pycord-Development/pycord/compare/v2.0.0...v2.0.1
