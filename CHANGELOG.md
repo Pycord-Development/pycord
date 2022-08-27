@@ -94,4 +94,13 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
 [Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...HEAD
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.1...v2.1.0
-[2.0.1]: https://https://github.com/Pycord-Development/pycord/compare/v2.0.0...v2.0.1
+[2.0.1]: https://github.com/Pycord-Development/pycord/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-rc.1...v2.0.0
+[2.0.0-rc.1]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.7...v2.0.0-rc.1
+[2.0.0-beta.7]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.6...v2.0.0-beta.7
+[2.0.0-beta.6]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.5...v2.0.0-beta.6
+[2.0.0-beta.5]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.4...v2.0.0-beta.5
+[2.0.0-beta.4]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.3...v2.0.0-beta.4
+[2.0.0-beta.3]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.2...v2.0.0-beta.3
+[2.0.0-beta.2]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
+[2.0.0-beta.1]: https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
