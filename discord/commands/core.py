@@ -473,6 +473,7 @@ class SlashCommand(ApplicationCommand):
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
 
 
+# TODO: implement with GrouMixin maybe
 class SlashCommandGroup(ApplicationCommand):
     """A class that implements the protocol for a slash command group.
 
@@ -585,10 +586,16 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        if command.cog is MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
