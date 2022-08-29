@@ -604,14 +604,6 @@ class Invokable(Generic[CogT, P, T]):
             if not await ctx.bot.can_run(ctx):
                 raise CheckFailure(f"The global check functions for command {self.qualified_name} failed.")
 
-            # I personally don't think parent checks should be
-            # run with the subcommand. It causes confusion, and
-            # nerfs control for a bit of reduced redundancy
-            # predicates = self.checks
-            # if self.parent is not None:
-            #     # parent checks should be run first
-            #     predicates = self.parent.checks + predicates
-
             if (cog := self.cog) and (local_check := cog._get_overridden_method(cog.cog_check)):
                 ret = await utils.maybe_coroutine(local_check, ctx)
                 if not ret:
