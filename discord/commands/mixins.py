@@ -30,7 +30,6 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from ..bot import Bot, AutoShardedBot
-    from ..cog import Cog
     from ..user import User, ClientUser
     from ..member import Member
     from ..guild import Guild
@@ -41,33 +40,34 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
 
     P = ParamSpec("P")
+else:
+    P = TypeVar("P")
 
-    BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
-    CogT = TypeVar("CogT", bound="Cog")
-    CallbackT = TypeVar("CallbackT")
-    ContextT = TypeVar("ContextT", bound="BaseContext")
+BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+CogT = TypeVar("CogT", bound="Cog")
+CallbackT = TypeVar("CallbackT")
+ContextT = TypeVar("ContextT", bound="BaseContext")
 
-    T = TypeVar("T")
-    Coro = Coroutine[Any, Any, T]
-    MaybeCoro = Union[T, Coro[T]]
+T = TypeVar("T")
+Coro = Coroutine[Any, Any, T]
+MaybeCoro = Union[T, Coro[T]]
 
-    Check = Union[
-        Callable[[Cog, ContextT], MaybeCoro[bool]],  # TODO: replace with stardized context superclass
-        Callable[[ContextT], MaybeCoro[bool]],       # as well as for the others
-    ]
+Check = Union[
+    Callable[[CogT, ContextT], MaybeCoro[bool]],
+    Callable[[ContextT], MaybeCoro[bool]],
+]
 
-    Error = Union[
-        Callable[[Cog, "BaseContext[Any]", CommandError], Coro[Any]],
-        Callable[["BaseContext[Any]", CommandError], Coro[Any]],
-    ]
-    ErrorT = TypeVar("ErrorT", bound="Error")
+Error = Union[
+    Callable[[CogT, "BaseContext[Any]", CommandError], Coro[Any]],
+    Callable[["BaseContext[Any]", CommandError], Coro[Any]],
+]
+ErrorT = TypeVar("ErrorT", bound="Error")
 
-    Hook = Union[
-        Callable[[Cog, ContextT], Coro[Any]],
-        Callable[[ContextT], Coro[Any]]
-    ]
-    HookT = TypeVar("HookT", bound="Hook")
-
+Hook = Union[
+    Callable[[CogT, ContextT], Coro[Any]],
+    Callable[[ContextT], Coro[Any]]
+]
+HookT = TypeVar("HookT", bound="Hook")
 
 
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
@@ -269,7 +269,7 @@ class Invokable(Generic[CogT, P, T]):
     def __init__(self, func: CallbackT, **kwargs):
         self.module: Any = None
         self.cog: Optional[Cog]
-        self.parent: Optional[Invokable] = (parent := kwargs.get("parent")) if isinstance(parent, _BaseCommand) else None
+        self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
         self.callback: CallbackT = func
 
         self.name: str = str(kwargs.get("name", func.__name__))
@@ -708,7 +708,8 @@ class Invokable(Generic[CogT, P, T]):
 
         # call the cog local hook if applicable:
         if cog is not None:
-            hook = Cog._get_overridden_method(cog.cog_after_invoke)
+            # :troll:
+            hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
             if hook is not None:
                 await hook(ctx)
 

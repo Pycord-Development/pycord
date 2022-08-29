@@ -56,7 +56,7 @@ from ...commands import (
     slash_command,
     user_command,
 )
-from ...commands.mixins import Invokable
+from ...commands.mixins import Invokable, CogT
 from ...errors import *
 from .cog import Cog
 from .context import Context
@@ -77,10 +77,30 @@ if TYPE_CHECKING:
 
     from discord.message import Message
 
-    from ...commands.mixins import CogT
     from ._types import Check, Coro, CoroFunc, Error, Hook
 
+    P = ParamSpec("P")
 
+    CommandT = TypeVar("CommandT", bound="Command")
+    ContextT = TypeVar("ContextT", bound="Context")
+    # CHT = TypeVar('CHT', bound='Check')
+    GroupT = TypeVar("GroupT", bound="Group")
+    HookT = TypeVar("HookT", bound="Hook")
+    ErrorT = TypeVar("ErrorT", bound="Error")
+
+    CallbackT = Union[
+        Callable[
+            [Concatenate[CogT, ContextT, P]],
+            Coro[T]
+        ],
+        Callable[
+            [Concatenate[ContextT, P]],
+            Coro[T]
+        ],
+    ]
+
+else:
+    P = TypeVar("P")
 __all__ = (
     "Command",
     "Group",
@@ -114,28 +134,6 @@ __all__ = (
 MISSING: Any = discord.utils.MISSING
 
 T = TypeVar("T")
-CommandT = TypeVar("CommandT", bound="Command")
-ContextT = TypeVar("ContextT", bound="Context")
-# CHT = TypeVar('CHT', bound='Check')
-GroupT = TypeVar("GroupT", bound="Group")
-HookT = TypeVar("HookT", bound="Hook")
-ErrorT = TypeVar("ErrorT", bound="Error")
-
-if TYPE_CHECKING:
-    P = ParamSpec("P")
-else:
-    P = TypeVar("P")
-
-CallbackT = Union[
-    Callable[
-        [Concatenate[CogT, ContextT, P]],
-        Coro[T]
-    ],
-    Callable[
-        [Concatenate[ContextT, P]],
-        Coro[T]
-    ],
-]
 
 
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
