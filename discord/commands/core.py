@@ -773,6 +773,7 @@ class SlashCommandGroup(ApplicationCommand):
         command = find(lambda x: x.name == option["name"], self.subcommands)
         option["resolved"] = resolved
         ctx.interaction.data = option
+        ctx.invoked_subcommand = command
         await command.invoke(ctx)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:

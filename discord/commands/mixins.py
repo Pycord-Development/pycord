@@ -128,16 +128,36 @@ class _BaseCommand:
 class BaseContext(abc.Messageable, Generic[BotT]):
     def __init__(
         self,
-        *,
         bot: Bot,
         command: Optional[Invokable],
         args: List[Any] = utils.MISSING,
-        kwargs: Dict[str, Any] = utils.MISSING
+        kwargs: Dict[str, Any] = utils.MISSING,
+        *,
+        invoked_with: Optional[str] = None,
+        invoked_parents: List[str] = utils.MISSING,
+        invoked_subcommand: Optional[Invokable] = None,
+        subcommand_passed: Optional[str] = None,
+        command_failed: bool = False
+
     ):
         self.bot: Bot = bot
         self.command: Optional[Invokable] = command
         self.args: List[Any] = args or []
         self.kwargs: Dict[str, Any] = kwargs or {}
+
+        self.invoked_with: Optional[str] = invoked_with
+        if not self.invoked_with and command:
+            self.invoked_with = command.name
+
+        self.invoked_parents: List[str] = invoked_parents or []
+        if not self.invoked_parents and command:
+            self.invoked_parents = [i.name for i in command.parents]
+
+        # This will always be None for slash commands
+        self.subcommand_passed: Optional[str] = subcommand_passed
+
+        self.invoked_subcommand: Optional[Invokable] = invoked_subcommand
+        self.command_failed: bool = command_failed
 
     async def invoke(self, command: Invokable[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
@@ -202,7 +222,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.source.guild
 
     @utils.cached_property
-    def channel_id(self) -> Optional[int]:
+    def guild_id(self) -> Optional[int]:
         """:class:`int`: Returns the ID of the guild associated with this context's command."""
         return getattr(self.source, "guild_id", self.guild.id if self.guild else None)
 
@@ -241,12 +261,8 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
-        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
+        """Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
         return self.guild.voice_client if self.guild else None
-
-
-
-
 
 
 class Invokable(Generic[CogT, P, T]):
@@ -730,10 +746,27 @@ class Invokable(Generic[CogT, P, T]):
         # terminate the invoked_subcommand chain.
         # since we're in a regular command (and not a group) then
         # the invoked subcommand is None.
-        # ctx.invoked_subcommand = None
-        # ctx.subcommand_passed = None
+        ctx.invoked_subcommand = None
+        ctx.subcommand_passed = None
         injected = hooked_wrapped_callback(self, ctx, self.callback)
         await injected(*ctx.args, **ctx.kwargs)
+
+    async def reinvoke(self, ctx: ContextT, *, call_hooks: bool = False) -> None:
+        ctx.command = self
+        await self._parse_arguments(ctx)
+
+        if call_hooks:
+            await self.call_before_hooks(ctx)
+
+        ctx.invoked_subcommand = None
+        try:
+            await self.callback(*ctx.args, **ctx.kwargs)  # type: ignore
+        except:
+            ctx.command_failed = True
+            raise
+        finally:
+            if call_hooks:
+                await self.call_after_hooks(ctx)
 
     def copy(self):
         """Creates a copy of this command.
@@ -746,7 +779,7 @@ class Invokable(Generic[CogT, P, T]):
         ret = self.__class__(self.callback, **self.__original_kwargs__)
         return self._ensure_assignment_on_copy(ret)
 
-    def _ensure_assignment_on_copy(self, other):
+    def _ensure_assignment_on_copy(self, other: Invokable):
         other._before_invoke = self._before_invoke
         other._after_invoke = self._after_invoke
         if self.checks != other.checks:

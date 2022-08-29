@@ -32,6 +32,7 @@ import discord.abc
 import discord.utils
 from discord.message import Message
 from ...commands.mixins import BaseContext
+from ...commands.context import ApplicationContext
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -123,59 +124,22 @@ class Context(BaseContext, Generic[BotT]):
         kwargs: Dict[str, Any] = MISSING,
         prefix: Optional[str] = None,
         command: Optional[Command] = None,
-        invoked_with: Optional[str] = None,
-        invoked_parents: List[str] = MISSING,
-        invoked_subcommand: Optional[Command] = None,
-        subcommand_passed: Optional[str] = None,
-        command_failed: bool = False,
         current_parameter: Optional[inspect.Parameter] = None,
+        **kwargs2,
     ):
-        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs)
+        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
 
         self.message: Message = message
         self.prefix: Optional[str] = prefix
         self.view: StringView = view
-        self.invoked_with: Optional[str] = invoked_with
-        self.invoked_parents: List[str] = invoked_parents or []
-        self.invoked_subcommand: Optional[Command] = invoked_subcommand
-        self.subcommand_passed: Optional[str] = subcommand_passed
-        self.command_failed: bool = command_failed
         self.current_parameter: Optional[inspect.Parameter] = current_parameter
 
     @property
     def source(self) -> Message:
         return self.message
 
+    @discord.utils.copy_doc(ApplicationContext.reinvoke)
     async def reinvoke(self, *, call_hooks: bool = False, restart: bool = True) -> None:
-        """|coro|
-
-        Calls the command again.
-
-        This is similar to :meth:`~.Context.invoke` except that it bypasses
-        checks, cooldowns, and error handlers.
-
-        .. note::
-
-            If you want to bypass :exc:`.UserInputError` derived exceptions,
-            it is recommended to use the regular :meth:`~.Context.invoke`
-            as it will work more naturally. After all, this will end up
-            using the old arguments the user has used and will thus just
-            fail again.
-
-        Parameters
-        ------------
-        call_hooks: :class:`bool`
-            Whether to call the before and after invoke hooks.
-        restart: :class:`bool`
-            Whether to start the call chain from the very beginning
-            or where we left off (i.e. the command that caused the error).
-            The default is to start where we left off.
-
-        Raises
-        -------
-        ValueError
-            The context to reinvoke is not valid.
-        """
         cmd = self.command
         view = self.view
         if cmd is None:

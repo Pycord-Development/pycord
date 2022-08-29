@@ -87,9 +87,10 @@ class ApplicationContext(BaseContext):
         *,
         command: Optional[ApplicationCommand] = None,
         args: List[Any] = None,
-        kwargs: Dict[str, Any] = None
+        kwargs: Dict[str, Any] = None,
+        **kwargs2
     ):
-        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs)
+        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
 
         self.interaction = interaction
 
@@ -97,6 +98,50 @@ class ApplicationContext(BaseContext):
         self.focused: Option = None  # type: ignore
         self.value: str = None  # type: ignore
         self.options: dict = None  # type: ignore
+
+    async def reinvoke(self, *, call_hooks: bool = False, restart: bool = True) -> None:
+        """|coro|
+
+        Calls the command again.
+
+        This is similar to :meth:`~.BaseContext.invoke` except that it bypasses
+        checks, cooldowns, and error handlers.
+
+        .. note::
+
+            If you want to bypass :exc:`.UserInputError` derived exceptions,
+            it is recommended to use the regular :meth:`~.Context.invoke`
+            as it will work more naturally. After all, this will end up
+            using the old arguments the user has used and will thus just
+            fail again.
+
+        Parameters
+        ------------
+        call_hooks: :class:`bool`
+            Whether to call the before and after invoke hooks.
+        restart: :class:`bool`
+            Whether to start the call chain from the very beginning
+            or where we left off (i.e. the command that caused the error).
+            The default is to start where we left off.
+
+        Raises
+        -------
+        ValueError
+            The context to reinvoke is not valid.
+        """
+        cmd = self.command
+        if cmd is None:
+            raise ValueError("This context is not valid.")
+
+        if restart:
+            to_call = cmd.root_parent or cmd
+        else:
+            to_call = cmd
+
+        try:
+            await to_call.reinvoke(self, call_hooks=call_hooks)
+        finally:
+            self.command = cmd
 
     @property
     def source(self) -> Interaction:

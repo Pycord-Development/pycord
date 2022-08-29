@@ -572,24 +572,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         if not self.ignore_extra and not view.eof:
             raise TooManyArguments(f"Too many arguments passed to {self.qualified_name}")
 
-    # TODO:
-    async def reinvoke(self, ctx: Context, *, call_hooks: bool = False) -> None:
-        ctx.command = self
-        await self._parse_arguments(ctx)
-
-        if call_hooks:
-            await self.call_before_hooks(ctx)
-
-        ctx.invoked_subcommand = None
-        try:
-            await self.callback(*ctx.args, **ctx.kwargs)  # type: ignore
-        except:
-            ctx.command_failed = True
-            raise
-        finally:
-            if call_hooks:
-                await self.call_after_hooks(ctx)
-
     @property
     def short_doc(self) -> str:
         """:class:`str`: Gets the "short" documentation of a command.
