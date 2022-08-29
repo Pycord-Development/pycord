@@ -585,16 +585,10 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def add_command(self, command: SlashCommand) -> None:
-        if command.cog is MISSING:
-            command.cog = self.cog
-
-        self.subcommands.append(command)
-
     def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.add_command(command)
+            self.subcommands.append(command)
             return command
 
         return wrap
