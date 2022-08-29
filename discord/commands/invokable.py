@@ -5,7 +5,6 @@ import datetime
 import functools
 from typing import (
     TYPE_CHECKING,
-    Generic,
     TypeVar,
     Callable,
     Coroutine,
