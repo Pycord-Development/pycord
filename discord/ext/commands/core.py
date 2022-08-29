@@ -56,7 +56,7 @@ from ...commands import (
     slash_command,
     user_command,
 )
-from ...commands.invokable import Invokable
+from ...commands.mixins import Invokable
 from ...errors import *
 from .cog import Cog
 from .context import Context
@@ -77,6 +77,7 @@ if TYPE_CHECKING:
 
     from discord.message import Message
 
+    from ...commands.mixins import CogT
     from ._types import Check, Coro, CoroFunc, Error, Hook
 
 
@@ -113,7 +114,6 @@ __all__ = (
 MISSING: Any = discord.utils.MISSING
 
 T = TypeVar("T")
-CogT = TypeVar("CogT", bound="Cog")
 CommandT = TypeVar("CommandT", bound="Command")
 ContextT = TypeVar("ContextT", bound="Context")
 # CHT = TypeVar('CHT', bound='Check')

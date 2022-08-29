@@ -10,12 +10,13 @@ from typing import (
     Coroutine,
     Optional,
     Union,
+    Generic,
     Any,
     Dict,
     List,
 )
 
-from .. import utils
+from .. import utils, abc
 from ..errors import (
     ApplicationCommandError,
     CheckFailure,
@@ -28,12 +29,22 @@ from .cooldowns import BucketType, CooldownMapping, MaxConcurrency
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
+    from ..bot import Bot, AutoShardedBot
     from ..cog import Cog
+    from ..user import User, ClientUser
+    from ..member import Member
+    from ..guild import Guild
+    from ..message import Message
+    from ..interactions import Interaction
+    from ..abc import MessageableChannel
+    from ..voice_client import VoiceProtocol
 
     P = ParamSpec("P")
 
+    BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+    CogT = TypeVar("CogT", bound="Cog")
     CallbackT = TypeVar("CallbackT")
-    ContextT = TypeVar("ContextT", bound="Context")  # TODO: yes
+    ContextT = TypeVar("ContextT", bound="BaseContext")
 
     T = TypeVar("T")
     Coro = Coroutine[Any, Any, T]
@@ -45,8 +56,8 @@ if TYPE_CHECKING:
     ]
 
     Error = Union[
-        Callable[[Cog, "Context[Any]", CommandError], Coro[Any]],
-        Callable[["Context[Any]", CommandError], Coro[Any]],
+        Callable[[Cog, "BaseContext[Any]", CommandError], Coro[Any]],
+        Callable[["BaseContext[Any]", CommandError], Coro[Any]],
     ]
     ErrorT = TypeVar("ErrorT", bound="Error")
 
@@ -113,7 +124,112 @@ class _BaseCommand:
     __slots__ = ()
 
 
-class Invokable:
+class BaseContext(abc.Messageable, Generic[BotT]):
+    def __init__(
+        self,
+        *,
+        bot: Bot,
+        command: Optional[Invokable],
+        args: List[Any] = utils.MISSING,
+        kwargs: Dict[str, Any] = utils.MISSING
+    ):
+        self.bot: Bot = bot
+        self.command: Optional[Invokable] = command
+        self.args: List[Any] = args or []
+        self.kwargs: Dict[str, Any] = kwargs or {}
+
+    async def invoke(self, command: Invokable[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+        r"""|coro|
+
+        Calls a command with the arguments given.
+
+        This is useful if you want to just call the callback that a
+        :class:`.Invokable` holds internally.
+
+        .. note::
+
+            This does not handle converters, checks, cooldowns, before-invoke,
+            or after-invoke hooks in any matter. It calls the internal callback
+            directly as-if it was a regular function.
+
+            You must take care in passing the proper arguments when
+            using this function.
+
+        Parameters
+        -----------
+        command: :class:`.Invokable`
+            The command that is going to be called.
+        \*args
+            The arguments to use.
+        \*\*kwargs
+            The keyword arguments to use.
+
+        Raises
+        -------
+        TypeError
+            The command argument to invoke is missing.
+        """
+        return await command(self, *args, **kwargs)
+
+    async def _get_channel(self) -> abc.Messageable:
+        return self.channel
+
+    @property
+    def source(self) -> Union[Message, Interaction]:
+        """Union[:class:`Message`, :class:`Interaction`]: Property to return a message or interaction
+        depending on the context.
+        """
+        raise NotImplementedError()
+
+    @property
+    def cog(self) -> Optional[Cog]:
+        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        None if it does not exist."""
+
+        if self.command is None:
+            return None
+        return self.command.cog
+
+    @utils.cached_property
+    def guild(self) -> Optional[Guild]:
+        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
+        None if not available."""
+        return self.source.guild
+
+    @utils.cached_property
+    def channel(self) -> MessageableChannel:
+        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command.
+        Shorthand for :attr:`.Message.channel`.
+        """
+        return self.source.channel
+
+    @utils.cached_property
+    def author(self) -> Union[User, Member]:
+        """Union[:class:`.User`, :class:`.Member`]:
+        Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
+        """
+        return self.source.author
+
+    @utils.cached_property
+    def me(self) -> Union[Member, ClientUser]:
+        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        message contexts, or when :meth:`Intents.guilds` is absent.
+        """
+        # bot.user will never be None at this point.
+        return self.guild.me if self.guild and self.guild.me else self.bot.user  # type: ignore
+
+    @property
+    def voice_client(self) -> Optional[VoiceProtocol]:
+        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
+        return self.guild.voice_client if self.guild else None
+
+
+
+
+
+
+class Invokable(Generic[CogT, P, T]):
     def __init__(self, func: CallbackT, **kwargs):
         self.module: Any = None
         self.cog: Optional[Cog]
@@ -565,8 +681,8 @@ class Invokable:
         # terminate the invoked_subcommand chain.
         # since we're in a regular command (and not a group) then
         # the invoked subcommand is None.
-        # ctx.invoked_subcommand = None
-        # ctx.subcommand_passed = None
+        ctx.invoked_subcommand = None
+        ctx.subcommand_passed = None
         injected = hooked_wrapped_callback(self, ctx, self.callback)
         await injected(*ctx.args, **ctx.kwargs)
 

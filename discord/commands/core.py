@@ -61,8 +61,8 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from .invokable import Invokable, _BaseCommand
 from ..utils import find, MISSING
+from .mixins import Invokable, _BaseCommand
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 

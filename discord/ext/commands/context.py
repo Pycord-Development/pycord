@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar, U
 import discord.abc
 import discord.utils
 from discord.message import Message
+from ...commands.mixins import BaseContext
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -62,8 +63,8 @@ else:
     P = TypeVar("P")
 
 
-class Context(discord.abc.Messageable, Generic[BotT]):
-    r"""Represents the context in which a command is being invoked under.
+class Context(BaseContext, Generic[BotT]):
+    """Represents the context in which a command is being invoked under.
 
     This class contains a lot of metadata to help you understand more about
     the invocation context. This class is not created manually and is instead
@@ -135,12 +136,10 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         command_failed: bool = False,
         current_parameter: Optional[inspect.Parameter] = None,
     ):
+        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs)
+
         self.message: Message = message
-        self.bot: BotT = bot
-        self.args: List[Any] = args or []
-        self.kwargs: Dict[str, Any] = kwargs or {}
         self.prefix: Optional[str] = prefix
-        self.command: Optional[Command] = command
         self.view: StringView = view
         self.invoked_with: Optional[str] = invoked_with
         self.invoked_parents: List[str] = invoked_parents or []
@@ -149,6 +148,10 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         self.command_failed: bool = command_failed
         self.current_parameter: Optional[inspect.Parameter] = current_parameter
         self._state: ConnectionState = self.message._state
+
+    @property
+    def source(self) -> Message:
+        return self.message
 
     async def invoke(self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
@@ -250,9 +253,6 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         """:class:`bool`: Checks if the invocation context is valid to be invoked with."""
         return self.prefix is not None and self.command is not None
 
-    async def _get_channel(self) -> discord.abc.Messageable:
-        return self.channel
-
     @property
     def clean_prefix(self) -> str:
         """:class:`str`: The cleaned up invoke prefix. i.e. mentions are ``@name`` instead of ``<@id>``.
@@ -269,50 +269,6 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         # odd one.
         pattern = re.compile(r"<@!?%s>" % user.id)
         return pattern.sub("@%s" % user.display_name.replace("\\", r"\\"), self.prefix)
-
-    @property
-    def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
-        None if it does not exist."""
-
-        if self.command is None:
-            return None
-        return self.command.cog
-
-    @discord.utils.cached_property
-    def guild(self) -> Optional[Guild]:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
-        None if not available."""
-        return self.message.guild
-
-    @discord.utils.cached_property
-    def channel(self) -> MessageableChannel:
-        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command.
-        Shorthand for :attr:`.Message.channel`.
-        """
-        return self.message.channel
-
-    @discord.utils.cached_property
-    def author(self) -> Union[User, Member]:
-        """Union[:class:`~discord.User`, :class:`.Member`]:
-        Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
-        """
-        return self.message.author
-
-    @discord.utils.cached_property
-    def me(self) -> Union[Member, ClientUser]:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
-        message contexts, or when :meth:`Intents.guilds` is absent.
-        """
-        # bot.user will never be None at this point.
-        return self.guild.me if self.guild is not None and self.guild.me is not None else self.bot.user  # type: ignore
-
-    @property
-    def voice_client(self) -> Optional[VoiceProtocol]:
-        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
-        g = self.guild
-        return g.voice_client if g else None
 
     async def send_help(self, *args: Any) -> Any:
         """send_help(entity=<bot>)
