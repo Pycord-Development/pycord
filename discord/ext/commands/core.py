@@ -24,11 +24,9 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import asyncio
 import functools
 import inspect
 import types
-
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -56,7 +54,14 @@ from ...commands import (
     slash_command,
     user_command,
 )
-from ...commands.mixins import Invokable, CogT
+from ...commands.mixins import (
+    CogT,
+    Invokable,
+    hooked_wrapped_callback,
+    unwrap_function,
+    wrap_callback,
+)
+from ...enums import ChannelType
 from ...errors import *
 from .cog import Cog
 from .context import Context
@@ -68,9 +73,9 @@ from .cooldowns import (
     DynamicCooldownMapping,
     MaxConcurrency,
 )
-from ...enums import ChannelType
-
 from .errors import *
+
+T = TypeVar("T")
 
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec, TypeGuard
@@ -98,9 +103,10 @@ if TYPE_CHECKING:
             Coro[T]
         ],
     ]
-
 else:
     P = TypeVar("P")
+
+
 __all__ = (
     "Command",
     "Group",
@@ -133,19 +139,6 @@ __all__ = (
 
 MISSING: Any = discord.utils.MISSING
 
-T = TypeVar("T")
-
-
-def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
-    partial = functools.partial
-    while True:
-        if hasattr(function, "__wrapped__"):
-            function = function.__wrapped__
-        elif isinstance(function, partial):
-            function = function.func
-        else:
-            return function
-
 
 def get_signature_parameters(function: Callable[..., Any], globalns: Dict[str, Any]) -> Dict[str, inspect.Parameter]:
     signature = inspect.signature(function)
@@ -168,46 +161,6 @@ def get_signature_parameters(function: Callable[..., Any], globalns: Dict[str, A
         params[name] = parameter.replace(annotation=annotation)
 
     return params
-
-
-def wrap_callback(coro):
-    @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
-        try:
-            ret = await coro(*args, **kwargs)
-        except CommandError:
-            raise
-        except asyncio.CancelledError:
-            return
-        except Exception as exc:
-            raise CommandInvokeError(exc) from exc
-        return ret
-
-    return wrapped
-
-
-def hooked_wrapped_callback(command, ctx, coro):
-    @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
-        try:
-            ret = await coro(*args, **kwargs)
-        except CommandError:
-            ctx.command_failed = True
-            raise
-        except asyncio.CancelledError:
-            ctx.command_failed = True
-            return
-        except Exception as exc:
-            ctx.command_failed = True
-            raise CommandInvokeError(exc) from exc
-        finally:
-            if command._max_concurrency is not None:
-                await command._max_concurrency.release(ctx)
-
-            await command.call_after_hooks(ctx)
-        return ret
-
-    return wrapped
 
 
 class _CaseInsensitiveDict(dict):
@@ -361,14 +314,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         self.require_var_positional: bool = kwargs.get("require_var_positional", False)
         self.ignore_extra: bool = kwargs.get("ignore_extra", True)
-        # TODO: maybe???
-        # self.cooldown_after_parsing: bool = kwargs.get("cooldown_after_parsing", False)
-        # TODO: typing
-        # self.cog: Optional[CogT] = None
-
-        # bandaid for the fact that sometimes parent can be the bot instance
-        parent = kwargs.get("parent")
-        self.parent: Optional[GroupMixin] = parent if isinstance(parent, _BaseCommand) else None  # type: ignore
 
     @property
     def callback(
@@ -392,28 +337,8 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         self.params = get_signature_parameters(func, globalns)
 
-    async def dispatch_error(self, ctx: Context, error: Exception) -> None:
-        ctx.command_failed = True
-        cog = self.cog
-        try:
-            coro = self.on_error
-        except AttributeError:
-            pass
-        else:
-            injected = wrap_callback(coro)
-            if cog is not None:
-                await injected(cog, ctx, error)
-            else:
-                await injected(ctx, error)
-
-        try:
-            if cog is not None:
-                local = Cog._get_overridden_method(cog.cog_command_error)
-                if local is not None:
-                    wrapped = wrap_callback(local)
-                    await wrapped(ctx, error)
-        finally:
-            ctx.bot.dispatch("command_error", ctx, error)
+    async def _dispatch_error(self, ctx: Context, error: Exception) -> None:
+        ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         required = param.default is param.empty

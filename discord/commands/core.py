@@ -50,6 +50,7 @@ from typing import (
 from ..channel import _threaded_guild_channel_factory
 from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
 from ..errors import (
+    CommandError,
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     ClientException,
@@ -86,20 +87,19 @@ if TYPE_CHECKING:
 
     from .. import Permissions
     from ..cog import Cog
+    from .mixins import BaseContext
 
-T = TypeVar("T")
-CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
-
-if TYPE_CHECKING:
     P = ParamSpec("P")
 else:
     P = TypeVar("P")
 
 
-def wrap_callback(coro):
-    from ..ext.commands.errors import CommandError
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
+
+def wrap_callback(coro):
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
         try:
@@ -195,8 +195,8 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    def _set_cog(self, cog):
-        self.cog = cog
+    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+        ctx.bot.dispatch("application_command_error", ctx, error)
 
 
 class SlashCommand(ApplicationCommand):
@@ -716,8 +716,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            # TODO: Improve this error message
-            raise Exception("a subgroup cannot have a subgroup")
+            raise Exception("A command subgroup can only have commands and not any more groups.")
 
         sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self, **kwargs)
         self.subcommands.append(sub_command_group)

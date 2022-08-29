@@ -23,6 +23,7 @@ from ..errors import (
     CommandError,
     CommandInvokeError,
     DisabledCommand,
+    CommandOnCooldown,
 )
 from .cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
@@ -38,6 +39,7 @@ if TYPE_CHECKING:
     from ..abc import MessageableChannel
     from ..voice_client import VoiceProtocol
     from ..state import ConnectionState
+    from ..cog import Cog
 
     P = ParamSpec("P")
 else:
@@ -267,13 +269,14 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
 class Invokable(Generic[CogT, P, T]):
     def __init__(self, func: CallbackT, **kwargs):
-        self.module: Any = None
-        self.cog: Optional[Cog]
-        self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
         self.callback: CallbackT = func
+        self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
+        self.cog: Optional[CogT]
+        self.module: Any = None
 
         self.name: str = str(kwargs.get("name", func.__name__))
         self.enabled: bool = kwargs.get("enabled", True)
+        self.cooldown_after_parsing: bool = kwargs.get("cooldown_after_parsing", False)
 
         # checks
         if checks := getattr(func, "__commands_checks__", []):
@@ -546,27 +549,30 @@ class Invokable(Generic[CogT, P, T]):
         finally:
             ctx.command = original
 
-    # depends on what to do with the application_command_error event
+    async def _dispatch_error(self, ctx: ContextT, error: Exception) -> None:
+        # since I don't want to copy paste code, subclassed Contexts
+        # dispatch it to their corresponding events
+        raise NotImplementedError()
 
-    # async def dispatch_error(self, ctx: ContextT, error: Exception) -> None:
-    #     ctx.command_failed = True
-    #     cog = self.cog
+    async def dispatch_error(self, ctx: ContextT, error: Exception) -> None:
+        ctx.command_failed = True
+        cog = self.cog
 
-    #     if coro := getattr(self, "on_error", None):
-    #         injected = wrap_callback(coro)
-    #         if cog is not None:
-    #             await injected(cog, ctx, error)
-    #         else:
-    #             await injected(ctx, error)
+        if coro := getattr(self, "on_error", None):
+            injected = wrap_callback(coro)
+            if cog is not None:
+                await injected(cog, ctx, error)
+            else:
+                await injected(ctx, error)
 
-    #     try:
-    #         if cog is not None:
-    #             local = cog.__class__._get_overridden_method(cog.cog_command_error)
-    #             if local is not None:
-    #                 wrapped = wrap_callback(local)
-    #                 await wrapped(ctx, error)
-    #     finally:
-    #         ctx.bot.dispatch("application_command_error", ctx, error)
+        try:
+            if cog is not None:
+                local = cog.__class__._get_overridden_method(cog.cog_command_error)
+                if local is not None:
+                    wrapped = wrap_callback(local)
+                    await wrapped(ctx, error)
+        finally:
+            await self._dispatch_error(ctx, error)
 
     def add_check(self, func: Check) -> None:
         """Adds a check to the command.
@@ -732,8 +738,12 @@ class Invokable(Generic[CogT, P, T]):
             await self._max_concurrency.acquire(ctx)  # type: ignore
 
         try:
-            self._prepare_cooldowns(ctx)
-            await self._parse_arguments(ctx)
+            if self.cooldown_after_parsing:
+                await self._parse_arguments(ctx)
+                self._prepare_cooldowns(ctx)
+            else:
+                self._prepare_cooldowns(ctx)
+                await self._parse_arguments(ctx)
 
             await self.call_before_hooks(ctx)
         except:
@@ -805,3 +815,6 @@ class Invokable(Generic[CogT, P, T]):
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
+
+    def _set_cog(self, cog: CogT):
+        self.cog = cog
