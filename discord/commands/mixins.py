@@ -38,6 +38,7 @@ if TYPE_CHECKING:
     from ..interactions import Interaction
     from ..abc import MessageableChannel
     from ..voice_client import VoiceProtocol
+    from ..state import ConnectionState
 
     P = ParamSpec("P")
 
@@ -182,6 +183,10 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         raise NotImplementedError()
 
     @property
+    def _state(self) -> ConnectionState:
+        return self.source._state
+
+    @property
     def cog(self) -> Optional[Cog]:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
         None if it does not exist."""
@@ -197,6 +202,11 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.source.guild
 
     @utils.cached_property
+    def channel_id(self) -> Optional[int]:
+        """:class:`int`: Returns the ID of the guild associated with this context's command."""
+        return getattr(self.source, "guild_id", self.guild.id if self.guild else None)
+
+    @utils.cached_property
     def channel(self) -> MessageableChannel:
         """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command.
         Shorthand for :attr:`.Message.channel`.
@@ -204,11 +214,21 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.source.channel
 
     @utils.cached_property
+    def channel_id(self) -> Optional[int]:
+        """:class:`int`: Returns the ID of the channel associated with this context's command."""
+        return getattr(self.source, "channel_id", self.channel.id if self.channel else None)
+
+    @utils.cached_property
     def author(self) -> Union[User, Member]:
         """Union[:class:`.User`, :class:`.Member`]:
         Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
         """
         return self.source.author
+
+    @property
+    def user(self) -> Union[User, Member]:
+        """Union[:class:`.User`, :class:`.Member`]: Alias for :attr:`BaseContext.author`."""
+        return self.author
 
     @utils.cached_property
     def me(self) -> Union[Member, ClientUser]:
@@ -653,7 +673,8 @@ class Invokable(Generic[CogT, P, T]):
             await hook(ctx)
 
     async def _parse_arguments(self, ctx: ContextT) -> None:
-        return
+        """Parses arguments and attaches them to the context class (Union[:class:`~ext.commands.Context`, :class:`.ApplicationContext`])"""
+        raise NotImplementedError()
 
     async def prepare(self, ctx: ContextT) -> None:
         ctx.command = self
@@ -681,8 +702,8 @@ class Invokable(Generic[CogT, P, T]):
         # terminate the invoked_subcommand chain.
         # since we're in a regular command (and not a group) then
         # the invoked subcommand is None.
-        ctx.invoked_subcommand = None
-        ctx.subcommand_passed = None
+        # ctx.invoked_subcommand = None
+        # ctx.subcommand_passed = None
         injected = hooked_wrapped_callback(self, ctx, self.callback)
         await injected(*ctx.args, **ctx.kwargs)
 

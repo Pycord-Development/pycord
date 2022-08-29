@@ -36,13 +36,6 @@ from ...commands.mixins import BaseContext
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
-    from discord.abc import MessageableChannel
-    from discord.guild import Guild
-    from discord.member import Member
-    from discord.state import ConnectionState
-    from discord.user import ClientUser, User
-    from discord.voice_client import VoiceProtocol
-
     from .bot import AutoShardedBot, Bot
     from .cog import Cog
     from .core import Command
@@ -118,6 +111,7 @@ class Context(BaseContext, Generic[BotT]):
         A boolean that indicates if the command failed to be parsed, checked,
         or invoked.
     """
+    command: Optional[Command]
 
     def __init__(
         self,
@@ -147,44 +141,10 @@ class Context(BaseContext, Generic[BotT]):
         self.subcommand_passed: Optional[str] = subcommand_passed
         self.command_failed: bool = command_failed
         self.current_parameter: Optional[inspect.Parameter] = current_parameter
-        self._state: ConnectionState = self.message._state
 
     @property
     def source(self) -> Message:
         return self.message
-
-    async def invoke(self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
-        r"""|coro|
-
-        Calls a command with the arguments given.
-
-        This is useful if you want to just call the callback that a
-        :class:`.Command` holds internally.
-
-        .. note::
-
-            This does not handle converters, checks, cooldowns, pre-invoke,
-            or after-invoke hooks in any matter. It calls the internal callback
-            directly as-if it was a regular function.
-
-            You must take care in passing the proper arguments when
-            using this function.
-
-        Parameters
-        -----------
-        command: :class:`.Command`
-            The command that is going to be called.
-        \*args
-            The arguments to use.
-        \*\*kwargs
-            The keyword arguments to use.
-
-        Raises
-        -------
-        TypeError
-            The command argument to invoke is missing.
-        """
-        return await command(self, *args, **kwargs)
 
     async def reinvoke(self, *, call_hooks: bool = False, restart: bool = True) -> None:
         """|coro|

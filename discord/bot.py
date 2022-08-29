@@ -736,7 +736,9 @@ class ApplicationCommandMixin(ABC):
             return self.dispatch("application_command_auto_complete", interaction, command)
 
         ctx = await self.get_application_context(interaction)
-        ctx.command = command
+        if not ctx.command:
+            ctx.command = command
+
         await self.invoke_application_command(ctx)
 
     async def on_application_command_auto_complete(self, interaction: Interaction, command: ApplicationCommand) -> None:

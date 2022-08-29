@@ -29,23 +29,18 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, TypeVar, Union
 import discord.abc
 from discord.interactions import InteractionMessage, InteractionResponse, Interaction
 from discord.webhook.async_ import Webhook
+from .mixins import BaseContext
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     import discord
     from .. import Bot
-    from ..state import ConnectionState
-    from ..voice_client import VoiceProtocol
 
     from .core import ApplicationCommand, Option
-    from ..interactions import Interaction, InteractionResponse, InteractionChannel
-    from ..guild import Guild
-    from ..member import Member
+    from ..interactions import Interaction, InteractionResponse
     from ..message import Message
-    from ..user import User
     from ..permissions import Permissions
-    from ..client import ClientUser
     from discord.webhook.async_ import Webhook
 
     from ..cog import Cog
@@ -66,7 +61,7 @@ else:
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
 
-class ApplicationContext(discord.abc.Messageable):
+class ApplicationContext(BaseContext):
     """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
@@ -83,85 +78,29 @@ class ApplicationContext(discord.abc.Messageable):
     command: :class:`.ApplicationCommand`
         The command that this context belongs to.
     """
+    command: Optional[ApplicationCommand]
 
-    def __init__(self, bot: Bot, interaction: Interaction):
-        self.bot = bot
+    def __init__(
+        self,
+        bot: Bot,
+        interaction: Interaction,
+        *,
+        command: Optional[ApplicationCommand] = None,
+        args: List[Any] = None,
+        kwargs: Dict[str, Any] = None
+    ):
+        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs)
+
         self.interaction = interaction
 
         # below attributes will be set after initialization
-        self.command: ApplicationCommand = None  # type: ignore
         self.focused: Option = None  # type: ignore
         self.value: str = None  # type: ignore
         self.options: dict = None  # type: ignore
 
-        self._state: ConnectionState = self.interaction._state
-
-    async def _get_channel(self) -> Optional[InteractionChannel]:
-        return self.interaction.channel
-
-    async def invoke(
-        self,
-        command: ApplicationCommand[CogT, P, T],
-        /,
-        *args: P.args,
-        **kwargs: P.kwargs,
-    ) -> T:
-        r"""|coro|
-
-        Calls a command with the arguments given.
-        This is useful if you want to just call the callback that a
-        :class:`.ApplicationCommand` holds internally.
-
-        .. note::
-
-            This does not handle converters, checks, cooldowns, pre-invoke,
-            or after-invoke hooks in any matter. It calls the internal callback
-            directly as-if it was a regular function.
-            You must take care in passing the proper arguments when
-            using this function.
-
-        Parameters
-        -----------
-        command: :class:`.ApplicationCommand`
-            The command that is going to be called.
-        \*args
-            The arguments to use.
-        \*\*kwargs
-            The keyword arguments to use.
-
-        Raises
-        -------
-        TypeError
-            The command argument to invoke is missing.
-        """
-        return await command(self, *args, **kwargs)
-
-    @cached_property
-    def channel(self) -> Optional[InteractionChannel]:
-        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
-        Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."""
-        return self.interaction.channel
-
-    @cached_property
-    def channel_id(self) -> Optional[int]:
-        """:class:`int`: Returns the ID of the channel associated with this context's command.
-        Shorthand for :attr:`.Interaction.channel_id`.
-        """
-        return self.interaction.channel_id
-
-    @cached_property
-    def guild(self) -> Optional[Guild]:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
-        Shorthand for :attr:`.Interaction.guild`.
-        """
-        return self.interaction.guild
-
-    @cached_property
-    def guild_id(self) -> Optional[int]:
-        """:class:`int`: Returns the ID of the guild associated with this context's command.
-        Shorthand for :attr:`.Interaction.guild_id`.
-        """
-        return self.interaction.guild_id
+    @property
+    def source(self) -> Interaction:
+        return self.interaction
 
     @cached_property
     def locale(self) -> Optional[str]:
@@ -182,38 +121,11 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.app_permissions
 
     @cached_property
-    def me(self) -> Optional[Union[Member, ClientUser]]:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
-        message contexts, or when :meth:`Intents.guilds` is absent.
-        """
-        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
-
-    @cached_property
     def message(self) -> Optional[Message]:
         """Optional[:class:`.Message`]: Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
         return self.interaction.message
-
-    @cached_property
-    def user(self) -> Optional[Union[Member, User]]:
-        """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command.
-        Shorthand for :attr:`.Interaction.user`.
-        """
-        return self.interaction.user
-
-    author: Optional[Union[Member, User]] = user
-
-    @property
-    def voice_client(self) -> Optional[VoiceProtocol]:
-        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command.
-        Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable.
-        """
-        if self.interaction.guild is None:
-            return None
-
-        return self.interaction.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
@@ -338,19 +250,9 @@ class ApplicationContext(discord.abc.Messageable):
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_message
 
-    @property
-    def cog(self) -> Optional[Cog]:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
-        ``None`` if it does not exist.
-        """
-        if self.command is None:
-            return None
-
-        return self.command.cog
-
 
 class AutocompleteContext:
-    """Represents context for a slash command's option autocomplete.
+    """Represents context for a slash command's option autocomplete. This ***does not*** inherent from :class:`.BaseContext`.
 
     This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback.
 
