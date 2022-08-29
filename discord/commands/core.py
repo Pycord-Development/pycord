@@ -79,7 +79,6 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from .. import Permissions
-    from ..cog import Cog
     from .mixins import BaseContext
 
     P = ParamSpec("P")
@@ -88,8 +87,6 @@ else:
 
 
 T = TypeVar("T")
-CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 
 def _validate_names(obj):
