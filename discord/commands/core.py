@@ -106,8 +106,8 @@ def _validate_descriptions(obj):
 class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     """Base class for all Application Commands, including:
 
-      - :class:`.SlashCommand`
-      - :class:`.SlashCommandGroup`
+      - :class:`SlashCommand`
+      - :class:`SlashCommandGroup`
       - :class:`ContextMenuCommand` which in turn is a superclass of
       - :class:`MessageCommand` and
       - :class:`UserCommand`

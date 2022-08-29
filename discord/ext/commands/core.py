@@ -537,8 +537,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         return " ".join(result)
 
-    def _set_cog(self, cog):
-        self.cog = cog
 
 class GroupMixin(Generic[CogT]):
     """A mixin that implements common functionality for classes that behave
