@@ -310,6 +310,34 @@ class Invokable(Generic[CogT, P, T]):
         return self._buckets._cooldown
 
     @property
+    def parents(self) -> List[Invokable]:
+        """List[:class:`Invokable`]: Retrieves the parents of this command.
+
+        If the command has no parents then it returns an empty :class:`list`.
+
+        For example in commands ``?a b c test``, the parents are ``[c, b, a]``.
+        """
+        entries = []
+        command = self
+        while command.parent is not None:  # type: ignore
+            command = command.parent  # type: ignore
+            entries.append(command)
+
+        return entries
+
+    @property
+    def root_parent(self) -> Optional[Invokable]:
+        """Optional[:class:`Invokable`]: Retrieves the root parent of this command.
+
+        If the command has no parents then it returns ``None``.
+
+        For example in commands ``?a b c test``, the root parent is ``a``.
+        """
+        if not self.parent:
+            return None
+        return self.parents[-1]
+
+    @property
     def full_parent_name(self) -> Optional[str]:
         """:class:`str`: Retrieves the fully qualified parent command name.
 

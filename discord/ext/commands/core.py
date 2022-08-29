@@ -522,36 +522,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         return result
 
-    @property
-    def parents(self) -> List[Group]:
-        """List[:class:`Group`]: Retrieves the parents of this command.
-
-        If the command has no parents then it returns an empty :class:`list`.
-
-        For example in commands ``?a b c test``, the parents are ``[c, b, a]``.
-
-        .. versionadded:: 1.1
-        """
-        entries = []
-        command = self
-        while command.parent is not None:  # type: ignore
-            command = command.parent  # type: ignore
-            entries.append(command)
-
-        return entries
-
-    @property
-    def root_parent(self) -> Optional[Group]:
-        """Optional[:class:`Group`]: Retrieves the root parent of this command.
-
-        If the command has no parents then it returns ``None``.
-
-        For example in commands ``?a b c test``, the root parent is ``a``.
-        """
-        if not self.parent:
-            return None
-        return self.parents[-1]
-
     async def _parse_arguments(self, ctx: Context) -> None:
         ctx.args = [ctx] if self.cog is None else [self.cog, ctx]
         ctx.kwargs = {}
