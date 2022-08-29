@@ -62,9 +62,15 @@ __all__ = (
     "NoEntryPointError",
     "ExtensionFailed",
     "ExtensionNotFound",
+    "CommandError",
+    "CommandInvokeError",
     "ApplicationCommandError",
-    "CheckFailure",
     "ApplicationCommandInvokeError",
+    "CheckFailure",
+    "MaxConcurrencyReached",
+    "CommandOnCooldown",
+    "DisabledCommand",
+    "UserInputError",
 )
 
 
@@ -104,24 +110,6 @@ class ValidationError(DiscordException):
     """An Exception that is raised when there is a Validation Error."""
 
     pass
-
-
-def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
-    items: List[Tuple[str, str]] = []
-    for k, v in d.items():
-        new_key = f"{key}.{k}" if key else k
-
-        if isinstance(v, dict):
-            try:
-                _errors: List[Dict[str, Any]] = v["_errors"]
-            except KeyError:
-                items.extend(_flatten_error_dict(v, new_key).items())
-            else:
-                items.append((new_key, " ".join(x.get("message", "") for x in _errors)))
-        else:
-            items.append((new_key, v))
-
-    return dict(items)
 
 
 class HTTPException(DiscordException):
@@ -336,13 +324,21 @@ class ApplicationCommandError(CommandError):
     pass
 
 
-class CheckFailure(CommandError):
-    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
+class CommandInvokeError(CommandError):
+    """Exception raised when the command being invoked raised an exception.
 
     This inherits from :exc:`CommandError`
+
+    Attributes
+    -----------
+    original: :exc:`Exception`
+        The original exception that was raised. You can also get this via
+        the ``__cause__`` attribute.
     """
 
-    pass
+    def __init__(self, e: Exception) -> None:
+        self.original: Exception = e
+        super().__init__(f"Command raised an exception: {e.__class__.__name__}: {e}")
 
 
 class ApplicationCommandInvokeError(ApplicationCommandError):
@@ -360,6 +356,81 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
     def __init__(self, e: Exception) -> None:
         self.original: Exception = e
         super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")
+
+
+class CheckFailure(CommandError):
+    """Exception raised when the predicates in :attr:`.Command.checks` have failed.
+
+    This inherits from :exc:`CommandError`
+    """
+
+    pass
+
+
+class MaxConcurrencyReached(CommandError):
+    """Exception raised when the command being invoked has reached its maximum concurrency.
+
+    This inherits from :exc:`CommandError`.
+
+    Attributes
+    ------------
+    number: :class:`int`
+        The maximum number of concurrent invokers allowed.
+    per: :class:`.BucketType`
+        The bucket type passed to the :func:`.max_concurrency` decorator.
+    """
+
+    def __init__(self, number: int, per: BucketType) -> None:
+        self.number: int = number
+        self.per: BucketType = per
+        name = per.name
+        suffix = f"per {name}" if per.name != "default" else "globally"
+        plural = "%s times %s" if number > 1 else "%s time %s"
+        fmt = plural % (number, suffix)
+        super().__init__(f"Too many people are using this command. It can only be used {fmt} concurrently.")
+
+
+class CommandOnCooldown(CommandError):
+    """Exception raised when the command being invoked is on cooldown.
+
+    This inherits from :exc:`CommandError`
+
+    Attributes
+    -----------
+    cooldown: :class:`.Cooldown`
+        A class with attributes ``rate`` and ``per`` similar to the
+        :func:`.cooldown` decorator.
+    type: :class:`BucketType`
+        The type associated with the cooldown.
+    retry_after: :class:`float`
+        The amount of seconds to wait before you can retry again.
+    """
+
+    def __init__(self, cooldown: Cooldown, retry_after: float, type: BucketType) -> None:
+        self.cooldown: Cooldown = cooldown
+        self.retry_after: float = retry_after
+        self.type: BucketType = type
+        super().__init__(f"You are on cooldown. Try again in {retry_after:.2f}s")
+
+
+class DisabledCommand(CommandError):
+    """Exception raised when the command being invoked is disabled.
+
+    This inherits from :exc:`CommandError`
+    """
+
+    pass
+
+
+class UserInputError(CommandError):
+    """The base exception type for errors that involve errors
+    regarding user input.
+
+    This inherits from :exc:`CommandError`.
+    """
+
+    pass
+
 
 
 class ExtensionError(DiscordException):
@@ -450,73 +521,19 @@ class ExtensionNotFound(ExtensionError):
         super().__init__(msg, name=name)
 
 
-class MaxConcurrencyReached(CommandError):
-    """Exception raised when the command being invoked has reached its maximum concurrency.
+def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
+    items: List[Tuple[str, str]] = []
+    for k, v in d.items():
+        new_key = f"{key}.{k}" if key else k
 
-    This inherits from :exc:`CommandError`.
+        if isinstance(v, dict):
+            try:
+                _errors: List[Dict[str, Any]] = v["_errors"]
+            except KeyError:
+                items.extend(_flatten_error_dict(v, new_key).items())
+            else:
+                items.append((new_key, " ".join(x.get("message", "") for x in _errors)))
+        else:
+            items.append((new_key, v))
 
-    Attributes
-    ------------
-    number: :class:`int`
-        The maximum number of concurrent invokers allowed.
-    per: :class:`.BucketType`
-        The bucket type passed to the :func:`.max_concurrency` decorator.
-    """
-
-    def __init__(self, number: int, per: BucketType) -> None:
-        self.number: int = number
-        self.per: BucketType = per
-        name = per.name
-        suffix = f"per {name}" if per.name != "default" else "globally"
-        plural = "%s times %s" if number > 1 else "%s time %s"
-        fmt = plural % (number, suffix)
-        super().__init__(f"Too many people are using this command. It can only be used {fmt} concurrently.")
-
-
-class CommandOnCooldown(CommandError):
-    """Exception raised when the command being invoked is on cooldown.
-
-    This inherits from :exc:`CommandError`
-
-    Attributes
-    -----------
-    cooldown: :class:`.Cooldown`
-        A class with attributes ``rate`` and ``per`` similar to the
-        :func:`.cooldown` decorator.
-    type: :class:`BucketType`
-        The type associated with the cooldown.
-    retry_after: :class:`float`
-        The amount of seconds to wait before you can retry again.
-    """
-
-    def __init__(self, cooldown: Cooldown, retry_after: float, type: BucketType) -> None:
-        self.cooldown: Cooldown = cooldown
-        self.retry_after: float = retry_after
-        self.type: BucketType = type
-        super().__init__(f"You are on cooldown. Try again in {retry_after:.2f}s")
-
-
-class CommandInvokeError(CommandError):
-    """Exception raised when the command being invoked raised an exception.
-
-    This inherits from :exc:`CommandError`
-
-    Attributes
-    -----------
-    original: :exc:`Exception`
-        The original exception that was raised. You can also get this via
-        the ``__cause__`` attribute.
-    """
-
-    def __init__(self, e: Exception) -> None:
-        self.original: Exception = e
-        super().__init__(f"Command raised an exception: {e.__class__.__name__}: {e}")
-
-
-class DisabledCommand(CommandError):
-    """Exception raised when the command being invoked is disabled.
-
-    This inherits from :exc:`CommandError`
-    """
-
-    pass
+    return dict(items)

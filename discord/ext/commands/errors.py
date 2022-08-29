@@ -34,7 +34,8 @@ from discord.errors import (
     CommandOnCooldown,
     CommandInvokeError,
     MaxConcurrencyReached,
-    DisabledCommand
+    DisabledCommand,
+    UserInputError
 )
 
 if TYPE_CHECKING:
@@ -121,16 +122,6 @@ class ConversionError(CommandError):
     def __init__(self, converter: Converter, original: Exception) -> None:
         self.converter: Converter = converter
         self.original: Exception = original
-
-
-class UserInputError(CommandError):
-    """The base exception type for errors that involve errors
-    regarding user input.
-
-    This inherits from :exc:`CommandError`.
-    """
-
-    pass
 
 
 class CommandNotFound(CommandError):

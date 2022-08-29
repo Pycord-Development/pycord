@@ -486,31 +486,13 @@ Exceptions
 .. autoexception:: discord.ext.commands.NoPrivateMessage
     :members:
 
-.. autoexception:: discord.ext.commands.CheckFailure
-    :members:
-
 .. autoexception:: discord.ext.commands.CheckAnyFailure
     :members:
 
 .. autoexception:: discord.ext.commands.CommandNotFound
     :members:
 
-.. autoexception:: discord.ext.commands.DisabledCommand
-    :members:
-
-.. autoexception:: discord.ext.commands.CommandInvokeError
-    :members:
-
 .. autoexception:: discord.ext.commands.TooManyArguments
-    :members:
-
-.. autoexception:: discord.ext.commands.UserInputError
-    :members:
-
-.. autoexception:: discord.ext.commands.CommandOnCooldown
-    :members:
-
-.. autoexception:: discord.ext.commands.MaxConcurrencyReached
     :members:
 
 .. autoexception:: discord.ext.commands.NotOwner
@@ -604,9 +586,9 @@ Exception Hierarchy
 .. exception_hierarchy::
 
     - :exc:`~.DiscordException`
-        - :exc:`~.commands.CommandError`
+        - :exc:`~.CommandError`
             - :exc:`~.commands.ConversionError`
-            - :exc:`~.commands.UserInputError`
+            - :exc:`~.UserInputError`
                 - :exc:`~.commands.MissingRequiredArgument`
                 - :exc:`~.commands.TooManyArguments`
                 - :exc:`~.commands.BadArgument`
@@ -636,7 +618,7 @@ Exception Hierarchy
                     - :exc:`~.commands.InvalidEndOfQuotedStringError`
                     - :exc:`~.commands.ExpectedClosingQuoteError`
             - :exc:`~.commands.CommandNotFound`
-            - :exc:`~.commands.CheckFailure`
+            - :exc:`~.CheckFailure`
                 - :exc:`~.commands.CheckAnyFailure`
                 - :exc:`~.commands.PrivateMessageOnly`
                 - :exc:`~.commands.NoPrivateMessage`
@@ -648,9 +630,9 @@ Exception Hierarchy
                 - :exc:`~.commands.MissingAnyRole`
                 - :exc:`~.commands.BotMissingAnyRole`
                 - :exc:`~.commands.NSFWChannelRequired`
-            - :exc:`~.commands.DisabledCommand`
-            - :exc:`~.commands.CommandInvokeError`
-            - :exc:`~.commands.CommandOnCooldown`
-            - :exc:`~.commands.MaxConcurrencyReached`
+            - :exc:`~.DisabledCommand`
+            - :exc:`~.CommandInvokeError`
+            - :exc:`~.CommandOnCooldown`
+            - :exc:`~.MaxConcurrencyReached`
     - :exc:`~.ClientException`
         - :exc:`~.commands.CommandRegistrationError`

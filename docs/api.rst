@@ -5163,13 +5163,31 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.opus.OpusNotLoaded
 
+.. autoexception:: discord.CommandError
+    :members:
+
 .. autoexception:: discord.ApplicationCommandError
     :members:
-    
+
+.. autoexception:: discord.ApplicationCommandInvokeError
+    :members:
+
 .. autoexception:: discord.CheckFailure
     :members:
-    
-.. autoexception:: discord.ApplicationCommandInvokeError
+
+.. autoexception:: discord.DisabledCommand
+    :members:
+
+.. autoexception:: discord.CommandInvokeError
+    :members:
+
+.. autoexception:: discord.UserInputError
+    :members:
+
+.. autoexception:: discord.CommandOnCooldown
+    :members:
+
+.. autoexception:: discord.MaxConcurrencyReached
     :members:
 
 .. autoexception:: discord.ExtensionError
@@ -5210,9 +5228,15 @@ Exception Hierarchy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`DiscordServerError`
-            - :exc:`ApplicationCommandError`
+            - :exc:`CommandError`
+                - :exc:`ApplicationCommandError`
+                    - :exc:`ApplicationCommandInvokeError`
+                - :exc:`CommandInvokeError`
                 - :exc:`CheckFailure`
-                - :exc:`ApplicationCommandInvokeError`
+                - :exc:`MaxConcurrencyReached`
+                - :exc:`CommandOnCooldown`
+                - :exc:`DisabledCommand`
+                - :exc:`UserInputError`
             - :exc:`ExtensionError`
                 - :exc:`ExtensionAlreadyLoaded`
                 - :exc:`ExtensionNotLoaded`
