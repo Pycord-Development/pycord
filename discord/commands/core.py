@@ -473,7 +473,7 @@ class SlashCommand(ApplicationCommand):
                 return await ctx.interaction.response.send_autocomplete_result(choices=choices)
 
 
-# TODO: implement with GrouMixin maybe
+# TODO: implement with GroupMixin maybe
 class SlashCommandGroup(ApplicationCommand):
     """A class that implements the protocol for a slash command group.
 
