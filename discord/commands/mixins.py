@@ -128,6 +128,53 @@ class _BaseCommand:
 
 
 class BaseContext(abc.Messageable, Generic[BotT]):
+    """A baseclass to provide ***basic & common functionality*** between
+    :class:`.ApplicationContext` and :class:`~ext.commands.Context`.
+
+    This is a subclass of :class:`~abc.Messageable` and can be used to
+    send messages, etc.
+
+    .. versionadded:: 2.2
+
+    Attributes
+    ----------
+    bot: :class:`.Bot`
+        The bot that contains the command being executed.
+    command: Optional[:class:`Invokable`]
+        The command that is being invoked currently.
+    args: :class:`list`
+        The list of transformed arguments that were passed into the command.
+        If this is accessed during the :func:`.on_command_error` event
+        then this list could be incomplete.
+    kwargs: :class:`dict`
+        A dictionary of transformed arguments that were passed into the command.
+        Similar to :attr:`args`\, if this is accessed in the
+        :func:`.on_command_error` event then this dict could be incomplete.
+    invoked_with: Optional[:class:`str`]
+        The command name that triggered this invocation. Useful for finding out
+        which alias called the command.
+    invoked_parents: List[:class:`str`]
+        The command names of the parents that triggered this invocation. Useful for
+        finding out which aliases called the command.
+
+        For example in commands ``?a b c test``, the invoked parents are ``['a', 'b', 'c']``.
+    invoked_subcommand: Optional[:class:`Invokable`]
+        The subcommand that was invoked.
+        If no valid subcommand was invoked then this is equal to ``None``.
+    subcommand_passed: Optional[:class:`str`]
+        The string that was attempted to call a subcommand. This does not have
+        to point to a valid registered subcommand and could just point to a
+        nonsense string. If nothing was passed to attempt a call to a
+        subcommand then this is set to ``None``.
+
+        .. note::
+
+            This will always be ``None`` if accessed on through a slash command.
+
+    command_failed: :class:`bool`
+        A boolean that indicates if the command failed to be parsed, checked,
+        or invoked.
+    """
     def __init__(
         self,
         bot: Bot,
@@ -162,7 +209,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         self.command_failed: bool = command_failed
 
     async def invoke(self, command: Invokable[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
-        r"""|coro|
+        """|coro|
 
         Calls a command with the arguments given.
 
@@ -199,7 +246,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @property
     def source(self) -> Union[Message, Interaction]:
-        """Union[:class:`Message`, :class:`Interaction`]: Property to return a message or interaction
+        """Union[:class:`.Message`, :class:`.Interaction`]: Property to return a message or interaction
         depending on the context.
         """
         raise NotImplementedError()
@@ -230,9 +277,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @utils.cached_property
     def channel(self) -> MessageableChannel:
-        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command.
-        Shorthand for :attr:`.Message.channel`.
-        """
+        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command."""
         return self.source.channel
 
     @utils.cached_property
@@ -242,9 +287,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @utils.cached_property
     def author(self) -> Union[User, Member]:
-        """Union[:class:`.User`, :class:`.Member`]:
-        Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
-        """
+        """Union[:class:`.User`, :class:`.Member`]: Returns the author associated with this context's command."""
         return self.source.author
 
     @property
@@ -256,7 +299,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
     def me(self) -> Union[Member, ClientUser]:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
-        message contexts, or when :meth:`Intents.guilds` is absent.
+        message contexts, or when :meth:`.Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
         return self.guild.me if self.guild and self.guild.me else self.bot.user  # type: ignore
@@ -268,6 +311,40 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
 
 class Invokable(Generic[CogT, P, T]):
+    """A baseclass to provide ***basic & common functionality*** between
+    :class:`.ApplicationCommand` and :class:`~ext.commands.Command`.
+
+    .. versionadded:: 2.2
+
+    Attributes
+    ----------
+    name: str
+        The name of the invokable/command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    parent: Optional[:class:`Invokable`]
+        The parent group of this command.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    enabled: :class:`bool`
+        A boolean that indicates if the command is currently enabled.
+        If the command is invoked while it is disabled, then
+        :exc:`.DisabledCommand` is raised to the :func:`.on_command_error`
+        event. Defaults to ``True``.
+    checks: List[Callable[[:class:`.BaseContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed with the given
+        :class:`.BaseContext` (:class:`.ApplicationContext` or :class:`~ext.commands.Context`
+        to be specific) as the sole parameter. If an exception is necessary to be thrown to
+        signal failure, then one inherited from :exc:`.CommandError` should be used. Note that
+        if the checks fail then :exc:`.CheckFailure` exception is raised to the :func:`.on_command_error`
+        event.
+    cooldown_after_parsing: :class:`bool`
+        If ``True``\, cooldown processing is done after argument parsing,
+        which calls converters. If ``False`` then cooldown processing is done
+        first and then the converters are called second. Defaults to ``False``.
+    cooldown: Optional[:class:`Cooldown`]
+        The cooldown applied when the command is invoked.
+    """
     def __init__(self, func: CallbackT, **kwargs):
         self.callback: CallbackT = func
         self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
@@ -329,6 +406,24 @@ class Invokable(Generic[CogT, P, T]):
         return self._buckets._cooldown
 
     @property
+    def qualified_name(self) -> str:
+        """:class:`str`: Retrieves the fully qualified command name.
+
+        This is the full parent name with the command name as well.
+        For example, in ``?one two three`` the qualified name would be
+        ``one two three``.
+        """
+        if not self.parent:
+            return self.name
+
+        return f"{self.parent.qualified_name} {self.name}"
+
+    @property
+    def cog_name(self) -> Optional[str]:
+        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
+        return type(self.cog).__cog_name__ if self.cog is not None else None
+
+    @property
     def parents(self) -> List[Invokable]:
         """List[:class:`Invokable`]: Retrieves the parents of this command.
 
@@ -365,24 +460,6 @@ class Invokable(Generic[CogT, P, T]):
         """
         if self.parent:
             return self.parent.qualified_name
-
-    @property
-    def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
-
-        This is the full parent name with the command name as well.
-        For example, in ``?one two three`` the qualified name would be
-        ``one two three``.
-        """
-        if not self.parent:
-            return self.name
-
-        return f"{self.parent.qualified_name} {self.name}"
-
-    @property
-    def cog_name(self) -> Optional[str]:
-        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
-        return type(self.cog).__cog_name__ if self.cog is not None else None
 
     def __str__(self) -> str:
         return self.qualified_name
@@ -549,31 +626,6 @@ class Invokable(Generic[CogT, P, T]):
         finally:
             ctx.command = original
 
-    async def _dispatch_error(self, ctx: ContextT, error: Exception) -> None:
-        # since I don't want to copy paste code, subclassed Contexts
-        # dispatch it to their corresponding events
-        raise NotImplementedError()
-
-    async def dispatch_error(self, ctx: ContextT, error: Exception) -> None:
-        ctx.command_failed = True
-        cog = self.cog
-
-        if coro := getattr(self, "on_error", None):
-            injected = wrap_callback(coro)
-            if cog is not None:
-                await injected(cog, ctx, error)
-            else:
-                await injected(ctx, error)
-
-        try:
-            if cog is not None:
-                local = cog.__class__._get_overridden_method(cog.cog_command_error)
-                if local is not None:
-                    wrapped = wrap_callback(local)
-                    await wrapped(ctx, error)
-        finally:
-            await self._dispatch_error(ctx, error)
-
     def add_check(self, func: Check) -> None:
         """Adds a check to the command.
 
@@ -604,18 +656,45 @@ class Invokable(Generic[CogT, P, T]):
         except ValueError:
             pass
 
-    def _prepare_cooldowns(self, ctx: ContextT):
-        if not self._buckets.valid:
-            return
+    def copy(self):
+        """Creates a copy of this command.
 
-        current = datetime.datetime.now().timestamp()
-        bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
+        Returns
+        --------
+        :class:`Invokable`
+            A new instance of this command.
+        """
+        ret = self.__class__(self.callback, **self.__original_kwargs__)
+        return self._ensure_assignment_on_copy(ret)
 
-        if bucket:
-            retry_after = bucket.update_rate_limit(current)
+    def _ensure_assignment_on_copy(self, other: Invokable):
+        other._before_invoke = self._before_invoke
+        other._after_invoke = self._after_invoke
+        if self.checks != other.checks:
+            other.checks = self.checks.copy()
+        if self._buckets.valid and not other._buckets.valid:
+           other._buckets = self._buckets.copy()
+        if self._max_concurrency != other._max_concurrency:
+           # _max_concurrency won't be None at this point
+           other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
-            if retry_after:
-                raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+        try:
+            other.on_error = self.on_error
+        except AttributeError:
+            pass
+        return other
+
+    def _update_copy(self, kwargs: Dict[str, Any]):
+        if kwargs:
+            kw = kwargs.copy()
+            kw.update(self.__original_kwargs__)
+            copy = self.__class__(self.callback, **kw)
+            return self._ensure_assignment_on_copy(copy)
+        else:
+            return self.copy()
+
+    def _set_cog(self, cog: CogT):
+        self.cog = cog
 
     def is_on_cooldown(self, ctx: ContextT) -> bool:
         """Checks whether the command is currently on cooldown.
@@ -678,6 +757,19 @@ class Invokable(Generic[CogT, P, T]):
 
         return 0.0
 
+    def _prepare_cooldowns(self, ctx: ContextT):
+        if not self._buckets.valid:
+            return
+
+        current = datetime.datetime.now().timestamp()
+        bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
+
+        if bucket:
+            retry_after = bucket.update_rate_limit(current)
+
+            if retry_after:
+                raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
+
     async def call_before_hooks(self, ctx: ContextT) -> None:
         # now that we're done preparing we can call the pre-command hooks
         # first, call the command local hook:
@@ -714,7 +806,6 @@ class Invokable(Generic[CogT, P, T]):
 
         # call the cog local hook if applicable:
         if cog is not None:
-            # :troll:
             hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
             if hook is not None:
                 await hook(ctx)
@@ -752,6 +843,13 @@ class Invokable(Generic[CogT, P, T]):
             raise
 
     async def invoke(self, ctx: ContextT) -> None:
+        """Runs the command with checks.
+        
+        Parameters
+        ----------
+        ctx: :class:`.BaseContext`
+            The context to pass into the command.
+        """
         await self.prepare(ctx)
 
         # terminate the invoked_subcommand chain.
@@ -779,42 +877,27 @@ class Invokable(Generic[CogT, P, T]):
             if call_hooks:
                 await self.call_after_hooks(ctx)
 
-    def copy(self):
-        """Creates a copy of this command.
+    async def _dispatch_error(self, ctx: ContextT, error: Exception) -> None:
+        # since I don't want to copy paste code, subclassed Contexts
+        # dispatch it to their corresponding events
+        raise NotImplementedError()
 
-        Returns
-        --------
-        :class:`Invokable`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
+    async def dispatch_error(self, ctx: ContextT, error: Exception) -> None:
+        ctx.command_failed = True
+        cog = self.cog
 
-    def _ensure_assignment_on_copy(self, other: Invokable):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-           other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-           # _max_concurrency won't be None at this point
-           other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+        if coro := getattr(self, "on_error", None):
+            injected = wrap_callback(coro)
+            if cog is not None:
+                await injected(cog, ctx, error)
+            else:
+                await injected(ctx, error)
 
         try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: Dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
-    def _set_cog(self, cog: CogT):
-        self.cog = cog
+            if cog is not None:
+                local = cog.__class__._get_overridden_method(cog.cog_command_error)
+                if local is not None:
+                    wrapped = wrap_callback(local)
+                    await wrapped(ctx, error)
+        finally:
+            await self._dispatch_error(ctx, error)

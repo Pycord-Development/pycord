@@ -59,11 +59,9 @@ from ...commands.mixins import (
     Invokable,
     hooked_wrapped_callback,
     unwrap_function,
-    wrap_callback,
 )
 from ...enums import ChannelType
 from ...errors import *
-from .cog import Cog
 from .context import Context
 from .converter import Greedy, get_converter, run_converters
 from .cooldowns import (
@@ -184,17 +182,15 @@ class _CaseInsensitiveDict(dict):
 
 
 class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
-    r"""A class that implements the protocol for a bot text command.
+    """A class that implements the protocol for a bot text command.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`Invokable`.
+
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
     help: Optional[:class:`str`]
         The long help text for the command.
     brief: Optional[:class:`str`]
@@ -203,23 +199,8 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         A replacement for arguments in the default help text.
     aliases: Union[List[:class:`str`], Tuple[:class:`str`]]
         The list of aliases the command can be invoked under.
-    enabled: :class:`bool`
-        A boolean that indicates if the command is currently enabled.
-        If the command is invoked while it is disabled, then
-        :exc:`.DisabledCommand` is raised to the :func:`.on_command_error`
-        event. Defaults to ``True``.
     parent: Optional[:class:`Group`]
-        The parent group that this command belongs to. ``None`` if there
-        isn't one.
-    cog: Optional[:class:`Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.Context`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.Context` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.CommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_command_error`
-        event.
+        The parent group that this command belongs to.
     description: :class:`str`
         The message prefixed into the default help command.
     hidden: :class:`bool`
@@ -232,8 +213,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         regular matter rather than passing the rest completely raw. If ``True``
         then the keyword-only argument will pass in the rest of the arguments
         in a completely raw matter. Defaults to ``False``.
-    invoked_subcommand: Optional[:class:`Command`]
-        The subcommand that was invoked, if any.
     require_var_positional: :class:`bool`
         If ``True`` and a variadic positional argument is specified, requires
         the user to specify at least one argument. Defaults to ``False``.
@@ -245,22 +224,11 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         requirements are met (e.g. ``?foo a b c`` when only expecting ``a``
         and ``b``). Otherwise :func:`.on_command_error` and local error handlers
         are called with :exc:`.TooManyArguments`. Defaults to ``True``.
-    cooldown_after_parsing: :class:`bool`
-        If ``True``\, cooldown processing is done after argument parsing,
-        which calls converters. If ``False`` then cooldown processing is done
-        first and then the converters are called second. Defaults to ``False``.
     extras: :class:`dict`
         A dict of user provided extras to attach to the Command.
 
         .. note::
             This object may be copied by the library.
-
-
-        .. versionadded:: 2.0
-
-    cooldown: Optional[:class:`Cooldown`]
-        The cooldown applied when the command is invoked. ``None`` if the command
-        doesn't have a cooldown.
 
         .. versionadded:: 2.0
     """
@@ -572,7 +540,6 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
     def _set_cog(self, cog):
         self.cog = cog
 
-# TODO: This is a mess
 class GroupMixin(Generic[CogT]):
     """A mixin that implements common functionality for classes that behave
     similar to :class:`.Group` and are allowed to register commands.

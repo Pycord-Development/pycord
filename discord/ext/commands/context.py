@@ -31,8 +31,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar, U
 import discord.abc
 import discord.utils
 from discord.message import Message
-from ...commands.mixins import BaseContext
-from ...commands.context import ApplicationContext
+from ...commands import BaseContext, ApplicationContext
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -70,16 +69,6 @@ class Context(BaseContext, Generic[BotT]):
     -----------
     message: :class:`.Message`
         The message that triggered the command being executed.
-    bot: :class:`.Bot`
-        The bot that contains the command being executed.
-    args: :class:`list`
-        The list of transformed arguments that were passed into the command.
-        If this is accessed during the :func:`.on_command_error` event
-        then this list could be incomplete.
-    kwargs: :class:`dict`
-        A dictionary of transformed arguments that were passed into the command.
-        Similar to :attr:`args`\, if this is accessed in the
-        :func:`.on_command_error` event then this dict could be incomplete.
     current_parameter: Optional[:class:`inspect.Parameter`]
         The parameter that is currently being inspected and converted.
         This is only of use for within converters.
@@ -87,27 +76,6 @@ class Context(BaseContext, Generic[BotT]):
         .. versionadded:: 2.0
     prefix: Optional[:class:`str`]
         The prefix that was used to invoke the command.
-    command: Optional[:class:`Command`]
-        The command that is being invoked currently.
-    invoked_with: Optional[:class:`str`]
-        The command name that triggered this invocation. Useful for finding out
-        which alias called the command.
-    invoked_parents: List[:class:`str`]
-        The command names of the parents that triggered this invocation. Useful for
-        finding out which aliases called the command.
-
-        For example in commands ``?a b c test``, the invoked parents are ``['a', 'b', 'c']``.
-
-        .. versionadded:: 1.7
-
-    invoked_subcommand: Optional[:class:`Command`]
-        The subcommand that was invoked.
-        If no valid subcommand was invoked then this is equal to ``None``.
-    subcommand_passed: Optional[:class:`str`]
-        The string that was attempted to call a subcommand. This does not have
-        to point to a valid registered subcommand and could just point to a
-        nonsense string. If nothing was passed to attempt a call to a
-        subcommand then this is set to ``None``.
     command_failed: :class:`bool`
         A boolean that indicates if the command failed to be parsed, checked,
         or invoked.

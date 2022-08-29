@@ -93,13 +93,28 @@ AutoShardedBot
 .. autoclass:: AutoShardedBot
     :members:
 
+Commands
+---------
+
+Invokable
+~~~~~~~~~~
+.. attributetable:: discord.commands.Invokable
+
+.. autoclass:: discord.commands.Invokable
+    :members:
+
+BaseContext
+~~~~~~~~~~
+.. attributetable:: discord.commands.BaseContext
+
+.. autoclass:: discord.commands.BaseContext
+    :members:
+
 Application Commands
 ---------------------
 
-
-Command Permission Decorators
+Decorators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 .. autofunction:: discord.commands.default_permissions
     :decorator:
@@ -107,6 +122,20 @@ Command Permission Decorators
 .. autofunction:: discord.commands.guild_only
     :decorator:
 
+.. autofunction:: discord.commands.application_command
+    :decorator:
+
+.. autofunction:: discord.commands.command
+    :decorator:
+
+.. autofunction:: discord.commands.slash_command
+    :decorator:
+
+.. autofunction:: discord.commands.user_command
+    :decorator:
+
+.. autofunction:: discord.commands.message_command
+    :decorator:
 
 ApplicationCommand
 ~~~~~~~~~~~~~~~~~~~
@@ -115,12 +144,6 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
-    
-.. autofunction:: discord.commands.application_command
-    :decorator:
-
-.. autofunction:: discord.commands.command
-    :decorator:
 
 SlashCommand
 ~~~~~~~~~~~~~
@@ -129,9 +152,6 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
-    
-.. autofunction:: discord.commands.slash_command
-    :decorator:
 
 SlashCommandGroup
 ~~~~~~~~~~~~~~~~~~
@@ -141,6 +161,30 @@ SlashCommandGroup
 .. autoclass:: SlashCommandGroup
     :members:
 
+ContextMenuCommand
+~~~~~~~~~~~~
+
+.. attributetable:: ContextMenuCommand
+
+.. autoclass:: ContextMenuCommand
+    :members:
+
+UserCommand
+~~~~~~~~~~~~
+
+.. attributetable:: UserCommand
+
+.. autoclass:: UserCommand
+    :members:
+
+MessageCommand
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageCommand
+
+.. autoclass:: MessageCommand
+    :members:
+
 Option
 ~~~~~~~
 
@@ -148,7 +192,7 @@ Option
 
 .. autoclass:: Option
     :members:
-    
+
 .. autofunction:: discord.commands.option
     :decorator:
 
@@ -167,28 +211,6 @@ OptionChoice
 
 .. autoclass:: OptionChoice
     :members:
-
-UserCommand
-~~~~~~~~~~~~
-
-.. attributetable:: UserCommand
-
-.. autoclass:: UserCommand
-    :members:
-    
-.. autofunction:: discord.commands.user_command
-    :decorator:
-
-MessageCommand
-~~~~~~~~~~~~~~~
-
-.. attributetable:: MessageCommand
-
-.. autoclass:: MessageCommand
-    :members:
-    
-.. autofunction:: discord.commands.message_command
-    :decorator:
 
 ApplicationContext
 ~~~~~~~~~~~~~~~~~~~

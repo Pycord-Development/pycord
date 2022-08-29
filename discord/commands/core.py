@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import functools
 import inspect
 import re
 import types
@@ -49,13 +48,7 @@ from typing import (
 
 from ..channel import _threaded_guild_channel_factory
 from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
-from ..errors import (
-    CommandError,
-    ApplicationCommandError,
-    ApplicationCommandInvokeError,
-    ClientException,
-    ValidationError,
-)
+from ..errors import ClientException, ValidationError
 from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
@@ -63,7 +56,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import find, MISSING
-from .mixins import Invokable, _BaseCommand
+from .mixins import Invokable, _BaseCommand, CogT
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -99,59 +92,6 @@ CogT = TypeVar("CogT", bound="Cog")
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 
-def wrap_callback(coro):
-    @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
-        try:
-            ret = await coro(*args, **kwargs)
-        except ApplicationCommandError:
-            raise
-        except CommandError:
-            raise
-        except asyncio.CancelledError:
-            return
-        except Exception as exc:
-            raise ApplicationCommandInvokeError(exc) from exc
-        return ret
-
-    return wrapped
-
-
-def hooked_wrapped_callback(command, ctx, coro):
-    from ..ext.commands.errors import CommandError
-
-    @functools.wraps(coro)
-    async def wrapped(arg):
-        try:
-            ret = await coro(arg)
-        except ApplicationCommandError:
-            raise
-        except CommandError:
-            raise
-        except asyncio.CancelledError:
-            return
-        except Exception as exc:
-            raise ApplicationCommandInvokeError(exc) from exc
-        finally:
-            if hasattr(command, "_max_concurrency") and command._max_concurrency is not None:
-                await command._max_concurrency.release(ctx)
-            await command.call_after_hooks(ctx)
-        return ret
-
-    return wrapped
-
-
-def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
-    partial = functools.partial
-    while True:
-        if hasattr(function, "__wrapped__"):
-            function = function.__wrapped__
-        elif isinstance(function, partial):
-            function = function.func
-        else:
-            return function
-
-
 def _validate_names(obj):
     validate_chat_input_name(obj.name)
     if obj.name_localizations:
@@ -167,6 +107,16 @@ def _validate_descriptions(obj):
 
 
 class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
+    """Base class for all Application Commands, including:
+
+      - :class:`.SlashCommand`
+      - :class:`.SlashCommandGroup`
+      - :class:`ContextMenuCommand` which in turn is a superclass of
+      - :class:`MessageCommand` and
+      - :class:`UserCommand`
+    
+    This is a subclass of :class:`.Invokable`.
+    """
     __original_kwargs__: Dict[str, Any]
     cog = None
 
@@ -174,7 +124,6 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
         super().__init__(func, **kwargs)
         self.id: Optional[int] = kwargs.get("id")
         self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
-        self.parent = kwargs.get("parent")
 
         # Permissions
         self.default_member_permissions: Optional["Permissions"] = getattr(
@@ -200,46 +149,27 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
 
 class SlashCommand(ApplicationCommand):
-    r"""A class that implements the protocol for a slash command.
+    """A class that implements the protocol for a slash command.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
+
+    This is a subclass of :class:`.Invokable`.
 
     .. versionadded:: 2.0
 
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
-    description: Optional[:class:`str`]
-        The description for the command.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     options: List[:class:`Option`]
         The parameters for this command.
     parent: Optional[:class:`SlashCommandGroup`]
-        The parent group that this command belongs to. ``None`` if there
-        isn't one.
-    mention: :class:`str` 
-        Returns a string that allows you to mention the slash command.
+        The parent group that this command belongs to.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
-        The cooldown applied when the command is invoked. ``None`` if the command
-        doesn't have a cooldown.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -395,6 +325,7 @@ class SlashCommand(ApplicationCommand):
     
     @property
     def mention(self) -> str:
+        """:class:`str`: Returns a string that allows you to mention the slash command."""
         return f"</{self.qualified_name}:{self.id}>"
     
     def to_dict(self) -> Dict:
@@ -419,6 +350,8 @@ class SlashCommand(ApplicationCommand):
         return as_dict
 
     async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        ctx.args = [ctx] if self.cog is None else [self.cog, ctx]
+
         # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -513,7 +446,6 @@ class SlashCommand(ApplicationCommand):
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
-        ctx.args = [ctx] if self.cog is None else [self.cog, ctx]
         ctx.kwargs = kwargs
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
@@ -542,15 +474,17 @@ class SlashCommand(ApplicationCommand):
 
 
 class SlashCommandGroup(ApplicationCommand):
-    r"""A class that implements the protocol for a slash command group.
+    """A class that implements the protocol for a slash command group.
 
     These can be created manually, but they should be created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable`.
+
+    .. versionadded:: 2.0
+
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
     description: Optional[:class:`str`]
         The description for the command.
     guild_ids: Optional[List[:class:`int`]]
@@ -562,13 +496,6 @@ class SlashCommandGroup(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -801,37 +728,22 @@ class SlashCommandGroup(ApplicationCommand):
 
 
 class ContextMenuCommand(ApplicationCommand):
-    r"""A class that implements the protocol for context menu commands.
+    """A base class that implements the protocol for context menu commands.
 
-    These are not created manually, instead they are created via the
-    decorator or functional interface.
+    These are not meant to be directly used, same as :class:`ApplicationCommand`.
+
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
 
     .. versionadded:: 2.0
 
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
-        The cooldown applied when the command is invoked. ``None`` if the command
-        doesn't have a cooldown.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -907,28 +819,19 @@ class ContextMenuCommand(ApplicationCommand):
 
 
 class UserCommand(ContextMenuCommand):
-    r"""A class that implements the protocol for user context menu commands.
+    """A class that implements the protocol for user context menu commands.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
+
+    .. versionadded:: 2.0
+
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     """
     type = 2
 
@@ -968,28 +871,19 @@ class UserCommand(ContextMenuCommand):
 
 
 class MessageCommand(ContextMenuCommand):
-    r"""A class that implements the protocol for message context menu commands.
+    """A class that implements the protocol for message context menu commands.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
+
+    .. versionadded:: 2.0
+
     Attributes
     -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     """
     type = 3
 
@@ -1068,13 +962,11 @@ def message_command(**kwargs):
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
+    one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
-    By default, the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-    The ``name`` attribute also defaults to the function name unchanged.
+    
+    The ``description`` and ``name`` of the command are automatically inferred from the function name
+    and function docstring.
 
     .. versionadded:: 2.0
 
