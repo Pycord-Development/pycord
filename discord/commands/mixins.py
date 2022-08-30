@@ -72,6 +72,13 @@ Hook = Union[
 HookT = TypeVar("HookT", bound="Hook")
 
 
+__all__ = (
+    "Invokable",
+    "_BaseCommand",
+    "BaseContext",
+)
+
+
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
     partial = functools.partial
     while True:
