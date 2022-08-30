@@ -40,6 +40,7 @@ if TYPE_CHECKING:
     from .cog import Cog
     from .core import Command
     from .view import StringView
+    from .help import HelpCommand
 
 __all__ = ("Context",)
 
