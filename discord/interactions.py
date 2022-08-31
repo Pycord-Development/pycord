@@ -321,7 +321,7 @@ class Interaction:
         InteractionMessage
             The original interaction response message.
         """
-        return self.original_response(**kwargs)
+        return self.original_response()
 
     async def edit_original_response(
         self,
