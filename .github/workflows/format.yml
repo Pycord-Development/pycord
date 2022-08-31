@@ -1,0 +1,33 @@
+name: format
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          cache: pip
+
+      - name: Run pre-commit
+        id: precommitrun
+        uses: pre-commit/action@v3.0.0
+
+      - name: Commit changes
+        if: ${{ failure() && steps.precommitrun.conclusion == 'failure' }}
+        run: |
+          git config user.name "pre-commit autofixer"
+
+          git pull
+          git add .
+          git commit -m "style: pre-commit autofix"
+          git push
