@@ -306,9 +306,8 @@ class Interaction:
         self._original_response = message
         return message
 
-    async def original_message(self, **kwargs):
+    async def original_message(self):
         """An alias for :meth:`original_response`.
-        .. versionadded:: 2.0
         
         Raises
         -------
@@ -427,7 +426,6 @@ class Interaction:
 
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
-        .. versionadded:: 2.0
         
         Raises
         -------
@@ -482,7 +480,6 @@ class Interaction:
 
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
-        .. versionadded:: 2.0
 
         Raises
         -------
