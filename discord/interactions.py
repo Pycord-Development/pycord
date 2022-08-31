@@ -306,6 +306,24 @@ class Interaction:
         self._original_response = message
         return message
 
+    async def original_message(self, **kwargs):
+        """An alias for :meth:`original_response`.
+        .. versionadded:: 2.0
+        
+        Raises
+        -------
+        HTTPException
+            Fetching the original response message failed.
+        ClientException
+            The channel for the message could not be resolved.
+
+        Returns
+        --------
+        InteractionMessage
+            The original interaction response message.
+        """
+        return self.original_response(**kwargs)
+
     async def edit_original_response(
         self,
         *,
@@ -407,6 +425,28 @@ class Interaction:
 
         return message
 
+    async def edit_original_message(self, **kwargs):
+        """An alias for :meth:`edit_original_response`.
+        .. versionadded:: 2.0
+        
+        Raises
+        -------
+        HTTPException
+            Editing the message failed.
+        Forbidden
+            Edited a message that is not yours.
+        TypeError
+            You specified both ``embed`` and ``embeds`` or ``file`` and ``files``
+        ValueError
+            The length of ``embeds`` was invalid.
+
+        Returns
+        --------
+        :class:`InteractionMessage`
+            The newly edited message.
+        """
+        return self.edit_original_response(**kwargs)
+
     async def delete_original_response(self, *, delay: Optional[float] = None) -> None:
         """|coro|
 
@@ -439,6 +479,19 @@ class Interaction:
             utils.delay_task(delay, func)
         else:
             await func
+
+    async def delete_original_message(self, **kwargs):
+        """An alias for :meth:`delete_original_response`.
+        .. versionadded:: 2.0
+
+        Raises
+        -------
+        HTTPException
+            Deleting the message failed.
+        Forbidden
+            Deleted a message that is not yours.
+        """
+        return self.delete_original_response(**kwargs)
 
     def to_dict(self) -> Dict[str, Any]:
         """
