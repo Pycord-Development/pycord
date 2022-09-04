@@ -1820,14 +1820,18 @@ class Guild(Hashable):
             fields["system_channel_flags"] = system_channel_flags.value
 
         if community is not MISSING:
-            features = []
+            features = self.features.copy()
             if community:
                 if "rules_channel_id" in fields and "public_updates_channel_id" in fields:
-                    features.append("COMMUNITY")
+                    if "COMMUNITY" not in features:
+                        features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
                         "community field requires both rules_channel and public_updates_channel fields to be provided"
                     )
+            else:
+                if "COMMUNITY" in features:
+                    features.remove("COMMUNITY")
 
             fields["features"] = features
 
