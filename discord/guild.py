@@ -1835,14 +1835,15 @@ class Guild(Hashable):
             fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
 
         if disable_invites is not MISSING:
+            features = self.features.copy()
             if disable_invites:
-                if not "INVITES_DISABLED" in self.features:
-                    self.features.append("INVITES_DISABLED")
+                if not "INVITES_DISABLED" in features:
+                    features.append("INVITES_DISABLED")
             else:
-                if "INVITES_DISABLED" in self.features:
-                    self.features.remove("INVITES_DISABLED")
+                if "INVITES_DISABLED" in features:
+                    features.remove("INVITES_DISABLED")
 
-            fields["features"] = self.features
+            fields["features"] = features
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
         return Guild(data=data, state=self._state)
