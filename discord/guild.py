@@ -1831,6 +1831,10 @@ class Guild(Hashable):
                     )
             else:
                 if "COMMUNITY" in features:
+                    if "rules_channel_id" in fields:
+                        fields["rules_channel_id"] = None
+                    if "public_updates_channel_id" in fields:
+                        fields["public_updates_channel_id"] = None
                     features.remove("COMMUNITY")
 
             fields["features"] = features
