@@ -1019,6 +1019,11 @@ class Guild(Hashable):
         """:class:`datetime.datetime`: Returns the guild's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
+    @property
+    def invites_disabled(self) -> bool:
+        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled"""
+        return "INVITES_DISABLED" in self.features
+
     def get_member_named(self, name: str, /) -> Optional[Member]:
         """Returns the first member found that matches the name provided.
 
@@ -1620,6 +1625,7 @@ class Guild(Hashable):
         rules_channel: Optional[TextChannel] = MISSING,
         public_updates_channel: Optional[TextChannel] = MISSING,
         premium_progress_bar_enabled: bool = MISSING,
+        disable_invites: bool = MISSING
     ) -> Guild:
         r"""|coro|
 
@@ -1697,6 +1703,8 @@ class Guild(Hashable):
             public updates channel.
         premium_progress_bar_enabled: :class:`bool`
             Whether the guild should have premium progress bar enabled.
+        disable_invites: :class:`bool`
+            Whether the guild should have server invites enabled or disabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1823,6 +1831,16 @@ class Guild(Hashable):
 
         if premium_progress_bar_enabled is not MISSING:
             fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
+
+        if disable_invites is not MISSING:
+            if disable_invites:
+                if not "INVITES_DISABLED" in self.features:
+                    self.features.append("INVITES_DISABLED")
+            else:
+                if "INVITES_DISABLED" in self.features:
+                    self.features.remove("INVITES_DISABLED")
+
+            fields["features"] = self.features
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
         return Guild(data=data, state=self._state)
