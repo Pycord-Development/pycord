@@ -534,7 +534,7 @@ class ApplicationCommandMixin(ABC):
                     registered = prefetched_commands
                 else:
                     _log.debug(
-                        f"Bulk updating commands %s for guild %s",
+                        "Bulk updating commands %s for guild %s",
                         {c["command"].name: c["action"] for c in pending_actions},
                         guild_id,
                     )
