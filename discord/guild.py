@@ -1023,7 +1023,7 @@ class Guild(Hashable):
 
     @property
     def invites_disabled(self) -> bool:
-        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled"""
+        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled."""
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Optional[Member]:
