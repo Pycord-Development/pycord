@@ -45,7 +45,6 @@ if TYPE_CHECKING:
     from .bot import AutoShardedBot, Bot
     from .cog import Cog
     from .core import Command
-    from .help import HelpCommand
     from .view import StringView
 
 __all__ = ("Context",)
