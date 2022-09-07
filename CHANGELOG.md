@@ -6,6 +6,10 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [2.1.3] - 2022-09-06
+### Fixed
+- Fix TypeError in `process_application_commands`. ([#1622](https://github.com/Pycord-Development/pycord/pull/1622))
+
 ## [2.1.2] - 2022-09-06
 ### Fixed
 - Fix subcommands having MISSING cog attribute. ([#1594](https://github.com/Pycord-Development/pycord/pull/1594) &
@@ -163,6 +167,7 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
   ([#1360](https://github.com/Pycord-Development/pycord/pull/1360))
 
 [Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...HEAD
+[2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.1...v2.1.0
