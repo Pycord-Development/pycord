@@ -719,7 +719,7 @@ class ApplicationCommandMixin(ABC):
         if interaction.type not in (
             InteractionType.application_command,
             InteractionType.auto_complete,
-        ) and isinstance(interaction.data, interactions.ComponentInteractionData):
+        ):
             return
 
         command: Optional[ApplicationCommand] = None
