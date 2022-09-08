@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import warnings
 from typing import TYPE_CHECKING, Any, Coroutine, Dict, List, Optional, Tuple, Union
 
 from . import utils
@@ -307,6 +306,7 @@ class Interaction:
         self._original_response = message
         return message
 
+    @utils.deprecated(self.original_response())
     async def original_message(self):
         """An alias for :meth:`original_response`.
         
@@ -322,7 +322,6 @@ class Interaction:
         InteractionMessage
             The original interaction response message.
         """
-        warnings.warn("'Interaction.original_message()' is deprecated, use 'Interaction.original_response()' instead.", DeprecationWarning)
         return self.original_response()
 
     async def edit_original_response(
@@ -426,6 +425,7 @@ class Interaction:
 
         return message
 
+    @utils.deprecated(self.edit_original_response())
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
         
@@ -445,7 +445,6 @@ class Interaction:
         :class:`InteractionMessage`
             The newly edited message.
         """
-        warnings.warn("'Interaction.edit_original_message()' is deprecated, use 'Interaction.edit_original_response()' instead.", DeprecationWarning)
         return self.edit_original_response(**kwargs)
 
     async def delete_original_response(self, *, delay: Optional[float] = None) -> None:
@@ -481,6 +480,7 @@ class Interaction:
         else:
             await func
 
+    @utils.deprecated(self.delete_original_response())
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
 
@@ -491,7 +491,6 @@ class Interaction:
         Forbidden
             Deleted a message that is not yours.
         """
-        warnings.warn("'Interaction.delete_original_message()' is deprecated, use 'Interaction.delete_original_response()' instead.", DeprecationWarning)
         return self.delete_original_response(**kwargs)
 
     def to_dict(self) -> Dict[str, Any]:
