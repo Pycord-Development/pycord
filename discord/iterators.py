@@ -55,7 +55,6 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .audit_logs import AuditLogEntry
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message

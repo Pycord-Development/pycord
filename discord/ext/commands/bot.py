@@ -40,11 +40,9 @@ from .help import DefaultHelpCommand, HelpCommand
 from .view import StringView
 
 if TYPE_CHECKING:
-    import importlib.machinery
-
     from discord.message import Message
 
-    from ._types import Check, CoroFunc
+    from ._types import CoroFunc
 
 __all__ = (
     "when_mentioned",

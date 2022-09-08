@@ -39,14 +39,13 @@ if TYPE_CHECKING:
     from ..voice_client import VoiceProtocol
 
     from .core import ApplicationCommand, Option
-    from ..interactions import Interaction, InteractionResponse, InteractionChannel
+    from ..interactions import InteractionChannel
     from ..guild import Guild
     from ..member import Member
     from ..message import Message
     from ..user import User
     from ..permissions import Permissions
     from ..client import ClientUser
-    from discord.webhook.async_ import Webhook
 
     from ..cog import Cog
     from ..webhook import WebhookMessage
