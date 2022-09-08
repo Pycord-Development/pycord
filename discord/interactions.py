@@ -322,7 +322,7 @@ class Interaction:
         InteractionMessage
             The original interaction response message.
         """
-        warnings.warn("Use 'Interaction.original_response()' instead.", DeprecationWarning)
+        warnings.warn("'Interaction.original_message()' is deprecated, use 'Interaction.original_response()' instead.", DeprecationWarning)
         return self.original_response()
 
     async def edit_original_response(
@@ -445,7 +445,7 @@ class Interaction:
         :class:`InteractionMessage`
             The newly edited message.
         """
-        warnings.warn("Use 'Interaction.edit_original_response()' instead.", DeprecationWarning)
+        warnings.warn("'Interaction.edit_original_message()' is deprecated, use 'Interaction.edit_original_response()' instead.", DeprecationWarning)
         return self.edit_original_response(**kwargs)
 
     async def delete_original_response(self, *, delay: Optional[float] = None) -> None:
@@ -491,7 +491,7 @@ class Interaction:
         Forbidden
             Deleted a message that is not yours.
         """
-        warnings.warn("Use 'Interaction.delete_original_response()' instead.", DeprecationWarning)
+        warnings.warn("'Interaction.delete_original_message()' is deprecated, use 'Interaction.delete_original_response()' instead.", DeprecationWarning)
         return self.delete_original_response(**kwargs)
 
     def to_dict(self) -> Dict[str, Any]:
