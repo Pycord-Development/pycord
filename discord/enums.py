@@ -53,6 +53,7 @@ __all__ = (
     "ActivityType",
     "NotificationLevel",
     "TeamMembershipState",
+    "TimestampType",
     "WebhookType",
     "ExpireBehaviour",
     "ExpireBehavior",
@@ -528,6 +529,21 @@ class ActivityType(Enum):
 class TeamMembershipState(Enum):
     invited = 1
     accepted = 2
+
+class TimestampType(Enum):
+    SHORT_TIME = ":t"
+    LONG_TIME = ":T"
+
+    SHORT_DATE = ":d"
+    LONG_DATE = ":D"
+
+    SHORT_DATETIME = ""
+    LONG_DATETIME = ":F"
+
+    RELATIVE = ":R"
+
+    def __str__(self):
+        return self.value
 
 
 class WebhookType(Enum):
