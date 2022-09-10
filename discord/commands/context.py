@@ -38,10 +38,10 @@ if TYPE_CHECKING:
     from .. import Bot
 
     from .core import ApplicationCommand, Option
-    from ..interactions import Interaction, InteractionResponse
+    from ..interactions import InteractionChannel
     from ..message import Message
     from ..permissions import Permissions
-    from discord.webhook.async_ import Webhook
+    from ..client import ClientUser
 
     from ..cog import Cog
     from ..webhook import WebhookMessage

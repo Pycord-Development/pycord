@@ -1469,7 +1469,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param rule: The deleted rule.
     :type rule: :class:`AutoModRule`
 
-.. function:: on_auto_moderation_action_execution(guild, action)
+.. function:: on_auto_moderation_action_execution(payload)
 
     Called when an auto moderation action is executed.
 
