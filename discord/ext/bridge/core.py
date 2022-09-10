@@ -277,7 +277,8 @@ class BridgeCommandGroup(BridgeCommand):
     """
     def __init__(self, callback, *args, **kwargs):
         self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, self.ext_variant.name, *args, **kwargs)
+        name = kwargs.pop("name", self.ext_variant.name)
+        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
         self.mapped: Optional[SlashCommand] = None
