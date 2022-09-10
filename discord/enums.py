@@ -39,6 +39,7 @@ from typing import (
 
 __all__ = (
     "Enum",
+    "EventType",
     "ChannelType",
     "MessageType",
     "VoiceRegion",
@@ -192,6 +193,109 @@ else:
             except (KeyError, TypeError):
                 return value
 
+# Thanks to Dest0re on GitHub for providing this enum!
+class EventType(Enum):
+    # Guild:
+    guild_update = 1
+    guild_join = 2
+    guild_available = 3
+    guild_unavailable = 4
+    guild_remove = 5
+    guild_role_create = 6
+    guild_role_update = 7
+    guild_role_delete = 8
+    guild_channel_create = 9
+    guild_channel_update = 10
+    guild_channel_delete = 11
+    guild_channel_pins_update = 12
+    thread_create = 13
+    thread_update = 14
+    thread_delete = 15
+    raw_thread_delete = 16
+    thread_remove = 17
+    thread_member_join = 18
+    thread_join = 19
+    thread_member_remove = 20
+    stage_instance_create = 21
+    stage_instance_update = 22
+    stage_instance_delete = 23
+
+    # Guild Members:
+    member_join = 24
+    member_update = 25
+    member_remove = 26
+
+    # Guild member bans:
+    member_ban = 27
+    member_unban = 28
+
+    # Guild emojis
+    guild_emojis_update = 29
+    guild_stickers_update = 30
+
+    # Guild integrations:
+    guild_integrations_update = 31
+    integration_create = 32
+    integration_update = 33
+    raw_integration_delete = 34
+
+    # Guild webhooks:
+    webhooks_update = 35
+
+    # Guild invites:
+    invite_create = 36
+    invite_delete = 37
+
+    # Guild voice state:
+    voice_state_update = 38
+
+    # Guild presence:
+    presence_update = 39
+
+    # Guild and Direct messages:
+    message = 40
+    raw_message_delete = 41
+    message_delete = 42
+    raw_bulk_message_delete = 43
+    bulk_message_delete = 44
+    raw_message_edit = 45
+    message_edit = 46
+
+    # Private Channels:
+    private_channel_update = 47
+    private_channel_pins_update = 48
+
+    # Guild and Direct message typing
+    raw_typing = 49
+    typing = 50
+
+    # Guild and Direct message reactions:
+    raw_reaction_add = 51
+    reaction_add = 52
+    raw_reaction_clear = 53
+    reaction_clear = 54
+    raw_reaction_remove = 55
+    reaction_remove = 56
+    raw_reaction_clear_emoji = 57
+    reaction_clear_emoji = 58
+
+    # Utility events:
+    disconnect = 59
+    ready = 60
+    connect = 61
+    resumed = 62
+    shard_ready = 63
+    shard_connect = 64
+    shard_resumed = 65
+
+    # Interactions:
+    interaction = 66
+    command = 67
+    command_completion = 68
+    command_error = 69 # nice
+
+    def __str__(self):
+        return self.name
 
 class ChannelType(Enum):
     text = 0

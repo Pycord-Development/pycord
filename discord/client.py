@@ -53,7 +53,7 @@ from .appinfo import AppInfo, PartialAppInfo
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import Emoji
-from .enums import ChannelType, Status
+from .enums import EventType, ChannelType, Status
 from .errors import *
 from .flags import ApplicationFlags, Intents
 from .gateway import *
@@ -243,8 +243,8 @@ class Client:
         )
 
         self._handlers: Dict[str, Callable] = {"ready": self._handle_ready}
-
         self._hooks: Dict[str, Callable] = {"before_identify": self._call_before_identify_hook}
+        self.events: Dict[str, List[Coro]] = {}
 
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
@@ -399,9 +399,9 @@ class Client:
         # Schedules the task
         return asyncio.create_task(wrapped, name=f"pycord: {event_name}")
 
-    def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
+    def dispatch(self, event: Union[str, EventType], *args: Any, **kwargs: Any) -> None:
+        event = str(event) # ensure that the event is a string first
         _log.debug("Dispatching event %s", event)
-        method = f"on_{event}"
 
         listeners = self._listeners.get(event)
         if listeners:
@@ -432,12 +432,18 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
+        # this is kept in for subclasses of Client like commands.Bot
         try:
-            coro = getattr(self, method)
+            coro = getattr(self, event)
         except AttributeError:
             pass
         else:
-            self._schedule_event(coro, method, *args, **kwargs)
+            self._schedule_event(coro, event, *args, **kwargs)
+
+        coros = self.events.get(event)
+        if coros:
+            for coro in coros:
+                self._schedule_event(coro, event, *args, **kwargs)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
@@ -553,7 +559,7 @@ class Client:
                     await self.ws.poll_event()
             except ReconnectWebSocket as e:
                 _log.info("Got a request to %s the websocket.", e.op)
-                self.dispatch("disconnect")
+                self.dispatch(EventType.disconnect)
                 ws_params.update(
                     sequence=self.ws.sequence,
                     resume=e.resume,
@@ -569,7 +575,7 @@ class Client:
                 asyncio.TimeoutError,
             ) as exc:
 
-                self.dispatch("disconnect")
+                self.dispatch(EventType.disconnect)
                 if not reconnect:
                     await self.close()
                     if isinstance(exc, ConnectionClosed) and exc.code == 1000:
@@ -1127,7 +1133,7 @@ class Client:
 
     # event registration
 
-    def event(self, coro: Coro) -> Coro:
+    def event(self, coro: Optional[Coro] = None, *, name: Optional[Union[str, EventType]] = None) -> Union[Coro, Callable[..., Any]]:
         """A decorator that registers an event to listen to.
 
         You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
@@ -1143,18 +1149,41 @@ class Client:
             async def on_ready():
                 print('Ready!')
 
+            @client.event(name=EventType.message)
+            async def hello_message_arrived(message):
+                if message.author != client.user:
+                    await message.reply("Nice")
+
+        Parameters
+        ------------
+        name: Optional[Union[:class:`str`, :class:`EventType`]]
+            The event to register this coroutine under. If this is not provided, then
+            the name of the coroutine provided will be used instead.
+
         Raises
         --------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
+        def wrapped(coro: Coro):
+            if not asyncio.iscoroutinefunction(coro):
+                raise TypeError("event registered must be a coroutine function")
 
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("event registered must be a coroutine function")
+            actual_event = (coro.__name__ if name is None else str(name)).lstrip("on_")
 
-        setattr(self, coro.__name__, coro)
-        _log.debug("%s has successfully been registered as an event", coro.__name__)
-        return coro
+            if actual_event not in self.events:
+                self.events[actual_event] = []
+            
+            self.events[actual_event].append(coro)
+            
+            _log.debug("%s has successfully been registered as an event", actual_event)
+            return coro
+
+        if coro:
+            # backwards compatibility
+            return wrapped(coro)
+        else:
+            return wrapped
 
     async def change_presence(
         self,
