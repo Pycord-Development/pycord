@@ -130,7 +130,7 @@ class BridgeCommand:
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
     def __init__(self, callback, **kwargs):
-        self.parent = kwargs.pop("parent")
+        self.parent = kwargs.pop("parent", None)
         self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
         self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
