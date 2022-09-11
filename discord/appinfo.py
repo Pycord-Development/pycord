@@ -1,8 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
-Copyright (c) 2021-present Pycord Development
+Copyright (c) 2015-present Rapptz
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -25,22 +24,28 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import List, TYPE_CHECKING, Optional
 
 from . import utils
 from .asset import Asset
+from .flags import ApplicationFlags
+from .permissions import Permissions
 
 if TYPE_CHECKING:
     from .guild import Guild
-    from .state import ConnectionState
-    from .types.appinfo import AppInfo as AppInfoPayload
-    from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
-    from .types.appinfo import Team as TeamPayload
+    from .types.appinfo import (
+        AppInfo as AppInfoPayload,
+        PartialAppInfo as PartialAppInfoPayload,
+        Team as TeamPayload,
+        InstallParams as InstallParamsPayload,
+    )
     from .user import User
+    from .state import ConnectionState
 
 __all__ = (
-    "AppInfo",
-    "PartialAppInfo",
+    'AppInfo',
+    'PartialAppInfo',
+    'AppInstallParams',
 )
 
 
@@ -67,19 +72,14 @@ class AppInfo:
         Whether the bot can be invited by anyone or if it is locked
         to the application owner.
     bot_require_code_grant: :class:`bool`
-        Whether the bot requires the completion of the full OAuth2 code
+        Whether the bot requires the completion of the full oauth2 code
         grant flow to join.
     rpc_origins: Optional[List[:class:`str`]]
         A list of RPC origin URLs, if RPC is enabled.
-    summary: :class:`str`
-        If this application is a game sold on Discord,
-        this field will be the summary field for the store page of its primary SKU.
-
-        .. versionadded:: 1.3
 
     verify_key: :class:`str`
         The hex encoded key for verification in interactions and the
-        GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_.
+        GameSDK's :ddocs:`GetTicket <game-sdk/applications#getticket>`.
 
         .. versionadded:: 1.3
 
@@ -111,61 +111,84 @@ class AppInfo:
         The application's privacy policy URL, if set.
 
         .. versionadded:: 2.0
+
+    tags: List[:class:`str`]
+        The list of tags describing the functionality of the application.
+
+        .. versionadded:: 2.0
+
+    custom_install_url: List[:class:`str`]
+        The custom authorization URL for the application, if enabled.
+
+        .. versionadded:: 2.0
+
+    install_params: Optional[:class:`AppInstallParams`]
+        The settings for custom authorization URL of application, if enabled.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
-        "_state",
-        "description",
-        "id",
-        "name",
-        "rpc_origins",
-        "bot_public",
-        "bot_require_code_grant",
-        "owner",
-        "_icon",
-        "summary",
-        "verify_key",
-        "team",
-        "guild_id",
-        "primary_sku_id",
-        "slug",
-        "_cover_image",
-        "terms_of_service_url",
-        "privacy_policy_url",
+        '_state',
+        'description',
+        'id',
+        'name',
+        'rpc_origins',
+        'bot_public',
+        'bot_require_code_grant',
+        'owner',
+        '_icon',
+        'verify_key',
+        'team',
+        'guild_id',
+        'primary_sku_id',
+        'slug',
+        '_cover_image',
+        '_flags',
+        'terms_of_service_url',
+        'privacy_policy_url',
+        'tags',
+        'custom_install_url',
+        'install_params',
     )
 
     def __init__(self, state: ConnectionState, data: AppInfoPayload):
         from .team import Team
 
         self._state: ConnectionState = state
-        self.id: int = int(data["id"])
-        self.name: str = data["name"]
-        self.description: str = data["description"]
-        self._icon: Optional[str] = data["icon"]
-        self.rpc_origins: List[str] = data["rpc_origins"]
-        self.bot_public: bool = data["bot_public"]
-        self.bot_require_code_grant: bool = data["bot_require_code_grant"]
-        self.owner: User = state.create_user(data["owner"])
+        self.id: int = int(data['id'])
+        self.name: str = data['name']
+        self.description: str = data['description']
+        self._icon: Optional[str] = data['icon']
+        self.rpc_origins: List[str] = data['rpc_origins']
+        self.bot_public: bool = data['bot_public']
+        self.bot_require_code_grant: bool = data['bot_require_code_grant']
+        self.owner: User = state.create_user(data['owner'])
 
-        team: Optional[TeamPayload] = data.get("team")
+        team: Optional[TeamPayload] = data.get('team')
         self.team: Optional[Team] = Team(state, team) if team else None
 
-        self.summary: str = data["summary"]
-        self.verify_key: str = data["verify_key"]
+        self.verify_key: str = data['verify_key']
 
-        self.guild_id: Optional[int] = utils._get_as_snowflake(data, "guild_id")
+        self.guild_id: Optional[int] = utils._get_as_snowflake(data, 'guild_id')
 
-        self.primary_sku_id: Optional[int] = utils._get_as_snowflake(data, "primary_sku_id")
-        self.slug: Optional[str] = data.get("slug")
-        self._cover_image: Optional[str] = data.get("cover_image")
-        self.terms_of_service_url: Optional[str] = data.get("terms_of_service_url")
-        self.privacy_policy_url: Optional[str] = data.get("privacy_policy_url")
+        self.primary_sku_id: Optional[int] = utils._get_as_snowflake(data, 'primary_sku_id')
+        self.slug: Optional[str] = data.get('slug')
+        self._flags: int = data.get('flags', 0)
+        self._cover_image: Optional[str] = data.get('cover_image')
+        self.terms_of_service_url: Optional[str] = data.get('terms_of_service_url')
+        self.privacy_policy_url: Optional[str] = data.get('privacy_policy_url')
+        self.tags: List[str] = data.get('tags', [])
+        self.custom_install_url: Optional[str] = data.get('custom_install_url')
+
+        params = data.get('install_params')
+        self.install_params: Optional[AppInstallParams] = AppInstallParams(params) if params else None
 
     def __repr__(self) -> str:
         return (
-            f"<{self.__class__.__name__} id={self.id} name={self.name!r} "
-            f"description={self.description!r} public={self.bot_public} "
-            f"owner={self.owner!r}>"
+            f'<{self.__class__.__name__} id={self.id} name={self.name!r} '
+            f'description={self.description!r} public={self.bot_public} '
+            f'owner={self.owner!r}>'
         )
 
     @property
@@ -173,7 +196,7 @@ class AppInfo:
         """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
-        return Asset._from_icon(self._state, self.id, self._icon, path="app")
+        return Asset._from_icon(self._state, self.id, self._icon, path='app')
 
     @property
     def cover_image(self) -> Optional[Asset]:
@@ -188,11 +211,19 @@ class AppInfo:
     @property
     def guild(self) -> Optional[Guild]:
         """Optional[:class:`Guild`]: If this application is a game sold on Discord,
-        this field will be the guild to which it has been linked.
+        this field will be the guild to which it has been linked
 
         .. versionadded:: 1.3
         """
         return self._state._get_guild(self.guild_id)
+
+    @property
+    def flags(self) -> ApplicationFlags:
+        """:class:`ApplicationFlags`: The application's flags.
+
+        .. versionadded:: 2.0
+        """
+        return ApplicationFlags._from_value(self._flags)
 
 
 class PartialAppInfo:
@@ -210,12 +241,9 @@ class PartialAppInfo:
         The application description.
     rpc_origins: Optional[List[:class:`str`]]
         A list of RPC origin URLs, if RPC is enabled.
-    summary: :class:`str`
-        If this application is a game sold on Discord,
-        this field will be the summary field for the store page of its primary SKU.
     verify_key: :class:`str`
         The hex encoded key for verification in interactions and the
-        GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_.
+        GameSDK's :ddocs:`GetTicket <game-sdk/applications#getticket>`.
     terms_of_service_url: Optional[:class:`str`]
         The application's terms of service URL, if set.
     privacy_policy_url: Optional[:class:`str`]
@@ -223,36 +251,65 @@ class PartialAppInfo:
     """
 
     __slots__ = (
-        "_state",
-        "id",
-        "name",
-        "description",
-        "rpc_origins",
-        "summary",
-        "verify_key",
-        "terms_of_service_url",
-        "privacy_policy_url",
-        "_icon",
+        '_state',
+        'id',
+        'name',
+        'description',
+        'rpc_origins',
+        'verify_key',
+        'terms_of_service_url',
+        'privacy_policy_url',
+        '_icon',
+        '_flags',
     )
 
     def __init__(self, *, state: ConnectionState, data: PartialAppInfoPayload):
         self._state: ConnectionState = state
-        self.id: int = int(data["id"])
-        self.name: str = data["name"]
-        self._icon: Optional[str] = data.get("icon")
-        self.description: str = data["description"]
-        self.rpc_origins: Optional[List[str]] = data.get("rpc_origins")
-        self.summary: str = data["summary"]
-        self.verify_key: str = data["verify_key"]
-        self.terms_of_service_url: Optional[str] = data.get("terms_of_service_url")
-        self.privacy_policy_url: Optional[str] = data.get("privacy_policy_url")
+        self.id: int = int(data['id'])
+        self.name: str = data['name']
+        self._icon: Optional[str] = data.get('icon')
+        self._flags: int = data.get('flags', 0)
+        self.description: str = data['description']
+        self.rpc_origins: Optional[List[str]] = data.get('rpc_origins')
+        self.verify_key: str = data['verify_key']
+        self.terms_of_service_url: Optional[str] = data.get('terms_of_service_url')
+        self.privacy_policy_url: Optional[str] = data.get('privacy_policy_url')
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} id={self.id} name={self.name!r} description={self.description!r}>"
+        return f'<{self.__class__.__name__} id={self.id} name={self.name!r} description={self.description!r}>'
 
     @property
     def icon(self) -> Optional[Asset]:
         """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
-        return Asset._from_icon(self._state, self.id, self._icon, path="app")
+        return Asset._from_icon(self._state, self.id, self._icon, path='app')
+
+    @property
+    def flags(self) -> ApplicationFlags:
+        """:class:`ApplicationFlags`: The application's flags.
+
+        .. versionadded:: 2.0
+        """
+        return ApplicationFlags._from_value(self._flags)
+
+
+class AppInstallParams:
+    """Represents the settings for custom authorization URL of an application.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    scopes: List[:class:`str`]
+        The list of :ddocs:`OAuth2 scopes <topics/oauth2#shared-resources-oauth2-scopes>`
+        to add the application to a guild with.
+    permissions: :class:`Permissions`
+        The permissions to give to application in the guild.
+    """
+
+    __slots__ = ('scopes', 'permissions')
+
+    def __init__(self, data: InstallParamsPayload) -> None:
+        self.scopes: List[str] = data.get('scopes', [])
+        self.permissions: Permissions = Permissions(int(data['permissions']))
