@@ -241,8 +241,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
     ) -> Union[
-        Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
-        Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
+        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+        Callable[Concatenate[ApplicationContext, P], Coro[T]],
     ]:
         return self._callback
 
@@ -250,8 +250,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def callback(
         self,
         function: Union[
-            Callable[[Concatenate[CogT, ApplicationContext, P]], Coro[T]],
-            Callable[[Concatenate[ApplicationContext, P]], Coro[T]],
+            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]],
+            Callable[Concatenate[ApplicationContext, P], Coro[T]],
         ],
     ) -> None:
         self._callback = function
@@ -564,6 +564,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             return f"{parent} {self.name}"
         else:
             return self.name
+
+    def to_dict(self) -> Dict[str, Any]:
+        raise NotImplementedError
 
     def __str__(self) -> str:
         return self.qualified_name
