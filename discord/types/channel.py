@@ -71,6 +71,14 @@ class TextChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[0]
 
 
+class ForumTag(TypedDict):
+    id: Snowflake
+    name: str
+    moderated: bool
+    emoji_id: Snowflake
+    emoji_name: str
+
+
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[15]
 
