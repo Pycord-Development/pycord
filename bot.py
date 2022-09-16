@@ -23,6 +23,9 @@ import json
 from types import SimpleNamespace
 import re
 from requests import Request, Session
+import requests
+from google_images_search import GoogleImagesSearch
+import random
 
 
 db = TinyDB('db.json')
@@ -54,7 +57,19 @@ def get_NFT_image(url):
         print(x.image_url)
         return x.image_url
     
+#for 10k10k   
+def fetch_adj_or_animal(type, aliteration, animal): 
 
+    if(aliteration == True and type =="adjective"):
+        animalFirst = animal[0]
+        url = f"https://random-word-form.herokuapp.com/random/{type}/{animalFirst}"
+    else:
+        url = f"https://random-word-form.herokuapp.com/random/{type}"
+
+    print(url)
+    r = requests.get(url)
+    result = r.json()[0]
+    return result
 
 def get_gas_from_etherscan(key: str,
                            verbose: bool = False) -> Tuple[int, int, int]:
@@ -187,6 +202,23 @@ def main(source, verbose=False):
 
 
         await ctx.send(embed=embed)
+
+    @bot.command(pass_context=True, brief="Gets projects opensea Graph QL data")
+    async def projectStats(ctx):
+        message = ctx.message.content
+        projectName = message.split("!projectStats ")
+        projectName = projectName[1]
+        projectName = projectName.replace(" ","-")
+        projectName = projectName.lower()
+        projectGraphUrl = "https://open-graph.opensea.io/v1/collections/"+projectName
+
+        await ctx.send(projectGraphUrl)
+
+
+    @bot.command(pass_context=True, brief="random artmatt FB post")
+    async def randomArtmatt(ctx):
+        fbPost = random.choice(list(open('randomartmatt.txt')))
+        await ctx.send(fbPost)
 
 
     @bot.command(pass_context=True, brief="Log meditations")
@@ -405,11 +437,52 @@ def main(source, verbose=False):
                 value="Don't think I got that command, boss."
             )
 
-        help_embed.set_footer(text="For any inquiries, suggestions, or bug reports, get in touch with @Nerte#1804")
+        help_embed.set_footer(text="For any inquiries, suggestions, or bug reports, get in touch with @Zanuss#1483")
         await ctx.send(embed=help_embed)
 
 
-    @bot.command(pass_context=True, brief="Get the cost for each tx type")
+    @bot.command(pass_context=True, brief="Generates new 10k inspiration")
+    async def new10k(ctx):
+        
+        message = ctx.message.content
+
+        #trim end off
+        trimmed = message.rstrip()
+        #remove command
+        arg = trimmed.split("!new10k ")
+        print(arg)
+        try:
+            arg = arg[1]
+        except IndexError:
+            arg = ""
+        
+        #fetch_adj_or_animal(type, aliteration, animal)
+
+        if arg == "-a":
+            animal = fetch_adj_or_animal("animal", False, False)
+            adj = fetch_adj_or_animal("adjective", True, animal)
+        else:
+            animal = fetch_adj_or_animal("animal", False, False)
+            adj = fetch_adj_or_animal("adjective", False, animal)
+        
+        
+        gis = GoogleImagesSearch(config['gkey'], config['gcs_cx'])
+
+        _search_params = {
+        'q': f'{animal} animal',
+        'num': 1,
+        'fileType': 'png',
+        'rights': 'cc_publicdomain|cc_attribute|cc_sharealike|cc_noncommercial|cc_nonderived'
+        }
+
+        gis.search(search_params=_search_params)
+        r = gis.results()   
+
+        output10k = f"{adj} {animal}'s {gis.results()[0].url}"
+
+        await ctx.send(output10k)
+
+    @bot.command(pass_context=True, brief="Get alerted of a specific gas amount !gasping 10")
     async def gasping(ctx):
         
         message = ctx.message.content
