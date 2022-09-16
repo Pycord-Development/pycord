@@ -31,7 +31,6 @@ import pathlib
 import sys
 import types
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     ClassVar,
@@ -56,10 +55,6 @@ from .commands import (
     SlashCommandGroup,
     _BaseCommand,
 )
-
-if TYPE_CHECKING:
-    from .ext.bridge import BridgeCommand
-
 
 __all__ = (
     "CogMeta",
@@ -200,16 +195,20 @@ class CogMeta(type):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
 
-                # a test to see if this value is a BridgeCommand
-                if hasattr(value, "add_to"):
-                    value: BridgeCommand
+                try:
+                    # a test to see if this value is a BridgeCommand
+                    getattr(value, "add_to")
+
                     if is_static_method:
                         raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
 
-                    commands[f"ext_{elem}"] = value.ext_variant
-                    commands[f"application_{elem}"] = value.slash_variant
+                    commands[f"ext_{elem}"] = value.get_ext_command()
+                    commands[f"application_{elem}"] = value.get_application_command()
+                except AttributeError:
+                    # we are confident that the value is not a Bridge Command
+                    pass
 
                 if inspect.iscoroutinefunction(value):
                     try:
