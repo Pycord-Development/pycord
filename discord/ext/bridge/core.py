@@ -22,13 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import inspect
-from typing import Any, List, Union, Optional, Callable
+from typing import TYPE_CHECKING, Any, List, Union, Optional, Callable
 
 import discord.commands.options
 from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from .context import BridgeApplicationContext
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
@@ -42,6 +42,9 @@ from ..commands import (
     Bot as ExtBot,
 )
 from ...utils import get, filter_params, find
+
+if TYPE_CHECKING:
+    from .context import BridgeApplicationContext, BridgeExtContext
 
 
 __all__ = (
@@ -178,6 +181,11 @@ class BridgeCommand:
         """
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
+
+    async def invoke(self, ctx: Union[BridgeExtContext, BridgeApplicationContext], /, *args, **kwargs):
+        if ctx.is_app:
+            return await self.slash_variant.invoke(ctx)
+        return await self.ext_variant.invoke(ctx)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -398,6 +406,7 @@ class MentionableConverter(Converter):
             return await RoleConverter().convert(ctx, argument)
         except BadArgument:
             return await UserConverter().convert(ctx, argument)
+
 
 class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):

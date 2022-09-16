@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, overload, Optional, Union
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -35,7 +35,7 @@ from discord.webhook import WebhookMessage
 from ..commands import Context
 
 if TYPE_CHECKING:
-    from .core import BridgeCommand
+    #from .core import BridgeCommand
     from ...commands import ApplicationCommand
     from ..commands import Command
 
@@ -81,8 +81,8 @@ class BridgeContext(ABC):
     async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
         ...
 
-    @abstractmethod
-    async def invoke(self, command: Union[ApplicationCommand, Command, BridgeCommand], *args, **kwargs) -> None:
+    @overload
+    async def invoke(self, command: Union[BridgeApplicationContext, BridgeExtContext], *args, **kwargs) -> None:
         ...
 
     async def respond(
@@ -157,11 +157,6 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
     async def _edit(self, *args, **kwargs) -> InteractionMessage:
         return await self._get_super("edit")(*args, **kwargs)
 
-    async def invoke(self, command: Union[ApplicationCommand, BridgeCommand], /, *args, **kwargs):
-        if hasattr(command, "slash_variant"):
-            return self.invoke(command.slash_variant)
-        return super().invoke(command, *args, **kwargs)
-
 
 class BridgeExtContext(BridgeContext, Context):
     """
@@ -206,8 +201,3 @@ class BridgeExtContext(BridgeContext, Context):
         """
         if self._original_response_message:
             await self._original_response_message.delete(delay=delay, reason=reason)
-
-    async def invoke(self, command: Union[Command, BridgeCommand], /, *args, **kwargs):
-        if hasattr(command, "ext_variant"):
-            return self.invoke(command.ext_variant)
-        return super().invoke(command, *args, **kwargs)
