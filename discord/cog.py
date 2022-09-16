@@ -178,12 +178,9 @@ class CogMeta(type):
                 if elem in listeners:
                     del listeners[elem]
 
-                try:
-                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
-                        # Skip commands if they are a part of a group
-                        continue
-                except AttributeError:
-                    pass
+                if getattr(value, "parent", None) and isinstance(value, ApplicationCommand):
+                    # Skip commands if they are a part of a group
+                    continue
 
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
@@ -195,20 +192,15 @@ class CogMeta(type):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
 
-                try:
-                    # a test to see if this value is a BridgeCommand
-                    getattr(value, "add_to")
-
+                # a test to see if this value is a BridgeCommand
+                if hasattr(value, "add_to") and not getattr(value, "parent", None):
                     if is_static_method:
                         raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
 
-                    commands[f"ext_{elem}"] = value.get_ext_command()
-                    commands[f"application_{elem}"] = value.get_application_command()
-                except AttributeError:
-                    # we are confident that the value is not a Bridge Command
-                    pass
+                    commands[f"ext_{elem}"] = value.ext_variant
+                    commands[f"application_{elem}"] = value.slash_variant
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -241,12 +233,9 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if (
-                isinstance(command, ApplicationCommand)
-                and command.guild_ids is None
-                and len(new_cls.__cog_guild_ids__) != 0
-            ):
+            if isinstance(command, ApplicationCommand) and not command.guild_ids and new_cls.__cog_guild_ids__:
                 command.guild_ids = new_cls.__cog_guild_ids__
+
             if not isinstance(command, SlashCommandGroup):
                 setattr(new_cls, command.callback.__name__, command)
                 parent = command.parent
