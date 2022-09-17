@@ -4,7 +4,7 @@ Run a Discord bot that takes the !gas command and shows the status in an embed +
 # Example:
 # python3 gas_bot.py -s etherscan
 
-from asyncio.windows_events import NULL
+#from asyncio.windows_events import NULL
 from typing import Tuple
 import logging
 import yaml
