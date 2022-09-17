@@ -200,7 +200,9 @@ class CogMeta(type):
                         raise TypeError(no_bot_cog.format(base, elem))
 
                     commands[f"ext_{elem}"] = value.ext_variant
-                    commands[f"application_{elem}"] = value.slash_variant
+                    commands[f"app_{elem}"] = value.slash_variant
+                    for cmd in value.subcommands:
+                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -229,7 +231,7 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
 
-        lookup = {cmd.qualified_name: cmd for cmd in new_cls.__cog_commands__}
+        lookup = {f"app_{cmd.qualified_name}" if isinstance(cmd, ApplicationCommand) else f"ext_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
@@ -241,7 +243,7 @@ class CogMeta(type):
                 parent = command.parent
                 if parent is not None:
                     # Get the latest parent reference
-                    parent = lookup[parent.qualified_name]  # type: ignore
+                    parent = lookup[f"{'app' if isinstance(command, ApplicationCommand) else 'ext'}_{parent.qualified_name}"]  # type: ignore
 
                     # Update our parent's reference to our self
                     parent.remove_command(command.name)  # type: ignore
