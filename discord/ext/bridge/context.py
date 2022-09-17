@@ -35,9 +35,7 @@ from discord.webhook import WebhookMessage
 from ..commands import Context
 
 if TYPE_CHECKING:
-    #from .core import BridgeCommand
-    from ...commands import ApplicationCommand
-    from ..commands import Command
+    from .core import BridgeSlashCommand, BridgeExtCommand
 
 
 __all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
@@ -82,7 +80,7 @@ class BridgeContext(ABC):
         ...
 
     @overload
-    async def invoke(self, command: Union[BridgeApplicationContext, BridgeExtContext], *args, **kwargs) -> None:
+    async def invoke(self, command: Union[BridgeSlashCommand, BridgeExtCommand], *args, **kwargs) -> None:
         ...
 
     async def respond(

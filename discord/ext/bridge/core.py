@@ -326,7 +326,7 @@ def bridge_command(**kwargs):
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
-    def decorator(callback: Callable):
+    def decorator(callback):
         return BridgeCommand(callback, **kwargs)
 
     return decorator
@@ -340,7 +340,7 @@ def bridge_group(**kwargs):
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
     """
-    def decorator(callback: Callable):
+    def decorator(callback):
         return BridgeCommandGroup(callback, **kwargs)
 
     return decorator
@@ -378,7 +378,7 @@ def map_to(name, description = None):
         The new description of the mapped command.
     """
 
-    def decorator(callback: Callable):
+    def decorator(callback):
         callback.__custom_map_to__ = {"name": name, "description": description}
         return callback
 
