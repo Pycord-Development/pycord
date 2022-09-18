@@ -178,12 +178,9 @@ class CogMeta(type):
                 if elem in listeners:
                     del listeners[elem]
 
-                try:
-                    if getattr(value, "parent") is not None and isinstance(value, ApplicationCommand):
-                        # Skip commands if they are a part of a group
-                        continue
-                except AttributeError:
-                    pass
+                if getattr(value, "parent", None) and isinstance(value, ApplicationCommand):
+                    # Skip commands if they are a part of a group
+                    continue
 
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
@@ -195,10 +192,8 @@ class CogMeta(type):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
 
-                try:
-                    # a test to see if this value is a BridgeCommand
-                    getattr(value, "add_to")
-
+                # a test to see if this value is a BridgeCommand
+                if hasattr(value, "add_to") and not getattr(value, "parent", None):
                     if is_static_method:
                         raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
                     if elem.startswith(("cog_", "bot_")):
@@ -206,9 +201,6 @@ class CogMeta(type):
 
                     commands[f"ext_{elem}"] = value.ext_variant
                     commands[f"application_{elem}"] = value.slash_variant
-                except AttributeError:
-                    # we are confident that the value is not a Bridge Command
-                    pass
 
                 if inspect.iscoroutinefunction(value):
                     try:

@@ -166,6 +166,8 @@ class Guild(Hashable):
         The channel that denotes the AFK channel. ``None`` if it doesn't exist.
     id: :class:`int`
         The guild's ID.
+    invites_disabled: :class:`bool`
+        Indicates if the guild invites are disabled.
     owner_id: :class:`int`
         The guild owner's ID. Use :attr:`Guild.owner` instead.
     unavailable: :class:`bool`
@@ -216,6 +218,7 @@ class Guild(Hashable):
         - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
+        - ``INVITES_DISABLED``: Guild Invites are disabled.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
         - ``MEMBER_PROFILES``: Unknown.
         - ``MEMBER_VERIFICATION_GATE_ENABLED``: Guild has Membership Screening enabled.
@@ -1014,6 +1017,11 @@ class Guild(Hashable):
         """:class:`datetime.datetime`: Returns the guild's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
+    @property
+    def invites_disabled(self) -> bool:
+        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled."""
+        return "INVITES_DISABLED" in self.features
+
     def get_member_named(self, name: str, /) -> Optional[Member]:
         """Returns the first member found that matches the name provided.
 
@@ -1615,6 +1623,7 @@ class Guild(Hashable):
         rules_channel: Optional[TextChannel] = MISSING,
         public_updates_channel: Optional[TextChannel] = MISSING,
         premium_progress_bar_enabled: bool = MISSING,
+        disable_invites: bool = MISSING
     ) -> Guild:
         r"""|coro|
 
@@ -1692,6 +1701,8 @@ class Guild(Hashable):
             public updates channel.
         premium_progress_bar_enabled: :class:`bool`
             Whether the guild should have premium progress bar enabled.
+        disable_invites: :class:`bool`
+            Whether the guild should have server invites enabled or disabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1805,19 +1816,38 @@ class Guild(Hashable):
             fields["system_channel_flags"] = system_channel_flags.value
 
         if community is not MISSING:
-            features = []
+            features = self.features.copy()
             if community:
                 if "rules_channel_id" in fields and "public_updates_channel_id" in fields:
-                    features.append("COMMUNITY")
+                    if "COMMUNITY" not in features:
+                        features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
                         "community field requires both rules_channel and public_updates_channel fields to be provided"
                     )
+            else:
+                if "COMMUNITY" in features:
+                    if "rules_channel_id" in fields:
+                        fields["rules_channel_id"] = None
+                    if "public_updates_channel_id" in fields:
+                        fields["public_updates_channel_id"] = None
+                    features.remove("COMMUNITY")
 
             fields["features"] = features
 
         if premium_progress_bar_enabled is not MISSING:
             fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
+
+        if disable_invites is not MISSING:
+            features = self.features.copy()
+            if disable_invites:
+                if not "INVITES_DISABLED" in features:
+                    features.append("INVITES_DISABLED")
+            else:
+                if "INVITES_DISABLED" in features:
+                    features.remove("INVITES_DISABLED")
+
+            fields["features"] = features
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
         return Guild(data=data, state=self._state)

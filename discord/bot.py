@@ -534,7 +534,7 @@ class ApplicationCommandMixin(ABC):
                     registered = prefetched_commands
                 else:
                     _log.debug(
-                        f"Bulk updating commands %s for guild %s",
+                        "Bulk updating commands %s for guild %s",
                         {c["command"].name: c["action"] for c in pending_actions},
                         guild_id,
                     )
@@ -719,7 +719,7 @@ class ApplicationCommandMixin(ABC):
         if interaction.type not in (
             InteractionType.application_command,
             InteractionType.auto_complete,
-        ) and isinstance(interaction.data, interactions.ComponentInteractionData):
+        ):
             return
 
         command: Optional[ApplicationCommand] = None
