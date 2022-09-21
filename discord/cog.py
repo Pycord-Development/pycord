@@ -231,7 +231,9 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
 
-        lookup = {f"{'app' if isinstance(command, ApplicationCommand) else 'ext'}_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
+        name_filter = lambda c: 'app' if isinstance(c, ApplicationCommand) else 'ext'
+
+        lookup = {f"{name_filter(cmd)}_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
@@ -239,11 +241,17 @@ class CogMeta(type):
                 command.guild_ids = new_cls.__cog_guild_ids__
 
             if not isinstance(command, SlashCommandGroup):
-                setattr(new_cls, command.callback.__name__, command)
+                # ignore bridge commands
+                cmd = getattr(new_cls, command.callback.__name__, None)
+                if hasattr(cmd, "add_to"):
+                    setattr(cmd, f"{name_filter(command).replace('app', 'slash')}_variant", command)  # hacker man
+                else:
+                    setattr(new_cls, command.callback.__name__, command)
+
                 parent = command.parent
                 if parent is not None:
                     # Get the latest parent reference
-                    parent = lookup[f"{'app' if isinstance(command, ApplicationCommand) else 'ext'}_{parent.qualified_name}"]  # type: ignore
+                    parent = lookup[f"{name_filter(command)}_{parent.qualified_name}"]  # type: ignore
 
                     # Update our parent's reference to our self
                     parent.remove_command(command.name)  # type: ignore
