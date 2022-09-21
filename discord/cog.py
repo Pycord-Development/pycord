@@ -244,7 +244,7 @@ class CogMeta(type):
                 # ignore bridge commands
                 cmd = getattr(new_cls, command.callback.__name__, None)
                 if hasattr(cmd, "add_to"):
-                    setattr(cmd, f"{name_filter(command).replace('app', 'slash')}_variant", command)  # hacker man
+                    setattr(cmd, f"{name_filter(command).replace('app', 'slash')}_variant", command)
                 else:
                     setattr(new_cls, command.callback.__name__, command)
 
