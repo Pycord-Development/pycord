@@ -339,7 +339,7 @@ def bridge_group(**kwargs):
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
+        Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`).
     """
     def decorator(callback):
         return BridgeCommandGroup(callback, **kwargs)
@@ -387,10 +387,10 @@ def map_to(name, description = None):
 
 
 def guild_only():
-    """Intended to work with :class:`ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
     that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord).
 
-    Basically a utility function that wraps both :func:`~ext.commands.guild_only` and :func:`permissions.guild_only`.
+    Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`.
     """
     def predicate(callback: Callable):
         callback.__guild_only__ = True
@@ -403,12 +403,12 @@ def guild_only():
 
 
 def has_permissions(**perms: bool):
-    """Intended to work with :class:`SlashCommand` and :class:`BridgeCommand`, adds a
+    """Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
 
-    Basically a utility function that wraps both :func:`~ext.commands.has_permission`
-    and :func:`permissions.default_permissions`.
+    Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions`
+    and :func:`discord.commands.default_permissions`.
 
     Parameters
     ----------
