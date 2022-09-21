@@ -28,7 +28,7 @@ import inspect
 from typing import TYPE_CHECKING, Any, List, Union, Optional, Callable
 
 import discord.commands.options
-from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
+from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup, Permissions
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
@@ -58,6 +58,7 @@ __all__ = (
     "BridgeSlashGroup",
     "map_to",
     "guild_only",
+    "has_permissions"
 )
 
 
@@ -386,20 +387,42 @@ def map_to(name, description = None):
 
 
 def guild_only():
-    """Works with :class:`ApplicationCommand`, :class:`~ext.commands.Command`, and :class:`BridgeCommand`,
-    adds a :func:`~ext.commands.check` that locks the command to only run in guilds, and for application commands,
-    registers the command as guild only client-side (on discord).
-    
+    """Intended to work with :class:`ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord).
+
     Basically a utility function that wraps both :func:`~ext.commands.guild_only` and :func:`permissions.guild_only`.
     """
-
     def predicate(callback: Callable):
-        # ignored if not an ApplicationCommand either way 
         callback.__guild_only__ = True
 
         from ..commands import guild_only
 
         return guild_only()(callback)
+
+    return predicate
+
+
+def has_permissions(**perms: bool):
+    """Intended to work with :class:`SlashCommand` and :class:`BridgeCommand`, adds a
+    :func:`~ext.commands.check` that locks the command to be run by people with certain
+    permissions inside guilds, and also registers the command as locked behind said permissions.
+
+    Basically a utility function that wraps both :func:`~ext.commands.has_permission`
+    and :func:`permissions.default_permissions`.
+
+    Parameters
+    ----------
+    \*\*perms: Dict[:class:`str`, :class:`bool`]
+        An argument list of permissions to check for.
+    """
+
+    def predicate(command: Callable):
+        from ..commands import has_permissions
+
+        command = has_permissions(**perms)(command)
+        command.__default_member_permissions__ = Permissions(**perms)
+
+        return command
 
     return predicate
 
