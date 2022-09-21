@@ -201,8 +201,9 @@ class CogMeta(type):
 
                     commands[f"ext_{elem}"] = value.ext_variant
                     commands[f"app_{elem}"] = value.slash_variant
-                    for cmd in value.subcommands:
-                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
+                    if hasattr(value, "subcommands"):
+                        for cmd in value.subcommands:
+                            commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
 
                 if inspect.iscoroutinefunction(value):
                     try:
