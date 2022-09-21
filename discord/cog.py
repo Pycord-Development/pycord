@@ -201,9 +201,8 @@ class CogMeta(type):
 
                     commands[f"ext_{elem}"] = value.ext_variant
                     commands[f"app_{elem}"] = value.slash_variant
-                    if hasattr(value, "subcommands"):
-                        for cmd in value.subcommands:
-                            commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
+                    for cmd in getattr(value, "subcommands", []):
+                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -232,7 +231,7 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
 
-        lookup = {f"app_{cmd.qualified_name}" if isinstance(cmd, ApplicationCommand) else f"ext_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
+        lookup = {f"{'app' if isinstance(command, ApplicationCommand) else 'ext'}_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
