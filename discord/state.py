@@ -1392,7 +1392,7 @@ class ConnectionState:
 
         creator = None if not data.get("creator", None) else guild.get_member(data.get("creator_id"))
         scheduled_event = ScheduledEvent(state=self, guild=guild, creator=creator, data=data)
-        old_event = guild.get_scheduled_event(data["id"])
+        old_event = guild.get_scheduled_event(int(data["id"]))
         guild._add_scheduled_event(scheduled_event)
         self.dispatch("scheduled_event_update", old_event, scheduled_event)
 
@@ -1572,6 +1572,11 @@ class ConnectionState:
         # self.user is *always* cached when this is called
         self_id = self.user.id  # type: ignore
         if guild is not None:
+            if int(data["user_id"]) == self_id:
+                voice = self._get_voice_client(guild.id)
+                if voice is not None:
+                    coro = voice.on_voice_state_update(data)
+                    asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
             member, before, after = guild._update_voice_state(data, channel_id)  # type: ignore
             if member is not None:
                 if flags.voice:
@@ -1588,14 +1593,6 @@ class ConnectionState:
                     "VOICE_STATE_UPDATE referencing an unknown member ID: %s. Discarding.",
                     data["user_id"],
                 )
-
-            if int(data["user_id"]) == self_id:
-                voice = self._get_voice_client(guild.id)
-                if voice is not None:
-                    if guild.me.voice is None:
-                        self._remove_voice_client(guild.id)
-                    coro = voice.on_voice_state_update(data)
-                    asyncio.create_task(logging_coroutine(coro, info="Voice Protocol voice state update handler"))
 
     def parse_voice_server_update(self, data) -> None:
         try:

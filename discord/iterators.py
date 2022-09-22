@@ -55,7 +55,6 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .audit_logs import AuditLogEntry
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
@@ -722,6 +721,8 @@ class BanIterator(_AsyncIterator["BanEntry"]):
         if not data:
             # no data, terminate
             return
+        if self.limit:
+            self.limit -= self.retrieve
 
         if len(data) < 1000:
             self.limit = 0  # terminate loop

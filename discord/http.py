@@ -449,6 +449,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -479,6 +480,9 @@ class HTTPClient:
 
         if stickers:
             payload["sticker_ids"] = stickers
+            
+        if flags:
+            payload["flags"] = flags
 
         return self.request(r, json=payload)
 
@@ -499,6 +503,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -519,6 +524,8 @@ class HTTPClient:
             payload["components"] = components
         if stickers:
             payload["sticker_ids"] = stickers
+        if flags:
+            payload["flags"] = flags
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -556,6 +563,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -570,6 +578,7 @@ class HTTPClient:
             message_reference=message_reference,
             stickers=stickers,
             components=components,
+            flags=flags,
         )
 
     def edit_multipart_helper(
@@ -1332,6 +1341,13 @@ class HTTPClient:
             Route("PATCH", "/guilds/{guild_id}", guild_id=guild_id),
             json=payload,
             reason=reason,
+        )
+
+    def edit_guild_mfa(self, guild_id: Snowflake, required: bool, *, reason: Optional[str]) -> Response[guild.GuildMFAModify]:
+        return self.request(
+            Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),
+            json={"level": int(required)},
+            reason=reason
         )
 
     def get_template(self, code: str) -> Response[template.Template]:

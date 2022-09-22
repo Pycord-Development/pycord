@@ -1353,7 +1353,11 @@ Threads
 
     Called whenever a thread is joined.
 
+<<<<<<< HEAD
     Note that you can get the guild from :attr:`Thread.guild`.
+=======
+.. function:: on_auto_moderation_action_execution(payload)
+>>>>>>> upstream/master
 
     This requires :attr:`Intents.guilds` to be enabled.
 
@@ -1516,6 +1520,8 @@ Utility Functions
 .. autofunction:: discord.utils.generate_snowflake
 
 .. autofunction:: discord.utils.basic_autocomplete
+
+.. autofunction:: discord.utils.filter_params
 
 .. _discord-api-enums:
 
@@ -4504,15 +4510,6 @@ CategoryChannel
 .. attributetable:: CategoryChannel
 
 .. autoclass:: CategoryChannel()
-    :members:
-    :inherited-members:
-
-ForumChannel
-~~~~~~~~~~~~~~~~~
-
-.. attributetable:: ForumChannel
-
-.. autoclass:: ForumChannel()
     :members:
     :inherited-members:
 
