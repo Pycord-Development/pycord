@@ -58,7 +58,7 @@ class WelcomeScreenChannel:
         The channel that is being referenced.
     description: :class:`str`
         The description of the channel that is shown on the welcome screen.
-    emoji: :class:`Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]`
+    emoji: Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]
         The emoji of the channel that is shown on welcome screen.
     """
 

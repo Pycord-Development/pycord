@@ -4486,15 +4486,6 @@ CategoryChannel
     :members:
     :inherited-members:
 
-ForumChannel
-~~~~~~~~~~~~~~~~~
-
-.. attributetable:: ForumChannel
-
-.. autoclass:: ForumChannel()
-    :members:
-    :inherited-members:
-
 DMChannel
 ~~~~~~~~~
 
