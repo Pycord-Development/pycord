@@ -756,20 +756,19 @@ class ApplicationCommandMixin(ABC):
         await self.invoke_application_command(ctx)
 
     async def on_application_command_auto_complete(self, interaction: Interaction, command: ApplicationCommand) -> None:
-        if isinstance(command, SlashCommand):
-            async def callback() -> None:
-                ctx = await self.get_autocomplete_context(interaction)
-                ctx.command = command
-                return await command.invoke_autocomplete_callback(ctx)
+        async def callback() -> None:
+            ctx = await self.get_autocomplete_context(interaction)
+            ctx.command = command
+            return await command.invoke_autocomplete_callback(ctx)
 
-            autocomplete_task = self._bot.loop.create_task(callback())
-            try:
-                await self._bot.wait_for("application_command_auto_complete", check=lambda i, c: c == command, timeout=3)
-            except asyncio.TimeoutError:
-                return
-            else:
-                if not autocomplete_task.done():
-                    autocomplete_task.cancel()
+        autocomplete_task = self._bot.loop.create_task(callback())
+        try:
+            await self._bot.wait_for("application_command_auto_complete", check=lambda i, c: c == command, timeout=3)
+        except asyncio.TimeoutError:
+            return
+        else:
+            if not autocomplete_task.done():
+                autocomplete_task.cancel()
 
     def slash_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`command` and adds it to
