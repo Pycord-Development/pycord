@@ -34,7 +34,7 @@ async def prefixed(ctx: commands.Context):
 
 # Dynamic cooldown function; allows for custom cooldown logic such as different cooldowns per-user
 def my_cooldown(message):
-    if message.author.id in allowed_users:
+    if message.author.id in bypassing_users:
         return None  # Let specific users bypass the cooldown entirely
     elif message.author.get_role(929080208148017242):
         return commands.Cooldown(2, 5)  # Users with the above role ID can use the command twice in 5 seconds
