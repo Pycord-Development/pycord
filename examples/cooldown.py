@@ -36,7 +36,7 @@ async def prefixed(ctx: commands.Context):
 def my_cooldown(message):
     if message.author.id in allowed_users:
         return None  # Let specific users bypass the cooldown entirely
-    elif message.author.get_role(929080208148017242)
+    elif message.author.get_role(929080208148017242):
         return commands.Cooldown(2, 5)  # Users with the above role ID can use the command twice in 5 seconds
     else:
         return commands.Cooldown(1, 10)  # All other users can use the command once in 10 seconds
