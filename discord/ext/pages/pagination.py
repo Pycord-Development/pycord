@@ -226,8 +226,7 @@ class PageGroup:
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[:class:`Page`],
-    List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
@@ -307,8 +306,7 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`],
-    List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``,
         only the first page group will be displayed.
@@ -453,8 +451,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`],
-        List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
+        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
             The list of :class:`PageGroup` objects, :class:`Page` objects, strings,
             embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
@@ -863,8 +860,7 @@ class Paginator(discord.ui.View):
             A target where the paginated message should be sent, if different from the original :class:`Context`
         target_message: Optional[:class:`str`]
             An optional message shown when the paginator message is sent elsewhere.
-        reference: Optional[Union[:class:`discord.Message`,
-        :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
+        reference: Optional[Union[:class:`discord.Message`, :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
             A reference to the :class:`~discord.Message` to which you are replying with the paginator.
             This can be created using :meth:`~discord.Message.to_reference` or passed directly as a
             :class:`~discord.Message`. You can control whether this mentions the author of the referenced message
