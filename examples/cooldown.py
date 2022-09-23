@@ -7,7 +7,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
-allowed_users = []
+bypassing_users = []  # used in the dynamic cooldown below
 
 # An application command with cooldown
 @bot.slash_command()
