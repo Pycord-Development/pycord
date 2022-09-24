@@ -85,13 +85,13 @@ class CogMeta(type):
 
         import abc
 
-        class CogABCMeta(commands.CogMeta, abc.ABCMeta):
+        class CogABCMeta(discord.CogMeta, abc.ABCMeta):
             pass
 
         class SomeMixin(metaclass=abc.ABCMeta):
             pass
 
-        class SomeCogMixin(SomeMixin, commands.Cog, metaclass=CogABCMeta):
+        class SomeCogMixin(SomeMixin, discord.Cog, metaclass=CogABCMeta):
             pass
 
     .. note::
@@ -102,7 +102,7 @@ class CogMeta(type):
 
         .. code-block:: python3
 
-            class MyCog(commands.Cog, name='My Cog'):
+            class MyCog(discord.Cog, name='My Cog'):
                 pass
 
     Attributes
@@ -122,12 +122,12 @@ class CogMeta(type):
 
         .. code-block:: python3
 
-            class MyCog(commands.Cog, command_attrs=dict(hidden=True)):
-                @commands.command()
+            class MyCog(discord.Cog, command_attrs=dict(hidden=True)):
+                @discord.slash_command()
                 async def foo(self, ctx):
                     pass # hidden -> True
 
-                @commands.command(hidden=False)
+                @discord.slash_command(hidden=False)
                 async def bar(self, ctx):
                     pass # hidden -> False
 
@@ -468,7 +468,7 @@ class Cog(metaclass=CogMeta):
     async def cog_before_invoke(self, ctx: ApplicationContext) -> None:
         """A special method that acts as a cog local pre-invoke hook.
 
-        This is similar to :meth:`.Command.before_invoke`.
+        This is similar to :meth:`.ApplicationCommand.before_invoke`.
 
         This **must** be a coroutine.
 
@@ -483,7 +483,7 @@ class Cog(metaclass=CogMeta):
     async def cog_after_invoke(self, ctx: ApplicationContext) -> None:
         """A special method that acts as a cog local post-invoke hook.
 
-        This is similar to :meth:`.Command.after_invoke`.
+        This is similar to :meth:`.ApplicationCommand.after_invoke`.
 
         This **must** be a coroutine.
 

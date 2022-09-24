@@ -303,7 +303,7 @@ class Option:
 
 class OptionChoice:
     """
-    Represents a name:value pairing for a selected :class:`Option`.
+    Represents a name:value pairing for a selected :class:`.Option`.
 
     .. versionadded:: 2.0
 

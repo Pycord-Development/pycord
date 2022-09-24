@@ -395,8 +395,8 @@ class AutoShardedClient(Client):
 
     @property
     def latencies(self) -> List[Tuple[int, float]]:
-        """List[Tuple[:class:`int`, :class:`float`]]:
-        A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """List[Tuple[:class:`int`, :class:`float`]]: A list of latencies between a
+        HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
         """
@@ -413,7 +413,7 @@ class AutoShardedClient(Client):
 
     @property
     def shards(self) -> Dict[int, ShardInfo]:
-        """Mapping[int, :class:`ShardInfo`]: Returns a mapping of shard IDs to their respective info object."""
+        """Mapping[:class:`int`, :class:`ShardInfo`]: Returns a mapping of shard IDs to their respective info object."""
         return {shard_id: ShardInfo(parent, self.shard_count) for shard_id, parent in self.__shards.items()}
 
     async def launch_shard(self, gateway: str, shard_id: int, *, initial: bool = False) -> None:
