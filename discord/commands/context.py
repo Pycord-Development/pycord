@@ -196,13 +196,13 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.message
 
     @cached_property
-    def user(self) -> Optional[Union[Member, User]]:
+    def user(self) -> Union[Member, User]:
         """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command.
         Shorthand for :attr:`.Interaction.user`.
         """
         return self.interaction.user
 
-    author: Optional[Union[Member, User]] = user
+    author = user
 
     @property
     def voice_client(self) -> Optional[VoiceProtocol]:
