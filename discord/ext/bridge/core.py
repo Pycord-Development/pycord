@@ -58,7 +58,7 @@ __all__ = (
     "BridgeSlashGroup",
     "map_to",
     "guild_only",
-    "has_permissions"
+    "has_permissions",
 )
 
 
