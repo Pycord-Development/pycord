@@ -9,7 +9,7 @@ negative_emoji: str = "\U0000274e"
 
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or("!"),
-    intents=intents
+    intents=intents,
 )
 
 
