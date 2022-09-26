@@ -19,7 +19,7 @@ async def on_ready():
     print("------")
 
 
-# return True if channel was thread.
+# returns whether the channel is a thread
 def is_thread(ctx: commands.Context) -> bool:
     return isinstance(ctx.channel, discord.Thread)
 
