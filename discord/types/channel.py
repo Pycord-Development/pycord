@@ -76,7 +76,7 @@ class ForumTag(TypedDict):
     name: str
     moderated: bool
     emoji_id: Snowflake
-    emoji_name: str
+    emoji_name: Optional[str]
 
 
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
