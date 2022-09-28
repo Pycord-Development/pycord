@@ -114,6 +114,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "_type",
         "last_message_id",
         "default_auto_archive_duration",
+        "available_tags",
         "flags",
     )
 
@@ -146,6 +147,11 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             # Does this need coercion into `int`? No idea yet.
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
+            self.available_tags: Optional[List[int]] = (
+                [int(tag_id) for tag_id in tag_ids]
+                if (tag_ids := data.get("available_tags")) is not None
+                else None
+            )
             self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self._fill_overwrites(data)
@@ -219,6 +225,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         category: Optional[CategoryChannel] = ...,
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
+        available_tags: List[int] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Union[Role, Member, Snowflake], PermissionOverwrite] = ...,
     ) -> Optional[TextChannel]:
@@ -275,6 +282,10 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        available_tags: List[:class:`int`]
+            The set of tags that can be used in a forum channel.
+
+            .. versionadded:: 2.2
 
         Raises
         ------
@@ -888,6 +899,7 @@ class ForumChannel(_TextChannel):
         nonce=None,
         allowed_mentions=None,
         view=None,
+        applied_tags=None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         slowmode_delay: int = MISSING,
         reason: Optional[str] = None,
@@ -1043,6 +1055,7 @@ class ForumChannel(_TextChannel):
                 components=components,
                 auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
                 rate_limit_per_user=slowmode_delay or self.slowmode_delay,
+                applied_tags=applied_tags,
                 reason=reason,
             )
         ret = Thread(guild=self.guild, state=self._state, data=data)

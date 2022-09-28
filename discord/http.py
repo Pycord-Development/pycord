@@ -1102,6 +1102,7 @@ class HTTPClient:
         auto_archive_duration: threads.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
+        applied_tags: Optional[SnowflakeList],
         reason: Optional[str] = None,
         embed: Optional[embed.Embed] = None,
         embeds: Optional[List[embed.Embed]] = None,
@@ -1117,6 +1118,9 @@ class HTTPClient:
         }
         if content:
             payload["content"] = content
+
+        if applied_tags:
+            payload["applied_tags"] = applied_tags
 
         if embed:
             payload["embeds"] = [embed]
