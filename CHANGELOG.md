@@ -236,6 +236,10 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
   ([#1350](https://github.com/Pycord-Development/pycord/pull/1350))
 - Make `TextChannel._get_channel` async. ([#1358](https://github.com/Pycord-Development/pycord/pull/1358))
 
+## [2.0.0-beta.7] - 2022-04-09
+### Fixed
+- Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
+
 [Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...HEAD
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
