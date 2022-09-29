@@ -118,7 +118,8 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
 - Support for loading folders in `load_extension`, and a new helper function `load_extensions`.
   ([#1423](https://github.com/Pycord-Development/pycord/pull/1423))
 - Support for AutoMod ([#1316](https://github.com/Pycord-Development/pycord/pull/1316))
-- Support for `min_length` and `max_length` kwargs in `Option`. ([#1463](https://github.com/Pycord-Development/pycord/pull/1463))
+- Support for `min_length` and `max_length` kwargs in `Option`.
+  ([#1463](https://github.com/Pycord-Development/pycord/pull/1463))
 - Native timeout support for `Modal`. ([#1434](https://github.com/Pycord-Development/pycord/pull/1434))
 
 ### Changed
@@ -165,6 +166,75 @@ and this project does not adhere to [Semantic Versioning](https://semver.org/spe
   ([#1467](https://github.com/Pycord-Development/pycord/pull/1467))
 - Fix AttributeError when voice client `play()` function isn't completed yet.
   ([#1360](https://github.com/Pycord-Development/pycord/pull/1360))
+
+## [2.0.0-rc.1] - 2022-05-17
+### Added
+- A `delete_after` kwarg to `Paginator.send`. ([#1245](https://github.com/Pycord-Development/pycord/pull/1245))
+- New `reason` kwarg to `Thread.delete_messages`. ([#1253](https://github.com/Pycord-Development/pycord/pull/1253))
+- A new `jump_url` property to channel and thread objects.
+  ([#1254](https://github.com/Pycord-Development/pycord/pull/1254) &
+  [#1259](https://github.com/Pycord-Development/pycord/pull/1259))
+- New `Paginator.edit()` method. ([#1258](https://github.com/Pycord-Development/pycord/pull/1258))
+- An `EmbedField` object. ([#1181](https://github.com/Pycord-Development/pycord/pull/1181))
+- Option names and descriptions are now validated locally.
+  ([#1271](https://github.com/Pycord-Development/pycord/pull/1271))
+- Component field limits are now enforced at library-level
+  ([#1065](https://github.com/Pycord-Development/pycord/pull/1065) &
+  [#1289](https://github.com/Pycord-Development/pycord/pull/1289))
+- Support providing option channel types as list. ([#1000](https://github.com/Pycord-Development/pycord/pull/1000))
+- New `Guild.jump_url` property. ([#1282](https://github.com/Pycord-Development/pycord/pull/1282))
+- ext.pages now supports ext.bridge. ([#1288](https://github.com/Pycord-Development/pycord/pull/1288))
+- Implement `None` check for check_guilds. ([#1291](https://github.com/Pycord-Development/pycord/pull/1291))
+- A debug warning to catch deprecated perms v1 usage until v2 perms are implemented.
+  ([#1301](https://github.com/Pycord-Development/pycord/pull/1301))
+- A new `files` parameter to `Page` object. ([#1300](https://github.com/Pycord-Development/pycord/pull/1300))
+- A `disable_all_items` and `enable_all_items` methods to `View` object.
+  ([#1199](https://github.com/Pycord-Development/pycord/pull/1199) & 
+  [#1319](https://github.com/Pycord-Development/pycord/pull/1319))
+- New `is_nsfw` attribute to voice channels. ([#1317](https://github.com/Pycord-Development/pycord/pull/1317))
+- Support for Permissions v2. ([#1328](https://github.com/Pycord-Development/pycord/pull/1328))
+- Allow using Enum to specify option choices. ([#1292](https://github.com/Pycord-Development/pycord/pull/1292))
+- The `file` and `files` parameters to `InteractionResponse.edit_message()`.
+  ([#1340](https://github.com/Pycord-Development/pycord/pull/1340))
+- A `BridgeExtContext.delete()` method. ([#1348](https://github.com/Pycord-Development/pycord/pull/1348))
+- Forum channels support. ([#1249](https://github.com/Pycord-Development/pycord/pull/1249))
+- Implemented `Interaction.to_dict`. ([#1274](https://github.com/Pycord-Development/pycord/pull/1274))
+- Support event covers for audit logs. ([#1355](https://github.com/Pycord-Development/pycord/pull/1355))
+
+### Changed
+- Removed implicit defer call in `View`. ([#1260](https://github.com/Pycord-Development/pycord/pull/1260))
+- `Option` class and usage was rewritten. ([#1251](https://github.com/Pycord-Development/pycord/pull/1251))
+- `description` argument of `PageGroup` is now optional.
+  ([#1330](https://github.com/Pycord-Development/pycord/pull/1330))
+- Allow `Modal.children` to be set on initialization. ([#1311](https://github.com/Pycord-Development/pycord/pull/1311))
+- Renamed `delete_exiting` to `delete_existing` (typo). ([#1336](https://github.com/Pycord-Development/pycord/pull/1336))
+
+### Fixed
+- Fix `PartialMessage.edit()` setting `view` as `None` when `view` kwarg is not passed.
+  ([#1256](https://github.com/Pycord-Development/pycord/pull/1256))
+- Fix channel parsing in slash command invocations. ([#1257](https://github.com/Pycord-Development/pycord/pull/1257))
+- Make channel `position` attribute optional. ([#1257](https://github.com/Pycord-Development/pycord/pull/1257))
+- Fix `PaginatorMenu` to use interaction routes for updates.
+  ([#1267](https://github.com/Pycord-Development/pycord/pull/1267))
+- Fix `PartialMessage.edit()` behavior when `content` is `None`.
+  ([#1268](https://github.com/Pycord-Development/pycord/pull/1268))
+- Fix `Paginator.add_menu()` and `Paginator.add_default_buttons()` passing `custom_id` to `PaginatorMenu`.
+  ([#1270](https://github.com/Pycord-Development/pycord/pull/1270))
+- Fix `process_application_commands` command not found fallback.
+  ([#1262](https://github.com/Pycord-Development/pycord/pull/1262))
+- Fix interaction response race condition. ([#1039](https://github.com/Pycord-Development/pycord/pull/1039))
+- Remove voice client when bot disconnects. ([#1273](https://github.com/Pycord-Development/pycord/pull/1273))
+- Fix conversion exception in ext.bridge. ([#1250](https://github.com/Pycord-Development/pycord/pull/1250))
+- Context.me return ClientUser when guilds intent is absent.
+  ([#1286](https://github.com/Pycord-Development/pycord/pull/1286))
+- Updated `Message.edit` type hinting overload and removed resulting redundant overloads.
+  ([#1299](https://github.com/Pycord-Development/pycord/pull/1299))
+- Improved validation regex for command names & options.
+  ([#1309](https://github.com/Pycord-Development/pycord/pull/1309))
+- Correct `Guild.fetch_members()` type hints. ([#1323](https://github.com/Pycord-Development/pycord/pull/1323))
+- Multiple fixes and enhancements for `PageGroup` handling.
+  ([#1350](https://github.com/Pycord-Development/pycord/pull/1350))
+- Make `TextChannel._get_channel` async. ([#1358](https://github.com/Pycord-Development/pycord/pull/1358))
 
 [Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...HEAD
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
