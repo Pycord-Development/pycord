@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more info).
 
 ## [Unreleased]
+### Added
+- New Guild Feature `INVITES_DISABLED` ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
+- `suppress` kwarg to `Messageable.send()` ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
+
+### Fixed
+- Various fixes to ext.bridge groups ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
+  [#1631](https://github.com/Pycord-Development/pycord/pull/1631))
+- Fix `VOICE_SERVER_UPDATE` error ([#1624](https://github.com/Pycord-Development/pycord/pull/1624))
+- Removed unnecessary instance check in autocomplete. ([#1643](https://github.com/Pycord-Development/pycord/pull/1643))
 
 ## [2.1.3] - 2022-09-06
 ### Fixed
