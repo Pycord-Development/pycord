@@ -121,6 +121,8 @@ class AsyncWebhookAdapter:
         *,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         files: Optional[List[File]] = None,
         reason: Optional[str] = None,
         auth_token: Optional[str] = None,
@@ -163,7 +165,15 @@ class AsyncWebhookAdapter:
                         form_data.add_field(**p)
                     to_send = form_data
                 try:
-                    async with session.request(method, url, data=to_send, headers=headers, params=params) as response:
+                    async with session.request(
+                            method,
+                            url,
+                            data=to_send,
+                            headers=headers,
+                            params=params,
+                            proxy=proxy,
+                            proxy_auth=proxy_auth
+                    ) as response:
                         _log.debug(
                             "Webhook ID %s with %s %s has returned status code %s",
                             webhook_id,
@@ -231,10 +241,12 @@ class AsyncWebhookAdapter:
         *,
         token: Optional[str] = None,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         reason: Optional[str] = None,
     ) -> Response[None]:
         route = Route("DELETE", "/webhooks/{webhook_id}", webhook_id=webhook_id)
-        return self.request(route, session, reason=reason, auth_token=token)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, reason=reason, auth_token=token)
 
     def delete_webhook_with_token(
         self,
@@ -242,6 +254,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         reason: Optional[str] = None,
     ) -> Response[None]:
         route = Route(
@@ -250,7 +264,7 @@ class AsyncWebhookAdapter:
             webhook_id=webhook_id,
             webhook_token=token,
         )
-        return self.request(route, session, reason=reason)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, reason=reason)
 
     def edit_webhook(
         self,
@@ -259,10 +273,14 @@ class AsyncWebhookAdapter:
         payload: Dict[str, Any],
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         reason: Optional[str] = None,
     ) -> Response[WebhookPayload]:
         route = Route("PATCH", "/webhooks/{webhook_id}", webhook_id=webhook_id)
-        return self.request(route, session, reason=reason, payload=payload, auth_token=token)
+        return self.request(
+            route, session=session, proxy=proxy, proxy_auth=proxy_auth, reason=reason, payload=payload, auth_token=token
+        )
 
     def edit_webhook_with_token(
         self,
@@ -271,6 +289,8 @@ class AsyncWebhookAdapter:
         payload: Dict[str, Any],
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         reason: Optional[str] = None,
     ) -> Response[WebhookPayload]:
         route = Route(
@@ -279,7 +299,7 @@ class AsyncWebhookAdapter:
             webhook_id=webhook_id,
             webhook_token=token,
         )
-        return self.request(route, session, reason=reason, payload=payload)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, reason=reason, payload=payload)
 
     def execute_webhook(
         self,
@@ -287,6 +307,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
         files: Optional[List[File]] = None,
@@ -311,6 +333,8 @@ class AsyncWebhookAdapter:
             route,
             session,
             payload=payload,
+            proxy=proxy,
+            proxy_auth=proxy_auth,
             multipart=multipart,
             files=files,
             params=params,
@@ -323,6 +347,8 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         thread_id: Optional[int] = None,
     ) -> Response[MessagePayload]:
         params = {}
@@ -337,7 +363,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session, params=params)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, params=params)
 
     def edit_webhook_message(
         self,
@@ -346,6 +372,8 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         thread_id: Optional[int] = None,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
@@ -368,6 +396,8 @@ class AsyncWebhookAdapter:
             session,
             params=params,
             payload=payload,
+            proxy=proxy,
+            proxy_auth=proxy_auth,
             multipart=multipart,
             files=files,
         )
@@ -379,6 +409,8 @@ class AsyncWebhookAdapter:
         message_id: int,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         thread_id: Optional[int] = None,
     ) -> Response[None]:
         params = {}
@@ -393,7 +425,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
             message_id=message_id,
         )
-        return self.request(route, session, params=params)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, params=params)
 
     def fetch_webhook(
         self,
@@ -401,9 +433,11 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
     ) -> Response[WebhookPayload]:
         route = Route("GET", "/webhooks/{webhook_id}", webhook_id=webhook_id)
-        return self.request(route, session=session, auth_token=token)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, auth_token=token)
 
     def fetch_webhook_with_token(
         self,
@@ -411,6 +445,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
     ) -> Response[WebhookPayload]:
         route = Route(
             "GET",
@@ -418,7 +454,7 @@ class AsyncWebhookAdapter:
             webhook_id=webhook_id,
             webhook_token=token,
         )
-        return self.request(route, session=session)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth)
 
     def create_interaction_response(
         self,
@@ -426,6 +462,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         type: int,
         data: Optional[Dict[str, Any]] = None,
         files: List[File] = None,
@@ -465,7 +503,7 @@ class AsyncWebhookAdapter:
             webhook_token=token,
         )
 
-        return self.request(route, session=session, files=files, multipart=form)
+        return self.request(route, session=session, proxy=proxy, proxy_auth=proxy_auth, files=files, multipart=form)
 
     def get_original_interaction_response(
         self,
@@ -473,6 +511,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
     ) -> Response[MessagePayload]:
         r = Route(
             "GET",
@@ -480,7 +520,7 @@ class AsyncWebhookAdapter:
             webhook_id=application_id,
             webhook_token=token,
         )
-        return self.request(r, session=session)
+        return self.request(r, session=session, proxy=proxy, proxy_auth=proxy_auth)
 
     def edit_original_interaction_response(
         self,
@@ -488,6 +528,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         payload: Optional[Dict[str, Any]] = None,
         multipart: Optional[List[Dict[str, Any]]] = None,
         files: Optional[List[File]] = None,
@@ -498,7 +540,9 @@ class AsyncWebhookAdapter:
             webhook_id=application_id,
             webhook_token=token,
         )
-        return self.request(r, session, payload=payload, multipart=multipart, files=files)
+        return self.request(
+            r, session=session, proxy=proxy, proxy_auth=proxy_auth, payload=payload, multipart=multipart, files=files
+        )
 
     def delete_original_interaction_response(
         self,
@@ -506,6 +550,8 @@ class AsyncWebhookAdapter:
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
     ) -> Response[None]:
         r = Route(
             "DELETE",
@@ -513,7 +559,7 @@ class AsyncWebhookAdapter:
             webhook_id=application_id,
             webhook_token=token,
         )
-        return self.request(r, session=session)
+        return self.request(r, session=session, proxy=proxy, proxy_auth=proxy_auth)
 
 
 class ExecuteWebhookParameters(NamedTuple):
@@ -1040,17 +1086,21 @@ class Webhook(BaseWebhook):
         .. versionadded:: 2.0
     """
 
-    __slots__: Tuple[str, ...] = ("session",)
+    __slots__: Tuple[str, ...] = ("session", "proxy", "proxy_auth")
 
     def __init__(
         self,
         data: WebhookPayload,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         token: Optional[str] = None,
         state=None,
     ):
         super().__init__(data, token, state)
         self.session = session
+        self.proxy: Optional[str] = proxy
+        self.proxy_auth: Optional[aiohttp.BasicAuth] = proxy_auth
 
     def __repr__(self):
         return f"<Webhook id={self.id!r}>"
@@ -1067,6 +1117,8 @@ class Webhook(BaseWebhook):
         token: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         bot_token: Optional[str] = None,
     ) -> Webhook:
         """Creates a partial :class:`Webhook`.
@@ -1101,7 +1153,7 @@ class Webhook(BaseWebhook):
             "token": token,
         }
 
-        return cls(data, session, token=bot_token)
+        return cls(data, session, proxy=proxy, proxy_auth=proxy_auth, token=bot_token)
 
     @classmethod
     def from_url(
@@ -1109,6 +1161,8 @@ class Webhook(BaseWebhook):
         url: str,
         *,
         session: aiohttp.ClientSession,
+        proxy: Optional[str] = None,
+        proxy_auth: Optional[aiohttp.BasicAuth] = None,
         bot_token: Optional[str] = None,
     ) -> Webhook:
         """Creates a partial :class:`Webhook` from a webhook URL.
@@ -1149,7 +1203,7 @@ class Webhook(BaseWebhook):
 
         data: Dict[str, Any] = m.groupdict()
         data["type"] = 1
-        return cls(data, session, token=bot_token)  # type: ignore
+        return cls(data, session, proxy=proxy, proxy_auth=proxy_auth, token=bot_token)  # type: ignore
 
     @classmethod
     def _as_follower(cls, data, *, channel, user) -> Webhook:
@@ -1169,13 +1223,19 @@ class Webhook(BaseWebhook):
         }
 
         state = channel._state
-        session = channel._state.http._HTTPClient__session
-        return cls(feed, session=session, state=state, token=state.http.token)
+        http = state.http
+        session = http._HTTPClient__session
+        proxy_auth = http.proxy_auth
+        proxy = http.proxy
+        return cls(feed, session=session, state=state, proxy_auth=proxy_auth, proxy=proxy, token=state.http.token)
 
     @classmethod
     def from_state(cls, data, state) -> Webhook:
-        session = state.http._HTTPClient__session
-        return cls(data, session=session, state=state, token=state.http.token)
+        http = state.http
+        session = http._HTTPClient__session
+        proxy_auth = http.proxy_auth
+        proxy = http.proxy
+        return cls(data, session=session, state=state, proxy_auth=proxy_auth, proxy=proxy, token=state.http.token)
 
     async def fetch(self, *, prefer_auth: bool = True) -> Webhook:
         """|coro|
@@ -1215,13 +1275,32 @@ class Webhook(BaseWebhook):
         adapter = async_context.get()
 
         if prefer_auth and self.auth_token:
-            data = await adapter.fetch_webhook(self.id, self.auth_token, session=self.session)
+            data = await adapter.fetch_webhook(
+                self.id,
+                self.auth_token,
+                session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
+            )
         elif self.token:
-            data = await adapter.fetch_webhook_with_token(self.id, self.token, session=self.session)
+            data = await adapter.fetch_webhook_with_token(
+                self.id,
+                self.token,
+                session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
+            )
         else:
             raise InvalidArgument("This webhook does not have a token associated with it")
 
-        return Webhook(data, self.session, token=self.auth_token, state=self._state)
+        return Webhook(
+            data,
+            session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
+            token=self.auth_token,
+            state=self._state,
+        )
 
     async def delete(self, *, reason: Optional[str] = None, prefer_auth: bool = True):
         """|coro|
@@ -1257,9 +1336,18 @@ class Webhook(BaseWebhook):
         adapter = async_context.get()
 
         if prefer_auth and self.auth_token:
-            await adapter.delete_webhook(self.id, token=self.auth_token, session=self.session, reason=reason)
+            await adapter.delete_webhook(
+                self.id,
+                token=self.auth_token,
+                session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
+                reason=reason,
+            )
         elif self.token:
-            await adapter.delete_webhook_with_token(self.id, self.token, session=self.session, reason=reason)
+            await adapter.delete_webhook_with_token(
+                self.id, self.token, session=self.session, proxy=self.proxy, proxy_auth=self.proxy_auth, reason=reason,
+            )
 
     async def edit(
         self,
@@ -1328,6 +1416,8 @@ class Webhook(BaseWebhook):
                 self.auth_token,
                 payload=payload,
                 session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
                 reason=reason,
             )
 
@@ -1337,6 +1427,8 @@ class Webhook(BaseWebhook):
                 self.auth_token,
                 payload=payload,
                 session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
                 reason=reason,
             )
         elif self.token:
@@ -1345,13 +1437,22 @@ class Webhook(BaseWebhook):
                 self.token,
                 payload=payload,
                 session=self.session,
+                proxy=self.proxy,
+                proxy_auth=self.proxy_auth,
                 reason=reason,
             )
 
         if data is None:
             raise RuntimeError("Unreachable code hit: data was not assigned")
 
-        return Webhook(data=data, session=self.session, token=self.auth_token, state=self._state)
+        return Webhook(
+            data,
+            session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
+            token=self.auth_token,
+            state=self._state,
+        )
 
     def _create_message(self, data):
         state = _WebhookState(self, parent=self._state)
@@ -1562,6 +1663,8 @@ class Webhook(BaseWebhook):
             self.id,
             self.token,
             session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
@@ -1628,6 +1731,8 @@ class Webhook(BaseWebhook):
             self.token,
             id,
             session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
             thread_id=thread_id,
         )
         msg = self._create_message(data)
@@ -1749,6 +1854,8 @@ class Webhook(BaseWebhook):
             self.token,
             message_id,
             session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
             thread_id=thread_id,
             payload=params.payload,
             multipart=params.multipart,
@@ -1793,5 +1900,7 @@ class Webhook(BaseWebhook):
             self.token,
             message_id,
             session=self.session,
+            proxy=self.proxy,
+            proxy_auth=self.proxy_auth,
             thread_id=thread_id,
         )
