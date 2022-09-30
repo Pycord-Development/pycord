@@ -969,9 +969,9 @@ class InteractionResponse:
         http = parent._state.http
         await self._locked_response(
             adapter.create_interaction_response(
-                self._parent.id,
-                self._parent.token,
-                session=self._parent._session,
+                parent.id,
+                parent.token,
+                session=parent._session,
                 proxy=http.proxy,
                 proxy_auth=http.proxy_auth,
                 type=InteractionResponseType.modal.value,
