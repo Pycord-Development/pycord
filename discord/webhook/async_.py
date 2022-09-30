@@ -172,7 +172,7 @@ class AsyncWebhookAdapter:
                             headers=headers,
                             params=params,
                             proxy=proxy,
-                            proxy_auth=proxy_auth
+                            proxy_auth=proxy_auth,
                     ) as response:
                         _log.debug(
                             "Webhook ID %s with %s %s has returned status code %s",
