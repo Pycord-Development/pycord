@@ -216,8 +216,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_channel")
     def channel(self) -> Optional[InteractionChannel]:
-        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]:
-        The channel the interaction was sent from.
+        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the
+        interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
         no data to complete them. These are :class:`PartialMessageable` instead.

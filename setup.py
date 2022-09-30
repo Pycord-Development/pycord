@@ -89,6 +89,7 @@ setup(
     author="Pycord Development",
     url="https://pycord.dev/github",
     project_urls={
+        "Changelog": "https://github.com/Pycord-Development/pycord/blob/master/CHANGELOG.md",
         "Website": "https://pycord.dev",
         "Documentation": "https://docs.pycord.dev/en/master/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
@@ -112,6 +113,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
