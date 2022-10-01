@@ -268,20 +268,87 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
     return decorator
 
 
+def warn_deprecated(
+    name: str,
+    instead: Optional[str] = None,
+    since: Optional[str] = None,
+    removed: Optional[str] = None,
+    reference: Optional[str] = None,
+) -> None:
+    """Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a
+    DeprecationWarning.
+
+    Parameters
+    ----------
+    name: str
+        The name of the deprecated function.
+    instead: Optional[:class:`str`]
+        A recommended alternative to the function.
+    since: Optional[:class:`str`]
+        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
+        the patch version is optional.
+    removed: Optional[:class:`str]
+        The version in which the function is planned to be removed. This should be in the format
+        ``major.minor(.patch)``, where the patch version is optional.
+    reference: Optional[:class:`str`]
+        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
+        issue/PR.
+    """
+    warnings.simplefilter("always", DeprecationWarning)  # turn off filter
+    message = f"{name} is deprecated"
+    if since:
+        message += f" since version {since}"
+    if removed:
+        message += f" and will be removed in version {removed}"
+    if instead:
+        message += f", consider using {instead} instead"
+    message += "."
+    if reference:
+        message += f" See {reference} for more information."
+
+    warnings.warn(message, stacklevel=3, category=DeprecationWarning)
+    warnings.simplefilter("default", DeprecationWarning)  # reset filter
+
+
 def deprecated(
     instead: Optional[str] = None,
+    since: Optional[str] = None,
+    removed: Optional[str] = None,
+    reference: Optional[str] = None,
+    *,
+    use_qualname: bool = True,
 ) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+    """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
+    the decorated function is called.
+
+    Parameters
+    ----------
+    instead: Optional[:class:`str`]
+        A recommended alternative to the function.
+    since: Optional[:class:`str`]
+        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
+        the patch version is optional.
+    removed: Optional[:class:`str]
+        The version in which the function is planned to be removed. This should be in the format
+        ``major.minor(.patch)``, where the patch version is optional.
+    reference: Optional[:class:`str`]
+        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
+        issue/PR.
+    use_qualname: :class:`bool`
+        Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
+        the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
+        will display as ``login``. Defaults to ``True``.
+    """
     def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
-            warnings.simplefilter("always", DeprecationWarning)  # turn off filter
-            if instead:
-                fmt = "{0.__name__} is deprecated, use {1} instead."
-            else:
-                fmt = "{0.__name__} is deprecated."
-
-            warnings.warn(fmt.format(func, instead), stacklevel=3, category=DeprecationWarning)
-            warnings.simplefilter("default", DeprecationWarning)  # reset filter
+            warn_deprecated(
+                name=func.__qualname__ if use_qualname else func.__name__,
+                instead=instead,
+                since=since,
+                removed=removed,
+                reference=reference,
+            )
             return func(*args, **kwargs)
 
         return decorated
