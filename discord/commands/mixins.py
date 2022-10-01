@@ -355,7 +355,7 @@ class Invokable(Generic[CogT, P, T]):
     def __init__(self, func: CallbackT, **kwargs):
         self.callback: CallbackT = func
         self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
-        self.cog: Optional[CogT]
+        self.cog: Optional[CogT] = None
         self.module: Any = None
 
         self.name: str = str(kwargs.get("name", func.__name__))

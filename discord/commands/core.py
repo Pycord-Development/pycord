@@ -35,7 +35,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Coroutine,
     Dict,
     Generator,
     Generic,
@@ -200,8 +199,6 @@ class SlashCommand(ApplicationCommand):
 
         self.options: List[Option] = kwargs.get("options", [])
 
-        self._cog = MISSING
-
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
@@ -268,7 +265,7 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
-    def _match_option_param_names(self, params, options):
+    def _match_option_param_names(self, params, options: List[Option]):
         params = self._check_required_params(params)
 
         check_annotations: List[Callable[[Option, Type], bool]] = [
@@ -313,8 +310,11 @@ class SlashCommand(ApplicationCommand):
 
     @cog.setter
     def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+        if not hasattr(self, "_cog"):
+            self._cog = MISSING
+        else:
+            self._cog = val
+            self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -584,7 +584,7 @@ class SlashCommandGroup(ApplicationCommand):
         return as_dict
 
     def add_command(self, command: SlashCommand) -> None:
-        if command.cog is MISSING:
+        if command.cog is MISSING and not self.cog is None:
             command.cog = self.cog
 
         self.subcommands.append(command)

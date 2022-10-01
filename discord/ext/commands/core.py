@@ -582,7 +582,7 @@ class GroupMixin(Generic[CogT]):
         :meth:`~.GroupMixin.group` shortcut decorators are used instead.
 
         .. versionchanged:: 1.4
-             Raise :exc:`.CommandRegistrationError` instead of generic :exc:`.ClientException`
+            Raise :exc:`.CommandRegistrationError` instead of generic :exc:`.ClientException`
 
         Parameters
         -----------
@@ -950,7 +950,6 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
 @overload  # for py 3.10
 def command(
-    name: str = ...,
     cls: Type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
@@ -967,7 +966,6 @@ def command(
 
 @overload
 def command(
-    name: str = ...,
     cls: Type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
@@ -984,7 +982,6 @@ def command(
 
 @overload
 def command(
-    name: str = ...,
     cls: Type[CommandT] = ...,
     **attrs: Any,
 ) -> Callable[
@@ -1000,7 +997,7 @@ def command(
 
 
 def command(
-    name: str = MISSING, cls: Type[CommandT] = MISSING, **attrs: Any
+    cls: Type[CommandT] = MISSING, **attrs: Any
 ) -> Callable[
     [
         Union[
@@ -1024,13 +1021,10 @@ def command(
 
     Parameters
     -----------
-    name: :class:`str`
-        The name to create the command with. By default, this uses the
-        function name unchanged.
     cls
         The class to construct with. By default, this is :class:`.Command`.
         You usually do not change this.
-    attrs
+    \*\*attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
 
@@ -1050,14 +1044,13 @@ def command(
     ) -> CommandT:
         if isinstance(func, Command):
             raise TypeError("Callback is already a command.")
-        return cls(func, name=name, **attrs)
+        return cls(func, **attrs)
 
     return decorator
 
 
 @overload
 def group(
-    name: str = ...,
     cls: Type[Group[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
@@ -1074,7 +1067,6 @@ def group(
 
 @overload
 def group(
-    name: str = ...,
     cls: Type[GroupT] = ...,
     **attrs: Any,
 ) -> Callable[
@@ -1090,7 +1082,6 @@ def group(
 
 
 def group(
-    name: str = MISSING,
     cls: Type[GroupT] = MISSING,
     **attrs: Any,
 ) -> Callable[
@@ -1112,7 +1103,7 @@ def group(
     """
     if cls is MISSING:
         cls = Group  # type: ignore
-    return command(name=name, cls=cls, **attrs)  # type: ignore
+    return command(cls=cls, **attrs)  # type: ignore
 
 
 def check(predicate: Check) -> Callable[[T], T]:
