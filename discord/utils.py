@@ -947,7 +947,7 @@ def raw_mentions(text: str) -> List[int]:
     List[:class:`int`]
         A list of user IDs found in the string.
     """
-    return [int(x) for x in re.findall(r"<@!?([0-9]{15,20})>", text)]
+    return [int(x) for x in re.findall(r"<@!?([0-9]+)>", text)]
 
 def raw_channel_mentions(text: str) -> List[int]:
     """Returns a list of channel IDs matching ``<@#channel_id>`` in the string.
@@ -962,7 +962,7 @@ def raw_channel_mentions(text: str) -> List[int]:
     List[:class:`int`]
         A list of channel IDs found in the string.
     """
-    return [int(x) for x in re.findall(r"<#([0-9]{15,20})>", text)]
+    return [int(x) for x in re.findall(r"<#([0-9]+)>", text)]
 
 def raw_role_mentions(text: str) -> List[int]:
     """Returns a list of role IDs matching ``<@&role_id>`` in the string.
@@ -977,7 +977,7 @@ def raw_role_mentions(text: str) -> List[int]:
     List[:class:`int`]
         A list of role IDs found in the string.
     """
-    return [int(x) for x in re.findall(r"<@&([0-9]{15,20})>", text)]
+    return [int(x) for x in re.findall(r"<@&([0-9]+)>", text)]
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[List[T]]:
     ret = []
