@@ -431,7 +431,7 @@ def has_permissions(**perms: Dict[str, bool]):
         from ..commands import has_permissions
 
         func = has_permissions(**perms)(func)
-        perms = Permissions(**perms)
+        _perms = Permissions(**perms)
         if isinstance(func, ApplicationCommand):
             func.default_member_permissions = perms
         else:
