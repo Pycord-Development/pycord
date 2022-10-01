@@ -215,8 +215,7 @@ class Guild(Hashable):
         - ``COMMUNITY``: Guild is a community server.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
-        - ``HUB``: Hubs contain a directory channel that let you find school-related,
-                   student-run servers for your school or university.
+        - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
         - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``INVITES_DISABLED``: Guild Invites are disabled.
@@ -229,17 +228,14 @@ class Guild(Hashable):
         - ``NEWS``: Guild can create news channels.
         - ``NEW_THREAD_PERMISSIONS``: Guild has new thread permissions.
         - ``PARTNERED``: Guild is a partnered server.
-        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord
-                                       Staff Member "Jethro" for their personal server).
+        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
         - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel
-                                     in a sidebar similar to thread view.
-        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer
-                                       members and a bot. Also gives the premium thread features.
+        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
+        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
@@ -1164,7 +1160,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1246,7 +1242,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1337,7 +1333,7 @@ class Guild(Hashable):
             The channel's name.
         topic: :class:`str`
             The new channel's topic.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1438,7 +1434,7 @@ class Guild(Hashable):
         -----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -2055,7 +2051,7 @@ class Guild(Hashable):
             Retrieving the channel failed.
         NotFound
             Invalid Channel ID.
-        :exc:`.Forbidden`
+        Forbidden
             You do not have permission to fetch this channel.
 
         Returns
@@ -2937,8 +2933,9 @@ class Guild(Hashable):
         self,
         user: Snowflake,
         *,
+        delete_message_seconds: Optional[int] = None,
+        delete_message_days: Optional[int] = None,
         reason: Optional[str] = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] = 1,
     ) -> None:
         """|coro|
 
@@ -2953,9 +2950,13 @@ class Guild(Hashable):
         -----------
         user: :class:`abc.Snowflake`
             The user to ban from their guild.
-        delete_message_days: :class:`int`
-            The number of days worth of messages to delete from the user
-            in the guild. The minimum is 0 and the maximum is 7.
+        delete_message_seconds: Optional[:class:`int`]
+            The number of seconds worth of messages to delete from
+            the user in the guild. The minimum is 0 and the maximum
+            is 604800 (i.e. 7 days). The default is 0.
+        delete_message_days: Optional[:class:`int`]
+            ***Deprecated parameter***, same as ``delete_message_seconds`` but
+            is used for days instead.
         reason: Optional[:class:`str`]
             The reason the user got banned.
 
@@ -2966,7 +2967,13 @@ class Guild(Hashable):
         HTTPException
             Banning failed.
         """
-        await self._state.http.ban(user.id, self.id, delete_message_days, reason=reason)
+        if delete_message_seconds and delete_message_days:
+            raise TypeError("delete_message_seconds and delete_message_days are mutually exclusive.")
+
+        if not (0 <= delete_message_seconds <= 604800):
+            raise TypeError("delete_message_seconds must be between 0 and 604800 seconds.")
+
+        await self._state.http.ban(user.id, self.id, delete_message_seconds, delete_message_days, reason=reason)
 
     async def unban(self, user: Snowflake, *, reason: Optional[str] = None) -> None:
         """|coro|

@@ -87,6 +87,7 @@ class BridgeSlashGroup(SlashCommandGroup):
     def __init__(self, callback, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.callback = callback
+        self.__original_kwargs__["callback"] = callback
         self.__command = None
 
     async def _invoke(self, ctx: BridgeApplicationContext) -> None:
@@ -107,6 +108,7 @@ class BridgeExtGroup(BridgeExtCommand, Group):
     """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
     pass
 
+
 class BridgeCommand:
     """Compatibility class between prefixed-based commands and slash commands.
 
@@ -122,10 +124,13 @@ class BridgeCommand:
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
         The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
+    parent: Optional[:class:`.BridgeCommandGroup`]:
+        Parent of the BridgeCommand.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
     def __init__(self, callback, **kwargs):
+        self.parent = kwargs.pop("parent", None)
         self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
         self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
@@ -277,7 +282,8 @@ class BridgeCommandGroup(BridgeCommand):
     """
     def __init__(self, callback, *args, **kwargs):
         self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, self.ext_variant.name, *args, **kwargs)
+        name = kwargs.pop("name", self.ext_variant.name)
+        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, name, *args, **kwargs)
         self.subcommands: List[BridgeCommand] = []
 
         self.mapped: Optional[SlashCommand] = None
@@ -295,8 +301,8 @@ class BridgeCommandGroup(BridgeCommand):
         """
         def wrap(callback):
             slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"), cls=BridgeSlashCommand)(callback)
-            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"), cls=BridgeExtGroup)(callback)
-            command = BridgeCommand(callback, slash_variant=slash, ext_variant=ext)
+            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"), cls=BridgeExtCommand)(callback)
+            command = BridgeCommand(callback, parent=self, slash_variant=slash, ext_variant=ext)
             self.subcommands.append(command)
             return command
 
