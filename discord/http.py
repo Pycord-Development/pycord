@@ -850,7 +850,8 @@ class HTTPClient:
         self,
         user_id: Snowflake,
         guild_id: Snowflake,
-        delete_message_days: int = 1,
+        delete_message_seconds: int = None,
+        delete_message_days: int = None,
         reason: Optional[str] = None,
     ) -> Response[None]:
         r = Route(
@@ -859,9 +860,12 @@ class HTTPClient:
             guild_id=guild_id,
             user_id=user_id,
         )
-        params = {
-            "delete_message_days": delete_message_days,
-        }
+        params = {}
+
+        if delete_message_days:
+            params["delete_message_days"] = delete_message_days
+        elif delete_message_seconds:
+            params["delete_message_seconds"] = delete_message_seconds
 
         return self.request(r, params=params, reason=reason)
 
