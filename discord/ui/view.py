@@ -314,7 +314,7 @@ class View:
         self.__weights.clear()
 
     def get_item(self, custom_id: str) -> Optional[Item]:
-        """Get an item from the view by its ``custom_id``.
+        """Get an item from the view by its ``custom_id``. Alias for `utils.get(view.children, custom_id=custom_id)`.
 
         Parameters
         -----------
