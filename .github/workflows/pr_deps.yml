@@ -1,6 +1,8 @@
 name: PR Dependencies
 
-on: [pull_request]
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   check_dependencies:
