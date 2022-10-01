@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New Guild Feature `INVITES_DISABLED` ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
 - `suppress` kwarg to `Messageable.send()` ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
+- `proxy` and `proxy_auth` params to many Webhook related methods.
+  ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 
 ### Fixed
 - Various fixes to ext.bridge groups ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
   [#1631](https://github.com/Pycord-Development/pycord/pull/1631))
 - Fix `VOICE_SERVER_UPDATE` error ([#1624](https://github.com/Pycord-Development/pycord/pull/1624))
 - Removed unnecessary instance check in autocomplete. ([#1643](https://github.com/Pycord-Development/pycord/pull/1643))
+- Interaction responses are now passed the respective `proxy` and `proxy_auth` params as defined in `Client`.
+  ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 
 ## [2.1.3] - 2022-09-06
 ### Fixed
