@@ -663,8 +663,6 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
-        self._cog = MISSING
-
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
@@ -772,7 +770,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return self._cog
+        return getattr(self, "_cog", MISSING)
 
     @cog.setter
     def cog(self, val):
@@ -1089,10 +1087,17 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        # check if subcommand has no cog set
+        if command.cog is MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
