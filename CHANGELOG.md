@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `suppress` kwarg to `Messageable.send()` ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
+- `delete_message_seconds` parameter in ban methods. ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+
+### Deprecated
+- The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
+  ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
 
 ### Fixed
 - Various fixes to ext.bridge groups ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
