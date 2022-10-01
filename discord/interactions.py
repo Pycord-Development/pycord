@@ -309,7 +309,7 @@ class Interaction:
         self._original_response = message
         return message
 
-    @utils.deprecated("Interaction.original_response")
+    @utils.warn_deprecated("Interaction.original_response")
     async def original_message(self):
         """An alias for :meth:`original_response`.
         
@@ -431,7 +431,7 @@ class Interaction:
 
         return message
 
-    @utils.deprecated("Interaction.edit_original_response")
+    @utils.warn_deprecated("Interaction.edit_original_response")
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
         
@@ -489,7 +489,7 @@ class Interaction:
         else:
             await func
 
-    @utils.deprecated("Interaction.delete_original_response")
+    @utils.warn_deprecated("Interaction.delete_original_response")
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
 
