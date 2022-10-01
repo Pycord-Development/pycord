@@ -50,6 +50,7 @@ from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
 from .file import File
+from .flags import MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
@@ -1256,6 +1257,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1274,6 +1276,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1292,6 +1295,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1310,6 +1314,7 @@ class Messageable:
         reference: Union[Message, MessageReference, PartialMessage] = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1329,6 +1334,7 @@ class Messageable:
         reference=None,
         mention_author=None,
         view=None,
+        suppress=None
     ):
         """|coro|
 
@@ -1377,8 +1383,7 @@ class Messageable:
 
             .. versionadded:: 1.4
 
-        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`,
-        :class:`~discord.PartialMessage`]
+        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
             A reference to the :class:`~discord.Message` to which you are replying, this can be created using
             :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
             whether this mentions the author of the referenced message using the
@@ -1401,6 +1406,8 @@ class Messageable:
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Raises
         --------
@@ -1435,6 +1442,8 @@ class Messageable:
             if len(embeds) > 10:
                 raise InvalidArgument("embeds parameter must be a list of up to 10 elements")
             embeds = [embed.to_dict() for embed in embeds]
+            
+        flags = MessageFlags.suppress_embeds if suppress else MessageFlags.DEFAULT_VALUE
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1486,6 +1495,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    flags=flags,
                 )
             finally:
                 file.close()
@@ -1509,6 +1519,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    flags=flags,
                 )
             finally:
                 for f in files:
@@ -1525,6 +1536,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
+                flags=flags,
             )
 
         ret = state.create_message(channel=channel, data=data)

@@ -449,6 +449,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -479,6 +480,9 @@ class HTTPClient:
 
         if stickers:
             payload["sticker_ids"] = stickers
+            
+        if flags:
+            payload["flags"] = flags
 
         return self.request(r, json=payload)
 
@@ -499,6 +503,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -519,6 +524,8 @@ class HTTPClient:
             payload["components"] = components
         if stickers:
             payload["sticker_ids"] = stickers
+        if flags:
+            payload["flags"] = flags
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -556,6 +563,7 @@ class HTTPClient:
         message_reference: Optional[message.MessageReference] = None,
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
+        flags: Optional[int] = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -570,6 +578,7 @@ class HTTPClient:
             message_reference=message_reference,
             stickers=stickers,
             components=components,
+            flags=flags,
         )
 
     def edit_multipart_helper(

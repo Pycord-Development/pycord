@@ -95,7 +95,7 @@ def guild_only() -> Callable:
         @bot.slash_command()
         @guild_only()
         async def test(ctx):
-            await ctx.respond('You\'re in a guild.')
+            await ctx.respond("You're in a guild.")
 
     """
 

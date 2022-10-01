@@ -216,8 +216,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_channel")
     def channel(self) -> Optional[InteractionChannel]:
-        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]:
-        The channel the interaction was sent from.
+        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the
+        interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
         no data to complete them. These are :class:`PartialMessageable` instead.
@@ -296,10 +296,13 @@ class Interaction:
             raise ClientException("Channel for message could not be resolved")
 
         adapter = async_context.get()
+        http = self._state.http
         data = await adapter.get_original_interaction_response(
             application_id=self.application_id,
             token=self.token,
             session=self._session,
+            proxy=http.proxy,
+            proxy_auth=http.proxy_auth,
         )
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=channel, data=data)  # type: ignore
@@ -387,17 +390,21 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
         )
         adapter = async_context.get()
+        http = self._state.http
         data = await adapter.edit_original_interaction_response(
             self.application_id,
             self.token,
             session=self._session,
+            proxy=http.proxy,
+            proxy_auth=http.proxy_auth,
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
         )
 
         # The message channel types should always match
-        message = InteractionMessage(state=self._state, channel=self.channel, data=data)  # type: ignore
+        state = _InteractionMessageState(self, self._state)
+        message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             self._state.store_view(view, message.id)
 
@@ -428,10 +435,13 @@ class Interaction:
             Deleted a message that is not yours.
         """
         adapter = async_context.get()
+        http = self._state.http
         func = adapter.delete_original_interaction_response(
             self.application_id,
             self.token,
             session=self._session,
+            proxy=http.proxy,
+            proxy_auth=http.proxy_auth,
         )
 
         if delay is not None:
@@ -565,6 +575,7 @@ class InteractionResponse:
 
         if defer_type:
             adapter = async_context.get()
+            http = parent._state.http
             await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
@@ -572,6 +583,8 @@ class InteractionResponse:
                     session=parent._session,
                     type=defer_type,
                     data=data,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
                 )
             )
             self._responded = True
@@ -596,11 +609,14 @@ class InteractionResponse:
         parent = self._parent
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
+            http = parent._state.http
             await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
                     parent.token,
                     session=parent._session,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
                     type=InteractionResponseType.pong.value,
                 )
             )
@@ -722,6 +738,7 @@ class InteractionResponse:
 
         parent = self._parent
         adapter = async_context.get()
+        http = parent._state.http
         try:
             await self._locked_response(
                 adapter.create_interaction_response(
@@ -729,6 +746,8 @@ class InteractionResponse:
                     parent.token,
                     session=parent._session,
                     type=InteractionResponseType.channel_message.value,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
                     data=payload,
                     files=files,
                 )
@@ -851,6 +870,7 @@ class InteractionResponse:
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
         adapter = async_context.get()
+        http = parent._state.http
         try:
             await self._locked_response(
                 adapter.create_interaction_response(
@@ -858,6 +878,8 @@ class InteractionResponse:
                     parent.token,
                     session=parent._session,
                     type=InteractionResponseType.message_update.value,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
                     data=payload,
                     files=files,
                 )
@@ -905,11 +927,14 @@ class InteractionResponse:
         payload = {"choices": [c.to_dict() for c in choices]}
 
         adapter = async_context.get()
+        http = parent._state.http
         await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
                 session=parent._session,
+                proxy=http.proxy,
+                proxy_auth=http.proxy_auth,
                 type=InteractionResponseType.auto_complete_result.value,
                 data=payload,
             )
@@ -937,13 +962,18 @@ class InteractionResponse:
         if self._responded:
             raise InteractionResponded(self._parent)
 
+        parent = self._parent
+
         payload = modal.to_dict()
         adapter = async_context.get()
+        http = parent._state.http
         await self._locked_response(
             adapter.create_interaction_response(
-                self._parent.id,
-                self._parent.token,
-                session=self._parent._session,
+                parent.id,
+                parent.token,
+                session=parent._session,
+                proxy=http.proxy,
+                proxy_auth=http.proxy_auth,
                 type=InteractionResponseType.modal.value,
                 data=payload,
             )

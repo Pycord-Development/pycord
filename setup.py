@@ -89,6 +89,7 @@ setup(
     author="Pycord Development",
     url="https://pycord.dev/github",
     project_urls={
+        "Changelog": "https://github.com/Pycord-Development/pycord/blob/master/CHANGELOG.md",
         "Website": "https://pycord.dev",
         "Documentation": "https://docs.pycord.dev/en/master/",
         "Issue tracker": "https://github.com/Pycord-Development/pycord/issues",
@@ -104,7 +105,7 @@ setup(
     extras_require=extras_require,
     python_requires=">=3.8.0",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
@@ -112,6 +113,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
