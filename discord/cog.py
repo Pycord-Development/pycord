@@ -50,8 +50,9 @@ import discord.utils
 
 from . import errors
 from .commands import (
+    Invokable,
+    BaseContext,
     ApplicationCommand,
-    ApplicationContext,
     SlashCommandGroup,
     _BaseCommand,
 )
@@ -140,7 +141,7 @@ class CogMeta(type):
 
     __cog_name__: str
     __cog_settings__: Dict[str, Any]
-    __cog_commands__: List[ApplicationCommand]
+    __cog_commands__: List[Invokable]
     __cog_listeners__: List[Tuple[str, str]]
     __cog_guild_ids__: List[int]
 
@@ -275,7 +276,7 @@ class Cog(metaclass=CogMeta):
 
     __cog_name__: ClassVar[str]
     __cog_settings__: ClassVar[Dict[str, Any]]
-    __cog_commands__: ClassVar[List[ApplicationCommand]]
+    __cog_commands__: ClassVar[List[Invokable]]
     __cog_listeners__: ClassVar[List[Tuple[str, str]]]
     __cog_guild_ids__: ClassVar[List[int]]
 
@@ -285,7 +286,7 @@ class Cog(metaclass=CogMeta):
         # To do this, we need to interfere with the Cog creation process.
         return super().__new__(cls)
 
-    def get_commands(self) -> List[ApplicationCommand]:
+    def get_commands(self) -> List[Invokable]:
         r"""
         Returns
         --------
@@ -313,12 +314,12 @@ class Cog(metaclass=CogMeta):
     def description(self, description: str) -> None:
         self.__cog_description__ = description
 
-    def walk_commands(self) -> Generator[ApplicationCommand, None, None]:
+    def walk_commands(self) -> Generator[Invokable, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        Union[:class:`.Invokable`]
             A command or group from the cog.
         """
         for command in self.__cog_commands__:
@@ -401,7 +402,7 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    def bot_check_once(self, ctx: ApplicationContext) -> bool:
+    def bot_check_once(self, ctx: BaseContext) -> bool:
         """A special method that registers as a :meth:`.Bot.check_once`
         check.
 
@@ -410,43 +411,45 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.BaseContext`
             The invocation context.
         """
         return True
 
     @_cog_special_method
-    def bot_check(self, ctx: ApplicationContext) -> bool:
+    def bot_check(self, ctx: BaseContext) -> bool:
         """A special method that registers as a :meth:`.Bot.check`
         check.
 
         This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
+        ``ctx``, to represent a subclass of :class:`BaseContext` (either :class:`.Context`
+        or :class:`.ApplicationContext`).
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.BaseContext`
             The invocation context.
         """
         return True
 
     @_cog_special_method
-    def cog_check(self, ctx: ApplicationContext) -> bool:
+    def cog_check(self, ctx: BaseContext) -> bool:
         """A special method that registers as a :func:`~discord.ext.commands.check`
         for every command and subcommand in this cog.
 
         This function **can** be a coroutine and must take a sole parameter,
-        ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
+        ``ctx``, to represent a subclass of :class:`BaseContext` (either :class:`.Context`
+        or :class:`.ApplicationContext`).
 
         Parameters
         -----------
-        ctx: :class:`.Context`
+        ctx: :class:`.BaseContext`
             The invocation context.
         """
         return True
 
     @_cog_special_method
-    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
+    async def cog_command_error(self, ctx: BaseContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -457,7 +460,7 @@ class Cog(metaclass=CogMeta):
 
         Parameters
         -----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context where the error happened.
         error: :class:`ApplicationCommandError`
             The error that happened.
@@ -465,31 +468,31 @@ class Cog(metaclass=CogMeta):
         pass
 
     @_cog_special_method
-    async def cog_before_invoke(self, ctx: ApplicationContext) -> None:
+    async def cog_before_invoke(self, ctx: BaseContext) -> None:
         """A special method that acts as a cog local pre-invoke hook.
 
-        This is similar to :meth:`.ApplicationCommand.before_invoke`.
+        This is similar to :meth:`.Invokable.before_invoke`.
 
         This **must** be a coroutine.
 
         Parameters
         -----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context.
         """
         pass
 
     @_cog_special_method
-    async def cog_after_invoke(self, ctx: ApplicationContext) -> None:
+    async def cog_after_invoke(self, ctx: BaseContext) -> None:
         """A special method that acts as a cog local post-invoke hook.
 
-        This is similar to :meth:`.ApplicationCommand.after_invoke`.
+        This is similar to :meth:`.BaseContext.after_invoke`.
 
         This **must** be a coroutine.
 
         Parameters
         -----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context.
         """
         pass
