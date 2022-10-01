@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interaction responses are now passed the respective `proxy` and `proxy_auth` params as defined in `Client`.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 
+### Changed
+- Rename `original_message` to `original_response` ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
+
 ## [2.1.3] - 2022-09-06
 ### Fixed
 - Fix TypeError in `process_application_commands`. ([#1622](https://github.com/Pycord-Development/pycord/pull/1622))
