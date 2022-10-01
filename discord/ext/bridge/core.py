@@ -25,10 +25,18 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING, Any, List, Union, Optional, Callable
+from typing import TYPE_CHECKING, Any, List, Union, Optional, Callable, Dict
 
 import discord.commands.options
-from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup, Permissions
+from discord import (
+    ApplicationCommand,
+    SlashCommand,
+    SlashCommandGroup,
+    Permissions,
+    SlashCommandOptionType,
+    Attachment,
+    Option,
+)
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
@@ -392,17 +400,20 @@ def guild_only():
 
     Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`.
     """
-    def predicate(callback: Callable):
-        callback.__guild_only__ = True
+    def predicate(func: Union[Callable, ApplicationCommand]):
+        if isinstance(func, ApplicationCommand):
+            func.guild_only = True
+        else:
+            func.__guild_only__ = True
 
         from ..commands import guild_only
 
-        return guild_only()(callback)
+        return guild_only()(func)
 
     return predicate
 
 
-def has_permissions(**perms: bool):
+def has_permissions(**perms: Dict[str, bool]):
     """Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
@@ -416,13 +427,17 @@ def has_permissions(**perms: bool):
         An argument list of permissions to check for.
     """
 
-    def predicate(command: Callable):
+    def predicate(func: Union[Callable, ApplicationCommand]):
         from ..commands import has_permissions
 
-        command = has_permissions(**perms)(command)
-        command.__default_member_permissions__ = Permissions(**perms)
+        func = has_permissions(**perms)(func)
+        perms = Permissions(**perms)
+        if isinstance(func, ApplicationCommand):
+            func.default_member_permissions = perms
+        else:
+            func.__default_member_permissions__ = perms
 
-        return command
+        return perms
 
     return predicate
 
