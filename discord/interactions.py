@@ -139,7 +139,7 @@ class Interaction:
         "_app_permissions",
         "_state",
         "_session",
-        "_original_message",
+        "_original_response",
         "_cs_app_permissions",
         "_cs_response",
         "_cs_followup",
@@ -149,7 +149,7 @@ class Interaction:
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
-        self._original_message: Optional[InteractionMessage] = None
+        self._original_response: Optional[InteractionMessage] = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -263,7 +263,7 @@ class Interaction:
         }
         return Webhook.from_state(data=payload, state=self._state)
 
-    async def original_message(self) -> InteractionMessage:
+    async def original_response(self) -> InteractionMessage:
         """|coro|
 
         Fetches the original interaction response message associated with the interaction.
@@ -287,8 +287,8 @@ class Interaction:
             The original interaction response message.
         """
 
-        if self._original_message is not None:
-            return self._original_message
+        if self._original_response is not None:
+            return self._original_response
 
         # TODO: fix later to not raise?
         channel = self.channel
@@ -306,10 +306,28 @@ class Interaction:
         )
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=channel, data=data)  # type: ignore
-        self._original_message = message
+        self._original_response = message
         return message
 
-    async def edit_original_message(
+    @utils.deprecated("Interaction.original_response", "2.1")
+    async def original_message(self):
+        """An alias for :meth:`original_response`.
+        
+        Raises
+        -------
+        HTTPException
+            Fetching the original response message failed.
+        ClientException
+            The channel for the message could not be resolved.
+
+        Returns
+        --------
+        InteractionMessage
+            The original interaction response message.
+        """
+        return self.original_response()
+
+    async def edit_original_response(
         self,
         *,
         content: Optional[str] = MISSING,
@@ -409,11 +427,33 @@ class Interaction:
             self._state.store_view(view, message.id)
 
         if delete_after is not None:
-            await self.delete_original_message(delay=delete_after)
+            await self.delete_original_response(delay=delete_after)
 
         return message
 
-    async def delete_original_message(self, *, delay: Optional[float] = None) -> None:
+    @utils.deprecated("Interaction.edit_original_response", "2.1")
+    async def edit_original_message(self, **kwargs):
+        """An alias for :meth:`edit_original_response`.
+        
+        Raises
+        -------
+        HTTPException
+            Editing the message failed.
+        Forbidden
+            Edited a message that is not yours.
+        TypeError
+            You specified both ``embed`` and ``embeds`` or ``file`` and ``files``
+        ValueError
+            The length of ``embeds`` was invalid.
+
+        Returns
+        --------
+        :class:`InteractionMessage`
+            The newly edited message.
+        """
+        return self.edit_original_response(**kwargs)
+
+    async def delete_original_response(self, *, delay: Optional[float] = None) -> None:
         """|coro|
 
         Deletes the original interaction response message.
@@ -448,6 +488,19 @@ class Interaction:
             utils.delay_task(delay, func)
         else:
             await func
+
+    @utils.deprecated("Interaction.delete_original_response", "2.1")
+    async def delete_original_message(self, **kwargs):
+        """An alias for :meth:`delete_original_response`.
+
+        Raises
+        -------
+        HTTPException
+            Deleting the message failed.
+        Forbidden
+            Deleted a message that is not yours.
+        """
+        return self.delete_original_response(**kwargs)
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -761,12 +814,12 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
-            view.message = await self._parent.original_message()
+            view.message = await self._parent.original_response()
             self._parent._state.store_view(view)
 
         self._responded = True
         if delete_after is not None:
-            await self._parent.delete_original_message(delay=delete_after)
+            await self._parent.delete_original_response(delay=delete_after)
         return self._parent
 
     async def edit_message(
@@ -894,7 +947,7 @@ class InteractionResponse:
 
         self._responded = True
         if delete_after is not None:
-            await self._parent.delete_original_message(delay=delete_after)
+            await self._parent.delete_original_response(delay=delete_after)
 
     async def send_autocomplete_result(
         self,
@@ -1032,7 +1085,7 @@ class InteractionMessage(Message):
     """Represents the original interaction response message.
 
     This allows you to edit or delete the message associated with
-    the interaction response. To retrieve this object see :meth:`Interaction.original_message`.
+    the interaction response. To retrieve this object see :meth:`Interaction.original_response`.
 
     This inherits from :class:`discord.Message` with changes to
     :meth:`edit` and :meth:`delete` to work.
@@ -1105,7 +1158,7 @@ class InteractionMessage(Message):
         """
         if attachments is MISSING:
             attachments = self.attachments or MISSING
-        return await self._state._interaction.edit_original_message(
+        return await self._state._interaction.edit_original_response(
             content=content,
             embeds=embeds,
             embed=embed,
@@ -1137,7 +1190,7 @@ class InteractionMessage(Message):
         HTTPException
             Deleting the message failed.
         """
-        await self._state._interaction.delete_original_message(delay=delay)
+        await self._state._interaction.delete_original_response(delay=delay)
 
 
 class MessageInteraction:

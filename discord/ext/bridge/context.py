@@ -22,8 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, overload, Optional, Union
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -31,6 +33,10 @@ from discord.message import Message
 from discord.webhook import WebhookMessage
 
 from ..commands import Context
+
+if TYPE_CHECKING:
+    from .core import BridgeSlashCommand, BridgeExtCommand
+
 
 __all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
 
@@ -71,6 +77,10 @@ class BridgeContext(ABC):
 
     @abstractmethod
     async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
+        ...
+
+    @overload
+    async def invoke(self, command: Union[BridgeSlashCommand, BridgeExtCommand], *args, **kwargs) -> None:
         ...
 
     async def respond(

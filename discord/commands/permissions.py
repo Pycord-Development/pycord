@@ -104,6 +104,7 @@ def guild_only() -> Callable:
             command.guild_only = True
         else:
             command.__guild_only__ = True
+
         return command
 
     return inner

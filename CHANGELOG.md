@@ -6,15 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more info).
 
 ## [Unreleased]
+
+## [2.2.0] - 2022-10-02
 ### Added
 - New Guild Feature `INVITES_DISABLED` ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
 - `suppress` kwarg to `Messageable.send()` ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 - `delete_message_seconds` parameter in ban methods. ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+- New `View.get_item()` method. ([#1659](https://github.com/Pycord-Development/pycord/pull/1659))
+- Permissions support for bridge commands. ([#1642](https://github.com/Pycord-Development/pycord/pull/1642))
+- New `BridgeCommand.invoke()` method. ([#1642](https://github.com/Pycord-Development/pycord/pull/1642))
+- New `raw_mentions`, `raw_role_mentions` and `raw_channel_mentions` functions in `discord.utils`.
+  ([#1658](https://github.com/Pycord-Development/pycord/pull/1658))
+- New methods `original_response`, `edit_original_response` & `delete_original_response` for `Interaction` objects.
+  ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
+
 
 ### Deprecated
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
+  ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+- The `original_message`, `edit_original_message` & `delete_original_message` methods for `Interaction` are now deprecated. Please use the respective `original_response`, `edit_original_response` & `delete_original_response` methods instead.
   ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
 
 ### Fixed
@@ -259,7 +271,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...HEAD
+[Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1

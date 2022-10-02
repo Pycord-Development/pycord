@@ -313,7 +313,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         Deletes the original interaction response message.
 
-        This is a higher level interface to :meth:`Interaction.delete_original_message`.
+        This is a higher level interface to :meth:`Interaction.delete_original_response`.
 
         Parameters
         -----------
@@ -330,12 +330,12 @@ class ApplicationContext(discord.abc.Messageable):
         if not self.interaction.response.is_done():
             await self.defer()
 
-        return await self.interaction.delete_original_message(delay=delay)
+        return await self.interaction.delete_original_response(delay=delay)
 
     @property
-    @discord.utils.copy_doc(Interaction.edit_original_message)
+    @discord.utils.copy_doc(Interaction.edit_original_response)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
-        return self.interaction.edit_original_message
+        return self.interaction.edit_original_response
 
     @property
     def cog(self) -> Optional[Cog]:
