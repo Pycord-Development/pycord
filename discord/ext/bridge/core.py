@@ -22,13 +22,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import inspect
-from typing import Any, List, Union, Optional
+from typing import TYPE_CHECKING, Any, List, Union, Optional, Callable, Dict
 
 import discord.commands.options
-from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from .context import BridgeApplicationContext
+from discord import (
+    ApplicationCommand,
+    SlashCommand,
+    SlashCommandGroup,
+    Permissions,
+    SlashCommandOptionType,
+    Attachment,
+    Option,
+)
 from ..commands.converter import _convert_to_bool, run_converters
 from ..commands import (
     Command,
@@ -43,6 +51,9 @@ from ..commands import (
 )
 from ...utils import get, filter_params, find
 
+if TYPE_CHECKING:
+    from .context import BridgeApplicationContext, BridgeExtContext
+
 
 __all__ = (
     "BridgeCommand",
@@ -54,6 +65,8 @@ __all__ = (
     "BridgeExtGroup",
     "BridgeSlashGroup",
     "map_to",
+    "guild_only",
+    "has_permissions",
 )
 
 
@@ -182,6 +195,11 @@ class BridgeCommand:
         """
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
+
+    async def invoke(self, ctx: Union[BridgeExtContext, BridgeApplicationContext], /, *args, **kwargs):
+        if ctx.is_app:
+            return await self.slash_variant.invoke(ctx)
+        return await self.ext_variant.invoke(ctx)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -329,7 +347,7 @@ def bridge_group(**kwargs):
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
+        Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`).
     """
     def decorator(callback):
         return BridgeCommandGroup(callback, **kwargs)
@@ -376,6 +394,54 @@ def map_to(name, description = None):
     return decorator
 
 
+def guild_only():
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord).
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`.
+    """
+    def predicate(func: Union[Callable, ApplicationCommand]):
+        if isinstance(func, ApplicationCommand):
+            func.guild_only = True
+        else:
+            func.__guild_only__ = True
+
+        from ..commands import guild_only
+
+        return guild_only()(func)
+
+    return predicate
+
+
+def has_permissions(**perms: Dict[str, bool]):
+    """Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
+    :func:`~ext.commands.check` that locks the command to be run by people with certain
+    permissions inside guilds, and also registers the command as locked behind said permissions.
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions`
+    and :func:`discord.commands.default_permissions`.
+
+    Parameters
+    ----------
+    \*\*perms: Dict[:class:`str`, :class:`bool`]
+        An argument list of permissions to check for.
+    """
+
+    def predicate(func: Union[Callable, ApplicationCommand]):
+        from ..commands import has_permissions
+
+        func = has_permissions(**perms)(func)
+        _perms = Permissions(**perms)
+        if isinstance(func, ApplicationCommand):
+            func.default_member_permissions = perms
+        else:
+            func.__default_member_permissions__ = perms
+
+        return perms
+
+    return predicate
+
+
 class MentionableConverter(Converter):
     """A converter that can convert a mention to a user or a role."""
 
@@ -384,6 +450,7 @@ class MentionableConverter(Converter):
             return await RoleConverter().convert(ctx, argument)
         except BadArgument:
             return await UserConverter().convert(ctx, argument)
+
 
 class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):
