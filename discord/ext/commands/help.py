@@ -377,7 +377,7 @@ class HelpCommand:
         """Retrieves the bot mapping passed to :meth:`send_bot_help`."""
         bot = self.context.bot
         mapping = {cog: cog.get_commands() for cog in bot.cogs.values()}
-        mapping[None] = [c for c in bot.commands if c.cog is None]
+        mapping[None] = [c for c in bot.commands if not c.cog]
         return mapping
 
     @property
