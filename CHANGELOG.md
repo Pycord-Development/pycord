@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 - `delete_message_seconds` parameter in ban methods. ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
-- New methods `Interaction.original_response`, `Interaction.edit_original_response` & `Interaction.delete_original_response` ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
+- New methods `original_response`, `edit_original_response` & `delete_original_response` for `Interaction` objects.
+  ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
 
 ### Deprecated
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
