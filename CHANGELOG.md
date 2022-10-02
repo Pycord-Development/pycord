@@ -12,9 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 - `delete_message_seconds` parameter in ban methods. ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+- New methods `Interaction.original_response`, `Interaction.edit_original_response` & `Interaction.delete_original_response` ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
 
 ### Deprecated
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
+  ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+- The `Interaction.original_message`, `Interaction.edit_original_message` & `Interaction.delete_original_message` methods are now deprecated. Please use `Interaction.original_response`, `Interaction.edit_original_response` & `Interaction.delete_original_response` respectively instead.
   ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
 
 ### Fixed
@@ -24,9 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed unnecessary instance check in autocomplete. ([#1643](https://github.com/Pycord-Development/pycord/pull/1643))
 - Interaction responses are now passed the respective `proxy` and `proxy_auth` params as defined in `Client`.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
-
-### Changed
-- Rename `original_message` to `original_response` ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
 
 ## [2.1.3] - 2022-09-06
 ### Fixed
