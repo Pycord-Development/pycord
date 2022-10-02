@@ -52,6 +52,7 @@ from ..components import Component
 from ..components import SelectMenu as SelectComponent
 from ..components import _component_factory
 from .item import Item, ItemCallbackType
+from ..utils import get
 
 __all__ = ("View",)
 
@@ -311,6 +312,21 @@ class View:
         """Removes all items from the view."""
         self.children.clear()
         self.__weights.clear()
+
+    def get_item(self, custom_id: str) -> Optional[Item]:
+        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+
+        Parameters
+        -----------
+        custom_id: :class:`str`
+            The custom_id of the item to get
+
+        Returns
+        --------
+        Optional[:class:`Item`]
+            The item with the matching ``custom_id`` if it exists.
+        """
+        return get(self.children, custom_id=custom_id)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
