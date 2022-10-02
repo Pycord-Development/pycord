@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more info).
 
 ## [Unreleased]
+
+## [2.2.0] - 2022-10-02
 ### Added
 - New Guild Feature `INVITES_DISABLED` ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
 - `suppress` kwarg to `Messageable.send()` ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
@@ -269,7 +271,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...HEAD
+[Unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1
