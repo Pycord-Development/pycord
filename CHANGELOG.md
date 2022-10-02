@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
 - `delete_message_seconds` parameter in ban methods. ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+- New `View.get_item()` method. ([#1659](https://github.com/Pycord-Development/pycord/pull/1659))
 - New `raw_mentions`, `raw_role_mentions` and `raw_channel_mentions` functions in `discord.utils`.
   ([#1658](https://github.com/Pycord-Development/pycord/pull/1658))
 
