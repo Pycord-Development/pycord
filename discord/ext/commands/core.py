@@ -2096,7 +2096,7 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
 
     Parameters
     ------------
-    perms
+    \*\*perms: Dict[:class:`str`, :class:`bool`]
         An argument list of permissions to check for.
 
     Example

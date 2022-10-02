@@ -88,6 +88,9 @@ __all__ = (
     "remove_markdown",
     "escape_markdown",
     "escape_mentions",
+    "raw_mentions",
+    "raw_channel_mentions",
+    "raw_role_mentions",
     "as_chunks",
     "format_dt",
     "basic_autocomplete",
@@ -931,6 +934,50 @@ def escape_mentions(text: str) -> str:
     """
     return re.sub(r"@(everyone|here|[!&]?[0-9]{17,20})", "@\u200b\\1", text)
 
+def raw_mentions(text: str) -> List[int]:
+    """Returns a list of user IDs matching ``<@user_id>`` in the string.
+
+    Parameters
+    -----------
+    text: :class:`str`
+        The string to get user mentions from.
+
+    Returns
+    --------
+    List[:class:`int`]
+        A list of user IDs found in the string.
+    """
+    return [int(x) for x in re.findall(r"<@!?([0-9]+)>", text)]
+
+def raw_channel_mentions(text: str) -> List[int]:
+    """Returns a list of channel IDs matching ``<@#channel_id>`` in the string.
+
+    Parameters
+    -----------
+    text: :class:`str`
+        The string to get channel mentions from.
+
+    Returns
+    --------
+    List[:class:`int`]
+        A list of channel IDs found in the string.
+    """
+    return [int(x) for x in re.findall(r"<#([0-9]+)>", text)]
+
+def raw_role_mentions(text: str) -> List[int]:
+    """Returns a list of role IDs matching ``<@&role_id>`` in the string.
+
+    Parameters
+    -----------
+    text: :class:`str`
+        The string to get role mentions from.
+
+    Returns
+    --------
+    List[:class:`int`]
+        A list of role IDs found in the string.
+    """
+    return [int(x) for x in re.findall(r"<@&([0-9]+)>", text)]
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[List[T]]:
     ret = []
