@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `View.get_item()` method. ([#1659](https://github.com/Pycord-Development/pycord/pull/1659))
 - Permissions support for bridge commands. ([#1642](https://github.com/Pycord-Development/pycord/pull/1642))
 - New `BridgeCommand.invoke()` method. ([#1642](https://github.com/Pycord-Development/pycord/pull/1642))
+- New `raw_mentions`, `raw_role_mentions` and `raw_channel_mentions` functions in `discord.utils`.
+  ([#1658](https://github.com/Pycord-Development/pycord/pull/1658))
 
 ### Deprecated
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
