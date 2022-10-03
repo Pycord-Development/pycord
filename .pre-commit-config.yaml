@@ -81,4 +81,10 @@ repos:
     rev: 93b15ca # TODO: Change this when v8.0 is released
     hooks:
       - id: pydocstringformatter
-        args: [--style=numpydoc, --no-numpydoc-name-type-spacing, --no-final-period]
+        args:
+          [
+            --style=numpydoc,
+            --no-numpydoc-name-type-spacing,
+            --no-final-period,
+            --no-capitalize-first-letter,
+          ]
