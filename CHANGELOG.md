@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `raw_mentions`, `raw_role_mentions` and `raw_channel_mentions` functions in `discord.utils`.
   ([#1658](https://github.com/Pycord-Development/pycord/pull/1658))
 - New methods `original_response`, `edit_original_response` & `delete_original_response` for `Interaction` objects.
-  ([#1609](https://github.com/Pycord-Development/pycord/pull/1609)
+  ([#1609](https://github.com/Pycord-Development/pycord/pull/1609))
 
 
 ### Deprecated
