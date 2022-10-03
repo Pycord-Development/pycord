@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead.
   ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
 - The `original_message`, `edit_original_message` & `delete_original_message` methods for `Interaction` are now deprecated. Please use the respective `original_response`, `edit_original_response` & `delete_original_response` methods instead.
-  ([#1557](https://github.com/Pycord-Development/pycord/pull/1557))
+  ([#1609](https://github.com/Pycord-Development/pycord/pull/1609))
 
 ### Fixed
 - Various fixes to ext.bridge groups ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
