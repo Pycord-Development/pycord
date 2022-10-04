@@ -1,5 +1,5 @@
 name: mypy
-on: [ pull_request, push ]
+on: [pull_request, push]
 jobs:
   mypy:
     #    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-ci')
@@ -9,4 +9,4 @@ jobs:
       - uses: actions/setup-python@v2
       - run: pip install -r requirements-dev.txt
       - run: mkdir --parents --verbose .mypy_cache
-      - run: mypy --non-interactive .
+      - run: mypy --non-interactive discord/
