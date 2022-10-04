@@ -12,3 +12,24 @@ show_error_codes = true
 #allow_untyped_decorators = true
 #allow_untyped_calls = true
 ignore_errors = true
+
+[tool.pylint.main]
+extension-pkg-whitelist = [
+    "pydantic",
+    "ujson"
+]
+py-version = 3.8
+
+[tool.pylint.messages_control]
+enable = [
+    "bad-indentation",
+    "line-too-long"
+]
+disable = [
+    "protected-access",
+    "fixme"
+]
+
+[tool.pylint.format]
+indent-string = '    '
+max-line-length = 120
