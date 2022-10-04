@@ -3,3 +3,12 @@ target-version = ['py38', 'py39', 'py310', 'py311']
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+namespace_packages = true
+install_types = true
+strict = true
+show_error_codes = true
+#allow_untyped_decorators = true
+#allow_untyped_calls = true
+ignore_errors = true
