@@ -23,35 +23,34 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 # mypy: implicit-reexport=True
-import datetime
-import random
-from inspect import signature
-from typing import TypeVar, Tuple, Any
+from typing import TypeVar
 
 import pytest
 
 from discord.utils import (
-    copy_doc,
-    time_snowflake,
-    snowflake_time,
-    utcnow,
     MISSING,
     _cached_property,
+    _parse_ratelimit_header,
+    _unique,
+    async_all,
+    copy_doc,
     find,
     get,
-    _unique,
-    _parse_ratelimit_header,
     maybe_coroutine,
-    async_all,
+    snowflake_time,
+    time_snowflake,
+    utcnow,
 )
+
 from .helpers import coroutine
 
-A = TypeVar('A')
-B = TypeVar('B')
+A = TypeVar("A")
+B = TypeVar("B")
 
 
 def test_temporary():
     assert True
+
 
 # def test_copy_doc() -> None:
 #     def foo(a: A, b: B) -> Tuple[A, B]:

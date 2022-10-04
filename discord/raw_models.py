@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, List, Optional, Set
+from typing import TYPE_CHECKING
 
 from .automod import AutoModAction
 from .enums import ChannelType, try_enum
@@ -39,8 +39,8 @@ if TYPE_CHECKING:
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
     from .threads import Thread
+    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
-        AutoModActionExecutionEvent as AutoModActionExecution,
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MessageDeleteEvent,
@@ -79,7 +79,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
     """Represents the event payload for a :func:`on_raw_message_delete` event.
 
     Attributes
-    ------------
+    ----------
     channel_id: :class:`int`
         The channel ID where the deletion took place.
     guild_id: Optional[:class:`int`]
@@ -95,18 +95,18 @@ class RawMessageDeleteEvent(_RawReprMixin):
     def __init__(self, data: MessageDeleteEvent) -> None:
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
-        self.cached_message: Optional[Message] = None
+        self.cached_message: Message | None = None
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawBulkMessageDeleteEvent(_RawReprMixin):
     """Represents the event payload for a :func:`on_raw_bulk_message_delete` event.
 
     Attributes
-    -----------
+    ----------
     message_ids: Set[:class:`int`]
         A :class:`set` of the message IDs that were deleted.
     channel_id: :class:`int`
@@ -120,21 +120,21 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
     __slots__ = ("message_ids", "channel_id", "guild_id", "cached_messages")
 
     def __init__(self, data: BulkMessageDeleteEvent) -> None:
-        self.message_ids: Set[int] = {int(x) for x in data.get("ids", [])}
+        self.message_ids: set[int] = {int(x) for x in data.get("ids", [])}
         self.channel_id: int = int(data["channel_id"])
-        self.cached_messages: List[Message] = []
+        self.cached_messages: list[Message] = []
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawMessageUpdateEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_message_edit` event.
 
     Attributes
-    -----------
+    ----------
     message_id: :class:`int`
         The message ID that got updated.
     channel_id: :class:`int`
@@ -159,12 +159,12 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
-        self.cached_message: Optional[Message] = None
+        self.cached_message: Message | None = None
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -172,7 +172,7 @@ class RawReactionActionEvent(_RawReprMixin):
     :func:`on_raw_reaction_remove` event.
 
     Attributes
-    -----------
+    ----------
     message_id: :class:`int`
         The message ID that got or lost a reaction.
     user_id: :class:`int`
@@ -207,25 +207,27 @@ class RawReactionActionEvent(_RawReprMixin):
         "member",
     )
 
-    def __init__(self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str) -> None:
+    def __init__(
+        self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str
+    ) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
         self.emoji: PartialEmoji = emoji
         self.event_type: str = event_type
-        self.member: Optional[Member] = None
+        self.member: Member | None = None
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionClearEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_reaction_clear` event.
 
     Attributes
-    -----------
+    ----------
     message_id: :class:`int`
         The message ID that got its reactions cleared.
     channel_id: :class:`int`
@@ -241,9 +243,9 @@ class RawReactionClearEvent(_RawReprMixin):
         self.channel_id: int = int(data["channel_id"])
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawReactionClearEmojiEvent(_RawReprMixin):
@@ -252,7 +254,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
     .. versionadded:: 1.3
 
     Attributes
-    -----------
+    ----------
     message_id: :class:`int`
         The message ID that got its reactions cleared.
     channel_id: :class:`int`
@@ -271,9 +273,9 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.channel_id: int = int(data["channel_id"])
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawIntegrationDeleteEvent(_RawReprMixin):
@@ -282,7 +284,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     integration_id: :class:`int`
         The ID of the integration that got deleted.
     application_id: Optional[:class:`int`]
@@ -298,9 +300,9 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
         self.guild_id: int = int(data["guild_id"])
 
         try:
-            self.application_id: Optional[int] = int(data["application_id"])
+            self.application_id: int | None = int(data["application_id"])
         except KeyError:
-            self.application_id: Optional[int] = None
+            self.application_id: int | None = None
 
 
 class RawThreadDeleteEvent(_RawReprMixin):
@@ -330,7 +332,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
         self.thread_type: ChannelType = try_enum(ChannelType, int(data["type"]))
         self.guild_id: int = int(data["guild_id"])
         self.parent_id: int = int(data["parent_id"])
-        self.thread: Optional[Thread] = None
+        self.thread: Thread | None = None
 
 
 class RawTypingEvent(_RawReprMixin):
@@ -339,7 +341,7 @@ class RawTypingEvent(_RawReprMixin):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     channel_id: :class:`int`
         The channel ID where the typing originated from.
     user_id: :class:`int`
@@ -357,13 +359,15 @@ class RawTypingEvent(_RawReprMixin):
     def __init__(self, data: TypingEvent) -> None:
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
-        self.when: datetime.datetime = datetime.datetime.fromtimestamp(data.get("timestamp"), tz=datetime.timezone.utc)
-        self.member: Optional[Member] = None
+        self.when: datetime.datetime = datetime.datetime.fromtimestamp(
+            data.get("timestamp"), tz=datetime.timezone.utc
+        )
+        self.member: Member | None = None
 
         try:
-            self.guild_id: Optional[int] = int(data["guild_id"])
+            self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
-            self.guild_id: Optional[int] = None
+            self.guild_id: int | None = None
 
 
 class RawScheduledEventSubscription(_RawReprMixin):
@@ -373,7 +377,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     event_id: :class:`int`
         The event ID where the typing originated from.
     user_id: :class:`int`
@@ -390,17 +394,17 @@ class RawScheduledEventSubscription(_RawReprMixin):
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
         self.event_id: int = int(data["guild_scheduled_event_id"])
         self.user_id: int = int(data["user_id"])
-        self.guild: Optional[Guild] = None
+        self.guild: Guild | None = None
         self.event_type: str = event_type
 
 
 class AutoModActionExecutionEvent:
     """Represents the payload for an :func:`on_auto_moderation_action_execution`
-    
+
     .. versionadded:: 2.0
-    
+
     Attributes
-    -----------
+    ----------
     action: :class:`AutoModAction`
         The action that was executed.
     rule_id: :class:`int`
@@ -418,13 +422,13 @@ class AutoModActionExecutionEvent:
     channel: Optional[Union[:class:`TextChannel`, :class:`Thread`, :class:`VoiceChannel`]]
         The channel in which the member's content was posted, if cached.
     message_id: Optional[:class:`int`]
-        The ID of the message that triggered the action. This is only available if the 
+        The ID of the message that triggered the action. This is only available if the
         message was not blocked.
     message: Optional[:class:`Message`]
         The message that triggered the action, if cached.
     alert_system_message_id: Optional[:class:`int`]
         The ID of the system auto moderation message that was posted as a result
-        of the action. 
+        of the action.
     alert_system_message: Optional[:class:`Message`]
         The system auto moderation message that was posted as a result of the action,
         if cached.
@@ -458,40 +462,46 @@ class AutoModActionExecutionEvent:
         self.action: AutoModAction = AutoModAction.from_dict(data["action"])
         self.rule_id: int = int(data["rule_id"])
         self.guild_id: int = int(data["guild_id"])
-        self.guild: Optional[Guild] = state._get_guild(self.guild_id)
+        self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
-        self.content: Optional[str] = data.get("content", None)
+        self.content: str | None = data.get("content", None)
         self.matched_keyword: str = data["matched_keyword"]
-        self.matched_content: Optional[str] = data.get("matched_content", None)
-        
+        self.matched_content: str | None = data.get("matched_content", None)
+
         if self.guild:
-            self.member: Optional[Member] = self.guild.get_member(self.user_id)
+            self.member: Member | None = self.guild.get_member(self.user_id)
         else:
-            self.member: Optional[Member] = None
-        
+            self.member: Member | None = None
+
         try:
             # I don't see why this would be optional, but it's documented
             # as such, so we should treat it that way
-            self.channel_id: Optional[int] = int(data["channel_id"])
-            self.channel: Optional[MessageableChannel] = self.guild.get_channel_or_thread(self.channel_id)
+            self.channel_id: int | None = int(data["channel_id"])
+            self.channel: MessageableChannel | None = self.guild.get_channel_or_thread(
+                self.channel_id
+            )
         except KeyError:
-            self.channel_id: Optional[int] = None
-            self.channel: Optional[MessageableChannel] = None
-            
+            self.channel_id: int | None = None
+            self.channel: MessageableChannel | None = None
+
         try:
-            self.message_id: Optional[int] = int(data["message_id"])
-            self.message: Optional[Message] = state._get_message(self.message_id)
+            self.message_id: int | None = int(data["message_id"])
+            self.message: Message | None = state._get_message(self.message_id)
         except KeyError:
-            self.message_id: Optional[int] = None
-            self.message: Optional[Message] = None
-            
+            self.message_id: int | None = None
+            self.message: Message | None = None
+
         try:
-            self.alert_system_message_id: Optional[int] = int(data["alert_system_message_id"])
-            self.alert_system_message: Optional[Message] = state._get_message(self.alert_system_message_id)
+            self.alert_system_message_id: int | None = int(
+                data["alert_system_message_id"]
+            )
+            self.alert_system_message: Message | None = state._get_message(
+                self.alert_system_message_id
+            )
         except KeyError:
-            self.alert_system_message_id: Optional[int] = None
-            self.alert_system_message: Optional[Message] = None
-            
+            self.alert_system_message_id: int | None = None
+            self.alert_system_message: Message | None = None
+
     def __repr__(self) -> str:
         return (
             f"<AutoModActionExecutionEvent action={self.action!r} "

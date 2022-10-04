@@ -27,17 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
 import aiohttp
 
@@ -80,10 +70,12 @@ class EventType:
 class EventItem:
     __slots__ = ("type", "shard", "error")
 
-    def __init__(self, etype: int, shard: Optional["Shard"], error: Optional[Exception]) -> None:
+    def __init__(
+        self, etype: int, shard: Shard | None, error: Exception | None
+    ) -> None:
         self.type: int = etype
-        self.shard: Optional["Shard"] = shard
-        self.error: Optional[Exception] = error
+        self.shard: Shard | None = shard
+        self.error: Exception | None = error
 
     def __lt__(self: EI, other: EI) -> bool:
         if not isinstance(other, EventItem):
@@ -114,8 +106,8 @@ class Shard:
         self._disconnect: bool = False
         self._reconnect = client._reconnect
         self._backoff: ExponentialBackoff = ExponentialBackoff()
-        self._task: Optional[asyncio.Task] = None
-        self._handled_exceptions: Tuple[Type[Exception], ...] = (
+        self._task: asyncio.Task | None = None
+        self._handled_exceptions: tuple[type[Exception], ...] = (
             OSError,
             HTTPException,
             GatewayNotFound,
@@ -162,7 +154,11 @@ class Shard:
 
         if isinstance(e, ConnectionClosed):
             if e.code == 4014:
-                self._queue_put(EventItem(EventType.terminate, self, PrivilegedIntentsRequired(self.id)))
+                self._queue_put(
+                    EventItem(
+                        EventType.terminate, self, PrivilegedIntentsRequired(self.id)
+                    )
+                )
                 return
             if e.code != 1000:
                 self._queue_put(EventItem(EventType.close, self, e))
@@ -246,7 +242,7 @@ class ShardInfo:
     .. versionadded:: 1.4
 
     Attributes
-    ------------
+    ----------
     id: :class:`int`
         The shard ID for this shard.
     shard_count: Optional[:class:`int`]
@@ -255,10 +251,10 @@ class ShardInfo:
 
     __slots__ = ("_parent", "id", "shard_count")
 
-    def __init__(self, parent: Shard, shard_count: Optional[int]) -> None:
+    def __init__(self, parent: Shard, shard_count: int | None) -> None:
         self._parent: Shard = parent
         self.id: int = parent.id
-        self.shard_count: Optional[int] = shard_count
+        self.shard_count: int | None = shard_count
 
     def is_closed(self) -> bool:
         """:class:`bool`: Whether the shard connection is currently closed."""
@@ -334,7 +330,7 @@ class AutoShardedClient(Client):
     0 to ``shard_count - 1``.
 
     Attributes
-    ------------
+    ----------
     shard_ids: Optional[List[:class:`int`]]
         An optional list of shard_ids to launch the shards with.
     """
@@ -345,16 +341,18 @@ class AutoShardedClient(Client):
     def __init__(
         self,
         *args: Any,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: asyncio.AbstractEventLoop | None = None,
         **kwargs: Any,
     ) -> None:
         kwargs.pop("shard_id", None)
-        self.shard_ids: Optional[List[int]] = kwargs.pop("shard_ids", None)
+        self.shard_ids: list[int] | None = kwargs.pop("shard_ids", None)
         super().__init__(*args, loop=loop, **kwargs)
 
         if self.shard_ids is not None:
             if self.shard_count is None:
-                raise ClientException("When passing manual shard_ids, you must provide a shard_count.")
+                raise ClientException(
+                    "When passing manual shard_ids, you must provide a shard_count."
+                )
             elif not isinstance(self.shard_ids, (list, tuple)):
                 raise ClientException("shard_ids parameter must be a list or a tuple.")
 
@@ -365,7 +363,9 @@ class AutoShardedClient(Client):
         self._connection._get_client = lambda: self
         self.__queue = asyncio.PriorityQueue()
 
-    def _get_websocket(self, guild_id: Optional[int] = None, *, shard_id: Optional[int] = None) -> DiscordWebSocket:
+    def _get_websocket(
+        self, guild_id: int | None = None, *, shard_id: int | None = None
+    ) -> DiscordWebSocket:
         if shard_id is None:
             # guild_id won't be None if shard_id is None and shard_count won't be None here
             shard_id = (guild_id >> 22) % self.shard_count  # type: ignore
@@ -394,15 +394,17 @@ class AutoShardedClient(Client):
         return sum(latency for _, latency in self.latencies) / len(self.__shards)
 
     @property
-    def latencies(self) -> List[Tuple[int, float]]:
+    def latencies(self) -> list[tuple[int, float]]:
         """List[Tuple[:class:`int`, :class:`float`]]: A list of latencies between a
         HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
         """
-        return [(shard_id, shard.ws.latency) for shard_id, shard in self.__shards.items()]
+        return [
+            (shard_id, shard.ws.latency) for shard_id, shard in self.__shards.items()
+        ]
 
-    def get_shard(self, shard_id: int) -> Optional[ShardInfo]:
+    def get_shard(self, shard_id: int) -> ShardInfo | None:
         """Optional[:class:`ShardInfo`]: Gets the shard information at a given shard ID or ``None`` if not found."""
         try:
             parent = self.__shards[shard_id]
@@ -412,13 +414,20 @@ class AutoShardedClient(Client):
             return ShardInfo(parent, self.shard_count)
 
     @property
-    def shards(self) -> Dict[int, ShardInfo]:
+    def shards(self) -> dict[int, ShardInfo]:
         """Mapping[:class:`int`, :class:`ShardInfo`]: Returns a mapping of shard IDs to their respective info object."""
-        return {shard_id: ShardInfo(parent, self.shard_count) for shard_id, parent in self.__shards.items()}
+        return {
+            shard_id: ShardInfo(parent, self.shard_count)
+            for shard_id, parent in self.__shards.items()
+        }
 
-    async def launch_shard(self, gateway: str, shard_id: int, *, initial: bool = False) -> None:
+    async def launch_shard(
+        self, gateway: str, shard_id: int, *, initial: bool = False
+    ) -> None:
         try:
-            coro = DiscordWebSocket.from_client(self, initial=initial, gateway=gateway, shard_id=shard_id)
+            coro = DiscordWebSocket.from_client(
+                self, initial=initial, gateway=gateway, shard_id=shard_id
+            )
             ws = await asyncio.wait_for(coro, timeout=180.0)
         except Exception:
             _log.exception("Failed to connect for shard_id: %s. Retrying...", shard_id)
@@ -483,7 +492,10 @@ class AutoShardedClient(Client):
             except Exception:
                 pass
 
-        to_close = [asyncio.ensure_future(shard.close(), loop=self.loop) for shard in self.__shards.values()]
+        to_close = [
+            asyncio.ensure_future(shard.close(), loop=self.loop)
+            for shard in self.__shards.values()
+        ]
         if to_close:
             await asyncio.wait(to_close)
 
@@ -493,8 +505,8 @@ class AutoShardedClient(Client):
     async def change_presence(
         self,
         *,
-        activity: Optional[BaseActivity] = None,
-        status: Optional[Status] = None,
+        activity: BaseActivity | None = None,
+        status: Status | None = None,
         shard_id: int = None,
     ) -> None:
         """|coro|

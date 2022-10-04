@@ -1,8 +1,11 @@
+[MASTER]
+extension-pkg-whitelist=pydantic,ujson
+py-version=3.8
+
 [MESSAGES CONTROL]
 
-disable=protected-access,fixme
-
 enable=bad-indentation,line-too-long
+disable=protected-access,fixme
 
 
 [FORMAT]

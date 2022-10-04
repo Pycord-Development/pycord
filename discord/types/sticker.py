@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, TypedDict, Union
+from typing import Literal, TypedDict, Union
 
 from .snowflake import Snowflake
 from .user import User
@@ -68,7 +68,7 @@ Sticker = Union[BaseSticker, StandardSticker, GuildSticker]
 
 class StickerPack(TypedDict):
     id: Snowflake
-    stickers: List[StandardSticker]
+    stickers: list[StandardSticker]
     name: str
     sku_id: Snowflake
     cover_sticker_id: Snowflake
@@ -92,4 +92,4 @@ class EditGuildSticker(TypedDict, total=False):
 
 
 class ListPremiumStickerPacks(TypedDict):
-    sticker_packs: List[StickerPack]
+    sticker_packs: list[StickerPack]

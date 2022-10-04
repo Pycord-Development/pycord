@@ -8,7 +8,9 @@ class Example(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command(guild_ids=[...])  # Create a slash command for the supplied guilds.
+    @commands.slash_command(
+        guild_ids=[...]
+    )  # Create a slash command for the supplied guilds.
     async def hello(self, ctx: discord.ApplicationContext):
         await ctx.respond("Hi, this is a slash command from a cog!")
 
