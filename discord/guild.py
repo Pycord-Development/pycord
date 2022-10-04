@@ -2933,8 +2933,8 @@ class Guild(Hashable):
         self,
         user: Snowflake,
         *,
-        delete_message_seconds: Optional[int] = None,
-        delete_message_days: Optional[Literal[0, 1, 2, 3, 4, 5, 6, 7]] = None,
+        delete_message_seconds: Optional[int] = 0,
+        delete_message_days: Optional[Literal[0, 1, 2, 3, 4, 5, 6, 7]] = 0,
         reason: Optional[str] = None,
     ) -> None:
         """|coro|
