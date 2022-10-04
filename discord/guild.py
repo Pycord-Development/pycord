@@ -3034,7 +3034,7 @@ class Guild(Hashable):
         *,
         delete_message_seconds: int | None = 0,
         delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = 0,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> None:
         """|coro|
 

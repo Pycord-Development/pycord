@@ -672,7 +672,11 @@ class Member(discord.abc.Messageable, _UserTag):
         Bans this member. Equivalent to :meth:`Guild.ban`.
         """
         await self.guild.ban(
-            self, reason=reason, delete_message_seconds=delete_message_seconds, delete_message_days=delete_message_days)
+            self,
+            reason=reason,
+            delete_message_seconds=delete_message_seconds,
+            delete_message_days=delete_message_days,
+        )
 
     async def unban(self, *, reason: str | None = None) -> None:
         """|coro|
