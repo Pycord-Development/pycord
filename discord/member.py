@@ -655,14 +655,15 @@ class Member(discord.abc.Messageable, _UserTag):
     async def ban(
         self,
         *,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] = 1,
+        delete_message_seconds: Optional[int] = 0,
+        delete_message_days: Optional[Literal[0, 1, 2, 3, 4, 5, 6, 7]] = 0,
         reason: Optional[str] = None,
     ) -> None:
         """|coro|
 
         Bans this member. Equivalent to :meth:`Guild.ban`.
         """
-        await self.guild.ban(self, reason=reason, delete_message_days=delete_message_days)
+        await self.guild.ban(self, reason=reason, delete_message_seconds=delete_message_seconds, delete_message_days=delete_message_days)
 
     async def unban(self, *, reason: Optional[str] = None) -> None:
         """|coro|
