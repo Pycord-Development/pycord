@@ -5,3 +5,4 @@ pytest-asyncio~=0.19.0
 # pytest-order~=1.0.1
 mypy~=0.982
 coverage~=6.5
+pre-commit==2.20.0

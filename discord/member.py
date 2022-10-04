@@ -30,18 +30,7 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    List,
-    Literal,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, Union
 
 import discord.abc
 
@@ -82,7 +71,7 @@ class VoiceState:
     """Represents a Discord user's voice state.
 
     Attributes
-    ------------
+    ----------
     deaf: :class:`bool`
         Indicates if the user is currently deafened by the guild.
     mute: :class:`bool`
@@ -135,11 +124,13 @@ class VoiceState:
         "suppress",
     )
 
-    def __init__(self, *, data: VoiceStatePayload, channel: Optional[VocalGuildChannel] = None):
+    def __init__(
+        self, *, data: VoiceStatePayload, channel: VocalGuildChannel | None = None
+    ):
         self.session_id: str = data.get("session_id")
         self._update(data, channel)
 
-    def _update(self, data: VoiceStatePayload, channel: Optional[VocalGuildChannel]):
+    def _update(self, data: VoiceStatePayload, channel: VocalGuildChannel | None):
         self.self_mute: bool = data.get("self_mute", False)
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
@@ -148,10 +139,10 @@ class VoiceState:
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
-        self.requested_to_speak_at: Optional[datetime.datetime] = utils.parse_time(
+        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(
             data.get("request_to_speak_timestamp")
         )
-        self.channel: Optional[VocalGuildChannel] = channel
+        self.channel: VocalGuildChannel | None = channel
 
     def __repr__(self) -> str:
         attrs = [
@@ -167,7 +158,9 @@ class VoiceState:
 
 
 def flatten_user(cls):
-    for attr, value in itertools.chain(BaseUser.__dict__.items(), User.__dict__.items()):
+    for attr, value in itertools.chain(
+        BaseUser.__dict__.items(), User.__dict__.items()
+    ):
         # ignore private/special methods
         if attr.startswith("_"):
             continue
@@ -180,7 +173,9 @@ def flatten_user(cls):
         # slotted members are implemented as member_descriptors in Type.__dict__
         if not hasattr(value, "__annotations__"):
             getter = attrgetter(f"_user.{attr}")
-            setattr(cls, attr, property(getter, doc=f"Equivalent to :attr:`User.{attr}`"))
+            setattr(
+                cls, attr, property(getter, doc=f"Equivalent to :attr:`User.{attr}`")
+            )
         else:
             # Technically, this can also use attrgetter
             # However I'm not sure how I feel about "functions" returning properties
@@ -291,29 +286,35 @@ class Member(discord.abc.Messageable, _UserTag):
         system: bool
         created_at: datetime.datetime
         default_avatar: Asset
-        avatar: Optional[Asset]
-        dm_channel: Optional[DMChannel]
+        avatar: Asset | None
+        dm_channel: DMChannel | None
         create_dm = User.create_dm
-        mutual_guilds: List[Guild]
+        mutual_guilds: list[Guild]
         public_flags: PublicUserFlags
-        banner: Optional[Asset]
-        accent_color: Optional[Colour]
-        accent_colour: Optional[Colour]
-        communication_disabled_until: Optional[datetime.datetime]
+        banner: Asset | None
+        accent_color: Colour | None
+        accent_colour: Colour | None
+        communication_disabled_until: datetime.datetime | None
 
-    def __init__(self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState):
+    def __init__(
+        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
+    ):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild
-        self.joined_at: Optional[datetime.datetime] = utils.parse_time(data.get("joined_at"))
-        self.premium_since: Optional[datetime.datetime] = utils.parse_time(data.get("premium_since"))
+        self.joined_at: datetime.datetime | None = utils.parse_time(
+            data.get("joined_at")
+        )
+        self.premium_since: datetime.datetime | None = utils.parse_time(
+            data.get("premium_since")
+        )
         self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
-        self._client_status: Dict[Optional[str], str] = {None: "offline"}
-        self.activities: Tuple[ActivityTypes, ...] = tuple()
-        self.nick: Optional[str] = data.get("nick", None)
+        self._client_status: dict[str | None, str] = {None: "offline"}
+        self.activities: tuple[ActivityTypes, ...] = tuple()
+        self.nick: str | None = data.get("nick", None)
         self.pending: bool = data.get("pending", False)
-        self._avatar: Optional[str] = data.get("avatar")
-        self.communication_disabled_until: Optional[datetime.datetime] = utils.parse_time(
+        self._avatar: str | None = data.get("avatar")
+        self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
             data.get("communication_disabled_until")
         )
 
@@ -336,7 +337,7 @@ class Member(discord.abc.Messageable, _UserTag):
         return hash(self._user)
 
     @classmethod
-    def _from_message(cls: Type[M], *, message: Message, data: MemberPayload) -> M:
+    def _from_message(cls: type[M], *, message: Message, data: MemberPayload) -> M:
         author = message.author
         data["user"] = author._to_minimal_user_json()  # type: ignore
         return cls(data=data, guild=message.guild, state=message._state)  # type: ignore
@@ -350,12 +351,12 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @classmethod
     def _try_upgrade(
-        cls: Type[M],
+        cls: type[M],
         *,
         data: UserWithMemberPayload,
         guild: Guild,
         state: ConnectionState,
-    ) -> Union[User, M]:
+    ) -> User | M:
         # A User object with a 'member' key
         try:
             member_data = data.pop("member")
@@ -366,7 +367,7 @@ class Member(discord.abc.Messageable, _UserTag):
             return cls(data=member_data, guild=guild, state=state)  # type: ignore
 
     @classmethod
-    def _copy(cls: Type[M], member: M) -> M:
+    def _copy(cls: type[M], member: M) -> M:
         self: M = cls.__new__(cls)  # to bypass __init__
 
         self._roles = utils.SnowflakeList(member._roles, is_sorted=True)
@@ -406,9 +407,13 @@ class Member(discord.abc.Messageable, _UserTag):
         self.premium_since = utils.parse_time(data.get("premium_since"))
         self._roles = utils.SnowflakeList(map(int, data["roles"]))
         self._avatar = data.get("avatar")
-        self.communication_disabled_until = utils.parse_time(data.get("communication_disabled_until"))
+        self.communication_disabled_until = utils.parse_time(
+            data.get("communication_disabled_until")
+        )
 
-    def _presence_update(self, data: PartialPresenceUpdate, user: UserPayload) -> Optional[Tuple[User, User]]:
+    def _presence_update(
+        self, data: PartialPresenceUpdate, user: UserPayload
+    ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {
             sys.intern(key): sys.intern(value) for key, value in data.get("client_status", {}).items()  # type: ignore
@@ -419,7 +424,7 @@ class Member(discord.abc.Messageable, _UserTag):
             return self._update_inner_user(user)
         return None
 
-    def _update_inner_user(self, user: UserPayload) -> Optional[Tuple[User, User]]:
+    def _update_inner_user(self, user: UserPayload) -> tuple[User, User] | None:
         u = self._user
         original = (u.name, u._avatar, u.discriminator, u._public_flags)
         # These keys seem to always be available
@@ -504,7 +509,7 @@ class Member(discord.abc.Messageable, _UserTag):
         return self.colour
 
     @property
-    def roles(self) -> List[Role]:
+    def roles(self) -> list[Role]:
         """List[:class:`Role`]: A :class:`list` of :class:`Role` that the member belongs to. Note
         that the first element of this list is always the default '@everyone'
         role.
@@ -549,7 +554,7 @@ class Member(discord.abc.Messageable, _UserTag):
         return self.guild_avatar or self._user.avatar or self._user.default_avatar
 
     @property
-    def guild_avatar(self) -> Optional[Asset]:
+    def guild_avatar(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns an :class:`Asset` for the guild avatar
         the member has. If unavailable, ``None`` is returned.
 
@@ -557,10 +562,12 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         if self._avatar is None:
             return None
-        return Asset._from_guild_avatar(self._state, self.guild.id, self.id, self._avatar)
+        return Asset._from_guild_avatar(
+            self._state, self.guild.id, self.id, self._avatar
+        )
 
     @property
-    def activity(self) -> Optional[ActivityTypes]:
+    def activity(self) -> ActivityTypes | None:
         """Optional[Union[:class:`BaseActivity`, :class:`Spotify`]]: Returns the primary
         activity the user is currently doing. Could be ``None`` if no activity is being done.
 
@@ -581,7 +588,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """Checks if the member is mentioned in the specified message.
 
         Parameters
-        -----------
+        ----------
         message: :class:`Message`
             The message to check if you're mentioned in.
 
@@ -637,7 +644,7 @@ class Member(discord.abc.Messageable, _UserTag):
         return base
 
     @property
-    def voice(self) -> Optional[VoiceState]:
+    def voice(self) -> VoiceState | None:
         """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
@@ -649,29 +656,36 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         return (
             self.communication_disabled_until is not None
-            and self.communication_disabled_until > datetime.datetime.now(datetime.timezone.utc)
+            and self.communication_disabled_until
+            > datetime.datetime.now(datetime.timezone.utc)
         )
 
     async def ban(
         self,
         *,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] = 1,
-        reason: Optional[str] = None,
+        delete_message_seconds: int | None = None,
+        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
+        reason: str | None = None,
     ) -> None:
         """|coro|
 
         Bans this member. Equivalent to :meth:`Guild.ban`.
         """
-        await self.guild.ban(self, reason=reason, delete_message_days=delete_message_days)
+        await self.guild.ban(
+            self,
+            reason=reason,
+            delete_message_seconds=delete_message_seconds,
+            delete_message_days=delete_message_days,
+        )
 
-    async def unban(self, *, reason: Optional[str] = None) -> None:
+    async def unban(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Unbans this member. Equivalent to :meth:`Guild.unban`.
         """
         await self.guild.unban(self, reason=reason)
 
-    async def kick(self, *, reason: Optional[str] = None) -> None:
+    async def kick(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Kicks this member. Equivalent to :meth:`Guild.kick`.
@@ -681,15 +695,15 @@ class Member(discord.abc.Messageable, _UserTag):
     async def edit(
         self,
         *,
-        nick: Optional[str] = MISSING,
+        nick: str | None = MISSING,
         mute: bool = MISSING,
         deafen: bool = MISSING,
         suppress: bool = MISSING,
-        roles: List[discord.abc.Snowflake] = MISSING,
-        voice_channel: Optional[VocalGuildChannel] = MISSING,
-        reason: Optional[str] = None,
-        communication_disabled_until: Optional[datetime.datetime] = MISSING,
-    ) -> Optional[Member]:
+        roles: list[discord.abc.Snowflake] = MISSING,
+        voice_channel: VocalGuildChannel | None = MISSING,
+        reason: str | None = None,
+        communication_disabled_until: datetime.datetime | None = MISSING,
+    ) -> Member | None:
         """|coro|
 
         Edits the member's data.
@@ -721,7 +735,7 @@ class Member(discord.abc.Messageable, _UserTag):
             The newly member is now optionally returned, if applicable.
 
         Parameters
-        -----------
+        ----------
         nick: Optional[:class:`str`]
             The member's new nickname. Use ``None`` to remove the nickname.
         mute: :class:`bool`
@@ -745,23 +759,24 @@ class Member(discord.abc.Messageable, _UserTag):
             from timeout.
 
             .. versionadded:: 2.0
-        Raises
+
+        Returns
         -------
+        Optional[:class:`.Member`]
+            The newly updated member, if applicable. This is only returned
+            when certain fields are updated.
+
+        Raises
+        ------
         Forbidden
             You do not have the proper permissions to the action requested.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.Member`]
-            The newly updated member, if applicable. This is only returned
-            when certain fields are updated.
         """
         http = self._state.http
         guild_id = self.guild.id
         me = self._state.self_id == self.id
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
 
         if nick is not MISSING:
             nick = nick or ""
@@ -789,7 +804,9 @@ class Member(discord.abc.Messageable, _UserTag):
                 await http.edit_my_voice_state(guild_id, voice_state_payload)
             else:
                 if not suppress:
-                    voice_state_payload["request_to_speak_timestamp"] = datetime.datetime.utcnow().isoformat()
+                    voice_state_payload[
+                        "request_to_speak_timestamp"
+                    ] = datetime.datetime.utcnow().isoformat()
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
         if voice_channel is not MISSING:
@@ -800,7 +817,9 @@ class Member(discord.abc.Messageable, _UserTag):
 
         if communication_disabled_until is not MISSING:
             if communication_disabled_until is not None:
-                payload["communication_disabled_until"] = communication_disabled_until.isoformat()
+                payload[
+                    "communication_disabled_until"
+                ] = communication_disabled_until.isoformat()
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
 
@@ -808,7 +827,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
             return Member(data=data, guild=self.guild, state=self._state)
 
-    async def timeout(self, until: Optional[datetime.datetime], *, reason: Optional[str] = None) -> None:
+    async def timeout(
+        self, until: datetime.datetime | None, *, reason: str | None = None
+    ) -> None:
         """|coro|
 
         Applies a timeout to a member in the guild until a set datetime.
@@ -816,14 +837,14 @@ class Member(discord.abc.Messageable, _UserTag):
         You must have the :attr:`~Permissions.moderate_members` permission to timeout a member.
 
         Parameters
-        -----------
+        ----------
         until: :class:`datetime.datetime`
             The date and time to timeout the member for. If this is ``None`` then the member is removed from timeout.
         reason: Optional[:class:`str`]
             The reason for doing this action. Shows up on the audit log.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to timeout members.
         HTTPException
@@ -831,7 +852,9 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         await self.edit(communication_disabled_until=until, reason=reason)
 
-    async def timeout_for(self, duration: datetime.timedelta, *, reason: Optional[str] = None) -> None:
+    async def timeout_for(
+        self, duration: datetime.timedelta, *, reason: str | None = None
+    ) -> None:
         """|coro|
 
         Applies a timeout to a member in the guild for a set duration. A shortcut method for :meth:`~.timeout`, and
@@ -841,22 +864,24 @@ class Member(discord.abc.Messageable, _UserTag):
         timeout a member.
 
         Parameters
-        -----------
+        ----------
         duration: :class:`datetime.timedelta`
             The duration to timeout the member for.
         reason: Optional[:class:`str`]
             The reason for doing this action. Shows up on the audit log.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to timeout members.
         HTTPException
             An error occurred doing the request.
         """
-        await self.timeout(datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason)
+        await self.timeout(
+            datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason
+        )
 
-    async def remove_timeout(self, *, reason: Optional[str] = None) -> None:
+    async def remove_timeout(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Removes the timeout from a member.
@@ -867,12 +892,12 @@ class Member(discord.abc.Messageable, _UserTag):
         This is equivalent to calling :meth:`~.timeout` and passing ``None`` to the ``until`` parameter.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for doing this action. Shows up on the audit log.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to remove the timeout.
         HTTPException
@@ -895,7 +920,7 @@ class Member(discord.abc.Messageable, _UserTag):
         .. versionadded:: 1.7
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have the proper permissions to the action requested.
         HTTPException
@@ -912,7 +937,9 @@ class Member(discord.abc.Messageable, _UserTag):
         else:
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
-    async def move_to(self, channel: VocalGuildChannel, *, reason: Optional[str] = None) -> None:
+    async def move_to(
+        self, channel: VocalGuildChannel, *, reason: str | None = None
+    ) -> None:
         """|coro|
 
         Moves a member to a new voice channel (they must be connected first).
@@ -926,7 +953,7 @@ class Member(discord.abc.Messageable, _UserTag):
             Can now pass ``None`` to kick a member from voice.
 
         Parameters
-        -----------
+        ----------
         channel: Optional[:class:`VoiceChannel`]
             The new voice channel to move the member to.
             Pass ``None`` to kick them from voice.
@@ -935,7 +962,9 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         await self.edit(voice_channel=channel, reason=reason)
 
-    async def add_roles(self, *roles: Snowflake, reason: Optional[str] = None, atomic: bool = True) -> None:
+    async def add_roles(
+        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
+    ) -> None:
         r"""|coro|
 
         Gives the member a number of :class:`Role`\s.
@@ -965,7 +994,9 @@ class Member(discord.abc.Messageable, _UserTag):
         """
 
         if not atomic:
-            new_roles = utils._unique(Object(id=r.id) for s in (self.roles[1:], roles) for r in s)
+            new_roles = utils._unique(
+                Object(id=r.id) for s in (self.roles[1:], roles) for r in s
+            )
             await self.edit(roles=new_roles, reason=reason)
         else:
             req = self._state.http.add_role
@@ -974,7 +1005,9 @@ class Member(discord.abc.Messageable, _UserTag):
             for role in roles:
                 await req(guild_id, user_id, role.id, reason=reason)
 
-    async def remove_roles(self, *roles: Snowflake, reason: Optional[str] = None, atomic: bool = True) -> None:
+    async def remove_roles(
+        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
+    ) -> None:
         r"""|coro|
 
         Removes :class:`Role`\s from this member.
@@ -1019,18 +1052,18 @@ class Member(discord.abc.Messageable, _UserTag):
             for role in roles:
                 await req(guild_id, user_id, role.id, reason=reason)
 
-    def get_role(self, role_id: int, /) -> Optional[Role]:
+    def get_role(self, role_id: int, /) -> Role | None:
         """Returns a role with the given ID from roles which the member has.
 
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         role_id: :class:`int`
             The ID to search for.
 
         Returns
-        --------
+        -------
         Optional[:class:`Role`]
             The role or ``None`` if not found in the member's roles.
         """

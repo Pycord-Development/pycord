@@ -25,9 +25,13 @@ class EphemeralCounter(discord.ui.View):
     # When this button is pressed, it will respond with a Counter View that will
     # give the button presser their own personal button they can press 5 times.
     @discord.ui.button(label="Click", style=discord.ButtonStyle.blurple)
-    async def receive(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def receive(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
         # ephemeral=True makes the message hidden from everyone except the button presser.
-        await interaction.response.send_message("Enjoy!", view=Counter(), ephemeral=True)
+        await interaction.response.send_message(
+            "Enjoy!", view=Counter(), ephemeral=True
+        )
 
 
 bot = discord.Bot(debug_guilds=[...])

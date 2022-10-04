@@ -1,9 +1,12 @@
 import random
-import discord
 from asyncio import TimeoutError
 
+import discord
+
 intents = discord.Intents.default()
-intents.message_content = True  # < This may give you `read-only` warning, just ignore it.
+intents.message_content = (
+    True  # < This may give you `read-only` warning, just ignore it.
+)
 # This intent requires "Message Content Intent" to be enabled at https://discord.com/developers
 
 
@@ -12,11 +15,12 @@ bot = discord.Bot(intents=intents)
 
 @bot.event
 async def on_ready():
-    print('Ready!')
+    print("Ready!")
 
 
 # For more examples regarding slash commands, checkout:
 # https://github.com/Pycord-Development/pycord/tree/master/examples/app_commands
+
 
 @bot.slash_command(name="guess", description="Guess a number between 1 and 10!")
 async def guess_number(ctx: discord.ApplicationContext):
@@ -29,12 +33,16 @@ async def guess_number(ctx: discord.ApplicationContext):
         # - The content of the message is a digit.
         # - The digit received is within the range of 1-10.
         # If any one of these checks fail, we ignore this message.
-        return m.author == ctx.author and m.content.isdigit() and 1 <= int(m.content) <= 10
+        return (
+            m.author == ctx.author and m.content.isdigit() and 1 <= int(m.content) <= 10
+        )
 
     answer = random.randint(1, 10)
 
     try:
-        guess: discord.Message = await bot.wait_for("message", check=is_valid_guess, timeout=5.0)
+        guess: discord.Message = await bot.wait_for(
+            "message", check=is_valid_guess, timeout=5.0
+        )
     except TimeoutError:
         return await ctx.send_followup(f"Sorry, you took too long it was {answer}.")
 

@@ -6,19 +6,25 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
+bot = commands.Bot(
+    command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents
+)
 bypassing_users = []  # used in the dynamic cooldown below
 
 # An application command with cooldown
 @bot.slash_command()
-@commands.cooldown(1, 5, commands.BucketType.user)  # The command can only be used once in 5 seconds
+@commands.cooldown(
+    1, 5, commands.BucketType.user
+)  # The command can only be used once in 5 seconds
 async def slash(ctx: discord.ApplicationContext):
     await ctx.respond("You can use this command again in 5 seconds.")
 
 
 # Application command error handler
 @bot.event
-async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
+async def on_application_command_error(
+    ctx: discord.ApplicationContext, error: discord.DiscordException
+):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.respond("This command is currently on cooldown.")
     else:
@@ -37,9 +43,14 @@ def my_cooldown(message):
     if message.author.id in bypassing_users:
         return None  # Let specific users bypass the cooldown entirely
     elif message.author.get_role(929080208148017242):
-        return commands.Cooldown(2, 5)  # Users with the above role ID can use the command twice in 5 seconds
+        return commands.Cooldown(
+            2, 5
+        )  # Users with the above role ID can use the command twice in 5 seconds
     else:
-        return commands.Cooldown(1, 10)  # All other users can use the command once in 10 seconds
+        return commands.Cooldown(
+            1, 10
+        )  # All other users can use the command once in 10 seconds
+
 
 # A prefixed command with the dynamic cooldown defined above
 @bot.command()

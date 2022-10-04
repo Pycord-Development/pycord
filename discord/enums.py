@@ -84,15 +84,29 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
-        cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
-        cls.__lt__ = lambda self, other: isinstance(other, self.__class__) and self.value < other.value
-        cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
+        cls.__le__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value <= other.value
+        )
+        cls.__ge__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value >= other.value
+        )
+        cls.__lt__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value < other.value
+        )
+        cls.__gt__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value > other.value
+        )
     return cls
 
 
 def _is_descriptor(obj):
-    return hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+    return (
+        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+    )
 
 
 class EnumMeta(type):
@@ -144,7 +158,9 @@ class EnumMeta(type):
         return (cls._enum_member_map_[name] for name in cls._enum_member_names_)
 
     def __reversed__(cls):
-        return (cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_))
+        return (
+            cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_)
+        )
 
     def __len__(cls):
         return len(cls._enum_member_names_)
@@ -388,7 +404,7 @@ class AuditLogAction(Enum):
     application_command_permission_update = 121
     auto_moderation_rule_create = 140
     auto_moderation_rule_update = 141
-    auto_moderation_rule_delete = 142 
+    auto_moderation_rule_delete = 142
     auto_moderation_block_message = 143
 
     @property
@@ -679,7 +695,9 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
-        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(datatype, types.UnionType)
+        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(
+            datatype, types.UnionType
+        )
 
         if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
             # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
@@ -716,7 +734,9 @@ class SlashCommandOptionType(Enum):
 
         from .commands.context import ApplicationContext
 
-        if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
+        if not issubclass(
+            datatype, ApplicationContext
+        ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
             )  # TODO: Improve the error message
@@ -779,29 +799,29 @@ class ScheduledEventLocationType(Enum):
     voice = 2
     external = 3
 
-    
+
 class AutoModTriggerType(Enum):
     keyword = 1
     harmful_link = 2
     spam = 3
     keyword_preset = 4
-    
+
 
 class AutoModEventType(Enum):
     message_send = 1
-    
-    
+
+
 class AutoModActionType(Enum):
     block_message = 1
     send_alert_message = 2
     timeout = 3
-    
-    
+
+
 class AutoModKeywordPresetType(Enum):
     profanity = 1
     sexual_content = 2
     slurs = 3
-    
+
 
 T = TypeVar("T")
 

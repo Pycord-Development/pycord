@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Iterator
 
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
@@ -74,7 +74,7 @@ class Emoji(_EmojiTag, AssetMixin):
             Returns the emoji rendered for discord.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The name of the emoji.
     id: :class:`int`
@@ -94,7 +94,7 @@ class Emoji(_EmojiTag, AssetMixin):
         having the :attr:`~Permissions.manage_emojis` permission.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "require_colons",
         "animated",
         "managed",
@@ -121,12 +121,12 @@ class Emoji(_EmojiTag, AssetMixin):
         self.available: bool = emoji.get("available", True)
         self._roles: SnowflakeList = SnowflakeList(map(int, emoji.get("roles", [])))
         user = emoji.get("user")
-        self.user: Optional[User] = User(state=self._state, data=user) if user else None
+        self.user: User | None = User(state=self._state, data=user) if user else None
 
     def _to_partial(self) -> PartialEmoji:
         return PartialEmoji(name=self.name, animated=self.animated, id=self.id)
 
-    def __iter__(self) -> Iterator[Tuple[str, Any]]:
+    def __iter__(self) -> Iterator[tuple[str, Any]]:
         for attr in self.__slots__:
             if attr[0] != "_":
                 value = getattr(self, attr, None)
@@ -162,7 +162,7 @@ class Emoji(_EmojiTag, AssetMixin):
         return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
 
     @property
-    def roles(self) -> List[Role]:
+    def roles(self) -> list[Role]:
         """List[:class:`Role`]: A :class:`list` of roles that is allowed to use this emoji.
 
         If roles is empty, the emoji is unrestricted.
@@ -190,7 +190,7 @@ class Emoji(_EmojiTag, AssetMixin):
         emoji_roles, my_roles = self._roles, self.guild.me._roles
         return any(my_roles.has(role_id) for role_id in emoji_roles)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the custom emoji.
@@ -199,26 +199,28 @@ class Emoji(_EmojiTag, AssetMixin):
         do this.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for deleting this emoji. Shows up on the audit log.
 
         Raises
-        -------
+        ------
         Forbidden
             You are not allowed to delete emojis.
         HTTPException
             An error occurred deleting the emoji.
         """
 
-        await self._state.http.delete_custom_emoji(self.guild.id, self.id, reason=reason)
+        await self._state.http.delete_custom_emoji(
+            self.guild.id, self.id, reason=reason
+        )
 
     async def edit(
         self,
         *,
         name: str = MISSING,
-        roles: List[Snowflake] = MISSING,
-        reason: Optional[str] = None,
+        roles: list[Snowflake] = MISSING,
+        reason: str | None = None,
     ) -> Emoji:
         r"""|coro|
 
@@ -258,5 +260,7 @@ class Emoji(_EmojiTag, AssetMixin):
         if roles is not MISSING:
             payload["roles"] = [role.id for role in roles]
 
-        data = await self._state.http.edit_custom_emoji(self.guild.id, self.id, payload=payload, reason=reason)
+        data = await self._state.http.edit_custom_emoji(
+            self.guild.id, self.id, payload=payload, reason=reason
+        )
         return Emoji(guild=self.guild, data=data, state=self._state)

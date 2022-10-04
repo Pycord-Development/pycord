@@ -1,0 +1,7 @@
+[flake8]
+min_python_version = 3.8
+ignore =
+    E203, W503, # Incompatible with black see https://github.com/ambv/black/issues/315
+
+max-line-length=120
+max-complexity=39
