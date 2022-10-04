@@ -6,7 +6,9 @@ bot = discord.Bot(debug_guilds=[...])
 
 
 @bot.slash_command()
-async def timeout(ctx: discord.ApplicationContext, member: discord.Member, minutes: int):
+async def timeout(
+    ctx: discord.ApplicationContext, member: discord.Member, minutes: int
+):
     """Apply a timeout to a member."""
 
     duration = datetime.timedelta(minutes=minutes)

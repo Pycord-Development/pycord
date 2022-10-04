@@ -10,7 +10,11 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), description="Nothing to see here!", intents=intents)
+bot = commands.Bot(
+    command_prefix=commands.when_mentioned_or("!"),
+    description="Nothing to see here!",
+    intents=intents,
+)
 
 
 # The `hidden` keyword argument hides it from the help command.
@@ -21,7 +25,9 @@ async def secret(ctx: commands.Context):
         await ctx.send("Shh!", delete_after=5)
 
 
-def create_overwrites(ctx: commands.Context, *objects: Union[discord.Role, discord.Member]):
+def create_overwrites(
+    ctx: commands.Context, *objects: Union[discord.Role, discord.Member]
+):
     """
     This is just a helper function that creates the overwrites for the
     voice/text channels.
@@ -36,11 +42,15 @@ def create_overwrites(ctx: commands.Context, *objects: Union[discord.Role, disco
 
     # A dict comprehension is being utilised here to set the same permission overwrites
     # for each `discord.Role` or `discord.Member`.
-    overwrites = {obj: discord.PermissionOverwrite(view_channel=True) for obj in objects}
+    overwrites = {
+        obj: discord.PermissionOverwrite(view_channel=True) for obj in objects
+    }
 
     # Prevents the default role (@everyone) from viewing the channel
     # if it isn't already allowed to view the channel.
-    overwrites.setdefault(ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False))
+    overwrites.setdefault(
+        ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
+    )
 
     # Makes sure the client is always allowed to view the channel.
     overwrites[ctx.guild.me] = discord.PermissionOverwrite(view_channel=True)
@@ -86,15 +96,15 @@ async def voice(
 
     overwrites = create_overwrites(ctx, *objects)
 
-    await ctx.guild.create_voice_channel(name, overwrites=overwrites, reason="Very secret business.")
+    await ctx.guild.create_voice_channel(
+        name, overwrites=overwrites, reason="Very secret business."
+    )
 
 
 @secret.command(name="emoji")
 @commands.guild_only()
 async def clone_emoji(
-    ctx: commands.Context,
-    emoji: discord.PartialEmoji,
-    *roles: discord.Role
+    ctx: commands.Context, emoji: discord.PartialEmoji, *roles: discord.Role
 ):
     """
     This clones a specified emoji that only

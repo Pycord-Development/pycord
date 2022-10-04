@@ -6,7 +6,6 @@ A basic wrapper for the Discord API.
 
 :copyright: (c) 2015-2021 Rapptz & (c) 2021-present Pycord Development
 :license: MIT, see LICENSE for more details.
-
 """
 
 __title__ = "pycord"
@@ -76,6 +75,8 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info: VersionInfo = VersionInfo(major=2, minor=2, micro=0, releaselevel="final", serial=0)
+version_info: VersionInfo = VersionInfo(
+    major=2, minor=2, micro=0, releaselevel="final", serial=0
+)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

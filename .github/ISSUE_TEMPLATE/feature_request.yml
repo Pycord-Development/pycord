@@ -26,16 +26,16 @@ body:
     attributes:
       label: The Problem
       description: >
-        What problem is your feature trying to solve?
-        What becomes easier or possible when this feature is implemented?
+        What problem is your feature trying to solve? What becomes easier or possible
+        when this feature is implemented?
     validations:
       required: true
   - type: textarea
     attributes:
       label: The Ideal Solution
       description: >
-        What is your ideal solution to the problem?
-        What would you like this feature to do?
+        What is your ideal solution to the problem? What would you like this feature to
+        do?
     validations:
       required: true
   - type: textarea

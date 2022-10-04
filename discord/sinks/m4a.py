@@ -57,7 +57,9 @@ class M4ASink(Sink):
             Formatting the audio failed.
         """
         if self.vc.recording:
-            raise M4ASinkError("Audio may only be formatted after recording is finished.")
+            raise M4ASinkError(
+                "Audio may only be formatted after recording is finished."
+            )
         m4a_file = f"{time.time()}.tmp"
         args = [
             "ffmpeg",
@@ -74,13 +76,19 @@ class M4ASink(Sink):
             m4a_file,
         ]
         if os.path.exists(m4a_file):
-            os.remove(m4a_file)  # process will get stuck asking whether to overwrite, if file already exists.
+            os.remove(
+                m4a_file
+            )  # process will get stuck asking whether to overwrite, if file already exists.
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
+            )
         except FileNotFoundError:
             raise M4ASinkError("ffmpeg was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise M4ASinkError("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
+            raise M4ASinkError(
+                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
+            ) from exc
 
         process.communicate(audio.file.read())
 

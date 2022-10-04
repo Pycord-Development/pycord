@@ -120,8 +120,8 @@ class _AutoModActionExecutionEventOptional(TypedDict, total=False):
     alert_system_message_id: Snowflake
     matched_keyword: str
     matched_content: str
-        
-        
+
+
 class AutoModActionExecutionEvent(_AutoModActionExecutionEventOptional):
     guild_id: Snowflake
     action: AutoModAction

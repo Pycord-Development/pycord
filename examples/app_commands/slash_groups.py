@@ -5,7 +5,9 @@ bot = discord.Bot(debug_guilds=[...])
 # If you use commands.Bot, @bot.slash_command should be used for
 # slash commands. You can use @bot.slash_command with discord.Bot as well.
 
-math = bot.create_group("math", "Commands related to mathematics.")  # Create a slash command group
+math = bot.create_group(
+    "math", "Commands related to mathematics."
+)  # Create a slash command group
 
 # Another way, creating the class manually:
 
