@@ -26,19 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Final,
-    List,
-    Mapping,
-    Optional,
-    Protocol,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Final, Mapping, Protocol, TypeVar, Union
 
 from . import utils
 from .colour import Colour
@@ -64,14 +52,16 @@ EmptyEmbed: Final = _EmptyEmbed()
 
 
 class EmbedProxy:
-    def __init__(self, layer: Dict[str, Any]):
+    def __init__(self, layer: dict[str, Any]):
         self.__dict__.update(layer)
 
     def __len__(self) -> int:
         return len(self.__dict__)
 
     def __repr__(self) -> str:
-        inner = ", ".join((f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_")))
+        inner = ", ".join(
+            (f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_"))
+        )
         return f"EmbedProxy({inner})"
 
     def __getattr__(self, attr: str) -> _EmptyEmbed:
@@ -128,13 +118,13 @@ class EmbedField:
         Whether the field should be displayed inline.
     """
 
-    def __init__(self, name: str, value: str, inline: Optional[bool] = False):
+    def __init__(self, name: str, value: str, inline: bool | None = False):
         self.name = name
         self.value = value
         self.inline = inline
 
     @classmethod
-    def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
+    def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
         """Converts a :class:`dict` to a :class:`EmbedField` provided it is in the
         format that Discord expects it to be in.
 
@@ -145,7 +135,7 @@ class EmbedField:
         __ DiscordDocsEF_
 
         Parameters
-        -----------
+        ----------
         data: :class:`dict`
             The dictionary to convert into an EmbedField object.
         """
@@ -157,11 +147,11 @@ class EmbedField:
 
         return self
 
-    def to_dict(self) -> Dict[str, Union[str, bool]]:
+    def to_dict(self) -> dict[str, str | bool]:
         """Converts this EmbedField object into a dict.
 
         Returns
-        --------
+        -------
         Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]
             A dictionary of :class:`str` embed field keys bound to the respective value.
         """
@@ -198,7 +188,7 @@ class Embed:
     cast to :class:`str` for you.
 
     Attributes
-    -----------
+    ----------
     title: :class:`str`
         The title of the embed.
         This can be set during initialisation.
@@ -248,14 +238,14 @@ class Embed:
     def __init__(
         self,
         *,
-        colour: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
-        color: Union[int, Colour, _EmptyEmbed] = EmptyEmbed,
+        colour: int | Colour | _EmptyEmbed = EmptyEmbed,
+        color: int | Colour | _EmptyEmbed = EmptyEmbed,
         title: MaybeEmpty[Any] = EmptyEmbed,
         type: EmbedType = "rich",
         url: MaybeEmpty[Any] = EmptyEmbed,
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
-        fields: Optional[List[EmbedField]] = None,
+        fields: list[EmbedField] | None = None,
     ):
 
         self.colour = colour if colour is not EmptyEmbed else color
@@ -275,10 +265,10 @@ class Embed:
 
         if timestamp:
             self.timestamp = timestamp
-        self._fields: List[EmbedField] = fields or []
+        self._fields: list[EmbedField] = fields or []
 
     @classmethod
-    def from_dict(cls: Type[E], data: Mapping[str, Any]) -> E:
+    def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
         """Converts a :class:`dict` to a :class:`Embed` provided it is in the
         format that Discord expects it to be in.
 
@@ -289,12 +279,12 @@ class Embed:
         __ DiscordDocs_
 
         Parameters
-        -----------
+        ----------
         data: :class:`dict`
             The dictionary to convert into an embed.
 
         Returns
-        --------
+        -------
         :class:`Embed`
             The converted embed object.
         """
@@ -355,7 +345,7 @@ class Embed:
         """Creates a shallow copy of the :class:`Embed` object.
 
         Returns
-        --------
+        -------
         :class:`Embed`
             The copied embed object.
         """
@@ -405,7 +395,7 @@ class Embed:
         return getattr(self, "_colour", EmptyEmbed)
 
     @colour.setter
-    def colour(self, value: Union[int, Colour, _EmptyEmbed]):  # type: ignore
+    def colour(self, value: int | Colour | _EmptyEmbed):  # type: ignore
         if isinstance(value, (Colour, _EmptyEmbed)):
             self._colour = value
         elif isinstance(value, int):
@@ -430,7 +420,9 @@ class Embed:
         elif isinstance(value, _EmptyEmbed):
             self._timestamp = value
         else:
-            raise TypeError(f"Expected datetime.datetime or Embed.Empty received {value.__class__.__name__} instead")
+            raise TypeError(
+                f"Expected datetime.datetime or Embed.Empty received {value.__class__.__name__} instead"
+            )
 
     @property
     def footer(self) -> _EmbedFooterProxy:
@@ -454,7 +446,7 @@ class Embed:
         chaining.
 
         Parameters
-        -----------
+        ----------
         text: :class:`str`
             The footer text.
             Must be 2048 characters or fewer.
@@ -511,7 +503,7 @@ class Embed:
             Passing :attr:`Empty` removes the image.
 
         Parameters
-        -----------
+        ----------
         url: :class:`str`
             The source URL for the image. Only HTTP(S) is supported.
         """
@@ -568,7 +560,7 @@ class Embed:
             Passing :attr:`Empty` removes the thumbnail.
 
         Parameters
-        -----------
+        ----------
         url: :class:`str`
             The source URL for the thumbnail. Only HTTP(S) is supported.
         """
@@ -647,7 +639,7 @@ class Embed:
         chaining.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the author.
             Must be 256 characters or fewer.
@@ -685,7 +677,7 @@ class Embed:
         return self
 
     @property
-    def fields(self) -> List[EmbedField]:
+    def fields(self) -> list[EmbedField]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
         See :meth:`add_field` for possible values you can access.
@@ -695,7 +687,7 @@ class Embed:
         return self._fields
 
     @fields.setter
-    def fields(self, value: List[EmbedField]) -> None:
+    def fields(self, value: list[EmbedField]) -> None:
         """Sets the fields for the embed. This overwrites any existing fields.
 
         Parameters
@@ -730,7 +722,7 @@ class Embed:
         chaining. There must be 25 fields or fewer.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the field.
             Must be 256 characters or fewer.
@@ -744,7 +736,9 @@ class Embed:
 
         return self
 
-    def insert_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
+    def insert_field_at(
+        self: E, index: int, *, name: Any, value: Any, inline: bool = True
+    ) -> E:
         """Inserts a field before a specified index to the embed.
 
         This function returns the class instance to allow for fluent-style
@@ -753,7 +747,7 @@ class Embed:
         .. versionadded:: 1.2
 
         Parameters
-        -----------
+        ----------
         index: :class:`int`
             The index of where to insert the field.
         name: :class:`str`
@@ -788,7 +782,7 @@ class Embed:
             shift to fill the gap just like a regular list.
 
         Parameters
-        -----------
+        ----------
         index: :class:`int`
             The index of the field to remove.
         """
@@ -797,7 +791,9 @@ class Embed:
         except IndexError:
             pass
 
-    def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
+    def set_field_at(
+        self: E, index: int, *, name: Any, value: Any, inline: bool = True
+    ) -> E:
         """Modifies a field to the embed object.
 
         The index must point to a valid pre-existing field. There must be 25 fields or fewer.
@@ -806,7 +802,7 @@ class Embed:
         chaining.
 
         Parameters
-        -----------
+        ----------
         index: :class:`int`
             The index of the field to modify.
         name: :class:`str`
@@ -819,7 +815,7 @@ class Embed:
             Whether the field should be displayed inline.
 
         Raises
-        -------
+        ------
         IndexError
             An invalid index was provided.
         """
@@ -838,7 +834,7 @@ class Embed:
         """Converts this embed object into a dict.
 
         Returns
-        --------
+        -------
         Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]
             A dictionary of :class:`str` embed keys bound to the respective value.
         """
@@ -870,9 +866,13 @@ class Embed:
         else:
             if timestamp:
                 if timestamp.tzinfo:
-                    result["timestamp"] = timestamp.astimezone(tz=datetime.timezone.utc).isoformat()
+                    result["timestamp"] = timestamp.astimezone(
+                        tz=datetime.timezone.utc
+                    ).isoformat()
                 else:
-                    result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
+                    result["timestamp"] = timestamp.replace(
+                        tzinfo=datetime.timezone.utc
+                    ).isoformat()
 
         # add in the non-raw attribute ones
         if self.type:

@@ -94,7 +94,7 @@ class StringView:
         return False
 
     def read_rest(self):
-        result = self.buffer[self.index:]
+        result = self.buffer[self.index :]
         self.previous = self.index
         self.index = self.end
         return result

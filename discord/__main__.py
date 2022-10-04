@@ -36,10 +36,16 @@ import discord
 
 
 def show_version() -> None:
-    entries = ["- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(sys.version_info)]
+    entries = [
+        "- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(
+            sys.version_info
+        )
+    ]
 
     version_info = discord.version_info
-    entries.append("- py-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info))
+    entries.append(
+        "- py-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info)
+    )
     if version_info.releaselevel != "final":
         pkg = pkg_resources.get_distribution("py-cord")
         if pkg:
@@ -293,7 +299,9 @@ def newcog(parser, args) -> None:
 
 
 def add_newbot_args(subparser: argparse._SubParsersAction) -> None:
-    parser = subparser.add_parser("newbot", help="creates a command bot project quickly")
+    parser = subparser.add_parser(
+        "newbot", help="creates a command bot project quickly"
+    )
     parser.set_defaults(func=newbot)
 
     parser.add_argument("name", help="the bot project name")
@@ -303,8 +311,12 @@ def add_newbot_args(subparser: argparse._SubParsersAction) -> None:
         nargs="?",
         default=Path.cwd(),
     )
-    parser.add_argument("--prefix", help="the bot prefix (default: $)", default="$", metavar="<prefix>")
-    parser.add_argument("--sharded", help="whether to use AutoShardedBot", action="store_true")
+    parser.add_argument(
+        "--prefix", help="the bot prefix (default: $)", default="$", metavar="<prefix>"
+    )
+    parser.add_argument(
+        "--sharded", help="whether to use AutoShardedBot", action="store_true"
+    )
     parser.add_argument(
         "--no-git",
         help="do not create a .gitignore file",
@@ -335,12 +347,18 @@ def add_newcog_args(subparser: argparse._SubParsersAction) -> None:
         help="whether to hide all commands in the cog",
         action="store_true",
     )
-    parser.add_argument("--full", help="add all special methods as well", action="store_true")
+    parser.add_argument(
+        "--full", help="add all special methods as well", action="store_true"
+    )
 
 
 def parse_args() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
-    parser = argparse.ArgumentParser(prog="discord", description="Tools for helping with Pycord")
-    parser.add_argument("-v", "--version", action="store_true", help="shows the library version")
+    parser = argparse.ArgumentParser(
+        prog="discord", description="Tools for helping with Pycord"
+    )
+    parser.add_argument(
+        "-v", "--version", action="store_true", help="shows the library version"
+    )
     parser.set_defaults(func=core)
 
     subparser = parser.add_subparsers(dest="subcommand", title="subcommands")

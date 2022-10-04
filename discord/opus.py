@@ -36,16 +36,7 @@ import struct
 import sys
 import threading
 import time
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    List,
-    Literal,
-    Tuple,
-    TypedDict,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
 from .errors import DiscordException
 from .sinks import RawData
@@ -134,14 +125,14 @@ signal_ctl: SignalCtl = {
 }
 
 
-def _err_lt(result: int, func: Callable, args: List) -> int:
+def _err_lt(result: int, func: Callable, args: list) -> int:
     if result < OK:
         _log.info("error has happened in %s", func.__name__)
         raise OpusError(result)
     return result
 
 
-def _err_ne(result: T, func: Callable, args: List) -> T:
+def _err_ne(result: T, func: Callable, args: list) -> T:
     ret = args[-1]._obj
     if ret.value != OK:
         _log.info("error has happened in %s", func.__name__)
@@ -154,7 +145,7 @@ def _err_ne(result: T, func: Callable, args: List) -> T:
 # The second one are the types of arguments it takes.
 # The third is the result type.
 # The fourth is the error handler.
-exported_functions: List[Tuple[Any, ...]] = [
+exported_functions: list[tuple[Any, ...]] = [
     # Generic
     ("opus_get_version_string", None, ctypes.c_char_p, None),
     ("opus_strerror", [ctypes.c_int], ctypes.c_char_p, None),
@@ -355,8 +346,6 @@ class OpusError(DiscordException):
 class OpusNotLoaded(DiscordException):
     """An exception that is thrown for when libopus is not loaded."""
 
-    pass
-
 
 class _OpusStruct:
     SAMPLING_RATE = 48000
@@ -395,7 +384,9 @@ class Encoder(_OpusStruct):
 
     def _create_state(self) -> EncoderStruct:
         ret = ctypes.c_int()
-        return _lib.opus_encoder_create(self.SAMPLING_RATE, self.CHANNELS, self.application, ctypes.byref(ret))
+        return _lib.opus_encoder_create(
+            self.SAMPLING_RATE, self.CHANNELS, self.application, ctypes.byref(ret)
+        )
 
     def set_bitrate(self, kbps: int) -> int:
         kbps = min(512, max(16, int(kbps)))
@@ -405,14 +396,18 @@ class Encoder(_OpusStruct):
 
     def set_bandwidth(self, req: BAND_CTL) -> None:
         if req not in band_ctl:
-            raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(band_ctl)}')
+            raise KeyError(
+                f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(band_ctl)}'
+            )
 
         k = band_ctl[req]
         _lib.opus_encoder_ctl(self._state, CTL_SET_BANDWIDTH, k)
 
     def set_signal_type(self, req: SIGNAL_CTL) -> None:
         if req not in signal_ctl:
-            raise KeyError(f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(signal_ctl)}')
+            raise KeyError(
+                f'{req!r} is not a valid bandwidth setting. Try one of: {",".join(signal_ctl)}'
+            )
 
         k = signal_ctl[req]
         _lib.opus_encoder_ctl(self._state, CTL_SET_SIGNAL, k)
@@ -448,7 +443,9 @@ class Decoder(_OpusStruct):
 
     def _create_state(self):
         ret = ctypes.c_int()
-        return _lib.opus_decoder_create(self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret))
+        return _lib.opus_decoder_create(
+            self.SAMPLING_RATE, self.CHANNELS, ctypes.byref(ret)
+        )
 
     @staticmethod
     def packet_get_nb_frames(data):
@@ -506,10 +503,15 @@ class Decoder(_OpusStruct):
             samples_per_frame = self.packet_get_samples_per_frame(data)
             frame_size = frames * samples_per_frame
 
-        pcm = (ctypes.c_int16 * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16)))()
+        pcm = (
+            ctypes.c_int16
+            * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
+        )()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
-        ret = _lib.opus_decode(self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec)
+        ret = _lib.opus_decode(
+            self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec
+        )
 
         return array.array("h", pcm[: ret * channel_count]).tobytes()
 
@@ -542,7 +544,9 @@ class DecodeManager(threading.Thread, _OpusStruct):
                 if data.decrypted_data is None:
                     continue
                 else:
-                    data.decoded_data = self.get_decoder(data.ssrc).decode(data.decrypted_data)
+                    data.decoded_data = self.get_decoder(data.ssrc).decode(
+                        data.decrypted_data
+                    )
             except OpusError:
                 print("Error occurred while decoding opus frame.")
                 continue

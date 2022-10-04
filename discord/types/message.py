@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Literal, Optional, TypedDict, Union
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from .channel import ChannelType
 from .components import Component
@@ -55,8 +55,8 @@ class Reaction(TypedDict):
 
 
 class _AttachmentOptional(TypedDict, total=False):
-    height: Optional[int]
-    width: Optional[int]
+    height: int | None
+    width: int | None
     content_type: str
     spoiler: bool
 
@@ -84,7 +84,7 @@ class _MessageApplicationOptional(TypedDict, total=False):
 class MessageApplication(_MessageApplicationOptional):
     id: Snowflake
     description: str
-    icon: Optional[str]
+    icon: str | None
     name: str
 
 
@@ -98,23 +98,25 @@ class MessageReference(TypedDict, total=False):
 class _MessageOptional(TypedDict, total=False):
     guild_id: Snowflake
     member: Member
-    mention_channels: List[ChannelMention]
-    reactions: List[Reaction]
-    nonce: Union[int, str]
+    mention_channels: list[ChannelMention]
+    reactions: list[Reaction]
+    nonce: int | str
     webhook_id: Snowflake
     activity: MessageActivity
     application: MessageApplication
     application_id: Snowflake
     message_reference: MessageReference
     flags: int
-    sticker_items: List[StickerItem]
-    referenced_message: Optional[Message]
+    sticker_items: list[StickerItem]
+    referenced_message: Message | None
     interaction: MessageInteraction
-    components: List[Component]
-    thread: Optional[Thread]
+    components: list[Component]
+    thread: Thread | None
 
 
-MessageType = Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 18, 19, 20, 21, 22, 23, 24]
+MessageType = Literal[
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 18, 19, 20, 21, 22, 23, 24
+]
 
 
 class Message(_MessageOptional):
@@ -123,13 +125,13 @@ class Message(_MessageOptional):
     author: User
     content: str
     timestamp: str
-    edited_timestamp: Optional[str]
+    edited_timestamp: str | None
     tts: bool
     mention_everyone: bool
-    mentions: List[UserWithMember]
+    mentions: list[UserWithMember]
     mention_roles: SnowflakeList
-    attachments: List[Attachment]
-    embeds: List[Embed]
+    attachments: list[Attachment]
+    embeds: list[Embed]
     pinned: bool
     type: MessageType
 
@@ -138,7 +140,7 @@ AllowedMentionType = Literal["roles", "users", "everyone"]
 
 
 class AllowedMentions(TypedDict):
-    parse: List[AllowedMentionType]
+    parse: list[AllowedMentionType]
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool

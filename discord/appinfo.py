@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from . import utils
 from .asset import Asset
@@ -47,9 +47,8 @@ __all__ = (
 class AppInfo:
     """Represents the application info for the bot provided by Discord.
 
-
     Attributes
-    -------------
+    ----------
     id: :class:`int`
         The application ID.
     name: :class:`str`
@@ -141,25 +140,27 @@ class AppInfo:
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self.description: str = data["description"]
-        self._icon: Optional[str] = data["icon"]
-        self.rpc_origins: List[str] = data["rpc_origins"]
+        self._icon: str | None = data["icon"]
+        self.rpc_origins: list[str] = data["rpc_origins"]
         self.bot_public: bool = data["bot_public"]
         self.bot_require_code_grant: bool = data["bot_require_code_grant"]
         self.owner: User = state.create_user(data["owner"])
 
-        team: Optional[TeamPayload] = data.get("team")
-        self.team: Optional[Team] = Team(state, team) if team else None
+        team: TeamPayload | None = data.get("team")
+        self.team: Team | None = Team(state, team) if team else None
 
         self.summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
 
-        self.guild_id: Optional[int] = utils._get_as_snowflake(data, "guild_id")
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
-        self.primary_sku_id: Optional[int] = utils._get_as_snowflake(data, "primary_sku_id")
-        self.slug: Optional[str] = data.get("slug")
-        self._cover_image: Optional[str] = data.get("cover_image")
-        self.terms_of_service_url: Optional[str] = data.get("terms_of_service_url")
-        self.privacy_policy_url: Optional[str] = data.get("privacy_policy_url")
+        self.primary_sku_id: int | None = utils._get_as_snowflake(
+            data, "primary_sku_id"
+        )
+        self.slug: str | None = data.get("slug")
+        self._cover_image: str | None = data.get("cover_image")
+        self.terms_of_service_url: str | None = data.get("terms_of_service_url")
+        self.privacy_policy_url: str | None = data.get("privacy_policy_url")
 
     def __repr__(self) -> str:
         return (
@@ -169,14 +170,14 @@ class AppInfo:
         )
 
     @property
-    def icon(self) -> Optional[Asset]:
+    def icon(self) -> Asset | None:
         """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
 
     @property
-    def cover_image(self) -> Optional[Asset]:
+    def cover_image(self) -> Asset | None:
         """Optional[:class:`.Asset`]: Retrieves the cover image on a store embed, if any.
 
         This is only available if the application is a game sold on Discord.
@@ -186,7 +187,7 @@ class AppInfo:
         return Asset._from_cover_image(self._state, self.id, self._cover_image)
 
     @property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: If this application is a game sold on Discord,
         this field will be the guild to which it has been linked.
 
@@ -201,7 +202,7 @@ class PartialAppInfo:
     .. versionadded:: 2.0
 
     Attributes
-    -------------
+    ----------
     id: :class:`int`
         The application ID.
     name: :class:`str`
@@ -239,19 +240,19 @@ class PartialAppInfo:
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
         self.name: str = data["name"]
-        self._icon: Optional[str] = data.get("icon")
+        self._icon: str | None = data.get("icon")
         self.description: str = data["description"]
-        self.rpc_origins: Optional[List[str]] = data.get("rpc_origins")
+        self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
-        self.terms_of_service_url: Optional[str] = data.get("terms_of_service_url")
-        self.privacy_policy_url: Optional[str] = data.get("privacy_policy_url")
+        self.terms_of_service_url: str | None = data.get("terms_of_service_url")
+        self.privacy_policy_url: str | None = data.get("privacy_policy_url")
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} id={self.id} name={self.name!r} description={self.description!r}>"
 
     @property
-    def icon(self) -> Optional[Asset]:
+    def icon(self) -> Asset | None:
         """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None

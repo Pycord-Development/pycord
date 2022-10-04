@@ -115,7 +115,7 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
-    
+
 .. autofunction:: discord.commands.application_command
     :decorator:
 
@@ -129,7 +129,7 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
-    
+
 .. autofunction:: discord.commands.slash_command
     :decorator:
 
@@ -148,7 +148,7 @@ Option
 
 .. autoclass:: Option
     :members:
-    
+
 .. autofunction:: discord.commands.option
     :decorator:
 
@@ -175,7 +175,7 @@ UserCommand
 
 .. autoclass:: UserCommand
     :members:
-    
+
 .. autofunction:: discord.commands.user_command
     :decorator:
 
@@ -186,7 +186,7 @@ MessageCommand
 
 .. autoclass:: MessageCommand
     :members:
-    
+
 .. autofunction:: discord.commands.message_command
     :decorator:
 
@@ -216,7 +216,7 @@ Cog
 
 .. autoclass:: Cog
     :members:
-    
+
 CogMeta
 ~~~~~~~~
 
@@ -397,7 +397,7 @@ Application Commands
 
     :param exception: The DiscordException associated to the error.
     :type exception: :class:`DiscordException`
-    
+
 .. function:: on_unknown_application_command(interaction)
 
     Called when an application command was not found in the bot's internal cache.
@@ -413,7 +413,7 @@ AutoMod
 
     Called when an auto moderation rule is created.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The newly created rule.
@@ -423,7 +423,7 @@ AutoMod
 
     Called when an auto moderation rule is updated.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The updated rule.
@@ -433,7 +433,7 @@ AutoMod
 
     Called when an auto moderation rule is deleted.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The deleted rule.
@@ -443,7 +443,7 @@ AutoMod
 
     Called when an auto moderation action is executed.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_execution` must be enabled.
 
     :param payload: The event's data.
@@ -1321,7 +1321,7 @@ Scheduled Events
 
 Stage Instances
 ~~~~~~~~~~~~~~~~
-.. function:: on_stage_instance_create(stage_instance) 
+.. function:: on_stage_instance_create(stage_instance)
               on_stage_instance_delete(stage_instance)
 
     Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`.
@@ -2943,7 +2943,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
-        
+
     .. attribute:: application_command_permission_update
 
         An application command's permissions were updated.
@@ -2957,7 +2957,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.command_id`
 
         .. versionadded:: 2.0
-        
+
 
 .. class:: AuditLogActionCategory
 
@@ -4014,7 +4014,7 @@ AuditLogDiff
         Non-moderators can now add other non-moderators to this thread.
 
         :type: :class:`bool`
-        
+
     .. attribute:: command_id
 
         This command's permissions were updated.
@@ -5161,10 +5161,10 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.ApplicationCommandError
     :members:
-    
+
 .. autoexception:: discord.CheckFailure
     :members:
-    
+
 .. autoexception:: discord.ApplicationCommandInvokeError
     :members:
 
