@@ -37,14 +37,12 @@ from discord.utils import deprecated
 
 try:
     __version__ = version("py-cord")
-    print("Set version")
 except PackageNotFoundError:
     # Package is not installed
     try:
         from setuptools_scm import get_version  # type: ignore[import]
 
         __version__ = get_version()
-        print("set version")
     except ImportError:
         # setuptools_scm is not installed
         __version__ = "0.0.0"
