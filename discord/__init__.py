@@ -19,7 +19,7 @@ __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 import logging
 
 from . import abc, opus, sinks, ui, utils
-from ._version import VersionInfo, __version__, version_info
+from ._version import *
 from .activity import *
 from .appinfo import *
 from .asset import *
