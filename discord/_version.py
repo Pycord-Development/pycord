@@ -41,7 +41,7 @@ class VersionInfo(NamedTuple):
     date: Optional[date] = None
 
     @property
-    @deprecated
+    @deprecated("release_level", "2.3")
     def releaselevel(self) -> Literal["alpha", "beta", "candidate", "final"]:
         return self.release_level
 
