@@ -1166,7 +1166,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.subcommands.append(command)
 
     def command(
-        self, cls: Type[T] = SlashCommand, **kwargs
+        self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
