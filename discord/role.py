@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from .asset import Asset
 from .colour import Colour
@@ -62,7 +62,7 @@ class RoleTags:
     .. versionadded:: 1.6
 
     Attributes
-    ------------
+    ----------
     bot_id: Optional[:class:`int`]
         The bot's user ID that manages this role.
     integration_id: Optional[:class:`int`]
@@ -76,13 +76,13 @@ class RoleTags:
     )
 
     def __init__(self, data: RoleTagPayload):
-        self.bot_id: Optional[int] = _get_as_snowflake(data, "bot_id")
-        self.integration_id: Optional[int] = _get_as_snowflake(data, "integration_id")
+        self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
+        self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
         # NOTE: The API returns "null" for this if it's valid, which corresponds to None.
         # This is different from other fields where "null" means "not there".
         # So in this case, a value of None is the same as True.
         # Which means we would need a different sentinel.
-        self._premium_subscriber: Optional[Any] = data.get("premium_subscriber", MISSING)
+        self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
 
     def is_bot_managed(self) -> bool:
         """:class:`bool`: Whether the role is associated with a bot."""
@@ -251,9 +251,9 @@ class Role(Hashable):
         self.hoist: bool = data.get("hoist", False)
         self.managed: bool = data.get("managed", False)
         self.mentionable: bool = data.get("mentionable", False)
-        self._icon: Optional[str] = data.get("icon")
-        self.unicode_emoji: Optional[str] = data.get("unicode_emoji")
-        self.tags: Optional[RoleTags]
+        self._icon: str | None = data.get("icon")
+        self.unicode_emoji: str | None = data.get("unicode_emoji")
+        self.tags: RoleTags | None
 
         try:
             self.tags = RoleTags(data["tags"])
@@ -291,7 +291,11 @@ class Role(Hashable):
         .. versionadded:: 2.0
         """
         me = self.guild.me
-        return not self.is_default() and not self.managed and (me.top_role > self or me.id == self.guild.owner_id)
+        return (
+            not self.is_default()
+            and not self.managed
+            and (me.top_role > self or me.id == self.guild.owner_id)
+        )
 
     @property
     def permissions(self) -> Permissions:
@@ -319,7 +323,7 @@ class Role(Hashable):
         return f"<@&{self.id}>"
 
     @property
-    def members(self) -> List[Member]:
+    def members(self) -> list[Member]:
         """List[:class:`Member`]: Returns all the members with this role."""
         all_members = self.guild.members
         if self.is_default():
@@ -329,7 +333,7 @@ class Role(Hashable):
         return [member for member in all_members if member._roles.has(role_id)]
 
     @property
-    def icon(self) -> Optional[Asset]:
+    def icon(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the role's icon asset, if available.
 
         .. versionadded:: 2.0
@@ -339,7 +343,7 @@ class Role(Hashable):
 
         return Asset._from_icon(self._state, self.id, self._icon, "role")
 
-    async def _move(self, position: int, reason: Optional[str]) -> None:
+    async def _move(self, position: int, reason: str | None) -> None:
         if position <= 0:
             raise InvalidArgument("Cannot move role to position 0 or below")
 
@@ -351,15 +355,23 @@ class Role(Hashable):
 
         http = self._state.http
 
-        change_range = range(min(self.position, position), max(self.position, position) + 1)
-        roles = [r.id for r in self.guild.roles[1:] if r.position in change_range and r.id != self.id]
+        change_range = range(
+            min(self.position, position), max(self.position, position) + 1
+        )
+        roles = [
+            r.id
+            for r in self.guild.roles[1:]
+            if r.position in change_range and r.id != self.id
+        ]
 
         if self.position > position:
             roles.insert(0, self.id)
         else:
             roles.append(self.id)
 
-        payload: List[RolePositionUpdate] = [{"id": z[0], "position": z[1]} for z in zip(roles, change_range)]
+        payload: list[RolePositionUpdate] = [
+            {"id": z[0], "position": z[1]} for z in zip(roles, change_range)
+        ]
         await http.move_role_position(self.guild.id, payload, reason=reason)
 
     async def edit(
@@ -367,15 +379,15 @@ class Role(Hashable):
         *,
         name: str = MISSING,
         permissions: Permissions = MISSING,
-        colour: Union[Colour, int] = MISSING,
-        color: Union[Colour, int] = MISSING,
+        colour: Colour | int = MISSING,
+        color: Colour | int = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         position: int = MISSING,
-        reason: Optional[str] = MISSING,
-        icon: Optional[bytes] = MISSING,
-        unicode_emoji: Optional[str] = MISSING,
-    ) -> Optional[Role]:
+        reason: str | None = MISSING,
+        icon: bytes | None = MISSING,
+        unicode_emoji: str | None = MISSING,
+    ) -> Role | None:
         """|coro|
 
         Edits the role.
@@ -393,7 +405,7 @@ class Role(Hashable):
             Added ``icon`` and ``unicode_emoji``.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The new role name to change to.
         permissions: :class:`Permissions`
@@ -418,8 +430,13 @@ class Role(Hashable):
             The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
-        Raises
+        Returns
         -------
+        :class:`Role`
+            The newly edited role.
+
+        Raises
+        ------
         Forbidden
             You do not have permissions to change the role.
         HTTPException
@@ -427,16 +444,11 @@ class Role(Hashable):
         InvalidArgument
             An invalid position was given or the default
             role was asked to be moved.
-
-        Returns
-        --------
-        :class:`Role`
-            The newly edited role.
         """
         if position is not MISSING:
             await self._move(position, reason=reason)
 
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if color is not MISSING:
             colour = color
 
@@ -465,10 +477,12 @@ class Role(Hashable):
             payload["unicode_emoji"] = unicode_emoji
             payload["icon"] = None
 
-        data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
+        data = await self._state.http.edit_role(
+            self.guild.id, self.id, reason=reason, **payload
+        )
         return Role(guild=self.guild, data=data, state=self._state)
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the role.
@@ -477,12 +491,12 @@ class Role(Hashable):
         use this.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for deleting this role. Shows up on the audit log.
 
         Raises
-        --------
+        ------
         Forbidden
             You do not have permissions to delete the role.
         HTTPException

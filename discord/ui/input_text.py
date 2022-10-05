@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
@@ -52,14 +52,14 @@ class InputText:
         self,
         *,
         style: InputTextStyle = InputTextStyle.short,
-        custom_id: Optional[str] = None,
+        custom_id: str | None = None,
         label: str,
-        placeholder: Optional[str] = None,
-        min_length: Optional[int] = None,
-        max_length: Optional[int] = None,
-        required: Optional[bool] = True,
-        value: Optional[str] = None,
-        row: Optional[int] = None,
+        placeholder: str | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        required: bool | None = True,
+        value: str | None = None,
+        row: int | None = None,
     ):
         super().__init__()
         if len(str(label)) > 45:
@@ -73,7 +73,9 @@ class InputText:
         if placeholder and len(str(placeholder)) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
 
         self._underlying = InputTextComponent._raw_construct(
@@ -89,7 +91,7 @@ class InputText:
         )
         self._input_value = False
         self.row = row
-        self._rendered_row: Optional[int] = None
+        self._rendered_row: int | None = None
 
     @property
     def type(self) -> ComponentType:
@@ -103,7 +105,9 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(f"style must be of type InputTextStyle not {value.__class__.__name__}")
+            raise TypeError(
+                f"style must be of type InputTextStyle not {value.__class__.__name__}"
+            )
         self._underlying.style = value
 
     @property
@@ -114,7 +118,9 @@ class InputText:
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(f"custom_id must be None or str not {value.__class__.__name__}")
+            raise TypeError(
+                f"custom_id must be None or str not {value.__class__.__name__}"
+            )
         self._underlying.custom_id = value
 
     @property
@@ -131,12 +137,12 @@ class InputText:
         self._underlying.label = value
 
     @property
-    def placeholder(self) -> Optional[str]:
+    def placeholder(self) -> str | None:
         """Optional[:class:`str`]: The placeholder text that is shown before anything is entered, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
-    def placeholder(self, value: Optional[str]):
+    def placeholder(self, value: str | None):
         if value and not isinstance(value, str):
             raise TypeError(f"placeholder must be None or str not {value.__class__.__name__}")  # type: ignore
         if value and len(value) > 100:
@@ -144,12 +150,12 @@ class InputText:
         self._underlying.placeholder = value
 
     @property
-    def min_length(self) -> Optional[int]:
+    def min_length(self) -> int | None:
         """Optional[:class:`int`]: The minimum number of characters that must be entered. Defaults to `0`."""
         return self._underlying.min_length
 
     @min_length.setter
-    def min_length(self, value: Optional[int]):
+    def min_length(self, value: int | None):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value < 0 or value) > 4000:
@@ -157,12 +163,12 @@ class InputText:
         self._underlying.min_length = value
 
     @property
-    def max_length(self) -> Optional[int]:
+    def max_length(self) -> int | None:
         """Optional[:class:`int`]: The maximum number of characters that can be entered."""
         return self._underlying.max_length
 
     @max_length.setter
-    def max_length(self, value: Optional[int]):
+    def max_length(self, value: int | None):
         if value and not isinstance(value, int):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value <= 0 or value > 4000):
@@ -170,18 +176,18 @@ class InputText:
         self._underlying.max_length = value
 
     @property
-    def required(self) -> Optional[bool]:
+    def required(self) -> bool | None:
         """Optional[:class:`bool`]: Whether the input text field is required or not. Defaults to `True`."""
         return self._underlying.required
 
     @required.setter
-    def required(self, value: Optional[bool]):
+    def required(self, value: bool | None):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         self._underlying.required = bool(value)
 
     @property
-    def value(self) -> Optional[str]:
+    def value(self) -> str | None:
         """Optional[:class:`str`]: The value entered in the text field."""
         if self._input_value is not False:
             # only False on init, otherwise the value was either set or cleared
@@ -189,7 +195,7 @@ class InputText:
         return self._underlying.value
 
     @value.setter
-    def value(self, value: Optional[str]):
+    def value(self, value: str | None):
         if value and not isinstance(value, str):
             raise TypeError(f"value must be None or str not {value.__class__.__name__}")  # type: ignore
         if value and len(str(value)) > 4000:

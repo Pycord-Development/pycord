@@ -16,12 +16,16 @@ class Example(commands.Cog):
 
     greetings = SlashCommandGroup("greetings", "Various greeting from cogs!")
 
-    international_greetings = greetings.create_subgroup("international", "International greetings")
+    international_greetings = greetings.create_subgroup(
+        "international", "International greetings"
+    )
 
     secret_greetings = SlashCommandGroup(
         "secret_greetings",
         "Secret greetings",
-        checks=[commands.is_owner().predicate],  # Ensures the owner_id user can access this group, and no one else
+        checks=[
+            commands.is_owner().predicate
+        ],  # Ensures the owner_id user can access this group, and no one else
     )
 
     @greetings.command()
@@ -33,11 +37,15 @@ class Example(commands.Cog):
         await ctx.respond("Aloha, a Hawaiian greeting")
 
     @secret_greetings.command()
-    async def secret_handshake(self, ctx: discord.ApplicationContext, member: discord.Member):
+    async def secret_handshake(
+        self, ctx: discord.ApplicationContext, member: discord.Member
+    ):
         await ctx.respond(f"{member.mention} secret handshakes you")
 
     @commands.Cog.listener()
-    async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
+    async def on_application_command_error(
+        self, ctx: discord.ApplicationContext, error: discord.DiscordException
+    ):
         if isinstance(error, commands.NotOwner):
             await ctx.respond("You can't use that command!")
         else:

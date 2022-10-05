@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from typing import TypeVar
 
-V = TypeVar('V')
+V = TypeVar("V")
 
 
 async def coroutine(val: V) -> V:

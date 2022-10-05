@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from .guild import Guild
 from .utils import MISSING, _bytes_to_base64_data, parse_time
@@ -93,7 +93,7 @@ class Template:
     .. versionadded:: 1.4
 
     Attributes
-    -----------
+    ----------
     code: :class:`str`
         The template code.
     uses: :class:`int`
@@ -138,15 +138,17 @@ class Template:
         self.code: str = data["code"]
         self.uses: int = data["usage_count"]
         self.name: str = data["name"]
-        self.description: Optional[str] = data["description"]
+        self.description: str | None = data["description"]
         creator_data = data.get("creator")
-        self.creator: Optional[User] = None if creator_data is None else self._state.create_user(creator_data)
+        self.creator: User | None = (
+            None if creator_data is None else self._state.create_user(creator_data)
+        )
 
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get("created_at"))
-        self.updated_at: Optional[datetime.datetime] = parse_time(data.get("updated_at"))
+        self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
+        self.updated_at: datetime.datetime | None = parse_time(data.get("updated_at"))
 
         guild_id = int(data["source_guild_id"])
-        guild: Optional[Guild] = self._state._get_guild(guild_id)
+        guild: Guild | None = self._state._get_guild(guild_id)
 
         self.source_guild: Guild
         if guild is None:
@@ -158,7 +160,7 @@ class Template:
         else:
             self.source_guild = guild
 
-        self.is_dirty: Optional[bool] = data.get("is_dirty", None)
+        self.is_dirty: bool | None = data.get("is_dirty", None)
 
     def __repr__(self) -> str:
         return (
@@ -181,18 +183,18 @@ class Template:
             The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
             for more details on what is expected.
 
+        Returns
+        -------
+        :class:`.Guild`
+            The guild created. This is not the same guild that is
+            added to cache.
+
         Raises
         ------
         HTTPException
             Guild creation failed.
         InvalidArgument
             Invalid icon image format given. Must be PNG or JPG.
-
-        Returns
-        -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
         """
         if icon is not None:
             icon = _bytes_to_base64_data(icon)
@@ -213,19 +215,19 @@ class Template:
         .. versionchanged:: 2.0
             The template is no longer synced in-place, instead it is returned.
 
-        Raises
+        Returns
         -------
+        :class:`Template`
+            The newly synced template.
+
+        Raises
+        ------
         HTTPException
             Syncing the template failed.
         Forbidden
             You don't have permissions to sync the template.
         NotFound
             This template does not exist.
-
-        Returns
-        --------
-        :class:`Template`
-            The newly synced template.
         """
 
         data = await self._state.http.sync_template(self.source_guild.id, self.code)
@@ -235,7 +237,7 @@ class Template:
         self,
         *,
         name: str = MISSING,
-        description: Optional[str] = MISSING,
+        description: str | None = MISSING,
     ) -> Template:
         """|coro|
 
@@ -250,25 +252,25 @@ class Template:
             The template is no longer edited in-place, instead it is returned.
 
         Parameters
-        ------------
+        ----------
         name: :class:`str`
             The template's new name.
         description: Optional[:class:`str`]
             The template's new description.
 
-        Raises
+        Returns
         -------
+        :class:`Template`
+            The newly edited template.
+
+        Raises
+        ------
         HTTPException
             Editing the template failed.
         Forbidden
             You don't have permissions to edit the template.
         NotFound
             This template does not exist.
-
-        Returns
-        --------
-        :class:`Template`
-            The newly edited template.
         """
         payload = {}
 
@@ -277,7 +279,9 @@ class Template:
         if description is not MISSING:
             payload["description"] = description
 
-        data = await self._state.http.edit_template(self.source_guild.id, self.code, payload)
+        data = await self._state.http.edit_template(
+            self.source_guild.id, self.code, payload
+        )
         return Template(state=self._state, data=data)
 
     async def delete(self) -> None:
@@ -291,7 +295,7 @@ class Template:
         .. versionadded:: 1.7
 
         Raises
-        -------
+        ------
         HTTPException
             Deleting the template failed.
         Forbidden

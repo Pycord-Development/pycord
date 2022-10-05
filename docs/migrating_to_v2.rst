@@ -109,7 +109,7 @@ Webhook Changes
 
 
 .. code-block:: python
-    
+
     async with aiohttp.ClientSession() as session:
         webhook = discord.Webhook.partial(
             id,

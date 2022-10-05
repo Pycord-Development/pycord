@@ -31,9 +31,7 @@ async def finished_callback(sink, channel: discord.TextChannel, *args):
 
 @bot.command()
 async def start(ctx: discord.ApplicationContext, sink: Sinks):
-    """
-    Record your voice!
-    """
+    """Record your voice!"""
     voice = ctx.author.voice
 
     if not voice:

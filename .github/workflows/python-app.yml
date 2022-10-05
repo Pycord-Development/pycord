@@ -3,15 +3,15 @@
 
 name: Python application
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ 3.8, 3.9, "3.10" ]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.8, 3.9, "3.10"]
     env:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python-version }}
@@ -44,5 +44,5 @@ jobs:
           files: ./coverage.xml
           flags: pytest # optional
           name: codecov-umbrella # optional
-          fail_ci_if_error: false  # Enable once we have good coverage
+          fail_ci_if_error: false # Enable once we have good coverage
           verbose: true # optional (default = false)

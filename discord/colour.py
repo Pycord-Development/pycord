@@ -64,7 +64,7 @@ class Colour:
              Returns the raw colour value.
 
     Attributes
-    ------------
+    ----------
     value: :class:`int`
         The raw integer colour value.
     """
@@ -73,7 +73,9 @@ class Colour:
 
     def __init__(self, value: int):
         if not isinstance(value, int):
-            raise TypeError(f"Expected int parameter, received {value.__class__.__name__} instead.")
+            raise TypeError(
+                f"Expected int parameter, received {value.__class__.__name__} instead."
+            )
 
         self.value: int = value
 
@@ -149,7 +151,7 @@ class Colour:
         .. versionadded:: 1.6
 
         Parameters
-        ------------
+        ----------
         seed: Optional[Union[:class:`int`, :class:`str`, :class:`float`, :class:`bytes`, :class:`bytearray`]]
             The seed to initialize the RNG with. If ``None`` is passed the default RNG is used.
 
@@ -342,7 +344,7 @@ class Colour:
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         theme: :class:`str`
             The theme color to apply, must be one of "dark", "light", or "amoled".
         """
