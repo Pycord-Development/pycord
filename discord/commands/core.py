@@ -813,7 +813,8 @@ class SlashCommand(ApplicationCommand):
     @cog.setter
     def cog(self, val):
         self._cog = val
-        self._validate_parameters()
+        if not self.options:
+            self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
