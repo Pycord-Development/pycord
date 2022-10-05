@@ -1,3 +1,81 @@
+[build-system]
+requires = [
+    "setuptools==65.4.1",
+    "setuptools-scm==7.0.5"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-cord"
+authors = [
+    {name = "Pycord Development"}
+]
+description = "A Python wrapper for the Discord API"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+Homepage = "https://pycord.dev"
+Changelog = "https://github.com/Pycord-Development/pycord/blob/master/CHANGELOG.md"
+Source = "https://github.com/Pycord-Development/pycord"
+Documentation = "https://docs.pycord.dev"
+Tracker = "https://github.com/Pycord-Development/pycord/issues"
+Funding = "https://patreon.com/pycord"
+
+[project.optional-dependencies]
+voice = [
+    "PyNaCl>=1.3.0,<1.6",
+]
+docs = [
+    "sphinx==4.5.0",
+    "sphinxcontrib_trio==1.1.2",
+    "sphinxcontrib-websupport",
+    "myst-parser",
+]
+speed = [
+    "orjson>=3.5.4",
+    "aiodns>=1.1",
+    "Brotlipy",
+    "cchardet",
+]
+
+[tool.setuptools]
+packages = [
+    "discord",
+    "discord.types",
+    "discord.sinks",
+    "discord.ui",
+    "discord.webhook",
+    "discord.commands",
+    "discord.ext.commands",
+    "discord.ext.tasks",
+    "discord.ext.pages",
+    "discord.ext.bridge",
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+
+[tool.setuptools_scm]
+
 [tool.black]
 target-version = ['py38', 'py39', 'py310', 'py311']
 
