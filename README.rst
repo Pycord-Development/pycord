@@ -141,4 +141,3 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
-- `Unofficial Discord API Server <https://discord.gg/discord-api>`_

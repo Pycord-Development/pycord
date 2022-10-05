@@ -3071,7 +3071,9 @@ class Guild(Hashable):
                 "delete_message_seconds and delete_message_days are mutually exclusive."
             )
 
-        if not (0 <= delete_message_seconds <= 604800):
+        if delete_message_seconds is not None and not (
+            0 <= delete_message_seconds <= 604800
+        ):
             raise TypeError(
                 "delete_message_seconds must be between 0 and 604800 seconds."
             )
