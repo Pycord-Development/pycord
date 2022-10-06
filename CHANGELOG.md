@@ -8,7 +8,13 @@ possible (see our
 [Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more
 info).
 
-## [Unreleased]
+## [2.2.2] - 2022-10-05
+
+### Fixed
+
+- Fixed `parent` attribute of second level subcommands being set to the base level
+  command instead of the direct parent.
+  ([#1673](https://github.com/Pycord-Development/pycord/pull/1673))
 
 ## [2.2.1] - 2022-10-05
 
@@ -391,7 +397,8 @@ info).
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
