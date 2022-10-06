@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from . import utils
 from .utils import MISSING, SnowflakeList, snowflake_time
+
 # from . import Emoji , PartialEmoji
 
 __all__ = ("Tag",)
@@ -18,17 +19,17 @@ if TYPE_CHECKING:
     from .types.emoji import Emoji as EmojiPayload
 
 
-class Tag():
+class Tag:
 
     """
-        An object that represents a tag that is able to be applied to a thread in a FORUM channel.
-        id:	snowflake	the id of the tag
-        name:	string	the name of the tag (0-20 characters)
-        moderated:	boolean	whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
-        emoji_id:	snowflake	the id of a guild's custom emoji *
-        emoji_name:	string	the unicode character of the emoji *
+    An object that represents a tag that is able to be applied to a thread in a FORUM channel.
+    id:	snowflake	the id of the tag
+    name:	string	the name of the tag (0-20 characters)
+    moderated:	boolean	whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
+    emoji_id:	snowflake	the id of a guild's custom emoji *
+    emoji_name:	string	the unicode character of the emoji *
     """
-    
+
     __slots__ = (
         "id",
         "name",
@@ -62,21 +63,24 @@ class Tag():
         return snowflake_time(self.id)
 
     @property
-    def emoji(self) -> Optional[Union[Emoji, PartialEmoji]]:
+    def emoji(self) -> Emoji | PartialEmoji | None:
         """:class:`Emoji`: Returns the emoji associated with this tag."""
         from .emoji import Emoji, PartialEmoji
+
         if self.emoji_id is None:
             return None
 
-        return self._state.get_emoji(self.emoji_id) or PartialEmoji(name=self.emoji_name, id=self.emoji_id)
+        return self._state.get_emoji(self.emoji_id) or PartialEmoji(
+            name=self.emoji_name, id=self.emoji_id
+        )
 
     @property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """:class:`Guild`: Returns the guild associated with this tag."""
         return self._state._get_guild(self.guild_id)
 
     @property
-    def guild_id(self) -> Optional[int]:
+    def guild_id(self) -> int | None:
         """:class:`int`: Returns the guild ID associated with this tag."""
         return self._state.guild_id
 
@@ -98,7 +102,7 @@ class Tag():
 
     def __hash__(self) -> int:
         return super().__hash__()
-    
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -107,12 +111,6 @@ class Tag():
             "emoji_id": self.emoji_id,
             "emoji_name": self.emoji_name,
         }
-        
-    
-    
-
 
     def __dict__(self) -> dict:
-        return self.to_dict()    
-    
-
+        return self.to_dict()
