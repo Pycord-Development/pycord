@@ -697,8 +697,6 @@ class SlashCommand(ApplicationCommand):
         self._before_invoke = None
         self._after_invoke = None
 
-        self._cog = MISSING
-
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
@@ -821,7 +819,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return self._cog
+        return getattr(self, "_cog", MISSING)
 
     @cog.setter
     def cog(self, val):
@@ -1127,7 +1125,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog = MISSING
         self.id = None
 
         # Permissions
@@ -1171,12 +1169,21 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        # check if subcommand has no cog set
+        # also check if cog is MISSING because it
+        # might not have been set by the cog yet
+        if command.cog is MISSING and self.cog is not MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
@@ -1273,7 +1280,7 @@ class SlashCommandGroup(ApplicationCommand):
                 guild_ids=guild_ids,
                 parent=self,
             )
-            self.subcommands.append(group)
+            self.add_command(group)
             return group
 
         return inner
