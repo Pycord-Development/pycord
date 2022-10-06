@@ -24,40 +24,41 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict, Optional, Literal, Union
-from datetime import datetime
+from typing import Literal, TypedDict
 
-from .guild import Guild
-from .user import User
-from .snowflake import Snowflake
-from .channel import StageChannel, VoiceChannel
-from .user import User
 from .member import Member
-
+from .snowflake import Snowflake
+from .user import User
 
 ScheduledEventStatus = Literal[1, 2, 3, 4]
 ScheduledEventLocationType = Literal[1, 2, 3]
 ScheduledEventPrivacyLevel = Literal[2]
 
 
-class ScheduledEventLocation(TypedDict):
-    value: Union[StageChannel, VoiceChannel, str]
-    type: ScheduledEventLocationType
-
-
 class ScheduledEvent(TypedDict):
     id: Snowflake
-    guild: Guild
+    guild_id: Snowflake
+    channel_id: Snowflake
+    creator_id: Snowflake
     name: str
     description: str
-    #image: Optional[str]
-    start_time: datetime
-    end_time: Optional[datetime]
+    image: str | None
+    scheduled_start_time: str
+    scheduled_end_time: str | None
+    privacy_level: ScheduledEventPrivacyLevel
     status: ScheduledEventStatus
-    subscriber_count: Optional[int]
-    creator_id: Snowflake
-    creator: Optional[User]
-    location: ScheduledEventLocation
+    entity_type: ScheduledEventLocationType
+    entity_id: Snowflake
+    entity_metadata: ScheduledEventEntityMetadata
+    creator: User
+    user_count: int | None
 
-class ScheduledEventSubscriber(User):
-    member: Optional[Member]
+
+class ScheduledEventEntityMetadata(TypedDict):
+    location: str
+
+
+class ScheduledEventSubscriber(TypedDict):
+    guild_scheduled_event_id: Snowflake
+    user: User
+    member: Member | None

@@ -53,8 +53,8 @@ instead. Similar to this example: ::
     # good
     await asyncio.sleep(10)
 
-Another common source of blocking for too long is using HTTP requests with the famous module :doc:`req:index`.
-While :doc:`req:index` is an amazing module for non-asynchronous programming, it is not a good choice for
+Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`.
+While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for
 :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which
 is installed on the side with this library.
 
@@ -262,6 +262,7 @@ There are multiple ways of doing this. If you have a specific model's ID then yo
 one of the following functions:
 
 - :meth:`Client.get_channel`
+- :meth:`Client.get_message`
 - :meth:`Client.get_guild`
 - :meth:`Client.get_user`
 - :meth:`Client.get_emoji`
@@ -325,10 +326,6 @@ Quick example: ::
     embed = discord.Embed()
     embed.set_image(url="attachment://image.png")
     await channel.send(file=file, embed=embed)
-
-.. note ::
-
-    Due to a Discord limitation, filenames may not include underscores.
 
 Is there an event for audit log entries being created?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

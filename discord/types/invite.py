@@ -25,14 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Optional, TypedDict, Union
+from typing import Literal, TypedDict, Union
 
-from .snowflake import Snowflake
+from .appinfo import PartialAppInfo
+from .channel import PartialChannel
 from .guild import InviteGuild, _GuildPreviewUnique
 from .scheduled_events import ScheduledEvent
-from .channel import PartialChannel
+from .snowflake import Snowflake
 from .user import PartialUser
-from .appinfo import PartialAppInfo
 
 InviteTargetType = Literal[1, 2]
 
@@ -52,11 +52,11 @@ class _InviteMetadata(TypedDict, total=False):
     max_age: int
     temporary: bool
     created_at: str
-    expires_at: Optional[str]
+    expires_at: str | None
 
 
 class VanityInvite(_InviteMetadata):
-    code: Optional[str]
+    code: str | None
 
 
 class IncompleteInvite(_InviteMetadata):
@@ -65,11 +65,11 @@ class IncompleteInvite(_InviteMetadata):
 
 
 class Invite(IncompleteInvite, _InviteOptional):
-    ...
+    pass
 
 
 class InviteWithCounts(Invite, _GuildPreviewUnique):
-    ...
+    pass
 
 
 class _GatewayInviteCreateOptional(TypedDict, total=False):

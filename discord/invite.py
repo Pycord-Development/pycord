@@ -25,38 +25,35 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Optional, Type, TypeVar, Union, TYPE_CHECKING
-from .asset import Asset
-from .utils import parse_time, snowflake_time, _get_as_snowflake
-from .object import Object
-from .mixins import Hashable
-from .enums import ChannelType, VerificationLevel, InviteTarget, try_enum
+from typing import TYPE_CHECKING, TypeVar, Union
+
 from .appinfo import PartialAppInfo
+from .asset import Asset
+from .enums import ChannelType, InviteTarget, VerificationLevel, try_enum
+from .mixins import Hashable
+from .object import Object
+from .utils import _get_as_snowflake, parse_time, snowflake_time
 
 __all__ = (
-    'PartialInviteChannel',
-    'PartialInviteGuild',
-    'Invite',
+    "PartialInviteChannel",
+    "PartialInviteGuild",
+    "Invite",
 )
 
 if TYPE_CHECKING:
-    from .types.invite import (
-        Invite as InvitePayload,
-        InviteGuild as InviteGuildPayload,
-        GatewayInvite as GatewayInvitePayload,
-    )
-    from .types.channel import (
-        PartialChannel as InviteChannelPayload,
-    )
-    from .state import ConnectionState
-    from .guild import Guild
     from .abc import GuildChannel
-    from .user import User
+    from .guild import Guild
     from .scheduled_events import ScheduledEvent
+    from .state import ConnectionState
+    from .types.channel import PartialChannel as InviteChannelPayload
+    from .types.invite import GatewayInvite as GatewayInvitePayload
+    from .types.invite import Invite as InvitePayload
+    from .types.invite import InviteGuild as InviteGuildPayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .user import User
 
-    InviteGuildType = Union[Guild, 'PartialInviteGuild', Object]
-    InviteChannelType = Union[GuildChannel, 'PartialInviteChannel', Object]
+    InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
+    InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
 
     import datetime
 
@@ -86,7 +83,7 @@ class PartialInviteChannel:
             Returns the partial channel's name.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The partial channel's name.
     id: :class:`int`
@@ -95,23 +92,25 @@ class PartialInviteChannel:
         The partial channel's type.
     """
 
-    __slots__ = ('id', 'name', 'type')
+    __slots__ = ("id", "name", "type")
 
     def __init__(self, data: InviteChannelPayload):
-        self.id: int = int(data['id'])
-        self.name: str = data['name']
-        self.type: ChannelType = try_enum(ChannelType, data['type'])
+        self.id: int = int(data["id"])
+        self.name: str = data["name"]
+        self.type: ChannelType = try_enum(ChannelType, data["type"])
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
-        return f'<PartialInviteChannel id={self.id} name={self.name} type={self.type!r}>'
+        return (
+            f"<PartialInviteChannel id={self.id} name={self.name} type={self.type!r}>"
+        )
 
     @property
     def mention(self) -> str:
         """:class:`str`: The string that allows you to mention the channel."""
-        return f'<#{self.id}>'
+        return f"<#{self.id}>"
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -144,7 +143,7 @@ class PartialInviteGuild:
             Returns the partial guild's name.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The partial guild's name.
     id: :class:`int`
@@ -157,26 +156,38 @@ class PartialInviteGuild:
         The partial guild's description.
     """
 
-    __slots__ = ('_state', 'features', '_icon', '_banner', 'id', 'name', '_splash', 'verification_level', 'description')
+    __slots__ = (
+        "_state",
+        "features",
+        "_icon",
+        "_banner",
+        "id",
+        "name",
+        "_splash",
+        "verification_level",
+        "description",
+    )
 
     def __init__(self, state: ConnectionState, data: InviteGuildPayload, id: int):
         self._state: ConnectionState = state
         self.id: int = id
-        self.name: str = data['name']
-        self.features: List[str] = data.get('features', [])
-        self._icon: Optional[str] = data.get('icon')
-        self._banner: Optional[str] = data.get('banner')
-        self._splash: Optional[str] = data.get('splash')
-        self.verification_level: VerificationLevel = try_enum(VerificationLevel, data.get('verification_level'))
-        self.description: Optional[str] = data.get('description')
+        self.name: str = data["name"]
+        self.features: list[str] = data.get("features", [])
+        self._icon: str | None = data.get("icon")
+        self._banner: str | None = data.get("banner")
+        self._splash: str | None = data.get("splash")
+        self.verification_level: VerificationLevel = try_enum(
+            VerificationLevel, data.get("verification_level")
+        )
+        self.description: str | None = data.get("description")
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return (
-            f'<{self.__class__.__name__} id={self.id} name={self.name!r} features={self.features} '
-            f'description={self.description!r}>'
+            f"<{self.__class__.__name__} id={self.id} name={self.name!r} features={self.features} "
+            f"description={self.description!r}>"
         )
 
     @property
@@ -185,28 +196,32 @@ class PartialInviteGuild:
         return snowflake_time(self.id)
 
     @property
-    def icon(self) -> Optional[Asset]:
+    def icon(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
 
     @property
-    def banner(self) -> Optional[Asset]:
+    def banner(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the guild's banner asset, if available."""
         if self._banner is None:
             return None
-        return Asset._from_guild_image(self._state, self.id, self._banner, path='banners')
+        return Asset._from_guild_image(
+            self._state, self.id, self._banner, path="banners"
+        )
 
     @property
-    def splash(self) -> Optional[Asset]:
+    def splash(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available."""
         if self._splash is None:
             return None
-        return Asset._from_guild_image(self._state, self.id, self._splash, path='splashes')
+        return Asset._from_guild_image(
+            self._state, self.id, self._splash, path="splashes"
+        )
 
 
-I = TypeVar('I', bound='Invite')
+I = TypeVar("I", bound="Invite")
 
 
 class Invite(Hashable):
@@ -312,80 +327,103 @@ class Invite(Hashable):
     """
 
     __slots__ = (
-        'max_age',
-        'code',
-        'guild',
-        'revoked',
-        'created_at',
-        'uses',
-        'temporary',
-        'max_uses',
-        'inviter',
-        'channel',
-        'target_user',
-        'target_type',
-        '_state',
-        'approximate_member_count',
-        'approximate_presence_count',
-        'scheduled_event',
-        'target_application',
-        'expires_at',
+        "max_age",
+        "code",
+        "guild",
+        "revoked",
+        "created_at",
+        "uses",
+        "temporary",
+        "max_uses",
+        "inviter",
+        "channel",
+        "target_user",
+        "target_type",
+        "_state",
+        "approximate_member_count",
+        "approximate_presence_count",
+        "scheduled_event",
+        "target_application",
+        "expires_at",
     )
 
-    BASE = 'https://discord.gg'
+    BASE = "https://discord.gg"
 
     def __init__(
         self,
         *,
         state: ConnectionState,
         data: InvitePayload,
-        guild: Optional[Union[PartialInviteGuild, Guild]] = None,
-        channel: Optional[Union[PartialInviteChannel, GuildChannel]] = None,
+        guild: PartialInviteGuild | Guild | None = None,
+        channel: PartialInviteChannel | GuildChannel | None = None,
     ):
         self._state: ConnectionState = state
-        self.max_age: Optional[int] = data.get('max_age')
-        self.code: str = data['code']
-        self.guild: Optional[InviteGuildType] = self._resolve_guild(data.get('guild'), guild)
-        self.revoked: Optional[bool] = data.get('revoked')
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get('created_at'))
-        self.temporary: Optional[bool] = data.get('temporary')
-        self.uses: Optional[int] = data.get('uses')
-        self.max_uses: Optional[int] = data.get('max_uses')
-        self.approximate_presence_count: Optional[int] = data.get('approximate_presence_count')
-        self.approximate_member_count: Optional[int] = data.get('approximate_member_count')
+        self.max_age: int | None = data.get("max_age")
+        self.code: str = data["code"]
+        self.guild: InviteGuildType | None = self._resolve_guild(
+            data.get("guild"), guild
+        )
+        self.revoked: bool | None = data.get("revoked")
+        self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
+        self.temporary: bool | None = data.get("temporary")
+        self.uses: int | None = data.get("uses")
+        self.max_uses: int | None = data.get("max_uses")
+        self.approximate_presence_count: int | None = data.get(
+            "approximate_presence_count"
+        )
+        self.approximate_member_count: int | None = data.get("approximate_member_count")
 
-        expires_at = data.get('expires_at', None)
-        self.expires_at: Optional[datetime.datetime] = parse_time(expires_at) if expires_at else None
+        expires_at = data.get("expires_at", None)
+        self.expires_at: datetime.datetime | None = (
+            parse_time(expires_at) if expires_at else None
+        )
 
-        inviter_data = data.get('inviter')
-        self.inviter: Optional[User] = None if inviter_data is None else self._state.create_user(inviter_data)
+        inviter_data = data.get("inviter")
+        self.inviter: User | None = (
+            None if inviter_data is None else self._state.create_user(inviter_data)
+        )
 
-        self.channel: Optional[InviteChannelType] = self._resolve_channel(data.get('channel'), channel)
+        self.channel: InviteChannelType | None = self._resolve_channel(
+            data.get("channel"), channel
+        )
 
-        target_user_data = data.get('target_user')
-        self.target_user: Optional[User] = None if target_user_data is None else self._state.create_user(target_user_data)
+        target_user_data = data.get("target_user")
+        self.target_user: User | None = (
+            None
+            if target_user_data is None
+            else self._state.create_user(target_user_data)
+        )
 
-        self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
+        self.target_type: InviteTarget = try_enum(
+            InviteTarget, data.get("target_type", 0)
+        )
 
         from .scheduled_events import ScheduledEvent
-        scheduled_event: ScheduledEventPayload = data.get('guild_scheduled_event')
-        self.scheduled_event: Optional[ScheduledEvent] = ScheduledEvent(state=state, data=scheduled_event) if scheduled_event else None 
 
-        application = data.get('target_application')
-        self.target_application: Optional[PartialAppInfo] = (
+        scheduled_event: ScheduledEventPayload = data.get("guild_scheduled_event")
+        self.scheduled_event: ScheduledEvent | None = (
+            ScheduledEvent(state=state, data=scheduled_event)
+            if scheduled_event
+            else None
+        )
+
+        application = data.get("target_application")
+        self.target_application: PartialAppInfo | None = (
             PartialAppInfo(data=application, state=state) if application else None
         )
 
     @classmethod
-    def from_incomplete(cls: Type[I], *, state: ConnectionState, data: InvitePayload) -> I:
-        guild: Optional[Union[Guild, PartialInviteGuild]]
+    def from_incomplete(
+        cls: type[I], *, state: ConnectionState, data: InvitePayload
+    ) -> I:
+        guild: Guild | PartialInviteGuild | None
         try:
-            guild_data = data['guild']
+            guild_data = data["guild"]
         except KeyError:
             # If we're here, then this is a group DM
             guild = None
         else:
-            guild_id = int(guild_data['id'])
+            guild_id = int(guild_data["id"])
             guild = state._get_guild(guild_id)
             if guild is None:
                 # If it's not cached, then it has to be a partial guild
@@ -393,7 +431,9 @@ class Invite(Hashable):
 
         # As far as I know, invites always need a channel
         # So this should never raise.
-        channel: Union[PartialInviteChannel, GuildChannel] = PartialInviteChannel(data['channel'])
+        channel: PartialInviteChannel | GuildChannel = PartialInviteChannel(
+            data["channel"]
+        )
         if guild is not None and not isinstance(guild, PartialInviteGuild):
             # Upgrade the partial data if applicable
             channel = guild.get_channel(channel.id) or channel
@@ -401,10 +441,12 @@ class Invite(Hashable):
         return cls(state=state, data=data, guild=guild, channel=channel)
 
     @classmethod
-    def from_gateway(cls: Type[I], *, state: ConnectionState, data: GatewayInvitePayload) -> I:
-        guild_id: Optional[int] = _get_as_snowflake(data, 'guild_id')
-        guild: Optional[Union[Guild, Object]] = state._get_guild(guild_id)
-        channel_id = int(data['channel_id'])
+    def from_gateway(
+        cls: type[I], *, state: ConnectionState, data: GatewayInvitePayload
+    ) -> I:
+        guild_id: int | None = _get_as_snowflake(data, "guild_id")
+        guild: Guild | Object | None = state._get_guild(guild_id)
+        channel_id = int(data["channel_id"])
         if guild is not None:
             channel = guild.get_channel(channel_id) or Object(id=channel_id)  # type: ignore
         else:
@@ -415,23 +457,23 @@ class Invite(Hashable):
 
     def _resolve_guild(
         self,
-        data: Optional[InviteGuildPayload],
-        guild: Optional[Union[Guild, PartialInviteGuild]] = None,
-    ) -> Optional[InviteGuildType]:
+        data: InviteGuildPayload | None,
+        guild: Guild | PartialInviteGuild | None = None,
+    ) -> InviteGuildType | None:
         if guild is not None:
             return guild
 
         if data is None:
             return None
 
-        guild_id = int(data['id'])
+        guild_id = int(data["id"])
         return PartialInviteGuild(self._state, data, guild_id)
 
     def _resolve_channel(
         self,
-        data: Optional[InviteChannelPayload],
-        channel: Optional[Union[PartialInviteChannel, GuildChannel]] = None,
-    ) -> Optional[InviteChannelType]:
+        data: InviteChannelPayload | None,
+        channel: PartialInviteChannel | GuildChannel | None = None,
+    ) -> InviteChannelType | None:
         if channel is not None:
             return channel
 
@@ -445,10 +487,10 @@ class Invite(Hashable):
 
     def __repr__(self) -> str:
         return (
-            f'<Invite code={self.code!r} guild={self.guild!r} '
-            f'online={self.approximate_presence_count} '
-            f'members={self.approximate_member_count} '
-            f'scheduled_event={self.scheduled_event}>'
+            f"<Invite code={self.code!r} guild={self.guild!r} "
+            f"online={self.approximate_presence_count} "
+            f"members={self.approximate_member_count} "
+            f"scheduled_event={self.scheduled_event}>"
         )
 
     def __hash__(self) -> int:
@@ -462,9 +504,9 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """:class:`str`: A property that retrieves the invite URL."""
-        return self.BASE + '/' + self.code + (f'?event={self.scheduled_event.id}' if self.scheduled_event else '')
+        return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
-    async def delete(self, *, reason: Optional[str] = None):
+    async def delete(self, *, reason: str | None = None):
         """|coro|
 
         Revokes the instant invite.
@@ -472,12 +514,12 @@ class Invite(Hashable):
         You must have the :attr:`~Permissions.manage_channels` permission to do this.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for deleting this invite. Shows up on the audit log.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to revoke invites.
         NotFound
@@ -493,7 +535,7 @@ class Invite(Hashable):
 
         .. note::
 
-            Scheduled events aren't actually associated to invites on the API.
+            Scheduled events aren't actually associated with invites on the API.
             Any guild channel invite can have an event attached to it. Using
             :meth:`abc.GuildChannel.create_invite`, :meth:`Client.fetch_invite`,
             or this method, you can link scheduled events.
@@ -501,7 +543,7 @@ class Invite(Hashable):
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         event: :class:`ScheduledEvent`
             The scheduled event object to link.
         """

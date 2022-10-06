@@ -24,20 +24,19 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Type, TypeVar, Union, List, TYPE_CHECKING, Any, Union
 
-__all__ = (
-    'AllowedMentions',
-)
+from typing import TYPE_CHECKING, Any, TypeVar
+
+__all__ = ("AllowedMentions",)
 
 if TYPE_CHECKING:
-    from .types.message import AllowedMentions as AllowedMentionsPayload
     from .abc import Snowflake
+    from .types.message import AllowedMentions as AllowedMentionsPayload
 
 
 class _FakeBool:
     def __repr__(self):
-        return 'True'
+        return "True"
 
     def __eq__(self, other):
         return other is True
@@ -48,18 +47,18 @@ class _FakeBool:
 
 default: Any = _FakeBool()
 
-A = TypeVar('A', bound='AllowedMentions')
+A = TypeVar("A", bound="AllowedMentions")
 
 
 class AllowedMentions:
     """A class that represents what mentions are allowed in a message.
 
     This class can be set during :class:`Client` initialisation to apply
-    to every message sent. It can also be applied on a per message basis
+    to every message sent. It can also be applied on a per-message basis
     via :meth:`abc.Messageable.send` for more fine-grained control.
 
     Attributes
-    ------------
+    ----------
     everyone: :class:`bool`
         Whether to allow everyone and here mentions. Defaults to ``True``.
     users: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
@@ -81,14 +80,14 @@ class AllowedMentions:
         .. versionadded:: 1.6
     """
 
-    __slots__ = ('everyone', 'users', 'roles', 'replied_user')
+    __slots__ = ("everyone", "users", "roles", "replied_user")
 
     def __init__(
         self,
         *,
         everyone: bool = default,
-        users: Union[bool, List[Snowflake]] = default,
-        roles: Union[bool, List[Snowflake]] = default,
+        users: bool | list[Snowflake] = default,
+        roles: bool | list[Snowflake] = default,
         replied_user: bool = default,
     ):
         self.everyone = everyone
@@ -97,7 +96,7 @@ class AllowedMentions:
         self.replied_user = replied_user
 
     @classmethod
-    def all(cls: Type[A]) -> A:
+    def all(cls: type[A]) -> A:
         """A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True``
 
         .. versionadded:: 1.5
@@ -105,7 +104,7 @@ class AllowedMentions:
         return cls(everyone=True, users=True, roles=True, replied_user=True)
 
     @classmethod
-    def none(cls: Type[A]) -> A:
+    def none(cls: type[A]) -> A:
         """A factory method that returns a :class:`AllowedMentions` with all fields set to ``False``
 
         .. versionadded:: 1.5
@@ -117,22 +116,25 @@ class AllowedMentions:
         data = {}
 
         if self.everyone:
-            parse.append('everyone')
+            parse.append("everyone")
 
+        # In the following operations, the comparison operator
+        # must be used instead of the "is" operator as the program
+        # has to invoke _Fakebool.__eq__ to prevent false results.
         if self.users == True:
-            parse.append('users')
+            parse.append("users")
         elif self.users != False:
-            data['users'] = [x.id for x in self.users]
+            data["users"] = [x.id for x in self.users]
 
         if self.roles == True:
-            parse.append('roles')
+            parse.append("roles")
         elif self.roles != False:
-            data['roles'] = [x.id for x in self.roles]
+            data["roles"] = [x.id for x in self.roles]
 
         if self.replied_user:
-            data['replied_user'] = True
+            data["replied_user"] = True
 
-        data['parse'] = parse
+        data["parse"] = parse
         return data  # type: ignore
 
     def merge(self, other: AllowedMentions) -> AllowedMentions:
@@ -142,11 +144,15 @@ class AllowedMentions:
         everyone = self.everyone if other.everyone is default else other.everyone
         users = self.users if other.users is default else other.users
         roles = self.roles if other.roles is default else other.roles
-        replied_user = self.replied_user if other.replied_user is default else other.replied_user
-        return AllowedMentions(everyone=everyone, roles=roles, users=users, replied_user=replied_user)
+        replied_user = (
+            self.replied_user if other.replied_user is default else other.replied_user
+        )
+        return AllowedMentions(
+            everyone=everyone, roles=roles, users=users, replied_user=replied_user
+        )
 
     def __repr__(self) -> str:
         return (
-            f'{self.__class__.__name__}(everyone={self.everyone}, '
-            f'users={self.users}, roles={self.roles}, replied_user={self.replied_user})'
+            f"{self.__class__.__name__}(everyone={self.everyone}, "
+            f"users={self.users}, roles={self.roles}, replied_user={self.replied_user})"
         )

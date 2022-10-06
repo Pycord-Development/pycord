@@ -25,14 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Type, TypeVar, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
+
 from .asset import Asset
 from .colour import Colour
 from .enums import DefaultAvatar
 from .flags import PublicUserFlags
-from .utils import snowflake_time, _bytes_to_base64_data, MISSING
+from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -46,11 +47,11 @@ if TYPE_CHECKING:
 
 
 __all__ = (
-    'User',
-    'ClientUser',
+    "User",
+    "ClientUser",
 )
 
-BU = TypeVar('BU', bound='BaseUser')
+BU = TypeVar("BU", bound="BaseUser")
 
 
 class _UserTag:
@@ -60,16 +61,16 @@ class _UserTag:
 
 class BaseUser(_UserTag):
     __slots__ = (
-        'name',
-        'id',
-        'discriminator',
-        '_avatar',
-        '_banner',
-        '_accent_colour',
-        'bot',
-        'system',
-        '_public_flags',
-        '_state',
+        "name",
+        "id",
+        "discriminator",
+        "_avatar",
+        "_banner",
+        "_accent_colour",
+        "bot",
+        "system",
+        "_public_flags",
+        "_state",
     )
 
     if TYPE_CHECKING:
@@ -79,9 +80,9 @@ class BaseUser(_UserTag):
         bot: bool
         system: bool
         _state: ConnectionState
-        _avatar: Optional[str]
-        _banner: Optional[str]
-        _accent_colour: Optional[int]
+        _avatar: str | None
+        _banner: str | None
+        _accent_colour: int | None
         _public_flags: int
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
@@ -95,7 +96,7 @@ class BaseUser(_UserTag):
         )
 
     def __str__(self) -> str:
-        return f'{self.name}#{self.discriminator}'
+        return f"{self.name}#{self.discriminator}"
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
@@ -107,18 +108,18 @@ class BaseUser(_UserTag):
         return self.id >> 22
 
     def _update(self, data: UserPayload) -> None:
-        self.name = data['username']
-        self.id = int(data['id'])
-        self.discriminator = data['discriminator']
-        self._avatar = data['avatar']
-        self._banner = data.get('banner', None)
-        self._accent_colour = data.get('accent_color', None)
-        self._public_flags = data.get('public_flags', 0)
-        self.bot = data.get('bot', False)
-        self.system = data.get('system', False)
+        self.name = data["username"]
+        self.id = int(data["id"])
+        self.discriminator = data["discriminator"]
+        self._avatar = data["avatar"]
+        self._banner = data.get("banner", None)
+        self._accent_colour = data.get("accent_color", None)
+        self._public_flags = data.get("public_flags", 0)
+        self.bot = data.get("bot", False)
+        self.system = data.get("system", False)
 
     @classmethod
-    def _copy(cls: Type[BU], user: BU) -> BU:
+    def _copy(cls: type[BU], user: BU) -> BU:
         self = cls.__new__(cls)  # bypass __init__
 
         self.name = user.name
@@ -133,14 +134,22 @@ class BaseUser(_UserTag):
 
         return self
 
-    def _to_minimal_user_json(self) -> Dict[str, Any]:
+    def _to_minimal_user_json(self) -> dict[str, Any]:
         return {
-            'username': self.name,
-            'id': self.id,
-            'avatar': self._avatar,
-            'discriminator': self.discriminator,
-            'bot': self.bot,
+            "username": self.name,
+            "id": self.id,
+            "avatar": self._avatar,
+            "discriminator": self.discriminator,
+            "bot": self.bot,
         }
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the user.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/users/{self.id}"
 
     @property
     def public_flags(self) -> PublicUserFlags:
@@ -148,7 +157,7 @@ class BaseUser(_UserTag):
         return PublicUserFlags._from_value(self._public_flags)
 
     @property
-    def avatar(self) -> Optional[Asset]:
+    def avatar(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns an :class:`Asset` for the avatar the user has.
 
         If the user does not have a traditional avatar, ``None`` is returned.
@@ -160,8 +169,12 @@ class BaseUser(_UserTag):
 
     @property
     def default_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the default avatar for a given user. This is calculated by the user's discriminator."""
-        return Asset._from_default_avatar(self._state, int(self.discriminator) % len(DefaultAvatar))
+        """:class:`Asset`: Returns the default avatar for a given user.
+        This is calculated by the user's discriminator.
+        """
+        return Asset._from_default_avatar(
+            self._state, int(self.discriminator) % len(DefaultAvatar)
+        )
 
     @property
     def display_avatar(self) -> Asset:
@@ -174,11 +187,10 @@ class BaseUser(_UserTag):
         return self.avatar or self.default_avatar
 
     @property
-    def banner(self) -> Optional[Asset]:
+    def banner(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the user's banner asset, if available.
 
         .. versionadded:: 2.0
-
 
         .. note::
             This information is only available via :meth:`Client.fetch_user`.
@@ -188,7 +200,7 @@ class BaseUser(_UserTag):
         return Asset._from_user_banner(self._state, self.id, self._banner)
 
     @property
-    def accent_colour(self) -> Optional[Colour]:
+    def accent_colour(self) -> Colour | None:
         """Optional[:class:`Colour`]: Returns the user's accent colour, if applicable.
 
         There is an alias for this named :attr:`accent_color`.
@@ -204,7 +216,7 @@ class BaseUser(_UserTag):
         return Colour(self._accent_colour)
 
     @property
-    def accent_color(self) -> Optional[Colour]:
+    def accent_color(self) -> Colour | None:
         """Optional[:class:`Colour`]: Returns the user's accent color, if applicable.
 
         There is an alias for this named :attr:`accent_colour`.
@@ -238,7 +250,7 @@ class BaseUser(_UserTag):
     @property
     def mention(self) -> str:
         """:class:`str`: Returns a string that allows you to mention the given user."""
-        return f'<@{self.id}>'
+        return f"<@{self.id}>"
 
     @property
     def created_at(self) -> datetime:
@@ -262,7 +274,7 @@ class BaseUser(_UserTag):
         """Checks if the user is mentioned in the specified message.
 
         Parameters
-        -----------
+        ----------
         message: :class:`Message`
             The message to check if you're mentioned in.
 
@@ -300,7 +312,7 @@ class ClientUser(BaseUser):
             Returns the user's name with discriminator.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The user's username.
     id: :class:`int`
@@ -322,11 +334,11 @@ class ClientUser(BaseUser):
         Specifies if the user has MFA turned on and working.
     """
 
-    __slots__ = ('locale', '_flags', 'verified', 'mfa_enabled', '__weakref__')
+    __slots__ = ("locale", "_flags", "verified", "mfa_enabled", "__weakref__")
 
     if TYPE_CHECKING:
         verified: bool
-        locale: Optional[str]
+        locale: str | None
         mfa_enabled: bool
         _flags: int
 
@@ -335,19 +347,21 @@ class ClientUser(BaseUser):
 
     def __repr__(self) -> str:
         return (
-            f'<ClientUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}'
-            f' bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>'
+            f"<ClientUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
         )
 
     def _update(self, data: UserPayload) -> None:
         super()._update(data)
-        # There's actually an Optional[str] phone field as well but I won't use it
-        self.verified = data.get('verified', False)
-        self.locale = data.get('locale')
-        self._flags = data.get('flags', 0)
-        self.mfa_enabled = data.get('mfa_enabled', False)
+        # There's actually an Optional[str] phone field as well, but I won't use it
+        self.verified = data.get("verified", False)
+        self.locale = data.get("locale")
+        self._flags = data.get("flags", 0)
+        self.mfa_enabled = data.get("mfa_enabled", False)
 
-    async def edit(self, *, username: str = MISSING, avatar: bytes = MISSING) -> ClientUser:
+    async def edit(
+        self, *, username: str = MISSING, avatar: bytes = MISSING
+    ) -> ClientUser:
         """|coro|
 
         Edits the current profile of the client.
@@ -365,12 +379,17 @@ class ClientUser(BaseUser):
             The edit is no longer in-place, instead the newly edited client user is returned.
 
         Parameters
-        -----------
+        ----------
         username: :class:`str`
             The new username you wish to change to.
         avatar: :class:`bytes`
             A :term:`py:bytes-like object` representing the image to upload.
             Could be ``None`` to denote no avatar.
+
+        Returns
+        -------
+        :class:`ClientUser`
+            The newly edited client user.
 
         Raises
         ------
@@ -378,18 +397,13 @@ class ClientUser(BaseUser):
             Editing your profile failed.
         InvalidArgument
             Wrong image format passed for ``avatar``.
-
-        Returns
-        ---------
-        :class:`ClientUser`
-            The newly edited client user.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if username is not MISSING:
-            payload['username'] = username
+            payload["username"] = username
 
         if avatar is not MISSING:
-            payload['avatar'] = _bytes_to_base64_data(avatar)
+            payload["avatar"] = _bytes_to_base64_data(avatar)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
         return ClientUser(state=self._state, data=data)
@@ -417,7 +431,7 @@ class User(BaseUser, discord.abc.Messageable):
             Returns the user's name with discriminator.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The user's username.
     id: :class:`int`
@@ -430,14 +444,14 @@ class User(BaseUser, discord.abc.Messageable):
         Specifies if the user is a system user (i.e. represents Discord officially).
     """
 
-    __slots__ = ('_stored',)
+    __slots__ = ("_stored",)
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
         super().__init__(state=state, data=data)
         self._stored: bool = False
 
     def __repr__(self) -> str:
-        return f'<User id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>'
+        return f"<User id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
 
     def __del__(self) -> None:
         try:
@@ -457,7 +471,7 @@ class User(BaseUser, discord.abc.Messageable):
         return ch
 
     @property
-    def dm_channel(self) -> Optional[DMChannel]:
+    def dm_channel(self) -> DMChannel | None:
         """Optional[:class:`DMChannel`]: Returns the channel associated with this user if it exists.
 
         If this returns ``None``, you can create a DM channel by calling the
@@ -466,7 +480,7 @@ class User(BaseUser, discord.abc.Messageable):
         return self._state._get_private_channel_by_user(self.id)
 
     @property
-    def mutual_guilds(self) -> List[Guild]:
+    def mutual_guilds(self) -> list[Guild]:
         """List[:class:`Guild`]: The guilds that the user shares with the client.
 
         .. note::
@@ -475,7 +489,9 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. versionadded:: 1.7
         """
-        return [guild for guild in self._state._guilds.values() if guild.get_member(self.id)]
+        return [
+            guild for guild in self._state._guilds.values() if guild.get_member(self.id)
+        ]
 
     async def create_dm(self) -> DMChannel:
         """|coro|

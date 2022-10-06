@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import List, Literal, Optional, TypedDict
+
+from typing import Literal, TypedDict
 
 from .snowflake import Snowflake
 
@@ -40,20 +41,21 @@ class ThreadMember(TypedDict):
 
 
 class _ThreadMetadataOptional(TypedDict, total=False):
-    locked: bool
     invitable: bool
+    create_timestamp: str
 
 
 class ThreadMetadata(_ThreadMetadataOptional):
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
+    locked: bool
 
 
 class _ThreadOptional(TypedDict, total=False):
     member: ThreadMember
-    last_message_id: Optional[Snowflake]
-    last_pin_timestamp: Optional[Snowflake]
+    last_message_id: Snowflake | None
+    last_pin_timestamp: Snowflake | None
 
 
 class Thread(_ThreadOptional):
@@ -70,6 +72,6 @@ class Thread(_ThreadOptional):
 
 
 class ThreadPaginationPayload(TypedDict):
-    threads: List[Thread]
-    members: List[ThreadMember]
+    threads: list[Thread]
+    members: list[ThreadMember]
     has_more: bool

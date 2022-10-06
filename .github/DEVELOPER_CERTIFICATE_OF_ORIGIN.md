@@ -1,4 +1,5 @@
-# Developer Certificate of Origin (DCO) 
+# Developer Certificate of Origin (DCO)
+
 ```
 Version 1.1
 

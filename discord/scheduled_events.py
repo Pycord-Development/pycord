@@ -25,71 +25,85 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING, Any
 
 from . import utils
-from typing import TYPE_CHECKING, Optional, Dict, Any, Union
+from .asset import Asset
 from .enums import (
+    ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     ScheduledEventStatus,
-    ScheduledEventLocationType,
     try_enum,
 )
-from .mixins import Hashable
-from .iterators import ScheduledEventSubscribersIterator
 from .errors import ValidationError
+from .iterators import ScheduledEventSubscribersIterator
+from .mixins import Hashable
+from .object import Object
 
 __all__ = (
-    'ScheduledEvent',
-    'ScheduledEventLocation',
+    "ScheduledEvent",
+    "ScheduledEventLocation",
 )
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .state import ConnectionState
-    from .member import Member
     from .guild import Guild
     from .iterators import AsyncIterator
-    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .member import Member
+    from .state import ConnectionState
     from .types.channel import StageChannel, VoiceChannel
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
 
 MISSING = utils.MISSING
+
 
 class ScheduledEventLocation:
     """Represents a scheduled event's location.
 
-    Setting the ``location`` to its corresponding type will set the location type automatically:
-    - :class:`StageChannel`: :attr:`ScheduledEventLocationType.external`
-    - :class:`VoiceChannel`: :attr:`ScheduledEventLocationType.voice`
-    - :class:`str`: :attr:`ScheduledEventLocationType.external`
+    Setting the ``value`` to its corresponding type will set the location type automatically:
+
+    +------------------------+---------------------------------------------------+
+    |     Type of Input      |                   Location Type                   |
+    +========================+===================================================+
+    | :class:`StageChannel`  | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`  | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`           | :attr:`ScheduledEventLocationType.external`       |
+    +------------------------+---------------------------------------------------+
 
     .. versionadded:: 2.0
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`int`, :class:`StageChannel`, :class:`VoiceChannel`]
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
     """
 
     __slots__ = (
-        '_state',
-        'value',
+        "_state",
+        "value",
     )
 
-    def __init__(self, *, state: ConnectionState, location: Union[str, int, StageChannel, VoiceChannel]):
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        value: str | int | StageChannel | VoiceChannel,
+    ):
         self._state = state
-        if isinstance(location, int):
-            self.value = self._state._get_channel(int(location))
+        self.value: str | StageChannel | VoiceChannel | Object
+        if isinstance(value, int):
+            self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
         else:
-            self.value = location
+            self.value = value
 
     def __repr__(self) -> str:
-        return f"<ScheduledEventLocation value={self.value} type={self.type}>"
+        return f"<ScheduledEventLocation value={self.value!r} type={self.type}>"
 
     def __str__(self) -> str:
-        return self.value
-    
+        return str(self.value)
+
     @property
     def type(self) -> ScheduledEventLocationType:
         if isinstance(self.value, str):
@@ -125,6 +139,8 @@ class ScheduledEvent(Hashable):
 
     Attributes
     ----------
+    guild: :class:`Guild`
+        The guild where the scheduled event is happening.
     name: :class:`str`
         The name of the scheduled event.
     description: Optional[:class:`str`]
@@ -139,9 +155,7 @@ class ScheduledEvent(Hashable):
         The location of the event.
         See :class:`ScheduledEventLocation` for more information.
     subscriber_count: Optional[:class:`int`]
-        The number of users that have marked themselves as interested for the event.
-    interested: Optional[:class:`int`]
-        Alias to :attr:`.subscriber_count`
+        The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021, haven't
@@ -152,66 +166,75 @@ class ScheduledEvent(Hashable):
         The privacy level of the event. Currently, the only possible value
         is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
         so there is no need to use this attribute.
-    created_at: :class:`datetime.datetime`
-        The datetime object of when the event was created.
-    guild: :class:`Guild`
-        The guild where the scheduled event is happening.
     """
-    
+
     __slots__ = (
-        'id',
-        'name',
-        'description',
-        'start_time',
-        'end_time',
-        'status',
-        'creator_id',
-        'creator',
-        'location',
-        'guild',
-        '_state',
-        'subscriber_count',
+        "id",
+        "name",
+        "description",
+        "start_time",
+        "end_time",
+        "status",
+        "creator_id",
+        "creator",
+        "location",
+        "guild",
+        "_state",
+        "_cover",
+        "subscriber_count",
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, creator: Optional[Member], data: ScheduledEventPayload):
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        guild: Guild,
+        creator: Member | None,
+        data: ScheduledEventPayload,
+    ):
         self._state: ConnectionState = state
-        
-        self.id: int = int(data.get('id'))
-        self.guild: Guild = guild
-        self.name: str = data.get('name')
-        self.description: Optional[str] = data.get('description', None)
-        #self.image: Optional[str] = data.get('image', None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get('scheduled_start_time'))
-        end_time = data.get('scheduled_end_time', None)
-        if end_time != None:
-            end_time = datetime.datetime.fromisoformat(end_time)
-        self.end_time: Optional[datetime.datetime] = end_time
-        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get('status'))
-        self.subscriber_count: Optional[int] = data.get('user_count', None)
-        self.creator_id = data.get('creator_id', None)
-        self.creator: Optional[Member] = creator
 
-        entity_metadata = data.get('entity_metadata')
-        channel_id = data.get('channel_id', None)
-        if channel_id != None:
-            self.location = ScheduledEventLocation(state=state, location=channel_id)
+        self.id: int = int(data.get("id"))
+        self.guild: Guild = guild
+        self.name: str = data.get("name")
+        self.description: str | None = data.get("description", None)
+        self._cover: str | None = data.get("image", None)
+        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
+            data.get("scheduled_start_time")
+        )
+        if end_time := data.get("scheduled_end_time", None):
+            end_time = datetime.datetime.fromisoformat(end_time)
+        self.end_time: datetime.datetime | None = end_time
+        self.status: ScheduledEventStatus = try_enum(
+            ScheduledEventStatus, data.get("status")
+        )
+        self.subscriber_count: int | None = data.get("user_count", None)
+        self.creator_id = data.get("creator_id", None)
+        self.creator: Member | None = creator
+
+        entity_metadata = data.get("entity_metadata")
+        channel_id = data.get("channel_id", None)
+        if channel_id is None:
+            self.location = ScheduledEventLocation(
+                state=state, value=entity_metadata["location"]
+            )
         else:
-            self.location = ScheduledEventLocation(state=state, location=entity_metadata["location"])
+            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return (
-            f'<ScheduledEvent id={self.id} '
-            f'name={self.name} '
-            f'description={self.description} '
-            f'start_time={self.start_time} '
-            f'end_time={self.end_time} '
-            f'location={self.location} '
-            f'status={self.status.name} '
-            f'subscriber_count={self.subscriber_count} '
-            f'creator_id={self.creator_id}>'
+            f"<ScheduledEvent id={self.id} "
+            f"name={self.name} "
+            f"description={self.description} "
+            f"start_time={self.start_time} "
+            f"end_time={self.end_time} "
+            f"location={self.location!r} "
+            f"status={self.status.name} "
+            f"subscriber_count={self.subscriber_count} "
+            f"creator_id={self.creator_id}>"
         )
 
     @property
@@ -220,34 +243,55 @@ class ScheduledEvent(Hashable):
         return utils.snowflake_time(self.id)
 
     @property
-    def interested(self) -> Optional[int]:
+    def interested(self) -> int | None:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
-    
+
+    @property
+    def url(self) -> str:
+        """:class:`str`: The url to reference the scheduled event."""
+        return f"https://discord.com/events/{self.guild.id}/{self.id}"
+
+    @property
+    def cover(self) -> Asset | None:
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
+        if self._cover is None:
+            return None
+        return Asset._from_scheduled_event_cover(
+            self._state,
+            self.id,
+            self._cover,
+        )
+
     async def edit(
         self,
         *,
+        reason: str | None = None,
         name: str = MISSING,
         description: str = MISSING,
-        status: Union[int, ScheduledEventStatus] = MISSING,
-        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
+        status: int | ScheduledEventStatus = MISSING,
+        location: str
+        | int
+        | VoiceChannel
+        | StageChannel
+        | ScheduledEventLocation = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
+        cover: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
-        reason: Optional[str] = None
-    ) -> Optional[ScheduledEvent]:
+    ) -> ScheduledEvent | None:
         """|coro|
-        
+
         Edits the Scheduled Event's data
-        
+
         All parameters are optional unless ``location.type`` is
         :attr:`ScheduledEventLocationType.external`, then ``end_time``
         is required.
-        
+
         Will return a new :class:`.ScheduledEvent` object if applicable.
-        
+
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The new name of the event.
         description: :class:`str`
@@ -268,21 +312,23 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        cover: Optional[:class:`bytes`]
+            The cover image of the scheduled event.
+
+        Returns
+        -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
+            fields are updated.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object. This is only returned when certain
-            fields are updated.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
 
         if name is not MISSING:
             payload["name"] = name
@@ -296,38 +342,52 @@ class ScheduledEvent(Hashable):
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
 
-        if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, location=location)
+        if cover is not MISSING:
+            if cover is not None:
+                payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:
-            if location.type in (ScheduledEventLocationType.voice, ScheduledEventLocationType.stage_instance):
+            if not isinstance(
+                location, (ScheduledEventLocation, utils._MissingSentinel)
+            ):
+                location = ScheduledEventLocation(state=self._state, value=location)
+
+            if location.type is ScheduledEventLocationType.external:
+                payload["channel_id"] = None
+                payload["entity_metadata"] = {"location": str(location.value)}
+            else:
                 payload["channel_id"] = location.value.id
                 payload["entity_metadata"] = None
-            else:
-                payload["channel_id"] = None
-                payload["entity_metadata"] = {"location":str(location.value)}
 
         location = location if location is not MISSING else self.location
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
-            raise ValidationError("end_time needs to be passed if location type is external.")
+            end_time = self.end_time
+            if end_time is None:
+                raise ValidationError(
+                    "end_time needs to be passed if location type is external."
+                )
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
-        
+
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload, reason=reason)
-            return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
+            data = await self._state.http.edit_scheduled_event(
+                self.guild.id, self.id, **payload, reason=reason
+            )
+            return ScheduledEvent(
+                data=data, guild=self.guild, creator=self.creator, state=self._state
+            )
 
     async def delete(self) -> None:
         """|coro|
-        
+
         Deletes the scheduled event.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
@@ -335,7 +395,7 @@ class ScheduledEvent(Hashable):
         """
         await self._state.http.delete_scheduled_event(self.guild.id, self.id)
 
-    async def start(self, *, reason: Optional[str] = None) -> None:
+    async def start(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Starts the scheduled event. Shortcut from :meth:`.edit`.
@@ -345,25 +405,25 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.active, reason=reason)
 
-    async def complete(self, *, reason: Optional[str] = None) -> None:
+    async def complete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Ends/completes the scheduled event. Shortcut from :meth:`.edit`.
@@ -373,25 +433,25 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.active`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.completed, reason=reason)
 
-    async def cancel(self, *, reason: Optional[str] = None) -> None:
+    async def cancel(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Cancels the scheduled event. Shortcut from :meth:`.edit`.
@@ -401,62 +461,44 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.canceled, reason=reason)
 
     def subscribers(
         self,
         *,
-        limit: Optional[int] = None,
+        limit: int = 100,
         as_member: bool = False,
-        before: Optional[Union[Snowflake, datetime.datetime]] = None,
-        after: Optional[Union[Snowflake, datetime.datetime]] = None,
+        before: Snowflake | datetime.datetime | None = None,
+        after: Snowflake | datetime.datetime | None = None,
     ) -> AsyncIterator:
         """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
 
         The ``after`` and ``before`` parameters must represent member
         or user objects and meet the :class:`abc.Snowflake` abc.
 
-        .. note:: 
+        .. note::
 
             Even is ``as_member`` is set to ``True``, if the user
             is outside the guild, it will be a :class:`User` object.
 
-        Examples
-        ---------
-
-        Usage ::
-
-            async for user in event.subscribers(limit=100):
-                print(user.name)
-
-        Flattening into a list: ::
-
-            users = await event.subscribers(limit=100).flatten()
-            # users is now a list of User...
-
-        Getting members instead of user objects: ::
-
-            async for member in event.subscribers(limit=100, as_member=True):
-                print(member.display_name)
-
         Parameters
-        -----------
+        ----------
         limit: Optional[:class:`int`]
             The maximum number of results to return.
         as_member: Optional[:class:`bool`]
@@ -472,16 +514,36 @@ class ScheduledEvent(Hashable):
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
 
-        Raises
-        -------
-        HTTPException
-            Fetching the subscribed users failed.
-
         Yields
-        -------
+        ------
         Union[:class:`User`, :class:`Member`]
             The subscribed :class:`Member`. If ``as_member`` is set to
             ``False`` or the user is outside the guild, it will be a
             :class:`User` object.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the subscribed users failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for user in event.subscribers(limit=100):
+                print(user.name)
+
+        Flattening into a list: ::
+
+            users = await event.subscribers(limit=100).flatten()
+            # users is now a list of User...
+
+        Getting members instead of user objects: ::
+
+            async for member in event.subscribers(limit=100, as_member=True):
+                print(member.display_name)
         """
-        return ScheduledEventSubscribersIterator(event=self, limit=limit, with_member=as_member, before=before, after=after)
+        return ScheduledEventSubscribersIterator(
+            event=self, limit=limit, with_member=as_member, before=before, after=after
+        )

@@ -27,58 +27,53 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import collections.abc
+import copy
 import inspect
-import traceback
-from .commands.errors import CheckFailure
-
-from typing import (
-    Any,
-    Callable,
-    Coroutine,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
-
+import logging
 import sys
+import traceback
+from abc import ABC, abstractmethod
+from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar
 
 from .client import Client
-from .shard import AutoShardedClient
-from .utils import MISSING, get, find, async_all
+from .cog import CogMixin
 from .commands import (
-    SlashCommand,
-    SlashCommandGroup,
-    MessageCommand,
-    UserCommand,
     ApplicationCommand,
     ApplicationContext,
     AutocompleteContext,
+    MessageCommand,
+    SlashCommand,
+    SlashCommandGroup,
+    UserCommand,
     command,
 )
-from .cog import CogMixin
-
-from .errors import Forbidden, DiscordException
-from .interactions import Interaction
 from .enums import InteractionType
+from .errors import CheckFailure, DiscordException
+from .interactions import Interaction
+from .shard import AutoShardedClient
+from .types import interactions
 from .user import User
+from .utils import MISSING, async_all, find, get
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
-CFT = TypeVar('CFT', bound=CoroFunc)
+CFT = TypeVar("CFT", bound=CoroFunc)
 
 __all__ = (
-    'ApplicationCommandMixin',
-    'Bot',
-    'AutoShardedBot',
+    "ApplicationCommandMixin",
+    "Bot",
+    "AutoShardedBot",
 )
 
-class ApplicationCommandMixin:
+_log = logging.getLogger(__name__)
+
+
+class ApplicationCommandMixin(ABC):
     """A mixin that implements common functionality for classes that need
     application command compatibility.
 
     Attributes
-    -----------
+    ----------
     application_commands: :class:`dict`
         A mapping of command id string to :class:`.ApplicationCommand` objects.
     pending_application_commands: :class:`list`
@@ -92,38 +87,47 @@ class ApplicationCommandMixin:
         self._application_commands = {}
 
     @property
+    def all_commands(self):
+        return self._application_commands
+
+    @property
     def pending_application_commands(self):
         return self._pending_application_commands
 
     @property
-    def commands(self) -> List[Union[ApplicationCommand, Any]]:
+    def commands(self) -> list[ApplicationCommand | Any]:
         commands = self.application_commands
-        if self._supports_prefixed_commands:
-            commands += self.prefixed_commands
+        if self._bot._supports_prefixed_commands and hasattr(
+            self._bot, "prefixed_commands"
+        ):
+            commands += getattr(self._bot, "prefixed_commands")
         return commands
 
     @property
-    def application_commands(self) -> List[ApplicationCommand]:
+    def application_commands(self) -> list[ApplicationCommand]:
         return list(self._application_commands.values())
 
     def add_application_command(self, command: ApplicationCommand) -> None:
         """Adds a :class:`.ApplicationCommand` into the internal list of commands.
 
-        This is usually not called, instead the :meth:`~.ApplicationMixin.command` or
+        This is usually not called, instead the :meth:`command` or
         other shortcut decorators are used instead.
 
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         command: :class:`.ApplicationCommand`
             The command to add.
         """
         if isinstance(command, SlashCommand) and command.is_subcommand:
             raise TypeError("The provided command is a sub-command of group")
 
-        if self.debug_guilds and command.guild_ids is None:
-            command.guild_ids = self.debug_guilds
+        if command.cog is MISSING:
+            command._set_cog(None)
+
+        if self._bot.debug_guilds and command.guild_ids is None:
+            command.guild_ids = self._bot.debug_guilds
 
         for cmd in self.pending_application_commands:
             if cmd == command:
@@ -134,32 +138,38 @@ class ApplicationCommandMixin:
 
     def remove_application_command(
         self, command: ApplicationCommand
-    ) -> Optional[ApplicationCommand]:
+    ) -> ApplicationCommand | None:
         """Remove a :class:`.ApplicationCommand` from the internal list
         of commands.
 
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         command: :class:`.ApplicationCommand`
             The command to remove.
 
         Returns
-        --------
+        -------
         Optional[:class:`.ApplicationCommand`]
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        return self._application_commands.pop(command.id)
+        if command.id is None:
+            try:
+                index = self._pending_application_commands.index(command)
+            except ValueError:
+                return None
+            return self._pending_application_commands.pop(index)
+        return self._application_commands.pop(command.id, None)
 
     @property
     def get_command(self):
         """Shortcut for :meth:`.get_application_command`.
-        
+
         .. note::
             Overridden in :class:`ext.commands.Bot`.
-        
+
         .. versionadded:: 2.0
         """
         # TODO: Do something like we did in self.commands for this
@@ -168,16 +178,16 @@ class ApplicationCommandMixin:
     def get_application_command(
         self,
         name: str,
-        guild_ids: Optional[List[int]] = None,
-        type: Type[ApplicationCommand] = SlashCommand,
-    ) -> Optional[ApplicationCommand]:
+        guild_ids: list[int] | None = None,
+        type: type[ApplicationCommand] = SlashCommand,
+    ) -> ApplicationCommand | None:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
 
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the command to get.
         guild_ids: List[:class:`int`]
@@ -186,279 +196,558 @@ class ApplicationCommandMixin:
             The type of the command to get. Defaults to :class:`.SlashCommand`.
 
         Returns
-        --------
+        -------
         Optional[:class:`.ApplicationCommand`]
             The command that was requested. If not found, returns ``None``.
         """
 
         for command in self._application_commands.values():
-            if (
-                command.name == name
-                and isinstance(command, type)
-            ):
+            if command.name == name and isinstance(command, type):
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
                 return command
 
-    async def sync_commands(self) -> None:
+    async def get_desynced_commands(
+        self,
+        guild_id: int | None = None,
+        prefetched: list[interactions.ApplicationCommand] | None = None,
+    ) -> list[dict[str, Any]]:
         """|coro|
 
-        Registers all commands that have been added through :meth:`.add_application_command`
-        since :meth:`.register_commands`. This does not remove any registered commands that are not in the internal
-        cache, like :meth:`.register_commands` does, but rather just adds new ones.
+        Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
+        guild commands that are desynced from said guild, else it will return global commands.
 
-        This should usually be used instead of :meth:`.register_commands` when commands are already registered and you
-        want to add more.
-
-        This can cause bugs if you run this command excessively without using register_commands, as the bot's internal
-        cache can get un-synced with discord's registered commands.
+        .. note::
+            This function is meant to be used internally, and should only be used if you want to override the default
+            command registration behavior.
 
         .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        guild_id: Optional[:class:`int`]
+            The guild id to get the desynced commands for, else global commands if unspecified.
+        prefetched: Optional[List[:class:`.ApplicationCommand`]]
+            If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage.
+
+        Returns
+        -------
+        List[Dict[:class:`str`, Any]]
+            A list of the desynced commands. Each will come with at least the ``cmd`` and ``action`` keys, which
+            respectively contain the command and the action to perform. Other keys may also be present depending on
+            the action, including ``id``.
         """
-        # TODO: Write this function as described in the docstring (bob will do this)
+
+        # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
+
+        def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
+            if isinstance(cmd, SlashCommandGroup):
+                if len(cmd.subcommands) != len(match.get("options", [])):
+                    return True
+                for i, subcommand in enumerate(cmd.subcommands):
+                    match_ = next(
+                        (
+                            data
+                            for data in match["options"]
+                            if data["name"] == subcommand.name
+                        ),
+                        MISSING,
+                    )
+                    if match_ is not MISSING and _check_command(subcommand, match_):
+                        return True
+            else:
+                as_dict = cmd.to_dict()
+                to_check = {
+                    "dm_permission": None,
+                    "default_member_permissions": None,
+                    "name": None,
+                    "description": None,
+                    "name_localizations": None,
+                    "description_localizations": None,
+                    "options": [
+                        "type",
+                        "name",
+                        "description",
+                        "autocomplete",
+                        "choices",
+                        "name_localizations",
+                        "description_localizations",
+                    ],
+                }
+                for check, value in to_check.items():
+                    if type(to_check[check]) == list:
+                        # We need to do some falsy conversion here
+                        # The API considers False (autocomplete) and [] (choices) to be falsy values
+                        falsy_vals = (False, [])
+                        for opt in value:
+                            cmd_vals = (
+                                [val.get(opt, MISSING) for val in as_dict[check]]
+                                if check in as_dict
+                                else []
+                            )
+                            for i, val in enumerate(cmd_vals):
+                                if val in falsy_vals:
+                                    cmd_vals[i] = MISSING
+                            if match.get(
+                                check, MISSING
+                            ) is not MISSING and cmd_vals != [
+                                val.get(opt, MISSING) for val in match[check]
+                            ]:
+                                # We have a difference
+                                return True
+                    elif getattr(cmd, check, None) != match.get(check):
+                        # We have a difference
+                        if (
+                            check == "default_permission"
+                            and getattr(cmd, check) is True
+                            and match.get(check) is None
+                        ):
+                            # This is a special case
+                            # TODO: Remove for perms v2
+                            continue
+                        return True
+            return False
+
+        return_value = []
+        cmds = self.pending_application_commands.copy()
+
+        if guild_id is None:
+            pending = [cmd for cmd in cmds if cmd.guild_ids is None]
+        else:
+            pending = [
+                cmd
+                for cmd in cmds
+                if cmd.guild_ids is not None and guild_id in cmd.guild_ids
+            ]
+
+        registered_commands: list[interactions.ApplicationCommand] = []
+        if prefetched is not None:
+            registered_commands = prefetched
+        elif self._bot.user:
+            if guild_id is None:
+                registered_commands = await self._bot.http.get_global_commands(
+                    self._bot.user.id
+                )
+            else:
+                registered_commands = await self._bot.http.get_guild_commands(
+                    self._bot.user.id, guild_id
+                )
+
+        registered_commands_dict = {cmd["name"]: cmd for cmd in registered_commands}
+        # First let's check if the commands we have locally are the same as the ones on discord
+        for cmd in pending:
+            match = registered_commands_dict.get(cmd.name)
+            if match is None:
+                # We don't have this command registered
+                return_value.append({"command": cmd, "action": "upsert"})
+            elif _check_command(cmd, match):
+                return_value.append(
+                    {
+                        "command": cmd,
+                        "action": "edit",
+                        "id": int(registered_commands_dict[cmd.name]["id"]),
+                    }
+                )
+            else:
+                # We have this command registered but it's the same
+                return_value.append(
+                    {"command": cmd, "action": None, "id": int(match["id"])}
+                )
+
+        # Now let's see if there are any commands on discord that we need to delete
+        for cmd, value_ in registered_commands_dict.items():
+            match = get(pending, name=registered_commands_dict[cmd]["name"])
+            if match is None:
+                # We have this command registered but not in our list
+                return_value.append(
+                    {
+                        "command": registered_commands_dict[cmd]["name"],
+                        "id": int(value_["id"]),
+                        "action": "delete",
+                    }
+                )
+
+                continue
+
+        return return_value
+
+    async def register_command(
+        self,
+        command: ApplicationCommand,
+        force: bool = True,
+        guild_ids: list[int] | None = None,
+    ) -> None:
+        """|coro|
+
+        Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed,
+        the command will be registered as a guild command for those guilds.
+
+        Parameters
+        ----------
+        command: :class:`~.ApplicationCommand`
+            The command to register.
+        force: :class:`bool`
+            Whether to force the command to be registered. If this is set to False, the command will only be registered
+            if it seems to already be registered and up to date with our internal cache. Defaults to True.
+        guild_ids: :class:`list`
+            A list of guild ids to register the command for. If this is not set, the command's
+            :attr:`ApplicationCommand.guild_ids` attribute will be used.
+
+        Returns
+        -------
+        :class:`~.ApplicationCommand`
+            The command that was registered
+        """
+        # TODO: Write this
         raise NotImplementedError
 
-    async def register_commands(self) -> None:
+    async def register_commands(
+        self,
+        commands: list[ApplicationCommand] | None = None,
+        guild_id: int | None = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        delete_existing: bool = True,
+    ) -> list[interactions.ApplicationCommand]:
         """|coro|
-        Registers all commands that have been added through :meth:`.add_application_command`.
-        This method cleans up all commands over the API and should sync them with the internal cache of commands.
-        This will only be rolled out to Discord if :meth:`.http.get_global_commands` has certain keys that differ from :data:`.pending_application_commands`
-        By default, this coroutine is called inside the :func:`.on_connect`
-        event. If you choose to override the :func:`.on_connect` event, then
-        you should invoke this coroutine as well.
+
+        Register a list of commands.
+
         .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        commands: Optional[List[:class:`~.ApplicationCommand`]]
+            A list of commands to register. If this is not set (``None``), then all commands will be registered.
+        guild_id: Optional[int]
+            If this is set, the commands will be registered as a guild command for the respective guild. If it is not
+            set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
+        method: Literal['individual', 'bulk', 'auto']
+            The method to use when registering the commands. If this is set to "individual", then each command will be
+            registered individually. If this is set to "bulk", then all commands will be registered in bulk. If this is
+            set to "auto", then the method will be determined automatically. Defaults to "bulk".
+        force: :class:`bool`
+            Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
+            can result in hitting rate limits more often. Defaults to False.
+        delete_existing: :class:`bool`
+            Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
         """
-        commands_to_bulk = []
+        if commands is None:
+            commands = self.pending_application_commands
 
-        needs_bulk = False
+        commands = [copy.copy(cmd) for cmd in commands]
 
-        # Global Command Permissions
-        global_permissions: List = []
+        if guild_id is not None:
+            for cmd in commands:
+                to_rep_with = [guild_id]
+                cmd.guild_ids = to_rep_with
 
-        registered_commands = await self.http.get_global_commands(self.user.id)
-        # 'Your app cannot have two global commands with the same name. Your app cannot have two guild commands within the same name on the same guild.'
-        # We can therefore safely use the name of the command in our global slash commands as a unique identifier
-        registered_commands_dict = {cmd["name"]:cmd for cmd in registered_commands}
-        global_pending_application_commands_dict = {}
-        
-        for command in [
-            cmd for cmd in self.pending_application_commands if cmd.guild_ids is None
-        ]:
-            as_dict = command.to_dict()
-            
-            global_pending_application_commands_dict[command.name] = as_dict
-            if command.name in registered_commands_dict:
-                match = registered_commands_dict[command.name]
-            else:
-                match = None
-            # TODO: There is probably a far more efficient way of doing this
-            # We want to check if the registered global command on Discord servers matches the given global commands
-            if match:
-                as_dict["id"] = match["id"]
+        is_global = guild_id is None
 
-                keys_to_check = {"default_permission": True, "name": True, "description": True, "options": ["type", "name", "description", "autocomplete", "choices"]}
-                for key, more_keys in {
-                    key:more_keys
-                    for key, more_keys in keys_to_check.items()
-                    if key in as_dict.keys()
-                    if key in match.keys()
-                }.items():
-                    if key == "options":
-                        for i, option_dict in enumerate(as_dict[key]):
-                            if command.name == "recent":
-                                print(option_dict, "|||||", match[key][i])
-                            for key2 in more_keys:
-                                pendingVal = None
-                                if key2 in option_dict.keys():
-                                    pendingVal = option_dict[key2]
-                                    if pendingVal == False or pendingVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        pendingVal = None
-                                matchVal = None
-                                if key2 in match[key][i].keys():
-                                    matchVal = match[key][i][key2]
-                                    if matchVal == False or matchVal == []: # Registered commands are not available if choices is an empty array or if autocomplete is false
-                                        matchVal = None
+        registered = []
 
-                                if pendingVal != matchVal:
-                                    # When a property in the options of a pending global command is changed
-                                    needs_bulk = True
-                    else:
-                        if as_dict[key] != match[key]:
-                            # When a property in a pending global command is changed
-                            needs_bulk = True
-            else:
-                # When a name of a pending global command is not registered in Discord
-                needs_bulk = True
+        if is_global:
+            pending = list(filter(lambda c: c.guild_ids is None, commands))
+            registration_methods = {
+                "bulk": self._bot.http.bulk_upsert_global_commands,
+                "upsert": self._bot.http.upsert_global_command,
+                "delete": self._bot.http.delete_global_command,
+                "edit": self._bot.http.edit_global_command,
+            }
 
-            commands_to_bulk.append(as_dict)
-        
-        for name, command in registered_commands_dict.items():
-            if not name in global_pending_application_commands_dict.keys():
-                # When a registered global command is not available in the pending global commands
-                needs_bulk = True
-    
-        if needs_bulk:
-            commands = await self.http.bulk_upsert_global_commands(self.user.id, commands_to_bulk)
+            def _register(
+                method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs
+            ):
+                return registration_methods[method](
+                    self._bot.user and self._bot.user.id, *args, **kwargs
+                )
+
         else:
-            commands = registered_commands
+            pending = list(
+                filter(
+                    lambda c: c.guild_ids is not None and guild_id in c.guild_ids,
+                    commands,
+                )
+            )
+            registration_methods = {
+                "bulk": self._bot.http.bulk_upsert_guild_commands,
+                "upsert": self._bot.http.upsert_guild_command,
+                "delete": self._bot.http.delete_guild_command,
+                "edit": self._bot.http.edit_guild_command,
+            }
 
-        for i in commands:
+            def _register(
+                method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs
+            ):
+                return registration_methods[method](
+                    self._bot.user and self._bot.user.id, guild_id, *args, **kwargs
+                )
+
+        def register(
+            method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs
+        ):
+            if kwargs.pop("_log", True):
+                if method == "bulk":
+                    _log.debug(
+                        f"Bulk updating commands {[c['name'] for c in args[0]]} for guild {guild_id}"
+                    )
+                # TODO: Find where "cmd" is defined
+                elif method == "upsert":
+                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")  # type: ignore
+                elif method == "edit":
+                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")  # type: ignore
+                elif method == "delete":
+                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")  # type: ignore
+            return _register(method, *args, **kwargs)
+
+        pending_actions = []
+
+        if not force:
+            prefetched_commands: list[interactions.ApplicationCommand] = []
+            if self._bot.user:
+                if guild_id is None:
+                    prefetched_commands = await self._bot.http.get_global_commands(
+                        self._bot.user.id
+                    )
+                else:
+                    prefetched_commands = await self._bot.http.get_guild_commands(
+                        self._bot.user.id, guild_id
+                    )
+            desynced = await self.get_desynced_commands(
+                guild_id=guild_id, prefetched=prefetched_commands
+            )
+
+            for cmd in desynced:
+                if cmd["action"] == "delete":
+                    pending_actions.append(
+                        {
+                            "action": "delete" if delete_existing else None,
+                            "command": collections.namedtuple("Command", ["name"])(
+                                name=cmd["command"]
+                            ),
+                            "id": cmd["id"],
+                        }
+                    )
+                    continue
+                # We can assume the command item is a command, since it's only a string if action is delete
+                match = get(pending, name=cmd["command"].name, type=cmd["command"].type)
+                if match is None:
+                    continue
+                if cmd["action"] == "edit":
+                    pending_actions.append(
+                        {
+                            "action": "edit",
+                            "command": match,
+                            "id": cmd["id"],
+                        }
+                    )
+                elif cmd["action"] == "upsert":
+                    pending_actions.append(
+                        {
+                            "action": "upsert",
+                            "command": match,
+                        }
+                    )
+                elif cmd["action"] is None:
+                    pending_actions.append(
+                        {
+                            "action": None,
+                            "command": match,
+                        }
+                    )
+                else:
+                    raise ValueError(f"Unknown action: {cmd['action']}")
+            filtered_no_action = list(
+                filter(lambda c: c["action"] is not None, pending_actions)
+            )
+            filtered_deleted = list(
+                filter(lambda a: a["action"] != "delete", pending_actions)
+            )
+            if method == "bulk" or (
+                method == "auto" and len(filtered_deleted) == len(pending)
+            ):
+                # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
+                data = [cmd["command"].to_dict() for cmd in filtered_deleted]
+                # If there's nothing to update, don't bother
+                if len(filtered_no_action) == 0:
+                    _log.debug("Skipping bulk command update: Commands are up to date")
+                    registered = prefetched_commands
+                else:
+                    _log.debug(
+                        "Bulk updating commands %s for guild %s",
+                        {c["command"].name: c["action"] for c in pending_actions},
+                        guild_id,
+                    )
+                    registered = await register("bulk", data, _log=False)
+            else:
+                if not filtered_no_action:
+                    registered = []
+                for cmd in filtered_no_action:
+                    if cmd["action"] == "delete":
+                        await register("delete", cmd["command"])
+                        continue
+                    if cmd["action"] == "edit":
+                        registered.append(
+                            await register("edit", cmd["id"], cmd["command"].to_dict())
+                        )
+                    elif cmd["action"] == "upsert":
+                        registered.append(
+                            await register("upsert", cmd["command"].to_dict())
+                        )
+                    else:
+                        raise ValueError(f"Unknown action: {cmd['action']}")
+
+            # TODO: Our lists dont work sometimes, see if that can be fixed so we can avoid this second API call
+            if method != "bulk":
+                if self._bot.user:
+                    if guild_id is None:
+                        registered = await self._bot.http.get_global_commands(
+                            self._bot.user.id
+                        )
+                    else:
+                        registered = await self._bot.http.get_guild_commands(
+                            self._bot.user.id, guild_id
+                        )
+        else:
+            data = [cmd.to_dict() for cmd in pending]
+            registered = await register("bulk", data)
+
+        for i in registered:
+            cmd = get(
+                self.pending_application_commands,
+                name=i["name"],
+                type=i.get("type"),
+            )
+            if not cmd:
+                raise ValueError(
+                    f"Registered command {i['name']}, type {i.get('type')} not found in pending commands"
+                )
+            cmd.id = i["id"]
+            self._application_commands[cmd.id] = cmd
+
+        return registered
+
+    async def sync_commands(
+        self,
+        commands: list[ApplicationCommand] | None = None,
+        method: Literal["individual", "bulk", "auto"] = "bulk",
+        force: bool = False,
+        guild_ids: list[int] | None = None,
+        register_guild_commands: bool = True,
+        check_guilds: list[int] | None = [],
+        delete_existing: bool = True,
+    ) -> None:
+        """|coro|
+
+        Registers all commands that have been added through :meth:`.add_application_command`. This method cleans up all
+        commands over the API and should sync them with the internal cache of commands. It attempts to register the
+        commands in the most efficient way possible, unless ``force`` is set to ``True``, in which case it will always
+        register all commands.
+
+        By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the
+        :func:`.on_connect` event, then you should invoke this coroutine as well.
+
+        .. note::
+            If you remove all guild commands from a particular guild, the library may not be able to detect and update
+            the commands accordingly, as it would have to individually check for each guild. To force the library to
+            unregister a guild's commands, call this function with ``commands=[]`` and ``guild_ids=[guild_id]``.
+
+        .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        commands: Optional[List[:class:`~.ApplicationCommand`]]
+            A list of commands to register. If this is not set (None), then all commands will be registered.
+        method: Literal['individual', 'bulk', 'auto']
+            The method to use when registering the commands. If this is set to "individual", then each command will be
+            registered individually. If this is set to "bulk", then all commands will be registered in bulk. If this is
+            set to "auto", then the method will be determined automatically. Defaults to "bulk".
+        force: :class:`bool`
+            Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
+            can result in hitting rate limits more often. Defaults to False.
+        guild_ids: Optional[List[:class:`int`]]
+            A list of guild ids to register the commands for. If this is not set, the commands'
+            :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
+        register_guild_commands: :class:`bool`
+            Whether to register guild commands. Defaults to True.
+        check_guilds: Optional[List[:class:`int`]]
+            A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all
+            guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
+            attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
+            ``register_guild_commands`` is set to False, then this parameter is ignored.
+        delete_existing: :class:`bool`
+            Whether to delete existing commands that are not in the list of commands to register. Defaults to True.
+        """
+
+        check_guilds = list(set((check_guilds or []) + (self._bot.debug_guilds or [])))
+
+        if commands is None:
+            commands = self.pending_application_commands
+
+        if guild_ids is not None:
+            for cmd in commands:
+                cmd.guild_ids = guild_ids
+
+        global_commands = [cmd for cmd in commands if cmd.guild_ids is None]
+        registered_commands = await self.register_commands(
+            global_commands, method=method, force=force, delete_existing=delete_existing
+        )
+
+        registered_guild_commands: dict[int, list[interactions.ApplicationCommand]] = {}
+
+        if register_guild_commands:
+            cmd_guild_ids: list[int] = []
+            for cmd in commands:
+                if cmd.guild_ids is not None:
+                    cmd_guild_ids.extend(cmd.guild_ids)
+            if check_guilds is not None:
+                cmd_guild_ids.extend(check_guilds)
+            for guild_id in set(cmd_guild_ids):
+                guild_commands = [
+                    cmd
+                    for cmd in commands
+                    if cmd.guild_ids is not None and guild_id in cmd.guild_ids
+                ]
+                app_cmds = await self.register_commands(
+                    guild_commands,
+                    guild_id=guild_id,
+                    method=method,
+                    force=force,
+                    delete_existing=delete_existing,
+                )
+                registered_guild_commands[guild_id] = app_cmds
+
+        for i in registered_commands:
             cmd = get(
                 self.pending_application_commands,
                 name=i["name"],
                 guild_ids=None,
-                type=i["type"],
+                type=i.get("type"),
             )
             if cmd:
                 cmd.id = i["id"]
                 self._application_commands[cmd.id] = cmd
 
-                # Permissions (Roles will be converted to IDs just before Upsert for Global Commands)
-                global_permissions.append({"id": i["id"], "permissions": cmd.permissions})
-
-        update_guild_commands = {}
-        async for guild in self.fetch_guilds(limit=None):
-            update_guild_commands[guild.id] = []
-        for command in [
-            cmd
-            for cmd in self.pending_application_commands
-            if cmd.guild_ids is not None
-        ]:
-            as_dict = command.to_dict()
-            for guild_id in command.guild_ids:
-                to_update = update_guild_commands[guild_id]
-                update_guild_commands[guild_id] = to_update + [as_dict]
-
-        for guild_id, guild_data in update_guild_commands.items():
-            try:
-                commands = await self.http.bulk_upsert_guild_commands(
-                    self.user.id, guild_id, update_guild_commands[guild_id]
-                )
-
-                # Permissions for this Guild
-                guild_permissions: List = []
-            except Forbidden:
-                if not guild_data:
-                    continue
-                print(f"Failed to add command to guild {guild_id}", file=sys.stderr)
-                raise
-            else:
-                for i in commands:
-                    cmd = find(lambda cmd: cmd.name == i["name"] and cmd.type == i["type"] and int(i["guild_id"]) in cmd.guild_ids, self.pending_application_commands)
+        if register_guild_commands and registered_guild_commands:
+            for guild_id, guild_cmds in registered_guild_commands.items():
+                for i in guild_cmds:
+                    cmd = find(
+                        lambda cmd: cmd.name == i["name"]
+                        and cmd.type == i.get("type")
+                        and cmd.guild_ids is not None
+                        # TODO: fix this type error (guild_id is not defined in ApplicationCommand Typed Dict)
+                        and int(i["guild_id"]) in cmd.guild_ids,  # type: ignore
+                        self.pending_application_commands,
+                    )
+                    if not cmd:
+                        # command has not been added yet
+                        continue
                     cmd.id = i["id"]
                     self._application_commands[cmd.id] = cmd
 
-                    # Permissions
-                    permissions = [
-                        perm.to_dict()
-                        for perm in cmd.permissions
-                        if perm.guild_id is None
-                        or (
-                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
-                        )
-                    ]
-                    guild_permissions.append(
-                        {"id": i["id"], "permissions": permissions}
-                    )
-
-                for global_command in global_permissions:
-                    permissions = [
-                        perm.to_dict()
-                        for perm in global_command["permissions"]
-                        if perm.guild_id is None
-                        or (
-                            perm.guild_id == guild_id and perm.guild_id in cmd.guild_ids
-                        )
-                    ]
-                    guild_permissions.append(
-                        {"id": global_command["id"], "permissions": permissions}
-                    )
-
-                # Collect & Upsert Permissions for Each Guild
-                # Command Permissions for this Guild
-                guild_cmd_perms: List = []
-
-                # Loop through Commands Permissions available for this Guild
-                for item in guild_permissions:
-                    new_cmd_perm = {"id": item["id"], "permissions": []}
-
-                    # Replace Role / Owner Names with IDs
-                    for permission in item["permissions"]:
-                        if isinstance(permission["id"], str):
-                            # Replace Role Names
-                            if permission["type"] == 1:
-                                role = get(
-                                    self.get_guild(guild_id).roles,
-                                    name=permission["id"],
-                                )
-
-                                # If not missing
-                                if role is not None:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": role.id,
-                                            "type": 1,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                                else:
-                                    print(
-                                        "No Role ID found in Guild ({guild_id}) for Role ({role})".format(
-                                            guild_id=guild_id, role=permission["id"]
-                                        )
-                                    )
-                            # Add owner IDs
-                            elif (
-                                permission["type"] == 2 and permission["id"] == "owner"
-                            ):
-                                app = await self.application_info()  # type: ignore
-                                if app.team:
-                                    for m in app.team.members:
-                                        new_cmd_perm["permissions"].append(
-                                            {
-                                                "id": m.id,
-                                                "type": 2,
-                                                "permission": permission["permission"],
-                                            }
-                                        )
-                                else:
-                                    new_cmd_perm["permissions"].append(
-                                        {
-                                            "id": app.owner.id,
-                                            "type": 2,
-                                            "permission": permission["permission"],
-                                        }
-                                    )
-                        # Add the rest
-                        else:
-                            new_cmd_perm["permissions"].append(permission)
-
-                    # Make sure we don't have over 10 overwrites
-                    if len(new_cmd_perm["permissions"]) > 10:
-                        print(
-                            "Command '{name}' has more than 10 permission overrides in guild ({guild_id}).\nwill only use the first 10 permission overrides.".format(
-                                name=self._application_commands[new_cmd_perm["id"]].name,
-                                guild_id=guild_id,
-                            )
-                        )
-                        new_cmd_perm["permissions"] = new_cmd_perm["permissions"][:10]
-
-                    # Append to guild_cmd_perms
-                    guild_cmd_perms.append(new_cmd_perm)
-
-                # Upsert
-                try:
-                    await self.http.bulk_upsert_command_permissions(
-                        self.user.id, guild_id, guild_cmd_perms
-                    )
-                except Forbidden:
-                    print(
-                        f"Failed to add command permissions to guild {guild_id}",
-                        file=sys.stderr,
-                    )
-                    raise
-
-    async def process_application_commands(self, interaction: Interaction) -> None:
+    async def process_application_commands(
+        self, interaction: Interaction, auto_sync: bool | None = None
+    ) -> None:
         """|coro|
 
         This function processes the commands that have been registered
@@ -470,61 +759,98 @@ class ApplicationCommandMixin:
         you should invoke this coroutine as well.
 
         This function finds a registered command matching the interaction id from
-        :attr:`.ApplicationCommandMixin.application_commands` and runs :meth:`ApplicationCommand.invoke` on it. If no matching
-        command was found, it replies to the interaction with a default message.
+        application commands and invokes it. If no matching command was
+        found, it replies to the interaction with a default message.
 
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         interaction: :class:`discord.Interaction`
             The interaction to process
+        auto_sync: Optional[:class:`bool`]
+            Whether to automatically sync and unregister the command if it is not found in the internal cache. This will
+            invoke the :meth:`~.Bot.sync_commands` method on the context of the command, either globally or per-guild,
+            based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`.
         """
+        if auto_sync is None:
+            auto_sync = self._bot.auto_sync_commands
+        # TODO: find out why the isinstance check below doesn't stop the type errors below
         if interaction.type not in (
-            InteractionType.application_command, 
-            InteractionType.auto_complete
+            InteractionType.application_command,
+            InteractionType.auto_complete,
         ):
             return
 
+        command: ApplicationCommand | None = None
         try:
-            command = self._application_commands[interaction.data["id"]]
+            if interaction.data:
+                command = self._application_commands[interaction.data["id"]]  # type: ignore
         except KeyError:
-            for cmd in self.application_commands:
-                if (
-                    cmd.name == interaction.data["name"]
-                    and interaction.data["guild_id"] in cmd.guild_ids
-                ):
-                    command = cmd
-                    break
+            for cmd in self.application_commands + self.pending_application_commands:
+                if interaction.data:
+                    guild_id = interaction.data.get("guild_id")
+                    if guild_id:
+                        guild_id = int(guild_id)
+                    if cmd.name == interaction.data["name"] and (  # type: ignore
+                        guild_id == cmd.guild_ids
+                        or (
+                            isinstance(cmd.guild_ids, list)
+                            and guild_id in cmd.guild_ids
+                        )
+                    ):
+                        command = cmd
+                        break
             else:
-                return self.dispatch("unknown_command", interaction)
+                if auto_sync and interaction.data:
+                    guild_id = interaction.data.get("guild_id")
+                    if guild_id is None:
+                        await self.sync_commands()
+                    else:
+
+                        await self.sync_commands(check_guilds=[guild_id])
+                return self._bot.dispatch("unknown_application_command", interaction)
+
         if interaction.type is InteractionType.auto_complete:
+            return self._bot.dispatch(
+                "application_command_auto_complete", interaction, command
+            )
+
+        ctx = await self.get_application_context(interaction)
+        if command:
+            ctx.command = command
+        await self.invoke_application_command(ctx)
+
+    async def on_application_command_auto_complete(
+        self, interaction: Interaction, command: ApplicationCommand
+    ) -> None:
+        async def callback() -> None:
             ctx = await self.get_autocomplete_context(interaction)
             ctx.command = command
             return await command.invoke_autocomplete_callback(ctx)
-        
-        ctx = await self.get_application_context(interaction)
-        ctx.command = command
-        self.dispatch("application_command", ctx)
+
+        autocomplete_task = self._bot.loop.create_task(callback())
         try:
-            if await self.can_run(ctx, call_once=True):
-                await ctx.command.invoke(ctx)
-            else:
-                raise CheckFailure("The global check once functions failed.")
-        except DiscordException as exc:
-            await ctx.command.dispatch_error(ctx, exc)
+            await self._bot.wait_for(
+                "application_command_auto_complete",
+                check=lambda i, c: c == command,
+                timeout=3,
+            )
+        except asyncio.TimeoutError:
+            return
         else:
-            self.dispatch("application_command_completion", ctx)
+            if not autocomplete_task.done():
+                autocomplete_task.cancel()
 
     def slash_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.SlashCommand`.
 
         .. versionadded:: 2.0
 
         Returns
-        --------
+        -------
         Callable[..., :class:`SlashCommand`]
             A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot,
             then returns it.
@@ -532,14 +858,14 @@ class ApplicationCommandMixin:
         return self.application_command(cls=SlashCommand, **kwargs)
 
     def user_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.UserCommand`.
 
         .. versionadded:: 2.0
 
         Returns
-        --------
+        -------
         Callable[..., :class:`UserCommand`]
             A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot,
             then returns it.
@@ -547,14 +873,14 @@ class ApplicationCommandMixin:
         return self.application_command(cls=UserCommand, **kwargs)
 
     def message_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.ApplicationCommandMixin.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`add_application_command`.
         This shortcut is made specifically for :class:`.MessageCommand`.
 
         .. versionadded:: 2.0
 
         Returns
-        --------
+        -------
         Callable[..., :class:`MessageCommand`]
             A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot,
             then returns it.
@@ -562,13 +888,13 @@ class ApplicationCommandMixin:
         return self.application_command(cls=MessageCommand, **kwargs)
 
     def application_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`.command` and adds it to
-        the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        """A shortcut decorator that invokes :func:`command` and adds it to
+        the internal command list via :meth:`~.Bot.add_application_command`.
 
         .. versionadded:: 2.0
 
         Returns
-        --------
+        -------
         Callable[..., :class:`ApplicationCommand`]
             A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
             then returns it.
@@ -582,7 +908,7 @@ class ApplicationCommandMixin:
         return decorator
 
     def command(self, **kwargs):
-        """There is an alias for :meth:`application_command`.
+        """An alias for :meth:`application_command`.
 
         .. note::
 
@@ -591,7 +917,7 @@ class ApplicationCommandMixin:
         .. versionadded:: 2.0
 
         Returns
-        --------
+        -------
         Callable[..., :class:`ApplicationCommand`]
             A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
             then returns it.
@@ -601,11 +927,12 @@ class ApplicationCommandMixin:
     def create_group(
         self,
         name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
+        description: str | None = None,
+        guild_ids: list[int] | None = None,
+        **kwargs,
     ) -> SlashCommandGroup:
         """A shortcut method that creates a slash command group with no subcommands and adds it to the internal
-        command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        command list via :meth:`add_application_command`.
 
         .. versionadded:: 2.0
 
@@ -618,25 +945,27 @@ class ApplicationCommandMixin:
         guild_ids: Optional[List[:class:`int`]]
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
+        kwargs:
+            Any additional keyword arguments to pass to :class:`.SlashCommandGroup`.
 
         Returns
-        --------
+        -------
         SlashCommandGroup
             The slash command group that was created.
         """
         description = description or "No description provided."
-        group = SlashCommandGroup(name, description, guild_ids)
+        group = SlashCommandGroup(name, description, guild_ids, **kwargs)
         self.add_application_command(group)
         return group
 
     def group(
         self,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
-    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        name: str | None = None,
+        description: str | None = None,
+        guild_ids: list[int] | None = None,
+    ) -> Callable[[type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
-        and adds it to the internal command list via :meth:`~.ApplicationCommandMixin.add_application_command`.
+        and adds it to the internal command list via :meth:`add_application_command`.
 
         .. versionadded:: 2.0
 
@@ -651,34 +980,50 @@ class ApplicationCommandMixin:
             This will be a global command if ``None`` is passed.
 
         Returns
-        --------
+        -------
         Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
             The slash command group that was created.
         """
-        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+
+        def inner(cls: type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
                 name or cls.__name__,
                 (
                     description or inspect.cleandoc(cls.__doc__).splitlines()[0]
-                    if cls.__doc__ is not None else "No description provided"
+                    if cls.__doc__ is not None
+                    else "No description provided"
                 ),
-                guild_ids=guild_ids
+                guild_ids=guild_ids,
             )
             self.add_application_command(group)
             return group
+
         return inner
 
     slash_group = group
 
+    def walk_application_commands(self) -> Generator[ApplicationCommand, None, None]:
+        """An iterator that recursively walks through all application commands and subcommands.
+
+        Yields
+        ------
+        :class:`.ApplicationCommand`
+            An application command from the internal list of application commands.
+        """
+        for command in self.application_commands:
+            if isinstance(command, SlashCommandGroup):
+                yield from command.walk_commands()
+            yield command
+
     async def get_application_context(
-        self, interaction: Interaction, cls=None
+        self, interaction: Interaction, cls: Any = ApplicationContext
     ) -> ApplicationContext:
         r"""|coro|
 
         Returns the invocation context from the interaction.
 
         This is a more low-level counter-part for :meth:`.process_application_commands`
-        to allow users more fine grained control over the processing.
+        to allow users more fine-grained control over the processing.
 
         Parameters
         -----------
@@ -696,19 +1041,17 @@ class ApplicationCommandMixin:
             The invocation context. The type of this can change via the
             ``cls`` parameter.
         """
-        if cls is None:
-            cls = ApplicationContext
         return cls(self, interaction)
 
     async def get_autocomplete_context(
-        self, interaction: Interaction, cls=None
+        self, interaction: Interaction, cls: Any = AutocompleteContext
     ) -> AutocompleteContext:
         r"""|coro|
 
         Returns the autocomplete context from the interaction.
 
         This is a more low-level counter-part for :meth:`.process_application_commands`
-        to allow users more fine grained control over the processing.
+        to allow users more fine-grained control over the processing.
 
         Parameters
         -----------
@@ -726,18 +1069,40 @@ class ApplicationCommandMixin:
             The autocomplete context. The type of this can change via the
             ``cls`` parameter.
         """
-        if cls is None:
-            cls = AutocompleteContext
         return cls(self, interaction)
 
+    async def invoke_application_command(self, ctx: ApplicationContext) -> None:
+        """|coro|
+
+        Invokes the application command given under the invocation
+        context and handles all the internal event dispatch mechanisms.
+
+        Parameters
+        ----------
+        ctx: :class:`.ApplicationCommand`
+            The invocation context to invoke.
+        """
+        self._bot.dispatch("application_command", ctx)
+        try:
+            if await self._bot.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self._bot.dispatch("application_command_completion", ctx)
+
+    @property
+    @abstractmethod
+    def _bot(self) -> Bot | AutoShardedBot:
+        ...
 
 
-class BotBase(ApplicationCommandMixin, CogMixin):
+class BotBase(ApplicationCommandMixin, CogMixin, ABC):
     _supports_prefixed_commands = False
-    # TODO I think
+
     def __init__(self, description=None, *args, **options):
-        # super(Client, self).__init__(*args, **kwargs)
-        # I replaced ^ with v and it worked
         super().__init__(*args, **options)
         self.extra_events = {}  # TYPE: Dict[str, List[CoroFunc]]
         self.__cogs = {}  # TYPE: Dict[str, Cog]
@@ -749,6 +1114,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self.description = inspect.cleandoc(description) if description else ""
         self.owner_id = options.get("owner_id")
         self.owner_ids = options.get("owner_ids", set())
+        self.auto_sync_commands = options.get("auto_sync_commands", True)
 
         self.debug_guilds = options.pop("debug_guilds", None)
 
@@ -768,7 +1134,8 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         self._after_invoke = None
 
     async def on_connect(self):
-        await self.register_commands()
+        if self.auto_sync_commands:
+            await self.sync_commands()
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
@@ -780,12 +1147,12 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         The default command error handler provided by the bot.
 
-        By default this prints to :data:`sys.stderr` however it could be
+        By default, this prints to :data:`sys.stderr` however it could be
         overridden to have a different implementation.
 
         This only fires if you do not specify any listeners for command error.
         """
-        if self.extra_events.get('on_application_command_error', None):
+        if self.extra_events.get("on_application_command_error", None):
             return
 
         command = context.command
@@ -805,44 +1172,38 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     # TODO: Remove these from commands.Bot
 
     def check(self, func):
-        r"""A decorator that adds a global check to the bot.
-        A global check is similar to a :func:`.check` that is applied
-        on a per command basis except it is run before any command checks
-        have been verified and applies to every command the bot has.
+        """A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is
+        applied on a per-command basis except it is run before any command checks have been verified and applies to
+        every command the bot has.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this
+           takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.ApplicationCommandError`.
 
         Example
-        ---------
+        -------
         .. code-block:: python3
 
             @bot.check
             def check_commands(ctx):
                 return ctx.command.qualified_name in allowed_commands
-
         """
         # T was used instead of Check to ensure the type matches on return
         self.add_check(func)  # type: ignore
         return func
 
     def add_check(self, func, *, call_once: bool = False) -> None:
-        """Adds a global check to the bot.
-        This is the non-decorator interface to :meth:`.check`
-        and :meth:`.check_once`.
+        """Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and
+        :meth:`.check_once`.
 
         Parameters
-        -----------
+        ----------
         func
             The function that was used as a global check.
         call_once: :class:`bool`
-            If the function should only be called once per
-            :meth:`.invoke` call.
-
+            If the function should only be called once per :meth:`.Bot.invoke` call.
         """
 
         if call_once:
@@ -856,51 +1217,44 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         if the function is not in the global checks.
 
         Parameters
-        -----------
+        ----------
         func
             The function to remove from the global checks.
         call_once: :class:`bool`
             If the function was added with ``call_once=True`` in
             the :meth:`.Bot.add_check` call or using :meth:`.check_once`.
-
         """
-        l = self._check_once if call_once else self._checks
+        checks = self._check_once if call_once else self._checks
 
         try:
-            l.remove(func)
+            checks.remove(func)
         except ValueError:
             pass
 
     def check_once(self, func):
-        r"""A decorator that adds a "call once" global check to the bot.
-        Unlike regular global checks, this one is called only once
-        per :meth:`.invoke` call.
-        Regular global checks are called whenever a command is called
-        or :meth:`.Command.can_run` is called. This type of check
-        bypasses that and ensures that it's called only once, even inside
-        the default help command.
+        """A decorator that adds a "call once" global check to the bot. Unlike regular global checks, this one is called
+        only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or
+        :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once,
+        even inside the default help command.
 
         .. note::
 
-            When using this function the :class:`.Context` sent to a group subcommand
-            may only parse the parent command and not the subcommands due to it
-            being invoked once per :meth:`.Bot.invoke` call.
+           When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command
+           and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call.
 
         .. note::
 
-            This function can either be a regular function or a coroutine.
-        Similar to a command :func:`.check`\, this takes a single parameter
-        of type :class:`.Context` and can only raise exceptions inherited from
-        :exc:`.CommandError`.
+           This function can either be a regular function or a coroutine. Similar to a command :func:`.check`,
+           this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
+           :exc:`.ApplicationCommandError`.
 
         Example
-        ---------
+        -------
         .. code-block:: python3
 
             @bot.check_once
             def whitelist(ctx):
                 return ctx.message.author.id in my_whitelist
-
         """
         self.add_check(func, call_once=True)
         return func
@@ -910,7 +1264,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     ) -> bool:
         data = self._check_once if call_once else self._checks
 
-        if len(data) == 0:
+        if not data:
             return True
 
         # type-checker doesn't distinguish between functions and methods
@@ -922,14 +1276,14 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         """The non decorator alternative to :meth:`.listen`.
 
         Parameters
-        -----------
+        ----------
         func: :ref:`coroutine <coroutine>`
             The function to call.
         name: :class:`str`
             The name of the event to listen for. Defaults to ``func.__name__``.
 
         Example
-        --------
+        -------
 
         .. code-block:: python3
 
@@ -942,7 +1296,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         name = func.__name__ if name is MISSING else name
 
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Listeners must be coroutines')
+            raise TypeError("Listeners must be coroutines")
 
         if name in self.extra_events:
             self.extra_events[name].append(func)
@@ -953,7 +1307,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
         """Removes a listener from the pool of listeners.
 
         Parameters
-        -----------
+        ----------
         func
             The function that was used as a listener to remove.
         name: :class:`str`
@@ -976,8 +1330,13 @@ class BotBase(ApplicationCommandMixin, CogMixin):
 
         The functions being listened to must be a :ref:`coroutine <coroutine>`.
 
+        Raises
+        ------
+        TypeError
+            The function being listened to is not a coroutine.
+
         Example
-        --------
+        -------
 
         .. code-block:: python3
 
@@ -992,11 +1351,6 @@ class BotBase(ApplicationCommandMixin, CogMixin):
                 print('two')
 
         Would print one and two in an unspecified order.
-
-        Raises
-        -------
-        TypeError
-            The function being listened to is not a coroutine.
         """
 
         def decorator(func: CFT) -> CFT:
@@ -1008,7 +1362,7 @@ class BotBase(ApplicationCommandMixin, CogMixin):
     def dispatch(self, event_name: str, *args: Any, **kwargs: Any) -> None:
         # super() will resolve to Client
         super().dispatch(event_name, *args, **kwargs)  # type: ignore
-        ev = 'on_' + event_name
+        ev = f"on_{event_name}"
         for event in self.extra_events.get(ev, []):
             self._schedule_event(event, ev, *args, **kwargs)  # type: ignore
 
@@ -1027,12 +1381,12 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             then the hooks are not called.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -1088,12 +1442,12 @@ class BotBase(ApplicationCommandMixin, CogMixin):
             :attr:`owner_ids` is not set.
 
         Parameters
-        -----------
+        ----------
         user: :class:`.abc.User`
             The user to check for.
 
         Returns
-        --------
+        -------
         :class:`bool`
             Whether the user is the owner.
         """
@@ -1119,13 +1473,13 @@ class Bot(BotBase, Client):
     anything that you can do with a :class:`discord.Client` you can do with
     this bot.
 
-    This class also subclasses :class:`.ApplicationCommandMixin` to provide the functionality
+    This class also subclasses ``ApplicationCommandMixin`` to provide the functionality
     to manage commands.
 
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     description: :class:`str`
         The content prefixed into the default help message.
     owner_id: Optional[:class:`int`]
@@ -1140,13 +1494,21 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-           
     debug_guilds: Optional[List[:class:`int`]]
-        Guild IDs of guilds to use for testing commands. This is similar to debug_guild.
-        The bot will not create any global commands if a debug_guilds is passed.
+        Guild IDs of guilds to use for testing commands.
+        The bot will not create any global commands if debug guild IDs are passed.
+
+        .. versionadded:: 2.0
+    auto_sync_commands: :class:`bool`
+        Whether to automatically sync slash commands. This will call sync_commands in on_connect, and in
+        :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
+
+        .. versionadded:: 2.0
     """
 
-    pass
+    @property
+    def _bot(self) -> Bot:
+        return self
 
 
 class AutoShardedBot(BotBase, AutoShardedClient):
@@ -1156,4 +1518,6 @@ class AutoShardedBot(BotBase, AutoShardedClient):
     .. versionadded:: 2.0
     """
 
-    pass
+    @property
+    def _bot(self) -> AutoShardedBot:
+        return self

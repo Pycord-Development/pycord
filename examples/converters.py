@@ -1,41 +1,43 @@
-# This example requires the 'members' privileged intent to use the Member converter.
+# This example requires the 'members' privileged intent to use the Member converter,
+# and the 'message_content' privileged intent for prefixed commands.
 
-import typing
+from typing import Union
 
 import discord
 from discord.ext import commands
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
-bot = commands.Bot("!", intents=intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), intents=intents)
 
 
 @bot.command()
 async def userinfo(ctx: commands.Context, user: discord.User):
     # In the command signature above, you can see that the `user`
-    # parameter is typehinted to `discord.User`. This means that
+    # parameter is type hinted to `discord.User`. This means that
     # during command invocation we will attempt to convert
     # the value passed as `user` to a `discord.User` instance.
-    # The documentation notes what can be converted, in the case of `discord.User`
-    # you pass an ID, mention or username (discrim optional)
+    # The documentation notes what can be converted and, in the case of `discord.User`,
+    # you pass an ID, mention or username (discriminator optional)
     # E.g. 80088516616269824, @Danny or Danny#0007
 
-    # NOTE: typehinting acts as a converter within the `commands` framework only.
-    # In standard Python, it is use for documentation and IDE assistance purposes.
+    # NOTE: Type hinting acts as a converter within the `commands` framework only.
+    # In standard Python, it is used for documentation and IDE assistance purposes.
 
-    # If the conversion is successful, we will have a `discord.User` instance
-    # and can do the following:
+    # If the conversion is successful, we will have a `discord.User`
+    # instance and can do the following:
     user_id = user.id
     username = user.name
-    avatar = user.avatar.url
+    avatar = user.display_avatar.url
     await ctx.send(f"User found: {user_id} -- {username}\n{avatar}")
 
 
 @userinfo.error
 async def userinfo_error(ctx: commands.Context, error: commands.CommandError):
-    # if the conversion above fails for any reason, it will raise `commands.BadArgument`
-    # so we handle this in this error handler:
+    # If the conversion above fails for any reason, it will raise
+    # `commands.BadArgument`, which we handle this in this error handler:
     if isinstance(error, commands.BadArgument):
         return await ctx.send("Couldn't find that user.")
 
@@ -79,7 +81,7 @@ class ChannelOrMemberConverter(commands.Converter):
 
 @bot.command()
 async def notify(ctx: commands.Context, target: ChannelOrMemberConverter):
-    # This command signature utilises the custom converter written above
+    # This command signature utilises the custom converter written above.
     # What will happen during command invocation is that the `target` above will be passed to
     # the `argument` parameter of the `ChannelOrMemberConverter.convert` method and
     # the conversion will go through the process defined there.
@@ -89,13 +91,13 @@ async def notify(ctx: commands.Context, target: ChannelOrMemberConverter):
 
 @bot.command()
 async def ignore(
-    ctx: commands.Context, target: typing.Union[discord.Member, discord.TextChannel]
+    ctx: commands.Context, target: Union[discord.Member, discord.TextChannel]
 ):
     # This command signature utilises the `typing.Union` typehint.
     # The `commands` framework attempts a conversion of each type in this Union *in order*.
     # So, it will attempt to convert whatever is passed to `target` to a `discord.Member` instance.
     # If that fails, it will attempt to convert it to a `discord.TextChannel` instance.
-    # See: https://pycord.readthedocs.io/en/latest/ext/commands/commands.html#typing-union
+    # See: https://docs.pycord.dev/en/master/ext/commands/commands.html#typing-union
     # NOTE: If a Union typehint converter fails it will raise `commands.BadUnionArgument`
     # instead of `commands.BadArgument`.
 
@@ -106,7 +108,7 @@ async def ignore(
         )
     elif isinstance(
         target, discord.TextChannel
-    ):  # this could be an `else` but for completeness' sake.
+    ):  # This could be an `else` but for completeness' sake.
         await ctx.send(
             f"Channel found: {target.mention}, adding it to the ignore list."
         )
@@ -117,11 +119,11 @@ async def ignore(
 async def multiply(ctx: commands.Context, number: int, maybe: bool):
     # We want an `int` and a `bool` parameter here.
     # `bool` is a slightly special case, as shown here:
-    # See: https://pycord.readthedocs.io/en/latest/ext/commands/commands.html#bool
+    # See: https://docs.pycord.dev/en/master/ext/commands/commands.html#bool
 
-    if maybe is True:
-        return await ctx.send(number * 2)
-    await ctx.send(number * 5)
+    if maybe:
+        return await ctx.send(str(number * 2))
+    await ctx.send(str(number * 5))
 
 
-bot.run("token")
+bot.run("TOKEN")

@@ -1,16 +1,15 @@
-import typing
-
 import discord
-from discord.ext import commands
 
 
 # Defines a custom Select containing colour options
 # that the user can choose. The callback function
-# of this class is called when the user changes their choice
+# of this class is called when the user changes their choice.
 class Dropdown(discord.ui.Select):
-    def __init__(self):
-
-        # Set the options that will be presented inside the dropdown
+    def __init__(self, bot_: discord.Bot):
+        # For example, you can use self.bot to retrieve a user or perform other functions in the callback.
+        # Alternatively you can use Interaction.client, so you don't need to pass the bot instance.
+        self.bot = bot_
+        # Set the options that will be presented inside the dropdown:
         options = [
             discord.SelectOption(
                 label="Red", description="Your favourite colour is red", emoji="🟥"
@@ -23,9 +22,9 @@ class Dropdown(discord.ui.Select):
             ),
         ]
 
-        # The placeholder is what will be shown when no option is chosen
-        # The min and max values indicate we can only pick one of the three options
-        # The options parameter defines the dropdown options. We defined this above
+        # The placeholder is what will be shown when no option is selected.
+        # The min and max values indicate we can only pick one of the three options.
+        # The options parameter, contents shown above, define the dropdown options.
         super().__init__(
             placeholder="Choose your favourite colour...",
             min_values=1,
@@ -43,35 +42,37 @@ class Dropdown(discord.ui.Select):
         )
 
 
+# Defines a simple View that allows the user to use the Select menu.
 class DropdownView(discord.ui.View):
-    def __init__(self):
+    def __init__(self, bot_: discord.Bot):
+        self.bot = bot_
         super().__init__()
 
-        # Adds the dropdown to our view object.
-        self.add_item(Dropdown())
+        # Adds the dropdown to our View object
+        self.add_item(Dropdown(self.bot))
+
+        # Initializing the view and adding the dropdown can actually be done in a one-liner if preferred:
+        # super().__init__(Dropdown(self.bot))
 
 
-class Bot(commands.Bot):
-    def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("$"))
-
-    async def on_ready(self):
-        print(f"Logged in as {self.user} (ID: {self.user.id})")
-        print("------")
+bot = discord.Bot(debug_guilds=[...])
 
 
-bot = Bot()
-
-
-@bot.command()
-async def colour(ctx):
-    """Sends a message with our dropdown containing colours"""
+@bot.slash_command()
+async def colour(ctx: discord.ApplicationContext):
+    """Sends a message with our dropdown that contains colour options."""
 
     # Create the view containing our dropdown
-    view = DropdownView()
+    view = DropdownView(bot)
 
-    # Sending a message containing our view
-    await ctx.send("Pick your favourite colour:", view=view)
+    # Sending a message containing our View
+    await ctx.respond("Pick your favourite colour:", view=view)
 
 
-bot.run("token")
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------")
+
+
+bot.run("TOKEN")

@@ -24,37 +24,35 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import Any, Callable, ClassVar, Dict, Iterator, List, Optional, Sequence, TYPE_CHECKING, Tuple
-from functools import partial
-from itertools import groupby
 
-import traceback
 import asyncio
+import os
 import sys
 import time
-import os
-from .item import Item, ItemCallbackType
-from ..components import (
-    Component,
-    ActionRow as ActionRowComponent,
-    _component_factory,
-    Button as ButtonComponent,
-    SelectMenu as SelectComponent,
-)
+import traceback
+from functools import partial
+from itertools import groupby
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 
-__all__ = (
-    'View',
-)
+from ..components import ActionRow as ActionRowComponent
+from ..components import Button as ButtonComponent
+from ..components import Component
+from ..components import SelectMenu as SelectComponent
+from ..components import _component_factory
+from ..utils import get
+from .item import Item, ItemCallbackType
+
+__all__ = ("View",)
 
 
 if TYPE_CHECKING:
-    from ..interactions import Interaction
+    from ..interactions import Interaction, InteractionMessage
     from ..message import Message
-    from ..types.components import Component as ComponentPayload
     from ..state import ConnectionState
+    from ..types.components import Component as ComponentPayload
 
 
-def _walk_all_components(components: List[Component]) -> Iterator[Component]:
+def _walk_all_components(components: list[Component]) -> Iterator[Component]:
     for item in components:
         if isinstance(item, ActionRowComponent):
             yield from item.children
@@ -75,12 +73,10 @@ def _component_to_item(component: Component) -> Item:
 
 
 class _ViewWeights:
-    __slots__ = (
-        'weights',
-    )
+    __slots__ = ("weights",)
 
-    def __init__(self, children: List[Item]):
-        self.weights: List[int] = [0, 0, 0, 0, 0]
+    def __init__(self, children: list[Item]):
+        self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
         children = sorted(children, key=key)
@@ -93,13 +89,15 @@ class _ViewWeights:
             if weight + item.width <= 5:
                 return index
 
-        raise ValueError('could not find open space for item')
+        raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(f'item would not fit at row {item.row} ({total} > 5 width)')
+                raise ValueError(
+                    f"item would not fit at row {item.row} ({total} > 5 width)"
+                )
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:
@@ -124,7 +122,7 @@ class View:
     .. versionadded:: 2.0
 
     Parameters
-    -----------
+    ----------
     *items: :class:`Item`
         The initial items attached to this view.
     timeout: Optional[:class:`float`]
@@ -132,34 +130,47 @@ class View:
         If ``None`` then there is no timeout.
 
     Attributes
-    ------------
+    ----------
     timeout: Optional[:class:`float`]
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this view.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
+    message: Optional[:class:`.Message`]
+        The message that this view is attached to.
+        If ``None`` then the view has not been sent with a message.
     """
 
     __discord_ui_view__: ClassVar[bool] = True
-    __view_children_items__: ClassVar[List[ItemCallbackType]] = []
+    __view_children_items__: ClassVar[list[ItemCallbackType]] = []
 
     def __init_subclass__(cls) -> None:
-        children: List[ItemCallbackType] = []
+        children: list[ItemCallbackType] = []
         for base in reversed(cls.__mro__):
             for member in base.__dict__.values():
-                if hasattr(member, '__discord_ui_model_type__'):
+                if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
         if len(children) > 25:
-            raise TypeError('View cannot have more than 25 children')
+            raise TypeError("View cannot have more than 25 children")
 
         cls.__view_children_items__ = children
 
-    def __init__(self, *items: Item, timeout: Optional[float] = 180.0):
+    def __init__(
+        self,
+        *items: Item,
+        timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+    ):
         self.timeout = timeout
-        self.children: List[Item] = []
+        self.disable_on_timeout = disable_on_timeout
+        self.children: list[Item] = []
         for func in self.__view_children_items__:
-            item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
+            item: Item = func.__discord_ui_model_type__(
+                **func.__discord_ui_model_kwargs__
+            )
             item.callback = partial(func, self, item)
             item._view = self
             setattr(self, func.__name__, item)
@@ -171,13 +182,14 @@ class View:
 
         loop = asyncio.get_running_loop()
         self.id: str = os.urandom(16).hex()
-        self.__cancel_callback: Optional[Callable[[View], None]] = None
-        self.__timeout_expiry: Optional[float] = None
-        self.__timeout_task: Optional[asyncio.Task[None]] = None
+        self.__cancel_callback: Callable[[View], None] | None = None
+        self.__timeout_expiry: float | None = None
+        self.__timeout_task: asyncio.Task[None] | None = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
+        self._message: Message | InteractionMessage | None = None
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>'
+        return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
 
     async def __timeout_task_impl(self) -> None:
         while True:
@@ -196,12 +208,12 @@ class View:
             # Wait N seconds to see if timeout data has been refreshed
             await asyncio.sleep(self.__timeout_expiry - now)
 
-    def to_components(self) -> List[Dict[str, Any]]:
+    def to_components(self) -> list[dict[str, Any]]:
         def key(item: Item) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
-        components: List[Dict[str, Any]] = []
+        components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
             children = [item.to_component_dict() for item in group]
             if not children:
@@ -209,15 +221,17 @@ class View:
 
             components.append(
                 {
-                    'type': 1,
-                    'components': children,
+                    "type": 1,
+                    "components": children,
                 }
             )
 
         return components
 
     @classmethod
-    def from_message(cls, message: Message, /, *, timeout: Optional[float] = 180.0) -> View:
+    def from_message(
+        cls, message: Message, /, *, timeout: float | None = 180.0
+    ) -> View:
         """Converts a message's components into a :class:`View`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -226,14 +240,14 @@ class View:
         converted into a :class:`View` first.
 
         Parameters
-        -----------
-        message: :class:`discord.Message`
+        ----------
+        message: :class:`.Message`
             The message with components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
 
         Returns
-        --------
+        -------
         :class:`View`
             The converted view. This always returns a :class:`View` and not
             one of its subclasses.
@@ -244,7 +258,7 @@ class View:
         return view
 
     @property
-    def _expires_at(self) -> Optional[float]:
+    def _expires_at(self) -> float | None:
         if self.timeout:
             return time.monotonic() + self.timeout
         return None
@@ -253,12 +267,12 @@ class View:
         """Adds an item to the view.
 
         Parameters
-        -----------
+        ----------
         item: :class:`Item`
             The item to add to the view.
 
         Raises
-        --------
+        ------
         TypeError
             An :class:`Item` was not passed.
         ValueError
@@ -267,10 +281,10 @@ class View:
         """
 
         if len(self.children) > 25:
-            raise ValueError('maximum number of children exceeded')
+            raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, Item):
-            raise TypeError(f'expected Item not {item.__class__!r}')
+            raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.__weights.add_item(item)
 
@@ -281,7 +295,7 @@ class View:
         """Removes an item from the view.
 
         Parameters
-        -----------
+        ----------
         item: :class:`Item`
             The item to remove from the view.
         """
@@ -298,6 +312,21 @@ class View:
         self.children.clear()
         self.__weights.clear()
 
+    def get_item(self, custom_id: str) -> Item | None:
+        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+
+        Parameters
+        ----------
+        custom_id: :class:`str`
+            The custom_id of the item to get
+
+        Returns
+        -------
+        Optional[:class:`Item`]
+            The item with the matching ``custom_id`` if it exists.
+        """
+        return get(self.children, custom_id=custom_id)
+
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
 
@@ -309,18 +338,20 @@ class View:
 
         The default implementation of this returns ``True``.
 
+        If this returns ``False``, :meth:`on_check_failure` is called.
+
         .. note::
 
             If an exception occurs within the body then the check
             is considered a failure and :meth:`on_error` is called.
 
         Parameters
-        -----------
+        ----------
         interaction: :class:`~discord.Interaction`
             The interaction that occurred.
 
         Returns
-        ---------
+        -------
         :class:`bool`
             Whether the view children's callbacks should be called.
         """
@@ -331,9 +362,25 @@ class View:
 
         A callback that is called when a view's timeout elapses without being explicitly stopped.
         """
-        pass
+        if self.disable_on_timeout:
+            if self._message:
+                self.disable_all_items()
+                await self._message.edit(view=self)
 
-    async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
+    async def on_check_failure(self, interaction: Interaction) -> None:
+        """|coro|
+        A callback that is called when a :meth:`View.interaction_check` returns ``False``.
+        This can be used to send a response when a check failure occurs.
+
+        Parameters
+        ----------
+        interaction: :class:`~discord.Interaction`
+            The interaction that occurred.
+        """
+
+    async def on_error(
+        self, error: Exception, item: Item, interaction: Interaction
+    ) -> None:
         """|coro|
 
         A callback that is called when an item's callback or :meth:`interaction_check`
@@ -342,7 +389,7 @@ class View:
         The default implementation prints the traceback to stderr.
 
         Parameters
-        -----------
+        ----------
         error: :class:`Exception`
             The exception that was raised.
         item: :class:`Item`
@@ -350,8 +397,10 @@ class View:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f'Ignoring exception in view {self} for item {item}:', file=sys.stderr)
-        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
+        print(f"Ignoring exception in view {self} for item {item}:", file=sys.stderr)
+        traceback.print_exception(
+            error.__class__, error, error.__traceback__, file=sys.stderr
+        )
 
     async def _scheduled_task(self, item: Item, interaction: Interaction):
         try:
@@ -360,11 +409,9 @@ class View:
 
             allow = await self.interaction_check(interaction)
             if not allow:
-                return
+                return await self.on_check_failure(interaction)
 
             await item.callback(interaction)
-            if not interaction.response._responded:
-                await interaction.response.defer()
         except Exception as e:
             return await self.on_error(e, item, interaction)
 
@@ -383,24 +430,27 @@ class View:
             return
 
         self.__stopped.set_result(True)
-        asyncio.create_task(self.on_timeout(), name=f'discord-ui-view-timeout-{self.id}')
+        asyncio.create_task(
+            self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
+        )
 
     def _dispatch_item(self, item: Item, interaction: Interaction):
         if self.__stopped.done():
             return
 
-        asyncio.create_task(self._scheduled_task(item, interaction), name=f'discord-ui-view-dispatch-{self.id}')
+        asyncio.create_task(
+            self._scheduled_task(item, interaction),
+            name=f"discord-ui-view-dispatch-{self.id}",
+        )
 
-    def refresh(self, components: List[Component]):
+    def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
-        # fmt: off
-        old_state: Dict[Tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item  # type: ignore
-            for item in self.children
-            if item.is_dispatchable()
+        old_state: dict[tuple[int, str], Item] = {
+            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
-        # fmt: on
-        children: List[Item] = [item for item in self.children if not item.is_dispatchable()]
+        children: list[Item] = [
+            item for item in self.children if not item.is_dispatchable()
+        ]
         for component in _walk_all_components(components):
             try:
                 older = old_state[(component.type.value, component.custom_id)]  # type: ignore
@@ -446,44 +496,78 @@ class View:
         A persistent view has all their components with a set ``custom_id`` and
         a :attr:`timeout` set to ``None``.
         """
-        return self.timeout is None and all(item.is_persistent() for item in self.children)
+        return self.timeout is None and all(
+            item.is_persistent() for item in self.children
+        )
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
 
-        A view is considered finished when :meth:`stop` is called
-        or it times out.
+        A view is considered finished when :meth:`stop`
+        is called, or it times out.
 
         Returns
-        --------
+        -------
         :class:`bool`
             If ``True``, then the view timed out. If ``False`` then
             the view finished normally.
         """
         return await self.__stopped
 
+    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Disables all items in the view.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.children` to not disable from the view.
+        """
+        for child in self.children:
+            if exclusions is None or child not in exclusions:
+                child.disabled = True
+
+    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Enables all items in the view.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.children` to not enable from the view.
+        """
+        for child in self.children:
+            if exclusions is None or child not in exclusions:
+                child.disabled = False
+
+    @property
+    def message(self):
+        return self._message
+
+    @message.setter
+    def message(self, value):
+        self._message = value
+
 
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (View, Item)
-        self._views: Dict[Tuple[int, Optional[int], str], Tuple[View, Item]] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[View, Item]] = {}
         # message_id: View
-        self._synced_message_views: Dict[int, View] = {}
+        self._synced_message_views: dict[int, View] = {}
         self._state: ConnectionState = state
 
     @property
     def persistent_views(self) -> Sequence[View]:
-        # fmt: off
         views = {
             view.id: view
             for (_, (view, _)) in self._views.items()
             if view.is_persistent()
         }
-        # fmt: on
         return list(views.values())
 
     def __verify_integrity(self):
-        to_remove: List[Tuple[int, Optional[int], str]] = []
+        to_remove: list[tuple[int, int | None, str]] = []
         for (k, (view, _)) in self._views.items():
             if view.is_finished():
                 to_remove.append(k)
@@ -491,7 +575,7 @@ class ViewStore:
         for k in to_remove:
             del self._views[k]
 
-    def add_view(self, view: View, message_id: Optional[int] = None):
+    def add_view(self, view: View, message_id: int | None = None):
         self.__verify_integrity()
 
         view._start_listening_from_store(self)
@@ -514,11 +598,13 @@ class ViewStore:
 
     def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
         self.__verify_integrity()
-        message_id: Optional[int] = interaction.message and interaction.message.id
+        message_id: int | None = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
         # Fallback to None message_id searches in case a persistent view
         # was added without an associated message_id
-        value = self._views.get(key) or self._views.get((component_type, None, custom_id))
+        value = self._views.get(key) or self._views.get(
+            (component_type, None, custom_id)
+        )
         if value is None:
             return
 
@@ -529,10 +615,10 @@ class ViewStore:
     def is_message_tracked(self, message_id: int):
         return message_id in self._synced_message_views
 
-    def remove_message_tracking(self, message_id: int) -> Optional[View]:
+    def remove_message_tracking(self, message_id: int) -> View | None:
         return self._synced_message_views.pop(message_id, None)
 
-    def update_from_message(self, message_id: int, components: List[ComponentPayload]):
+    def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         view.refresh([_component_factory(d) for d in components])

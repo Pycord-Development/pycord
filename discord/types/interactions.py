@@ -25,13 +25,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, Dict, TypedDict, Union, List, Literal
-from .snowflake import Snowflake
+from typing import TYPE_CHECKING, Literal, TypedDict, Union
+
+from ..permissions import Permissions
+from .channel import ChannelType
 from .components import Component, ComponentType
 from .embed import Embed
-from .channel import ChannelType
 from .member import Member
+from .message import Attachment
 from .role import Role
+from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
@@ -40,9 +43,14 @@ if TYPE_CHECKING:
 
 ApplicationCommandType = Literal[1, 2, 3]
 
+
 class _ApplicationCommandOptional(TypedDict, total=False):
-    options: List[ApplicationCommandOption]
+    options: list[ApplicationCommandOption]
     type: ApplicationCommandType
+    name_localized: str
+    name_localizations: dict[str, str]
+    description_localized: str
+    description_localizations: dict[str, str]
 
 
 class ApplicationCommand(_ApplicationCommandOptional):
@@ -53,11 +61,13 @@ class ApplicationCommand(_ApplicationCommandOptional):
 
 
 class _ApplicationCommandOptionOptional(TypedDict, total=False):
-    choices: List[ApplicationCommandOptionChoice]
-    options: List[ApplicationCommandOption]
+    choices: list[ApplicationCommandOptionChoice]
+    options: list[ApplicationCommandOption]
+    name_localizations: dict[str, str]
+    description_localizations: dict[str, str]
 
 
-ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class ApplicationCommandOption(_ApplicationCommandOptionOptional):
@@ -67,12 +77,16 @@ class ApplicationCommandOption(_ApplicationCommandOptionOptional):
     required: bool
 
 
-class ApplicationCommandOptionChoice(TypedDict):
+class _ApplicationCommandOptionChoiceOptional(TypedDict, total=False):
+    name_localizations: dict[str, str]
+
+
+class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
     name: str
-    value: Union[str, int]
+    value: str | int
 
 
-ApplicationCommandPermissionType = Literal[1, 2]
+ApplicationCommandPermissionType = Literal[1, 2, 3]
 
 
 class ApplicationCommandPermissions(TypedDict):
@@ -82,7 +96,7 @@ class ApplicationCommandPermissions(TypedDict):
 
 
 class BaseGuildApplicationCommandPermissions(TypedDict):
-    permissions: List[ApplicationCommandPermissions]
+    permissions: list[ApplicationCommandPermissions]
 
 
 class PartialGuildApplicationCommandPermissions(BaseGuildApplicationCommandPermissions):
@@ -101,32 +115,44 @@ class _ApplicationCommandInteractionDataOption(TypedDict):
     name: str
 
 
-class _ApplicationCommandInteractionDataOptionSubcommand(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionSubcommand(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[1, 2]
-    options: List[ApplicationCommandInteractionDataOption]
+    options: list[ApplicationCommandInteractionDataOption]
 
 
-class _ApplicationCommandInteractionDataOptionString(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionString(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[3]
     value: str
 
 
-class _ApplicationCommandInteractionDataOptionInteger(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionInteger(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[4]
     value: int
 
 
-class _ApplicationCommandInteractionDataOptionBoolean(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionBoolean(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[5]
     value: bool
 
 
-class _ApplicationCommandInteractionDataOptionSnowflake(_ApplicationCommandInteractionDataOption):
-    type: Literal[6, 7, 8, 9]
+class _ApplicationCommandInteractionDataOptionSnowflake(
+    _ApplicationCommandInteractionDataOption
+):
+    type: Literal[6, 7, 8, 9, 11]
     value: Snowflake
 
 
-class _ApplicationCommandInteractionDataOptionNumber(_ApplicationCommandInteractionDataOption):
+class _ApplicationCommandInteractionDataOptionNumber(
+    _ApplicationCommandInteractionDataOption
+):
     type: Literal[10]
     value: float
 
@@ -149,14 +175,15 @@ class ApplicationCommandResolvedPartialChannel(TypedDict):
 
 
 class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
-    users: Dict[Snowflake, User]
-    members: Dict[Snowflake, Member]
-    roles: Dict[Snowflake, Role]
-    channels: Dict[Snowflake, ApplicationCommandResolvedPartialChannel]
+    users: dict[Snowflake, User]
+    members: dict[Snowflake, Member]
+    roles: dict[Snowflake, Role]
+    channels: dict[Snowflake, ApplicationCommandResolvedPartialChannel]
+    attachments: dict[Snowflake, Attachment]
 
 
 class _ApplicationCommandInteractionDataOptional(TypedDict, total=False):
-    options: List[ApplicationCommandInteractionDataOption]
+    options: list[ApplicationCommandInteractionDataOption]
     resolved: ApplicationCommandInteractionDataResolved
     target_id: Snowflake
     type: ApplicationCommandType
@@ -168,7 +195,7 @@ class ApplicationCommandInteractionData(_ApplicationCommandInteractionDataOption
 
 
 class _ComponentInteractionDataOptional(TypedDict, total=False):
-    values: List[str]
+    values: list[str]
 
 
 class ComponentInteractionData(_ComponentInteractionDataOptional):
@@ -188,6 +215,7 @@ class _InteractionOptional(TypedDict, total=False):
     message: Message
     locale: str
     guild_locale: str
+    app_permissions: Permissions
 
 
 class Interaction(_InteractionOptional):
@@ -201,10 +229,10 @@ class Interaction(_InteractionOptional):
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
     tts: bool
     content: str
-    embeds: List[Embed]
+    embeds: list[Embed]
     allowed_mentions: AllowedMentions
     flags: int
-    components: List[Component]
+    components: list[Component]
 
 
 InteractionResponseType = Literal[1, 4, 5, 6, 7]
@@ -225,12 +253,9 @@ class MessageInteraction(TypedDict):
     user: User
 
 
-
-
-
 class _EditApplicationCommandOptional(TypedDict, total=False):
     description: str
-    options: Optional[List[ApplicationCommandOption]]
+    options: list[ApplicationCommandOption] | None
     type: ApplicationCommandType
 
 

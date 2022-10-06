@@ -18,8 +18,10 @@ Historically however, thanks to:
 
 /* CSS variables would go here */
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --monospace-font-family: 'Consolas', 'Menlo', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --monospace-font-family: "Consolas", "Menlo", "Deja Vu Sans Mono",
+    "Bitstream Vera Sans Mono", monospace;
 
   /* palette goes here */
   --white: #ffffff;
@@ -28,10 +30,10 @@ Historically however, thanks to:
   --grey-2: #ededf0;
   --grey-3: #d7d7db;
   --grey-4: #b1b1b3;
-  --grey-5: #737373;
+  --grey-5: #2a2a2b;
   --grey-6: #4a4a4f;
-  --grey-7: #38383d;
-  --grey-8: #2a2a2e;
+  --grey-7: #2a2a2b;
+  --grey-8: #1e1e1f;
   --black: #0c0c0d;
 
   --blue-1: #3399ff;
@@ -40,6 +42,7 @@ Historically however, thanks to:
   --blue-4: #003eaa;
   --blue-5: #002275;
   --blue-6: #000f40;
+  --blurple: #7289da;
 
   --settings: var(--grey-1);
   --settings-hover: var(--grey-1-8);
@@ -56,7 +59,7 @@ Historically however, thanks to:
   --nav-hover-text: var(--grey-6);
   --nav-header-text: var(--black);
   --sub-header-background: var(--grey-6);
-  --search-border: var(--grey-4);
+  --search-border: var(--grey-7);
   --search-text: var(--white);
   --search-focus: var(--blue-1);
   --search-button: var(--grey-1);
@@ -65,7 +68,7 @@ Historically however, thanks to:
   --footer-link: var(--grey-6);
   --hr-border: var(--grey-2);
   --main-big-headers-text: var(--black);
-  --main-big-headers-border: var(--grey-4);
+  --main-big-headers-border: var(--grey-7);
   --main-h5-header-text: var(--black);
   --main-h6-header-text: var(--grey-4);
   --main-h4-header-border: var(--grey-4);
@@ -91,8 +94,8 @@ Historically however, thanks to:
   --table-border: var(--grey-4);
   --mobile-active-toc: var(--grey-7);
   --active-toc: var(--grey-3);
-  --scrollbar: rgba(0,0,0,0.2);
-  --scrollbar-hover: rgba(0,0,0,0.4);
+  --scrollbar: rgba(0, 0, 0, 0.2);
+  --scrollbar-hover: rgba(0, 0, 0, 0.4);
   --rtd-ad-border: var(--grey-3);
   --rtd-ad-background: var(--grey-2);
   --rtd-ad-main-text: var(--grey-6);
@@ -110,7 +113,7 @@ Historically however, thanks to:
 }
 
 :root[data-font="serif"] {
-  --font-family: 'Georgia', 'Yu Gothic', 'Noto Sans CJK JP Regular', serif;
+  --font-family: "Georgia", "Yu Gothic", "Noto Sans CJK JP Regular", serif;
 }
 
 :root[data-theme="dark"] {
@@ -118,7 +121,7 @@ Historically however, thanks to:
   --link-text: var(--blue-1);
   --link-hover-text: var(--blue-2);
   --main-text: var(--white);
-  --sub-header-background: var(--grey-8);
+  --sub-header-background: var(--grey-7);
   --search-border: var(--grey-5);
   --nav-background: var(--main-background);
   --nav-text: var(--grey-1);
@@ -139,7 +142,7 @@ Historically however, thanks to:
   --note-text: var(--white);
   --warning-background: #d7b600;
   --warning-text: var(--black);
-  --error-background:  #d70022;
+  --error-background: #d70022;
   --error-text: var(--white);
   --helpful-background: #008ea4;
   --helpful-text: var(--white);
@@ -153,8 +156,8 @@ Historically however, thanks to:
   --table-text: var(--grey-1);
   --table-border: var(--grey-4);
   --active-toc: var(--grey-6);
-  --scrollbar: rgba(0,0,0,0.5);
-  --scrollbar-hover: rgba(0,0,0,0.7);
+  --scrollbar: rgba(0, 0, 0, 0.5);
+  --scrollbar-hover: rgba(0, 0, 0, 0.7);
   --rtd-ad-border: var(--grey-6);
   --rtd-ad-background: var(--grey-5);
   --rtd-ad-main-text: var(--grey-2);
@@ -169,7 +172,7 @@ Historically however, thanks to:
   --highlighted-text: rgba(250, 166, 26, 0.2);
 }
 
-img[src$="snake_dark.svg"]  {
+img[src$="snake_dark.svg"] {
   display: none;
 }
 :root[data-theme="dark"] img[src$="snake.svg"] {
@@ -189,7 +192,6 @@ body {
   color: var(--main-text);
 }
 
-
 /* Scrollbar related */
 
 #sidebar::-webkit-scrollbar {
@@ -204,7 +206,6 @@ body {
 #sidebar::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-hover);
 }
-
 
 /* grid related */
 
@@ -315,7 +316,7 @@ header > nav > a:hover {
   border-bottom: 1px solid var(--search-border);
 
   appearance: none;
-  background-image: url('/_images/drop_down_icon.svg');
+  background-image: url("/_images/drop_down_icon.svg");
   background-repeat: no-repeat;
   background-position-x: 100%;
   background-position-y: 50%;
@@ -324,7 +325,7 @@ header > nav > a:hover {
 }
 
 .sub-header option {
-    color: black;
+  color: black;
 }
 
 .sub-header > select:focus {
@@ -384,7 +385,7 @@ aside h3 {
 }
 
 .collapsible-arrow {
-  font-size: 1.5em!important;
+  font-size: 1.5em !important;
   left: -1.166em;
   top: 0.25em;
   user-select: none;
@@ -464,15 +465,15 @@ aside .material-icons,
   align-items: stretch;
 }
 
-.search-wrapper > input[type=search] {
+.search-wrapper > input[type="search"] {
   font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
   outline: none;
   appearance: none;
   font-size: 1em;
 }
 
-.search-wrapper > input[type=search],
-.search-wrapper > button[type=submit] {
+.search-wrapper > input[type="search"],
+.search-wrapper > button[type="submit"] {
   background-color: var(--sub-header-background);
   border: none;
   color: var(--search-text);
@@ -502,7 +503,7 @@ button[type=submit]:focus ~ input[type=search] {
   border-right: none;
 } */
 
-.search-wrapper > button[type=submit] {
+.search-wrapper > button[type="submit"] {
   color: var(--search-button);
   /* border: 1px solid var(--search-border); */
   /* border-left: none; */
@@ -518,7 +519,7 @@ input[type=search]:focus ~ button[type=submit] {
   border-left: none;
 } */
 
-.search-wrapper > button[type=submit]:hover {
+.search-wrapper > button[type="submit"]:hover {
   background-color: var(--search-border);
   color: var(--search-button-hover);
 }
@@ -543,14 +544,14 @@ div.modal {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   cursor: pointer;
   display: none;
 }
 
 div.modal-content {
   background-color: var(--main-background);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.54);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.54);
   padding: 24px;
   border-radius: 4px;
   max-width: 40%;
@@ -638,40 +639,78 @@ main h2,
 main h3,
 main h4,
 main h5,
-main h6 { font-weight: normal; }
+main h6 {
+  font-weight: normal;
+}
 
 main h1,
 main h2,
 main h3,
-main h4 { color: var(--main-big-headers-text); }
-main h5 { color: var(--main-h5-header-text); }
-main h6 { color: var(--main-h6-header-text); }
+main h4 {
+  color: var(--main-big-headers-text);
+}
+main h5 {
+  color: var(--main-h5-header-text);
+}
+main h6 {
+  color: var(--main-h6-header-text);
+}
 
-main h1 { margin: 0 0 10px 0; }
+main h1 {
+  margin: 0 0 10px 0;
+}
 main h2,
-main h3 { margin: 10px 0px 10px 0px; }
+main h3 {
+  margin: 10px 0px 10px 0px;
+}
 main h4,
 main h5,
-main h6 { margin: 20px 0px 10px 0px; }
+main h6 {
+  margin: 20px 0px 10px 0px;
+}
 
-main h1 { padding: 0 0 10px 0; }
+main h1 {
+  padding: 0 0 10px 0;
+}
 main h2,
-main h3 { padding: 10px 0 10px 0; }
-main h4 { padding: 10px 0 10px 0; }
+main h3 {
+  padding: 10px 0 10px 0;
+}
+main h4 {
+  padding: 10px 0 10px 0;
+}
 main h5,
-main h6 { padding: 10px 0 0 0; }
+main h6 {
+  padding: 10px 0 0 0;
+}
 
 main h1,
 main h2,
-main h3 { border-bottom: 1px solid var(--main-big-headers-border); }
-main h4 { border-bottom: 1px solid var(--main-h4-header-border); }
+main h3 {
+  border-bottom: 1px solid var(--main-big-headers-border);
+}
+main h4 {
+  border-bottom: 1px solid var(--main-h4-header-border);
+}
 
-main h1 { font-size: 2.3em; }
-main h2 { font-size: 1.8em; }
-main h3 { font-size: 1.3em; }
-main h4 { font-size: 1.1em; }
-main h5 { font-size: 1.05em; }
-main h6 { font-size: 1em; }
+main h1 {
+  font-size: 2.3em;
+}
+main h2 {
+  font-size: 1.8em;
+}
+main h3 {
+  font-size: 1.3em;
+}
+main h4 {
+  font-size: 1.1em;
+}
+main h5 {
+  font-size: 1.05em;
+}
+main h6 {
+  font-size: 1em;
+}
 
 a.headerlink {
   color: var(--header-link);
@@ -696,7 +735,7 @@ dt:hover > a.headerlink,
 caption:hover > a.headerlink,
 p.caption:hover > a.headerlink,
 div.code-block-caption:hover > a.headerlink {
-    visibility: visible;
+  visibility: visible;
 }
 
 .versionmodified {
@@ -709,8 +748,9 @@ main ul {
   padding-left: 1.3em;
 }
 
-main ul ul, main ol ul {
-  margin: .2em 0;
+main ul ul,
+main ol ul {
+  margin: 0.2em 0;
   padding-left: 1.2em;
 }
 
@@ -729,7 +769,7 @@ main ol {
 }
 
 main ol ol {
-  margin: .2em 0;
+  margin: 0.2em 0;
 }
 
 main ol > li {
@@ -792,7 +832,7 @@ p.admonition-title {
 }
 
 p.admonition-title::before {
-  font: normal normal normal 24px/1 'Material Icons';
+  font: normal normal normal 24px/1 "Material Icons";
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -800,7 +840,10 @@ p.admonition-title::before {
   left: 9.6px;
 }
 
-div.important, div.note, div.hint, div.tip {
+div.important,
+div.note,
+div.hint,
+div.tip {
   border-left-color: var(--note-background);
 }
 
@@ -816,10 +859,12 @@ div.important > p.admonition-title::before,
 div.note > p.admonition-title::before,
 div.hint > p.admonition-title::before,
 div.tip > p.admonition-title::before {
-  content: '\0e88e';
+  content: "\0e88e";
 }
 
-div.attention, div.warning, div.caution {
+div.attention,
+div.warning,
+div.caution {
   border-left-color: var(--warning-background);
 }
 
@@ -833,10 +878,11 @@ div.caution > p.admonition-title {
 div.attention > p.admonition-title::before,
 div.warning > p.admonition-title::before,
 div.caution > p.admonition-title::before {
-  content: '\0e002';
+  content: "\0e002";
 }
 
-div.danger, div.error {
+div.danger,
+div.error {
   border-left-color: var(--error-background);
 }
 
@@ -848,7 +894,7 @@ div.error > p.admonition-title {
 
 div.danger > p.admonition-title::before,
 div.error > p.admonition-title::before {
-  content: '\0e000';
+  content: "\0e000";
 }
 
 /* helpful admonitions */
@@ -862,7 +908,7 @@ div.helpful > p.admonition-title {
 }
 
 div.helpful > p.admonition-title::before {
-  content: '\0e873';
+  content: "\0e873";
 }
 
 dl.field-list > dd {
@@ -915,7 +961,7 @@ a.reference.rfc > strong {
 }
 
 .exception-hierarchy-content ul {
-  list-style: '»' !important;
+  list-style: "»" !important;
 }
 
 /* attribute tables */
@@ -994,7 +1040,8 @@ pre {
   overflow-x: auto;
 }
 
-pre, code {
+pre,
+code {
   font-family: var(--monospace-font-family);
   font-size: 0.9em;
   overflow-wrap: break-word;
@@ -1002,7 +1049,7 @@ pre, code {
 
 code {
   background-color: var(--inline-code-background);
-  padding: .15em;
+  padding: 0.15em;
   border-radius: 3px;
 }
 
@@ -1021,7 +1068,8 @@ code.descclassname + code.descname {
   padding-left: 0;
 }
 
-code.xref, a code {
+code.xref,
+a code {
   font-weight: normal;
   background-color: var(--xref-code-background);
 }
@@ -1058,12 +1106,13 @@ dd {
   margin-left: 1.5em;
 }
 
-dt:target, span.highlighted {
-    background-color: var(--highlighted-text);
+dt:target,
+span.highlighted {
+  background-color: var(--highlighted-text);
 }
 
 rect.highlighted {
-    fill: var(--highlighted-text);
+  fill: var(--highlighted-text);
 }
 
 .container.operations {
@@ -1073,7 +1122,7 @@ rect.highlighted {
 }
 
 .container.operations::before {
-  content: 'Supported Operations';
+  content: "Supported Operations";
   color: var(--main-big-headers-text);
   display: block;
   padding-bottom: 0.5em;
@@ -1133,7 +1182,7 @@ table.docutils tbody tr td ul,
 table.docutils thead tr td ol,
 table.docutils tfoot tr td ol,
 table.docutils tbody tr td ol {
-  margin: 0 0 .5em;
+  margin: 0 0 0.5em;
 }
 table.docutils thead tr td p.last,
 table.docutils tfoot tr td p.last,
@@ -1180,7 +1229,6 @@ div.code-block-caption {
   font-size: medium;
   font-weight: bold;
 }
-
 
 /* desktop stuff */
 
@@ -1277,9 +1325,9 @@ div.code-block-caption {
     color: var(--nav-hover-text);
   }
 
-  #hamburger-toggle, #settings-toggle {
+  #hamburger-toggle,
+  #settings-toggle {
     display: none;
-
   }
 }
 
@@ -1292,7 +1340,7 @@ div.code-block-caption {
       "h h h h h h h h h h h h h h h h"
       "n n n n n n n n n n n n n n n n"
       "s s s . . c c c c c c c c c . ."
-      "s s s f f f f f f f f f f f f f"
+      "s s s f f f f f f f f f f f f f";
   }
 
   header > nav {

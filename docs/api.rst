@@ -95,9 +95,134 @@ AutoShardedBot
 
 Application Commands
 ---------------------
-.. attributetable:: ApplicationCommandMixin
 
-.. autoclass:: ApplicationCommandMixin
+
+Command Permission Decorators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+.. autofunction:: discord.commands.default_permissions
+    :decorator:
+
+.. autofunction:: discord.commands.guild_only
+    :decorator:
+
+
+ApplicationCommand
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationCommand
+
+.. autoclass:: ApplicationCommand
+    :members:
+
+.. autofunction:: discord.commands.application_command
+    :decorator:
+
+.. autofunction:: discord.commands.command
+    :decorator:
+
+SlashCommand
+~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommand
+
+.. autoclass:: SlashCommand
+    :members:
+
+.. autofunction:: discord.commands.slash_command
+    :decorator:
+
+SlashCommandGroup
+~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: SlashCommandGroup
+
+.. autoclass:: SlashCommandGroup
+    :members:
+
+Option
+~~~~~~~
+
+.. attributetable:: Option
+
+.. autoclass:: Option
+    :members:
+
+.. autofunction:: discord.commands.option
+    :decorator:
+
+ThreadOption
+~~~~~~~~~~~~~
+
+.. attributetable:: ThreadOption
+
+.. autoclass:: ThreadOption
+    :members:
+
+OptionChoice
+~~~~~~~~~~~~~
+
+.. attributetable:: OptionChoice
+
+.. autoclass:: OptionChoice
+    :members:
+
+UserCommand
+~~~~~~~~~~~~
+
+.. attributetable:: UserCommand
+
+.. autoclass:: UserCommand
+    :members:
+
+.. autofunction:: discord.commands.user_command
+    :decorator:
+
+MessageCommand
+~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageCommand
+
+.. autoclass:: MessageCommand
+    :members:
+
+.. autofunction:: discord.commands.message_command
+    :decorator:
+
+ApplicationContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: ApplicationContext
+
+.. autoclass:: ApplicationContext
+    :members:
+
+AutocompleteContext
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutocompleteContext
+
+.. autoclass:: AutocompleteContext
+    :members:
+
+Cogs
+-----
+
+Cog
+~~~~
+
+.. attributetable:: Cog
+
+.. autoclass:: Cog
+    :members:
+
+CogMeta
+~~~~~~~~
+
+.. attributetable:: CogMeta
+
+.. autoclass:: CogMeta
     :members:
 
 Application Info
@@ -241,6 +366,205 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     errors. In order to turn a function into a coroutine they must be ``async def``
     functions.
 
+Application Commands
+~~~~~~~~~~~~~~~~~~~~
+.. function:: on_application_command(context)
+
+    Called when an application command is received.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command being received.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_completion(context)
+
+    Called when an application command is completed, after any checks have finished.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that was completed.
+    :type context: :class:`ApplicationContext`
+
+.. function:: on_application_command_error(context, exception)
+
+    Called when an application command has an error.
+
+    .. versionadded:: 2.0
+
+    :param context: The ApplicationContext associated to the command that has an error.
+    :type context: :class:`ApplicationContext`
+
+    :param exception: The DiscordException associated to the error.
+    :type exception: :class:`DiscordException`
+
+.. function:: on_unknown_application_command(interaction)
+
+    Called when an application command was not found in the bot's internal cache.
+
+    .. versionadded:: 2.0
+
+    :param interaction: The interaction associated to the unknown command.
+    :type interaction: :class:`Interaction`
+
+AutoMod
+~~~~~~~
+.. function:: on_auto_moderation_rule_create(rule)
+
+    Called when an auto moderation rule is created.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The newly created rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_update(rule)
+
+    Called when an auto moderation rule is updated.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The updated rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_rule_delete(rule)
+
+    Called when an auto moderation rule is deleted.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
+    :attr:`Intents.auto_moderation_configuration` must be enabled.
+
+    :param rule: The deleted rule.
+    :type rule: :class:`AutoModRule`
+
+.. function:: on_auto_moderation_action_execution(payload)
+
+    Called when an auto moderation action is executed.
+
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
+    :attr:`Intents.auto_moderation_execution` must be enabled.
+
+    :param payload: The event's data.
+    :type payload: :class:`AutoModActionExecutionEvent`
+
+Bans
+~~~~
+.. function:: on_member_ban(guild, user)
+
+    Called when user gets banned from a :class:`Guild`.
+
+    This requires :attr:`Intents.bans` to be enabled.
+
+    :param guild: The guild the user got banned from.
+    :type guild: :class:`Guild`
+    :param user: The user that got banned.
+                 Can be either :class:`User` or :class:`Member` depending if
+                 the user was in the guild or not at the time of removal.
+    :type user: Union[:class:`User`, :class:`Member`]
+
+.. function:: on_member_unban(guild, user)
+
+    Called when a :class:`User` gets unbanned from a :class:`Guild`.
+
+    This requires :attr:`Intents.bans` to be enabled.
+
+    :param guild: The guild the user got unbanned from.
+    :type guild: :class:`Guild`
+    :param user: The user that got unbanned.
+    :type user: :class:`User`
+
+Channels
+~~~~~~~~
+.. function:: on_private_channel_update(before, after)
+
+    Called whenever a private group DM is updated. e.g. changed name or topic.
+
+    This requires :attr:`Intents.messages` to be enabled.
+
+    :param before: The updated group channel's old info.
+    :type before: :class:`GroupChannel`
+    :param after: The updated group channel's new info.
+    :type after: :class:`GroupChannel`
+
+.. function:: on_private_channel_pins_update(channel, last_pin)
+
+    Called whenever a message is pinned or unpinned from a private channel.
+
+    :param channel: The private channel that had its pins updated.
+    :type channel: :class:`abc.PrivateChannel`
+    :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
+    :type last_pin: Optional[:class:`datetime.datetime`]
+
+.. function:: on_guild_channel_update(before, after)
+
+    Called whenever a guild channel is updated. e.g. changed name, topic, permissions.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param before: The updated guild channel's old info.
+    :type before: :class:`abc.GuildChannel`
+    :param after: The updated guild channel's new info.
+    :type after: :class:`abc.GuildChannel`
+
+.. function:: on_guild_channel_pins_update(channel, last_pin)
+
+    Called whenever a message is pinned or unpinned from a guild channel.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param channel: The guild channel that had its pins updated.
+    :type channel: Union[:class:`abc.GuildChannel`, :class:`Thread`]
+    :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
+    :type last_pin: Optional[:class:`datetime.datetime`]
+
+.. function:: on_guild_channel_delete(channel)
+              on_guild_channel_create(channel)
+
+    Called whenever a guild channel is deleted or created.
+
+    Note that you can get the guild from :attr:`~abc.GuildChannel.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param channel: The guild channel that got created or deleted.
+    :type channel: :class:`abc.GuildChannel`
+
+Connection
+~~~~~~~~~~
+.. function:: on_error(event, *args, **kwargs)
+
+    Usually when an event raises an uncaught exception, a traceback is
+    printed to stderr and the exception is ignored. If you want to
+    change this behaviour and handle the exception for whatever reason
+    yourself, this event can be overridden. Which, when done, will
+    suppress the default action of printing the traceback.
+
+    The information of the exception raised and the exception itself can
+    be retrieved with a standard call to :func:`sys.exc_info`.
+
+    If you want exception to propagate out of the :class:`Client` class
+    you can define an ``on_error`` handler consisting of a single empty
+    :ref:`raise statement <py:raise>`. Exceptions raised by ``on_error`` will not be
+    handled in any way by :class:`Client`.
+
+    .. note::
+
+        ``on_error`` will only be dispatched to :meth:`Client.event`.
+
+        It will not be received by :meth:`Client.wait_for`, or, if used,
+        :ref:`ext_commands_api_bot` listeners such as
+        :meth:`~ext.commands.Bot.listen` or :meth:`~ext.commands.Cog.listener`.
+
+    :param event: The name of the event that raised the exception.
+    :type event: :class:`str`
+
+    :param args: The positional arguments for the event that raised the
+        exception.
+    :param kwargs: The keyword arguments for the event that raised the
+        exception.
+
 .. function:: on_connect()
 
     Called when the client has successfully connected to Discord. This is not
@@ -265,6 +589,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     or Discord terminating the connection one way or the other.
 
     This function can be called many times without a corresponding :func:`on_connect` call.
+
 
 .. function:: on_shard_disconnect(shard_id)
 
@@ -310,41 +635,9 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param shard_id: The shard ID that has resumed.
     :type shard_id: :class:`int`
 
-.. function:: on_error(event, *args, **kwargs)
-
-    Usually when an event raises an uncaught exception, a traceback is
-    printed to stderr and the exception is ignored. If you want to
-    change this behaviour and handle the exception for whatever reason
-    yourself, this event can be overridden. Which, when done, will
-    suppress the default action of printing the traceback.
-
-    The information of the exception raised and the exception itself can
-    be retrieved with a standard call to :func:`sys.exc_info`.
-
-    If you want exception to propagate out of the :class:`Client` class
-    you can define an ``on_error`` handler consisting of a single empty
-    :ref:`raise statement <py:raise>`. Exceptions raised by ``on_error`` will not be
-    handled in any way by :class:`Client`.
-
-    .. note::
-
-        ``on_error`` will only be dispatched to :meth:`Client.event`.
-
-        It will not be received by :meth:`Client.wait_for`, or, if used,
-        :ref:`ext_commands_api_bot` listeners such as
-        :meth:`~ext.commands.Bot.listen` or :meth:`~ext.commands.Cog.listener`.
-
-    :param event: The name of the event that raised the exception.
-    :type event: :class:`str`
-
-    :param args: The positional arguments for the event that raised the
-        exception.
-    :param kwargs: The keyword arguments for the event that raised the
-        exception.
-
 .. function:: on_socket_event_type(event_type)
 
-    Called whenever a websocket event is received from the WebSocket.
+    Called whenever a WebSocket event is received from the WebSocket.
 
     This is mainly useful for logging how many events you are receiving
     from the Discord gateway.
@@ -393,39 +686,316 @@ to handle it, which defaults to print a traceback and ignoring the exception.
                     WebSocket library. It can be :class:`bytes` to denote a binary
                     message or :class:`str` to denote a regular text message.
 
-.. function:: on_typing(channel, user, when)
+Guilds
+~~~~~~
+.. function:: on_guild_join(guild)
 
-    Called when someone begins typing a message.
+    Called when a :class:`Guild` is either created by the :class:`Client` or when the
+    :class:`Client` joins a guild.
 
-    The ``channel`` parameter can be a :class:`abc.Messageable` instance.
-    Which could either be :class:`TextChannel`, :class:`GroupChannel`, or
-    :class:`DMChannel`.
+    This requires :attr:`Intents.guilds` to be enabled.
 
-    If the ``channel`` is a :class:`TextChannel` then the ``user`` parameter
-    is a :class:`Member`, otherwise it is a :class:`User`.
+    :param guild: The guild that was joined.
+    :type guild: :class:`Guild`
 
-    This requires :attr:`Intents.typing` to be enabled.
+.. function:: on_guild_remove(guild)
 
-    :param channel: The location where the typing originated from.
-    :type channel: :class:`abc.Messageable`
-    :param user: The user that started typing.
-    :type user: Union[:class:`User`, :class:`Member`]
-    :param when: When the typing started as an aware datetime in UTC.
-    :type when: :class:`datetime.datetime`
+    Called when a :class:`Guild` is removed from the :class:`Client`.
 
-.. function:: on_raw_typing(payload)
+    This happens through, but not limited to, these circumstances:
 
-    Called when someone begins typing a message. Unlike :func:`on_typing`, this is 
-    called regardless if the user can be found in the bot's cache or not.
+    - The client got banned.
+    - The client got kicked.
+    - The client left the guild.
+    - The client or the guild owner deleted the guild.
 
-    If the typing event is occurring in a guild,
-    the member that started typing can be accessed via :attr:`RawTypingEvent.member`
+    In order for this event to be invoked then the :class:`Client` must have
+    been part of the guild to begin with. (i.e. it is part of :attr:`Client.guilds`)
 
-    This requires :attr:`Intents.typing` to be enabled.
+    This requires :attr:`Intents.guilds` to be enabled.
 
-    :param payload: The raw typing payload.
-    :type payload: :class:`RawTypingEvent`
+    :param guild: The guild that got removed.
+    :type guild: :class:`Guild`
 
+.. function:: on_guild_update(before, after)
+
+    Called when a :class:`Guild` is updated, for example:
+
+    - Changed name
+    - Changed AFK channel
+    - Changed AFK timeout
+    - etc.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param before: The guild prior to being updated.
+    :type before: :class:`Guild`
+    :param after: The guild after being updated.
+    :type after: :class:`Guild`
+
+.. function:: on_guild_role_create(role)
+              on_guild_role_delete(role)
+
+    Called when a :class:`Guild` creates or deletes a :class:`Role`.
+
+    To get the guild it belongs to, use :attr:`Role.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param role: The role that was created or deleted.
+    :type role: :class:`Role`
+
+.. function:: on_guild_role_update(before, after)
+
+    Called when a :class:`Role` is changed guild-wide.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param before: The updated role's old info.
+    :type before: :class:`Role`
+    :param after: The updated role's updated info.
+    :type after: :class:`Role`
+
+.. function:: on_guild_emojis_update(guild, before, after)
+
+    Called when a :class:`Guild` adds or removes an :class:`Emoji`.
+
+    This requires :attr:`Intents.emojis_and_stickers` to be enabled.
+
+    :param guild: The guild who got their emojis updated.
+    :type guild: :class:`Guild`
+    :param before: A list of emojis before the update.
+    :type before: Sequence[:class:`Emoji`]
+    :param after: A list of emojis after the update.
+    :type after: Sequence[:class:`Emoji`]
+
+.. function:: on_guild_stickers_update(guild, before, after)
+
+    Called when a :class:`Guild` adds or removes a sticker.
+
+    This requires :attr:`Intents.emojis_and_stickers` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param guild: The guild who got their stickers updated.
+    :type guild: :class:`Guild`
+    :param before: A list of stickers before the update.
+    :type before: Sequence[:class:`GuildSticker`]
+    :param after: A list of stickers after the update.
+    :type after: Sequence[:class:`GuildSticker`]
+
+.. function:: on_guild_available(guild)
+              on_guild_unavailable(guild)
+
+    Called when a guild becomes available or unavailable. The guild must have
+    existed in the :attr:`Client.guilds` cache.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    :param guild: The guild that has changed availability.
+    :type guild: :class:`Guild`
+
+.. function:: on_webhooks_update(channel)
+
+    Called whenever a webhook is created, modified, or removed from a guild channel.
+
+    This requires :attr:`Intents.webhooks` to be enabled.
+
+    :param channel: The channel that had its webhooks updated.
+    :type channel: :class:`abc.GuildChannel`
+
+Integrations
+~~~~~~~~~~~~
+.. function:: on_guild_integrations_update(guild)
+
+    Called whenever an integration is created, modified, or removed from a guild.
+
+    This requires :attr:`Intents.integrations` to be enabled.
+
+    .. versionadded:: 1.4
+
+    :param guild: The guild that had its integrations updated.
+    :type guild: :class:`Guild`
+
+.. function:: on_integration_create(integration)
+
+    Called when an integration is created.
+
+    This requires :attr:`Intents.integrations` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param integration: The integration that was created.
+    :type integration: :class:`Integration`
+
+.. function:: on_integration_update(integration)
+
+    Called when an integration is updated.
+
+    This requires :attr:`Intents.integrations` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param integration: The integration that was created.
+    :type integration: :class:`Integration`
+
+.. function:: on_raw_integration_delete(payload)
+
+    Called when an integration is deleted.
+
+    This requires :attr:`Intents.integrations` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawIntegrationDeleteEvent`
+
+Interactions
+~~~~~~~~~~~~
+.. function:: on_interaction(interaction)
+
+    Called when an interaction happened.
+
+    This currently happens due to application command invocations or components being used.
+
+    .. warning::
+
+        This is a low level function that is not generally meant to be used.
+        If you are working with components, consider using the callbacks associated
+        with the :class:`~discord.ui.View` instead as it provides a nicer user experience.
+
+    .. versionadded:: 2.0
+
+    :param interaction: The interaction data.
+    :type interaction: :class:`Interaction`
+
+Invites
+~~~~~~~
+.. function:: on_invite_create(invite)
+
+    Called when an :class:`Invite` is created.
+    You must have the :attr:`~Permissions.manage_channels` permission to receive this.
+
+    .. versionadded:: 1.3
+
+    .. note::
+
+        There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel`
+        attributes will be of :class:`Object` rather than the respective models.
+
+    This requires :attr:`Intents.invites` to be enabled.
+
+    :param invite: The invite that was created.
+    :type invite: :class:`Invite`
+
+.. function:: on_invite_delete(invite)
+
+    Called when an :class:`Invite` is deleted.
+    You must have the :attr:`~Permissions.manage_channels` permission to receive this.
+
+    .. versionadded:: 1.3
+
+    .. note::
+
+        There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel`
+        attributes will be of :class:`Object` rather than the respective models.
+
+        Outside of those two attributes, the only other attribute guaranteed to be
+        filled by the Discord gateway for this event is :attr:`Invite.code`.
+
+    This requires :attr:`Intents.invites` to be enabled.
+
+    :param invite: The invite that was deleted.
+    :type invite: :class:`Invite`
+
+Members/Users
+~~~~~~~~~~~~~
+.. function:: on_member_join(member)
+              on_member_remove(member)
+
+    Called when a :class:`Member` leaves or joins a :class:`Guild`.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param member: The member who joined or left.
+    :type member: :class:`Member`
+
+.. function:: on_member_update(before, after)
+
+    Called when a :class:`Member` updates their profile.
+
+    This is called when one or more of the following things change:
+
+    - nickname
+    - roles
+    - pending
+    - communication_disabled_until
+    - timed_out
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param before: The updated member's old info.
+    :type before: :class:`Member`
+    :param after: The updated member's updated info.
+    :type after: :class:`Member`
+
+.. function:: on_presence_update(before, after)
+
+    Called when a :class:`Member` updates their presence.
+
+    This is called when one or more of the following things change:
+
+    - status
+    - activity
+
+    This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param before: The updated member's old info.
+    :type before: :class:`Member`
+    :param after: The updated member's updated info.
+    :type after: :class:`Member`
+
+.. function:: on_voice_state_update(member, before, after)
+
+    Called when a :class:`Member` changes their :class:`VoiceState`.
+
+    The following, but not limited to, examples illustrate when this event is called:
+
+    - A member joins a voice or stage channel.
+    - A member leaves a voice or stage channel.
+    - A member is muted or deafened by their own accord.
+    - A member is muted or deafened by a guild administrator.
+
+    This requires :attr:`Intents.voice_states` to be enabled.
+
+    :param member: The member whose voice states changed.
+    :type member: :class:`Member`
+    :param before: The voice state prior to the changes.
+    :type before: :class:`VoiceState`
+    :param after: The voice state after the changes.
+    :type after: :class:`VoiceState`
+
+.. function:: on_user_update(before, after)
+
+    Called when a :class:`User` updates their profile.
+
+    This is called when one or more of the following things change:
+
+    - avatar
+    - username
+    - discriminator
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param before: The updated user's old info.
+    :type before: :class:`User`
+    :param after: The updated user's updated info.
+    :type after: :class:`User`
+
+Messages
+~~~~~~~~
 .. function:: on_message(message)
 
     Called when a :class:`Message` is created and sent.
@@ -553,6 +1123,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessageUpdateEvent`
 
+Reactions
+`````````
 .. function:: on_reaction_add(reaction, user)
 
     Called when a message has a reaction added to it. Similar to :func:`on_message_edit`,
@@ -668,499 +1240,8 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawReactionClearEmojiEvent`
 
-.. function:: on_interaction(interaction)
-
-    Called when an interaction happened.
-
-    This currently happens due to slash command invocations or components being used.
-
-    .. warning::
-
-        This is a low level function that is not generally meant to be used.
-        If you are working with components, consider using the callbacks associated
-        with the :class:`~discord.ui.View` instead as it provides a nicer user experience.
-
-    .. versionadded:: 2.0
-
-    :param interaction: The interaction data.
-    :type interaction: :class:`Interaction`
-
-.. function:: on_private_channel_update(before, after)
-
-    Called whenever a private group DM is updated. e.g. changed name or topic.
-
-    This requires :attr:`Intents.messages` to be enabled.
-
-    :param before: The updated group channel's old info.
-    :type before: :class:`GroupChannel`
-    :param after: The updated group channel's new info.
-    :type after: :class:`GroupChannel`
-
-.. function:: on_private_channel_pins_update(channel, last_pin)
-
-    Called whenever a message is pinned or unpinned from a private channel.
-
-    :param channel: The private channel that had its pins updated.
-    :type channel: :class:`abc.PrivateChannel`
-    :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
-    :type last_pin: Optional[:class:`datetime.datetime`]
-
-.. function:: on_guild_channel_delete(channel)
-              on_guild_channel_create(channel)
-
-    Called whenever a guild channel is deleted or created.
-
-    Note that you can get the guild from :attr:`~abc.GuildChannel.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param channel: The guild channel that got created or deleted.
-    :type channel: :class:`abc.GuildChannel`
-
-.. function:: on_guild_channel_update(before, after)
-
-    Called whenever a guild channel is updated. e.g. changed name, topic, permissions.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param before: The updated guild channel's old info.
-    :type before: :class:`abc.GuildChannel`
-    :param after: The updated guild channel's new info.
-    :type after: :class:`abc.GuildChannel`
-
-.. function:: on_guild_channel_pins_update(channel, last_pin)
-
-    Called whenever a message is pinned or unpinned from a guild channel.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param channel: The guild channel that had its pins updated.
-    :type channel: Union[:class:`abc.GuildChannel`, :class:`Thread`]
-    :param last_pin: The latest message that was pinned as an aware datetime in UTC. Could be ``None``.
-    :type last_pin: Optional[:class:`datetime.datetime`]
-
-.. function:: on_thread_join(thread)
-
-    Called whenever a thread is joined or created. Note that from the API's perspective there is no way to
-    differentiate between a thread being created or the bot joining a thread.
-
-    Note that you can get the guild from :attr:`Thread.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param thread: The thread that got joined.
-    :type thread: :class:`Thread`
-
-.. function:: on_thread_remove(thread)
-
-    Called whenever a thread is removed. This is different from a thread being deleted.
-
-    Note that you can get the guild from :attr:`Thread.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    .. warning::
-
-        Due to technical limitations, this event might not be called
-        as soon as one expects. Since the library tracks thread membership
-        locally, the API only sends updated thread membership status upon being
-        synced by joining a thread.
-
-    .. versionadded:: 2.0
-
-    :param thread: The thread that got removed.
-    :type thread: :class:`Thread`
-
-.. function:: on_thread_delete(thread)
-
-    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache 
-    then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
-
-
-    Note that you can get the guild from :attr:`Thread.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param thread: The thread that got deleted.
-    :type thread: :class:`Thread`
-
-.. function:: on_raw_thread_delete(payload)
-    
-    Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called
-    regardless of the state of the internal cache.
-
-    :param payload: The raw event payload data.
-    :type payload: :class:`RawThreadDeleteEvent`
-
-.. function:: on_thread_member_join(member)
-              on_thread_member_remove(member)
-
-    Called when a :class:`ThreadMember` leaves or joins a :class:`Thread`.
-
-    You can get the thread a member belongs in by accessing :attr:`ThreadMember.thread`.
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param member: The member who joined or left.
-    :type member: :class:`ThreadMember`
-
-.. function:: on_thread_update(before, after)
-
-    Called whenever a thread is updated.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param before: The updated thread's old info.
-    :type before: :class:`Thread`
-    :param after: The updated thread's new info.
-    :type after: :class:`Thread`
-
-.. function:: on_guild_integrations_update(guild)
-
-    Called whenever an integration is created, modified, or removed from a guild.
-
-    This requires :attr:`Intents.integrations` to be enabled.
-
-    .. versionadded:: 1.4
-
-    :param guild: The guild that had its integrations updated.
-    :type guild: :class:`Guild`
-
-.. function:: on_integration_create(integration)
-
-    Called when an integration is created.
-
-    This requires :attr:`Intents.integrations` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param integration: The integration that was created.
-    :type integration: :class:`Integration`
-
-.. function:: on_integration_update(integration)
-
-    Called when an integration is updated.
-
-    This requires :attr:`Intents.integrations` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param integration: The integration that was created.
-    :type integration: :class:`Integration`
-
-.. function:: on_raw_integration_delete(payload)
-
-    Called when an integration is deleted.
-
-    This requires :attr:`Intents.integrations` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param payload: The raw event payload data.
-    :type payload: :class:`RawIntegrationDeleteEvent`
-
-.. function:: on_webhooks_update(channel)
-
-    Called whenever a webhook is created, modified, or removed from a guild channel.
-
-    This requires :attr:`Intents.webhooks` to be enabled.
-
-    :param channel: The channel that had its webhooks updated.
-    :type channel: :class:`abc.GuildChannel`
-
-.. function:: on_member_join(member)
-              on_member_remove(member)
-
-    Called when a :class:`Member` leaves or joins a :class:`Guild`.
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    :param member: The member who joined or left.
-    :type member: :class:`Member`
-
-.. function:: on_member_update(before, after)
-
-    Called when a :class:`Member` updates their profile.
-
-    This is called when one or more of the following things change:
-
-    - nickname
-    - roles
-    - pending
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    :param before: The updated member's old info.
-    :type before: :class:`Member`
-    :param after: The updated member's updated info.
-    :type after: :class:`Member`
-
-.. function:: on_presence_update(before, after)
-
-    Called when a :class:`Member` updates their presence.
-
-    This is called when one or more of the following things change:
-
-    - status
-    - activity
-
-    This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param before: The updated member's old info.
-    :type before: :class:`Member`
-    :param after: The updated member's updated info.
-    :type after: :class:`Member`
-
-.. function:: on_user_update(before, after)
-
-    Called when a :class:`User` updates their profile.
-
-    This is called when one or more of the following things change:
-
-    - avatar
-    - username
-    - discriminator
-
-    This requires :attr:`Intents.members` to be enabled.
-
-    :param before: The updated user's old info.
-    :type before: :class:`User`
-    :param after: The updated user's updated info.
-    :type after: :class:`User`
-
-.. function:: on_guild_join(guild)
-
-    Called when a :class:`Guild` is either created by the :class:`Client` or when the
-    :class:`Client` joins a guild.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param guild: The guild that was joined.
-    :type guild: :class:`Guild`
-
-.. function:: on_guild_remove(guild)
-
-    Called when a :class:`Guild` is removed from the :class:`Client`.
-
-    This happens through, but not limited to, these circumstances:
-
-    - The client got banned.
-    - The client got kicked.
-    - The client left the guild.
-    - The client or the guild owner deleted the guild.
-
-    In order for this event to be invoked then the :class:`Client` must have
-    been part of the guild to begin with. (i.e. it is part of :attr:`Client.guilds`)
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param guild: The guild that got removed.
-    :type guild: :class:`Guild`
-
-.. function:: on_guild_update(before, after)
-
-    Called when a :class:`Guild` updates, for example:
-
-    - Changed name
-    - Changed AFK channel
-    - Changed AFK timeout
-    - etc
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param before: The guild prior to being updated.
-    :type before: :class:`Guild`
-    :param after: The guild after being updated.
-    :type after: :class:`Guild`
-
-.. function:: on_guild_role_create(role)
-              on_guild_role_delete(role)
-
-    Called when a :class:`Guild` creates or deletes a new :class:`Role`.
-
-    To get the guild it belongs to, use :attr:`Role.guild`.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param role: The role that was created or deleted.
-    :type role: :class:`Role`
-
-.. function:: on_guild_role_update(before, after)
-
-    Called when a :class:`Role` is changed guild-wide.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param before: The updated role's old info.
-    :type before: :class:`Role`
-    :param after: The updated role's updated info.
-    :type after: :class:`Role`
-
-.. function:: on_guild_emojis_update(guild, before, after)
-
-    Called when a :class:`Guild` adds or removes :class:`Emoji`.
-
-    This requires :attr:`Intents.emojis_and_stickers` to be enabled.
-
-    :param guild: The guild who got their emojis updated.
-    :type guild: :class:`Guild`
-    :param before: A list of emojis before the update.
-    :type before: Sequence[:class:`Emoji`]
-    :param after: A list of emojis after the update.
-    :type after: Sequence[:class:`Emoji`]
-
-.. function:: on_guild_stickers_update(guild, before, after)
-
-    Called when a :class:`Guild` updates its stickers.
-
-    This requires :attr:`Intents.emojis_and_stickers` to be enabled.
-
-    .. versionadded:: 2.0
-
-    :param guild: The guild who got their stickers updated.
-    :type guild: :class:`Guild`
-    :param before: A list of stickers before the update.
-    :type before: Sequence[:class:`GuildSticker`]
-    :param after: A list of stickers after the update.
-    :type after: Sequence[:class:`GuildSticker`]
-
-.. function:: on_guild_available(guild)
-              on_guild_unavailable(guild)
-
-    Called when a guild becomes available or unavailable. The guild must have
-    existed in the :attr:`Client.guilds` cache.
-
-    This requires :attr:`Intents.guilds` to be enabled.
-
-    :param guild: The :class:`Guild` that has changed availability.
-
-.. function:: on_voice_state_update(member, before, after)
-
-    Called when a :class:`Member` changes their :class:`VoiceState`.
-
-    The following, but not limited to, examples illustrate when this event is called:
-
-    - A member joins a voice or stage channel.
-    - A member leaves a voice or stage channel.
-    - A member is muted or deafened by their own accord.
-    - A member is muted or deafened by a guild administrator.
-
-    This requires :attr:`Intents.voice_states` to be enabled.
-
-    :param member: The member whose voice states changed.
-    :type member: :class:`Member`
-    :param before: The voice state prior to the changes.
-    :type before: :class:`VoiceState`
-    :param after: The voice state after the changes.
-    :type after: :class:`VoiceState`
-
-.. function:: on_stage_instance_create(stage_instance)
-              on_stage_instance_delete(stage_instance)
-
-    Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`.
-
-    .. versionadded:: 2.0
-
-    :param stage_instance: The stage instance that was created or deleted.
-    :type stage_instance: :class:`StageInstance`
-
-.. function:: on_stage_instance_update(before, after)
-
-    Called when a :class:`StageInstance` is updated.
-
-    The following, but not limited to, examples illustrate when this event is called:
-
-    - The topic is changed.
-    - The privacy level is changed.
-
-    .. versionadded:: 2.0
-
-    :param before: The stage instance before the update.
-    :type before: :class:`StageInstance`
-    :param after: The stage instance after the update.
-    :type after: :class:`StageInstance`
-
-.. function:: on_member_ban(guild, user)
-
-    Called when user gets banned from a :class:`Guild`.
-
-    This requires :attr:`Intents.bans` to be enabled.
-
-    :param guild: The guild the user got banned from.
-    :type guild: :class:`Guild`
-    :param user: The user that got banned.
-                 Can be either :class:`User` or :class:`Member` depending if
-                 the user was in the guild or not at the time of removal.
-    :type user: Union[:class:`User`, :class:`Member`]
-
-.. function:: on_member_unban(guild, user)
-
-    Called when a :class:`User` gets unbanned from a :class:`Guild`.
-
-    This requires :attr:`Intents.bans` to be enabled.
-
-    :param guild: The guild the user got unbanned from.
-    :type guild: :class:`Guild`
-    :param user: The user that got unbanned.
-    :type user: :class:`User`
-
-.. function:: on_invite_create(invite)
-
-    Called when an :class:`Invite` is created.
-    You must have the :attr:`~Permissions.manage_channels` permission to receive this.
-
-    .. versionadded:: 1.3
-
-    .. note::
-
-        There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel`
-        attributes will be of :class:`Object` rather than the respective models.
-
-    This requires :attr:`Intents.invites` to be enabled.
-
-    :param invite: The invite that was created.
-    :type invite: :class:`Invite`
-
-.. function:: on_invite_delete(invite)
-
-    Called when an :class:`Invite` is deleted.
-    You must have the :attr:`~Permissions.manage_channels` permission to receive this.
-
-    .. versionadded:: 1.3
-
-    .. note::
-
-        There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel`
-        attributes will be of :class:`Object` rather than the respective models.
-
-        Outside of those two attributes, the only other attribute guaranteed to be
-        filled by the Discord gateway for this event is :attr:`Invite.code`.
-
-    This requires :attr:`Intents.invites` to be enabled.
-
-    :param invite: The invite that was deleted.
-    :type invite: :class:`Invite`
-
-.. function:: on_group_join(channel, user)
-              on_group_remove(channel, user)
-
-    Called when someone joins or leaves a :class:`GroupChannel`.
-
-    :param channel: The group that the user joined or left.
-    :type channel: :class:`GroupChannel`
-    :param user: The user that joined or left.
-    :type user: :class:`User`
-
+Scheduled Events
+~~~~~~~~~~~~~~~~
 .. function:: on_scheduled_event_create(event)
 
     Called when an :class:`ScheduledEvent` is created.
@@ -1238,6 +1319,171 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param payload: The raw event payload data.
     :type payload: :class:`RawScheduledEventSubscription`
 
+Stage Instances
+~~~~~~~~~~~~~~~~
+.. function:: on_stage_instance_create(stage_instance)
+              on_stage_instance_delete(stage_instance)
+
+    Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`.
+
+    .. versionadded:: 2.0
+
+    :param stage_instance: The stage instance that was created or deleted.
+    :type stage_instance: :class:`StageInstance`
+
+.. function:: on_stage_instance_update(before, after)
+
+    Called when a :class:`StageInstance` is updated.
+
+    The following, but not limited to, examples illustrate when this event is called:
+
+    - The topic is changed.
+    - The privacy level is changed.
+
+    .. versionadded:: 2.0
+
+    :param before: The stage instance before the update.
+    :type before: :class:`StageInstance`
+    :param after: The stage instance after the update.
+    :type after: :class:`StageInstance`
+
+Threads
+~~~~~~~
+.. function:: on_thread_join(thread)
+
+    Called whenever a thread is joined.
+
+<<<<<<< HEAD
+    Note that you can get the guild from :attr:`Thread.guild`.
+=======
+.. function:: on_auto_moderation_action_execution(payload)
+>>>>>>> upstream/master
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param thread: The thread that got joined.
+    :type thread: :class:`Thread`
+
+.. function:: on_thread_create(thread)
+
+    Called whenever a thread is created.
+
+    Note that you can get the guild from :attr:`Thread.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param thread: The thread that got created.
+    :type thread: :class:`Thread`
+
+.. function:: on_thread_remove(thread)
+
+    Called whenever a thread is removed. This is different from a thread being deleted.
+
+    Note that you can get the guild from :attr:`Thread.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. warning::
+
+        Due to technical limitations, this event might not be called
+        as soon as one expects. Since the library tracks thread membership
+        locally, the API only sends updated thread membership status upon being
+        synced by joining a thread.
+
+    .. versionadded:: 2.0
+
+    :param thread: The thread that got removed.
+    :type thread: :class:`Thread`
+
+.. function:: on_thread_delete(thread)
+
+    Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache
+    then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`
+
+
+    Note that you can get the guild from :attr:`Thread.guild`.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param thread: The thread that got deleted.
+    :type thread: :class:`Thread`
+
+.. function:: on_raw_thread_delete(payload)
+
+    Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called
+    regardless of the state of the internal cache.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawThreadDeleteEvent`
+
+.. function:: on_thread_member_join(member)
+              on_thread_member_remove(member)
+
+    Called when a :class:`ThreadMember` leaves or joins a :class:`Thread`.
+
+    You can get the thread a member belongs in by accessing :attr:`ThreadMember.thread`.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param member: The member who joined or left.
+    :type member: :class:`ThreadMember`
+
+.. function:: on_thread_update(before, after)
+
+    Called whenever a thread is updated.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.0
+
+    :param before: The updated thread's old info.
+    :type before: :class:`Thread`
+    :param after: The updated thread's new info.
+    :type after: :class:`Thread`
+
+Typing
+~~~~~~
+.. function:: on_typing(channel, user, when)
+
+    Called when someone begins typing a message.
+
+    The ``channel`` parameter can be a :class:`abc.Messageable` instance.
+    Which could either be :class:`TextChannel`, :class:`GroupChannel`, or
+    :class:`DMChannel`.
+
+    If the ``channel`` is a :class:`TextChannel` then the ``user`` parameter
+    is a :class:`Member`, otherwise it is a :class:`User`.
+
+    This requires :attr:`Intents.typing` to be enabled.
+
+    :param channel: The location where the typing originated from.
+    :type channel: :class:`abc.Messageable`
+    :param user: The user that started typing.
+    :type user: Union[:class:`User`, :class:`Member`]
+    :param when: When the typing started as an aware datetime in UTC.
+    :type when: :class:`datetime.datetime`
+
+.. function:: on_raw_typing(payload)
+
+    Called when someone begins typing a message. Unlike :func:`on_typing`, this is
+    called regardless if the user can be found in the bot's cache or not.
+
+    If the typing event is occurring in a guild,
+    the member that started typing can be accessed via :attr:`RawTypingEvent.member`
+
+    This requires :attr:`Intents.typing` to be enabled.
+
+    :param payload: The raw typing payload.
+    :type payload: :class:`RawTypingEvent`
+
 .. _discord-api-utils:
 
 Utility Functions
@@ -1273,6 +1519,10 @@ Utility Functions
 
 .. autofunction:: discord.utils.generate_snowflake
 
+.. autofunction:: discord.utils.basic_autocomplete
+
+.. autofunction:: discord.utils.filter_params
+
 .. _discord-api-enums:
 
 Enumerations
@@ -1284,6 +1534,47 @@ from being stringly typed in case the strings change in the future.
 All enumerations are subclasses of an internal class which mimics the behaviour
 of :class:`enum.Enum`.
 
+.. class:: SlashCommandOptionType
+
+    Specifies the input type of an option.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: sub_command
+
+        A slash subcommand.
+    .. attribute:: sub_command_group
+
+        A slash command group.
+    .. attribute:: string
+
+        A string.
+    .. attribute:: integer
+
+        An integer.
+    .. attribute:: boolean
+
+        A boolean.
+    .. attribute:: user
+
+        A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`
+    .. attribute:: channel
+
+        A channel from the current guild.
+    .. attribute:: role
+
+        A role from the current guild.
+    .. attribute:: mentionable
+
+        A mentionable (user or role).
+    .. attribute:: number
+
+        A floating number.
+
+    .. attribute:: attachment
+
+        An attachment. Currently in beta.
+
 .. class:: ChannelType
 
     Specifies the type of channel.
@@ -1291,25 +1582,26 @@ of :class:`enum.Enum`.
     .. attribute:: text
 
         A text channel.
+
     .. attribute:: voice
 
         A voice channel.
+
     .. attribute:: private
 
         A private text channel. Also called a direct message.
+
     .. attribute:: group
 
         A private group text channel.
+
     .. attribute:: category
 
         A category channel.
+
     .. attribute:: news
 
         A guild news channel.
-
-    .. attribute:: store
-
-        A guild store channel.
 
     .. attribute:: stage_voice
 
@@ -1337,21 +1629,13 @@ of :class:`enum.Enum`.
 
     .. attribute:: directory
 
-        A guild directory entry.
-
-        Used in hub guilds.
-
-        In Experiment.
+        A guild directory entry, used in hub guilds, currently in experiment.
 
         .. versionadded:: 2.0
 
     .. attribute:: forum
 
-        User can only write in threads.
-
-        Similar functionality to a forum.
-
-        In Experiment.
+        User can only write in threads, similar functionality to a forum, currently in experiment.
 
         .. versionadded:: 2.0
 
@@ -1593,6 +1877,9 @@ of :class:`enum.Enum`.
     .. attribute:: auto_complete
 
         Represents a autocomplete interaction for slash commands.
+    .. attribute:: modal_submit
+
+        Represents a modal based interaction.
 
 .. class:: InteractionResponseType
 
@@ -1628,7 +1915,14 @@ of :class:`enum.Enum`.
         See also :meth:`InteractionResponse.edit_message`
     .. attribute:: auto_complete_result
 
-        Responds to autocomplete requests.
+        Responds to the interaction by sending the autocomplete choices.
+
+        See also :meth:`InteractionResponse.send_autocomplete_result`
+    .. attribute:: modal
+
+        Responds to the interaction by sending a modal dialog.
+
+        See also :meth:`InteractionResponse.send_modal`
 
 .. class:: ComponentType
 
@@ -1645,7 +1939,9 @@ of :class:`enum.Enum`.
     .. attribute:: select
 
         Represents a select component.
+    .. attribute:: input_text
 
+        Represents an input_text component.
 
 .. class:: ButtonStyle
 
@@ -1687,6 +1983,28 @@ of :class:`enum.Enum`.
     .. attribute:: url
 
         An alias for :attr:`link`.
+
+.. class:: InputTextStyle
+
+    Represents the style of the input text component.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: short
+
+        Represents a single-line input text field.
+    .. attribute:: long
+
+        Represents a multi-line input text field.
+    .. attribute:: singleline
+
+        An alias for :attr:`short`.
+    .. attribute:: multiline
+
+        An alias for :attr:`long`.
+    .. attribute:: paragraph
+
+        An alias for :attr:`long`.
 
 .. class:: VoiceRegion
 
@@ -2111,7 +2429,7 @@ of :class:`enum.Enum`.
         A member has updated. This triggers in the following situations:
 
         - A nickname was changed
-        - They were server muted or deafened (or it was undo'd)
+        - They were server muted or deafened (or it was undone)
 
         When this is the action, the type of :attr:`~AuditLogEntry.target` is
         the :class:`Member` or :class:`User` who got updated.
@@ -2516,17 +2834,59 @@ of :class:`enum.Enum`.
 
         A scheduled event was created.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
+
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_update
 
         A scheduled event was updated.
 
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
+
         .. versionadded:: 2.0
-        
+
     .. attribute:: scheduled_event_delete
 
         A scheduled event was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which
+        was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.description`
+        - :attr:`~AuditLogDiff.channel`
+        - :attr:`~AuditLogDiff.privacy_level`
+        - :attr:`~discord.ScheduledEvent.location`
+        - :attr:`~discord.ScheduledEvent.status`
+        - :attr:`~discord.ScheduledEventLocation.type`
 
         .. versionadded:: 2.0
 
@@ -2544,6 +2904,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2561,6 +2922,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
 
@@ -2578,8 +2940,24 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.archived`
         - :attr:`~AuditLogDiff.locked`
         - :attr:`~AuditLogDiff.auto_archive_duration`
+        - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
+
+    .. attribute:: application_command_permission_update
+
+        An application command's permissions were updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        an :class:`Object` with the ID of the command that
+        had it's permissions edited.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.command_id`
+
+        .. versionadded:: 2.0
+
 
 .. class:: AuditLogActionCategory
 
@@ -2727,7 +3105,9 @@ of :class:`enum.Enum`.
 
     .. attribute:: embedded_application
 
-        A stream invite that targets an embedded application.
+        A invite that targets an embedded application.
+
+        Note that your bot won't be verified if you provide users access to this
 
 .. class:: VideoQualityMode
 
@@ -2746,12 +3126,10 @@ of :class:`enum.Enum`.
 .. class:: StagePrivacyLevel
 
     Represents a stage instance's privacy level.
+    Stage event privacy levels can only have 1 possible value at the moment so
+    this shouldn't really be used.
 
     .. versionadded:: 2.0
-
-    .. attribute:: public
-
-        The stage instance can be joined by external users.
 
     .. attribute:: closed
 
@@ -2808,32 +3186,40 @@ of :class:`enum.Enum`.
 
     Represents an embedded activity application.
 
+    Some might be boost-only or gated.
+
+    .. warning::
+
+        Discord said that they won't verify bots who gives access to embedded activities.
+
+        Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321.
+
     .. versionadded:: 2.0
 
     .. attribute:: awkword
-        
+
         Represents the embedded application Awkword.
 
     .. attribute:: betrayal
 
         Represents the embedded application Betrayal.io
-    
+
     .. attribute:: checkers_in_the_park
 
         Represents the embedded application Checkers in the Park Prod.
-    
+
     .. attribute:: checkers_in_the_park_dev
 
         Represents the embedded application Checkers in the Park Development.
-    
+
     .. attribute:: checkers_in_the_park_staging
-        
+
         Represents the embedded application Checkers in the Park Staging.
-    
+
     .. attribute:: checkers_in_the_park_qa
-        
+
         Represents the embedded application Checkers in the Park QA.
-    
+
     .. attribute:: chess_in_the_park
 
         Represents the embedded application Chess in the Park.
@@ -2843,13 +3229,13 @@ of :class:`enum.Enum`.
         Represents the embedded application Chess in the Park Development.
 
     .. attribute:: chest_in_the_park_staging
-        
+
         Represents the embedded application Chess in the Park Staging.
 
     .. attribute:: chest_in_the_park_qa
-        
+
         Represents the embedded application Chess in the Park QA.
-    
+
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
@@ -2861,9 +3247,9 @@ of :class:`enum.Enum`.
     .. attribute:: letter_tile
 
         Represents the embedded application Letter Tile.
-    
+
     .. attribute:: ocho
-    
+
         Represents the embedded application Ocho.
 
     .. attribute:: ocho_dev
@@ -2871,37 +3257,37 @@ of :class:`enum.Enum`.
         Represents the embedded application Ocho Development.
 
     .. attribute:: ocho_staging
-        
+
         Represents the embedded application Ocho Staging.
-    
+
     .. attribute:: ocho_qa
-        
+
         Represents the embedded application Ocho QA.
-    
-    .. attribute:: pn_stagging
+
+    .. attribute:: poker_night_staging
 
         Represents the embedded application Poker Night Staging.
 
     .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
-     
-    .. attribute:: poker_night
+
+    .. attribute:: poker_night_qa
 
         Represents the embedded application Poker QA.
-    
+
     .. attribute:: putts
-        
+
         Represents the embedded application Putts.
 
-    .. attribute:: sketchy_artist 
-        
+    .. attribute:: sketchy_artist
+
         Represents the embedded application Sketchy Artist.
-    
+
     .. attribute:: sketchy_artist_dev
-        
+
         Represents the embedded application Sketchy Artist development version.
-    
+
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
@@ -2909,19 +3295,19 @@ of :class:`enum.Enum`.
     .. attribute:: watch_together
 
         Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access.
-        
+
     .. attribute:: watch_together_dev
 
         Development version of :attr:`.watch_together`.
 
     .. attribute:: word_snacks
-        
+
         Represents the embedded application word snacks.
-    
+
     .. attribute:: word_snacks_dev
-        
+
         Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
-        
+
     .. attribute:: youtube_together
 
         Represents the embedded application Youtube Together.
@@ -2930,7 +3316,7 @@ of :class:`enum.Enum`.
 
     Represents the status of a scheduled event.
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: scheduled
 
@@ -2956,7 +3342,7 @@ of :class:`enum.Enum`.
 
     Represents a scheduled event location type (otherwise known as the entity type on the API).
 
-    .. verssionadded:: 2.0
+    .. versionadded:: 2.0
 
     .. attribute:: stage_instance
 
@@ -3237,12 +3623,6 @@ AuditLogDiff
 
         :type: Union[:class:`Member`, :class:`User`]
 
-    .. attribute:: region
-
-        The guild's voice region. See also :attr:`Guild.region`.
-
-        :type: :class:`VoiceRegion`
-
     .. attribute:: afk_channel
 
         The guild's AFK channel.
@@ -3397,9 +3777,9 @@ AuditLogDiff
 
     .. attribute:: privacy_level
 
-        The privacy level of the stage instance.
+        The privacy level of the stage instance or scheduled event.
 
-        :type: :class:`StagePrivacyLevel`
+        :type: Union[:class:`StagePrivacyLevel`, :class:`ScheduledEventPrivacyLevel`]
 
     .. attribute:: roles
 
@@ -3626,6 +4006,18 @@ AuditLogDiff
     .. attribute:: default_auto_archive_duration
 
         The default auto archive duration for newly created threads being changed.
+
+        :type: :class:`int`
+
+    .. attribute:: invitable
+
+        Non-moderators can now add other non-moderators to this thread.
+
+        :type: :class:`bool`
+
+    .. attribute:: command_id
+
+        This command's permissions were updated.
 
         :type: :class:`int`
 
@@ -3903,15 +4295,10 @@ Guild
 ScheduledEvent
 ~~~~~~~~~~~~~~~
 
-.. attributestable:: ScheduledEvent
+.. attributetable:: ScheduledEvent
 
 .. autoclass:: ScheduledEvent()
     :members:
-
-ScheduledEventLocation
-~~~~~~~~~~~~~~~~~~~~~~~
-
-..attributestable:: ScheduledEventLocation
 
 .. autoclass:: ScheduledEventLocation()
     :members:
@@ -3956,6 +4343,14 @@ InteractionMessage
 .. attributetable:: InteractionMessage
 
 .. autoclass:: InteractionMessage()
+    :members:
+
+MessageInteraction
+~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: MessageInteraction
+
+.. autoclass:: MessageInteraction()
     :members:
 
 Member
@@ -4049,6 +4444,15 @@ TextChannel
     .. automethod:: typing
         :async-with:
 
+ForumChannel
+~~~~~~~~~~~~~
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
 Thread
 ~~~~~~~~
 
@@ -4072,15 +4476,6 @@ ThreadMember
 
 .. autoclass:: ThreadMember()
     :members:
-
-StoreChannel
-~~~~~~~~~~~~~
-
-.. attributetable:: StoreChannel
-
-.. autoclass:: StoreChannel()
-    :members:
-    :inherited-members:
 
 VoiceChannel
 ~~~~~~~~~~~~~
@@ -4181,7 +4576,7 @@ Template
 
 .. autoclass:: Template()
     :members:
-        
+
 WelcomeScreen
 ~~~~~~~~~~~~~~~
 
@@ -4263,6 +4658,22 @@ GuildSticker
 .. autoclass:: GuildSticker()
     :members:
 
+AutoModRule
+~~~~~~~~~~~~
+
+.. attributetable:: AutoModRule
+
+.. autoclass:: AutoModRule()
+    :members:
+
+AutoModActionExecutionEvent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. attributetable:: AutoModActionExecutionEvent
+
+.. autoclass:: AutoModActionExecutionEvent()
+    :members:
+
 RawTypingEvent
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -4336,7 +4747,7 @@ RawThreadDeleteEvent
     :members:
 
 RawScheduledEventSubscription
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: RawScheduledEventSubscription
 
@@ -4390,6 +4801,14 @@ Embed
 .. attributetable:: Embed
 
 .. autoclass:: Embed
+    :members:
+
+EmbedField
+~~~~~~~~~~
+
+.. attributetable:: EmbedField
+
+.. autoclass:: EmbedField
     :members:
 
 AllowedMentions
@@ -4552,6 +4971,14 @@ PublicUserFlags
 .. autoclass:: PublicUserFlags()
     :members:
 
+ChannelFlags
+~~~~~~~~~~~~~
+
+.. attributetable:: ChannelFlags
+
+.. autoclass:: ChannelFlags()
+    :members:
+
 .. _discord_ui_kit:
 
 Bot UI Kit
@@ -4597,6 +5024,102 @@ Select
 
 .. autofunction:: discord.ui.select
 
+Modal
+~~~~~
+
+.. attributetable:: discord.ui.Modal
+
+.. autoclass:: discord.ui.Modal
+    :members:
+    :inherited-members:
+
+InputText
+~~~~~~~~~
+
+.. attributetable:: discord.ui.InputText
+
+.. autoclass:: discord.ui.InputText
+    :members:
+    :inherited-members:
+
+Sink Core
+---------
+
+.. autoclass:: discord.sinks.Filters
+    :members:
+
+.. autoclass:: discord.sinks.Sink
+    :members:
+
+.. autoclass:: discord.sinks.AudioData
+    :members:
+
+.. autoclass:: discord.sinks.RawData
+    :members:
+
+
+Sinks
+-----
+
+.. autoclass:: discord.sinks.WaveSink
+    :members:
+
+.. autoclass:: discord.sinks.MP3Sink
+    :members:
+
+.. autoclass:: discord.sinks.MP4Sink
+    :members:
+
+.. autoclass:: discord.sinks.M4ASink
+    :members:
+
+.. autoclass:: discord.sinks.MKVSink
+    :members:
+
+.. autoclass:: discord.sinks.MKASink
+    :members:
+
+.. autoclass:: discord.sinks.OGGSink
+    :members:
+
+
+Sink Error Reference
+--------------------
+
+.. autoexception:: discord.sinks.SinkException
+
+.. autoexception:: discord.sinks.RecordingException
+
+.. autoexception:: discord.sinks.WaveSinkError
+
+.. autoexception:: discord.sinks.MP3SinkError
+
+.. autoexception:: discord.sinks.MP4SinkError
+
+.. autoexception:: discord.sinks.M4ASinkError
+
+.. autoexception:: discord.sinks.MKVSinkError
+
+.. autoexception:: discord.sinks.MKASinkError
+
+.. autoexception:: discord.sinks.OGGSinkError
+
+Sink Exception Hierarchy
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. exception_hierarchy::
+
+    - :exc:`DiscordException`
+        - :exc:`sinks.SinkException`
+            - :exc:`sinks.RecordingException`
+            - :exc:`sinks.WaveSinkError`
+            - :exc:`sinks.MP3SinkError`
+            - :exc:`sinks.MP4SinkError`
+            - :exc:`sinks.M4ASinkError`
+            - :exc:`sinks.MKVSinkError`
+            - :exc:`sinks.MKASinkError`
+            - :exc:`sinks.OGGSinkError`
+
 
 Exceptions
 ------------
@@ -4636,6 +5159,33 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.opus.OpusNotLoaded
 
+.. autoexception:: discord.ApplicationCommandError
+    :members:
+
+.. autoexception:: discord.CheckFailure
+    :members:
+
+.. autoexception:: discord.ApplicationCommandInvokeError
+    :members:
+
+.. autoexception:: discord.ExtensionError
+    :members:
+
+.. autoexception:: discord.ExtensionAlreadyLoaded
+    :members:
+
+.. autoexception:: discord.ExtensionNotLoaded
+    :members:
+
+.. autoexception:: discord.NoEntryPointError
+    :members:
+
+.. autoexception:: discord.ExtensionFailed
+    :members:
+
+.. autoexception:: discord.ExtensionNotFound
+    :members:
+
 Exception Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -4656,3 +5206,12 @@ Exception Hierarchy
                 - :exc:`Forbidden`
                 - :exc:`NotFound`
                 - :exc:`DiscordServerError`
+            - :exc:`ApplicationCommandError`
+                - :exc:`CheckFailure`
+                - :exc:`ApplicationCommandInvokeError`
+            - :exc:`ExtensionError`
+                - :exc:`ExtensionAlreadyLoaded`
+                - :exc:`ExtensionNotLoaded`
+                - :exc:`NoEntryPointError`
+                - :exc:`ExtensionFailed`
+                - :exc:`ExtensionNotFound`

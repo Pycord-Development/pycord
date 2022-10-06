@@ -25,86 +25,155 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import copy
 import asyncio
+import copy
+import time
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
-    Optional,
-    TYPE_CHECKING,
+    Iterable,
     Protocol,
     Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
     runtime_checkable,
 )
 
-from .scheduled_events import ScheduledEvent
-from .iterators import HistoryIterator
+from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
-from .errors import InvalidArgument, ClientException
+from .errors import ClientException, InvalidArgument
+from .file import File
+from .flags import MessageFlags
+from .invite import Invite
+from .iterators import HistoryIterator
 from .mentions import AllowedMentions
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
-from .invite import Invite
-from .file import File
-from .voice_client import VoiceClient, VoiceProtocol
+from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
-from . import utils
+from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
-    'Snowflake',
-    'User',
-    'PrivateChannel',
-    'GuildChannel',
-    'Messageable',
-    'Connectable',
-    'Mentionable'
+    "Snowflake",
+    "User",
+    "PrivateChannel",
+    "GuildChannel",
+    "Messageable",
+    "Connectable",
+    "Mentionable",
 )
 
-T = TypeVar('T', bound=VoiceProtocol)
+T = TypeVar("T", bound=VoiceProtocol)
 
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from .client import Client
-    from .user import ClientUser
     from .asset import Asset
-    from .state import ConnectionState
+    from .channel import (
+        CategoryChannel,
+        DMChannel,
+        GroupChannel,
+        PartialMessageable,
+        TextChannel,
+        VoiceChannel,
+    )
+    from .client import Client
+    from .embeds import Embed
+    from .enums import InviteTarget
+    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
-    from .channel import CategoryChannel
-    from .embeds import Embed
     from .message import Message, MessageReference, PartialMessage
-    from .channel import TextChannel, DMChannel, GroupChannel, PartialMessageable
+    from .state import ConnectionState
     from .threads import Thread
-    from .enums import InviteTarget
+    from .types.channel import Channel as ChannelPayload
+    from .types.channel import GuildChannel as GuildChannelPayload
+    from .types.channel import OverwriteType
+    from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
-    from .types.channel import (
-        PermissionOverwrite as PermissionOverwritePayload,
-        Channel as ChannelPayload,
-        GuildChannel as GuildChannelPayload,
-        OverwriteType,
-    )
+    from .user import ClientUser
 
-    PartialMessageableChannel = Union[TextChannel, Thread, DMChannel, PartialMessageable]
+    PartialMessageableChannel = Union[
+        TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable
+    ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
 
 MISSING = utils.MISSING
 
 
-class _Undefined:
-    def __repr__(self) -> str:
-        return 'see-below'
+async def _single_delete_strategy(
+    messages: Iterable[Message], *, reason: str | None = None
+):
+    for m in messages:
+        await m.delete(reason=reason)
 
 
-_undefined: Any = _Undefined()
+async def _purge_messages_helper(
+    channel: TextChannel | Thread | VoiceChannel,
+    *,
+    limit: int | None = 100,
+    check: Callable[[Message], bool] = MISSING,
+    before: SnowflakeTime | None = None,
+    after: SnowflakeTime | None = None,
+    around: SnowflakeTime | None = None,
+    oldest_first: bool | None = False,
+    bulk: bool = True,
+    reason: str | None = None,
+) -> list[Message]:
+    if check is MISSING:
+        check = lambda m: True
+
+    iterator = channel.history(
+        limit=limit,
+        before=before,
+        after=after,
+        oldest_first=oldest_first,
+        around=around,
+    )
+    ret: list[Message] = []
+    count = 0
+
+    minimum_time = int((time.time() - 14 * 24 * 60 * 60) * 1000.0 - 1420070400000) << 22
+    strategy = channel.delete_messages if bulk else _single_delete_strategy
+
+    async for message in iterator:
+        if count == 100:
+            to_delete = ret[-100:]
+            await strategy(to_delete, reason=reason)
+            count = 0
+            await asyncio.sleep(1)
+
+        if not check(message):
+            continue
+
+        if message.id < minimum_time:
+            # older than 14 days old
+            if count == 1:
+                await ret[-1].delete(reason=reason)
+            elif count >= 2:
+                to_delete = ret[-count:]
+                await strategy(to_delete, reason=reason)
+
+            count = 0
+            strategy = _single_delete_strategy
+
+        count += 1
+        ret.append(message)
+
+    # Some messages remaining to poll
+    if count >= 2:
+        # more than 2 messages -> bulk delete
+        to_delete = ret[-count:]
+        await strategy(to_delete, reason=reason)
+    elif count == 1:
+        # delete a single message
+        await ret[-1].delete(reason=reason)
+
+    return ret
 
 
 @runtime_checkable
@@ -118,7 +187,7 @@ class Snowflake(Protocol):
     :class:`.Object`.
 
     Attributes
-    -----------
+    ----------
     id: :class:`int`
         The model's unique ID.
     """
@@ -140,7 +209,7 @@ class User(Snowflake, Protocol):
     This ABC must also implement :class:`~discord.abc.Snowflake`.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The user's username.
     discriminator: :class:`str`
@@ -181,7 +250,7 @@ class PrivateChannel(Snowflake, Protocol):
     This ABC must also implement :class:`~discord.abc.Snowflake`.
 
     Attributes
-    -----------
+    ----------
     me: :class:`~discord.ClientUser`
         The user presenting yourself.
     """
@@ -192,23 +261,23 @@ class PrivateChannel(Snowflake, Protocol):
 
 
 class _Overwrites:
-    __slots__ = ('id', 'allow', 'deny', 'type')
+    __slots__ = ("id", "allow", "deny", "type")
 
     ROLE = 0
     MEMBER = 1
 
     def __init__(self, data: PermissionOverwritePayload):
-        self.id: int = int(data['id'])
-        self.allow: int = int(data.get('allow', 0))
-        self.deny: int = int(data.get('deny', 0))
-        self.type: OverwriteType = data['type']
+        self.id: int = int(data["id"])
+        self.allow: int = int(data.get("allow", 0))
+        self.deny: int = int(data.get("deny", 0))
+        self.type: OverwriteType = data["type"]
 
     def _asdict(self) -> PermissionOverwritePayload:
         return {
-            'id': self.id,
-            'allow': str(self.allow),
-            'deny': str(self.deny),
-            'type': self.type,
+            "id": self.id,
+            "allow": str(self.allow),
+            "deny": str(self.deny),
+            "type": self.type,
         }
 
     def is_role(self) -> bool:
@@ -218,7 +287,7 @@ class _Overwrites:
         return self.type == self.MEMBER
 
 
-GCH = TypeVar('GCH', bound='GuildChannel')
+GCH = TypeVar("GCH", bound="GuildChannel")
 
 
 class GuildChannel:
@@ -230,11 +299,12 @@ class GuildChannel:
     - :class:`~discord.VoiceChannel`
     - :class:`~discord.CategoryChannel`
     - :class:`~discord.StageChannel`
+    - :class:`~discord.ForumChannel`
 
     This ABC must also implement :class:`~discord.abc.Snowflake`.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The channel name.
     guild: :class:`~discord.Guild`
@@ -251,13 +321,16 @@ class GuildChannel:
     guild: Guild
     type: ChannelType
     position: int
-    category_id: Optional[int]
+    category_id: int | None
+    flags: ChannelFlags
     _state: ConnectionState
-    _overwrites: List[_Overwrites]
+    _overwrites: list[_Overwrites]
 
     if TYPE_CHECKING:
 
-        def __init__(self, *, state: ConnectionState, guild: Guild, data: Dict[str, Any]):
+        def __init__(
+            self, *, state: ConnectionState, guild: Guild, data: dict[str, Any]
+        ):
             ...
 
     def __str__(self) -> str:
@@ -267,23 +340,25 @@ class GuildChannel:
     def _sorting_bucket(self) -> int:
         raise NotImplementedError
 
-    def _update(self, guild: Guild, data: Dict[str, Any]) -> None:
+    def _update(self, guild: Guild, data: dict[str, Any]) -> None:
         raise NotImplementedError
 
     async def _move(
         self,
         position: int,
-        parent_id: Optional[Any] = None,
+        parent_id: Any | None = None,
         lock_permissions: bool = False,
         *,
-        reason: Optional[str],
+        reason: str | None,
     ) -> None:
         if position < 0:
-            raise InvalidArgument('Channel position cannot be less than 0.')
+            raise InvalidArgument("Channel position cannot be less than 0.")
 
         http = self._state.http
         bucket = self._sorting_bucket
-        channels: List[GuildChannel] = [c for c in self.guild.channels if c._sorting_bucket == bucket]
+        channels: list[GuildChannel] = [
+            c for c in self.guild.channels if c._sorting_bucket == bucket
+        ]
 
         channels.sort(key=lambda c: c.position)
 
@@ -294,106 +369,122 @@ class GuildChannel:
             # not there somehow lol
             return
         else:
-            index = next((i for i, c in enumerate(channels) if c.position >= position), len(channels))
+            index = next(
+                (i for i, c in enumerate(channels) if c.position >= position),
+                len(channels),
+            )
             # add ourselves at our designated position
             channels.insert(index, self)
 
         payload = []
         for index, c in enumerate(channels):
-            d: Dict[str, Any] = {'id': c.id, 'position': index}
-            if parent_id is not _undefined and c.id == self.id:
+            d: dict[str, Any] = {"id": c.id, "position": index}
+            if parent_id is not MISSING and c.id == self.id:
                 d.update(parent_id=parent_id, lock_permissions=lock_permissions)
             payload.append(d)
 
         await http.bulk_channel_update(self.guild.id, payload, reason=reason)
 
-    async def _edit(self, options: Dict[str, Any], reason: Optional[str]) -> Optional[ChannelPayload]:
+    async def _edit(
+        self, options: dict[str, Any], reason: str | None
+    ) -> ChannelPayload | None:
         try:
-            parent = options.pop('category')
+            parent = options.pop("category")
         except KeyError:
-            parent_id = _undefined
+            parent_id = MISSING
         else:
             parent_id = parent and parent.id
 
         try:
-            options['rate_limit_per_user'] = options.pop('slowmode_delay')
+            options["rate_limit_per_user"] = options.pop("slowmode_delay")
         except KeyError:
             pass
 
         try:
-            rtc_region = options.pop('rtc_region')
-        except KeyError:
-            pass
-        else:
-            options['rtc_region'] = None if rtc_region is None else str(rtc_region)
-
-        try:
-            video_quality_mode = options.pop('video_quality_mode')
+            rtc_region = options.pop("rtc_region")
         except KeyError:
             pass
         else:
-            options['video_quality_mode'] = int(video_quality_mode)
-
-        lock_permissions = options.pop('sync_permissions', False)
+            options["rtc_region"] = None if rtc_region is None else str(rtc_region)
 
         try:
-            position = options.pop('position')
+            video_quality_mode = options.pop("video_quality_mode")
         except KeyError:
-            if parent_id is not _undefined:
+            pass
+        else:
+            options["video_quality_mode"] = int(video_quality_mode)
+
+        lock_permissions = options.pop("sync_permissions", False)
+
+        try:
+            position = options.pop("position")
+        except KeyError:
+            if parent_id is not MISSING:
                 if lock_permissions:
                     category = self.guild.get_channel(parent_id)
                     if category:
-                        options['permission_overwrites'] = [c._asdict() for c in category._overwrites]
-                options['parent_id'] = parent_id
+                        options["permission_overwrites"] = [
+                            c._asdict() for c in category._overwrites
+                        ]
+                options["parent_id"] = parent_id
             elif lock_permissions and self.category_id is not None:
                 # if we're syncing permissions on a pre-existing channel category without changing it
                 # we need to update the permissions to point to the pre-existing category
                 category = self.guild.get_channel(self.category_id)
                 if category:
-                    options['permission_overwrites'] = [c._asdict() for c in category._overwrites]
+                    options["permission_overwrites"] = [
+                        c._asdict() for c in category._overwrites
+                    ]
         else:
-            await self._move(position, parent_id=parent_id, lock_permissions=lock_permissions, reason=reason)
+            await self._move(
+                position,
+                parent_id=parent_id,
+                lock_permissions=lock_permissions,
+                reason=reason,
+            )
 
-        overwrites = options.get('overwrites', None)
+        overwrites = options.get("overwrites")
         if overwrites is not None:
             perms = []
             for target, perm in overwrites.items():
                 if not isinstance(perm, PermissionOverwrite):
-                    raise InvalidArgument(f'Expected PermissionOverwrite received {perm.__class__.__name__}')
+                    raise InvalidArgument(
+                        f"Expected PermissionOverwrite received {perm.__class__.__name__}"
+                    )
 
                 allow, deny = perm.pair()
                 payload = {
-                    'allow': allow.value,
-                    'deny': deny.value,
-                    'id': target.id,
+                    "allow": allow.value,
+                    "deny": deny.value,
+                    "id": target.id,
+                    "type": _Overwrites.ROLE
+                    if isinstance(target, Role)
+                    else _Overwrites.MEMBER,
                 }
 
-                if isinstance(target, Role):
-                    payload['type'] = _Overwrites.ROLE
-                else:
-                    payload['type'] = _Overwrites.MEMBER
-
                 perms.append(payload)
-            options['permission_overwrites'] = perms
+            options["permission_overwrites"] = perms
 
         try:
-            ch_type = options['type']
+            ch_type = options["type"]
         except KeyError:
             pass
         else:
             if not isinstance(ch_type, ChannelType):
-                raise InvalidArgument('type field must be of type ChannelType')
-            options['type'] = ch_type.value
+                raise InvalidArgument("type field must be of type ChannelType")
+            options["type"] = ch_type.value
 
         if options:
-            return await self._state.http.edit_channel(self.id, reason=reason, **options)
+            return await self._state.http.edit_channel(
+                self.id, reason=reason, **options
+            )
 
     def _fill_overwrites(self, data: GuildChannelPayload) -> None:
         self._overwrites = []
         everyone_index = 0
         everyone_id = self.guild.id
 
-        for index, overridden in enumerate(data.get('permission_overwrites', [])):
+        for index, overridden in enumerate(data.get("permission_overwrites", [])):
             overwrite = _Overwrites(overridden)
             self._overwrites.append(overwrite)
 
@@ -414,9 +505,10 @@ class GuildChannel:
             tmp[everyone_index], tmp[0] = tmp[0], tmp[everyone_index]
 
     @property
-    def changed_roles(self) -> List[Role]:
+    def changed_roles(self) -> list[Role]:
         """List[:class:`~discord.Role`]: Returns a list of roles that have been overridden from
-        their default values in the :attr:`~discord.Guild.roles` attribute."""
+        their default values in the :attr:`~discord.Guild.roles` attribute.
+        """
         ret = []
         g = self.guild
         for overwrite in filter(lambda o: o.is_role(), self._overwrites):
@@ -432,24 +524,32 @@ class GuildChannel:
     @property
     def mention(self) -> str:
         """:class:`str`: The string that allows you to mention the channel."""
-        return f'<#{self.id}>'
+        return f"<#{self.id}>"
+
+    @property
+    def jump_url(self) -> str:
+        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+
+        .. versionadded:: 2.0
+        """
+        return f"https://discord.com/channels/{self.guild.id}/{self.id}"
 
     @property
     def created_at(self) -> datetime:
         """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
-    def overwrites_for(self, obj: Union[Role, User]) -> PermissionOverwrite:
+    def overwrites_for(self, obj: Role | User) -> PermissionOverwrite:
         """Returns the channel-specific overwrites for a member or a role.
 
         Parameters
-        -----------
+        ----------
         obj: Union[:class:`~discord.Role`, :class:`~discord.abc.User`]
             The role or user denoting
             whose overwrite to get.
 
         Returns
-        ---------
+        -------
         :class:`~discord.PermissionOverwrite`
             The permission overwrites for this object.
         """
@@ -470,7 +570,7 @@ class GuildChannel:
         return PermissionOverwrite()
 
     @property
-    def overwrites(self) -> Dict[Union[Role, Member], PermissionOverwrite]:
+    def overwrites(self) -> dict[Role | Member, PermissionOverwrite]:
         """Returns all of the channel's overwrites.
 
         This is returned as a dictionary where the key contains the target which
@@ -478,7 +578,7 @@ class GuildChannel:
         overwrite as a :class:`~discord.PermissionOverwrite`.
 
         Returns
-        --------
+        -------
         Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]
             The channel's permission overwrites.
         """
@@ -504,7 +604,7 @@ class GuildChannel:
         return ret
 
     @property
-    def category(self) -> Optional[CategoryChannel]:
+    def category(self) -> CategoryChannel | None:
         """Optional[:class:`~discord.CategoryChannel`]: The category this channel belongs to.
 
         If there is no category then this is ``None``.
@@ -513,7 +613,7 @@ class GuildChannel:
 
     @property
     def permissions_synced(self) -> bool:
-        """:class:`bool`: Whether or not the permissions for this channel are synced with the
+        """:class:`bool`: Whether the permissions for this channel are synced with the
         category it belongs to.
 
         If there is no category then this is ``False``.
@@ -526,7 +626,7 @@ class GuildChannel:
         category = self.guild.get_channel(self.category_id)
         return bool(category and category.overwrites == self.overwrites)
 
-    def permissions_for(self, obj: Union[Member, Role], /) -> Permissions:
+    def permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Handles permission resolution for the :class:`~discord.Member`
         or :class:`~discord.Role`.
 
@@ -568,7 +668,7 @@ class GuildChannel:
         # (or otherwise) are then OR'd together.
         # After the role permissions are resolved, the member permissions
         # have to take into effect.
-        # After all that is done.. you have to do the following:
+        # After all that is done, you have to do the following:
 
         # If manage permissions is True, then all permissions are set to True.
 
@@ -592,7 +692,9 @@ class GuildChannel:
             try:
                 maybe_everyone = self._overwrites[0]
                 if maybe_everyone.id == self.guild.id:
-                    base.handle_overwrite(allow=maybe_everyone.allow, deny=maybe_everyone.deny)
+                    base.handle_overwrite(
+                        allow=maybe_everyone.allow, deny=maybe_everyone.deny
+                    )
             except IndexError:
                 pass
 
@@ -623,7 +725,9 @@ class GuildChannel:
         try:
             maybe_everyone = self._overwrites[0]
             if maybe_everyone.id == self.guild.id:
-                base.handle_overwrite(allow=maybe_everyone.allow, deny=maybe_everyone.deny)
+                base.handle_overwrite(
+                    allow=maybe_everyone.allow, deny=maybe_everyone.deny
+                )
                 remaining_overwrites = self._overwrites[1:]
             else:
                 remaining_overwrites = self._overwrites
@@ -662,7 +766,7 @@ class GuildChannel:
 
         return base
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the channel.
@@ -670,13 +774,13 @@ class GuildChannel:
         You must have :attr:`~discord.Permissions.manage_channels` permission to use this.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for deleting this channel.
             Shows up on the audit log.
 
         Raises
-        -------
+        ------
         ~discord.Forbidden
             You do not have proper permissions to delete the channel.
         ~discord.NotFound
@@ -689,24 +793,26 @@ class GuildChannel:
     @overload
     async def set_permissions(
         self,
-        target: Union[Member, Role],
+        target: Member | Role,
         *,
-        overwrite: Optional[Union[PermissionOverwrite, _Undefined]] = ...,
-        reason: Optional[str] = ...,
+        overwrite: PermissionOverwrite | None = ...,
+        reason: str | None = ...,
     ) -> None:
         ...
 
     @overload
     async def set_permissions(
         self,
-        target: Union[Member, Role],
+        target: Member | Role,
         *,
-        reason: Optional[str] = ...,
+        reason: str | None = ...,
         **permissions: bool,
     ) -> None:
         ...
 
-    async def set_permissions(self, target, *, overwrite=_undefined, reason=None, **permissions):
+    async def set_permissions(
+        self, target, *, overwrite=MISSING, reason=None, **permissions
+    ):
         r"""|coro|
 
         Sets the channel specific permission overwrites for a target in the
@@ -782,18 +888,17 @@ class GuildChannel:
         elif isinstance(target, Role):
             perm_type = _Overwrites.ROLE
         else:
-            raise InvalidArgument('target parameter must be either Member or Role')
+            raise InvalidArgument("target parameter must be either Member or Role")
 
-        if overwrite is _undefined:
+        if overwrite is MISSING:
             if len(permissions) == 0:
-                raise InvalidArgument('No overwrite provided.')
+                raise InvalidArgument("No overwrite provided.")
             try:
                 overwrite = PermissionOverwrite(**permissions)
             except (ValueError, TypeError):
-                raise InvalidArgument('Invalid permissions given to keyword arguments.')
-        else:
-            if len(permissions) > 0:
-                raise InvalidArgument('Cannot mix overwrite and keyword arguments.')
+                raise InvalidArgument("Invalid permissions given to keyword arguments.")
+        elif len(permissions) > 0:
+            raise InvalidArgument("Cannot mix overwrite and keyword arguments.")
 
         # TODO: wait for event
 
@@ -801,30 +906,36 @@ class GuildChannel:
             await http.delete_channel_permissions(self.id, target.id, reason=reason)
         elif isinstance(overwrite, PermissionOverwrite):
             (allow, deny) = overwrite.pair()
-            await http.edit_channel_permissions(self.id, target.id, allow.value, deny.value, perm_type, reason=reason)
+            await http.edit_channel_permissions(
+                self.id, target.id, allow.value, deny.value, perm_type, reason=reason
+            )
         else:
-            raise InvalidArgument('Invalid overwrite type provided.')
+            raise InvalidArgument("Invalid overwrite type provided.")
 
     async def _clone_impl(
         self: GCH,
-        base_attrs: Dict[str, Any],
+        base_attrs: dict[str, Any],
         *,
-        name: Optional[str] = None,
-        reason: Optional[str] = None,
+        name: str | None = None,
+        reason: str | None = None,
     ) -> GCH:
-        base_attrs['permission_overwrites'] = [x._asdict() for x in self._overwrites]
-        base_attrs['parent_id'] = self.category_id
-        base_attrs['name'] = name or self.name
+        base_attrs["permission_overwrites"] = [x._asdict() for x in self._overwrites]
+        base_attrs["parent_id"] = self.category_id
+        base_attrs["name"] = name or self.name
         guild_id = self.guild.id
         cls = self.__class__
-        data = await self._state.http.create_channel(guild_id, self.type.value, reason=reason, **base_attrs)
+        data = await self._state.http.create_channel(
+            guild_id, self.type.value, reason=reason, **base_attrs
+        )
         obj = cls(state=self._state, guild=self.guild, data=data)
 
         # temporarily add it to the cache
         self.guild._channels[obj.id] = obj  # type: ignore
         return obj
 
-    async def clone(self: GCH, *, name: Optional[str] = None, reason: Optional[str] = None) -> GCH:
+    async def clone(
+        self: GCH, *, name: str | None = None, reason: str | None = None
+    ) -> GCH:
         """|coro|
 
         Clones this channel. This creates a channel with the same properties
@@ -836,24 +947,24 @@ class GuildChannel:
         .. versionadded:: 1.1
 
         Parameters
-        ------------
+        ----------
         name: Optional[:class:`str`]
             The name of the new channel. If not provided, defaults to this
             channel name.
         reason: Optional[:class:`str`]
             The reason for cloning this channel. Shows up on the audit log.
 
-        Raises
+        Returns
         -------
+        :class:`.abc.GuildChannel`
+            The channel that was created.
+
+        Raises
+        ------
         ~discord.Forbidden
             You do not have the proper permissions to create this channel.
         ~discord.HTTPException
             Creating the channel failed.
-
-        Returns
-        --------
-        :class:`.abc.GuildChannel`
-            The channel that was created.
         """
         raise NotImplementedError
 
@@ -863,9 +974,9 @@ class GuildChannel:
         *,
         beginning: bool,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
-        reason: Optional[str] = MISSING,
+        reason: str | None = MISSING,
     ) -> None:
         ...
 
@@ -875,7 +986,7 @@ class GuildChannel:
         *,
         end: bool,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -887,7 +998,7 @@ class GuildChannel:
         *,
         before: Snowflake,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -899,7 +1010,7 @@ class GuildChannel:
         *,
         after: Snowflake,
         offset: int = MISSING,
-        category: Optional[Snowflake] = MISSING,
+        category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
     ) -> None:
@@ -923,7 +1034,7 @@ class GuildChannel:
         .. versionadded:: 1.7
 
         Parameters
-        ------------
+        ----------
         beginning: :class:`bool`
             Whether to move the channel to the beginning of the
             channel list (or category if given).
@@ -955,9 +1066,9 @@ class GuildChannel:
             The reason for the move.
 
         Raises
-        -------
+        ------
         InvalidArgument
-            An invalid position was given or a bad mix of arguments were passed.
+            An invalid position was given or a bad mix of arguments was passed.
         Forbidden
             You do not have permissions to move the channel.
         HTTPException
@@ -967,32 +1078,30 @@ class GuildChannel:
         if not kwargs:
             return
 
-        beginning, end = kwargs.get('beginning'), kwargs.get('end')
-        before, after = kwargs.get('before'), kwargs.get('after')
-        offset = kwargs.get('offset', 0)
+        beginning, end = kwargs.get("beginning"), kwargs.get("end")
+        before, after = kwargs.get("before"), kwargs.get("after")
+        offset = kwargs.get("offset", 0)
         if sum(bool(a) for a in (beginning, end, before, after)) > 1:
-            raise InvalidArgument('Only one of [before, after, end, beginning] can be used.')
+            raise InvalidArgument(
+                "Only one of [before, after, end, beginning] can be used."
+            )
 
         bucket = self._sorting_bucket
-        parent_id = kwargs.get('category', MISSING)
-        # fmt: off
-        channels: List[GuildChannel]
+        parent_id = kwargs.get("category", MISSING)
+        channels: list[GuildChannel]
         if parent_id not in (MISSING, None):
             parent_id = parent_id.id
             channels = [
                 ch
                 for ch in self.guild.channels
-                if ch._sorting_bucket == bucket
-                and ch.category_id == parent_id
+                if ch._sorting_bucket == bucket and ch.category_id == parent_id
             ]
         else:
             channels = [
                 ch
                 for ch in self.guild.channels
-                if ch._sorting_bucket == bucket
-                and ch.category_id == self.category_id
+                if ch._sorting_bucket == bucket and ch.category_id == self.category_id
             ]
-        # fmt: on
 
         channels.sort(key=lambda c: (c.position, c.id))
 
@@ -1011,35 +1120,39 @@ class GuildChannel:
         elif before:
             index = next((i for i, c in enumerate(channels) if c.id == before.id), None)
         elif after:
-            index = next((i + 1 for i, c in enumerate(channels) if c.id == after.id), None)
+            index = next(
+                (i + 1 for i, c in enumerate(channels) if c.id == after.id), None
+            )
 
         if index is None:
-            raise InvalidArgument('Could not resolve appropriate move position')
+            raise InvalidArgument("Could not resolve appropriate move position")
 
         channels.insert(max((index + offset), 0), self)
         payload = []
-        lock_permissions = kwargs.get('sync_permissions', False)
-        reason = kwargs.get('reason')
+        lock_permissions = kwargs.get("sync_permissions", False)
+        reason = kwargs.get("reason")
         for index, channel in enumerate(channels):
-            d = {'id': channel.id, 'position': index}
+            d = {"id": channel.id, "position": index}
             if parent_id is not MISSING and channel.id == self.id:
                 d.update(parent_id=parent_id, lock_permissions=lock_permissions)
             payload.append(d)
 
-        await self._state.http.bulk_channel_update(self.guild.id, payload, reason=reason)
+        await self._state.http.bulk_channel_update(
+            self.guild.id, payload, reason=reason
+        )
 
     async def create_invite(
         self,
         *,
-        reason: Optional[str] = None,
+        reason: str | None = None,
         max_age: int = 0,
         max_uses: int = 0,
         temporary: bool = False,
         unique: bool = True,
-        target_event: Optional[ScheduledEvent] = None,
-        target_type: Optional[InviteTarget] = None,
-        target_user: Optional[User] = None,
-        target_application_id: Optional[int] = None,
+        target_event: ScheduledEvent | None = None,
+        target_type: InviteTarget | None = None,
+        target_user: User | None = None,
+        target_application_id: int | None = None,
     ) -> Invite:
         """|coro|
 
@@ -1049,7 +1162,7 @@ class GuildChannel:
         do this.
 
         Parameters
-        ------------
+        ----------
         max_age: :class:`int`
             How long the invite should last in seconds. If it's 0 then the invite
             doesn't expire. Defaults to ``0``.
@@ -1071,36 +1184,38 @@ class GuildChannel:
             .. versionadded:: 2.0
 
         target_user: Optional[:class:`User`]
-            The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.
+            The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`.
+            The user must be streaming in the channel.
 
             .. versionadded:: 2.0
 
         target_application_id: Optional[:class:`int`]
-            The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.
+            The id of the embedded application for the invite, required if `target_type` is
+            `TargetType.embedded_application`.
 
             .. versionadded:: 2.0
 
-        target_event: Optional[:class:`ScheduledEvent`]
+        target_event: Optional[:class:`.ScheduledEvent`]
             The scheduled event object to link to the event.
-            Shortcut to :meth:`Invite.set_scheduled_event`
+            Shortcut to :meth:`.Invite.set_scheduled_event`
 
-            See :meth:`Invite.set_scheduled_event` for more
+            See :meth:`.Invite.set_scheduled_event` for more
             info on event invite linking.
 
             .. versionadded:: 2.0
 
-        Raises
+        Returns
         -------
+        :class:`~discord.Invite`
+            The invite that was created.
+
+        Raises
+        ------
         ~discord.HTTPException
             Invite creation failed.
 
         ~discord.NotFound
             The channel that was passed is a category or an invalid channel.
-
-        Returns
-        --------
-        :class:`~discord.Invite`
-            The invite that was created.
         """
 
         data = await self._state.http.create_invite(
@@ -1119,30 +1234,33 @@ class GuildChannel:
             invite.set_scheduled_event(target_event)
         return invite
 
-    async def invites(self) -> List[Invite]:
+    async def invites(self) -> list[Invite]:
         """|coro|
 
         Returns a list of all active instant invites from this channel.
 
         You must have :attr:`~discord.Permissions.manage_channels` to get this information.
 
-        Raises
-        -------
-        ~discord.Forbidden
-            You do not have proper permissions to get the information.
-        ~discord.HTTPException
-            An error occurred while fetching the information.
-
         Returns
         -------
         List[:class:`~discord.Invite`]
             The list of invites that are currently active.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
         """
 
         state = self._state
         data = await state.http.invites_from_channel(self.id)
         guild = self.guild
-        return [Invite(state=state, data=invite, channel=self, guild=guild) for invite in data]
+        return [
+            Invite(state=state, data=invite, channel=self, guild=guild)
+            for invite in data
+        ]
 
 
 class Messageable:
@@ -1169,72 +1287,76 @@ class Messageable:
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
         embed: Embed = ...,
         file: File = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
         embed: Embed = ...,
-        files: List[File] = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        files: list[File] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
-        embeds: List[Embed] = ...,
+        embeds: list[Embed] = ...,
         file: File = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
     @overload
     async def send(
         self,
-        content: Optional[str] = ...,
+        content: str | None = ...,
         *,
         tts: bool = ...,
-        embeds: List[Embed] = ...,
-        files: List[File] = ...,
-        stickers: Sequence[Union[GuildSticker, StickerItem]] = ...,
+        embeds: list[Embed] = ...,
+        files: list[File] = ...,
+        stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: Union[str, int] = ...,
+        nonce: str | int = ...,
         allowed_mentions: AllowedMentions = ...,
-        reference: Union[Message, MessageReference, PartialMessage] = ...,
+        reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        suppress: bool = ...,
     ) -> Message:
         ...
 
@@ -1254,6 +1376,7 @@ class Messageable:
         reference=None,
         mention_author=None,
         view=None,
+        suppress=None,
     ):
         """|coro|
 
@@ -1274,7 +1397,7 @@ class Messageable:
         **Specifying both parameters will lead to an exception**.
 
         Parameters
-        ------------
+        ----------
         content: Optional[:class:`str`]
             The content of the message to send.
         tts: :class:`bool`
@@ -1305,8 +1428,9 @@ class Messageable:
         reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
             A reference to the :class:`~discord.Message` to which you are replying, this can be created using
             :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
-            whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user`
-            attribute of ``allowed_mentions`` or by setting ``mention_author``.
+            whether this mentions the author of the referenced message using the
+            :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
+            setting ``mention_author``.
 
             .. versionadded:: 1.6
 
@@ -1324,9 +1448,16 @@ class Messageable:
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
+
+        Returns
+        -------
+        :class:`~discord.Message`
+            The message that was sent.
 
         Raises
-        --------
+        ------
         ~discord.HTTPException
             Sending the message failed.
         ~discord.Forbidden
@@ -1337,11 +1468,6 @@ class Messageable:
             or you specified both ``embed`` and ``embeds``,
             or the ``reference`` object is not a :class:`~discord.Message`,
             :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`.
-
-        Returns
-        ---------
-        :class:`~discord.Message`
-            The message that was sent.
         """
 
         channel = await self._get_channel()
@@ -1349,51 +1475,62 @@ class Messageable:
         content = str(content) if content is not None else None
 
         if embed is not None and embeds is not None:
-            raise InvalidArgument('cannot pass both embed and embeds parameter to send()')
+            raise InvalidArgument(
+                "cannot pass both embed and embeds parameter to send()"
+            )
 
         if embed is not None:
             embed = embed.to_dict()
 
         elif embeds is not None:
             if len(embeds) > 10:
-                raise InvalidArgument('embeds parameter must be a list of up to 10 elements')
+                raise InvalidArgument(
+                    "embeds parameter must be a list of up to 10 elements"
+                )
             embeds = [embed.to_dict() for embed in embeds]
+
+        flags = MessageFlags.suppress_embeds if suppress else MessageFlags.DEFAULT_VALUE
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
 
-        if allowed_mentions is not None:
-            if state.allowed_mentions is not None:
-                allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
-            else:
-                allowed_mentions = allowed_mentions.to_dict()
+        if allowed_mentions is None:
+            allowed_mentions = (
+                state.allowed_mentions and state.allowed_mentions.to_dict()
+            )
+        elif state.allowed_mentions is not None:
+            allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
-            allowed_mentions = state.allowed_mentions and state.allowed_mentions.to_dict()
+            allowed_mentions = allowed_mentions.to_dict()
 
         if mention_author is not None:
             allowed_mentions = allowed_mentions or AllowedMentions().to_dict()
-            allowed_mentions['replied_user'] = bool(mention_author)
+            allowed_mentions["replied_user"] = bool(mention_author)
 
         if reference is not None:
             try:
                 reference = reference.to_message_reference_dict()
             except AttributeError:
-                raise InvalidArgument('reference parameter must be Message, MessageReference, or PartialMessage') from None
+                raise InvalidArgument(
+                    "reference parameter must be Message, MessageReference, or PartialMessage"
+                ) from None
 
         if view:
-            if not hasattr(view, '__discord_ui_view__'):
-                raise InvalidArgument(f'view parameter must be View not {view.__class__!r}')
+            if not hasattr(view, "__discord_ui_view__"):
+                raise InvalidArgument(
+                    f"view parameter must be View not {view.__class__!r}"
+                )
 
             components = view.to_components()
         else:
             components = None
 
         if file is not None and files is not None:
-            raise InvalidArgument('cannot pass both file and files parameter to send()')
+            raise InvalidArgument("cannot pass both file and files parameter to send()")
 
         if file is not None:
             if not isinstance(file, File):
-                raise InvalidArgument('file parameter must be File')
+                raise InvalidArgument("file parameter must be File")
 
             try:
                 data = await state.http.send_files(
@@ -1408,15 +1545,18 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    flags=flags,
                 )
             finally:
                 file.close()
 
         elif files is not None:
             if len(files) > 10:
-                raise InvalidArgument('files parameter must be a list of up to 10 elements')
+                raise InvalidArgument(
+                    "files parameter must be a list of up to 10 elements"
+                )
             elif not all(isinstance(file, File) for file in files):
-                raise InvalidArgument('files parameter must be a list of File')
+                raise InvalidArgument("files parameter must be a list of File")
 
             try:
                 data = await state.http.send_files(
@@ -1431,6 +1571,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
+                    flags=flags,
                 )
             finally:
                 for f in files:
@@ -1447,11 +1588,13 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
+                flags=flags,
             )
 
         ret = state.create_message(channel=channel, data=data)
         if view:
             state.store_view(view, ret.id)
+            view.message = ret
 
         if delete_after is not None:
             await ret.delete(delay=delete_after)
@@ -1485,7 +1628,6 @@ class Messageable:
                 await asyncio.sleep(10)
 
             await channel.send('done!')
-
         """
         return Typing(self)
 
@@ -1495,30 +1637,30 @@ class Messageable:
         Retrieves a single :class:`~discord.Message` from the destination.
 
         Parameters
-        ------------
+        ----------
         id: :class:`int`
             The message ID to look for.
 
+        Returns
+        -------
+        :class:`~discord.Message`
+            The message asked for.
+
         Raises
-        --------
+        ------
         ~discord.NotFound
             The specified message was not found.
         ~discord.Forbidden
             You do not have the permissions required to get a message.
         ~discord.HTTPException
             Retrieving the message failed.
-
-        Returns
-        --------
-        :class:`~discord.Message`
-            The message asked for.
         """
 
         channel = await self._get_channel()
         data = await self._state.http.get_message(channel.id, id)
         return self._state.create_message(channel=channel, data=data)
 
-    async def pins(self) -> List[Message]:
+    async def pins(self) -> list[Message]:
         """|coro|
 
         Retrieves all messages that are currently pinned in the channel.
@@ -1529,107 +1671,97 @@ class Messageable:
             objects returned by this method do not contain complete
             :attr:`.Message.reactions` data.
 
-        Raises
-        -------
-        ~discord.HTTPException
-            Retrieving the pinned messages failed.
-
         Returns
-        --------
+        -------
         List[:class:`~discord.Message`]
             The messages that are currently pinned.
+
+        Raises
+        ------
+        ~discord.HTTPException
+            Retrieving the pinned messages failed.
         """
 
         channel = await self._get_channel()
         state = self._state
         data = await state.http.pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
-    
+
     def can_send(self, *objects) -> bool:
         """Returns a :class:`bool` indicating whether you have the permissions to send the object(s).
+
+        Returns
+        -------
+        :class:`bool`
+            Indicates whether you have the permissions to send the object(s).
 
         Raises
         ------
         TypeError
             An invalid type has been passed.
-
-        Returns
-        --------
-        :class:`bool`
-            Indicates whether you have the permissions to send the object(s).
         """
         mapping = {
-            'Message': 'send_messages',
-            'Embed': 'embed_links',
-            'File': 'attach_files',
-            'Emoji': 'use_external_emojis',
-            'GuildSticker': 'use_external_stickers',
+            "Message": "send_messages",
+            "Embed": "embed_links",
+            "File": "attach_files",
+            "Emoji": "use_external_emojis",
+            "GuildSticker": "use_external_stickers",
         }
         # Can't use channel = await self._get_channel() since its async
-        if hasattr(self, 'permissions_for'):
+        if hasattr(self, "permissions_for"):
             channel = self
-        elif hasattr(self, 'channel') and not type(self.channel).__name__ in ('DMChannel', 'GroupChannel'):
+        elif hasattr(self, "channel") and type(self.channel).__name__ not in (
+            "DMChannel",
+            "GroupChannel",
+        ):
             channel = self.channel
         else:
-            return True # Permissions don't exist for User DMs
+            return True  # Permissions don't exist for User DMs
 
-        
-        objects = (None, ) + objects # Makes sure we check for send_messages first
+        objects = (None,) + objects  # Makes sure we check for send_messages first
 
         for obj in objects:
             try:
                 if obj is None:
-                    permission = mapping['Message']
+                    permission = mapping["Message"]
                 else:
-                    permission = mapping.get(type(obj).__name__) or mapping[obj.__name__]
-                
-                if type(obj).__name__ == 'Emoji':
-                    if obj._to_partial().is_unicode_emoji or obj.guild_id == channel.guild.id:
+                    permission = (
+                        mapping.get(type(obj).__name__) or mapping[obj.__name__]
+                    )
+
+                if type(obj).__name__ == "Emoji":
+                    if (
+                        obj._to_partial().is_unicode_emoji
+                        or obj.guild_id == channel.guild.id
+                    ):
                         continue
-                elif type(obj).__name__ == 'GuildSticker':
+                elif type(obj).__name__ == "GuildSticker":
                     if obj.guild_id == channel.guild.id:
                         continue
 
             except (KeyError, AttributeError):
-                raise TypeError(f'The object {obj} is of an invalid type.')
+                raise TypeError(f"The object {obj} is of an invalid type.")
 
             if not getattr(channel.permissions_for(channel.guild.me), permission):
                 return False
 
-        return True 
+        return True
 
     def history(
         self,
         *,
-        limit: Optional[int] = 100,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = None,
+        limit: int | None = 100,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = None,
     ) -> HistoryIterator:
         """Returns an :class:`~discord.AsyncIterator` that enables receiving the destination's message history.
 
         You must have :attr:`~discord.Permissions.read_message_history` permissions to use this.
 
-        Examples
-        ---------
-
-        Usage ::
-
-            counter = 0
-            async for message in channel.history(limit=200):
-                if message.author == client.user:
-                    counter += 1
-
-        Flattening into a list: ::
-
-            messages = await channel.history(limit=123).flatten()
-            # messages is now a list of Message...
-
-        All parameters are optional.
-
         Parameters
-        -----------
+        ----------
         limit: Optional[:class:`int`]
             The number of messages to retrieve.
             If ``None``, retrieves every message in the channel. Note, however,
@@ -1647,10 +1779,15 @@ class Messageable:
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
             When using this argument, the maximum limit is 101. Note that if the limit is an
-            even number then this will return at most limit + 1 messages.
+            even number, then this will return at most limit + 1 messages.
         oldest_first: Optional[:class:`bool`]
             If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if
             ``after`` is specified, otherwise ``False``.
+
+        Yields
+        ------
+        :class:`~discord.Message`
+            The message with the message data parsed.
 
         Raises
         ------
@@ -1659,12 +1796,31 @@ class Messageable:
         ~discord.HTTPException
             The request to get message history failed.
 
-        Yields
-        -------
-        :class:`~discord.Message`
-            The message with the message data parsed.
+        Examples
+        --------
+
+        Usage ::
+
+            counter = 0
+            async for message in channel.history(limit=200):
+                if message.author == client.user:
+                    counter += 1
+
+        Flattening into a list: ::
+
+            messages = await channel.history(limit=123).flatten()
+            # messages is now a list of Message...
+
+        All parameters are optional.
         """
-        return HistoryIterator(self, limit=limit, before=before, after=after, around=around, oldest_first=oldest_first)
+        return HistoryIterator(
+            self,
+            limit=limit,
+            before=before,
+            after=after,
+            around=around,
+            oldest_first=oldest_first,
+        )
 
 
 class Connectable(Protocol):
@@ -1685,10 +1841,10 @@ class Connectable(Protocol):
     __slots__ = ()
     _state: ConnectionState
 
-    def _get_voice_client_key(self) -> Tuple[int, str]:
+    def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError
 
-    def _get_voice_state_pair(self) -> Tuple[int, int]:
+    def _get_voice_state_pair(self) -> tuple[int, int]:
         raise NotImplementedError
 
     async def connect(
@@ -1706,7 +1862,7 @@ class Connectable(Protocol):
         This requires :attr:`Intents.voice_states`.
 
         Parameters
-        -----------
+        ----------
         timeout: :class:`float`
             The timeout in seconds to wait for the voice endpoint.
         reconnect: :class:`bool`
@@ -1717,32 +1873,32 @@ class Connectable(Protocol):
             A type that subclasses :class:`~discord.VoiceProtocol` to connect with.
             Defaults to :class:`~discord.VoiceClient`.
 
-        Raises
+        Returns
         -------
+        :class:`~discord.VoiceProtocol`
+            A voice client that is fully connected to the voice server.
+
+        Raises
+        ------
         asyncio.TimeoutError
             Could not connect to the voice channel in time.
         ~discord.ClientException
             You are already connected to a voice channel.
         ~discord.opus.OpusNotLoaded
             The opus library has not been loaded.
-
-        Returns
-        --------
-        :class:`~discord.VoiceProtocol`
-            A voice client that is fully connected to the voice server.
         """
 
         key_id, _ = self._get_voice_client_key()
         state = self._state
 
         if state._get_voice_client(key_id):
-            raise ClientException('Already connected to a voice channel.')
+            raise ClientException("Already connected to a voice channel.")
 
         client = state._get_client()
         voice = cls(client, self)
 
         if not isinstance(voice, VoiceProtocol):
-            raise TypeError('Type must meet VoiceProtocol abstract base class.')
+            raise TypeError("Type must meet VoiceProtocol abstract base class.")
 
         state._add_voice_client(key_id, voice)
 
@@ -1757,6 +1913,7 @@ class Connectable(Protocol):
             raise  # re-raise
 
         return voice
+
 
 class Mentionable:
     # TODO: documentation, methods if needed

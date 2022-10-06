@@ -25,19 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Optional, TYPE_CHECKING
-from .utils import parse_time, _get_as_snowflake, _bytes_to_base64_data, MISSING
-from .enums import VoiceRegion
-from .guild import Guild
+from typing import TYPE_CHECKING, Any
 
-__all__ = (
-    'Template',
-)
+from .guild import Guild
+from .utils import MISSING, _bytes_to_base64_data, parse_time
+
+__all__ = ("Template",)
 
 if TYPE_CHECKING:
     import datetime
-    from .types.template import Template as TemplatePayload
+
     from .state import ConnectionState
+    from .types.template import Template as TemplatePayload
     from .user import User
 
 
@@ -45,7 +44,7 @@ class _FriendlyHttpAttributeErrorHelper:
     __slots__ = ()
 
     def __getattr__(self, attr):
-        raise AttributeError('PartialTemplateState does not support http methods.')
+        raise AttributeError("PartialTemplateState does not support http methods.")
 
 
 class _PartialTemplateState:
@@ -85,7 +84,7 @@ class _PartialTemplateState:
         return []
 
     def __getattr__(self, attr):
-        raise AttributeError(f'PartialTemplateState does not support {attr!r}.')
+        raise AttributeError(f"PartialTemplateState does not support {attr!r}.")
 
 
 class Template:
@@ -94,7 +93,7 @@ class Template:
     .. versionadded:: 1.4
 
     Attributes
-    -----------
+    ----------
     code: :class:`str`
         The template code.
     uses: :class:`int`
@@ -119,16 +118,16 @@ class Template:
     """
 
     __slots__ = (
-        'code',
-        'uses',
-        'name',
-        'description',
-        'creator',
-        'created_at',
-        'updated_at',
-        'source_guild',
-        'is_dirty',
-        '_state',
+        "code",
+        "uses",
+        "name",
+        "description",
+        "creator",
+        "created_at",
+        "updated_at",
+        "source_guild",
+        "is_dirty",
+        "_state",
     )
 
     def __init__(self, *, state: ConnectionState, data: TemplatePayload) -> None:
@@ -136,38 +135,40 @@ class Template:
         self._store(data)
 
     def _store(self, data: TemplatePayload) -> None:
-        self.code: str = data['code']
-        self.uses: int = data['usage_count']
-        self.name: str = data['name']
-        self.description: Optional[str] = data['description']
-        creator_data = data.get('creator')
-        self.creator: Optional[User] = None if creator_data is None else self._state.create_user(creator_data)
+        self.code: str = data["code"]
+        self.uses: int = data["usage_count"]
+        self.name: str = data["name"]
+        self.description: str | None = data["description"]
+        creator_data = data.get("creator")
+        self.creator: User | None = (
+            None if creator_data is None else self._state.create_user(creator_data)
+        )
 
-        self.created_at: Optional[datetime.datetime] = parse_time(data.get('created_at'))
-        self.updated_at: Optional[datetime.datetime] = parse_time(data.get('updated_at'))
+        self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
+        self.updated_at: datetime.datetime | None = parse_time(data.get("updated_at"))
 
-        guild_id = int(data['source_guild_id'])
-        guild: Optional[Guild] = self._state._get_guild(guild_id)
+        guild_id = int(data["source_guild_id"])
+        guild: Guild | None = self._state._get_guild(guild_id)
 
         self.source_guild: Guild
         if guild is None:
-            source_serialised = data['serialized_source_guild']
-            source_serialised['id'] = guild_id
+            source_serialised = data["serialized_source_guild"]
+            source_serialised["id"] = guild_id
             state = _PartialTemplateState(state=self._state)
             # Guild expects a ConnectionState, we're passing a _PartialTemplateState
             self.source_guild = Guild(data=source_serialised, state=state)  # type: ignore
         else:
             self.source_guild = guild
 
-        self.is_dirty: Optional[bool] = data.get('is_dirty', None)
+        self.is_dirty: bool | None = data.get("is_dirty", None)
 
     def __repr__(self) -> str:
         return (
-            f'<Template code={self.code!r} uses={self.uses} name={self.name!r}'
-            f' creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>'
+            f"<Template code={self.code!r} uses={self.uses} name={self.name!r}"
+            f" creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>"
         )
 
-    async def create_guild(self, name: str, region: Optional[VoiceRegion] = None, icon: Any = None) -> Guild:
+    async def create_guild(self, name: str, icon: Any = None) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild` using the template.
@@ -178,12 +179,15 @@ class Template:
         ----------
         name: :class:`str`
             The name of the guild.
-        region: :class:`.VoiceRegion`
-            The region for the voice communication server.
-            Defaults to :attr:`.VoiceRegion.us_west`.
         icon: :class:`bytes`
             The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
             for more details on what is expected.
+
+        Returns
+        -------
+        :class:`.Guild`
+            The guild created. This is not the same guild that is
+            added to cache.
 
         Raises
         ------
@@ -191,20 +195,11 @@ class Template:
             Guild creation failed.
         InvalidArgument
             Invalid icon image format given. Must be PNG or JPG.
-
-        Returns
-        -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
         """
         if icon is not None:
             icon = _bytes_to_base64_data(icon)
 
-        region = region or VoiceRegion.us_west
-        region_value = region.value
-
-        data = await self._state.http.create_from_template(self.code, name, region_value, icon)
+        data = await self._state.http.create_from_template(self.code, name, icon)
         return Guild(data=data, state=self._state)
 
     async def sync(self) -> Template:
@@ -218,21 +213,21 @@ class Template:
         .. versionadded:: 1.7
 
         .. versionchanged:: 2.0
-            The template is no longer edited in-place, instead it is returned.
-
-        Raises
-        -------
-        HTTPException
-            Editing the template failed.
-        Forbidden
-            You don't have permissions to edit the template.
-        NotFound
-            This template does not exist.
+            The template is no longer synced in-place, instead it is returned.
 
         Returns
-        --------
+        -------
         :class:`Template`
-            The newly edited template.
+            The newly synced template.
+
+        Raises
+        ------
+        HTTPException
+            Syncing the template failed.
+        Forbidden
+            You don't have permissions to sync the template.
+        NotFound
+            This template does not exist.
         """
 
         data = await self._state.http.sync_template(self.source_guild.id, self.code)
@@ -242,7 +237,7 @@ class Template:
         self,
         *,
         name: str = MISSING,
-        description: Optional[str] = MISSING,
+        description: str | None = MISSING,
     ) -> Template:
         """|coro|
 
@@ -257,34 +252,36 @@ class Template:
             The template is no longer edited in-place, instead it is returned.
 
         Parameters
-        ------------
+        ----------
         name: :class:`str`
             The template's new name.
         description: Optional[:class:`str`]
             The template's new description.
 
-        Raises
+        Returns
         -------
+        :class:`Template`
+            The newly edited template.
+
+        Raises
+        ------
         HTTPException
             Editing the template failed.
         Forbidden
             You don't have permissions to edit the template.
         NotFound
             This template does not exist.
-
-        Returns
-        --------
-        :class:`Template`
-            The newly edited template.
         """
         payload = {}
 
         if name is not MISSING:
-            payload['name'] = name
+            payload["name"] = name
         if description is not MISSING:
-            payload['description'] = description
+            payload["description"] = description
 
-        data = await self._state.http.edit_template(self.source_guild.id, self.code, payload)
+        data = await self._state.http.edit_template(
+            self.source_guild.id, self.code, payload
+        )
         return Template(state=self._state, data=data)
 
     async def delete(self) -> None:
@@ -298,11 +295,11 @@ class Template:
         .. versionadded:: 1.7
 
         Raises
-        -------
+        ------
         HTTPException
-            Editing the template failed.
+            Deleting the template failed.
         Forbidden
-            You don't have permissions to edit the template.
+            You don't have permissions to delete the template.
         NotFound
             This template does not exist.
         """
@@ -311,7 +308,7 @@ class Template:
     @property
     def url(self) -> str:
         """:class:`str`: The template url.
-        
+
         .. versionadded:: 2.0
         """
-        return f'https://discord.new/{self.code}'
+        return f"https://discord.new/{self.code}"

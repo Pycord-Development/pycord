@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .commands import *
 from .context import *
-from .errors import *
+from .core import *
+from .options import *
 from .permissions import *

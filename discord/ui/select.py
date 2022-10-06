@@ -24,35 +24,31 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from typing import List, Optional, TYPE_CHECKING, Tuple, TypeVar, Type, Callable, Union
+
 import inspect
 import os
+from typing import TYPE_CHECKING, Callable, TypeVar
 
-from .item import Item, ItemCallbackType
-from ..enums import ComponentType
-from ..partial_emoji import PartialEmoji
+from ..components import SelectMenu, SelectOption
 from ..emoji import Emoji
+from ..enums import ComponentType
 from ..interactions import Interaction
+from ..partial_emoji import PartialEmoji
 from ..utils import MISSING
-from ..components import (
-    SelectOption,
-    SelectMenu,
-)
+from .item import Item, ItemCallbackType
 
 __all__ = (
-    'Select',
-    'select',
+    "Select",
+    "select",
 )
 
 if TYPE_CHECKING:
-    from .view import View
     from ..types.components import SelectMenu as SelectMenuPayload
-    from ..types.interactions import (
-        ComponentInteractionData,
-    )
+    from ..types.interactions import ComponentInteractionData
+    from .view import View
 
-S = TypeVar('S', bound='Select')
-V = TypeVar('V', bound='View', covariant=True)
+S = TypeVar("S", bound="Select")
+V = TypeVar("V", bound="View", covariant=True)
 
 
 class Select(Item[V]):
@@ -65,7 +61,7 @@ class Select(Item[V]):
     .. versionadded:: 2.0
 
     Parameters
-    ------------
+    ----------
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         If not given then one is generated for you.
@@ -89,29 +85,40 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = (
-        'placeholder',
-        'min_values',
-        'max_values',
-        'options',
-        'disabled',
+    __item_repr_attributes__: tuple[str, ...] = (
+        "placeholder",
+        "min_values",
+        "max_values",
+        "options",
+        "disabled",
     )
 
     def __init__(
         self,
         *,
-        custom_id: str = MISSING,
-        placeholder: Optional[str] = None,
+        custom_id: str | None = None,
+        placeholder: str | None = None,
         min_values: int = 1,
         max_values: int = 1,
-        options: List[SelectOption] = MISSING,
+        options: list[SelectOption] = MISSING,
         disabled: bool = False,
-        row: Optional[int] = None,
+        row: int | None = None,
     ) -> None:
         super().__init__()
-        self._selected_values: List[str] = []
-        self._provided_custom_id = custom_id is not MISSING
-        custom_id = os.urandom(16).hex() if custom_id is MISSING else custom_id
+        self._selected_values: list[str] = []
+        if min_values < 0 or min_values > 25:
+            raise ValueError("min_values must be between 0 and 25")
+        if max_values < 1 or max_values > 25:
+            raise ValueError("max_values must be between 1 and 25")
+        if placeholder and len(placeholder) > 150:
+            raise ValueError("placeholder must be 150 characters or fewer")
+        if not isinstance(custom_id, str) and custom_id is not None:
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
+
+        self._provided_custom_id = custom_id is not None
+        custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         options = [] if options is MISSING else options
         self._underlying = SelectMenu._raw_construct(
             custom_id=custom_id,
@@ -132,19 +139,22 @@ class Select(Item[V]):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError('custom_id must be None or str')
-
+            raise TypeError("custom_id must be None or str")
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
 
     @property
-    def placeholder(self) -> Optional[str]:
+    def placeholder(self) -> str | None:
         """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
-    def placeholder(self, value: Optional[str]):
+    def placeholder(self, value: str | None):
         if value is not None and not isinstance(value, str):
-            raise TypeError('placeholder must be None or str')
+            raise TypeError("placeholder must be None or str")
+        if value and len(value) > 150:
+            raise ValueError("placeholder must be 150 characters or fewer")
 
         self._underlying.placeholder = value
 
@@ -155,6 +165,8 @@ class Select(Item[V]):
 
     @min_values.setter
     def min_values(self, value: int):
+        if value < 0 or value > 25:
+            raise ValueError("min_values must be between 0 and 25")
         self._underlying.min_values = int(value)
 
     @property
@@ -164,19 +176,21 @@ class Select(Item[V]):
 
     @max_values.setter
     def max_values(self, value: int):
+        if value < 1 or value > 25:
+            raise ValueError("max_values must be between 1 and 25")
         self._underlying.max_values = int(value)
 
     @property
-    def options(self) -> List[SelectOption]:
+    def options(self) -> list[SelectOption]:
         """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu."""
         return self._underlying.options
 
     @options.setter
-    def options(self, value: List[SelectOption]):
+    def options(self, value: list[SelectOption]):
         if not isinstance(value, list):
-            raise TypeError('options must be a list of SelectOption')
+            raise TypeError("options must be a list of SelectOption")
         if not all(isinstance(obj, SelectOption) for obj in value):
-            raise TypeError('all list items must subclass SelectOption')
+            raise TypeError("all list items must subclass SelectOption")
 
         self._underlying.options = value
 
@@ -185,8 +199,8 @@ class Select(Item[V]):
         *,
         label: str,
         value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
         default: bool = False,
     ):
         """Adds an option to the select menu.
@@ -195,7 +209,7 @@ class Select(Item[V]):
         :meth:`append_option` method instead.
 
         Parameters
-        -----------
+        ----------
         label: :class:`str`
             The label of the option. This is displayed to users.
             Can only be up to 100 characters.
@@ -212,7 +226,7 @@ class Select(Item[V]):
             Whether this option is selected by default.
 
         Raises
-        -------
+        ------
         ValueError
             The number of options exceeds 25.
         """
@@ -225,25 +239,24 @@ class Select(Item[V]):
             default=default,
         )
 
-
         self.append_option(option)
 
     def append_option(self, option: SelectOption):
         """Appends an option to the select menu.
 
         Parameters
-        -----------
+        ----------
         option: :class:`discord.SelectOption`
             The option to append to the select menu.
 
         Raises
-        -------
+        ------
         ValueError
             The number of options exceeds 25.
         """
 
         if len(self._underlying.options) > 25:
-            raise ValueError('maximum number of options already provided')
+            raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
 
@@ -257,7 +270,7 @@ class Select(Item[V]):
         self._underlying.disabled = bool(value)
 
     @property
-    def values(self) -> List[str]:
+    def values(self) -> list[str]:
         """List[:class:`str`]: A list of values that have been selected by the user."""
         return self._selected_values
 
@@ -273,10 +286,10 @@ class Select(Item[V]):
 
     def refresh_state(self, interaction: Interaction) -> None:
         data: ComponentInteractionData = interaction.data  # type: ignore
-        self._selected_values = data.get('values', [])
+        self._selected_values = data.get("values", [])
 
     @classmethod
-    def from_component(cls: Type[S], component: SelectMenu) -> S:
+    def from_component(cls: type[S], component: SelectMenu) -> S:
         return cls(
             custom_id=component.custom_id,
             placeholder=component.placeholder,
@@ -297,13 +310,13 @@ class Select(Item[V]):
 
 def select(
     *,
-    placeholder: Optional[str] = None,
-    custom_id: str = MISSING,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
     min_values: int = 1,
     max_values: int = 1,
-    options: List[SelectOption] = MISSING,
+    options: list[SelectOption] = MISSING,
     disabled: bool = False,
-    row: Optional[int] = None,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -315,7 +328,7 @@ def select(
     use :attr:`Select.values`.
 
     Parameters
-    ------------
+    ----------
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     custom_id: :class:`str`
@@ -329,7 +342,7 @@ def select(
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     min_values: :class:`int`
         The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
+        Defaults to 1 and must be between 0 and 25.
     max_values: :class:`int`
         The maximum number of items that must be chosen for this select menu.
         Defaults to 1 and must be between 1 and 25.
@@ -341,17 +354,17 @@ def select(
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):
-            raise TypeError('select function must be a coroutine function')
+            raise TypeError("select function must be a coroutine function")
 
         func.__discord_ui_model_type__ = Select
         func.__discord_ui_model_kwargs__ = {
-            'placeholder': placeholder,
-            'custom_id': custom_id,
-            'row': row,
-            'min_values': min_values,
-            'max_values': max_values,
-            'options': options,
-            'disabled': disabled,
+            "placeholder": placeholder,
+            "custom_id": custom_id,
+            "row": row,
+            "min_values": min_values,
+            "max_values": max_values,
+            "options": options,
+            "disabled": disabled,
         }
         return func
 

@@ -25,67 +25,74 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import datetime
-import re
 import io
+import re
 from os import PathLike
-from typing import Dict, TYPE_CHECKING, Union, List, Optional, Any, Callable, Tuple, ClassVar, Optional, overload, TypeVar, Type
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Sequence,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from . import utils
-from .reaction import Reaction
-from .emoji import Emoji
-from .partial_emoji import PartialEmoji
-from .enums import MessageType, ChannelType, try_enum
-from .errors import InvalidArgument, HTTPException
 from .components import _component_factory
 from .embeds import Embed
-from .member import Member
-from .flags import MessageFlags
+from .emoji import Emoji
+from .enums import ChannelType, MessageType, try_enum
+from .errors import InvalidArgument
 from .file import File
-from .utils import escape_mentions, MISSING
+from .flags import MessageFlags
 from .guild import Guild
+from .member import Member
 from .mixins import Hashable
+from .partial_emoji import PartialEmoji
+from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
+from .utils import MISSING, escape_mentions
 
 if TYPE_CHECKING:
-    from .types.message import (
-        Message as MessagePayload,
-        Attachment as AttachmentPayload,
-        MessageReference as MessageReferencePayload,
-        MessageApplication as MessageApplicationPayload,
-        MessageActivity as MessageActivityPayload,
-        Reaction as ReactionPayload,
+    from .abc import (
+        GuildChannel,
+        MessageableChannel,
+        PartialMessageableChannel,
+        Snowflake,
     )
-
-    from .types.components import Component as ComponentPayload
-    from .types.threads import ThreadArchiveDuration
-    from .types.member import (
-        Member as MemberPayload,
-        UserWithMember as UserWithMemberPayload,
-    )
-    from .types.user import User as UserPayload
-    from .types.embed import Embed as EmbedPayload
-    from .abc import Snowflake
-    from .abc import GuildChannel, PartialMessageableChannel, MessageableChannel
+    from .channel import TextChannel
     from .components import Component
-    from .state import ConnectionState
-    from .channel import TextChannel, GroupChannel, DMChannel, PartialMessageable
     from .mentions import AllowedMentions
-    from .user import User
     from .role import Role
+    from .state import ConnectionState
+    from .types.components import Component as ComponentPayload
+    from .types.embed import Embed as EmbedPayload
+    from .types.member import Member as MemberPayload
+    from .types.member import UserWithMember as UserWithMemberPayload
+    from .types.message import Attachment as AttachmentPayload
+    from .types.message import Message as MessagePayload
+    from .types.message import MessageActivity as MessageActivityPayload
+    from .types.message import MessageApplication as MessageApplicationPayload
+    from .types.message import MessageReference as MessageReferencePayload
+    from .types.message import Reaction as ReactionPayload
+    from .types.threads import ThreadArchiveDuration
+    from .types.user import User as UserPayload
     from .ui.view import View
+    from .user import User
 
-    MR = TypeVar('MR', bound='MessageReference')
+    MR = TypeVar("MR", bound="MessageReference")
     EmojiInputType = Union[Emoji, PartialEmoji, str]
 
 __all__ = (
-    'Attachment',
-    'Message',
-    'PartialMessage',
-    'MessageReference',
-    'DeletedReferencedMessage',
+    "Attachment",
+    "Message",
+    "PartialMessage",
+    "MessageReference",
+    "DeletedReferencedMessage",
 )
 
 
@@ -94,15 +101,17 @@ def convert_emoji_reaction(emoji):
         emoji = emoji.emoji
 
     if isinstance(emoji, Emoji):
-        return f'{emoji.name}:{emoji.id}'
+        return f"{emoji.name}:{emoji.id}"
     if isinstance(emoji, PartialEmoji):
         return emoji._as_reaction()
     if isinstance(emoji, str):
         # Reactions can be in :name:id format, but not <:name:id>.
         # No existing emojis have <> in them, so this should be okay.
-        return emoji.strip('<>')
+        return emoji.strip("<>")
 
-    raise InvalidArgument(f'emoji argument must be str, Emoji, or Reaction not {emoji.__class__.__name__}.')
+    raise InvalidArgument(
+        f"emoji argument must be str, Emoji, or Reaction not {emoji.__class__.__name__}."
+    )
 
 
 class Attachment(Hashable):
@@ -127,10 +136,10 @@ class Attachment(Hashable):
             Returns the hash of the attachment.
 
     .. versionchanged:: 1.7
-        Attachment can now be casted to :class:`str` and is hashable.
+        Attachment can now be cast to :class:`str` and is hashable.
 
     Attributes
-    ------------
+    ----------
     id: :class:`int`
         The attachment ID.
     size: :class:`int`
@@ -156,39 +165,51 @@ class Attachment(Hashable):
         .. versionadded:: 1.7
 
     description: Optional[:class:`str`]
-        The attachment's description. 
+        The attachment's description.
 
         .. versionadded:: 2.0
     """
 
-    __slots__ = ('id', 'size', 'height', 'width', 'filename', 'url', 'proxy_url', '_http', 'content_type', 'ephemeral', 'description')
+    __slots__ = (
+        "id",
+        "size",
+        "height",
+        "width",
+        "filename",
+        "url",
+        "proxy_url",
+        "_http",
+        "content_type",
+        "ephemeral",
+        "description",
+    )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
-        self.id: int = int(data['id'])
-        self.size: int = data['size']
-        self.height: Optional[int] = data.get('height')
-        self.width: Optional[int] = data.get('width')
-        self.filename: str = data['filename']
-        self.url: str = data.get('url')
-        self.proxy_url: str = data.get('proxy_url')
+        self.id: int = int(data["id"])
+        self.size: int = data["size"]
+        self.height: int | None = data.get("height")
+        self.width: int | None = data.get("width")
+        self.filename: str = data["filename"]
+        self.url: str = data.get("url")
+        self.proxy_url: str = data.get("proxy_url")
         self._http = state.http
-        self.content_type: Optional[str] = data.get('content_type')
-        self.ephemeral: bool = data.get('ephemeral', False)
-        self.description: Optional[str] = data.get('description')
+        self.content_type: str | None = data.get("content_type")
+        self.ephemeral: bool = data.get("ephemeral", False)
+        self.description: str | None = data.get("description")
 
     def is_spoiler(self) -> bool:
         """:class:`bool`: Whether this attachment contains a spoiler."""
-        return self.filename.startswith('SPOILER_')
+        return self.filename.startswith("SPOILER_")
 
     def __repr__(self) -> str:
-        return f'<Attachment id={self.id} filename={self.filename!r} url={self.url!r}>'
+        return f"<Attachment id={self.id} filename={self.filename!r} url={self.url!r}>"
 
     def __str__(self) -> str:
-        return self.url or ''
+        return self.url or ""
 
     async def save(
         self,
-        fp: Union[io.BufferedIOBase, PathLike],
+        fp: io.BufferedIOBase | PathLike,
         *,
         seek_begin: bool = True,
         use_cached: bool = False,
@@ -198,7 +219,7 @@ class Attachment(Hashable):
         Saves this attachment into a file-like object.
 
         Parameters
-        -----------
+        ----------
         fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
             The file-like object to save this attachment to or the filename
             to use. If a filename is passed then a file is created with that
@@ -211,20 +232,20 @@ class Attachment(Hashable):
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
 
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+
         Raises
-        --------
+        ------
         HTTPException
             Saving the attachment failed.
         NotFound
             The attachment was deleted.
-
-        Returns
-        --------
-        :class:`int`
-            The number of bytes written.
         """
         data = await self.read(use_cached=use_cached)
         if isinstance(fp, io.BufferedIOBase):
@@ -233,7 +254,7 @@ class Attachment(Hashable):
                 fp.seek(0)
             return written
         else:
-            with open(fp, 'wb') as f:
+            with open(fp, "wb") as f:
                 return f.write(data)
 
     async def read(self, *, use_cached: bool = False) -> bytes:
@@ -244,14 +265,19 @@ class Attachment(Hashable):
         .. versionadded:: 1.1
 
         Parameters
-        -----------
+        ----------
         use_cached: :class:`bool`
             Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
+
+        Returns
+        -------
+        :class:`bytes`
+            The contents of the attachment.
 
         Raises
         ------
@@ -261,11 +287,6 @@ class Attachment(Hashable):
             You do not have permissions to access this attachment
         NotFound
             The attachment was deleted.
-
-        Returns
-        -------
-        :class:`bytes`
-            The contents of the attachment.
         """
         url = self.proxy_url if use_cached else self.url
         data = await self._http.get_from_cdn(url)
@@ -280,13 +301,13 @@ class Attachment(Hashable):
         .. versionadded:: 1.3
 
         Parameters
-        -----------
+        ----------
         use_cached: :class:`bool`
             Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
             the attachment. This will allow attachments to be saved after deletion
             more often, compared to the regular URL which is generally deleted right
             after the message is deleted. Note that this can still fail to download
-            deleted attachments if too much time has passed and it does not work
+            deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
 
             .. versionadded:: 1.4
@@ -294,6 +315,11 @@ class Attachment(Hashable):
             Whether the file is a spoiler.
 
             .. versionadded:: 1.4
+
+        Returns
+        -------
+        :class:`File`
+            The attachment as a file suitable for sending.
 
         Raises
         ------
@@ -303,33 +329,33 @@ class Attachment(Hashable):
             You do not have permissions to access this attachment
         NotFound
             The attachment was deleted.
-
-        Returns
-        -------
-        :class:`File`
-            The attachment as a file suitable for sending.
         """
 
         data = await self.read(use_cached=use_cached)
-        return File(io.BytesIO(data), filename=self.filename, spoiler=spoiler, description=self.description)
+        return File(
+            io.BytesIO(data),
+            filename=self.filename,
+            spoiler=spoiler,
+            description=self.description,
+        )
 
     def to_dict(self) -> AttachmentPayload:
         result: AttachmentPayload = {
-            'filename': self.filename,
-            'id': self.id,
-            'proxy_url': self.proxy_url,
-            'size': self.size,
-            'url': self.url,
-            'spoiler': self.is_spoiler(),
+            "filename": self.filename,
+            "id": self.id,
+            "proxy_url": self.proxy_url,
+            "size": self.size,
+            "url": self.url,
+            "spoiler": self.is_spoiler(),
         }
         if self.height:
-            result['height'] = self.height
+            result["height"] = self.height
         if self.width:
-            result['width'] = self.width
+            result["width"] = self.width
         if self.content_type:
-            result['content_type'] = self.content_type
+            result["content_type"] = self.content_type
         if self.description:
-            result['description'] = self.description
+            result["description"] = self.description
         return result
 
 
@@ -343,7 +369,7 @@ class DeletedReferencedMessage:
     .. versionadded:: 1.6
     """
 
-    __slots__ = ('_parent',)
+    __slots__ = ("_parent",)
 
     def __init__(self, parent: MessageReference):
         self._parent: MessageReference = parent
@@ -355,7 +381,7 @@ class DeletedReferencedMessage:
     def id(self) -> int:
         """:class:`int`: The message ID of the deleted referenced message."""
         # the parent's message id won't be None here
-        return self._parent.message_id # type: ignore
+        return self._parent.message_id  # type: ignore
 
     @property
     def channel_id(self) -> int:
@@ -363,7 +389,7 @@ class DeletedReferencedMessage:
         return self._parent.channel_id
 
     @property
-    def guild_id(self) -> Optional[int]:
+    def guild_id(self) -> int | None:
         """Optional[:class:`int`]: The guild ID of the deleted referenced message."""
         return self._parent.guild_id
 
@@ -377,7 +403,7 @@ class MessageReference:
         This class can now be constructed by users.
 
     Attributes
-    -----------
+    ----------
     message_id: Optional[:class:`int`]
         The id of the message referenced.
     channel_id: :class:`int`
@@ -402,29 +428,47 @@ class MessageReference:
         .. versionadded:: 1.6
     """
 
-    __slots__ = ('message_id', 'channel_id', 'guild_id', 'fail_if_not_exists', 'resolved', '_state')
+    __slots__ = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "fail_if_not_exists",
+        "resolved",
+        "_state",
+    )
 
-    def __init__(self, *, message_id: int, channel_id: int, guild_id: Optional[int] = None, fail_if_not_exists: bool = True):
-        self._state: Optional[ConnectionState] = None
-        self.resolved: Optional[Union[Message, DeletedReferencedMessage]] = None
-        self.message_id: Optional[int] = message_id
+    def __init__(
+        self,
+        *,
+        message_id: int,
+        channel_id: int,
+        guild_id: int | None = None,
+        fail_if_not_exists: bool = True,
+    ):
+        self._state: ConnectionState | None = None
+        self.resolved: Message | DeletedReferencedMessage | None = None
+        self.message_id: int | None = message_id
         self.channel_id: int = channel_id
-        self.guild_id: Optional[int] = guild_id
+        self.guild_id: int | None = guild_id
         self.fail_if_not_exists: bool = fail_if_not_exists
 
     @classmethod
-    def with_state(cls: Type[MR], state: ConnectionState, data: MessageReferencePayload) -> MR:
+    def with_state(
+        cls: type[MR], state: ConnectionState, data: MessageReferencePayload
+    ) -> MR:
         self = cls.__new__(cls)
-        self.message_id = utils._get_as_snowflake(data, 'message_id')
-        self.channel_id = int(data.pop('channel_id'))
-        self.guild_id = utils._get_as_snowflake(data, 'guild_id')
-        self.fail_if_not_exists = data.get('fail_if_not_exists', True)
+        self.message_id = utils._get_as_snowflake(data, "message_id")
+        self.channel_id = int(data.pop("channel_id"))
+        self.guild_id = utils._get_as_snowflake(data, "guild_id")
+        self.fail_if_not_exists = data.get("fail_if_not_exists", True)
         self._state = state
         self.resolved = None
         return self
 
     @classmethod
-    def from_message(cls: Type[MR], message: Message, *, fail_if_not_exists: bool = True) -> MR:
+    def from_message(
+        cls: type[MR], message: Message, *, fail_if_not_exists: bool = True
+    ) -> MR:
         """Creates a :class:`MessageReference` from an existing :class:`~discord.Message`.
 
         .. versionadded:: 1.6
@@ -447,14 +491,14 @@ class MessageReference:
         self = cls(
             message_id=message.id,
             channel_id=message.channel.id,
-            guild_id=getattr(message.guild, 'id', None),
+            guild_id=getattr(message.guild, "id", None),
             fail_if_not_exists=fail_if_not_exists,
         )
         self._state = message._state
         return self
 
     @property
-    def cached_message(self) -> Optional[Message]:
+    def cached_message(self) -> Message | None:
         """Optional[:class:`~discord.Message`]: The cached message, if found in the internal message cache."""
         return self._state and self._state._get_message(self.message_id)
 
@@ -464,36 +508,41 @@ class MessageReference:
 
         .. versionadded:: 1.7
         """
-        guild_id = self.guild_id if self.guild_id is not None else '@me'
-        return f'https://discord.com/channels/{guild_id}/{self.channel_id}/{self.message_id}'
+        guild_id = self.guild_id if self.guild_id is not None else "@me"
+        return f"https://discord.com/channels/{guild_id}/{self.channel_id}/{self.message_id}"
 
     def __repr__(self) -> str:
-        return f'<MessageReference message_id={self.message_id!r} channel_id={self.channel_id!r} guild_id={self.guild_id!r}>'
+        return (
+            f"<MessageReference message_id={self.message_id!r}"
+            f" channel_id={self.channel_id!r} guild_id={self.guild_id!r}>"
+        )
 
     def to_dict(self) -> MessageReferencePayload:
-        result: MessageReferencePayload = {'message_id': self.message_id} if self.message_id is not None else {}
-        result['channel_id'] = self.channel_id
+        result: MessageReferencePayload = (
+            {"message_id": self.message_id} if self.message_id is not None else {}
+        )
+        result["channel_id"] = self.channel_id
         if self.guild_id is not None:
-            result['guild_id'] = self.guild_id
+            result["guild_id"] = self.guild_id
         if self.fail_if_not_exists is not None:
-            result['fail_if_not_exists'] = self.fail_if_not_exists
+            result["fail_if_not_exists"] = self.fail_if_not_exists
         return result
 
     to_message_reference_dict = to_dict
 
 
 def flatten_handlers(cls):
-    prefix = len('_handle_')
+    prefix = len("_handle_")
     handlers = [
         (key[prefix:], value)
         for key, value in cls.__dict__.items()
-        if key.startswith('_handle_') and key != '_handle_member'
+        if key.startswith("_handle_") and key != "_handle_member"
     ]
 
     # store _handle_member last
-    handlers.append(('member', cls._handle_member))
+    handlers.append(("member", cls._handle_member))
     cls._HANDLERS = handlers
-    cls._CACHED_SLOTS = [attr for attr in cls.__slots__ if attr.startswith('_cs_')]
+    cls._CACHED_SLOTS = [attr for attr in cls.__slots__ if attr.startswith("_cs_")]
     return cls
 
 
@@ -560,7 +609,7 @@ class Message(Hashable):
 
         .. warning::
 
-            The order of the mentions list is not in any particular order so you should
+            The order of the mentions list is not in any particular order, so you should
             not rely on it. This is a Discord limitation, not one with the library.
     channel_mentions: List[:class:`abc.GuildChannel`]
         A list of :class:`abc.GuildChannel` that were mentioned. If the message is in a private message
@@ -612,49 +661,57 @@ class Message(Hashable):
         .. versionadded:: 2.0
     guild: Optional[:class:`Guild`]
         The guild that the message belongs to, if applicable.
+    interaction: Optional[:class:`MessageInteraction`]
+        The interaction associated with the message, if applicable.
+    thread: Optional[:class:`Thread`]
+        The thread created from this message, if applicable.
+
+        .. versionadded:: 2.0
     """
 
     __slots__ = (
-        '_state',
-        '_edited_timestamp',
-        '_cs_channel_mentions',
-        '_cs_raw_mentions',
-        '_cs_clean_content',
-        '_cs_raw_channel_mentions',
-        '_cs_raw_role_mentions',
-        '_cs_system_content',
-        'tts',
-        'content',
-        'channel',
-        'webhook_id',
-        'mention_everyone',
-        'embeds',
-        'id',
-        'mentions',
-        'author',
-        'attachments',
-        'nonce',
-        'pinned',
-        'role_mentions',
-        'type',
-        'flags',
-        'reactions',
-        'reference',
-        'application',
-        'activity',
-        'stickers',
-        'components',
-        'guild',
+        "_state",
+        "_edited_timestamp",
+        "_cs_channel_mentions",
+        "_cs_raw_mentions",
+        "_cs_clean_content",
+        "_cs_raw_channel_mentions",
+        "_cs_raw_role_mentions",
+        "_cs_system_content",
+        "tts",
+        "content",
+        "channel",
+        "webhook_id",
+        "mention_everyone",
+        "embeds",
+        "id",
+        "mentions",
+        "author",
+        "attachments",
+        "nonce",
+        "pinned",
+        "role_mentions",
+        "type",
+        "flags",
+        "reactions",
+        "reference",
+        "application",
+        "activity",
+        "stickers",
+        "components",
+        "guild",
+        "interaction",
+        "thread",
     )
 
     if TYPE_CHECKING:
-        _HANDLERS: ClassVar[List[Tuple[str, Callable[..., None]]]]
-        _CACHED_SLOTS: ClassVar[List[str]]
-        guild: Optional[Guild]
-        reference: Optional[MessageReference]
-        mentions: List[Union[User, Member]]
-        author: Union[User, Member]
-        role_mentions: List[Role]
+        _HANDLERS: ClassVar[list[tuple[str, Callable[..., None]]]]
+        _CACHED_SLOTS: ClassVar[list[str]]
+        guild: Guild | None
+        reference: MessageReference | None
+        mentions: list[User | Member]
+        author: User | Member
+        role_mentions: list[Role]
 
     def __init__(
         self,
@@ -664,39 +721,49 @@ class Message(Hashable):
         data: MessagePayload,
     ):
         self._state: ConnectionState = state
-        self.id: int = int(data['id'])
-        self.webhook_id: Optional[int] = utils._get_as_snowflake(data, 'webhook_id')
-        self.reactions: List[Reaction] = [Reaction(message=self, data=d) for d in data.get('reactions', [])]
-        self.attachments: List[Attachment] = [Attachment(data=a, state=self._state) for a in data['attachments']]
-        self.embeds: List[Embed] = [Embed.from_dict(a) for a in data['embeds']]
-        self.application: Optional[MessageApplicationPayload] = data.get('application')
-        self.activity: Optional[MessageActivityPayload] = data.get('activity')
+        self.id: int = int(data["id"])
+        self.webhook_id: int | None = utils._get_as_snowflake(data, "webhook_id")
+        self.reactions: list[Reaction] = [
+            Reaction(message=self, data=d) for d in data.get("reactions", [])
+        ]
+        self.attachments: list[Attachment] = [
+            Attachment(data=a, state=self._state) for a in data["attachments"]
+        ]
+        self.embeds: list[Embed] = [Embed.from_dict(a) for a in data["embeds"]]
+        self.application: MessageApplicationPayload | None = data.get("application")
+        self.activity: MessageActivityPayload | None = data.get("activity")
         self.channel: MessageableChannel = channel
-        self._edited_timestamp: Optional[datetime.datetime] = utils.parse_time(data['edited_timestamp'])
-        self.type: MessageType = try_enum(MessageType, data['type'])
-        self.pinned: bool = data['pinned']
-        self.flags: MessageFlags = MessageFlags._from_value(data.get('flags', 0))
-        self.mention_everyone: bool = data['mention_everyone']
-        self.tts: bool = data['tts']
-        self.content: str = data['content']
-        self.nonce: Optional[Union[int, str]] = data.get('nonce')
-        self.stickers: List[StickerItem] = [StickerItem(data=d, state=state) for d in data.get('sticker_items', [])]
-        self.components: List[Component] = [_component_factory(d) for d in data.get('components', [])]
+        self._edited_timestamp: datetime.datetime | None = utils.parse_time(
+            data["edited_timestamp"]
+        )
+        self.type: MessageType = try_enum(MessageType, data["type"])
+        self.pinned: bool = data["pinned"]
+        self.flags: MessageFlags = MessageFlags._from_value(data.get("flags", 0))
+        self.mention_everyone: bool = data["mention_everyone"]
+        self.tts: bool = data["tts"]
+        self.content: str = data["content"]
+        self.nonce: int | str | None = data.get("nonce")
+        self.stickers: list[StickerItem] = [
+            StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
+        ]
+        self.components: list[Component] = [
+            _component_factory(d) for d in data.get("components", [])
+        ]
 
         try:
             # if the channel doesn't have a guild attribute, we handle that
             self.guild = channel.guild  # type: ignore
         except AttributeError:
-            self.guild = state._get_guild(utils._get_as_snowflake(data, 'guild_id'))
+            self.guild = state._get_guild(utils._get_as_snowflake(data, "guild_id"))
 
         try:
-            ref = data['message_reference']
+            ref = data["message_reference"]
         except KeyError:
             self.reference = None
         else:
             self.reference = ref = MessageReference.with_state(state, ref)
             try:
-                resolved = data['referenced_message']
+                resolved = data["referenced_message"]
             except KeyError:
                 pass
             else:
@@ -707,21 +774,40 @@ class Message(Hashable):
                     if ref.channel_id == channel.id:
                         chan = channel
                     else:
-                        chan, _ = state._get_guild_channel(resolved)
+                        chan, _ = state._get_guild_channel(
+                            resolved, guild_id=self.guild.id
+                        )
 
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
 
-        for handler in ('author', 'member', 'mentions', 'mention_roles'):
+        from .interactions import MessageInteraction
+
+        self.interaction: MessageInteraction | None
+        try:
+            self.interaction = MessageInteraction(data=data["interaction"], state=state)
+        except KeyError:
+            self.interaction = None
+
+        self.thread: Thread | None
+        try:
+            self.thread = Thread(
+                guild=self.guild, state=self._state, data=data["thread"]
+            )
+        except KeyError:
+            self.thread = None
+
+        for handler in ("author", "member", "mentions", "mention_roles"):
             try:
-                getattr(self, f'_handle_{handler}')(data[handler])
+                getattr(self, f"_handle_{handler}")(data[handler])
             except KeyError:
                 continue
 
     def __repr__(self) -> str:
         name = self.__class__.__name__
         return (
-            f'<{name} id={self.id} channel={self.channel!r} type={self.type!r} author={self.author!r} flags={self.flags!r}>'
+            f"<{name} id={self.id} channel={self.channel!r} type={self.type!r}"
+            f" author={self.author!r} flags={self.flags!r}>"
         )
 
     def _try_patch(self, data, key, transform=None) -> None:
@@ -737,7 +823,7 @@ class Message(Hashable):
 
     def _add_reaction(self, data, emoji, user_id) -> Reaction:
         reaction = utils.find(lambda r: r.emoji == emoji, self.reactions)
-        is_me = data['me'] = user_id == self._state.self_id
+        is_me = data["me"] = user_id == self._state.self_id
 
         if reaction is None:
             reaction = Reaction(message=self, data=data, emoji=emoji)
@@ -749,12 +835,14 @@ class Message(Hashable):
 
         return reaction
 
-    def _remove_reaction(self, data: ReactionPayload, emoji: EmojiInputType, user_id: int) -> Reaction:
+    def _remove_reaction(
+        self, data: ReactionPayload, emoji: EmojiInputType, user_id: int
+    ) -> Reaction:
         reaction = utils.find(lambda r: r.emoji == emoji, self.reactions)
 
         if reaction is None:
             # already removed?
-            raise ValueError('Emoji already removed?')
+            raise ValueError("Emoji already removed?")
 
         # if reaction isn't in the list, we crash. This means discord
         # sent bad data, or we stored improperly
@@ -768,7 +856,7 @@ class Message(Hashable):
 
         return reaction
 
-    def _clear_emoji(self, emoji) -> Optional[Reaction]:
+    def _clear_emoji(self, emoji) -> Reaction | None:
         to_check = str(emoji)
         for index, reaction in enumerate(self.reactions):
             if str(reaction.emoji) == to_check:
@@ -827,13 +915,13 @@ class Message(Hashable):
     def _handle_content(self, value: str) -> None:
         self.content = value
 
-    def _handle_attachments(self, value: List[AttachmentPayload]) -> None:
+    def _handle_attachments(self, value: list[AttachmentPayload]) -> None:
         self.attachments = [Attachment(data=a, state=self._state) for a in value]
 
-    def _handle_embeds(self, value: List[EmbedPayload]) -> None:
+    def _handle_embeds(self, value: list[EmbedPayload]) -> None:
         self.embeds = [Embed.from_dict(data) for data in value]
 
-    def _handle_nonce(self, value: Union[str, int]) -> None:
+    def _handle_nonce(self, value: str | int) -> None:
         self.nonce = value
 
     def _handle_author(self, author: UserPayload) -> None:
@@ -859,7 +947,7 @@ class Message(Hashable):
             # TODO: consider adding to cache here
             self.author = Member._from_message(message=self, data=member)
 
-    def _handle_mentions(self, mentions: List[UserWithMemberPayload]) -> None:
+    def _handle_mentions(self, mentions: list[UserWithMemberPayload]) -> None:
         self.mentions = r = []
         guild = self.guild
         state = self._state
@@ -868,14 +956,14 @@ class Message(Hashable):
             return
 
         for mention in filter(None, mentions):
-            id_search = int(mention['id'])
+            id_search = int(mention["id"])
             member = guild.get_member(id_search)
             if member is not None:
                 r.append(member)
             else:
                 r.append(Member._try_upgrade(data=mention, guild=guild, state=state))
 
-    def _handle_mention_roles(self, role_mentions: List[int]) -> None:
+    def _handle_mention_roles(self, role_mentions: list[int]) -> None:
         self.role_mentions = []
         if isinstance(self.guild, Guild):
             for role_id in map(int, role_mentions):
@@ -883,45 +971,47 @@ class Message(Hashable):
                 if role is not None:
                     self.role_mentions.append(role)
 
-    def _handle_components(self, components: List[ComponentPayload]):
+    def _handle_components(self, components: list[ComponentPayload]):
         self.components = [_component_factory(d) for d in components]
 
-    def _rebind_cached_references(self, new_guild: Guild, new_channel: Union[TextChannel, Thread]) -> None:
+    def _rebind_cached_references(
+        self, new_guild: Guild, new_channel: TextChannel | Thread
+    ) -> None:
         self.guild = new_guild
         self.channel = new_channel
 
-    @utils.cached_slot_property('_cs_raw_mentions')
-    def raw_mentions(self) -> List[int]:
+    @utils.cached_slot_property("_cs_raw_mentions")
+    def raw_mentions(self) -> list[int]:
         """List[:class:`int`]: A property that returns an array of user IDs matched with
         the syntax of ``<@user_id>`` in the message content.
 
         This allows you to receive the user IDs of mentioned users
         even in a private message context.
         """
-        return [int(x) for x in re.findall(r'<@!?([0-9]{15,20})>', self.content)]
+        return [int(x) for x in re.findall(r"<@!?([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property('_cs_raw_channel_mentions')
-    def raw_channel_mentions(self) -> List[int]:
+    @utils.cached_slot_property("_cs_raw_channel_mentions")
+    def raw_channel_mentions(self) -> list[int]:
         """List[:class:`int`]: A property that returns an array of channel IDs matched with
         the syntax of ``<#channel_id>`` in the message content.
         """
-        return [int(x) for x in re.findall(r'<#([0-9]{15,20})>', self.content)]
+        return [int(x) for x in re.findall(r"<#([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property('_cs_raw_role_mentions')
-    def raw_role_mentions(self) -> List[int]:
+    @utils.cached_slot_property("_cs_raw_role_mentions")
+    def raw_role_mentions(self) -> list[int]:
         """List[:class:`int`]: A property that returns an array of role IDs matched with
         the syntax of ``<@&role_id>`` in the message content.
         """
-        return [int(x) for x in re.findall(r'<@&([0-9]{15,20})>', self.content)]
+        return [int(x) for x in re.findall(r"<@&([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property('_cs_channel_mentions')
-    def channel_mentions(self) -> List[GuildChannel]:
+    @utils.cached_slot_property("_cs_channel_mentions")
+    def channel_mentions(self) -> list[GuildChannel]:
         if self.guild is None:
             return []
         it = filter(None, map(self.guild.get_channel, self.raw_channel_mentions))
         return utils._unique(it)
 
-    @utils.cached_slot_property('_cs_clean_content')
+    @utils.cached_slot_property("_cs_clean_content")
     def clean_content(self) -> str:
         """:class:`str`: A property that returns the content in a "cleaned up"
         manner. This basically means that mentions are transformed
@@ -938,20 +1028,19 @@ class Message(Hashable):
             respectively, along with this function.
         """
 
-        # fmt: off
         transformations = {
-            re.escape(f'<#{channel.id}>'): '#' + channel.name
+            re.escape(f"<#{channel.id}>"): f"#{channel.name}"
             for channel in self.channel_mentions
         }
 
         mention_transforms = {
-            re.escape(f'<@{member.id}>'): '@' + member.display_name
+            re.escape(f"<@{member.id}>"): f"@{member.display_name}"
             for member in self.mentions
         }
 
         # add the <@!user_id> cases as well..
         second_mention_transforms = {
-            re.escape(f'<@!{member.id}>'): '@' + member.display_name
+            re.escape(f"<@!{member.id}>"): f"@{member.display_name}"
             for member in self.mentions
         }
 
@@ -960,17 +1049,15 @@ class Message(Hashable):
 
         if self.guild is not None:
             role_transforms = {
-                re.escape(f'<@&{role.id}>'): '@' + role.name
+                re.escape(f"<@&{role.id}>"): f"@{role.name}"
                 for role in self.role_mentions
             }
             transformations.update(role_transforms)
 
-        # fmt: on
-
         def repl(obj):
-            return transformations.get(re.escape(obj.group(0)), '')
+            return transformations.get(re.escape(obj.group(0)), "")
 
-        pattern = re.compile('|'.join(transformations.keys()))
+        pattern = re.compile("|".join(transformations.keys()))
         result = pattern.sub(repl, self.content)
         return escape_mentions(result)
 
@@ -980,15 +1067,17 @@ class Message(Hashable):
         return utils.snowflake_time(self.id)
 
     @property
-    def edited_at(self) -> Optional[datetime.datetime]:
-        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the edited time of the message."""
+    def edited_at(self) -> datetime.datetime | None:
+        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the
+        edited time of the message.
+        """
         return self._edited_timestamp
 
     @property
     def jump_url(self) -> str:
         """:class:`str`: Returns a URL that allows the client to jump to this message."""
-        guild_id = getattr(self.guild, 'id', '@me')
-        return f'https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}'
+        guild_id = getattr(self.guild, "id", "@me")
+        return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
 
     def is_system(self) -> bool:
         """:class:`bool`: Whether the message is a system message.
@@ -1005,13 +1094,13 @@ class Message(Hashable):
             MessageType.thread_starter_message,
         )
 
-    @utils.cached_slot_property('_cs_system_content')
+    @utils.cached_slot_property("_cs_system_content")
     def system_content(self):
         r""":class:`str`: A property that returns the content that is rendered
         regardless of the :attr:`Message.type`.
 
         In the case of :attr:`MessageType.default` and :attr:`MessageType.reply`\,
-        this just returns the regular :attr:`Message.content`. Otherwise this
+        this just returns the regular :attr:`Message.content`. Otherwise, this
         returns an English message denoting the contents of the system message.
         """
 
@@ -1020,24 +1109,26 @@ class Message(Hashable):
 
         if self.type is MessageType.recipient_add:
             if self.channel.type is ChannelType.group:
-                return f'{self.author.name} added {self.mentions[0].name} to the group.'
+                return f"{self.author.name} added {self.mentions[0].name} to the group."
             else:
-                return f'{self.author.name} added {self.mentions[0].name} to the thread.'
+                return (
+                    f"{self.author.name} added {self.mentions[0].name} to the thread."
+                )
 
         if self.type is MessageType.recipient_remove:
             if self.channel.type is ChannelType.group:
-                return f'{self.author.name} removed {self.mentions[0].name} from the group.'
+                return f"{self.author.name} removed {self.mentions[0].name} from the group."
             else:
-                return f'{self.author.name} removed {self.mentions[0].name} from the thread.'
+                return f"{self.author.name} removed {self.mentions[0].name} from the thread."
 
         if self.type is MessageType.channel_name_change:
-            return f'{self.author.name} changed the channel name: **{self.content}**'
+            return f"{self.author.name} changed the channel name: **{self.content}**"
 
         if self.type is MessageType.channel_icon_change:
-            return f'{self.author.name} changed the channel icon.'
+            return f"{self.author.name} changed the channel icon."
 
         if self.type is MessageType.pins_add:
-            return f'{self.author.name} pinned a message to this channel.'
+            return f"{self.author.name} pinned a message to this channel."
 
         if self.type is MessageType.new_member:
             formats = [
@@ -1061,69 +1152,89 @@ class Message(Hashable):
 
         if self.type is MessageType.premium_guild_subscription:
             if not self.content:
-                return f'{self.author.name} just boosted the server!'
+                return f"{self.author.name} just boosted the server!"
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times!'
+                return f"{self.author.name} just boosted the server **{self.content}** times!"
 
         if self.type is MessageType.premium_guild_tier_1:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**'
+                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**"
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 1!**'
+                return (
+                    f"{self.author.name} just boosted the server **{self.content}** times!"
+                    f" {self.guild} has achieved **Level 1!**"
+                )
 
         if self.type is MessageType.premium_guild_tier_2:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**'
+                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**"
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 2!**'
+                return (
+                    f"{self.author.name} just boosted the server **{self.content}** times!"
+                    f" {self.guild} has achieved **Level 2!**"
+                )
 
         if self.type is MessageType.premium_guild_tier_3:
             if not self.content:
-                return f'{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**'
+                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**"
             else:
-                return f'{self.author.name} just boosted the server **{self.content}** times! {self.guild} has achieved **Level 3!**'
+                return (
+                    f"{self.author.name} just boosted the server **{self.content}** times!"
+                    f" {self.guild} has achieved **Level 3!**"
+                )
 
         if self.type is MessageType.channel_follow_add:
-            return f'{self.author.name} has added {self.content} to this channel'
+            return f"{self.author.name} has added {self.content} to this channel"
 
         if self.type is MessageType.guild_stream:
             # the author will be a Member
-            return f'{self.author.name} is live! Now streaming {self.author.activity.name}'  # type: ignore
+            return f"{self.author.name} is live! Now streaming {self.author.activity.name}"  # type: ignore
 
         if self.type is MessageType.guild_discovery_disqualified:
-            return 'This server has been removed from Server Discovery because it no longer passes all the requirements. Check Server Settings for more details.'
+            return (
+                "This server has been removed from Server Discovery because it no longer passes all the"
+                " requirements. Check Server Settings for more details."
+            )
 
         if self.type is MessageType.guild_discovery_requalified:
-            return 'This server is eligible for Server Discovery again and has been automatically relisted!'
+            return "This server is eligible for Server Discovery again and has been automatically relisted!"
 
         if self.type is MessageType.guild_discovery_grace_period_initial_warning:
-            return 'This server has failed Discovery activity requirements for 1 week. If this server fails for 4 weeks in a row, it will be automatically removed from Discovery.'
+            return (
+                "This server has failed Discovery activity requirements for 1 week. If this server fails for"
+                " 4 weeks in a row, it will be automatically removed from Discovery."
+            )
 
         if self.type is MessageType.guild_discovery_grace_period_final_warning:
-            return 'This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails for 1 more week, it will be removed from Discovery.'
+            return (
+                "This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails"
+                " for 1 more week, it will be removed from Discovery."
+            )
 
         if self.type is MessageType.thread_created:
-            return f'{self.author.name} started a thread: **{self.content}**. See all **threads**.'
+            return f"{self.author.name} started a thread: **{self.content}**. See all **threads**."
 
         if self.type is MessageType.reply:
             return self.content
 
         if self.type is MessageType.thread_starter_message:
             if self.reference is None or self.reference.resolved is None:
-                return 'Sorry, we couldn\'t load the first message in this thread'
+                return "Sorry, we couldn't load the first message in this thread"
 
             # the resolved message for the reference will be a Message
             return self.reference.resolved.content  # type: ignore
 
         if self.type is MessageType.guild_invite_reminder:
-            return 'Wondering who to invite?\nStart by inviting anyone who can help you build the server!'
+            return "Wondering who to invite?\nStart by inviting anyone who can help you build the server!"
 
-    async def delete(self, *, delay: Optional[float] = None) -> None:
+    async def delete(
+        self, *, delay: float | None = None, reason: str | None = None
+    ) -> None:
         """|coro|
 
         Deletes the message.
 
-        Your own messages could be deleted without any proper permissions. However to
+        Your own messages could be deleted without any proper permissions. However, to
         delete other people's messages, you need the :attr:`~Permissions.manage_messages`
         permission.
 
@@ -1131,10 +1242,12 @@ class Message(Hashable):
             Added the new ``delay`` keyword-only parameter.
 
         Parameters
-        -----------
+        ----------
         delay: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message. If the deletion fails then it is silently ignored.
+        reason: Optional[:class:`str`]
+            The reason for deleting the message. Shows up on the audit log.
 
         Raises
         ------
@@ -1145,7 +1258,9 @@ class Message(Hashable):
         HTTPException
             Deleting the message failed.
         """
-        del_func = self._state.http.delete_message(self.channel.id, self.id)
+        del_func = self._state.http.delete_message(
+            self.channel.id, self.id, reason=reason
+        )
         if delay is not None:
             utils.delay_task(delay, del_func)
         else:
@@ -1155,59 +1270,31 @@ class Message(Hashable):
     async def edit(
         self,
         *,
-        content: Optional[str] = ...,
-        embed: Optional[Embed] = ...,
-        file: Optional[File] = ...,
-        attachments: List[Attachment] = ...,
+        content: str | None = ...,
+        embed: Embed | None = ...,
+        embeds: list[Embed] = ...,
+        file: File | None = ...,
+        files: list[File] | None = ...,
+        attachments: list[Attachment] = ...,
         suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
-    ) -> Message:
-        ...
-        
-    @overload
-    async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
-        embed: Optional[Embed] = ...,
-        files: Optional[List[File]] = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
-    ) -> Message:
-        ...
-
-    @overload
-    async def edit(
-        self,
-        *,
-        content: Optional[str] = ...,
-        embeds: List[Embed] = ...,
-        file: File = ...,
-        attachments: List[Attachment] = ...,
-        suppress: bool = ...,
-        delete_after: Optional[float] = ...,
-        allowed_mentions: Optional[AllowedMentions] = ...,
-        view: Optional[View] = ...,
+        delete_after: float | None = ...,
+        allowed_mentions: AllowedMentions | None = ...,
+        view: View | None = ...,
     ) -> Message:
         ...
 
     async def edit(
         self,
-        content: Optional[str] = MISSING,
-        embed: Optional[Embed] = MISSING,
-        embeds: List[Embed] = MISSING,
+        content: str | None = MISSING,
+        embed: Embed | None = MISSING,
+        embeds: list[Embed] = MISSING,
         file: Sequence[File] = MISSING,
-        files: List[Sequence[File]] = MISSING,
-        attachments: List[Attachment] = MISSING,
+        files: list[Sequence[File]] = MISSING,
+        attachments: list[Attachment] = MISSING,
         suppress: bool = MISSING,
-        delete_after: Optional[float] = None,
-        allowed_mentions: Optional[AllowedMentions] = MISSING,
-        view: Optional[View] = MISSING,
+        delete_after: float | None = None,
+        allowed_mentions: AllowedMentions | None = MISSING,
+        view: View | None = MISSING,
     ) -> Message:
         """|coro|
 
@@ -1219,7 +1306,7 @@ class Message(Hashable):
             The ``suppress`` keyword-only parameter was added.
 
         Parameters
-        -----------
+        ----------
         content: Optional[:class:`str`]
             The new content to replace the message with.
             Could be ``None`` to remove the content.
@@ -1261,7 +1348,7 @@ class Message(Hashable):
             the view is removed.
 
         Raises
-        -------
+        ------
         HTTPException
             Editing the message failed.
         Forbidden
@@ -1269,82 +1356,67 @@ class Message(Hashable):
             edited a message's content or embed that isn't yours.
         ~discord.InvalidArgument
             You specified both ``embed`` and ``embeds``,
-            specified both ``file`` and ``files``, or either``file`` 
+            specified both ``file`` and ``files``, or either``file``
             or ``files`` were of the wrong type.
         """
 
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if content is not MISSING:
-            if content is not None:
-                payload['content'] = str(content)
-            else:
-                payload['content'] = None
-
+            payload["content"] = str(content) if content is not None else None
         if embed is not MISSING and embeds is not MISSING:
-            raise InvalidArgument('cannot pass both embed and embeds parameter to edit()')
+            raise InvalidArgument(
+                "cannot pass both embed and embeds parameter to edit()"
+            )
 
         if embed is not MISSING:
-            if embed is None:
-                payload['embeds'] = []
-            else:
-                payload['embeds'] = [embed.to_dict()]
+            payload["embeds"] = [] if embed is None else [embed.to_dict()]
         elif embeds is not MISSING:
-            payload['embeds'] = [e.to_dict() for e in embeds]
+            payload["embeds"] = [e.to_dict() for e in embeds]
 
         if suppress is not MISSING:
             flags = MessageFlags._from_value(self.flags.value)
             flags.suppress_embeds = suppress
-            payload['flags'] = flags.value
+            payload["flags"] = flags.value
 
         if allowed_mentions is MISSING:
-            if self._state.allowed_mentions is not None and self.author.id == self._state.self_id:
-                payload['allowed_mentions'] = self._state.allowed_mentions.to_dict()
-        else:
-            if allowed_mentions is not None:
-                if self._state.allowed_mentions is not None:
-                    payload['allowed_mentions'] = self._state.allowed_mentions.merge(allowed_mentions).to_dict()
-                else:
-                    payload['allowed_mentions'] = allowed_mentions.to_dict()
+            if (
+                self._state.allowed_mentions is not None
+                and self.author.id == self._state.self_id
+            ):
+                payload["allowed_mentions"] = self._state.allowed_mentions.to_dict()
+        elif allowed_mentions is not None:
+            if self._state.allowed_mentions is not None:
+                payload["allowed_mentions"] = self._state.allowed_mentions.merge(
+                    allowed_mentions
+                ).to_dict()
+            else:
+                payload["allowed_mentions"] = allowed_mentions.to_dict()
 
         if attachments is not MISSING:
-            payload['attachments'] = [a.to_dict() for a in attachments]
+            payload["attachments"] = [a.to_dict() for a in attachments]
 
         if view is not MISSING:
             self._state.prevent_view_updates_for(self.id)
-            if view:
-                payload['components'] = view.to_components()
-            else:
-                payload['components'] = []
-                
+            payload["components"] = view.to_components() if view else []
         if file is not MISSING and files is not MISSING:
-            raise InvalidArgument('cannot pass both file and files parameter to edit()')
+            raise InvalidArgument("cannot pass both file and files parameter to edit()")
 
-        if file is not MISSING:
-            if 'attachments' not in payload:
+        if file is not MISSING or files is not MISSING:
+            if file is not MISSING:
+                if not isinstance(file, File):
+                    raise InvalidArgument("file parameter must be of type File")
+                files = [file]
+            else:
+                if len(files) > 10:
+                    raise InvalidArgument(
+                        "files parameter must be a list of up to 10 elements"
+                    )
+                elif not all(isinstance(file, File) for file in files):
+                    raise InvalidArgument("files parameter must be a list of File")
+
+            if "attachments" not in payload:
                 # don't want it to remove any attachments when we just add a new file
-                payload['attachments'] = [a.to_dict() for a in self.attachments]
-            if not isinstance(file, File):
-                raise InvalidArgument('file parameter must be File')
-
-            try:
-                data = await self._state.http.edit_files(
-                    self.channel.id,
-                    self.id,
-                    files=[file],
-                    **payload,
-                )
-            finally:
-                file.close()
-
-        elif files is not MISSING:
-            if len(files) > 10:
-                raise InvalidArgument('files parameter must be a list of up to 10 elements')
-            elif not all(isinstance(file, File) for file in files):
-                raise InvalidArgument('files parameter must be a list of File')
-            if 'attachments' not in payload:
-                # don't want it to remove any attachments when we just add a new file
-                payload['attachments'] = [a.to_dict() for a in self.attachments]
-
+                payload["attachments"] = [a.to_dict() for a in self.attachments]
             try:
                 data = await self._state.http.edit_files(
                     self.channel.id,
@@ -1356,7 +1428,9 @@ class Message(Hashable):
                 for f in files:
                     f.close()
         else:
-            data = await self._state.http.edit_message(self.channel.id, self.id, **payload)
+            data = await self._state.http.edit_message(
+                self.channel.id, self.id, **payload
+            )
         message = Message(state=self._state, channel=self.channel, data=data)
 
         if view and not view.is_finished():
@@ -1378,7 +1452,7 @@ class Message(Hashable):
         permission is also needed.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have the proper permissions to publish this message.
         HTTPException
@@ -1387,7 +1461,7 @@ class Message(Hashable):
 
         await self._state.http.publish_message(self.channel.id, self.id)
 
-    async def pin(self, *, reason: Optional[str] = None) -> None:
+    async def pin(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Pins the message.
@@ -1396,14 +1470,14 @@ class Message(Hashable):
         this in a non-private channel context.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for pinning the message. Shows up on the audit log.
 
             .. versionadded:: 1.4
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to pin the message.
         NotFound
@@ -1416,7 +1490,7 @@ class Message(Hashable):
         await self._state.http.pin_message(self.channel.id, self.id, reason=reason)
         self.pinned = True
 
-    async def unpin(self, *, reason: Optional[str] = None) -> None:
+    async def unpin(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Unpins the message.
@@ -1425,14 +1499,14 @@ class Message(Hashable):
         this in a non-private channel context.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason for unpinning the message. Shows up on the audit log.
 
             .. versionadded:: 1.4
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permissions to unpin the message.
         NotFound
@@ -1456,12 +1530,12 @@ class Message(Hashable):
         emoji, the :attr:`~Permissions.add_reactions` permission is required.
 
         Parameters
-        ------------
+        ----------
         emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to react with.
 
         Raises
-        --------
+        ------
         HTTPException
             Adding the reaction failed.
         Forbidden
@@ -1475,7 +1549,9 @@ class Message(Hashable):
         emoji = convert_emoji_reaction(emoji)
         await self._state.http.add_reaction(self.channel.id, self.id, emoji)
 
-    async def remove_reaction(self, emoji: Union[EmojiInputType, Reaction], member: Snowflake) -> None:
+    async def remove_reaction(
+        self, emoji: EmojiInputType | Reaction, member: Snowflake
+    ) -> None:
         """|coro|
 
         Remove a reaction by the member from the message.
@@ -1489,14 +1565,14 @@ class Message(Hashable):
         the :class:`abc.Snowflake` abc.
 
         Parameters
-        ------------
+        ----------
         emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to remove.
         member: :class:`abc.Snowflake`
             The member for which to remove the reaction.
 
         Raises
-        --------
+        ------
         HTTPException
             Removing the reaction failed.
         Forbidden
@@ -1512,9 +1588,11 @@ class Message(Hashable):
         if member.id == self._state.self_id:
             await self._state.http.remove_own_reaction(self.channel.id, self.id, emoji)
         else:
-            await self._state.http.remove_reaction(self.channel.id, self.id, emoji, member.id)
+            await self._state.http.remove_reaction(
+                self.channel.id, self.id, emoji, member.id
+            )
 
-    async def clear_reaction(self, emoji: Union[EmojiInputType, Reaction]) -> None:
+    async def clear_reaction(self, emoji: EmojiInputType | Reaction) -> None:
         """|coro|
 
         Clears a specific reaction from the message.
@@ -1526,12 +1604,12 @@ class Message(Hashable):
         .. versionadded:: 1.3
 
         Parameters
-        -----------
+        ----------
         emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to clear.
 
         Raises
-        --------
+        ------
         HTTPException
             Clearing the reaction failed.
         Forbidden
@@ -1553,7 +1631,7 @@ class Message(Hashable):
         You need the :attr:`~Permissions.manage_messages` permission to use this.
 
         Raises
-        --------
+        ------
         HTTPException
             Removing the reactions failed.
         Forbidden
@@ -1561,7 +1639,9 @@ class Message(Hashable):
         """
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
-    async def create_thread(self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING) -> Thread:
+    async def create_thread(
+        self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING
+    ) -> Thread:
         """|coro|
 
         Creates a public thread from this message.
@@ -1574,40 +1654,46 @@ class Message(Hashable):
         .. versionadded:: 2.0
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the thread.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
 
-        Raises
+        Returns
         -------
+        :class:`.Thread`
+            The created thread.
+
+        Raises
+        ------
         Forbidden
             You do not have permissions to create a thread.
         HTTPException
             Creating the thread failed.
         InvalidArgument
             This message does not have guild info attached.
-
-        Returns
-        --------
-        :class:`.Thread`
-            The created thread.
         """
         if self.guild is None:
-            raise InvalidArgument('This message does not have guild info attached.')
+            raise InvalidArgument("This message does not have guild info attached.")
 
-        default_auto_archive_duration: ThreadArchiveDuration = getattr(self.channel, 'default_auto_archive_duration', 1440)
+        default_auto_archive_duration: ThreadArchiveDuration = getattr(
+            self.channel, "default_auto_archive_duration", 1440
+        )
+
         data = await self._state.http.start_thread_with_message(
             self.channel.id,
             self.id,
             name=name,
-            auto_archive_duration=auto_archive_duration or default_auto_archive_duration,
+            auto_archive_duration=auto_archive_duration
+            or default_auto_archive_duration,
         )
-        return Thread(guild=self.guild, state=self._state, data=data)
 
-    async def reply(self, content: Optional[str] = None, **kwargs) -> Message:
+        self.thread = Thread(guild=self.guild, state=self._state, data=data)
+        return self.thread
+
+    async def reply(self, content: str | None = None, **kwargs) -> Message:
         """|coro|
 
         A shortcut method to :meth:`.abc.Messageable.send` to reply to the
@@ -1615,20 +1701,20 @@ class Message(Hashable):
 
         .. versionadded:: 1.6
 
+        Returns
+        -------
+        :class:`.Message`
+            The message that was sent.
+
         Raises
-        --------
+        ------
         ~discord.HTTPException
             Sending the message failed.
         ~discord.Forbidden
             You do not have the proper permissions to send the message.
         ~discord.InvalidArgument
-            The ``files`` list is not of the appropriate size or
+            The ``files`` list is not of the appropriate size, or
             you specified both ``file`` and ``files``.
-
-        Returns
-        ---------
-        :class:`.Message`
-            The message that was sent.
         """
 
         return await self.channel.send(content, reference=self, **kwargs)
@@ -1647,21 +1733,23 @@ class Message(Hashable):
             .. versionadded:: 1.7
 
         Returns
-        ---------
+        -------
         :class:`~discord.MessageReference`
             The reference to this message.
         """
 
-        return MessageReference.from_message(self, fail_if_not_exists=fail_if_not_exists)
+        return MessageReference.from_message(
+            self, fail_if_not_exists=fail_if_not_exists
+        )
 
     def to_message_reference_dict(self) -> MessageReferencePayload:
         data: MessageReferencePayload = {
-            'message_id': self.id,
-            'channel_id': self.channel.id,
+            "message_id": self.id,
+            "channel_id": self.channel.id,
         }
 
         if self.guild is not None:
-            data['guild_id'] = self.guild.id
+            data["guild_id"] = self.guild.id
 
         return data
 
@@ -1696,14 +1784,14 @@ class PartialMessage(Hashable):
             Returns the partial message's hash.
 
     Attributes
-    -----------
+    ----------
     channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`]
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
     """
 
-    __slots__ = ('channel', 'id', '_cs_guild', '_state')
+    __slots__ = ("channel", "id", "_cs_guild", "_state")
 
     jump_url: str = Message.jump_url  # type: ignore
     delete = Message.delete
@@ -1721,13 +1809,16 @@ class PartialMessage(Hashable):
     def __init__(self, *, channel: PartialMessageableChannel, id: int):
         if channel.type not in (
             ChannelType.text,
+            ChannelType.voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,
             ChannelType.public_thread,
             ChannelType.private_thread,
         ):
-            raise TypeError(f'Expected TextChannel, DMChannel or Thread not {type(channel)!r}')
+            raise TypeError(
+                f"Expected TextChannel, VoiceChannel, DMChannel or Thread not {type(channel)!r}"
+            )
 
         self.channel: PartialMessageableChannel = channel
         self._state: ConnectionState = channel._state
@@ -1743,59 +1834,61 @@ class PartialMessage(Hashable):
     pinned = property(None, lambda x, y: None)
 
     def __repr__(self) -> str:
-        return f'<PartialMessage id={self.id} channel={self.channel!r}>'
+        return f"<PartialMessage id={self.id} channel={self.channel!r}>"
 
     @property
     def created_at(self) -> datetime.datetime:
         """:class:`datetime.datetime`: The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
-    @utils.cached_slot_property('_cs_guild')
-    def guild(self) -> Optional[Guild]:
+    @utils.cached_slot_property("_cs_guild")
+    def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild that the partial message belongs to, if applicable."""
-        return getattr(self.channel, 'guild', None)
+        return getattr(self.channel, "guild", None)
 
     async def fetch(self) -> Message:
         """|coro|
 
         Fetches the partial message to a full :class:`Message`.
 
+        Returns
+        -------
+        :class:`Message`
+            The full message.
+
         Raises
-        --------
+        ------
         NotFound
             The message was not found.
         Forbidden
             You do not have the permissions required to get a message.
         HTTPException
             Retrieving the message failed.
-
-        Returns
-        --------
-        :class:`Message`
-            The full message.
         """
 
         data = await self._state.http.get_message(self.channel.id, self.id)
         return self._state.create_message(channel=self.channel, data=data)
 
-    async def edit(self, **fields: Any) -> Optional[Message]:
+    async def edit(self, **fields: Any) -> Message | None:
         """|coro|
 
         Edits the message.
-
-        The content must be able to be transformed into a string via ``str(content)``.
 
         .. versionchanged:: 1.7
             :class:`discord.Message` is returned instead of ``None`` if an edit took place.
 
         Parameters
-        -----------
+        ----------
         content: Optional[:class:`str`]
             The new content to replace the message with.
             Could be ``None`` to remove the content.
-        embed: Optional[:class:`Embed`]
+        embed: Optional[:class:`~discord.Embed`]
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
+        embeds: Optional[List[:class:`~discord.Embed`]]
+            A list of embeds to upload. Must be a maximum of 10.
+
+            .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1818,8 +1911,13 @@ class PartialMessage(Hashable):
 
             .. versionadded:: 2.0
 
-        Raises
+        Returns
         -------
+        Optional[:class:`Message`]
+            The message that was edited.
+
+        Raises
+        ------
         NotFound
             The message was not found.
         HTTPException
@@ -1827,66 +1925,56 @@ class PartialMessage(Hashable):
         Forbidden
             Tried to suppress a message without permissions or
             edited a message's content or embed that isn't yours.
-
-        Returns
-        ---------
-        Optional[:class:`Message`]
-            The message that was edited.
         """
 
-        try:
-            content = fields['content']
-        except KeyError:
-            pass
-        else:
-            if content is not None:
-                fields['content'] = str(content)
+        content = fields.pop("content", MISSING)
+        if content is not MISSING:
+            fields["content"] = str(content) if content is not None else None
 
-        try:
-            embed = fields['embed']
-        except KeyError:
-            pass
-        else:
-            if embed is not None:
-                fields['embed'] = embed.to_dict()
+        embed = fields.pop("embed", MISSING)
+        embeds = fields.pop("embeds", MISSING)
 
-        try:
-            suppress: bool = fields.pop('suppress')
-        except KeyError:
-            pass
-        else:
-            flags = MessageFlags._from_value(0)
-            flags.suppress_embeds = suppress
-            fields['flags'] = flags.value
+        if embed is not MISSING and embeds is not MISSING:
+            raise InvalidArgument("Cannot pass both embed and embeds parameters.")
 
-        delete_after = fields.pop('delete_after', None)
+        if embed is not MISSING:
+            fields["embeds"] = [embed.to_dict()]
 
-        try:
-            allowed_mentions = fields.pop('allowed_mentions')
-        except KeyError:
-            pass
-        else:
-            if allowed_mentions is not None:
-                if self._state.allowed_mentions is not None:
-                    allowed_mentions = self._state.allowed_mentions.merge(allowed_mentions).to_dict()
-                else:
-                    allowed_mentions = allowed_mentions.to_dict()
-                fields['allowed_mentions'] = allowed_mentions
+        if embeds is not MISSING:
+            fields["embeds"] = [embed.to_dict() for embed in embeds]
 
-        try:
-            view = fields.pop('view')
-        except KeyError:
-            # To check for the view afterwards
-            view = None
-        else:
-            self._state.prevent_view_updates_for(self.id)
-            if view:
-                fields['components'] = view.to_components()
+        suppress = fields.pop("suppress", False)
+        flags = MessageFlags._from_value(0)
+        flags.suppress_embeds = suppress
+        fields["flags"] = flags.value
+
+        delete_after = fields.pop("delete_after", None)
+
+        allowed_mentions = fields.get("allowed_mentions", MISSING)
+        if allowed_mentions is not MISSING:
+            if self._state.allowed_mentions is not None:
+                allowed_mentions = self._state.allowed_mentions.merge(
+                    allowed_mentions
+                ).to_dict()
             else:
-                fields['components'] = []
+                allowed_mentions = allowed_mentions.to_dict()
+            fields["allowed_mentions"] = allowed_mentions
+        else:
+            fields["allowed_mentions"] = (
+                self._state.allowed_mentions.to_dict()
+                if self._state.allowed_mentions
+                else None
+            )
+
+        view = fields.pop("view", MISSING)
+        if view is not MISSING:
+            self._state.prevent_view_updates_for(self.id)
+            fields["components"] = view.to_components() if view else []
 
         if fields:
-            data = await self._state.http.edit_message(self.channel.id, self.id, **fields)
+            data = await self._state.http.edit_message(
+                self.channel.id, self.id, **fields
+            )
 
         if delete_after is not None:
             await self.delete(delay=delete_after)

@@ -1,3 +1,5 @@
+# This example requires the 'message_content' privileged intent for prefixed commands.
+
 import asyncio
 
 import youtube_dl
@@ -20,7 +22,7 @@ ytdl_format_options = {
     "quiet": True,
     "no_warnings": True,
     "default_search": "auto",
-    "source_address": "0.0.0.0",  # bind to ipv4 since ipv6 addresses cause issues sometimes
+    "source_address": "0.0.0.0",  # Bind to ipv4 since ipv6 addresses cause issues at certain times
 }
 
 ffmpeg_options = {"options": "-vn"}
@@ -29,7 +31,7 @@ ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
-    def __init__(self, source, *, data, volume=0.5):
+    def __init__(self, source: discord.AudioSource, *, data: dict, volume: float = 0.5):
         super().__init__(source, volume)
 
         self.data = data
@@ -45,7 +47,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         )
 
         if "entries" in data:
-            # take first item from a playlist
+            # Takes the first item from a playlist
             data = data["entries"][0]
 
         filename = data["url"] if stream else ytdl.prepare_filename(data)
@@ -53,11 +55,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 class Music(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot_: commands.Bot):
+        self.bot = bot_
 
     @commands.command()
-    async def join(self, ctx, *, channel: discord.VoiceChannel):
+    async def join(self, ctx: commands.Context, *, channel: discord.VoiceChannel):
         """Joins a voice channel"""
 
         if ctx.voice_client is not None:
@@ -66,7 +68,7 @@ class Music(commands.Cog):
         await channel.connect()
 
     @commands.command()
-    async def play(self, ctx, *, query):
+    async def play(self, ctx: commands.Context, *, query: str):
         """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
@@ -77,7 +79,7 @@ class Music(commands.Cog):
         await ctx.send(f"Now playing: {query}")
 
     @commands.command()
-    async def yt(self, ctx, *, url):
+    async def yt(self, ctx: commands.Context, *, url: str):
         """Plays from a url (almost anything youtube_dl supports)"""
 
         async with ctx.typing():
@@ -89,7 +91,7 @@ class Music(commands.Cog):
         await ctx.send(f"Now playing: {player.title}")
 
     @commands.command()
-    async def stream(self, ctx, *, url):
+    async def stream(self, ctx: commands.Context, *, url: str):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
@@ -101,7 +103,7 @@ class Music(commands.Cog):
         await ctx.send(f"Now playing: {player.title}")
 
     @commands.command()
-    async def volume(self, ctx, volume: int):
+    async def volume(self, ctx: commands.Context, volume: int):
         """Changes the player's volume"""
 
         if ctx.voice_client is None:
@@ -111,15 +113,15 @@ class Music(commands.Cog):
         await ctx.send(f"Changed volume to {volume}%")
 
     @commands.command()
-    async def stop(self, ctx):
+    async def stop(self, ctx: commands.Context):
         """Stops and disconnects the bot from voice"""
 
-        await ctx.voice_client.disconnect()
+        await ctx.voice_client.disconnect(force=True)
 
     @play.before_invoke
     @yt.before_invoke
     @stream.before_invoke
-    async def ensure_voice(self, ctx):
+    async def ensure_voice(self, ctx: commands.Context):
         if ctx.voice_client is None:
             if ctx.author.voice:
                 await ctx.author.voice.channel.connect()
@@ -130,9 +132,13 @@ class Music(commands.Cog):
             ctx.voice_client.stop()
 
 
+intents = discord.Intents.default()
+intents.message_content = True
+
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or("!"),
     description="Relatively simple music bot example",
+    intents=intents,
 )
 
 
@@ -143,4 +149,4 @@ async def on_ready():
 
 
 bot.add_cog(Music(bot))
-bot.run("token")
+bot.run("TOKEN")

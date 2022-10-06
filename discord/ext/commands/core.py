@@ -24,110 +24,105 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+import asyncio
+import datetime
+import functools
+import inspect
+import types
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Generator,
     Generic,
     Literal,
-    List,
-    Optional,
-    Union,
-    Set,
-    Tuple,
     TypeVar,
-    Type,
-    TYPE_CHECKING,
+    Union,
     overload,
 )
-import asyncio
-import functools
-import inspect
-import datetime
-import types
 
 import discord
 
-from .errors import *
-from ...errors import *
-from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
-from .converter import run_converters, get_converter, Greedy
 from ...commands import (
     ApplicationCommand,
     _BaseCommand,
+    message_command,
     slash_command,
     user_command,
-    message_command,
 )
+from ...enums import ChannelType
+from ...errors import *
 from .cog import Cog
 from .context import Context
-
+from .converter import Greedy, get_converter, run_converters
+from .cooldowns import (
+    BucketType,
+    Cooldown,
+    CooldownMapping,
+    DynamicCooldownMapping,
+    MaxConcurrency,
+)
+from .errors import *
 
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec, TypeGuard
 
     from discord.message import Message
 
-    from ._types import (
-        Coro,
-        CoroFunc,
-        Check,
-        Hook,
-        Error,
-    )
+    from ._types import Check, Coro, CoroFunc, Error, Hook
 
 
 __all__ = (
-    'Command',
-    'Group',
-    'GroupMixin',
-    'command',
-    'group',
-    'has_role',
-    'has_permissions',
-    'has_any_role',
-    'check',
-    'check_any',
-    'before_invoke',
-    'after_invoke',
-    'bot_has_role',
-    'bot_has_permissions',
-    'bot_has_any_role',
-    'cooldown',
-    'dynamic_cooldown',
-    'max_concurrency',
-    'dm_only',
-    'guild_only',
-    'is_owner',
-    'is_nsfw',
-    'has_guild_permissions',
-    'bot_has_guild_permissions',
-    'slash_command',
-    'user_command',
-    'message_command'
+    "Command",
+    "Group",
+    "GroupMixin",
+    "command",
+    "group",
+    "has_role",
+    "has_permissions",
+    "has_any_role",
+    "check",
+    "check_any",
+    "before_invoke",
+    "after_invoke",
+    "bot_has_role",
+    "bot_has_permissions",
+    "bot_has_any_role",
+    "cooldown",
+    "dynamic_cooldown",
+    "max_concurrency",
+    "dm_only",
+    "guild_only",
+    "is_owner",
+    "is_nsfw",
+    "has_guild_permissions",
+    "bot_has_guild_permissions",
+    "slash_command",
+    "user_command",
+    "message_command",
 )
 
 MISSING: Any = discord.utils.MISSING
 
-T = TypeVar('T')
-CogT = TypeVar('CogT', bound='Cog')
-CommandT = TypeVar('CommandT', bound='Command')
-ContextT = TypeVar('ContextT', bound='Context')
+T = TypeVar("T")
+CogT = TypeVar("CogT", bound="Cog")
+CommandT = TypeVar("CommandT", bound="Command")
+ContextT = TypeVar("ContextT", bound="Context")
 # CHT = TypeVar('CHT', bound='Check')
-GroupT = TypeVar('GroupT', bound='Group')
-HookT = TypeVar('HookT', bound='Hook')
-ErrorT = TypeVar('ErrorT', bound='Error')
+GroupT = TypeVar("GroupT", bound="Group")
+HookT = TypeVar("HookT", bound="Hook")
+ErrorT = TypeVar("ErrorT", bound="Error")
 
 if TYPE_CHECKING:
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 else:
-    P = TypeVar('P')
+    P = TypeVar("P")
+
 
 def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
     partial = functools.partial
     while True:
-        if hasattr(function, '__wrapped__'):
+        if hasattr(function, "__wrapped__"):
             function = function.__wrapped__
         elif isinstance(function, partial):
             function = function.func
@@ -135,10 +130,12 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
             return function
 
 
-def get_signature_parameters(function: Callable[..., Any], globalns: Dict[str, Any]) -> Dict[str, inspect.Parameter]:
+def get_signature_parameters(
+    function: Callable[..., Any], globalns: dict[str, Any]
+) -> dict[str, inspect.Parameter]:
     signature = inspect.signature(function)
     params = {}
-    cache: Dict[str, Any] = {}
+    cache: dict[str, Any] = {}
     eval_annotation = discord.utils.evaluate_annotation
     for name, parameter in signature.parameters.items():
         annotation = parameter.annotation
@@ -151,7 +148,7 @@ def get_signature_parameters(function: Callable[..., Any], globalns: Dict[str, A
 
         annotation = eval_annotation(annotation, globalns, globalns, cache)
         if annotation is Greedy:
-            raise TypeError('Unparameterized Greedy[...] is disallowed in signature.')
+            raise TypeError("Unparameterized Greedy[...] is disallowed in signature.")
 
         params[name] = parameter.replace(annotation=annotation)
 
@@ -170,7 +167,9 @@ def wrap_callback(coro):
         except Exception as exc:
             raise CommandInvokeError(exc) from exc
         return ret
+
     return wrapped
+
 
 def hooked_wrapped_callback(command, ctx, coro):
     @functools.wraps(coro)
@@ -192,6 +191,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 
             await command.call_after_hooks(ctx)
         return ret
+
     return wrapped
 
 
@@ -213,6 +213,7 @@ class _CaseInsensitiveDict(dict):
 
     def __setitem__(self, k, v):
         super().__setitem__(k.casefold(), v)
+
 
 class Command(_BaseCommand, Generic[CogT, P, T]):
     r"""A class that implements the protocol for a bot text command.
@@ -281,8 +282,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         which calls converters. If ``False`` then cooldown processing is done
         first and then the converters are called second. Defaults to ``False``.
     extras: :class:`dict`
-        A dict of user provided extras to attach to the Command. 
-        
+        A dict of user provided extras to attach to the Command.
+
         .. note::
             This object may be copied by the library.
 
@@ -295,9 +296,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         .. versionadded:: 2.0
     """
-    __original_kwargs__: Dict[str, Any]
+    __original_kwargs__: dict[str, Any]
 
-    def __new__(cls: Type[CommandT], *args: Any, **kwargs: Any) -> CommandT:
+    def __new__(cls: type[CommandT], *args: Any, **kwargs: Any) -> CommandT:
         # if you're wondering why this is done, it's because we need to ensure
         # we have a complete original copy of **kwargs even for classes that
         # mess with it by popping before delegating to the subclass __init__.
@@ -313,81 +314,89 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    def __init__(self, func: Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
-        ], **kwargs: Any):
+    def __init__(
+        self,
+        func: (
+            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+            | Callable[Concatenate[ContextT, P], Coro[T]]
+        ),
+        **kwargs: Any,
+    ):
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Callback must be a coroutine.')
+            raise TypeError("Callback must be a coroutine.")
 
-        name = kwargs.get('name') or func.__name__
+        name = kwargs.get("name") or func.__name__
         if not isinstance(name, str):
-            raise TypeError('Name of a command must be a string.')
+            raise TypeError("Name of a command must be a string.")
         self.name: str = name
 
         self.callback = func
-        self.enabled: bool = kwargs.get('enabled', True)
+        self.enabled: bool = kwargs.get("enabled", True)
 
-        help_doc = kwargs.get('help')
+        help_doc = kwargs.get("help")
         if help_doc is not None:
             help_doc = inspect.cleandoc(help_doc)
         else:
             help_doc = inspect.getdoc(func)
             if isinstance(help_doc, bytes):
-                help_doc = help_doc.decode('utf-8')
+                help_doc = help_doc.decode("utf-8")
 
-        self.help: Optional[str] = help_doc
+        self.help: str | None = help_doc
 
-        self.brief: Optional[str] = kwargs.get('brief')
-        self.usage: Optional[str] = kwargs.get('usage')
-        self.rest_is_raw: bool = kwargs.get('rest_is_raw', False)
-        self.aliases: Union[List[str], Tuple[str]] = kwargs.get('aliases', [])
-        self.extras: Dict[str, Any] = kwargs.get('extras', {})
+        self.brief: str | None = kwargs.get("brief")
+        self.usage: str | None = kwargs.get("usage")
+        self.rest_is_raw: bool = kwargs.get("rest_is_raw", False)
+        self.aliases: list[str] | tuple[str] = kwargs.get("aliases", [])
+        self.extras: dict[str, Any] = kwargs.get("extras", {})
 
         if not isinstance(self.aliases, (list, tuple)):
-            raise TypeError("Aliases of a command must be a list or a tuple of strings.")
+            raise TypeError(
+                "Aliases of a command must be a list or a tuple of strings."
+            )
 
-        self.description: str = inspect.cleandoc(kwargs.get('description', ''))
-        self.hidden: bool = kwargs.get('hidden', False)
+        self.description: str = inspect.cleandoc(kwargs.get("description", ""))
+        self.hidden: bool = kwargs.get("hidden", False)
 
         try:
             checks = func.__commands_checks__
             checks.reverse()
         except AttributeError:
-            checks = kwargs.get('checks', [])
+            checks = kwargs.get("checks", [])
 
-        self.checks: List[Check] = checks
+        self.checks: list[Check] = checks
 
         try:
             cooldown = func.__commands_cooldown__
         except AttributeError:
-            cooldown = kwargs.get('cooldown')
-        
+            cooldown = kwargs.get("cooldown")
+
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+            raise TypeError(
+                "Cooldown must be a an instance of CooldownMapping or None."
+            )
         self._buckets: CooldownMapping = buckets
 
         try:
             max_concurrency = func.__commands_max_concurrency__
         except AttributeError:
-            max_concurrency = kwargs.get('max_concurrency')
+            max_concurrency = kwargs.get("max_concurrency")
 
-        self._max_concurrency: Optional[MaxConcurrency] = max_concurrency
+        self._max_concurrency: MaxConcurrency | None = max_concurrency
 
-        self.require_var_positional: bool = kwargs.get('require_var_positional', False)
-        self.ignore_extra: bool = kwargs.get('ignore_extra', True)
-        self.cooldown_after_parsing: bool = kwargs.get('cooldown_after_parsing', False)
-        self.cog: Optional[CogT] = None
+        self.require_var_positional: bool = kwargs.get("require_var_positional", False)
+        self.ignore_extra: bool = kwargs.get("ignore_extra", True)
+        self.cooldown_after_parsing: bool = kwargs.get("cooldown_after_parsing", False)
+        self.cog: CogT | None = None
 
         # bandaid for the fact that sometimes parent can be the bot instance
-        parent = kwargs.get('parent')
-        self.parent: Optional[GroupMixin] = parent if isinstance(parent, _BaseCommand) else None  # type: ignore
+        parent = kwargs.get("parent")
+        self.parent: GroupMixin | None = parent if isinstance(parent, _BaseCommand) else None  # type: ignore
 
-        self._before_invoke: Optional[Hook] = None
+        self._before_invoke: Hook | None = None
         try:
             before_invoke = func.__before_invoke__
         except AttributeError:
@@ -395,7 +404,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         else:
             self.before_invoke(before_invoke)
 
-        self._after_invoke: Optional[Hook] = None
+        self._after_invoke: Hook | None = None
         try:
             after_invoke = func.__after_invoke__
         except AttributeError:
@@ -404,17 +413,22 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             self.after_invoke(after_invoke)
 
     @property
-    def callback(self) -> Union[
-            Callable[Concatenate[CogT, Context, P], Coro[T]],
-            Callable[Concatenate[Context, P], Coro[T]],
-        ]:
+    def callback(
+        self,
+    ) -> (
+        Callable[Concatenate[CogT, Context, P], Coro[T]]
+        | Callable[Concatenate[Context, P], Coro[T]]
+    ):
         return self._callback
 
     @callback.setter
-    def callback(self, function: Union[
-            Callable[Concatenate[CogT, Context, P], Coro[T]],
-            Callable[Concatenate[Context, P], Coro[T]],
-        ]) -> None:
+    def callback(
+        self,
+        function: (
+            Callable[Concatenate[CogT, Context, P], Coro[T]]
+            | Callable[Concatenate[Context, P], Coro[T]]
+        ),
+    ) -> None:
         self._callback = function
         unwrap = unwrap_function(function)
         self.module = unwrap.__module__
@@ -434,7 +448,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         .. versionadded:: 1.3
 
         Parameters
-        -----------
+        ----------
         func
             The function that will be used as a check.
         """
@@ -450,7 +464,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         .. versionadded:: 1.3
 
         Parameters
-        -----------
+        ----------
         func
             The function to remove from the checks.
         """
@@ -508,14 +522,14 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         """Creates a copy of this command.
 
         Returns
-        --------
+        -------
         :class:`Command`
             A new instance of this command.
         """
         ret = self.__class__(self.callback, **self.__original_kwargs__)
         return self._ensure_assignment_on_copy(ret)
 
-    def _update_copy(self: CommandT, kwargs: Dict[str, Any]) -> CommandT:
+    def _update_copy(self: CommandT, kwargs: dict[str, Any]) -> CommandT:
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
@@ -545,22 +559,28 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                     wrapped = wrap_callback(local)
                     await wrapped(ctx, error)
         finally:
-            ctx.bot.dispatch('command_error', ctx, error)
+            ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         required = param.default is param.empty
         converter = get_converter(param)
-        consume_rest_is_special = param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
+        consume_rest_is_special = (
+            param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
+        )
         view = ctx.view
         view.skip_ws()
 
         # The greedy converter is simple -- it keeps going until it fails in which case,
-        # it undos the view ready for the next parameter to use instead
+        # it undoes the view ready for the next parameter to use instead
         if isinstance(converter, Greedy):
             if param.kind in (param.POSITIONAL_OR_KEYWORD, param.POSITIONAL_ONLY):
-                return await self._transform_greedy_pos(ctx, param, required, converter.converter)
+                return await self._transform_greedy_pos(
+                    ctx, param, required, converter.converter
+                )
             elif param.kind == param.VAR_POSITIONAL:
-                return await self._transform_greedy_var_pos(ctx, param, converter.converter)
+                return await self._transform_greedy_var_pos(
+                    ctx, param, converter.converter
+                )
             else:
                 # if we're here, then it's a KEYWORD_ONLY param type
                 # since this is mostly useless, we'll helpfully transform Greedy[X]
@@ -569,11 +589,14 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         if view.eof:
             if param.kind == param.VAR_POSITIONAL:
-                raise RuntimeError() # break the loop
+                raise RuntimeError()  # break the loop
             if required:
                 if self._is_typing_optional(param.annotation):
                     return None
-                if hasattr(converter, '__commands_is_flag__') and converter._can_be_constructible():
+                if (
+                    hasattr(converter, "__commands_is_flag__")
+                    and converter._can_be_constructible()
+                ):
                     return await converter._construct_default(ctx)
                 raise MissingRequiredArgument(param)
             return param.default
@@ -585,17 +608,18 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             try:
                 argument = view.get_quoted_word()
             except ArgumentParsingError as exc:
-                if self._is_typing_optional(param.annotation):
-                    view.index = previous
-                    return None
-                else:
+                if not self._is_typing_optional(param.annotation):
                     raise exc
+                view.index = previous
+                return None
         view.previous = previous
 
         # type-checker fails to narrow argument
         return await run_converters(ctx, converter, argument, param)  # type: ignore
 
-    async def _transform_greedy_pos(self, ctx: Context, param: inspect.Parameter, required: bool, converter: Any) -> Any:
+    async def _transform_greedy_pos(
+        self, ctx: Context, param: inspect.Parameter, required: bool, converter: Any
+    ) -> Any:
         view = ctx.view
         result = []
         while not view.eof:
@@ -616,7 +640,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             return param.default
         return result
 
-    async def _transform_greedy_var_pos(self, ctx: Context, param: inspect.Parameter, converter: Any) -> Any:
+    async def _transform_greedy_var_pos(
+        self, ctx: Context, param: inspect.Parameter, converter: Any
+    ) -> Any:
         view = ctx.view
         previous = view.index
         try:
@@ -624,12 +650,12 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             value = await run_converters(ctx, converter, argument, param)  # type: ignore
         except (CommandError, ArgumentParsingError):
             view.index = previous
-            raise RuntimeError() from None # break loop
+            raise RuntimeError() from None  # break loop
         else:
             return value
 
     @property
-    def clean_params(self) -> Dict[str, inspect.Parameter]:
+    def clean_params(self) -> dict[str, inspect.Parameter]:
         """Dict[:class:`str`, :class:`inspect.Parameter`]:
         Retrieves the parameter dictionary without the context or self parameters.
 
@@ -661,14 +687,14 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         entries = []
         command = self
         # command.parent is type-hinted as GroupMixin some attributes are resolved via MRO
-        while command.parent is not None: # type: ignore
-            command = command.parent # type: ignore
-            entries.append(command.name) # type: ignore
+        while command.parent is not None:  # type: ignore
+            command = command.parent  # type: ignore
+            entries.append(command.name)  # type: ignore
 
-        return ' '.join(reversed(entries))
+        return " ".join(reversed(entries))
 
     @property
-    def parents(self) -> List[Group]:
+    def parents(self) -> list[Group]:
         """List[:class:`Group`]: Retrieves the parents of this command.
 
         If the command has no parents then it returns an empty :class:`list`.
@@ -679,14 +705,14 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         """
         entries = []
         command = self
-        while command.parent is not None: # type: ignore
-            command = command.parent # type: ignore
+        while command.parent is not None:  # type: ignore
+            command = command.parent  # type: ignore
             entries.append(command)
 
         return entries
 
     @property
-    def root_parent(self) -> Optional[Group]:
+    def root_parent(self) -> Group | None:
         """Optional[:class:`Group`]: Retrieves the root parent of this command.
 
         If the command has no parents then it returns ``None``.
@@ -708,7 +734,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         parent = self.full_parent_name
         if parent:
-            return parent + ' ' + self.name
+            return f"{parent} {self.name}"
         else:
             return self.name
 
@@ -730,13 +756,17 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             try:
                 next(iterator)
             except StopIteration:
-                raise discord.ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+                raise discord.ClientException(
+                    f'Callback for {self.name} command is missing "self" parameter.'
+                )
 
         # next we have the 'ctx' as the next parameter
         try:
             next(iterator)
         except StopIteration:
-            raise discord.ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise discord.ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         for name, param in iterator:
             ctx.current_parameter = param
@@ -763,7 +793,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                         break
 
         if not self.ignore_extra and not view.eof:
-            raise TooManyArguments('Too many arguments passed to ' + self.qualified_name)
+            raise TooManyArguments(
+                f"Too many arguments passed to {self.qualified_name}"
+            )
 
     async def call_before_hooks(self, ctx: Context) -> None:
         # now that we're done preparing we can call the pre-command hooks
@@ -771,7 +803,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         cog = self.cog
         if self._before_invoke is not None:
             # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, '__self__', cog)
+            instance = getattr(self._before_invoke, "__self__", cog)
             # __self__ only exists for methods, not functions
             # however, if @command.before_invoke is used, it will be a function
             if instance:
@@ -793,7 +825,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     async def call_after_hooks(self, ctx: Context) -> None:
         cog = self.cog
         if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, '__self__', cog)
+            instance = getattr(self._after_invoke, "__self__", cog)
             if instance:
                 await self._after_invoke(instance, ctx)  # type: ignore
             else:
@@ -823,7 +855,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(f'The check functions for command {self.qualified_name} failed.')
+            raise CheckFailure(
+                f"The check functions for command {self.qualified_name} failed."
+            )
 
         if self._max_concurrency is not None:
             # For this application, context can be duck-typed as a Message
@@ -844,19 +878,19 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             raise
 
     @property
-    def cooldown(self) -> Optional[Cooldown]:
+    def cooldown(self) -> Cooldown | None:
         return self._buckets._cooldown
 
     def is_on_cooldown(self, ctx: Context) -> bool:
         """Checks whether the command is currently on cooldown.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
-            The invocation context to use when checking the commands cooldown status.
+            The invocation context to use when checking the command's cooldown status.
 
         Returns
-        --------
+        -------
         :class:`bool`
             A boolean indicating if the command is on cooldown.
         """
@@ -872,7 +906,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         """Resets the cooldown on this command.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The invocation context to reset the cooldown under.
         """
@@ -886,12 +920,12 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         .. versionadded:: 1.4
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The invocation context to retrieve the cooldown from.
 
         Returns
-        --------
+        -------
         :class:`float`
             The amount of time left on this command's cooldown in seconds.
             If this is ``0.0`` then the command isn't on cooldown.
@@ -940,18 +974,18 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         invoked afterwards as the catch-all.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the local error handler.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
 
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The error handler must be a coroutine.')
+            raise TypeError("The error handler must be a coroutine.")
 
         self.on_error: Error = coro
         return coro
@@ -961,7 +995,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         .. versionadded:: 1.7
         """
-        return hasattr(self, 'on_error')
+        return hasattr(self, "on_error")
 
     def before_invoke(self, coro: HookT) -> HookT:
         """A decorator that registers a coroutine as a pre-invoke hook.
@@ -975,17 +1009,17 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         See :meth:`.Bot.before_invoke` for more info.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The pre-invoke hook must be a coroutine.')
+            raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
         return coro
@@ -1002,23 +1036,23 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         See :meth:`.Bot.after_invoke` for more info.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
         if not asyncio.iscoroutinefunction(coro):
-            raise TypeError('The post-invoke hook must be a coroutine.')
+            raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
         return coro
 
     @property
-    def cog_name(self) -> Optional[str]:
+    def cog_name(self) -> str | None:
         """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
@@ -1033,15 +1067,17 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         if self.brief is not None:
             return self.brief
         if self.help is not None:
-            return self.help.split('\n', 1)[0]
-        return ''
+            return self.help.split("\n", 1)[0]
+        return ""
 
-    def _is_typing_optional(self, annotation: Union[T, Optional[T]]) -> TypeGuard[Optional[T]]:
+    def _is_typing_optional(self, annotation: T | T | None) -> TypeGuard[T | None]:
         return (
-            (getattr(annotation, '__origin__', None) is Union
-            or type(annotation) is getattr(types, "UnionType", Union))
-            and type(None) in annotation.__args__  # type: ignore
-        )
+            getattr(annotation, "__origin__", None) is Union
+            or type(annotation) is getattr(types, "UnionType", Union)
+        ) and type(
+            None
+        ) in annotation.__args__  # type: ignore
+
     @property
     def signature(self) -> str:
         """:class:`str`: Returns a POSIX-like signature useful for help command output."""
@@ -1050,7 +1086,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         params = self.clean_params
         if not params:
-            return ''
+            return ""
 
         result = []
         for name, param in params.items():
@@ -1060,41 +1096,51 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             # for typing.Literal[...], typing.Optional[typing.Literal[...]], and Greedy[typing.Literal[...]], the
             # parameter signature is a literal list of it's values
             annotation = param.annotation.converter if greedy else param.annotation
-            origin = getattr(annotation, '__origin__', None)
+            origin = getattr(annotation, "__origin__", None)
             if not greedy and origin is Union:
                 none_cls = type(None)
                 union_args = annotation.__args__
                 optional = union_args[-1] is none_cls
                 if len(union_args) == 2 and optional:
                     annotation = union_args[0]
-                    origin = getattr(annotation, '__origin__', None)
+                    origin = getattr(annotation, "__origin__", None)
 
             if origin is Literal:
-                name = '|'.join(f'"{v}"' if isinstance(v, str) else str(v) for v in annotation.__args__)
+                name = "|".join(
+                    f'"{v}"' if isinstance(v, str) else str(v)
+                    for v in annotation.__args__
+                )
             if param.default is not param.empty:
-                # We don't want None or '' to trigger the [name=value] case and instead it should
+                # We don't want None or '' to trigger the [name=value] case, and instead it should
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
-                should_print = param.default if isinstance(param.default, str) else param.default is not None
+                should_print = (
+                    param.default
+                    if isinstance(param.default, str)
+                    else param.default is not None
+                )
                 if should_print:
-                    result.append(f'[{name}={param.default}]' if not greedy else
-                                  f'[{name}={param.default}]...')
+                    result.append(
+                        f"[{name}={param.default}]"
+                        if not greedy
+                        else f"[{name}={param.default}]..."
+                    )
                     continue
                 else:
-                    result.append(f'[{name}]')
+                    result.append(f"[{name}]")
 
             elif param.kind == param.VAR_POSITIONAL:
                 if self.require_var_positional:
-                    result.append(f'<{name}...>')
+                    result.append(f"<{name}...>")
                 else:
-                    result.append(f'[{name}...]')
+                    result.append(f"[{name}...]")
             elif greedy:
-                result.append(f'[{name}]...')
+                result.append(f"[{name}]...")
             elif optional:
-                result.append(f'[{name}]')
+                result.append(f"[{name}]")
             else:
-                result.append(f'<{name}>')
+                result.append(f"<{name}>")
 
-        return ' '.join(result)
+        return " ".join(result)
 
     async def can_run(self, ctx: Context) -> bool:
         """|coro|
@@ -1107,31 +1153,33 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             Checks whether the command is disabled or not
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The ctx of the command currently being invoked.
 
-        Raises
+        Returns
         -------
+        :class:`bool`
+            A boolean indicating if the command can be invoked.
+
+        Raises
+        ------
         :class:`CommandError`
             Any command error that was raised during a check call will be propagated
             by this function.
-
-        Returns
-        --------
-        :class:`bool`
-            A boolean indicating if the command can be invoked.
         """
 
         if not self.enabled:
-            raise DisabledCommand(f'{self.name} command is disabled')
+            raise DisabledCommand(f"{self.name} command is disabled")
 
         original = ctx.command
         ctx.command = self
 
         try:
             if not await ctx.bot.can_run(ctx):
-                raise CheckFailure(f'The global check functions for command {self.qualified_name} failed.')
+                raise CheckFailure(
+                    f"The global check functions for command {self.qualified_name} failed."
+                )
 
             cog = self.cog
             if cog is not None:
@@ -1153,31 +1201,42 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def _set_cog(self, cog):
         self.cog = cog
 
+
 class GroupMixin(Generic[CogT]):
     """A mixin that implements common functionality for classes that behave
     similar to :class:`.Group` and are allowed to register commands.
 
     Attributes
-    -----------
+    ----------
     all_commands: :class:`dict`
         A mapping of command name to :class:`.Command`
         objects.
     case_insensitive: :class:`bool`
-        Whether the commands should be case insensitive. Defaults to ``False``.
+        Whether the commands should be case-insensitive. Defaults to ``False``.
     """
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        case_insensitive = kwargs.get('case_insensitive', False)
-        self.all_commands: Dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
+        case_insensitive = kwargs.get("case_insensitive", False)
+        self.prefixed_commands: dict[str, Command[CogT, Any, Any]] = (
+            _CaseInsensitiveDict() if case_insensitive else {}
+        )
         self.case_insensitive: bool = case_insensitive
         super().__init__(*args, **kwargs)
 
     @property
-    def commands(self) -> Set[Command[CogT, Any, Any]]:
+    def all_commands(self):
+        # merge app and prefixed commands
+        if hasattr(self, "_application_commands"):
+            return {**self._application_commands, **self.prefixed_commands}
+        return self.prefixed_commands
+
+    @property
+    def commands(self) -> set[Command[CogT, Any, Any]]:
         """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
-        return set(self.all_commands.values())
+        return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:
-        for command in self.all_commands.copy().values():
+        for command in self.prefixed_commands.copy().values():
             if isinstance(command, GroupMixin):
                 command.recursively_remove_all_commands()
             self.remove_command(command.name)
@@ -1192,12 +1251,12 @@ class GroupMixin(Generic[CogT]):
              Raise :exc:`.CommandRegistrationError` instead of generic :exc:`.ClientException`
 
         Parameters
-        -----------
+        ----------
         command: :class:`Command`
             The command to add.
 
         Raises
-        -------
+        ------
         :exc:`.CommandRegistrationError`
             If the command or its alias is already registered by different command.
         TypeError
@@ -1205,56 +1264,56 @@ class GroupMixin(Generic[CogT]):
         """
 
         if not isinstance(command, Command):
-            raise TypeError('The command passed must be a subclass of Command')
+            raise TypeError("The command passed must be a subclass of Command")
 
         if isinstance(self, Command):
             command.parent = self
 
-        if command.name in self.all_commands:
+        if command.name in self.prefixed_commands:
             raise CommandRegistrationError(command.name)
 
-        self.all_commands[command.name] = command
+        self.prefixed_commands[command.name] = command
         for alias in command.aliases:
-            if alias in self.all_commands:
+            if alias in self.prefixed_commands:
                 self.remove_command(command.name)
                 raise CommandRegistrationError(alias, alias_conflict=True)
-            self.all_commands[alias] = command
+            self.prefixed_commands[alias] = command
 
-    def remove_command(self, name: str) -> Optional[Command[CogT, Any, Any]]:
+    def remove_command(self, name: str) -> Command[CogT, Any, Any] | None:
         """Remove a :class:`.Command` from the internal list
         of commands.
 
         This could also be used as a way to remove aliases.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the command to remove.
 
         Returns
-        --------
+        -------
         Optional[:class:`.Command`]
             The command that was removed. If the name is not valid then
             ``None`` is returned instead.
         """
-        command = self.all_commands.pop(name, None)
+        command = self.prefixed_commands.pop(name, None)
 
         # does not exist
         if command is None:
             return None
 
         if name in command.aliases:
-            # we're removing an alias so we don't want to remove the rest
+            # we're removing an alias, so we don't want to remove the rest
             return command
 
         # we're not removing the alias so let's delete the rest of them.
         for alias in command.aliases:
-            cmd = self.all_commands.pop(alias, None)
+            cmd = self.prefixed_commands.pop(alias, None)
             # in the case of a CommandRegistrationError, an alias might conflict
             # with an already existing command. If this is the case, we want to
             # make sure the pre-existing command is not removed.
             if cmd is not None and cmd != command:
-                self.all_commands[alias] = cmd
+                self.prefixed_commands[alias] = cmd
         return command
 
     def walk_commands(self) -> Generator[Command[CogT, Any, Any], None, None]:
@@ -1273,7 +1332,7 @@ class GroupMixin(Generic[CogT]):
             if isinstance(command, GroupMixin):
                 yield from command.walk_commands()
 
-    def get_command(self, name: str) -> Optional[Command[CogT, Any, Any]]:
+    def get_command(self, name: str) -> Command[CogT, Any, Any] | None:
         """Get a :class:`.Command` from the internal list
         of commands.
 
@@ -1284,30 +1343,30 @@ class GroupMixin(Generic[CogT]):
         subcommand is not found then ``None`` is returned just as usual.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the command to get.
 
         Returns
-        --------
+        -------
         Optional[:class:`Command`]
             The command that was requested. If not found, returns ``None``.
         """
 
         # fast path, no space in name.
-        if ' ' not in name:
-            return self.all_commands.get(name)
+        if " " not in name:
+            return self.prefixed_commands.get(name)
 
         names = name.split()
         if not names:
             return None
-        obj = self.all_commands.get(names[0])
+        obj = self.prefixed_commands.get(names[0])
         if not isinstance(obj, GroupMixin):
             return obj
 
         for name in names[1:]:
             try:
-                obj = obj.all_commands[name]  # type: ignore
+                obj = obj.prefixed_commands[name]  # type: ignore
             except (AttributeError, KeyError):
                 return None
 
@@ -1317,23 +1376,25 @@ class GroupMixin(Generic[CogT]):
     def command(
         self,
         name: str = ...,
-        cls: Type[Command[CogT, P, T]] = ...,
+        cls: type[Command[CogT, P, T]] = ...,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[
         [
-            Union[
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-                Callable[Concatenate[ContextT, P], Coro[T]],
-            ]
-        ], Command[CogT, P, T]]:
+            (
+                Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+                | Callable[Concatenate[ContextT, P], Coro[T]]
+            )
+        ],
+        Command[CogT, P, T],
+    ]:
         ...
 
     @overload
     def command(
         self,
         name: str = ...,
-        cls: Type[CommandT] = ...,
+        cls: type[CommandT] = ...,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
@@ -1342,7 +1403,7 @@ class GroupMixin(Generic[CogT]):
     def command(
         self,
         name: str = MISSING,
-        cls: Type[CommandT] = MISSING,
+        cls: type[CommandT] = MISSING,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
@@ -1350,12 +1411,13 @@ class GroupMixin(Generic[CogT]):
         the internal command list via :meth:`~.GroupMixin.add_command`.
 
         Returns
-        --------
+        -------
         Callable[..., :class:`Command`]
             A decorator that converts the provided method into a Command, adds it to the bot, then returns it.
         """
+
         def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> CommandT:
-            kwargs.setdefault('parent', self)
+            kwargs.setdefault("parent", self)
             result = command(name=name, cls=cls, *args, **kwargs)(func)
             self.add_command(result)
             return result
@@ -1366,22 +1428,25 @@ class GroupMixin(Generic[CogT]):
     def group(
         self,
         name: str = ...,
-        cls: Type[Group[CogT, P, T]] = ...,
+        cls: type[Group[CogT, P, T]] = ...,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[
-            Union[
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-                Callable[Concatenate[ContextT, P], Coro[T]]
-            ]
-        ], Group[CogT, P, T]]:
+    ) -> Callable[
+        [
+            (
+                Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+                | Callable[Concatenate[ContextT, P], Coro[T]]
+            )
+        ],
+        Group[CogT, P, T],
+    ]:
         ...
 
     @overload
     def group(
         self,
         name: str = ...,
-        cls: Type[GroupT] = ...,
+        cls: type[GroupT] = ...,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
@@ -1390,7 +1455,7 @@ class GroupMixin(Generic[CogT]):
     def group(
         self,
         name: str = MISSING,
-        cls: Type[GroupT] = MISSING,
+        cls: type[GroupT] = MISSING,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
@@ -1398,17 +1463,19 @@ class GroupMixin(Generic[CogT]):
         the internal command list via :meth:`~.GroupMixin.add_command`.
 
         Returns
-        --------
+        -------
         Callable[..., :class:`Group`]
             A decorator that converts the provided method into a Group, adds it to the bot, then returns it.
         """
+
         def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> GroupT:
-            kwargs.setdefault('parent', self)
+            kwargs.setdefault("parent", self)
             result = group(name=name, cls=cls, *args, **kwargs)(func)
             self.add_command(result)
             return result
 
         return decorator
+
 
 class Group(GroupMixin[CogT], Command[CogT, P, T]):
     """A class that implements a grouping protocol for commands to be
@@ -1418,7 +1485,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
     valid in :class:`.Command` are valid in here as well.
 
     Attributes
-    -----------
+    ----------
     invoke_without_command: :class:`bool`
         Indicates if the group callback should begin parsing and
         invocation only if no subcommand was found. Useful for
@@ -1429,18 +1496,19 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         that the checks and the parsing dictated by its parameters
         will be executed. Defaults to ``False``.
     case_insensitive: :class:`bool`
-        Indicates if the group's commands should be case insensitive.
+        Indicates if the group's commands should be case-insensitive.
         Defaults to ``False``.
     """
+
     def __init__(self, *args: Any, **attrs: Any) -> None:
-        self.invoke_without_command: bool = attrs.pop('invoke_without_command', False)
+        self.invoke_without_command: bool = attrs.pop("invoke_without_command", False)
         super().__init__(*args, **attrs)
 
     def copy(self: GroupT) -> GroupT:
         """Creates a copy of this :class:`Group`.
 
         Returns
-        --------
+        -------
         :class:`Group`
             A new instance of this group.
         """
@@ -1463,7 +1531,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             injected = hooked_wrapped_callback(self, ctx, self.callback)
@@ -1497,7 +1565,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 
         if trigger:
             ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+            ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
             try:
@@ -1520,50 +1588,74 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
             view.previous = previous
             await super().reinvoke(ctx, call_hooks=call_hooks)
 
+
 # Decorators
 
-@overload
+
+@overload  # for py 3.10
 def command(
     name: str = ...,
-    cls: Type[Command[CogT, P, T]] = ...,
+    cls: type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
     [
-        Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
-        ]
-    ]
-, Command[CogT, P, T]]:
+        (
+            Callable[Concatenate[CogT, ContextT, P]]
+            | Coro[T]
+            | Callable[Concatenate[ContextT, P]]
+            | Coro[T]
+        )
+    ],
+    Command[CogT, P, T],
+]:
     ...
+
 
 @overload
 def command(
     name: str = ...,
-    cls: Type[CommandT] = ...,
+    cls: type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
     [
-        Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-        ]
-    ]
-, CommandT]:
+        (
+            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+            | Callable[Concatenate[ContextT, P], Coro[T]]
+        )
+    ],
+    Command[CogT, P, T],
+]:
     ...
 
+
+@overload
 def command(
-    name: str = MISSING,
-    cls: Type[CommandT] = MISSING,
-    **attrs: Any
+    name: str = ...,
+    cls: type[CommandT] = ...,
+    **attrs: Any,
 ) -> Callable[
     [
-        Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-        ]
-    ]
-, Union[Command[CogT, P, T], CommandT]]:
+        (
+            Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
+            | Callable[Concatenate[ContextT, P], Coro[Any]]
+        )
+    ],
+    CommandT,
+]:
+    ...
+
+
+def command(
+    name: str = MISSING, cls: type[CommandT] = MISSING, **attrs: Any
+) -> Callable[
+    [
+        (
+            Callable[Concatenate[ContextT, P], Coro[Any]]
+            | Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+        )
+    ],
+    Command[CogT, P, T] | CommandT,
+]:
     """A decorator that transforms a function into a :class:`.Command`
     or if called with :func:`.group`, :class:`.Group`.
 
@@ -1577,77 +1669,85 @@ def command(
     decorator.
 
     Parameters
-    -----------
+    ----------
     name: :class:`str`
-        The name to create the command with. By default this uses the
+        The name to create the command with. By default, this uses the
         function name unchanged.
     cls
-        The class to construct with. By default this is :class:`.Command`.
+        The class to construct with. By default, this is :class:`.Command`.
         You usually do not change this.
     attrs
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
 
     Raises
-    -------
+    ------
     TypeError
         If the function is not a coroutine or is already a command.
     """
     if cls is MISSING:
         cls = Command  # type: ignore
 
-    def decorator(func: Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
-        ]) -> CommandT:
+    def decorator(
+        func: (
+            Callable[Concatenate[ContextT, P], Coro[Any]]
+            | Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
+        )
+    ) -> CommandT:
         if isinstance(func, Command):
-            raise TypeError('Callback is already a command.')
+            raise TypeError("Callback is already a command.")
         return cls(func, name=name, **attrs)
 
     return decorator
 
-@overload
-def group(
-    name: str = ...,
-    cls: Type[Group[CogT, P, T]] = ...,
-    **attrs: Any,
-) -> Callable[
-    [
-        Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-            Callable[Concatenate[ContextT, P], Coro[T]],
-        ]
-    ]
-, Group[CogT, P, T]]:
-    ...
 
 @overload
 def group(
     name: str = ...,
-    cls: Type[GroupT] = ...,
+    cls: type[Group[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
     [
-        Union[
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]],
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-        ]
-    ]
-, GroupT]:
+        (
+            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+            | Callable[Concatenate[ContextT, P], Coro[T]]
+        )
+    ],
+    Group[CogT, P, T],
+]:
     ...
+
+
+@overload
+def group(
+    name: str = ...,
+    cls: type[GroupT] = ...,
+    **attrs: Any,
+) -> Callable[
+    [
+        (
+            Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
+            | Callable[Concatenate[ContextT, P], Coro[Any]]
+        )
+    ],
+    GroupT,
+]:
+    ...
+
 
 def group(
     name: str = MISSING,
-    cls: Type[GroupT] = MISSING,
+    cls: type[GroupT] = MISSING,
     **attrs: Any,
 ) -> Callable[
     [
-        Union[
-            Callable[Concatenate[ContextT, P], Coro[Any]],
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]],
-        ]
-    ]
-, Union[Group[CogT, P, T], GroupT]]:
+        (
+            Callable[Concatenate[ContextT, P], Coro[Any]]
+            | Callable[Concatenate[CogT, ContextT, P], Coro[T]]
+        )
+    ],
+    Group[CogT, P, T] | GroupT,
+]:
     """A decorator that transforms a function into a :class:`.Group`.
 
     This is similar to the :func:`.command` decorator but the ``cls``
@@ -1659,6 +1759,7 @@ def group(
     if cls is MISSING:
         cls = Group  # type: ignore
     return command(name=name, cls=cls, **attrs)  # type: ignore
+
 
 def check(predicate: Check) -> Callable[[T], T]:
     r"""A decorator that adds a check to the :class:`.Command` or its
@@ -1731,11 +1832,11 @@ def check(predicate: Check) -> Callable[[T], T]:
         The predicate to check if the command should be invoked.
     """
 
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         if isinstance(func, _BaseCommand):
             func.checks.append(predicate)
         else:
-            if not hasattr(func, '__commands_checks__'):
+            if not hasattr(func, "__commands_checks__"):
                 func.__commands_checks__ = []
 
             func.__commands_checks__.append(predicate)
@@ -1745,12 +1846,15 @@ def check(predicate: Check) -> Callable[[T], T]:
     if inspect.iscoroutinefunction(predicate):
         decorator.predicate = predicate
     else:
+
         @functools.wraps(predicate)
         async def wrapper(ctx):
             return predicate(ctx)  # type: ignore
+
         decorator.predicate = wrapper
 
     return decorator  # type: ignore
+
 
 def check_any(*checks: Check) -> Callable[[T], T]:
     r"""A :func:`check` that is added that checks if any of the checks passed
@@ -1801,7 +1905,9 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         try:
             pred = wrapped.predicate
         except AttributeError:
-            raise TypeError(f'{wrapped!r} must be wrapped by commands.check decorator') from None
+            raise TypeError(
+                f"{wrapped!r} must be wrapped by commands.check decorator"
+            ) from None
         else:
             unwrapped.append(pred)
 
@@ -1820,7 +1926,8 @@ def check_any(*checks: Check) -> Callable[[T], T]:
 
     return check(predicate)
 
-def has_role(item: Union[int, str]) -> Callable[[T], T]:
+
+def has_role(item: int | str) -> Callable[[T], T]:
     """A :func:`.check` that is added that checks if the member invoking the
     command has the role specified via the name or ID specified.
 
@@ -1842,7 +1949,7 @@ def has_role(item: Union[int, str]) -> Callable[[T], T]:
         instead of generic :exc:`.CheckFailure`
 
     Parameters
-    -----------
+    ----------
     item: Union[:class:`int`, :class:`str`]
         The name or ID of the role to check.
     """
@@ -1862,7 +1969,8 @@ def has_role(item: Union[int, str]) -> Callable[[T], T]:
 
     return check(predicate)
 
-def has_any_role(*items: Union[int, str]) -> Callable[[T], T]:
+
+def has_any_role(*items: int | str) -> Callable[[T], T]:
     r"""A :func:`.check` that is added that checks if the member invoking the
     command has **any** of the roles specified. This means that if they have
     one out of the three roles specified, then this check will return `True`.
@@ -1893,17 +2001,24 @@ def has_any_role(*items: Union[int, str]) -> Callable[[T], T]:
         async def cool(ctx):
             await ctx.send('You are cool indeed')
     """
+
     def predicate(ctx):
         if ctx.guild is None:
             raise NoPrivateMessage()
 
         # ctx.guild is None doesn't narrow ctx.author to Member
         getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
-        if any(getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None for item in items):
+        if any(
+            getter(id=item) is not None
+            if isinstance(item, int)
+            else getter(name=item) is not None
+            for item in items
+        ):
             return True
         raise MissingAnyRole(list(items))
 
     return check(predicate)
+
 
 def bot_has_role(item: int) -> Callable[[T], T]:
     """Similar to :func:`.has_role` except checks if the bot itself has the
@@ -1931,7 +2046,9 @@ def bot_has_role(item: int) -> Callable[[T], T]:
         if role is None:
             raise BotMissingRole(item)
         return True
+
     return check(predicate)
+
 
 def bot_has_any_role(*items: int) -> Callable[[T], T]:
     """Similar to :func:`.has_any_role` except checks if the bot itself has
@@ -1944,21 +2061,29 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
     .. versionchanged:: 1.1
 
         Raise :exc:`.BotMissingAnyRole` or :exc:`.NoPrivateMessage`
-        instead of generic checkfailure
+        instead of generic :exc:`.CheckFailure`.
     """
+
     def predicate(ctx):
         if ctx.guild is None:
             raise NoPrivateMessage()
 
         me = ctx.me
         getter = functools.partial(discord.utils.get, me.roles)
-        if any(getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None for item in items):
+        if any(
+            getter(id=item) is not None
+            if isinstance(item, int)
+            else getter(name=item) is not None
+            for item in items
+        ):
             return True
         raise BotMissingAnyRole(list(items))
+
     return check(predicate)
 
+
 def has_permissions(**perms: bool) -> Callable[[T], T]:
-    """A :func:`.check` that is added that checks if the member has all of
+    r"""A :func:`.check` that is added that checks if the member has all of
     the permissions necessary.
 
     Note that this check operates on the current channel permissions, not the
@@ -1970,9 +2095,11 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
     This check raises a special exception, :exc:`.MissingPermissions`
     that is inherited from :exc:`.CheckFailure`.
 
+    If the command is executed within a DM, it returns ``True``.
+
     Parameters
     ------------
-    perms
+    \*\*perms: Dict[:class:`str`, :class:`bool`]
         An argument list of permissions to check for.
 
     Example
@@ -1992,10 +2119,13 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
         raise TypeError(f"Invalid permission(s): {', '.join(invalid)}")
 
     def predicate(ctx: Context) -> bool:
-        ch = ctx.channel
-        permissions = ch.permissions_for(ctx.author)  # type: ignore
+        if ctx.channel.type == ChannelType.private:
+            return True
+        permissions = ctx.channel.permissions_for(ctx.author)  # type: ignore
 
-        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
+        missing = [
+            perm for perm, value in perms.items() if getattr(permissions, perm) != value
+        ]
 
         if not missing:
             return True
@@ -2003,6 +2133,7 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
         raise MissingPermissions(missing)
 
     return check(predicate)
+
 
 def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     """Similar to :func:`.has_permissions` except checks if the bot itself has
@@ -2019,9 +2150,17 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
     def predicate(ctx: Context) -> bool:
         guild = ctx.guild
         me = guild.me if guild is not None else ctx.bot.user
-        permissions = ctx.channel.permissions_for(me)  # type: ignore
+        if ctx.channel.type == ChannelType.private:
+            return True
 
-        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
+        if hasattr(ctx, "app_permissions"):
+            permissions = ctx.app_permissions
+        else:
+            permissions = ctx.channel.permissions_for(me)  # type: ignore
+
+        missing = [
+            perm for perm, value in perms.items() if getattr(permissions, perm) != value
+        ]
 
         if not missing:
             return True
@@ -2029,6 +2168,7 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
         raise BotMissingPermissions(missing)
 
     return check(predicate)
+
 
 def has_guild_permissions(**perms: bool) -> Callable[[T], T]:
     """Similar to :func:`.has_permissions`, but operates on guild wide
@@ -2049,7 +2189,9 @@ def has_guild_permissions(**perms: bool) -> Callable[[T], T]:
             raise NoPrivateMessage
 
         permissions = ctx.author.guild_permissions  # type: ignore
-        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
+        missing = [
+            perm for perm, value in perms.items() if getattr(permissions, perm) != value
+        ]
 
         if not missing:
             return True
@@ -2057,6 +2199,7 @@ def has_guild_permissions(**perms: bool) -> Callable[[T], T]:
         raise MissingPermissions(missing)
 
     return check(predicate)
+
 
 def bot_has_guild_permissions(**perms: bool) -> Callable[[T], T]:
     """Similar to :func:`.has_guild_permissions`, but checks the bot
@@ -2074,7 +2217,9 @@ def bot_has_guild_permissions(**perms: bool) -> Callable[[T], T]:
             raise NoPrivateMessage
 
         permissions = ctx.me.guild_permissions  # type: ignore
-        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
+        missing = [
+            perm for perm, value in perms.items() if getattr(permissions, perm) != value
+        ]
 
         if not missing:
             return True
@@ -2082,6 +2227,7 @@ def bot_has_guild_permissions(**perms: bool) -> Callable[[T], T]:
         raise BotMissingPermissions(missing)
 
     return check(predicate)
+
 
 def dm_only() -> Callable[[T], T]:
     """A :func:`.check` that indicates this command must only be used in a
@@ -2101,6 +2247,7 @@ def dm_only() -> Callable[[T], T]:
 
     return check(predicate)
 
+
 def guild_only() -> Callable[[T], T]:
     """A :func:`.check` that indicates this command must only be used in a
     guild context only. Basically, no private messages are allowed when
@@ -2117,6 +2264,7 @@ def guild_only() -> Callable[[T], T]:
 
     return check(predicate)
 
+
 def is_owner() -> Callable[[T], T]:
     """A :func:`.check` that checks if the person invoking this command is the
     owner of the bot.
@@ -2129,10 +2277,11 @@ def is_owner() -> Callable[[T], T]:
 
     async def predicate(ctx: Context) -> bool:
         if not await ctx.bot.is_owner(ctx.author):
-            raise NotOwner('You do not own this bot.')
+            raise NotOwner("You do not own this bot.")
         return True
 
     return check(predicate)
+
 
 def is_nsfw() -> Callable[[T], T]:
     """A :func:`.check` that checks if the channel is a NSFW channel.
@@ -2145,14 +2294,23 @@ def is_nsfw() -> Callable[[T], T]:
         Raise :exc:`.NSFWChannelRequired` instead of generic :exc:`.CheckFailure`.
         DM channels will also now pass this check.
     """
+
     def pred(ctx: Context) -> bool:
         ch = ctx.channel
-        if ctx.guild is None or (isinstance(ch, (discord.TextChannel, discord.Thread)) and ch.is_nsfw()):
+        if ctx.guild is None or (
+            isinstance(ch, (discord.TextChannel, discord.Thread)) and ch.is_nsfw()
+        ):
             return True
         raise NSFWChannelRequired(ch)  # type: ignore
+
     return check(pred)
 
-def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], Any]] = BucketType.default) -> Callable[[T], T]:
+
+def cooldown(
+    rate: int,
+    per: float,
+    type: BucketType | Callable[[Message], Any] = BucketType.default,
+) -> Callable[[T], T]:
     """A decorator that adds a cooldown to a command
 
     A cooldown allows a command to only be used a specific amount
@@ -2167,7 +2325,7 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
     A command can only have a single cooldown.
 
     Parameters
-    ------------
+    ----------
     rate: :class:`int`
         The number of times a command can be used before triggering a cooldown.
     per: :class:`float`
@@ -2179,15 +2337,20 @@ def cooldown(rate: int, per: float, type: Union[BucketType, Callable[[Message], 
             Callables are now supported for custom bucket types.
     """
 
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         if isinstance(func, (Command, ApplicationCommand)):
             func._buckets = CooldownMapping(Cooldown(rate, per), type)
         else:
             func.__commands_cooldown__ = CooldownMapping(Cooldown(rate, per), type)
         return func
+
     return decorator  # type: ignore
 
-def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type: BucketType = BucketType.default) -> Callable[[T], T]:
+
+def dynamic_cooldown(
+    cooldown: BucketType | Callable[[Message], Any],
+    type: BucketType = BucketType.default,
+) -> Callable[[T], T]:
     """A decorator that adds a dynamic cooldown to a command
 
     This differs from :func:`.cooldown` in that it takes a function that
@@ -2209,7 +2372,7 @@ def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type
     .. versionadded:: 2.0
 
     Parameters
-    ------------
+    ----------
     cooldown: Callable[[:class:`.discord.Message`], Optional[:class:`.Cooldown`]]
         A function that takes a message and returns a cooldown that will
         apply to this invocation or ``None`` if the cooldown should be bypassed.
@@ -2219,15 +2382,19 @@ def dynamic_cooldown(cooldown: Union[BucketType, Callable[[Message], Any]], type
     if not callable(cooldown):
         raise TypeError("A callable must be provided")
 
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         if isinstance(func, Command):
             func._buckets = DynamicCooldownMapping(cooldown, type)
         else:
             func.__commands_cooldown__ = DynamicCooldownMapping(cooldown, type)
         return func
+
     return decorator  # type: ignore
 
-def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: bool = False) -> Callable[[T], T]:
+
+def max_concurrency(
+    number: int, per: BucketType = BucketType.default, *, wait: bool = False
+) -> Callable[[T], T]:
     """A decorator that adds a maximum concurrency to a command
 
     This enables you to only allow a certain number of command invocations at the same time,
@@ -2238,7 +2405,7 @@ def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: 
     .. versionadded:: 1.3
 
     Parameters
-    -------------
+    ----------
     number: :class:`int`
         The maximum number of invocations of this command that can be running at the same time.
     per: :class:`.BucketType`
@@ -2251,14 +2418,16 @@ def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: 
         then the command waits until it can be executed.
     """
 
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         value = MaxConcurrency(number, per=per, wait=wait)
         if isinstance(func, (Command, ApplicationCommand)):
             func._max_concurrency = value
         else:
             func.__commands_max_concurrency__ = value
         return func
+
     return decorator  # type: ignore
+
 
 def before_invoke(coro) -> Callable[[T], T]:
     """A decorator that registers a coroutine as a pre-invoke hook.
@@ -2269,7 +2438,7 @@ def before_invoke(coro) -> Callable[[T], T]:
     .. versionadded:: 1.4
 
     Example
-    ---------
+    -------
 
     .. code-block:: python3
 
@@ -2279,14 +2448,14 @@ def before_invoke(coro) -> Callable[[T], T]:
         @bot.command()
         @commands.before_invoke(record_usage)
         async def who(ctx): # Output: <User> used who at <Time>
-            await ctx.send('i am a bot')
+            await ctx.send('I am a bot')
 
         class What(commands.Cog):
 
             @commands.before_invoke(record_usage)
             @commands.command()
             async def when(self, ctx): # Output: <User> used when at <Time>
-                await ctx.send(f'and i have existed since {ctx.bot.user.created_at}')
+                await ctx.send(f'and I have existed since {ctx.bot.user.created_at}')
 
             @commands.command()
             async def where(self, ctx): # Output: <Nothing>
@@ -2298,13 +2467,16 @@ def before_invoke(coro) -> Callable[[T], T]:
 
         bot.add_cog(What())
     """
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         if isinstance(func, Command):
             func.before_invoke(coro)
         else:
             func.__before_invoke__ = coro
         return func
+
     return decorator  # type: ignore
+
 
 def after_invoke(coro) -> Callable[[T], T]:
     """A decorator that registers a coroutine as a post-invoke hook.
@@ -2314,10 +2486,12 @@ def after_invoke(coro) -> Callable[[T], T]:
 
     .. versionadded:: 1.4
     """
-    def decorator(func: Union[Command, CoroFunc]) -> Union[Command, CoroFunc]:
+
+    def decorator(func: Command | CoroFunc) -> Command | CoroFunc:
         if isinstance(func, Command):
             func.after_invoke(coro)
         else:
             func.__after_invoke__ = coro
         return func
+
     return decorator  # type: ignore
