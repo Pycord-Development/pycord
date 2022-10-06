@@ -183,3 +183,7 @@ __pycache__
 .vscode/*
 test.py
 node_modules/*
+
+# Tests
+pycord-*.pem
+testing.q/
