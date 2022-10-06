@@ -924,6 +924,63 @@ class ForumChannel(_TextChannel):
         tag_data = filter(lambda x: x["name"] == name,forum_channel.available_tags)
         return Tag(state=self._state, data=tag_data)
     
+    async def delete_tag(
+        self,
+        *,
+        tag: Tag,
+    ) -> None:
+        """|coro|
+
+        Deletes a tag in this forum channel.
+
+        .. versionadded:: 2.0
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to delete a tag.
+        HTTPException
+            Deleting the tag failed.
+            Tag names must be unique.
+
+        Returns
+        --------
+        :class:`Tag`
+            The created tag
+        """
+        forum_channel : ForumChannel = await self._state.http.edit_channel(
+            self.id,
+            available_tags = [tag_.to_dict() for tag_ in self.available_tags if tag_.name != tag.name],
+            
+        )
+        return None
+    
+    async def get_tag(
+        self,
+        *,
+        name: str,
+    ) -> Tag:
+        """|coro|
+
+        Gets a tag in this forum channel.
+
+        .. versionadded:: 2.0
+
+        Raises
+        -------
+        Forbidden
+            You do not have permissions to get a tag.
+        HTTPException
+            Getting the tag failed.
+            Tag names must be unique.
+
+        Returns
+        --------
+        :class:`Tag`
+            The created tag
+        """
+        tag_data = filter(lambda x: x["name"] == name,self.available_tags)
+        return Tag(state=self._state, data=tag_data)
 
     async def create_thread(
         self,
