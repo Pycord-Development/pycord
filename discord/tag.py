@@ -68,7 +68,7 @@ class Tag():
         if self.emoji_id is None:
             return None
 
-        return self._state._get_guild_emoji(self.emoji_id) or PartialEmoji(name=self.emoji_name, id=self.emoji_id)
+        return self._state.get_emoji(self.emoji_id) or PartialEmoji(name=self.emoji_name, id=self.emoji_id)
 
     @property
     def guild(self) -> Optional[Guild]:
