@@ -885,7 +885,6 @@ class ForumChannel(_TextChannel):
         *,
         name: str,
         emoji: Optional[Union[Emoji, PartialEmoji, str]] = None,
-        moderated : bool = False,
     ) -> Tag:
         """|coro|
 
@@ -893,28 +892,13 @@ class ForumChannel(_TextChannel):
 
         .. versionadded:: 2.0
 
-        Parameters
-        -----------
-        name: :class:`str`
-            The name of the tag.
-
-        emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
-            The emoji to use for the tag. This can be a custom emoji or a unicode emoji.
-            If ``None`` is passed then the tag will not have an emoji.
-            Defaults to ``None``.
-
-        moderated: :class:`bool`
-            Whether the tag is moderated or not. Defaults to ``False``.
-            Only allow moderators to apply tag.
-            whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
-
-
         Raises
         -------
         Forbidden
             You do not have permissions to create a tag.
         HTTPException
             Creating the tag failed.
+            Tag names must be unique.
 
         Returns
         --------
@@ -934,7 +918,7 @@ class ForumChannel(_TextChannel):
 
         forum_channel : ForumChannel = await self._state.http.edit_channel(
             self.id,
-            available_tags = [data] + [tag_.__dict__ for tag_ in self.available_tags],
+            available_tags = [data] + [tag_.to_dict() for tag_ in self.available_tags],
             
         )
         tag_data = filter(lambda x: x["name"] == name,forum_channel.available_tags)
@@ -959,7 +943,7 @@ class ForumChannel(_TextChannel):
         slowmode_delay: int = MISSING,
         reason: Optional[str] = None,
         tag : Optional[Union[Tag, str]] = None,
-        tags: Optional[list[Tag]] = [],
+        tags: Optional[list[Tag]] = None,
     ) -> Thread:
         """|coro|
 
@@ -1011,14 +995,6 @@ class ForumChannel(_TextChannel):
             If not provided, the forum channel's default slowmode is used.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
-        tag: Optional[Union[:class:`Tag`, :class:`str`]]
-            The tag to apply to the thread. This can be a tag object or a tag name.
-            If ``None`` is passed then the thread will not have a tag.
-            Defaults to ``None``.
-        tags: Optional[list[:class:`Tag`]]
-            A list of tags to apply to the thread. This can be a tag object or a tag name.
-            If ``None`` is passed then the thread will not have a tag.
-            Defaults to ``[]``.
 
         Raises
         -------

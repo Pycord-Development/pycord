@@ -111,3 +111,8 @@ class Tag():
     
     
 
+
+    def __dict__(self) -> dict:
+        return self.to_dict()    
+    
+

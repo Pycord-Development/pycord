@@ -1135,10 +1135,10 @@ class HTTPClient:
             payload["rate_limit_per_user"] = rate_limit_per_user
         
         if tag:
-            payload["applied_tags"] = [tag.__dict__]
+            payload["applied_tags"] = [tag.id]
         
         if tags:
-            payload["applied_tags"] = [tag_.__dict__ for tag_ in tags] + [tag.__dict__] if tag else []
+            payload["applied_tags"] = [tag_.id for tag_ in tags] + [tag.id] if tag else []
 
         # TODO: Once supported by API, remove has_message=true query parameter
         route = Route("POST", "/channels/{channel_id}/threads?has_message=true", channel_id=channel_id)
