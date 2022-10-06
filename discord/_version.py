@@ -74,7 +74,7 @@ version_regex = re.compile(
     r"^(?P<major>\d+)(?:\.(?P<minor>\d+))?(?:\.(?P<patch>\d+))?"
     r"(?:(?P<level>rc|a|b)(?P<serial>\d+))?"
     r"(?:\.dev(?P<build>\d+))?"
-    r"(?:\+(?:(?:g(?P<commit>[a-fA-F0-9]{8})(?:\.d(?P<date>\d{4}\d{2}\d{2})|))|d(?P<date1>\d{4}\d{2}\d{2})))?$"
+    r"(?:\+(?:(?:g(?P<commit>[a-fA-F0-9]{4,40})(?:\.d(?P<date>\d{4}\d{2}\d{2})|))|d(?P<date1>\d{4}\d{2}\d{2})))?$"
 )
 version_match = version_regex.match(__version__)
 if version_match is None:
