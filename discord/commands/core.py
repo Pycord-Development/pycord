@@ -589,7 +589,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         This is the root parent ID. For example, in ``/one two three``
         the qualified ID would return ``one.id``.
         """
-        if getattr(self, "parent", None) is not None:
+        if self.id is None:
             return self.parent.qualified_id
         return self.id
 
