@@ -813,8 +813,7 @@ class SlashCommand(ApplicationCommand):
     @cog.setter
     def cog(self, val):
         self._cog = val
-        if not self.options:
-            self._validate_parameters()
+        self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -1115,7 +1114,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog = MISSING
         self.id = None
 
         # Permissions
@@ -1161,7 +1160,9 @@ class SlashCommandGroup(ApplicationCommand):
 
     def add_command(self, command: SlashCommand) -> None:
         # check if subcommand has no cog set
-        if command.cog is MISSING:
+        # also check if cog is MISSING because it
+        # might not have been set by the cog yet
+        if command.cog is MISSING and self.cog is not MISSING:
             command.cog = self.cog
 
         self.subcommands.append(command)
@@ -1268,7 +1269,7 @@ class SlashCommandGroup(ApplicationCommand):
                 guild_ids=guild_ids,
                 parent=self,
             )
-            self.subcommands.append(group)
+            self.add_command(group)
             return group
 
         return inner
