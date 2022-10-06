@@ -10,13 +10,29 @@ info).
 
 ## [Unreleased]
 
+## [2.2.1] - 2022-10-05
+
+### Added
+
+- New `SlashCommand.qualified_id` attribute.
+  ([#1672](https://github.com/Pycord-Development/pycord/pull/1672))
+
+### Fixed
+
+- Fixed a `TypeError` in `ban()` methods related to the new `delete_message_seconds`
+  parameter. ([#1666](https://github.com/Pycord-Development/pycord/pull/1666))
+- Fixed broken `cog` and `parent` attributes on commands in cogs.
+  ([#1662](https://github.com/Pycord-Development/pycord/pull/1662))
+- Fixed `SlashCommand.mention` for subcommands.
+  ([#1672](https://github.com/Pycord-Development/pycord/pull/1672))
+
 ## [2.2.0] - 2022-10-02
 
 ### Added
 
-- New Guild Feature `INVITES_DISABLED`
+- New Guild Feature `INVITES_DISABLED`.
   ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
-- `suppress` kwarg to `Messageable.send()`
+- `suppress` kwarg to `Messageable.send()`.
   ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
@@ -46,10 +62,10 @@ info).
 
 ### Fixed
 
-- Various fixes to ext.bridge groups
+- Various fixes to ext.bridge groups.
   ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
   [#1631](https://github.com/Pycord-Development/pycord/pull/1631))
-- Fix `VOICE_SERVER_UPDATE` error
+- Fix `VOICE_SERVER_UPDATE` error.
   ([#1624](https://github.com/Pycord-Development/pycord/pull/1624))
 - Removed unnecessary instance check in autocomplete.
   ([#1643](https://github.com/Pycord-Development/pycord/pull/1643))
@@ -375,7 +391,8 @@ info).
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
