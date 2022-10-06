@@ -75,7 +75,7 @@ class BridgeSlashCommand(SlashCommand):
     """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, brief="description")
+        self.brief = kwargs.pop('brief', None)
         super().__init__(func, **kwargs)
 
 
@@ -83,7 +83,6 @@ class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, description="brief")
         super().__init__(func, **kwargs)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
