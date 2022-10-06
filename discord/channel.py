@@ -1052,6 +1052,10 @@ class ForumChannel(_TextChannel):
             If not provided, the forum channel's default slowmode is used.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
+        tag: :class:`Tag`
+            The tag to use for the thread.
+        tags: List[:class:`Tag`]
+            A list of tags to use for the thread. 
 
         Raises
         -------
