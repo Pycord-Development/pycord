@@ -531,6 +531,12 @@ class Cog(metaclass=CogMeta):
             command._set_cog(self)
 
             if isinstance(command, ApplicationCommand):
+                if isinstance(command, discord.SlashCommandGroup):
+                    for x in command.subcommands:
+                        if isinstance(x, discord.SlashCommandGroup):
+                            for y in x.subcommands:
+                                y.parent = x
+                        x.parent = command
                 bot.add_application_command(command)
 
             elif command.parent is None:

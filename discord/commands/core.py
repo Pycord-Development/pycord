@@ -582,6 +582,17 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         else:
             return self.name
 
+    @property
+    def qualified_id(self) -> int:
+        """:class:`int`: Retrieves the fully qualified command ID.
+
+        This is the root parent ID. For example, in ``/one two three``
+        the qualified ID would return ``one.id``.
+        """
+        if self.id is None:
+            return self.parent.qualified_id
+        return self.id
+
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
@@ -685,8 +696,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-
-        self._cog = MISSING
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
@@ -810,7 +819,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return self._cog
+        return getattr(self, "_cog", MISSING)
 
     @cog.setter
     def cog(self, val):
@@ -823,7 +832,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def mention(self) -> str:
-        return f"</{self.qualified_name}:{self.id}>"
+        return f"</{self.qualified_name}:{self.qualified_id}>"
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -1116,7 +1125,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog = MISSING
         self.id = None
 
         # Permissions
@@ -1160,12 +1169,21 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        # check if subcommand has no cog set
+        # also check if cog is MISSING because it
+        # might not have been set by the cog yet
+        if command.cog is MISSING and self.cog is not MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
@@ -1262,7 +1280,7 @@ class SlashCommandGroup(ApplicationCommand):
                 guild_ids=guild_ids,
                 parent=self,
             )
-            self.subcommands.append(group)
+            self.add_command(group)
             return group
 
         return inner
