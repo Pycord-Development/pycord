@@ -33,7 +33,7 @@ __all__ = ("__version__", "VersionInfo", "version_info")
 
 from typing import Literal, NamedTuple
 
-from discord.utils import deprecated
+from .utils import deprecated
 
 try:
     __version__ = version("py-cord")
