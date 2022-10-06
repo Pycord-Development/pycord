@@ -50,10 +50,11 @@ from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
 
-TEST_MODE = bool(int(os.getenv('PYCORD_TEST_MODE', 0)))
+TEST_MODE = bool(int(os.getenv("PYCORD_TEST_MODE", 0)))
 if TEST_MODE:
     import ssl
-    ssl_cert = os.getenv('PYCORD_CERT_PATH')
+
+    ssl_cert = os.getenv("PYCORD_CERT_PATH")
     assert os.path.exists(ssl_cert)
     ssl_context_override = ssl.create_default_context(cafile=ssl_cert)
 else:
@@ -413,7 +414,9 @@ class HTTPClient:
         self.token = token
 
         try:
-            data = await self.request(Route('GET', '/users/@me'), ssl=ssl_context_override)  # Without this it can't login during unit testing
+            data = await self.request(
+                Route("GET", "/users/@me"), ssl=ssl_context_override
+            )  # Without this it can't login during unit testing
         except HTTPException as exc:
             self.token = old_token
             if exc.status == 401:
