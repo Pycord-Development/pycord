@@ -582,6 +582,17 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         else:
             return self.name
 
+    @property
+    def qualified_id(self) -> int:
+        """:class:`int`: Retrieves the fully qualified command ID.
+
+        This is the root parent ID. For example, in ``/one two three``
+        the qualified ID would return ``one.id``.
+        """
+        if getattr(self, "parent", None) is not None:
+            return self.parent.qualified_id
+        return self.id
+
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
@@ -823,7 +834,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def mention(self) -> str:
-        return f"</{self.qualified_name}:{self.id}>"
+        return f"</{self.qualified_name}:{self.qualified_id}>"
 
     def to_dict(self) -> dict:
         as_dict = {
