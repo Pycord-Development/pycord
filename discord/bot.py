@@ -123,7 +123,7 @@ class ApplicationCommandMixin(ABC):
         if isinstance(command, SlashCommand) and command.is_subcommand:
             raise TypeError("The provided command is a sub-command of group")
 
-        if command.cog is MISSING or command.cog is None:
+        if command.cog is MISSING:
             command._set_cog(None)
 
         if self._bot.debug_guilds and command.guild_ids is None:
