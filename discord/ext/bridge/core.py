@@ -329,12 +329,12 @@ class BridgeCommandGroup(BridgeCommand):
         def wrap(callback):
             slash = self.slash_variant.command(
                 *args,
-                **filter_params(kwargs, brief="description"),
+                **kwargs,
                 cls=BridgeSlashCommand,
             )(callback)
             ext = self.ext_variant.command(
                 *args,
-                **filter_params(kwargs, description="brief"),
+                **kwargs,
                 cls=BridgeExtCommand,
             )(callback)
             command = BridgeCommand(
