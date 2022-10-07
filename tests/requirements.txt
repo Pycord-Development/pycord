@@ -1,6 +1,6 @@
 aiounittest
 persist-queue
-proxy.py
+proxy.py~=2.3.1
 filemagic
 pyOpenSSL
 ndg-httpsclient
