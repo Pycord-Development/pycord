@@ -15,7 +15,8 @@ envecho:
 	@echo $(PYCORD_CERT_PATH)
 
 runtests:
-	python -m pytest
+	coverage run -m pytest
+	coverage xml
 
 gencerts:
 	# Create CA keyfile and remove passphrase
@@ -34,3 +35,5 @@ gencerts:
 		--private-key-path $(CA_SIGNKEY)
 	python -m proxy.common.pki remove_passphrase \
 		--private-key-path $(CA_SIGNKEY)
+
+ci: gencerts runtests
