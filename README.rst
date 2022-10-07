@@ -132,7 +132,7 @@ Traditional Commands Example
 
 You can find more examples in the examples directory.
 
-Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
+Note: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.
 
 Useful Links
 ------------
