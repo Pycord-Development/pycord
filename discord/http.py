@@ -50,7 +50,7 @@ from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
 
-TEST_MODE = bool(int(os.getenv("PYCORD_TEST_MODE", 0)))
+TEST_MODE = bool(int(os.getenv("PYCORD_TEST_MODE") or 0))
 if TEST_MODE:
     import ssl
 
