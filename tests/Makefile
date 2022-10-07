@@ -15,7 +15,7 @@ envecho:
 	@echo $(PYCORD_CERT_PATH)
 
 runtests:
-	python -m unittest
+	python -m pytest
 
 gencerts:
 	# Create CA keyfile and remove passphrase
