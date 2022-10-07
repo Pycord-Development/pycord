@@ -34,7 +34,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
       - name: Run code coverage with pytest
         run: |
-          cd tests && echo "PYCORD_BOT_TOKEN=${{ secrets.DISCORD_TOKEN}} > .env && make ci
+          cd tests && echo "PYCORD_BOT_TOKEN=${{ secrets.DISCORD_TOKEN }}" > .env && make ci
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v2
         with:
