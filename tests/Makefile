@@ -9,6 +9,9 @@ CA_KEYFILE := pycord-key.pem
 CA_CERTFILE := pycord-cert.pem
 CA_SIGNKEY := pycord-signkey.pem
 
+install:
+	pip install -r requirements.txt
+
 envecho:
 	@echo $(PYCORD_TEST_MODE)
 	@echo $(PYCORD_BOT_TOKEN)
@@ -36,4 +39,4 @@ gencerts:
 	python -m proxy.common.pki remove_passphrase \
 		--private-key-path $(CA_SIGNKEY)
 
-ci: gencerts runtests
+ci: install gencerts runtests
