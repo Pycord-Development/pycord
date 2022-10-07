@@ -75,7 +75,7 @@ class BridgeSlashCommand(SlashCommand):
     """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        self.brief = kwargs.pop('brief', None)
+        self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
 
