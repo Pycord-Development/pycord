@@ -73,13 +73,19 @@ else:
 
 
 __all__ = (
+    "parse_time",
+    "warn_deprecated",
+    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
     "find",
     "get",
+    "get_or_fetch",
     "sleep_until",
     "utcnow",
+    "resolve_invite",
+    "resolve_template",
     "remove_markdown",
     "escape_markdown",
     "escape_mentions",
@@ -88,8 +94,8 @@ __all__ = (
     "raw_role_mentions",
     "as_chunks",
     "format_dt",
-    "basic_autocomplete",
     "generate_snowflake",
+    "basic_autocomplete",
     "filter_params",
 )
 
@@ -252,6 +258,18 @@ def parse_time(timestamp: str | None) -> datetime.datetime | None:
 
 
 def parse_time(timestamp: str | None) -> datetime.datetime | None:
+    """A helper function to convert an ISO 8601 timestamp to a datetime object.
+
+    Parameters
+    -----------
+    timestamp: Optional[:class:`str`]
+        The timestamp to convert.
+
+    Returns
+    --------
+    Optional[:class:`datetime.datetime`]
+        The converted datetime object.
+    """
     if timestamp:
         return datetime.datetime.fromisoformat(timestamp)
     return None
@@ -408,7 +426,8 @@ def oauth_url(
 
 
 def snowflake_time(id: int) -> datetime.datetime:
-    """
+    """Converts a Discord snowflake ID to a UTC-aware datetime object.
+
     Parameters
     ----------
     id: :class:`int`
@@ -542,8 +561,49 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
     return None
 
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
-    # TODO: Document this
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
+    """This is a :ref:`coroutine <coroutine>`
+    Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
+    If the fetch also fails, an error will be raised.
+
+    Parameters
+    ----------
+    obj: Any
+        The object to use the get or fetch methods in
+    attr: :class:`str`
+        The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute.
+    id: :class:`int`
+        The ID of the object
+    default: Any
+        The default value to return if the object is not found, instead of raising an error.
+
+    Returns
+    -------
+    Any
+        The object found or the default value.
+
+    Raises
+    ------
+    :exc:`AttributeError`
+        The object is missing a ``get_`` or ``fetch_`` method
+    :exc:`NotFound`
+        Invalid ID for the object
+    :exc:`HTTPException`
+        An error occurred fetching the object
+    :exc:`Forbidden`
+        You do not have permission to fetch the object
+
+    Examples
+    --------
+
+    Getting a guild from a guild ID: ::
+
+        guild = await utils.get_or_fetch(client, 'guild', guild_id)
+
+    Getting a channel from the guild. If the channel is not found, return None: ::
+
+        channel = await utils.get_or_fetch(guild, 'channel', channel_id, default=None)
+    """
     getter = getattr(obj, f"get_{attr}")(id)
     if getter is None:
         try:
