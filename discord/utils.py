@@ -1003,6 +1003,8 @@ def escape_mentions(text: str) -> str:
 
 def raw_mentions(text: str) -> list[int]:
     """Returns a list of user IDs matching ``<@user_id>`` in the string.
+    
+    .. versionadded:: 2.2
 
     Parameters
     ----------
@@ -1019,6 +1021,8 @@ def raw_mentions(text: str) -> list[int]:
 
 def raw_channel_mentions(text: str) -> list[int]:
     """Returns a list of channel IDs matching ``<@#channel_id>`` in the string.
+    
+    .. versionadded:: 2.2
 
     Parameters
     ----------
@@ -1035,6 +1039,8 @@ def raw_channel_mentions(text: str) -> list[int]:
 
 def raw_role_mentions(text: str) -> list[int]:
     """Returns a list of role IDs matching ``<@&role_id>`` in the string.
+    
+    .. versionadded:: 2.2
 
     Parameters
     ----------
