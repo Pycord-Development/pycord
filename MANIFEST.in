@@ -3,3 +3,17 @@ include LICENSE
 include requirements.txt
 include discord/bin/*.dll
 include discord/py.typed
+
+prune .github
+prune docs
+prune examples
+prune tests
+exclude discord/bin/COPYING
+exclude .flake8
+exclude .gitignore
+exclude .pre-commit-config.yaml
+exclude .prettierrc
+exclude .readthedocs.yml
+exclude CHANGELOG.md
+exclude FUNDING.yml
+exclude requirements-dev.txt
