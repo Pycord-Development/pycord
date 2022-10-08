@@ -217,7 +217,9 @@ class ApplicationCommandMixin(ABC):
                     return
                 commands = command.subcommands
             command = get(commands, name=names.pop())
-            if not isinstance(command, type) or (guild_ids is not None and command.guild_ids != guild_ids):
+            if not isinstance(command, type) or (
+                guild_ids is not None and command.guild_ids != guild_ids
+            ):
                 return
             return command
 
