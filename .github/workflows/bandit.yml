@@ -6,6 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
       - run: pip install bandit
       - run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
