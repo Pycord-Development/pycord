@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Any, Coroutine, Union, Callable, Awaitable
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Coroutine, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -341,7 +341,9 @@ class Interaction:
         ClientException
             The channel for the message could not be resolved.
         """
-        utils.warn_deprecated("Interaction.original_message", "Interaction.original_response", "2.2")
+        utils.warn_deprecated(
+            "Interaction.original_message", "Interaction.original_response", "2.2"
+        )
         return self.original_response
 
     async def edit_original_response(
@@ -468,7 +470,11 @@ class Interaction:
         ValueError
             The length of ``embeds`` was invalid.
         """
-        utils.warn_deprecated("Interaction.edit_original_message", "Interaction.edit_original_response", "2.2")
+        utils.warn_deprecated(
+            "Interaction.edit_original_message",
+            "Interaction.edit_original_response",
+            "2.2",
+        )
         return self.edit_original_response
 
     async def delete_original_response(self, *, delay: float | None = None) -> None:
@@ -518,7 +524,11 @@ class Interaction:
         Forbidden
             Deleted a message that is not yours.
         """
-        utils.warn_deprecated("Interaction.delete_original_message", "Interaction.delete_original_response", "2.2")
+        utils.warn_deprecated(
+            "Interaction.delete_original_message",
+            "Interaction.delete_original_response",
+            "2.2",
+        )
         return self.delete_original_response
 
     def to_dict(self) -> dict[str, Any]:
