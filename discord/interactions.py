@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Any, Coroutine, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Union, Callable, Awaitable
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -325,7 +325,6 @@ class Interaction:
         self._original_response = message
         return message
 
-    @utils.deprecated("Interaction.original_response", "2.2")
     @property
     def original_message(self) -> Callable[..., Awaitable[InteractionMessage]]:
         """An alias for :meth:`original_response`.
@@ -342,6 +341,7 @@ class Interaction:
         ClientException
             The channel for the message could not be resolved.
         """
+        utils.warn_deprecated("Interaction.original_message", "Interaction.original_response", "2.2")
         return self.original_response
 
     async def edit_original_response(
@@ -448,7 +448,6 @@ class Interaction:
 
         return message
 
-    @utils.deprecated("Interaction.edit_original_response", "2.2")
     @property
     def edit_original_message(self) -> Callable[..., Awaitable[InteractionMessage]]:
         """An alias for :meth:`edit_original_response`.
@@ -469,6 +468,7 @@ class Interaction:
         ValueError
             The length of ``embeds`` was invalid.
         """
+        utils.warn_deprecated("Interaction.edit_original_message", "Interaction.edit_original_response", "2.2")
         return self.edit_original_response
 
     async def delete_original_response(self, *, delay: float | None = None) -> None:
@@ -507,7 +507,6 @@ class Interaction:
         else:
             await func
 
-    @utils.deprecated("Interaction.delete_original_response", "2.2")
     @property
     def delete_original_message(self) -> Callable[..., Awaitable[None]]:
         """An alias for :meth:`delete_original_response`.
@@ -519,6 +518,7 @@ class Interaction:
         Forbidden
             Deleted a message that is not yours.
         """
+        utils.warn_deprecated("Interaction.delete_original_message", "Interaction.delete_original_response", "2.2")
         return self.delete_original_response
 
     def to_dict(self) -> dict[str, Any]:
