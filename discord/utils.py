@@ -562,7 +562,8 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 
 async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
-    """This is a :ref:`coroutine <coroutine>`
+    """|coro|
+    
     Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
     If the fetch also fails, an error will be raised.
 
