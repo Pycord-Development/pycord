@@ -326,7 +326,8 @@ class Interaction:
         return message
 
     @utils.deprecated("Interaction.original_response", "2.2")
-    async def original_message(self):
+    @property
+    def original_message(self) -> Callable[..., Awaitable[InteractionMessage]]:
         """An alias for :meth:`original_response`.
 
         Returns
@@ -341,7 +342,7 @@ class Interaction:
         ClientException
             The channel for the message could not be resolved.
         """
-        return self.original_response()
+        return self.original_response
 
     async def edit_original_response(
         self,
@@ -448,7 +449,8 @@ class Interaction:
         return message
 
     @utils.deprecated("Interaction.edit_original_response", "2.2")
-    async def edit_original_message(self, **kwargs):
+    @property
+    def edit_original_message(self) -> Callable[..., Awaitable[InteractionMessage]]:
         """An alias for :meth:`edit_original_response`.
 
         Returns
@@ -467,7 +469,7 @@ class Interaction:
         ValueError
             The length of ``embeds`` was invalid.
         """
-        return self.edit_original_response(**kwargs)
+        return self.edit_original_response
 
     async def delete_original_response(self, *, delay: float | None = None) -> None:
         """|coro|
@@ -506,7 +508,8 @@ class Interaction:
             await func
 
     @utils.deprecated("Interaction.delete_original_response", "2.2")
-    async def delete_original_message(self, **kwargs):
+    @property
+    def delete_original_message(self) -> Callable[..., Awaitable[None]]:
         """An alias for :meth:`delete_original_response`.
 
         Raises
@@ -516,7 +519,7 @@ class Interaction:
         Forbidden
             Deleted a message that is not yours.
         """
-        return self.delete_original_response(**kwargs)
+        return self.delete_original_response
 
     def to_dict(self) -> dict[str, Any]:
         """
