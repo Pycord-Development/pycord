@@ -37,7 +37,7 @@ jobs:
           coverage run -m pytest
           coverage xml
       - name: Upload code coverage to codecov.io
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           #        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           env_vars: OS,PYTHON
