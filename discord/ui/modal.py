@@ -113,7 +113,8 @@ class Modal:
 
     @property
     def title(self) -> str:
-        """:class:`str`: The title of the modal dialog."""
+        """:class:`str`: The title of the modal dialog.
+        """
         return self._title
 
     @title.setter
@@ -126,7 +127,8 @@ class Modal:
 
     @property
     def children(self) -> list[InputText]:
-        """List[:class:`InputText`]: The child components associated with the modal dialog."""
+        """List[:class:`InputText`]: The child components associated with the modal dialog.
+        """
         return self._children
 
     @children.setter
@@ -141,7 +143,8 @@ class Modal:
 
     @property
     def custom_id(self) -> str:
-        """:class:`str`: The ID of the modal dialog that gets received during an interaction."""
+        """:class:`str`: The ID of the modal dialog that gets received during an interaction.
+        """
         return self._custom_id
 
     @custom_id.setter
@@ -219,7 +222,8 @@ class Modal:
             pass
 
     def stop(self) -> None:
-        """Stops listening to interaction events from the modal dialog."""
+        """Stops listening to interaction events from the modal dialog.
+        """
         if not self._stopped.done():
             self._stopped.set_result(True)
         self.__timeout_expiry = None
@@ -228,7 +232,8 @@ class Modal:
             self.__timeout_task = None
 
     async def wait(self) -> bool:
-        """Waits for the modal dialog to be submitted."""
+        """Waits for the modal dialog to be submitted.
+        """
         return await self._stopped
 
     def to_dict(self):

@@ -361,11 +361,13 @@ class HistoryIterator(_AsyncIterator["Message"]):
                 )
 
     async def _retrieve_messages(self, retrieve) -> list[Message]:
-        """Retrieve messages and update next parameters."""
+        """Retrieve messages and update next parameters.
+        """
         raise NotImplementedError
 
     async def _retrieve_messages_before_strategy(self, retrieve):
-        """Retrieve messages using before parameter."""
+        """Retrieve messages using before parameter.
+        """
         before = self.before.id if self.before else None
         data: list[MessagePayload] = await self.logs_from(
             self.channel.id, retrieve, before=before
@@ -377,7 +379,8 @@ class HistoryIterator(_AsyncIterator["Message"]):
         return data
 
     async def _retrieve_messages_after_strategy(self, retrieve):
-        """Retrieve messages using after parameter."""
+        """Retrieve messages using after parameter.
+        """
         after = self.after.id if self.after else None
         data: list[MessagePayload] = await self.logs_from(
             self.channel.id, retrieve, after=after
@@ -389,7 +392,8 @@ class HistoryIterator(_AsyncIterator["Message"]):
         return data
 
     async def _retrieve_messages_around_strategy(self, retrieve):
-        """Retrieve messages using around parameter."""
+        """Retrieve messages using around parameter.
+        """
         if self.around:
             around = self.around.id if self.around else None
             data: list[MessagePayload] = await self.logs_from(
@@ -609,11 +613,13 @@ class GuildIterator(_AsyncIterator["Guild"]):
                 await self.guilds.put(self.create_guild(element))
 
     async def _retrieve_guilds(self, retrieve) -> list[Guild]:
-        """Retrieve guilds and update next parameters."""
+        """Retrieve guilds and update next parameters.
+        """
         raise NotImplementedError
 
     async def _retrieve_guilds_before_strategy(self, retrieve):
-        """Retrieve guilds using before parameter."""
+        """Retrieve guilds using before parameter.
+        """
         before = self.before.id if self.before else None
         data: list[GuildPayload] = await self.get_guilds(retrieve, before=before)
         if len(data):
@@ -623,7 +629,8 @@ class GuildIterator(_AsyncIterator["Guild"]):
         return data
 
     async def _retrieve_guilds_after_strategy(self, retrieve):
-        """Retrieve guilds using after parameter."""
+        """Retrieve guilds using after parameter.
+        """
         after = self.after.id if self.after else None
         data: list[GuildPayload] = await self.get_guilds(retrieve, after=after)
         if len(data):
