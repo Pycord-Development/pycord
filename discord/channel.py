@@ -30,15 +30,10 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
-    List,
     Mapping,
-    Optional,
     Tuple,
-    Type,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -1039,7 +1034,7 @@ class ForumChannel(_TextChannel):
         reason: str | None = None,
         tag: Tag | str | None = None,
         tags: list[Tag] | None = None,
-    ) -> Tuple(Thread, Message):
+    ) -> tuple(Thread, Message):
         """|coro|
 
         Creates a thread in this forum channel.
