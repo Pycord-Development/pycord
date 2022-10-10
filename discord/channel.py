@@ -1039,7 +1039,7 @@ class ForumChannel(_TextChannel):
         reason: str | None = None,
         tag: Tag | str | None = None,
         tags: list[Tag] | None = None,
-    ) -> Tuple(Thread, Message):
+    ) -> Tuple[Thread, Message]:
         """|coro|
 
         Creates a thread in this forum channel.
