@@ -575,7 +575,7 @@ Connection
     .. warning::
 
         Overriding this event will not call :meth:`Bot.sync_commands`.
-        As a result, :class:`ApplicationCommand`s will not be registered.
+        As a result, :class:`ApplicationCommand` will not be registered.
 
 .. function:: on_shard_connect(shard_id)
 
