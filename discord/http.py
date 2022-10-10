@@ -1160,15 +1160,19 @@ class HTTPClient:
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
+            "message": {}
         }
+
+        
+
         if content:
-            payload["content"] = content
+            payload["message"]["content"] = content
 
         if embed:
-            payload["embeds"] = [embed]
+            payload["message"]["embeds"] = [embed]
 
         if embeds:
-            payload["embeds"] = embeds
+            payload["message"]["embeds"] = embeds
 
         if nonce:
             payload["nonce"] = nonce
@@ -1177,29 +1181,24 @@ class HTTPClient:
             payload["allowed_mentions"] = allowed_mentions
 
         if components:
-            payload["components"] = components
+            payload["message"]["components"] = components
 
         if stickers:
-            payload["sticker_ids"] = stickers
+            payload["message"]["sticker_ids"] = stickers
 
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
-
+        
         if tag:
             payload["applied_tags"] = [tag.id]
-
+        
         if tags:
-            payload["applied_tags"] = (
-                [tag_.id for tag_ in tags] + [tag.id] if tag else []
-            )
+            payload["applied_tags"] = [tag_.id for tag_ in tags] + [tag.id] if tag else []
 
-        # TODO: Once supported by API, remove has_message=true query parameter
-        route = Route(
-            "POST",
-            "/channels/{channel_id}/threads?has_message=true",
-            channel_id=channel_id,
-        )
-        return self.request(route, json=payload, reason=reason)
+        
+        route = Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id)
+        query = {'use_nested_fields': 1}
+        return self.request(route, json=payload, params=query, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(

@@ -1039,7 +1039,7 @@ class ForumChannel(_TextChannel):
         reason: str | None = None,
         tag: Tag | str | None = None,
         tags: list[Tag] | None = None,
-    ) -> Thread:
+    ) -> Tuple(Thread, Message):
         """|coro|
 
         Creates a thread in this forum channel.
@@ -1099,6 +1099,8 @@ class ForumChannel(_TextChannel):
         -------
         :class:`Thread`
             The created thread
+        :class:`Message`
+            The message sent in the thread
 
         Raises
         ------
@@ -1211,13 +1213,14 @@ class ForumChannel(_TextChannel):
                 tags=tags,
             )
         ret = Thread(guild=self.guild, state=self._state, data=data)
+        message = Message(channel=ret, state=self._state, data=data["message"])
         msg = ret.get_partial_message(data["last_message_id"])
         if view:
             state.store_view(view, msg.id)
 
         if delete_message_after is not None:
             await msg.delete(delay=delete_message_after)
-        return ret
+        return ret, message
 
 
 class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hashable):
