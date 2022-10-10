@@ -1500,7 +1500,7 @@ class Bot(BotBase, Client):
 
         .. versionadded:: 2.0
     auto_sync_commands: :class:`bool`
-        Whether to automatically sync slash commands. This will call sync_commands in on_connect, and in
+        Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
         .. versionadded:: 2.0
