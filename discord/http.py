@@ -29,20 +29,7 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Coroutine,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -1160,10 +1147,8 @@ class HTTPClient:
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
-            "message": {}
+            "message": {},
         }
-
-        
 
         if content:
             payload["message"]["content"] = content
@@ -1188,16 +1173,17 @@ class HTTPClient:
 
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
-        
+
         if tag:
             payload["applied_tags"] = [tag.id]
-        
-        if tags:
-            payload["applied_tags"] = [tag_.id for tag_ in tags] + [tag.id] if tag else []
 
-        
+        if tags:
+            payload["applied_tags"] = (
+                [tag_.id for tag_ in tags] + [tag.id] if tag else []
+            )
+
         route = Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id)
-        query = {'use_nested_fields': 1}
+        query = {"use_nested_fields": 1}
         return self.request(route, json=payload, params=query, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
