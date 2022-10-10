@@ -303,7 +303,7 @@ def warn_deprecated(
     since: Optional[:class:`str`]
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str]
+    removed: Optional[:class:`str`]
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
     reference: Optional[:class:`str`]
@@ -344,7 +344,7 @@ def deprecated(
     since: Optional[:class:`str`]
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str]
+    removed: Optional[:class:`str`]
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
     reference: Optional[:class:`str`]
@@ -562,7 +562,8 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 
 async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
-    """This is a :ref:`coroutine <coroutine>`
+    """|coro|
+
     Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
     If the fetch also fails, an error will be raised.
 
