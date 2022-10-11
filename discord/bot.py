@@ -655,7 +655,6 @@ class ApplicationCommandMixin(ABC):
                     await bot.sync_commands()
                 print(f"{bot.user.name} connected.")
 
-
         .. note::
             If you remove all guild commands from a particular guild, the library may not be able to detect and update
             the commands accordingly, as it would have to individually check for each guild. To force the library to
