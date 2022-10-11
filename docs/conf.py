@@ -186,19 +186,59 @@ resource_links = {
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
+base_colors = {
+    "white": "#ffffff",
+    "grey-1": "#f9f9fa",
+    "grey-1-8": "rgba(249, 249, 250, 0.8)",
+    "grey-2": "#ededf0",
+    "grey-3": "#d7d7db",
+    "grey-4": "#b1b1b3",
+    "grey-5": "#2a2a2b",
+    "grey-6": "#4a4a4f",
+    "grey-7": "#2a2a2b",
+    "grey-8": "#1e1e1f",
+    "black": "#0c0c0d",
+    "blue-1": "#3399ff",
+    "blue-2": "#0a84ff",
+    "blue-3": "#0060df",
+    "blue-4": "#003eaa",
+    "blue-5": "#002275",
+    "blue-6": "#000f40",
+    "blurple": "#7289da",
+}
+
 html_theme_options = {
     "source_repository": "https://github.com/Pycord-Development/pycord",
     "source_branch": "master",
     "source_directory": "docs/",
     "light_css_variables": {
+        # Theme Colors
         "color-brand-primary": "#5865f2",
-    },
+        # Custom Colors
+        "attribute-table-title": "var(--grey-6)",
+        "attribute-table-entry-border": "var(--grey-3)",
+        "attribute-table-entry-text": "var(--grey-5)",
+        "attribute-table-entry-hover-border": "var(--blue-2)",
+        "attribute-table-entry-hover-background": "var(--grey-2)",
+        "attribute-table-entry-hover-text": "var(--blue-2)",
+        "attribute-table-badge": "var(--grey-7)",
+    }
+    | base_colors,
     "dark_css_variables": {
+        # Theme Colors
         "color-foreground-primary": "#fff",
         "color-brand-primary": "#5865f2",
         "color-background-primary": "#17181a",
         "color-background-secondary": "#1a1c1e",
         "color-background-hover": "#33373a",
+        # Custom Colors
+        "attribute-table-title": "var(--grey-3)",
+        "attribute-table-entry-border": "var(--grey-5)",
+        "attribute-table-entry-text": "var(--grey-3)",
+        "attribute-table-entry-hover-border": "var(--blue-1)",
+        "attribute-table-entry-hover-background": "var(--grey-6)",
+        "attribute-table-entry-hover-text": "var(--blue-1)",
+        "attribute-table-badge": "var(--grey-4)",
     },
 }
 
