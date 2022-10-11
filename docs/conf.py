@@ -215,6 +215,7 @@ html_theme_options = {
         # Theme Colors
         "color-brand-primary": "#5865f2",
         # Custom Colors
+        **base_colors,
         "attribute-table-title": "var(--grey-6)",
         "attribute-table-entry-border": "var(--grey-3)",
         "attribute-table-entry-text": "var(--grey-5)",
@@ -222,8 +223,7 @@ html_theme_options = {
         "attribute-table-entry-hover-background": "var(--grey-2)",
         "attribute-table-entry-hover-text": "var(--blue-2)",
         "attribute-table-badge": "var(--grey-7)",
-    }
-    | base_colors,
+    },
     "dark_css_variables": {
         # Theme Colors
         "color-foreground-primary": "#fff",
