@@ -131,3 +131,11 @@ h5,
 h6 {
   font-family: "Saira", monospace;
 }
+
+img[src="_images/snake.svg"] {
+  display: var(--light-snake-display);
+}
+
+img[src="_images/snake_dark.svg"] {
+  display: var(--dark-snake-display);
+}

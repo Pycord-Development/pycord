@@ -227,6 +227,8 @@ html_theme_options = {
         "attribute-table-entry-hover-background": "var(--grey-2)",
         "attribute-table-entry-hover-text": "var(--blue-2)",
         "attribute-table-badge": "var(--grey-7)",
+        "light-snake-display": "unset",
+        "dark-snake-display": "none",
     },
     "dark_css_variables": {
         # Theme
@@ -243,6 +245,8 @@ html_theme_options = {
         "attribute-table-entry-hover-background": "var(--grey-6)",
         "attribute-table-entry-hover-text": "var(--blue-1)",
         "attribute-table-badge": "var(--grey-4)",
+        "light-snake-display": "none",
+        "dark-snake-display": "unset",
     },
 }
 
