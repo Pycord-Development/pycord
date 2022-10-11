@@ -645,7 +645,16 @@ class ApplicationCommandMixin(ABC):
         register all commands.
 
         By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the
-        :func:`.on_connect` event, then you should invoke this coroutine as well.
+        :func:`.on_connect` event, then you should invoke this coroutine as well such as the follwing:
+
+        .. code-block:: python
+
+            @bot.event
+            async def on_connect():
+                if bot.auto_sync_commands:
+                    await bot.sync_commands()
+                print(f"{bot.user.name} connected.")
+
 
         .. note::
             If you remove all guild commands from a particular guild, the library may not be able to detect and update
