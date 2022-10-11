@@ -19,6 +19,13 @@ Pycord
 
 A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
+Fork Features
+------------
+- Tag objects added
+- Createing thread from forum channel return Tuple[Thread,Message]
+- Create , delete , get tags
+
+
 Key Features
 ------------
 
