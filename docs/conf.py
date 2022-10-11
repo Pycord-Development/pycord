@@ -30,19 +30,24 @@ sys.path.append(os.path.abspath("extensions"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "builder",
+    # "builder",
     "sphinx.ext.autodoc",
     "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinxcontrib_trio",
-    "details",
+    # "details",
     "exception_hierarchy",
     "attributetable",
     "resourcelinks",
     "nitpick_file_ignorer",
     "myst_parser",
+    "sphinx_copybutton",
+    "sphinxext.opengraph",
 ]
+
+ogp_site_url = "https://pycord.dev/"
+ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
 autodoc_typehints = "none"
@@ -68,7 +73,7 @@ rst_prolog = """
 """
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+# templates_path = ["_templates"]
 
 # The suffix of source filenames.
 source_suffix = {
@@ -119,7 +124,7 @@ gettext_compact = False
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build"]
+exclude_patterns = ["_build", "node_modules"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -158,7 +163,7 @@ html_experimental_html5_writer = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "basic"
+html_theme = "furo"
 
 html_context = {
     "discord_invite": "https://pycord.dev/discord",
@@ -181,8 +186,21 @@ resource_links = {
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {
-# }
+html_theme_options = {
+    "source_repository": "https://github.com/Pycord-Development/pycord",
+    "source_branch": "master",
+    "source_directory": "docs/",
+    "light_css_variables": {
+        "color-brand-primary": "#5865f2",
+    },
+    "dark_css_variables": {
+        "color-foreground-primary": "#fff",
+        "color-brand-primary": "#5865f2",
+        "color-background-primary": "#17181a",
+        "color-background-secondary": "#1a1c1e",
+        "color-background-hover": "#33373a",
+    },
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -196,7 +214,7 @@ resource_links = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-# html_logo = None
+html_logo = "./images/pycord_logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -207,6 +225,8 @@ html_favicon = "./images/pycord.ico"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+html_css_files = ["css/custom.css"]
+html_js_files = ["js/custom.js"]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -268,7 +288,7 @@ html_static_path = ["_static"]
 # implements a search results scorer. If empty, the default will be used.
 html_search_scorer = "_static/scorer.js"
 
-html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
+# html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "pycorddoc"
