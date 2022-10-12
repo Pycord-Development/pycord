@@ -104,12 +104,12 @@ else:
     date_info = None
 
 version_info: VersionInfo = VersionInfo(
-    major=raw_info["major"],
-    minor=raw_info["minor"],
-    micro=raw_info["patch"],
+    major=int(raw_info["major"]),
+    minor=int(raw_info["minor"]),
+    micro=int(raw_info["patch"]),
     release_level=level_info,
     serial=raw_info["serial"],
-    build=raw_info["build"],
+    build=int(raw_info["build"]),
     commit=raw_info["commit"],
     date=date_info,
 )
