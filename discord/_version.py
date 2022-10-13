@@ -109,7 +109,7 @@ version_info: VersionInfo = VersionInfo(
     micro=int(raw_info["patch"] or 0) or None,
     release_level=level_info,
     serial=raw_info["serial"],
-    build=int(raw_info["build"]),
+    build=int(raw_info["build"] or 0) or None,
     commit=raw_info["commit"],
     date=date_info,
 )
