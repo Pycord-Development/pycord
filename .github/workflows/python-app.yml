@@ -45,6 +45,7 @@ jobs:
           make install
           make gencerts
           make envecho
+          pip freeze
           ls -la
           make runtests
       - name: Upload code coverage to codecov.io
@@ -55,5 +56,5 @@ jobs:
           files: ./tests/coverage.xml
           flags: pytest # optional
           name: codecov-umbrella # optional
-          fail_ci_if_error: false # Enable once we have good coverage
+          fail_ci_if_error: true # Enable once we have good coverage
           verbose: true # optional (default = false)
