@@ -20,6 +20,7 @@ from parsing import CombinedHttpRequest
 from persistqueue import PDict
 from proxy import Proxy
 
+from discord.client import Client
 from discord.http import HTTPClient, Route
 
 RANDOM_ID_CHARS = string.ascii_letters + string.digits
@@ -52,9 +53,9 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         self.request_queue = PDict("testing.q", "requests")
         # Setting default value allows pycord to raise LoginFailure
         self.token = os.getenv("PYCORD_BOT_TOKEN", "")
-        self.http_client = HTTPClient(proxy=self.proxy_url)
+        self.client = Client(proxy=self.proxy_url)
         self.request_ids = set()
-        await self.http_client.static_login(self.token)
+        await self.client.login(self.token)
         logging.info("Finished setUp()")
 
     @contextmanager
@@ -153,7 +154,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         super().tearDown()
         del self.request_queue
         shutil.rmtree("testing.q")
-        await self.http_client.close()
+        await self.client.close()
 
     def run(self, result: Optional[TestResult] = None) -> None:
         """Ensure the tests are run with a running proxy"""
@@ -204,7 +205,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         """
         reqid = self._generate_request_id()
         try:
-            resp = await self.http_client.request(
+            resp = await self.client.http.request(
                 route,
                 ssl=self.ssl,
                 headers={"X-Allow-Through": str(int(allow_through_proxy))}
@@ -297,4 +298,4 @@ class TestPyCordTestingFixtures(PyCordBaseTestCase):
     async def test_route_visited(self) -> None:
         r = Route("GET", "/users/@me")
         with self.assertRouteCalled(r):
-            await self.http_client.request(r)
+            await self.client.http.request(r)
