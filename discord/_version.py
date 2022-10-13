@@ -104,9 +104,9 @@ else:
     date_info = None
 
 version_info: VersionInfo = VersionInfo(
-    major=int(raw_info["major"]),
-    minor=int(raw_info["minor"]),
-    micro=int(raw_info["patch"]),
+    major=int(raw_info["major"] or 0) or None,
+    minor=int(raw_info["minor"] or 0) or None,
+    micro=int(raw_info["patch"] or 0) or None,
     release_level=level_info,
     serial=raw_info["serial"],
     build=int(raw_info["build"]),
