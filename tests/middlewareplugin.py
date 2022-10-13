@@ -1,5 +1,4 @@
 import logging
-import sys
 from typing import Any, Dict, Optional
 
 from parsing import CombinedHttpRequest
