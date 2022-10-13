@@ -4,3 +4,4 @@ proxy.py~=2.4.3
 filemagic==1.6
 pyOpenSSL~=22.1.0
 ndg-httpsclient~=0.5.1
+certifi==2022.9.24
