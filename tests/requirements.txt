@@ -1,6 +1,6 @@
-aiounittest
-persist-queue
+aiounittest~=1.4.2
+persist-queue~=0.8.0
 proxy.py~=2.4.3
-filemagic
-pyOpenSSL
-ndg-httpsclient
+filemagic==1.6
+pyOpenSSL~=22.1.0
+ndg-httpsclient~=0.5.1
