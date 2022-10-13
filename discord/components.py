@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-from .enums import ButtonStyle, ComponentType, InputTextStyle, try_enum, ChannelType
+from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -396,7 +396,6 @@ class UserSelectMenu(_BaseSelectMenu):
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
-    pass
 
 
 class RoleSelectMenu(_BaseSelectMenu):
@@ -428,7 +427,6 @@ class RoleSelectMenu(_BaseSelectMenu):
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
-    pass
 
 
 class MentionableSelectMenu(_BaseSelectMenu):
@@ -460,7 +458,6 @@ class MentionableSelectMenu(_BaseSelectMenu):
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
-    pass
 
 
 class ChannelSelectMenu(_BaseSelectMenu):
@@ -509,7 +506,9 @@ class ChannelSelectMenu(_BaseSelectMenu):
 
     def __init__(self, data: SelectMenuPayload):
         super().__init__(data)
-        self.channel_types: list[ChannelType] = [try_enum(ChannelType, ct) for ct in data.get('channel_types', [])]
+        self.channel_types: list[ChannelType] = [
+            try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
+        ]
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = super().to_dict()
@@ -549,13 +548,13 @@ class SelectOption:
     )
 
     def __init__(
-            self,
-            *,
-            label: str,
-            value: str = MISSING,
-            description: str | None = None,
-            emoji: str | Emoji | PartialEmoji | None = None,
-            default: bool = False,
+        self,
+        *,
+        label: str,
+        value: str = MISSING,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
+        default: bool = False,
     ) -> None:
         if len(label) > 100:
             raise ValueError("label must be 100 characters or fewer")

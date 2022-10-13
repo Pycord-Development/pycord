@@ -30,18 +30,19 @@ import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
 import discord
-from .. import User, Member, Role, Thread
+
+from .. import Member, Role, Thread, User
 from ..channel import _threaded_guild_channel_factory
 from ..components import (
-    SelectMenu,
-    UserSelectMenu,
-    RoleSelectMenu,
-    MentionableSelectMenu,
     ChannelSelectMenu,
-    SelectOption
+    MentionableSelectMenu,
+    RoleSelectMenu,
+    SelectMenu,
+    SelectOption,
+    UserSelectMenu,
 )
 from ..emoji import Emoji
-from ..enums import ComponentType, ChannelType
+from ..enums import ChannelType, ComponentType
 from ..interactions import Interaction
 from ..partial_emoji import PartialEmoji
 from ..utils import MISSING
@@ -66,7 +67,7 @@ _select_component_types = {
     5: UserSelectMenu,
     6: RoleSelectMenu,
     7: MentionableSelectMenu,
-    8: ChannelSelectMenu
+    8: ChannelSelectMenu,
 }
 
 
@@ -80,15 +81,15 @@ class _BaseSelect(Item[V]):
     )
 
     def __init__(
-            self,
-            select_type: int,
-            *,
-            custom_id: str | None = None,
-            placeholder: str | None = None,
-            min_values: int = 1,
-            max_values: int = 1,
-            disabled: bool = False,
-            row: int | None = None,
+        self,
+        select_type: int,
+        *,
+        custom_id: str | None = None,
+        placeholder: str | None = None,
+        min_values: int = 1,
+        max_values: int = 1,
+        disabled: bool = False,
+        row: int | None = None,
     ) -> None:
         super().__init__()
         self._selected_values: list[str] = []
@@ -106,7 +107,9 @@ class _BaseSelect(Item[V]):
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self._underlying: _BaseSelectMenu = _select_component_types[select_type]._raw_construct(
+        self._underlying: _BaseSelectMenu = _select_component_types[
+            select_type
+        ]._raw_construct(
             custom_id=custom_id,
             type=select_type,
             placeholder=placeholder,
@@ -247,6 +250,7 @@ class Select(_BaseSelect):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     _underlying: SelectMenu
     __item_repr_attributes__: tuple[str, ...] = (
         "placeholder",
@@ -275,13 +279,13 @@ class Select(_BaseSelect):
         self._underlying.options = value
 
     def add_option(
-            self,
-            *,
-            label: str,
-            value: str = MISSING,
-            description: str | None = None,
-            emoji: str | Emoji | PartialEmoji | None = None,
-            default: bool = False,
+        self,
+        *,
+        label: str,
+        value: str = MISSING,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
+        default: bool = False,
     ):
         """Adds an option to the select menu.
 
@@ -374,6 +378,7 @@ class UserSelect(_BaseSelect):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     _underlying: UserSelectMenu
 
     def __init__(self, **kwargs) -> None:
@@ -382,7 +387,8 @@ class UserSelect(_BaseSelect):
     @property
     def values(self) -> list[User, Member]:
         """List[:class:`discord.User`, :class:`discord.Member`]:
-        A list of users that have been selected by the user."""
+        A list of users that have been selected by the user.
+        """
         resolved = []
         selected_values = self._selected_values
         state = self._interaction._state
@@ -437,6 +443,7 @@ class RoleSelect(_BaseSelect):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     _underlying: RoleSelectMenu
 
     def __init__(self, **kwargs) -> None:
@@ -445,7 +452,8 @@ class RoleSelect(_BaseSelect):
     @property
     def values(self) -> list[Role]:
         """List[:class:`discord.Role`]:
-        A list of roles that have been selected by the user."""
+        A list of roles that have been selected by the user.
+        """
         resolved = []
         selected_values = self._selected_values
         state = self._interaction._state
@@ -491,6 +499,7 @@ class MentionableSelect(_BaseSelect):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     _underlying: MentionableSelectMenu
 
     def __init__(self, **kwargs) -> None:
@@ -499,7 +508,8 @@ class MentionableSelect(_BaseSelect):
     @property
     def values(self) -> list[User, Member]:
         """List[:class:`discord.User`, :class:`discord.Member`, :class:`discord.Role`]:
-        A list of mentionables that have been selected by the user."""
+        A list of mentionables that have been selected by the user.
+        """
         resolved = []
         selected_values = self._selected_values
         state = self._interaction._state
@@ -560,16 +570,20 @@ class ChannelSelect(_BaseSelect):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     _underlying: ChannelSelectMenu
 
     def __init__(self, *, channel_types: ChannelType = MISSING, **kwargs) -> None:
         super().__init__(8, **kwargs)
-        self._underlying.channel_types = [] if channel_types is MISSING else channel_types
+        self._underlying.channel_types = (
+            [] if channel_types is MISSING else channel_types
+        )
 
     @property
     def values(self) -> list[Role]:
         """List[:class:`discord.abc.GuildChannel`, :class:`discord.Thread`]:
-        A list of channels that have been selected by the user."""
+        A list of channels that have been selected by the user.
+        """
         resolved = []
         selected_values = self._selected_values
         state = self._interaction._state
@@ -617,21 +631,21 @@ _select_classes = {
     ComponentType.user_select: UserSelect,
     ComponentType.role_select: RoleSelect,
     ComponentType.mentionable_select: MentionableSelect,
-    ComponentType.channel_select: ChannelSelect
+    ComponentType.channel_select: ChannelSelect,
 }
 
 
 def select(
-        select_type: ComponentType = ComponentType.string_select,
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        options: list[SelectOption] = MISSING,
-        channel_types: list[ChannelType] = MISSING,
-        disabled: bool = False,
-        row: int | None = None,
+    select_type: ComponentType = ComponentType.string_select,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    options: list[SelectOption] = MISSING,
+    channel_types: list[ChannelType] = MISSING,
+    disabled: bool = False,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -678,9 +692,15 @@ def select(
         Whether the select is disabled or not. Defaults to ``False``.
     """
     if select_type not in _select_classes:
-        raise ValueError("select_type must be one of " + ', '.join([i.name for i in _select_classes.keys()]))
+        raise ValueError(
+            "select_type must be one of "
+            + ", ".join([i.name for i in _select_classes.keys()])
+        )
 
-    if options is not MISSING and select_type not in (ComponentType.select, ComponentType.string_select):
+    if options is not MISSING and select_type not in (
+        ComponentType.select,
+        ComponentType.string_select,
+    ):
         raise TypeError("options may only be specified for string selects")
 
     if channel_types is not MISSING and select_type is not ComponentType.channel_select:
@@ -712,14 +732,14 @@ def select(
 
 
 def string_select(
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        options: list[SelectOption] = MISSING,
-        disabled: bool = False,
-        row: int | None = None,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    options: list[SelectOption] = MISSING,
+    disabled: bool = False,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
 
@@ -738,13 +758,13 @@ def string_select(
 
 
 def user_select(
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        disabled: bool = False,
-        row: int | None = None,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
@@ -762,13 +782,13 @@ def user_select(
 
 
 def role_select(
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        disabled: bool = False,
-        row: int | None = None,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
@@ -786,13 +806,13 @@ def role_select(
 
 
 def mentionable_select(
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        disabled: bool = False,
-        row: int | None = None,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
@@ -810,14 +830,14 @@ def mentionable_select(
 
 
 def channel_select(
-        *,
-        placeholder: str | None = None,
-        custom_id: str | None = None,
-        min_values: int = 1,
-        max_values: int = 1,
-        disabled: bool = False,
-        channel_types: list[ChannelType] = MISSING,
-        row: int | None = None,
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    channel_types: list[ChannelType] = MISSING,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
