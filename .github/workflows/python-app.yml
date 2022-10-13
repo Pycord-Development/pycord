@@ -29,6 +29,7 @@ jobs:
           if [ "$RUNNER_OS" == "MacOS" ]; then
             brew install libmagic
           fi
+        shell: bash
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
