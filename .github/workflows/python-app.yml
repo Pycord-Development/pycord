@@ -26,9 +26,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8
           pip install -r requirements-dev.txt
-          if [ "$RUNNER_OS" == "MacOS" ]; then
-            brew install libmagic
-          fi
+      - name: Install libmagic
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install libmagic
         shell: bash
       - name: Lint with flake8
         run: |
