@@ -43,12 +43,7 @@ jobs:
           echo "PYCORD_BOT_TOKEN=${{ secrets.DISCORD_TOKEN }}" > .env
           echo "PYCORD_TEST_MODE=1" >> .env
           echo "PYCORD_CERT_PATH=pycord-cert.pem" >> .env
-          make install
-          make gencerts
-          make envecho
-          pip freeze
-          ls -la
-          make runtests
+          make ci
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v3
         with:
