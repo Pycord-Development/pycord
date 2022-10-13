@@ -45,7 +45,7 @@ jobs:
           make install
           make gencerts
           make envecho
-          ls -a
+          ls -la
           make runtests
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v3
