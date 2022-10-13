@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict, Union
 
+from .channel import ChannelType
 from .emoji import PartialEmoji
 
 ComponentType = Literal[1, 2, 3, 4]
@@ -72,6 +73,8 @@ class _SelectMenuOptional(TypedDict, total=False):
     min_values: int
     max_values: int
     disabled: bool
+    options: list[SelectOption]
+    channel_types: list[ChannelType]
 
 
 class _SelectOptionsOptional(TypedDict, total=False):
@@ -86,9 +89,8 @@ class SelectOption(_SelectOptionsOptional):
 
 
 class SelectMenu(_SelectMenuOptional):
-    type: Literal[3]
+    type: Literal[3, 5, 6, 7, 8]
     custom_id: str
-    options: list[SelectOption]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]

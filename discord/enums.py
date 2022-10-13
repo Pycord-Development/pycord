@@ -617,8 +617,13 @@ class VideoQualityMode(Enum):
 class ComponentType(Enum):
     action_row = 1
     button = 2
-    select = 3
+    select = 3  # alias for string_select
+    string_select = 3
     input_text = 4
+    user_select = 5
+    role_select = 6
+    mentionable_select = 7
+    channel_select = 8
 
     def __int__(self):
         return self.value

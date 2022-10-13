@@ -37,7 +37,13 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Component
-from ..components import SelectMenu as SelectComponent
+from ..components import (
+    SelectMenu as SelectComponent,
+    UserSelectMenu as UserSelectComponent,
+    RoleSelectMenu as RoleSelectComponent,
+    MentionableSelectMenu as MentionableSelectComponent,
+    ChannelSelectMenu as ChannelSelectComponent
+)
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
@@ -444,6 +450,7 @@ class View:
         )
 
     def refresh(self, components: list[Component]):
+
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], Item] = {
             (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
