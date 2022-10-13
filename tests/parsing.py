@@ -21,7 +21,7 @@ class CombinedHttpRequest:
         cls: Type[T], connect_req: HttpParser, final_req: HttpParser
     ) -> T:
 
-        headers_merged = connect_req.headers | final_req.headers
+        headers_merged = {**connect_req.headers, **final_req.headers}
         parsed_headers = {
             k.decode("utf-8"): v.decode("utf-8") for k, v in headers_merged.values()
         }

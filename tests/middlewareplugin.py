@@ -1,4 +1,5 @@
 import logging
+import sys
 from typing import Any, Dict, Optional
 
 from parsing import CombinedHttpRequest
@@ -54,8 +55,9 @@ class PyCordTestMiddleware(CacheResponsesPlugin):
                     q = self.q.get(request_id, [])
                     q.append(merged)
                     self.q[request_id] = q
+                    # TODO: 3.9: use removeprefix
                     logging.info(
-                        f'Placing request into bucket: {request_id.removeprefix("bucket:")!r}'
+                        f'Placing request into bucket: {request_id[7 if request_id.startswith("bucket:") else 0:]!r}'
                     )
                 else:
                     self.q[request_id] = merged
