@@ -113,4 +113,4 @@ indent-string = '    '
 max-line-length = 120
 
 [tool.pytest.ini_options]
-#asyncio_mode = "auto"
+addopts = "--cov"

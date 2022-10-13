@@ -18,7 +18,7 @@ envecho:
 	@echo $(PYCORD_CERT_PATH)
 
 runtests:
-	coverage run -m pytest
+	python -m pytest
 	coverage xml
 
 gencerts:
