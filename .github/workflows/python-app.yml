@@ -52,7 +52,7 @@ jobs:
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v3
         with:
-          #        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           env_vars: OS,PYTHON
           files: ./tests/coverage.xml
           flags: pytest # optional
