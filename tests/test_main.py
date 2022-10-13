@@ -153,7 +153,6 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         """Called to take down environment after testing"""
         super().tearDown()
         del self.request_queue
-        shutil.rmtree("testing.q")
         await self.client.close()
 
     def run(self, result: Optional[TestResult] = None) -> None:
@@ -175,6 +174,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             ]
         ):
             super().run(result)
+        shutil.rmtree("testing.q")
 
     async def proxied_route_request(
         self,
