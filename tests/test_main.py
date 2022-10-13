@@ -39,6 +39,12 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         """Called to set up environment before testing"""
         logging.info("Starting setUp()")
         super().setUp()
+        for var in ("CERT_PATH", "BOT_TOKEN", "TEST_MODE"):
+            if os.getenv(f"PYCORD_{var}") is None:
+                raise RuntimeError(f"PYCORD_{var} is not set")
+        for var in ("cert", "key", "signkey"):
+            filename = f"pycord-{var}.pem"
+            assert os.path.exists(os.path.join(os.path.dirname(__file__), filename)), f"{filename} does not exist"
         self.proxy_url = "http://localhost:8899"
         self.ssl = ssl.create_default_context(cafile=os.getenv("PYCORD_CERT_PATH"))
         self.request_queue = PDict("testing.q", "requests")
