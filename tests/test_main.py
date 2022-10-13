@@ -257,8 +257,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 
         reqid = self._generate_request_id()
         try:
-            with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
-                content_type = m.id_buffer(body)
+            content_type = magic.from_buffer(body, mime=True)
             async with aiohttp.ClientSession(
                 headers={
                     "Connection": "close",

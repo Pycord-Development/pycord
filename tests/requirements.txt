@@ -1,7 +1,8 @@
 aiounittest~=1.4.2
 persist-queue~=0.8.0
 proxy.py~=2.4.3
-filemagic==1.6
+# Have to use a fork for python-magic, see https://github.com/ahupp/python-magic/pull/267
+python-magic @ git+https://github.com/Pycord-Development/python-magic@master#egg=python-magic
 pyOpenSSL~=22.1.0
 ndg-httpsclient~=0.5.1
 certifi==2022.9.24
