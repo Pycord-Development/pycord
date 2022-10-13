@@ -20,7 +20,6 @@ envecho:
 
 runtests:
 	python -m pytest
-	coverage xml
 
 gencerts:
 	# Create CA keyfile and remove passphrase
