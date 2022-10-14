@@ -1950,12 +1950,24 @@ of :class:`enum.Enum`.
     .. attribute:: button
 
         Represents a button component.
-    .. attribute:: select
+    .. attribute:: string_select
 
-        Represents a select component.
+        Represents a string select component.
     .. attribute:: input_text
 
         Represents an input_text component.
+    .. attribute:: user_select
+
+        Represents a user select component.
+    .. attribute:: role_select
+
+        Represents a role select component.
+    .. attribute:: mentionable_select
+
+        Represents a mentionable select component.
+    .. attribute:: channel_select
+
+        Represents a channel select component.
 
 .. class:: ButtonStyle
 
@@ -4254,6 +4266,41 @@ SelectMenu
     :members:
     :inherited-members:
 
+UserSelectMenu
+~~~~~~~~~~~
+
+.. attributetable:: UserSelectMenu
+
+.. autoclass:: UserSelectMenu()
+    :members:
+    :inherited-members:
+
+RoleSelectMenu
+~~~~~~~~~~~
+
+.. attributetable:: RoleSelectMenu
+
+.. autoclass:: RoleSelectMenu()
+    :members:
+    :inherited-members:
+
+MentionableSelectMenu
+~~~~~~~~~~~
+
+.. attributetable:: MentionableSelectMenu
+
+.. autoclass:: MentionableSelectMenu()
+    :members:
+    :inherited-members:
+
+ChannelSelectMenu
+~~~~~~~~~~~
+
+.. attributetable:: ChannelSelectMenu
+
+.. autoclass:: ChannelSelectMenu()
+    :members:
+    :inherited-members:
 
 DeletedReferencedMessage
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -5037,6 +5084,50 @@ Select
     :inherited-members:
 
 .. autofunction:: discord.ui.select
+
+UserSelect
+~~~~~~~
+
+.. attributetable:: discord.ui.UserSelect
+
+.. autoclass:: discord.ui.UserSelect
+    :members:
+    :inherited-members:
+
+.. autofunction:: discord.ui.user_select
+
+RoleSelect
+~~~~~~~
+
+.. attributetable:: discord.ui.RoleSelect
+
+.. autoclass:: discord.ui.RoleSelect
+    :members:
+    :inherited-members:
+
+.. autofunction:: discord.ui.role_select
+
+MentionableSelect
+~~~~~~~
+
+.. attributetable:: discord.ui.MentionableSelect
+
+.. autoclass:: discord.ui.MentionableSelect
+    :members:
+    :inherited-members:
+
+.. autofunction:: discord.ui.mentionable_select
+
+ChannelSelect
+~~~~~~~
+
+.. attributetable:: discord.ui.ChannelSelect
+
+.. autoclass:: discord.ui.ChannelSelect
+    :members:
+    :inherited-members:
+
+.. autofunction:: discord.ui.channel_select
 
 Modal
 ~~~~~
