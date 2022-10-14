@@ -38,6 +38,7 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
+from dataclasses import field
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -114,6 +115,11 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
+# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
+# field(default=MISSING) produces the same error, but passing a lambda to
+# default_factory produces the same behavior as default=MISSING and does not raise an
+# error.
+MissingField = field(default_factory=lambda: MISSING)
 
 
 class _cached_property:
