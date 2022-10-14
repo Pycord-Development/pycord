@@ -5086,7 +5086,7 @@ Select
 .. autofunction:: discord.ui.select
 
 UserSelect
-~~~~~~~
+~~~~~~~~~~~
 
 .. attributetable:: discord.ui.UserSelect
 
@@ -5097,7 +5097,7 @@ UserSelect
 .. autofunction:: discord.ui.user_select
 
 RoleSelect
-~~~~~~~
+~~~~~~~~~~~
 
 .. attributetable:: discord.ui.RoleSelect
 
@@ -5108,7 +5108,7 @@ RoleSelect
 .. autofunction:: discord.ui.role_select
 
 MentionableSelect
-~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ui.MentionableSelect
 
@@ -5119,7 +5119,7 @@ MentionableSelect
 .. autofunction:: discord.ui.mentionable_select
 
 ChannelSelect
-~~~~~~~
+~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ui.ChannelSelect
 
