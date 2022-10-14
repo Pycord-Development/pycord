@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import asyncio
+import json
 import logging
 import os
 import random
@@ -6,7 +9,7 @@ import shutil
 import ssl
 import string
 from contextlib import contextmanager
-from typing import Any, Dict, Generator, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, Union
 from unittest import IsolatedAsyncioTestCase, TestResult
 from unittest.mock import PropertyMock, patch
 
@@ -19,7 +22,9 @@ from multidict import CIMultiDict
 from parsing import CombinedHttpRequest
 from persistqueue import PDict
 from proxy import Proxy
+from yarl import URL
 
+import discord
 from discord.client import Client
 from discord.http import HTTPClient, Route
 
@@ -60,7 +65,11 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 
     @contextmanager
     def assertRouteCalled(
-        self, route: Route, allow_through_proxy: bool = True
+        self,
+        route: Route,
+        allow_through_proxy: bool = False,
+        mock_response=None,
+        params: dict[str, str] | None = None,
     ) -> RouteTrackingContext:
         """Context manager to check if a route is called in its body
 
@@ -70,14 +79,23 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             The route to test for
         allow_through_proxy: bool
             Weather or not to allow requests through proxy inside the block
+        mock_response
+            A mock response to return. Will override the actual response even if ``allow_through_proxy`` is True.
         """
         request_bin = self._create_request_bin()
         client_request_method = HTTPClient.request
 
-        def wrapped_route_request(*args, **kwargs):
+        async def wrapped_route_request(*args, **kwargs):
             kwargs["proxy"] = self.proxy_url
             kwargs["ssl"] = self.ssl
-            return client_request_method(*args, **kwargs)
+            try:
+                resp = await client_request_method(*args, **kwargs)
+            except ServerDisconnectedError:
+                # When the request is blocked
+                resp = None
+            if mock_response is not None:
+                resp = mock_response
+            return resp
 
         with patch.object(HTTPClient, "request", wrapped_route_request):
             logging.info("Patched HTTPClient request method")
@@ -98,15 +116,19 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 
         logging.info("All patches reversed")
 
-        filled_bin: List[CombinedHttpRequest] = self.request_queue[request_bin]
+        filled_bin: list[CombinedHttpRequest] = self.request_queue[request_bin]
         all_visited_urls = {req.full_url for req in filled_bin}
-        route_visited = route.url.split("://")[-1] in all_visited_urls
+        target_url = URL(route.url)
+        if params is not None:
+            target_url = target_url.with_query(params)
+        target_url = str(target_url).split("://")[-1]
+        route_visited = target_url in all_visited_urls
         if not route_visited:
             raise AssertionError(
-                f'Route {route.path!r} was not visited, visited URLs: {all_visited_urls}, route: {route.url.split("://")[-1]}'
+                f"Route {route.path!r} was not visited, visited URLs: {all_visited_urls}, route: {target_url}"
             )
         else:
-            logging.info(f"Route {route.url!r} was called, assertion passed!")
+            logging.info(f"Route {target_url!r} was called, assertion passed!")
 
     def _create_request_bin(self) -> str:
         """Generates a unique request ID
@@ -134,7 +156,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             self.request_ids.add(new_id)
             return new_id
 
-    def _tracking_header(self, reqid: str) -> Dict[str, str]:
+    def _tracking_header(self, reqid: str) -> dict[str, str]:
         """Generate a header used to track request
 
         Parameters
@@ -155,7 +177,7 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         del self.request_queue
         await self.client.close()
 
-    def run(self, result: Optional[TestResult] = None) -> None:
+    def run(self, result: TestResult | None = None) -> None:
         """Ensure the tests are run with a running proxy"""
         with Proxy(
             [
@@ -177,10 +199,8 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         shutil.rmtree("testing.q")
 
     async def proxied_route_request(
-        self,
-        route: Route,
-        allow_through_proxy: bool = False,
-    ) -> Tuple[CombinedHttpRequest, Optional[Union[Dict[str, Any], str]]]:
+        self, route: Route, allow_through_proxy: bool = False, mock_response=None
+    ) -> tuple[CombinedHttpRequest, dict[str, Any] | str | None]:
         """Send a request through the proxy to view request data
 
         This function will make a request to a URL through the testing proxy
@@ -196,6 +216,8 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             Should the request continue to the destination? (defaults to False)
         headers: Optional[dict]
             The headers to be sent with the request, defaults to an empty dict
+        mock_response
+            A mock response to return. Will override the actual response even if ``allow_through_proxy`` is True.
 
         Returns
         -------
@@ -208,12 +230,16 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
             resp = await self.client.http.request(
                 route,
                 ssl=self.ssl,
-                headers={"X-Allow-Through": str(int(allow_through_proxy))}
-                | self._tracking_header(reqid),
+                headers={
+                    "X-Allow-Through": str(int(allow_through_proxy)),
+                    **self._tracking_header(reqid),
+                },
             )
         except ServerDisconnectedError:  # Raised when the proxy blocks request
             resp = None
         finally:
+            if mock_response is not None:
+                resp = mock_response
             # Queue module has weird typing that creates errors
             req: CombinedHttpRequest = self.request_queue.get()  # type: ignore
             # Ignore unreachable code warning, as resp is always not None
@@ -225,9 +251,10 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         method: str,
         url: str,
         allow_through_proxy: bool = False,
-        headers: Dict[str, str] = {},
-        body: Union[str, bytes, Dict[str, Any]] = "",
-    ) -> Tuple[CombinedHttpRequest, Optional[ClientResponse]]:
+        headers: dict[str, str] = {},
+        body: str | bytes | dict[str, Any] = "",
+        mock_response: ClientResponse | None = None,
+    ) -> tuple[CombinedHttpRequest, ClientResponse | None]:
         """Send a request through the proxy to view request data
 
         This function will make a request to a URL through the testing proxy
@@ -248,6 +275,8 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         body: Union[str, bytes, Dict[str, Any]]
             The body of the request, can either be
             a string, json data, or raw bytes
+        mock_response: Optional[ClientResponse]
+            A mock response to return. Will override the actual response even if ``allow_through_proxy`` is True.
 
         Returns
         -------
@@ -264,9 +293,9 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
                     "Connection": "close",
                     "Content-Type": content_type,
                     "X-Allow-Through": str(int(allow_through_proxy)),
+                    **self._tracking_header(reqid),
+                    **headers,
                 }
-                | self._tracking_header(reqid)
-                | headers
             ) as cs:
                 if type(body) is dict:
                     json = body
@@ -287,6 +316,8 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
         except ServerDisconnectedError:  # Raised when the proxy blocks request
             resp = None
         finally:
+            if mock_response is not None:
+                resp = mock_response
             req: CombinedHttpRequest = self.request_queue[reqid]
             logging.info(f"Reading request {reqid!r} from queue")
             # Ignore unreachable code warning, as resp is always not None
@@ -297,5 +328,116 @@ class PyCordBaseTestCase(IsolatedAsyncioTestCase):
 class TestPyCordTestingFixtures(PyCordBaseTestCase):
     async def test_route_visited(self) -> None:
         r = Route("GET", "/users/@me")
-        with self.assertRouteCalled(r):
+        with self.assertRouteCalled(r, allow_through_proxy=True):
             await self.client.http.request(r)
+
+
+class TestPyCordGuild(PyCordBaseTestCase):
+    _GUILD_ID = 881207955029110855
+
+    def _route(self, method: str, path: str, **parameters) -> Route:
+        """Helper function to create a route prefixed with /guilds/{self._GUILD_ID}"""
+        return Route(method, f"/guilds/{self._GUILD_ID}{path}", **parameters)
+
+    async def test_get_guild(self) -> None:
+        with open("data/guild.json") as f:
+            data = json.load(f)
+        r = self._route("GET", "")
+        with self.assertRouteCalled(r, params=dict(with_counts=1), mock_response=data):
+            guild = await self.client.fetch_guild(881207955029110855)
+        guild_dict = dict(
+            id=str(guild.id),
+            name=guild.name,
+            icon=guild.icon.key if guild.icon else None,
+            description=guild.description,
+            splash=guild.splash.key if guild.splash else None,
+            discovery_splash=guild.discovery_splash.key
+            if guild.discovery_splash
+            else None,
+            features=guild.features,
+            approximate_member_count=guild.approximate_member_count,
+            approximate_presence_count=guild.approximate_presence_count,
+            emojis=[
+                dict(
+                    name=emoji.name,
+                    roles=emoji.roles,
+                    id=str(emoji.id),
+                    require_colons=emoji.require_colons,
+                    managed=emoji.managed,
+                    animated=emoji.animated,
+                    available=emoji.available,
+                )
+                for emoji in guild.emojis
+            ],
+            stickers=[
+                dict(
+                    id=str(sticker.id),
+                    name=sticker.name,
+                    tags=sticker.emoji,
+                    type=sticker.type.value,
+                    format_type=sticker.format.value,
+                    description=sticker.description,
+                    asset="",  # Deprecated
+                    available=sticker.available,
+                    guild_id=str(sticker.guild_id),
+                )
+                for sticker in guild.stickers
+            ],
+            banner=guild.banner.key if guild.banner else None,
+            owner_id=str(guild.owner_id),
+            application_id=data["application_id"],  # TODO: Fix
+            region=data["region"],  # Deprecated
+            afk_channel_id=str(guild.afk_channel.id) if guild.afk_channel else None,
+            afk_timeout=guild.afk_timeout,
+            system_channel_id=str(guild._system_channel_id)
+            if guild._system_channel_id
+            else None,
+            widget_enabled=data["widget_enabled"],  # TODO: Fix
+            widget_channel_id=data["widget_channel_id"],  # TODO: Fix
+            verification_level=guild.verification_level.value,
+            roles=[
+                dict(
+                    id=str(role.id),
+                    name=role.name,
+                    permissions=str(role.permissions.value),
+                    position=role.position,
+                    color=role.color.value,
+                    hoist=role.hoist,
+                    managed=role.managed,
+                    mentionable=role.mentionable,
+                    icon=role.icon.key if role.icon else None,
+                    unicode_emoji=role.unicode_emoji,
+                    flags=list(
+                        filter(lambda d: d["id"] == str(role.id), data["roles"])
+                    )[0][
+                        "flags"
+                    ],  # TODO: Fix
+                )
+                for role in guild.roles
+            ],
+            default_message_notifications=guild.default_notifications.value,
+            mfa_level=guild.mfa_level,
+            explicit_content_filter=guild.explicit_content_filter.value,
+            max_presences=guild.max_presences,
+            max_members=guild.max_members,
+            max_stage_video_channel_users=data[
+                "max_stage_video_channel_users"
+            ],  # TODO: Fix
+            max_video_channel_users=guild.max_video_channel_users,
+            vanity_url_code=data["vanity_url_code"],  # TODO: Fix
+            premium_tier=guild.premium_tier,
+            premium_subscription_count=guild.premium_subscription_count,
+            system_channel_flags=guild.system_channel_flags.value,
+            preferred_locale=guild.preferred_locale,
+            rules_channel_id=str(guild._rules_channel_id)
+            if guild._rules_channel_id
+            else None,
+            public_updates_channel_id=str(guild._public_updates_channel_id)
+            if guild._public_updates_channel_id
+            else None,
+            hub_type=data["hub_type"],  # TODO: Fix
+            premium_progress_bar_enabled=guild.premium_progress_bar_enabled,
+            nsfw=data["nsfw"],  # TODO: Fix
+            nsfw_level=guild.nsfw_level.value,
+        )
+        self.assertDictEqual(guild_dict, data)
