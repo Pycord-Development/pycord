@@ -672,7 +672,10 @@ def select(
     Parameters
     ----------
     select_type: :class:`discord.ComponentType`
-        The type of select to create. Must be
+        The type of select to create. Must be one of 
+        :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        or :attr:`discord.ComponentType.channel_select`.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     custom_id: :class:`str`
