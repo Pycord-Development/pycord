@@ -671,7 +671,7 @@ def select(
 
     Parameters
     ----------
-    select_type: :class:`ComponentType`
+    select_type: :class:`discord.ComponentType`
         The type of select to create. Must be
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
@@ -692,10 +692,10 @@ def select(
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`discord.SelectOption`]
         A list of options that can be selected in this menu.
-        Only valid for the :attr:`ComponentType.string_select` type.
+        Only valid for the :attr:`discord.ComponentType.string_select` type.
     channel_types: List[:class:`discord.ChannelType`]
         The channel types that should be selectable.
-        Only valid for the :attr:`ComponentType.channel_select` type.
+        Only valid for the :attr:`discord.ComponentType.channel_select` type.
         Defaults to all channel types.
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
