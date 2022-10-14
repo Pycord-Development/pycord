@@ -404,18 +404,18 @@ class UserSelect(_BaseSelect):
         cache_flag = state.member_cache_flags.interaction
         guild = self._interaction.guild
         resolved_data = self._interaction.data.get("resolved", {})
+        resolved_user_data = resolved_data.get("users", {})
         resolved_member_data = resolved_data.get("members", {})
-        for user_id, _data in resolved_data.get("users", {}).items():
-            if user_id not in selected_values:
-                continue
-            if (_member_data := resolved_member_data.get(user_id)) is not None:
-                member = dict(_member_data)
-                member["user"] = _data
-                _data = member
-                result = guild._get_and_update_member(_data, int(user_id), cache_flag)
-            else:
-                result = User(state=state, data=_data)
-            resolved.append(result)
+        for _id in selected_values:
+            if (_data := resolved_user_data.get(_id)) is not None:
+                if (_member_data := resolved_member_data.get(_id)) is not None:
+                    member = dict(_member_data)
+                    member["user"] = _data
+                    _data = member
+                    result = guild._get_and_update_member(_data, int(_id), cache_flag)
+                else:
+                    result = User(state=state, data=_data)
+                resolved.append(result)
         return resolved
 
 
