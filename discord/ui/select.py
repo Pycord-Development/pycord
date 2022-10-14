@@ -29,10 +29,6 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from ..member import Member
-from ..role import Role
-from ..threads import Thread
-from ..user import User
 from ..channel import _threaded_guild_channel_factory
 from ..components import (
     ChannelSelectMenu,
@@ -45,7 +41,11 @@ from ..components import (
 from ..emoji import Emoji
 from ..enums import ChannelType, ComponentType
 from ..interactions import Interaction
+from ..member import Member
 from ..partial_emoji import PartialEmoji
+from ..role import Role
+from ..threads import Thread
+from ..user import User
 from ..utils import MISSING
 from .item import Item, ItemCallbackType
 
