@@ -45,6 +45,10 @@ __all__ = (
     "ActionRow",
     "Button",
     "SelectMenu",
+    "UserSelectMenu",
+    "RoleSelectMenu",
+    "MentionableSelectMenu",
+    "ChannelSelectMenu",
     "SelectOption",
     "InputText",
 )
