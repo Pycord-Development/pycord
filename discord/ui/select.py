@@ -29,9 +29,10 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-import discord
-
-from .. import Member, Role, Thread, User
+from ..member import Member
+from ..role import Role
+from ..threads import Thread
+from ..user import User
 from ..channel import _threaded_guild_channel_factory
 from ..components import (
     ChannelSelectMenu,
@@ -50,7 +51,15 @@ from .item import Item, ItemCallbackType
 
 __all__ = (
     "Select",
+    "UserSelect",
+    "RoleSelect",
+    "MentionableSelect",
+    "ChannelSelect",
     "select",
+    "user_select",
+    "role_select",
+    "mentionable_select",
+    "channel_select",
 )
 
 if TYPE_CHECKING:
@@ -108,7 +117,7 @@ class _BaseSelect(Item[V]):
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._underlying: _BaseSelectMenu = _select_component_types[
-            select_type
+            select_type.value
         ]._raw_construct(
             custom_id=custom_id,
             type=select_type,
@@ -261,7 +270,7 @@ class Select(_BaseSelect):
     )
 
     def __init__(self, *, options: list[SelectOption] = MISSING, **kwargs) -> None:
-        super().__init__(3, **kwargs)
+        super().__init__(ComponentType.string_select, **kwargs)
         self._underlying.options = [] if options is MISSING else options
 
     @property
@@ -382,7 +391,7 @@ class UserSelect(_BaseSelect):
     _underlying: UserSelectMenu
 
     def __init__(self, **kwargs) -> None:
-        super().__init__(5, **kwargs)
+        super().__init__(ComponentType.user_select, **kwargs)
 
     @property
     def values(self) -> list[User, Member]:
@@ -447,7 +456,7 @@ class RoleSelect(_BaseSelect):
     _underlying: RoleSelectMenu
 
     def __init__(self, **kwargs) -> None:
-        super().__init__(6, **kwargs)
+        super().__init__(ComponentType.role_select, **kwargs)
 
     @property
     def values(self) -> list[Role]:
@@ -503,7 +512,7 @@ class MentionableSelect(_BaseSelect):
     _underlying: MentionableSelectMenu
 
     def __init__(self, **kwargs) -> None:
-        super().__init__(7, **kwargs)
+        super().__init__(ComponentType.mentionable_select, **kwargs)
 
     @property
     def values(self) -> list[User, Member]:
@@ -574,7 +583,7 @@ class ChannelSelect(_BaseSelect):
     _underlying: ChannelSelectMenu
 
     def __init__(self, *, channel_types: ChannelType = MISSING, **kwargs) -> None:
-        super().__init__(8, **kwargs)
+        super().__init__(ComponentType.channel_select, **kwargs)
         self._underlying.channel_types = (
             [] if channel_types is MISSING else channel_types
         )
