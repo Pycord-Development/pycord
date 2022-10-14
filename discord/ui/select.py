@@ -667,7 +667,7 @@ def select(
 
     .. versionchanged:: 2.3
 
-        Creating other select menus is now supported.
+        Creating select menus of different types is now supported.
 
     Parameters
     ----------
