@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, Callable, Generator, TypeVar
 import discord
 
 from ...cog import Cog
-from ...commands import Invokable, ApplicationCommand, SlashCommandGroup
+from ...commands import ApplicationCommand, Invokable, SlashCommandGroup
 
 if TYPE_CHECKING:
     from .core import Command

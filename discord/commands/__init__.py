@@ -25,6 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from .context import *
 from .core import *
+from .mixins import *
 from .options import *
 from .permissions import *
-from .mixins import *

@@ -28,14 +28,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable
 
 from discord.errors import (
+    CheckFailure,
     ClientException,
     CommandError,
-    CheckFailure,
-    CommandOnCooldown,
     CommandInvokeError,
-    MaxConcurrencyReached,
+    CommandOnCooldown,
     DisabledCommand,
-    UserInputError
+    MaxConcurrencyReached,
+    UserInputError,
 )
 
 if TYPE_CHECKING:

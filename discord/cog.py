@@ -36,9 +36,9 @@ import discord.utils
 
 from . import errors
 from .commands import (
-    Invokable,
-    BaseContext,
     ApplicationCommand,
+    BaseContext,
+    Invokable,
     SlashCommandGroup,
     _BaseCommand,
 )
@@ -475,9 +475,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    async def cog_command_error(
-        self, ctx: BaseContext, error: Exception
-    ) -> None:
+    async def cog_command_error(self, ctx: BaseContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 

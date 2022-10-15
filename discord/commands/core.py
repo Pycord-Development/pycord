@@ -52,9 +52,9 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import find, MISSING
-from .mixins import Invokable, _BaseCommand, CogT
+from ..utils import MISSING, find
 from .context import ApplicationContext, AutocompleteContext
+from .mixins import CogT, Invokable, _BaseCommand
 from .options import Option, OptionChoice
 
 __all__ = (
@@ -107,10 +107,11 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
       - :class:`ContextMenuCommand` which in turn is a superclass of
       - :class:`MessageCommand` and
       - :class:`UserCommand`
-    
+
     This is a subclass of :class:`.Invokable`.
     """
-    __original_kwargs__: Dict[str, Any]
+
+    __original_kwargs__: dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
@@ -161,7 +162,7 @@ class SlashCommand(ApplicationCommand):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     options: List[:class:`Option`]
@@ -181,6 +182,7 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -534,7 +536,7 @@ class SlashCommandGroup(ApplicationCommand):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     description: Optional[:class:`str`]
         The description for the command.
     guild_ids: Optional[List[:class:`int`]]
@@ -553,6 +555,7 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
@@ -708,7 +711,9 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            raise Exception("A command subgroup can only have commands and not any more groups.")
+            raise Exception(
+                "A command subgroup can only have commands and not any more groups."
+            )
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
@@ -804,7 +809,7 @@ class ContextMenuCommand(ApplicationCommand):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
@@ -906,10 +911,11 @@ class UserCommand(ContextMenuCommand):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     """
+
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -958,10 +964,11 @@ class MessageCommand(ContextMenuCommand):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     """
+
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
@@ -1041,7 +1048,7 @@ def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
-    
+
     The ``description`` and ``name`` of the command are automatically inferred from the function name
     and function docstring.
 

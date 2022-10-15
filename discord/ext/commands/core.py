@@ -48,12 +48,7 @@ from ...commands import (
     slash_command,
     user_command,
 )
-from ...commands.mixins import (
-    CogT,
-    Invokable,
-    hooked_wrapped_callback,
-    unwrap_function,
-)
+from ...commands.mixins import CogT, Invokable, hooked_wrapped_callback, unwrap_function
 from ...enums import ChannelType
 from ...errors import *
 from .context import Context
@@ -86,14 +81,8 @@ if TYPE_CHECKING:
     ErrorT = TypeVar("ErrorT", bound="Error")
 
     CallbackT = Union[
-        Callable[
-            [Concatenate[CogT, ContextT, P]],
-            Coro[T]
-        ],
-        Callable[
-            [Concatenate[ContextT, P]],
-            Coro[T]
-        ],
+        Callable[[Concatenate[CogT, ContextT, P]], Coro[T]],
+        Callable[[Concatenate[ContextT, P]], Coro[T]],
     ]
 else:
     P = TypeVar("P")
@@ -178,7 +167,7 @@ class _CaseInsensitiveDict(dict):
 
 
 class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
-    """A class that implements the protocol for a bot text command.
+    r"""A class that implements the protocol for a bot text command.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
@@ -288,10 +277,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         return self._callback
 
     @callback.setter
-    def callback(
-        self,
-        func: CallbackT
-    ) -> None:
+    def callback(self, func: CallbackT) -> None:
         self._callback = func
         unwrap = unwrap_function(func)
         self.module = unwrap.__module__
@@ -1016,7 +1002,7 @@ def command(
     ],
     Command[CogT, P, T] | CommandT,
 ]:
-    """A decorator that transforms a function into a :class:`.Command`
+    r"""A decorator that transforms a function into a :class:`.Command`
     or if called with :func:`.group`, :class:`.Group`.
 
     By default the ``help`` attribute is received automatically from the

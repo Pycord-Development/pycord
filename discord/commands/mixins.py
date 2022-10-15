@@ -5,41 +5,41 @@ import datetime
 import functools
 from typing import (
     TYPE_CHECKING,
-    TypeVar,
+    Any,
     Callable,
     Coroutine,
-    Optional,
-    Union,
-    Generic,
-    Any,
     Dict,
+    Generic,
     List,
+    Optional,
+    TypeVar,
+    Union,
 )
 
-from .. import utils, abc
+from .. import abc, utils
 from ..errors import (
     ApplicationCommandError,
     CheckFailure,
     CommandError,
     CommandInvokeError,
-    DisabledCommand,
     CommandOnCooldown,
+    DisabledCommand,
 )
 from .cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
-    from ..bot import Bot, AutoShardedBot
-    from ..user import User, ClientUser
-    from ..member import Member
-    from ..guild import Guild
-    from ..message import Message
-    from ..interactions import Interaction
     from ..abc import MessageableChannel
-    from ..voice_client import VoiceProtocol
-    from ..state import ConnectionState
+    from ..bot import AutoShardedBot, Bot
     from ..cog import Cog
+    from ..guild import Guild
+    from ..interactions import Interaction
+    from ..member import Member
+    from ..message import Message
+    from ..state import ConnectionState
+    from ..user import ClientUser, User
+    from ..voice_client import VoiceProtocol
 
     P = ParamSpec("P")
 else:
@@ -65,10 +65,7 @@ Error = Union[
 ]
 ErrorT = TypeVar("ErrorT", bound="Error")
 
-Hook = Union[
-    Callable[[CogT, ContextT], Coro[Any]],
-    Callable[[ContextT], Coro[Any]]
-]
+Hook = Union[Callable[[CogT, ContextT], Coro[Any]], Callable[[ContextT], Coro[Any]]]
 HookT = TypeVar("HookT", bound="Hook")
 
 
@@ -135,7 +132,7 @@ class _BaseCommand:
 
 
 class BaseContext(abc.Messageable, Generic[BotT]):
-    """A baseclass to provide ***basic & common functionality*** between
+    r"""A baseclass to provide ***basic & common functionality*** between
     :class:`.ApplicationContext` and :class:`~ext.commands.Context`.
 
     This is a subclass of :class:`~abc.Messageable` and can be used to
@@ -182,41 +179,43 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         A boolean that indicates if the command failed to be parsed, checked,
         or invoked.
     """
+
     def __init__(
         self,
         bot: Bot,
-        command: Optional[Invokable],
-        args: List[Any] = utils.MISSING,
-        kwargs: Dict[str, Any] = utils.MISSING,
+        command: Invokable | None,
+        args: list[Any] = utils.MISSING,
+        kwargs: dict[str, Any] = utils.MISSING,
         *,
-        invoked_with: Optional[str] = None,
-        invoked_parents: List[str] = utils.MISSING,
-        invoked_subcommand: Optional[Invokable] = None,
-        subcommand_passed: Optional[str] = None,
-        command_failed: bool = False
-
+        invoked_with: str | None = None,
+        invoked_parents: list[str] = utils.MISSING,
+        invoked_subcommand: Invokable | None = None,
+        subcommand_passed: str | None = None,
+        command_failed: bool = False,
     ):
         self.bot: Bot = bot
-        self.command: Optional[Invokable] = command
-        self.args: List[Any] = args or []
-        self.kwargs: Dict[str, Any] = kwargs or {}
+        self.command: Invokable | None = command
+        self.args: list[Any] = args or []
+        self.kwargs: dict[str, Any] = kwargs or {}
 
-        self.invoked_with: Optional[str] = invoked_with
+        self.invoked_with: str | None = invoked_with
         if not self.invoked_with and command:
             self.invoked_with = command.name
 
-        self.invoked_parents: List[str] = invoked_parents or []
+        self.invoked_parents: list[str] = invoked_parents or []
         if not self.invoked_parents and command:
             self.invoked_parents = [i.name for i in command.parents]
 
         # This will always be None for slash commands
-        self.subcommand_passed: Optional[str] = subcommand_passed
+        self.subcommand_passed: str | None = subcommand_passed
 
-        self.invoked_subcommand: Optional[Invokable] = invoked_subcommand
+        self.invoked_subcommand: Invokable | None = invoked_subcommand
         self.command_failed: bool = command_failed
 
-    async def invoke(self, command: Invokable[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
-        """|coro|
+    async def invoke(
+        self, command: Invokable[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs
+    ) -> T:
+        r"""|coro|
 
         Calls a command with the arguments given.
 
@@ -252,7 +251,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.channel
 
     @property
-    def source(self) -> Union[Message, Interaction]:
+    def source(self) -> Message | Interaction:
         """Union[:class:`.Message`, :class:`.Interaction`]: Property to return a message or interaction
         depending on the context.
         """
@@ -263,22 +262,24 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.source._state
 
     @property
-    def cog(self) -> Optional[Cog]:
+    def cog(self) -> Cog | None:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
-        None if it does not exist."""
+        None if it does not exist.
+        """
 
         if self.command is None:
             return None
         return self.command.cog
 
     @utils.cached_property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
-        None if not available."""
+        None if not available.
+        """
         return self.source.guild
 
     @utils.cached_property
-    def guild_id(self) -> Optional[int]:
+    def guild_id(self) -> int | None:
         """:class:`int`: Returns the ID of the guild associated with this context's command."""
         return getattr(self.source, "guild_id", self.guild.id if self.guild else None)
 
@@ -288,22 +289,24 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.source.channel
 
     @utils.cached_property
-    def channel_id(self) -> Optional[int]:
+    def channel_id(self) -> int | None:
         """:class:`int`: Returns the ID of the channel associated with this context's command."""
-        return getattr(self.source, "channel_id", self.channel.id if self.channel else None)
+        return getattr(
+            self.source, "channel_id", self.channel.id if self.channel else None
+        )
 
     @utils.cached_property
-    def author(self) -> Union[User, Member]:
+    def author(self) -> User | Member:
         """Union[:class:`.User`, :class:`.Member`]: Returns the author associated with this context's command."""
         return self.source.author
 
     @property
-    def user(self) -> Union[User, Member]:
+    def user(self) -> User | Member:
         """Union[:class:`.User`, :class:`.Member`]: Alias for :attr:`BaseContext.author`."""
         return self.author
 
     @utils.cached_property
-    def me(self) -> Union[Member, ClientUser]:
+    def me(self) -> Member | ClientUser:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`.Intents.guilds` is absent.
@@ -312,13 +315,13 @@ class BaseContext(abc.Messageable, Generic[BotT]):
         return self.guild.me if self.guild and self.guild.me else self.bot.user  # type: ignore
 
     @property
-    def voice_client(self) -> Optional[VoiceProtocol]:
-        """Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
+    def voice_client(self) -> VoiceProtocol | None:
+        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
         return self.guild.voice_client if self.guild else None
 
 
 class Invokable(Generic[CogT, P, T]):
-    """A baseclass to provide ***basic & common functionality*** between
+    r"""A baseclass to provide ***basic & common functionality*** between
     :class:`.ApplicationCommand` and :class:`~ext.commands.Command`.
 
     .. versionadded:: 2.2
@@ -352,10 +355,15 @@ class Invokable(Generic[CogT, P, T]):
     cooldown: Optional[:class:`Cooldown`]
         The cooldown applied when the command is invoked.
     """
+
     def __init__(self, func: CallbackT, **kwargs):
         self.callback: CallbackT = func
-        self.parent: Optional[Invokable] = parent if isinstance((parent := kwargs.get("parent")), _BaseCommand) else None
-        self.cog: Optional[CogT] = None
+        self.parent: Invokable | None = (
+            parent
+            if isinstance((parent := kwargs.get("parent")), _BaseCommand)
+            else None
+        )
+        self.cog: CogT | None = None
         self.module: Any = None
 
         self.name: str = str(kwargs.get("name", func.__name__))
@@ -366,8 +374,10 @@ class Invokable(Generic[CogT, P, T]):
         if checks := getattr(func, "__commands_checks__", []):
             checks.reverse()
 
-        checks += kwargs.get("checks", [])  # combine all the checks we find (kwargs or decorator)
-        self.checks: List[Check] = checks
+        checks += kwargs.get(
+            "checks", []
+        )  # combine all the checks we find (kwargs or decorator)
+        self.checks: list[Check] = checks
 
         # cooldowns
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
@@ -377,23 +387,27 @@ class Invokable(Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
+            raise TypeError(
+                "Cooldown must be a an instance of CooldownMapping or None."
+            )
 
         self._buckets: CooldownMapping = buckets
 
         # max concurrency
-        self._max_concurrency: Optional[MaxConcurrency] = getattr(func, "__commands_max_concurrency__", kwargs.get("max_concurrency"))
+        self._max_concurrency: MaxConcurrency | None = getattr(
+            func, "__commands_max_concurrency__", kwargs.get("max_concurrency")
+        )
 
         # hooks
-        self._before_invoke: Optional[Hook] = None
+        self._before_invoke: Hook | None = None
         if hook := getattr(func, "__before_invoke__", None):
             self.before_invoke(hook)
 
-        self._after_invoke: Optional[Hook] = None
+        self._after_invoke: Hook | None = None
         if hook := getattr(func, "__after_invoke__", None):
             self.after_invoke(hook)
 
-        self.on_error: Optional[Error]
+        self.on_error: Error | None
 
     @property
     def callback(self) -> CallbackT:
@@ -426,12 +440,12 @@ class Invokable(Generic[CogT, P, T]):
         return f"{self.parent.qualified_name} {self.name}"
 
     @property
-    def cog_name(self) -> Optional[str]:
+    def cog_name(self) -> str | None:
         """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
     @property
-    def parents(self) -> List[Invokable]:
+    def parents(self) -> list[Invokable]:
         """List[:class:`Invokable`]: Retrieves the parents of this command.
 
         If the command has no parents then it returns an empty :class:`list`.
@@ -447,7 +461,7 @@ class Invokable(Generic[CogT, P, T]):
         return entries
 
     @property
-    def root_parent(self) -> Optional[Invokable]:
+    def root_parent(self) -> Invokable | None:
         """Optional[:class:`Invokable`]: Retrieves the root parent of this command.
 
         If the command has no parents then it returns ``None``.
@@ -459,7 +473,7 @@ class Invokable(Generic[CogT, P, T]):
         return self.parents[-1]
 
     @property
-    def full_parent_name(self) -> Optional[str]:
+    def full_parent_name(self) -> str | None:
         """:class:`str`: Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
@@ -481,7 +495,6 @@ class Invokable(Generic[CogT, P, T]):
             This bypasses all mechanisms -- including checks, converters,
             invoke hooks, cooldowns, etc. You must take care to pass
             the proper arguments and types to this function.
-
         """
         if self.cog is not None:
             return await self.callback(self.cog, ctx, *args, **kwargs)
@@ -489,7 +502,7 @@ class Invokable(Generic[CogT, P, T]):
 
     def update(self, **kwargs: Any) -> None:
         """Updates the :class:`Command` instance with updated attribute.
-        
+
         Similar to creating a new instance except it updates the current.
         """
         self.__init__(self.callback, **dict(self.__original_kwargs__, **kwargs))
@@ -502,12 +515,12 @@ class Invokable(Generic[CogT, P, T]):
         invoked afterwards as the catch-all.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the local error handler.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -533,12 +546,12 @@ class Invokable(Generic[CogT, P, T]):
         See :meth:`.Bot.before_invoke` for more info.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -560,12 +573,12 @@ class Invokable(Generic[CogT, P, T]):
         See :meth:`.Bot.after_invoke` for more info.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -586,20 +599,20 @@ class Invokable(Generic[CogT, P, T]):
             Checks whether the command is disabled or not
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The ctx of the command currently being invoked.
 
-        Raises
+        Returns
         -------
+        :class:`bool`
+            A boolean indicating if the command can be invoked.
+
+        Raises
+        ------
         :class:`CommandError`
             Any command error that was raised during a check call will be propagated
             by this function.
-
-        Returns
-        --------
-        :class:`bool`
-            A boolean indicating if the command can be invoked.
         """
         if not self.enabled:
             raise DisabledCommand(f"{self.name} command is disabled")
@@ -609,9 +622,13 @@ class Invokable(Generic[CogT, P, T]):
 
         try:
             if not await ctx.bot.can_run(ctx):
-                raise CheckFailure(f"The global check functions for command {self.qualified_name} failed.")
+                raise CheckFailure(
+                    f"The global check functions for command {self.qualified_name} failed."
+                )
 
-            if (cog := self.cog) and (local_check := cog._get_overridden_method(cog.cog_check)):
+            if (cog := self.cog) and (
+                local_check := cog._get_overridden_method(cog.cog_check)
+            ):
                 ret = await utils.maybe_coroutine(local_check, ctx)
                 if not ret:
                     return False
@@ -631,7 +648,7 @@ class Invokable(Generic[CogT, P, T]):
         This is the non-decorator interface to :func:`.check`.
 
         Parameters
-        -----------
+        ----------
         func: Callable
             The function that will be used as a check.
         """
@@ -645,7 +662,7 @@ class Invokable(Generic[CogT, P, T]):
         if the function is not in the command's checks.
 
         Parameters
-        -----------
+        ----------
         func: Callable
             The function to remove from the checks.
         """
@@ -659,7 +676,7 @@ class Invokable(Generic[CogT, P, T]):
         """Creates a copy of this command.
 
         Returns
-        --------
+        -------
         :class:`Invokable`
             A new instance of this command.
         """
@@ -672,10 +689,10 @@ class Invokable(Generic[CogT, P, T]):
         if self.checks != other.checks:
             other.checks = self.checks.copy()
         if self._buckets.valid and not other._buckets.valid:
-           other._buckets = self._buckets.copy()
+            other._buckets = self._buckets.copy()
         if self._max_concurrency != other._max_concurrency:
-           # _max_concurrency won't be None at this point
-           other._max_concurrency = self._max_concurrency.copy()  # type: ignore
+            # _max_concurrency won't be None at this point
+            other._max_concurrency = self._max_concurrency.copy()  # type: ignore
 
         try:
             other.on_error = self.on_error
@@ -683,7 +700,7 @@ class Invokable(Generic[CogT, P, T]):
             pass
         return other
 
-    def _update_copy(self, kwargs: Dict[str, Any]):
+    def _update_copy(self, kwargs: dict[str, Any]):
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
@@ -703,12 +720,12 @@ class Invokable(Generic[CogT, P, T]):
             This uses the current time instead of the interaction time.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context to use when checking the command's cooldown status.
 
         Returns
-        --------
+        -------
         :class:`bool`
             A boolean indicating if the command is on cooldown.
         """
@@ -723,7 +740,7 @@ class Invokable(Generic[CogT, P, T]):
         """Resets the cooldown on this command.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context to reset the cooldown under.
         """
@@ -739,12 +756,12 @@ class Invokable(Generic[CogT, P, T]):
             This uses the current time instead of the interaction time.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context to retrieve the cooldown from.
 
         Returns
-        --------
+        -------
         :class:`float`
             The amount of time left on this command's cooldown in seconds.
             If this is ``0.0`` then the command isn't on cooldown.
@@ -821,7 +838,9 @@ class Invokable(Generic[CogT, P, T]):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(f"The check functions for command {self.qualified_name} failed.")
+            raise CheckFailure(
+                f"The check functions for command {self.qualified_name} failed."
+            )
 
         if self._max_concurrency is not None:
             # For this application, context can be duck-typed as a Message
@@ -843,7 +862,7 @@ class Invokable(Generic[CogT, P, T]):
 
     async def invoke(self, ctx: ContextT) -> None:
         """Runs the command with checks.
-        
+
         Parameters
         ----------
         ctx: :class:`.BaseContext`

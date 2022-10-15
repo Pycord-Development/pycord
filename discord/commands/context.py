@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 import discord.abc
 from discord.interactions import Interaction, InteractionMessage, InteractionResponse
 from discord.webhook.async_ import Webhook
+
 from .mixins import BaseContext
 
 if TYPE_CHECKING:
@@ -78,6 +79,7 @@ class ApplicationContext(BaseContext):
     command: :class:`.ApplicationCommand`
         The command that this context belongs to.
     """
+
     command: Optional[ApplicationCommand]
 
     def __init__(
@@ -88,7 +90,7 @@ class ApplicationContext(BaseContext):
         command: Optional[ApplicationCommand] = None,
         args: List[Any] = None,
         kwargs: Dict[str, Any] = None,
-        **kwargs2
+        **kwargs2,
     ):
         super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
 
@@ -125,7 +127,7 @@ class ApplicationContext(BaseContext):
             The default is to start where we left off.
 
         Raises
-        -------
+        ------
         ValueError
             The context to reinvoke is not valid.
         """

@@ -31,7 +31,8 @@ from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
 import discord.abc
 import discord.utils
 from discord.message import Message
-from ...commands import BaseContext, ApplicationContext
+
+from ...commands import ApplicationContext, BaseContext
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -39,8 +40,8 @@ if TYPE_CHECKING:
     from .bot import AutoShardedBot, Bot
     from .cog import Cog
     from .core import Command
-    from .view import StringView
     from .help import HelpCommand
+    from .view import StringView
 
 __all__ = ("Context",)
 
@@ -67,7 +68,7 @@ class Context(BaseContext, Generic[BotT]):
     This class implements the :class:`~discord.abc.Messageable` ABC.
 
     Attributes
-    -----------
+    ----------
     message: :class:`.Message`
         The message that triggered the command being executed.
     current_parameter: Optional[:class:`inspect.Parameter`]
@@ -81,6 +82,7 @@ class Context(BaseContext, Generic[BotT]):
         A boolean that indicates if the command failed to be parsed, checked,
         or invoked.
     """
+
     command: Optional[Command]
 
     def __init__(
