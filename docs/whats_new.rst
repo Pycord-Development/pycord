@@ -669,7 +669,7 @@ Bug Fixes
 
 - Fix a regression when :attr:`Message.channel` would be ``None``.
 - Fix a regression where :attr:`Message.edited_at` would not update during edits.
-- Fix a crash that would trigger during message updates (:dpy-issue:`2265`, :dpy-issue:`2287`).
+- Fix a crash that would trigger during message updates (GH-2265, :dpy-issue:`2287`).
 - Fix a bug when :meth:`VoiceChannel.connect` would not return (:dpy-issue:`2274`, :dpy-issue:`2372`, :dpy-issue:`2373`, :dpy-issue:`2377`).
 - Fix a crash relating to token-less webhooks (:dpy-issue:`2364`).
 - Fix issue where :attr:`Guild.premium_subscription_count` would be ``None`` due to a Discord bug. (:dpy-issue:`2331`, :dpy-issue:`2376`).
