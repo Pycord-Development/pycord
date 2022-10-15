@@ -424,4 +424,5 @@ texinfo_documents = [
 
 linkcheck_ignore = [
     r"https://discord.com/developers/docs/.*#",
+    r"https://support-dev.discord.com/hc/en-us/articles/.*",
 ]
