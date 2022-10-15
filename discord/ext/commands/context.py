@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import inspect
 import re
-from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
 
 import discord.abc
 import discord.utils
@@ -89,19 +89,19 @@ class Context(BaseContext, Generic[BotT]):
         message: Message,
         bot: BotT,
         view: StringView,
-        args: List[Any] = MISSING,
-        kwargs: Dict[str, Any] = MISSING,
-        prefix: Optional[str] = None,
-        command: Optional[Command] = None,
-        current_parameter: Optional[inspect.Parameter] = None,
+        args: list[Any] = MISSING,
+        kwargs: dict[str, Any] = MISSING,
+        prefix: str | None = None,
+        command: Command | None = None,
+        current_parameter: inspect.Parameter | None = None,
         **kwargs2,
     ):
         super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
 
         self.message: Message = message
-        self.prefix: Optional[str] = prefix
+        self.prefix: str | None = prefix
         self.view: StringView = view
-        self.current_parameter: Optional[inspect.Parameter] = current_parameter
+        self.current_parameter: inspect.Parameter | None = current_parameter
 
     @property
     def source(self) -> Message:
@@ -184,12 +184,12 @@ class Context(BaseContext, Generic[BotT]):
             this returns :class:`None` on bad input or no help command.
 
         Parameters
-        ------------
+        ----------
         entity: Optional[Union[:class:`Command`, :class:`Cog`, :class:`str`]]
             The entity to show help for.
 
         Returns
-        --------
+        -------
         Any
             The result of the help command, if any.
         """
@@ -245,5 +245,5 @@ class Context(BaseContext, Generic[BotT]):
             await cmd.on_help_command_error(self, e)
 
     @discord.utils.copy_doc(Message.reply)
-    async def reply(self, content: Optional[str] = None, **kwargs: Any) -> Message:
+    async def reply(self, content: str | None = None, **kwargs: Any) -> Message:
         return await self.message.reply(content, **kwargs)

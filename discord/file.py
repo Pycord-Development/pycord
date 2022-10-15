@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import io
 import os
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
 __all__ = ("File",)
 
@@ -77,16 +77,16 @@ class File:
 
     if TYPE_CHECKING:
         fp: io.BufferedIOBase
-        filename: Optional[str]
-        description: Optional[str]
+        filename: str | None
+        description: str | None
         spoiler: bool
 
     def __init__(
         self,
-        fp: Union[str, bytes, os.PathLike, io.BufferedIOBase],
-        filename: Optional[str] = None,
+        fp: str | bytes | os.PathLike | io.BufferedIOBase,
+        filename: str | None = None,
         *,
-        description: Optional[str] = None,
+        description: str | None = None,
         spoiler: bool = False,
     ):
         if isinstance(fp, io.IOBase):
@@ -115,13 +115,19 @@ class File:
         else:
             self.filename = filename
 
-        if spoiler and self.filename is not None and not self.filename.startswith("SPOILER_"):
+        if (
+            spoiler
+            and self.filename is not None
+            and not self.filename.startswith("SPOILER_")
+        ):
             self.filename = f"SPOILER_{self.filename}"
 
-        self.spoiler = spoiler or (self.filename is not None and self.filename.startswith("SPOILER_"))
+        self.spoiler = spoiler or (
+            self.filename is not None and self.filename.startswith("SPOILER_")
+        )
         self.description = description
 
-    def reset(self, *, seek: Union[int, bool] = True) -> None:
+    def reset(self, *, seek: int | bool = True) -> None:
         # The `seek` parameter is needed because
         # the retry-loop is iterated over multiple times
         # starting from 0, as an implementation quirk

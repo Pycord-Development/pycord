@@ -24,10 +24,10 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
-from discord.interactions import InteractionMessage, InteractionResponse, Interaction
+from discord.interactions import Interaction, InteractionMessage, InteractionResponse
 from discord.webhook.async_ import Webhook
 from .mixins import BaseContext
 
@@ -70,7 +70,7 @@ class ApplicationContext(BaseContext):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     bot: :class:`.Bot`
         The bot that the command belongs to.
     interaction: :class:`.Interaction`
@@ -116,7 +116,7 @@ class ApplicationContext(BaseContext):
             fail again.
 
         Parameters
-        ------------
+        ----------
         call_hooks: :class:`bool`
             Whether to call the before and after invoke hooks.
         restart: :class:`bool`
@@ -148,14 +148,14 @@ class ApplicationContext(BaseContext):
         return self.interaction
 
     @cached_property
-    def locale(self) -> Optional[str]:
+    def locale(self) -> str | None:
         """:class:`str`: Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.locale`.
         """
         return self.interaction.locale
 
     @cached_property
-    def guild_locale(self) -> Optional[str]:
+    def guild_locale(self) -> str | None:
         """:class:`str`: Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_locale`.
         """
@@ -166,7 +166,7 @@ class ApplicationContext(BaseContext):
         return self.interaction.app_permissions
 
     @cached_property
-    def message(self) -> Optional[Message]:
+    def message(self) -> Message | None:
         """Optional[:class:`.Message`]: Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
@@ -175,11 +175,12 @@ class ApplicationContext(BaseContext):
     @cached_property
     def response(self) -> InteractionResponse:
         """:class:`.InteractionResponse`: Returns the response object associated with this context's command.
-        Shorthand for :attr:`.Interaction.response`."""
+        Shorthand for :attr:`.Interaction.response`.
+        """
         return self.interaction.response
 
     @property
-    def selected_options(self) -> Optional[List[Dict[str, Any]]]:
+    def selected_options(self) -> list[dict[str, Any]] | None:
         """The options and values that were selected by the user when sending the command.
 
         Returns
@@ -192,7 +193,7 @@ class ApplicationContext(BaseContext):
         return self.interaction.data.get("options", None)
 
     @property
-    def unselected_options(self) -> Optional[List[Option]]:
+    def unselected_options(self) -> list[Option] | None:
         """The options that were not provided by the user when sending the command.
 
         Returns
@@ -206,7 +207,8 @@ class ApplicationContext(BaseContext):
                 return [
                     option
                     for option in self.command.options  # type: ignore
-                    if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
+                    if option.to_dict()["name"]
+                    not in [opt["name"] for opt in self.selected_options]
                 ]
             else:
                 return self.command.options  # type: ignore
@@ -217,7 +219,7 @@ class ApplicationContext(BaseContext):
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
-    async def respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
         """|coro|
 
         Sends either a response or a message using the followup webhook determined by whether the interaction
@@ -230,7 +232,9 @@ class ApplicationContext(BaseContext):
         """
         try:
             if not self.interaction.response.is_done():
-                return await self.interaction.response.send_message(*args, **kwargs)  # self.response
+                return await self.interaction.response.send_message(
+                    *args, **kwargs
+                )  # self.response
             else:
                 return await self.followup.send(*args, **kwargs)  # self.send_followup
         except discord.errors.InteractionResponded:
@@ -266,20 +270,20 @@ class ApplicationContext(BaseContext):
         """:class:`Webhook`: Returns the followup webhook for followup interactions."""
         return self.interaction.followup
 
-    async def delete(self, *, delay: Optional[float] = None) -> None:
+    async def delete(self, *, delay: float | None = None) -> None:
         """|coro|
 
         Deletes the original interaction response message.
 
-        This is a higher level interface to :meth:`Interaction.delete_original_message`.
+        This is a higher level interface to :meth:`Interaction.delete_original_response`.
 
         Parameters
-        -----------
+        ----------
         delay: Optional[:class:`float`]
             If provided, the number of seconds to wait before deleting the message.
 
         Raises
-        -------
+        ------
         HTTPException
             Deleting the message failed.
         Forbidden
@@ -288,12 +292,12 @@ class ApplicationContext(BaseContext):
         if not self.interaction.response.is_done():
             await self.defer()
 
-        return await self.interaction.delete_original_message(delay=delay)
+        return await self.interaction.delete_original_response(delay=delay)
 
     @property
-    @discord.utils.copy_doc(Interaction.edit_original_message)
+    @discord.utils.copy_doc(Interaction.edit_original_response)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
-        return self.interaction.edit_original_message
+        return self.interaction.edit_original_response
 
 
 class AutocompleteContext:
@@ -304,7 +308,7 @@ class AutocompleteContext:
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     bot: :class:`.Bot`
         The bot that the command belongs to.
     interaction: :class:`.Interaction`
@@ -331,7 +335,7 @@ class AutocompleteContext:
         self.options: dict = None  # type: ignore
 
     @property
-    def cog(self) -> Optional[Cog]:
+    def cog(self) -> Cog | None:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
         ``None`` if it does not exist.
         """

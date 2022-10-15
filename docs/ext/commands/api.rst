@@ -8,7 +8,7 @@ The following section outlines the API of Pycord's prefixed command extension mo
 .. note::
 
     Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled.
-    
+
 
 .. _ext_commands_api_bot:
 

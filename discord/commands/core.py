@@ -38,15 +38,13 @@ from typing import (
     Dict,
     Generator,
     Generic,
-    List,
-    Optional,
-    Type,
     TypeVar,
     Union,
 )
 
 from ..channel import _threaded_guild_channel_factory
-from ..enums import MessageType, SlashCommandOptionType, try_enum, Enum as DiscordEnum
+from ..enums import Enum as DiscordEnum
+from ..enums import MessageType, SlashCommandOptionType, try_enum
 from ..errors import ClientException, ValidationError
 from ..member import Member
 from ..message import Attachment, Message
@@ -84,7 +82,6 @@ if TYPE_CHECKING:
 else:
     P = TypeVar("P")
 
-
 T = TypeVar("T")
 
 
@@ -118,24 +115,33 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
     def __init__(self, func: Callable, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        self.id: Optional[int] = kwargs.get("id")
-        self.guild_ids: Optional[List[int]] = kwargs.get("guild_ids", None)
+        self.id: int | None = kwargs.get("id")
+        self.guild_ids: List[int] | None = kwargs.get("guild_ids", None)
 
         # Permissions
-        self.default_member_permissions: Optional["Permissions"] = getattr(
-            func, "__default_member_permissions__", kwargs.get("default_member_permissions", None)
+        self.default_member_permissions: Permissions | None = getattr(
+            func,
+            "__default_member_permissions__",
+            kwargs.get("default_member_permissions", None),
         )
-        self.guild_only: Optional[bool] = getattr(func, "__guild_only__", kwargs.get("guild_only", None))
+        self.guild_only: bool | None = getattr(
+            func, "__guild_only__", kwargs.get("guild_only", None)
+        )
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if getattr(self, "id", None) is not None and getattr(other, "id", None) is not None:
+        if (
+            getattr(self, "id", None) is not None
+            and getattr(other, "id", None) is not None
+        ):
             check = self.id == other.id
         else:
             check = self.name == other.name and self.guild_ids == other.guild_ids
-        return isinstance(other, self.__class__) and self.parent == other.parent and check
+        return (
+            isinstance(other, self.__class__) and self.parent == other.parent and check
+        )
 
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
@@ -162,6 +168,8 @@ class SlashCommand(ApplicationCommand):
         The parameters for this command.
     parent: Optional[:class:`SlashCommandGroup`]
         The parent group that this command belongs to.
+    mention: :class:`str`
+        Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
     default_member_permissions: :class:`~discord.Permissions`
@@ -184,45 +192,50 @@ class SlashCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
 
-        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.name_localizations: dict[str, str] | None = kwargs.get(
+            "name_localizations", None
+        )
         _validate_names(self)
 
         description = kwargs.get("description") or (
-            inspect.cleandoc(func.__doc__).splitlines()[0] if func.__doc__ is not None else "No description provided"
+            inspect.cleandoc(func.__doc__).splitlines()[0]
+            if func.__doc__ is not None
+            else "No description provided"
         )
 
         self.description: str = description
-        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
+        self.description_localizations: dict[str, str] | None = kwargs.get(
+            "description_localizations", None
+        )
         _validate_descriptions(self)
 
         self.attached_to_group: bool = False
 
-        self.options: List[Option] = kwargs.get("options", [])
+        self.options: list[Option] = kwargs.get("options", [])
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
-            self.options: List[Option] = self._match_option_param_names(params, kwop)
+            self.options: list[Option] = self._match_option_param_names(params, kwop)
         else:
-            self.options: List[Option] = self._parse_options(params)
+            self.options: list[Option] = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
         required_params = (
-            ["self", "context"]
-            if self.attached_to_group
-            or self.cog
-            else ["context"]
+            ["self", "context"] if self.attached_to_group or self.cog else ["context"]
         )
         for p in required_params:
             try:
                 next(params)
             except StopIteration:
-                raise ClientException(f'Callback for {self.name} command is missing "{p}" parameter.')
+                raise ClientException(
+                    f'Callback for {self.name} command is missing "{p}" parameter.'
+                )
 
         return params
 
-    def _parse_options(self, params, *, check_params: bool = True) -> List[Option]:
+    def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
         if check_params:
             params = self._check_required_params(params)
 
@@ -240,15 +253,22 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(option)
+                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(
+                        option
+                    )
                     option = p_obj.default
                 else:
                     option = Option(option)
 
             if option.default is None and not p_obj.default == inspect.Parameter.empty:
-                if isinstance(p_obj.default, type) and issubclass(p_obj.default, (DiscordEnum, Enum)):
+                if isinstance(p_obj.default, type) and issubclass(
+                    p_obj.default, (DiscordEnum, Enum)
+                ):
                     option = Option(p_obj.default)
-                elif isinstance(p_obj.default, Option) and not (default := p_obj.default.default) is None:
+                elif (
+                    isinstance(p_obj.default, Option)
+                    and not (default := p_obj.default.default) is None
+                ):
                     option.default = default
                 else:
                     option.default = p_obj.default
@@ -268,13 +288,18 @@ class SlashCommand(ApplicationCommand):
     def _match_option_param_names(self, params, options: List[Option]):
         params = self._check_required_params(params)
 
-        check_annotations: List[Callable[[Option, Type], bool]] = [
+        check_annotations: list[Callable[[Option, type], bool]] = [
             lambda o, a: o.input_type == SlashCommandOptionType.string
             and o.converter is not None,  # pass on converters
-            lambda o, a: isinstance(o.input_type, SlashCommandOptionType),  # pass on slash cmd option type enums
+            lambda o, a: isinstance(
+                o.input_type, SlashCommandOptionType
+            ),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
-            lambda o, a: self._is_typing_optional(a) and not o.required and o._raw_type in a.__args__,  # optional
-            lambda o, a: isinstance(a, type) and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: self._is_typing_optional(a)
+            and not o.required
+            and o._raw_type in a.__args__,  # optional
+            lambda o, a: isinstance(a, type)
+            and issubclass(a, o._raw_type),  # 'normal' types
         ]
         for o in options:
             _validate_names(o)
@@ -286,7 +311,9 @@ class SlashCommand(ApplicationCommand):
             p_obj = p_obj.annotation
 
             if not any(check(o, p_obj) for check in check_annotations):
-                raise TypeError(f"Parameter {p_name} does not match input type of {o.name}.")
+                raise TypeError(
+                    f"Parameter {p_name} does not match input type of {o.name}."
+                )
             o._parameter_name = p_name
 
         left_out_params = OrderedDict()
@@ -297,7 +324,9 @@ class SlashCommand(ApplicationCommand):
         return options
 
     def _is_typing_union(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union or type(annotation) is getattr(
+        return getattr(annotation, "__origin__", None) is Union or type(
+            annotation
+        ) is getattr(
             types, "UnionType", Union
         )  # type: ignore
 
@@ -306,7 +335,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return self._cog
+        return getattr(self, "_cog", MISSING)
 
     @cog.setter
     def cog(self, val):
@@ -319,13 +348,13 @@ class SlashCommand(ApplicationCommand):
     @property
     def is_subcommand(self) -> bool:
         return self.parent is not None
-    
+
     @property
     def mention(self) -> str:
         """:class:`str`: Returns a string that allows you to mention the slash command."""
-        return f"</{self.qualified_name}:{self.id}>"
-    
-    def to_dict(self) -> Dict:
+        return f"</{self.qualified_name}:{self.qualified_id}>"
+
+    def to_dict(self) -> dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -342,7 +371,9 @@ class SlashCommand(ApplicationCommand):
             as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = self.default_member_permissions.value
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         return as_dict
 
@@ -367,7 +398,8 @@ class SlashCommand(ApplicationCommand):
             ):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
-                    op.input_type in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
+                    op.input_type
+                    in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
                     and (_data := resolved.get("members", {}).get(arg)) is not None
                 ):
                     # The option type is a user, we resolved a member from the snowflake and assigned it to _data
@@ -380,16 +412,23 @@ class SlashCommand(ApplicationCommand):
                     if (_data := resolved.get("users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
                     elif (_data := resolved.get("roles", {}).get(arg)) is not None:
-                        arg = Role(state=ctx.interaction._state, data=_data, guild=ctx.guild)
+                        arg = Role(
+                            state=ctx.interaction._state, data=_data, guild=ctx.guild
+                        )
                     else:
                         arg = Object(id=int(arg))
-                elif (_data := resolved.get(f"{op.input_type.name}s", {}).get(arg)) is not None:
+                elif (
+                    _data := resolved.get(f"{op.input_type.name}s", {}).get(arg)
+                ) is not None:
                     if op.input_type is SlashCommandOptionType.channel and (
-                        int(arg) in ctx.guild._channels or int(arg) in ctx.guild._threads
+                        int(arg) in ctx.guild._channels
+                        or int(arg) in ctx.guild._threads
                     ):
                         arg = ctx.guild.get_channel_or_thread(int(arg))
                         _data["_invoke_flag"] = True
-                        arg._update(_data) if isinstance(arg, Thread) else arg._update(ctx.guild, _data)
+                        arg._update(_data) if isinstance(arg, Thread) else arg._update(
+                            ctx.guild, _data
+                        )
                     else:
                         obj_type = None
                         kw = {}
@@ -414,18 +453,24 @@ class SlashCommand(ApplicationCommand):
                     # We couldn't resolve the object, so we just return an empty object
                     arg = Object(id=int(arg))
 
-            elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
+            elif (
+                op.input_type == SlashCommandOptionType.string
+                and (converter := op.converter) is not None
+            ):
                 from discord.ext.commands import Converter
+
                 if isinstance(converter, Converter):
                     if isinstance(converter, type):
                         arg = await converter().convert(ctx, arg)
                     else:
                         arg = await converter.convert(ctx, arg)
 
-            elif op._raw_type in (SlashCommandOptionType.integer,
-                                  SlashCommandOptionType.number,
-                                  SlashCommandOptionType.string,
-                                  SlashCommandOptionType.boolean):
+            elif op._raw_type in (
+                SlashCommandOptionType.integer,
+                SlashCommandOptionType.number,
+                SlashCommandOptionType.string,
+                SlashCommandOptionType.boolean,
+            ):
                 pass
 
             elif issubclass(op._raw_type, Enum):
@@ -451,7 +496,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({i["name"]: i["value"] for i in ctx.interaction.data["options"]})
+                values.update(
+                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
+                )
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
@@ -466,8 +513,13 @@ class SlashCommand(ApplicationCommand):
                 if asyncio.iscoroutinefunction(option.autocomplete):
                     result = await result
 
-                choices = [o if isinstance(o, OptionChoice) else OptionChoice(o) for o in result][:25]
-                return await ctx.interaction.response.send_autocomplete_result(choices=choices)
+                choices = [
+                    o if isinstance(o, OptionChoice) else OptionChoice(o)
+                    for o in result
+                ][:25]
+                return await ctx.interaction.response.send_autocomplete_result(
+                    choices=choices
+                )
 
 
 # TODO: implement with GroupMixin maybe
@@ -501,7 +553,7 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
-    __initial_commands__: List[Union[SlashCommand, SlashCommandGroup]]
+    __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
@@ -529,9 +581,9 @@ class SlashCommandGroup(ApplicationCommand):
     def __init__(
         self,
         name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
-        parent: Optional[SlashCommandGroup] = None,
+        description: str | None = None,
+        guild_ids: list[int] | None = None,
+        parent: SlashCommandGroup | None = None,
         **kwargs,
     ) -> None:
         self.name = str(name)
@@ -539,7 +591,9 @@ class SlashCommandGroup(ApplicationCommand):
         validate_chat_input_name(self.name)
         validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: List[Union[SlashCommand, SlashCommandGroup]] = self.__initial_commands__
+        self.subcommands: list[
+            SlashCommand | SlashCommandGroup
+        ] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
         self.attached_to_group: bool = False
@@ -547,21 +601,27 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog = MISSING
         self.id = None
 
         # Permissions
-        self.default_member_permissions: Optional["Permissions"] = kwargs.get("default_member_permissions", None)
-        self.guild_only: Optional[bool] = kwargs.get("guild_only", None)
+        self.default_member_permissions: Permissions | None = kwargs.get(
+            "default_member_permissions", None
+        )
+        self.guild_only: bool | None = kwargs.get("guild_only", None)
 
-        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
-        self.description_localizations: Optional[Dict[str, str]] = kwargs.get("description_localizations", None)
+        self.name_localizations: dict[str, str] | None = kwargs.get(
+            "name_localizations", None
+        )
+        self.description_localizations: dict[str, str] | None = kwargs.get(
+            "description_localizations", None
+        )
 
     @property
-    def module(self) -> Optional[str]:
+    def module(self) -> str | None:
         return self.__module__
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -579,17 +639,24 @@ class SlashCommandGroup(ApplicationCommand):
             as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = self.default_member_permissions.value
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         return as_dict
 
     def add_command(self, command: SlashCommand) -> None:
-        if command.cog is MISSING and not self.cog is None:
+        # check if subcommand has no cog set
+        # also check if cog is MISSING because it
+        # might not have been set by the cog yet
+        if command.cog is MISSING and self.cog is not MISSING:
             command.cog = self.cog
 
         self.subcommands.append(command)
 
-    def command(self, cls: Type[T] = SlashCommand, **kwargs) -> Callable[[Callable], SlashCommand]:
+    def command(
+        self, cls: type[T] = SlashCommand, **kwargs
+    ) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
             self.add_command(command)
@@ -600,8 +667,8 @@ class SlashCommandGroup(ApplicationCommand):
     def create_subgroup(
         self,
         name: str,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
+        description: str | None = None,
+        guild_ids: list[int] | None = None,
         **kwargs,
     ) -> SlashCommandGroup:
         """
@@ -635,7 +702,7 @@ class SlashCommandGroup(ApplicationCommand):
             See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
         Returns
-        --------
+        -------
         SlashCommandGroup
             The slash command group that was created.
         """
@@ -643,16 +710,18 @@ class SlashCommandGroup(ApplicationCommand):
         if self.parent is not None:
             raise Exception("A command subgroup can only have commands and not any more groups.")
 
-        sub_command_group = SlashCommandGroup(name, description, guild_ids, parent=self, **kwargs)
+        sub_command_group = SlashCommandGroup(
+            name, description, guild_ids, parent=self, **kwargs
+        )
         self.subcommands.append(sub_command_group)
         return sub_command_group
 
     def subgroup(
         self,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        guild_ids: Optional[List[int]] = None,
-    ) -> Callable[[Type[SlashCommandGroup]], SlashCommandGroup]:
+        name: str | None = None,
+        description: str | None = None,
+        guild_ids: list[int] | None = None,
+    ) -> Callable[[type[SlashCommandGroup]], SlashCommandGroup]:
         """A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup`
         as a subgroup.
 
@@ -669,12 +738,12 @@ class SlashCommandGroup(ApplicationCommand):
             This will be a global command if ``None`` is passed.
 
         Returns
-        --------
+        -------
         Callable[[Type[SlashCommandGroup]], SlashCommandGroup]
             The slash command group that was created.
         """
 
-        def inner(cls: Type[SlashCommandGroup]) -> SlashCommandGroup:
+        def inner(cls: type[SlashCommandGroup]) -> SlashCommandGroup:
             group = cls(
                 name or cls.__name__,
                 description
@@ -686,7 +755,7 @@ class SlashCommandGroup(ApplicationCommand):
                 guild_ids=guild_ids,
                 parent=self,
             )
-            self.subcommands.append(group)
+            self.add_command(group)
             return group
 
         return inner
@@ -756,7 +825,9 @@ class ContextMenuCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
 
-        self.name_localizations: Optional[Dict[str, str]] = kwargs.get("name_localizations", None)
+        self.name_localizations: dict[str, str] | None = kwargs.get(
+            "name_localizations", None
+        )
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
@@ -781,23 +852,29 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            raise ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
 
         # next we have the 'user/message' as the next parameter
         try:
             next(params)
         except StopIteration:
             cmd = "user" if type(self) == UserCommand else "message"
-            raise ClientException(f'Callback for {self.name} command is missing "{cmd}" parameter.')
+            raise ClientException(
+                f'Callback for {self.name} command is missing "{cmd}" parameter.'
+            )
 
         # next there should be no more parameters
         try:
             next(params)
-            raise ClientException(f"Callback for {self.name} command has too many parameters.")
+            raise ClientException(
+                f"Callback for {self.name} command has too many parameters."
+            )
         except StopIteration:
             pass
 
-    def to_dict(self) -> Dict[str, Union[str, int]]:
+    def to_dict(self) -> dict[str, str | int]:
         as_dict = {
             "name": self.name,
             "description": self.description,
@@ -808,7 +885,9 @@ class ContextMenuCommand(ApplicationCommand):
             as_dict["dm_permission"] = not self.guild_only
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = self.default_member_permissions.value
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations
@@ -925,7 +1004,7 @@ def slash_command(**kwargs):
     .. versionadded:: 2.0
 
     Returns
-    --------
+    -------
     Callable[..., :class:`.SlashCommand`]
         A decorator that converts the provided method into a :class:`.SlashCommand`.
     """
@@ -938,7 +1017,7 @@ def user_command(**kwargs):
     .. versionadded:: 2.0
 
     Returns
-    --------
+    -------
     Callable[..., :class:`.UserCommand`]
         A decorator that converts the provided method into a :class:`.UserCommand`.
     """
@@ -951,7 +1030,7 @@ def message_command(**kwargs):
     .. versionadded:: 2.0
 
     Returns
-    --------
+    -------
     Callable[..., :class:`.MessageCommand`]
         A decorator that converts the provided method into a :class:`.MessageCommand`.
     """
@@ -969,7 +1048,7 @@ def application_command(cls=SlashCommand, **attrs):
     .. versionadded:: 2.0
 
     Parameters
-    -----------
+    ----------
     cls: :class:`.ApplicationCommand`
         The class to construct with. By default, this is :class:`.SlashCommand`.
         You usually do not change this.
@@ -977,22 +1056,24 @@ def application_command(cls=SlashCommand, **attrs):
         Keyword arguments to pass into the construction of the class denoted
         by ``cls``.
 
-    Raises
-    -------
-    TypeError
-        If the function is not a coroutine or is already a command.
-
     Returns
-    --------
+    -------
     Callable[..., :class:`.ApplicationCommand`]
         A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it.
+
+    Raises
+    ------
+    TypeError
+        If the function is not a coroutine or is already a command.
     """
 
     def decorator(func: Callable) -> cls:
         if isinstance(func, ApplicationCommand):
             func = func.callback
         elif not callable(func):
-            raise TypeError("func needs to be a callable or a subclass of ApplicationCommand.")
+            raise TypeError(
+                "func needs to be a callable or a subclass of ApplicationCommand."
+            )
         return cls(func, **attrs)
 
     return decorator
@@ -1007,7 +1088,7 @@ def command(**kwargs):
     .. versionadded:: 2.0
 
     Returns
-    --------
+    -------
     Callable[..., :class:`.ApplicationCommand`]
         A decorator that converts the provided method into an :class:`.ApplicationCommand`.
     """
@@ -1050,7 +1131,7 @@ valid_locales = [
 
 
 # Validation
-def validate_chat_input_name(name: Any, locale: Optional[str] = None):
+def validate_chat_input_name(name: Any, locale: str | None = None):
     # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
@@ -1058,15 +1139,21 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         )
     error = None
     if not isinstance(name, str):
-        error = TypeError(f'Command names and options must be of type str. Received "{name}"')
+        error = TypeError(
+            f'Command names and options must be of type str. Received "{name}"'
+        )
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
             r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
             f"For more information, see {docs}/interactions/application-commands#application-command-object-"
             f'application-command-naming. Received "{name}"'
         )
-    elif name.lower() != name:  # Can't use islower() as it fails if none of the chars can be lowered. See #512.
-        error = ValidationError(f'Command names and options must be lowercase. Received "{name}"')
+    elif (
+        name.lower() != name
+    ):  # Can't use islower() as it fails if none of the chars can be lowered. See #512.
+        error = ValidationError(
+            f'Command names and options must be lowercase. Received "{name}"'
+        )
 
     if error:
         if locale:
@@ -1074,14 +1161,16 @@ def validate_chat_input_name(name: Any, locale: Optional[str] = None):
         raise error
 
 
-def validate_chat_input_description(description: Any, locale: Optional[str] = None):
+def validate_chat_input_description(description: Any, locale: str | None = None):
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
             f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
         )
     error = None
     if not isinstance(description, str):
-        error = TypeError(f'Command and option description must be of type str. Received "{description}"')
+        error = TypeError(
+            f'Command and option description must be of type str. Received "{description}"'
+        )
     elif not 1 <= len(description) <= 100:
         error = ValidationError(
             f'Command and option description must be 1-100 characters long. Received "{description}"'

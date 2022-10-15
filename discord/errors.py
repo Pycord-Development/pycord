@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Union
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse, ClientWebSocketResponse
@@ -80,8 +80,6 @@ class DiscordException(Exception):
     Ideally speaking, this could be caught to handle any exceptions raised from this library.
     """
 
-    pass
-
 
 class ClientException(DiscordException):
     """Exception that's raised when an operation in the :class:`Client` fails.
@@ -89,13 +87,9 @@ class ClientException(DiscordException):
     These are usually for exceptions that happened due to user input.
     """
 
-    pass
-
 
 class NoMoreItems(DiscordException):
     """Exception that is raised when an async iteration operation has no more items."""
-
-    pass
 
 
 class GatewayNotFound(DiscordException):
@@ -109,14 +103,12 @@ class GatewayNotFound(DiscordException):
 class ValidationError(DiscordException):
     """An Exception that is raised when there is a Validation Error."""
 
-    pass
-
 
 class HTTPException(DiscordException):
     """Exception that's raised when an HTTP request operation fails.
 
     Attributes
-    ------------
+    ----------
     response: :class:`aiohttp.ClientResponse`
         The response of the failed HTTP request. This is an
         instance of :class:`aiohttp.ClientResponse`. In some cases
@@ -130,7 +122,7 @@ class HTTPException(DiscordException):
         The Discord specific error code for the failure.
     """
 
-    def __init__(self, response: _ResponseType, message: Optional[Union[str, Dict[str, Any]]]):
+    def __init__(self, response: _ResponseType, message: str | dict[str, Any] | None):
         self.response: _ResponseType = response
         self.status: int = response.status  # type: ignore
         self.code: int
@@ -162,16 +154,12 @@ class Forbidden(HTTPException):
     Subclass of :exc:`HTTPException`
     """
 
-    pass
-
 
 class NotFound(HTTPException):
     """Exception that's raised for when status code 404 occurs.
 
     Subclass of :exc:`HTTPException`
     """
-
-    pass
 
 
 class DiscordServerError(HTTPException):
@@ -182,15 +170,11 @@ class DiscordServerError(HTTPException):
     .. versionadded:: 1.5
     """
 
-    pass
-
 
 class InvalidData(ClientException):
     """Exception that's raised when the library encounters unknown
     or invalid data from Discord.
     """
-
-    pass
 
 
 class InvalidArgument(ClientException):
@@ -202,8 +186,6 @@ class InvalidArgument(ClientException):
     :exc:`DiscordException`.
     """
 
-    pass
-
 
 class LoginFailure(ClientException):
     """Exception that's raised when the :meth:`Client.login` function
@@ -211,15 +193,13 @@ class LoginFailure(ClientException):
     failure.
     """
 
-    pass
-
 
 class ConnectionClosed(ClientException):
     """Exception that's raised when the gateway connection is
     closed for reasons that could not be handled internally.
 
     Attributes
-    -----------
+    ----------
     code: :class:`int`
         The close code of the websocket.
     reason: :class:`str`
@@ -232,15 +212,15 @@ class ConnectionClosed(ClientException):
         self,
         socket: ClientWebSocketResponse,
         *,
-        shard_id: Optional[int],
-        code: Optional[int] = None,
+        shard_id: int | None,
+        code: int | None = None,
     ):
         # This exception is just the same exception except
         # reconfigured to subclass ClientException for users
         self.code: int = code or socket.close_code or -1
         # aiohttp doesn't seem to consistently provide close reason
         self.reason: str = ""
-        self.shard_id: Optional[int] = shard_id
+        self.shard_id: int | None = shard_id
         super().__init__(f"Shard ID {self.shard_id} WebSocket closed with {self.code}")
 
 
@@ -256,13 +236,13 @@ class PrivilegedIntentsRequired(ClientException):
     - :attr:`Intents.message_content`
 
     Attributes
-    -----------
+    ----------
     shard_id: Optional[:class:`int`]
         The shard ID that got closed if applicable.
     """
 
-    def __init__(self, shard_id: Optional[int]):
-        self.shard_id: Optional[int] = shard_id
+    def __init__(self, shard_id: int | None):
+        self.shard_id: int | None = shard_id
         msg = (
             "Shard ID %s is requesting privileged intents that have not been explicitly enabled in the "
             "developer portal. It is recommended to go to https://discord.com/developers/applications/ "
@@ -281,7 +261,7 @@ class InteractionResponded(ClientException):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     interaction: :class:`Interaction`
         The interaction that's already been responded to.
     """
@@ -439,16 +419,18 @@ class ExtensionError(DiscordException):
     This inherits from :exc:`~discord.DiscordException`.
 
     Attributes
-    ------------
+    ----------
     name: :class:`str`
         The extension that had an error.
     """
 
-    def __init__(self, message: Optional[str] = None, *args: Any, name: str) -> None:
+    def __init__(self, message: str | None = None, *args: Any, name: str) -> None:
         self.name: str = name
         message = message or f"Extension {name!r} had an error."
         # clean-up @everyone and @here mentions
-        m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
+        m = message.replace("@everyone", "@\u200beveryone").replace(
+            "@here", "@\u200bhere"
+        )
         super().__init__(m, *args)
 
 
@@ -488,7 +470,7 @@ class ExtensionFailed(ExtensionError):
     This inherits from :exc:`ExtensionError`
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The extension that had the error.
     original: :exc:`Exception`
@@ -511,7 +493,7 @@ class ExtensionNotFound(ExtensionError):
         Made the ``original`` attribute always None.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The extension that had the error.
     """
@@ -521,14 +503,14 @@ class ExtensionNotFound(ExtensionError):
         super().__init__(msg, name=name)
 
 
-def _flatten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
-    items: List[Tuple[str, str]] = []
+def _flatten_error_dict(d: dict[str, Any], key: str = "") -> dict[str, str]:
+    items: list[tuple[str, str]] = []
     for k, v in d.items():
         new_key = f"{key}.{k}" if key else k
 
         if isinstance(v, dict):
             try:
-                _errors: List[Dict[str, Any]] = v["_errors"]
+                _errors: list[dict[str, Any]] = v["_errors"]
             except KeyError:
                 items.extend(_flatten_error_dict(v, new_key).items())
             else:

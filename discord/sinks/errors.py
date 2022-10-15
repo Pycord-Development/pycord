@@ -38,8 +38,6 @@ class RecordingException(SinkException):
     .. versionadded:: 2.0
     """
 
-    pass
-
 
 class MP3SinkError(SinkException):
     """Exception thrown when an exception occurs with :class:`MP3Sink`

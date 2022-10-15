@@ -51,9 +51,6 @@ BridgeCommand
 .. autoclass:: discord.ext.bridge.BridgeCommand
     :members:
 
-.. automethod:: discord.ext.bridge.bridge_command()
-    :decorator:
-
 BridgeCommandGroup
 ~~~~~~~~~~~~~~~~~~~
 
@@ -62,10 +59,21 @@ BridgeCommandGroup
 .. autoclass:: discord.ext.bridge.BridgeCommandGroup
     :members:
 
+Decorators
+~~~~~~~~~~~
+.. automethod:: discord.ext.bridge.bridge_command()
+    :decorator:
+
 .. automethod:: discord.ext.bridge.bridge_group()
     :decorator:
 
 .. automethod:: discord.ext.bridge.map_to()
+    :decorator:
+
+.. automethod:: discord.ext.bridge.guild_only()
+    :decorator:
+
+.. automethod:: discord.ext.bridge.has_permissions()
     :decorator:
 
 Command Subclasses

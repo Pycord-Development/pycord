@@ -22,26 +22,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import inspect
-from typing import Any, List, Union, Optional
+from typing import TYPE_CHECKING, Any, Callable
 
 import discord.commands.options
-from discord import SlashCommandOptionType, Attachment, Option, SlashCommand, SlashCommandGroup
-from .context import BridgeApplicationContext
-from ..commands.converter import _convert_to_bool, run_converters
+from discord import (
+    ApplicationCommand,
+    Attachment,
+    Option,
+    Permissions,
+    SlashCommand,
+    SlashCommandGroup,
+    SlashCommandOptionType,
+)
+
+from ...utils import filter_params, find, get
+from ..commands import BadArgument
+from ..commands import Bot as ExtBot
 from ..commands import (
     Command,
-    Group,
+    Context,
     Converter,
+    Group,
     GuildChannelConverter,
     RoleConverter,
     UserConverter,
-    BadArgument,
-    Context,
-    Bot as ExtBot,
 )
-from ...utils import get, filter_params, find
+from ..commands.converter import _convert_to_bool, run_converters
+
+if TYPE_CHECKING:
+    from .context import BridgeApplicationContext, BridgeExtContext
 
 
 __all__ = (
@@ -54,6 +66,8 @@ __all__ = (
     "BridgeExtGroup",
     "BridgeSlashGroup",
     "map_to",
+    "guild_only",
+    "has_permissions",
 )
 
 
@@ -61,7 +75,7 @@ class BridgeSlashCommand(SlashCommand):
     """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, brief="description")
+        self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
 
@@ -69,7 +83,6 @@ class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, description="brief")
         super().__init__(func, **kwargs)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
@@ -82,6 +95,7 @@ class BridgeExtCommand(Command):
 
 class BridgeSlashGroup(SlashCommandGroup):
     """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."""
+
     __slots__ = ("module",)
 
     def __init__(self, callback, *args, **kwargs):
@@ -106,18 +120,10 @@ class BridgeSlashGroup(SlashCommandGroup):
 
 class BridgeExtGroup(BridgeExtCommand, Group):
     """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
-    pass
 
 
 class BridgeCommand:
     """Compatibility class between prefixed-based commands and slash commands.
-
-    Attributes
-    ----------
-    slash_variant: :class:`.BridgeSlashCommand`
-        The slash command version of this bridge command.
-    ext_variant: :class:`.BridgeExtCommand`
-        The prefix-based version of this bridge command.
 
     Parameters
     ----------
@@ -128,11 +134,23 @@ class BridgeCommand:
         Parent of the BridgeCommand.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+
+    Attributes
+    ----------
+    slash_variant: :class:`.BridgeSlashCommand`
+        The slash command version of this bridge command.
+    ext_variant: :class:`.BridgeExtCommand`
+        The prefix-based version of this bridge command.
     """
+
     def __init__(self, callback, **kwargs):
         self.parent = kwargs.pop("parent", None)
-        self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(callback, **kwargs)
-        self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
+        self.slash_variant: BridgeSlashCommand = kwargs.pop(
+            "slash_variant", None
+        ) or BridgeSlashCommand(callback, **kwargs)
+        self.ext_variant: BridgeExtCommand = kwargs.pop(
+            "ext_variant", None
+        ) or BridgeExtCommand(callback, **kwargs)
 
     @property
     def name_localizations(self):
@@ -145,7 +163,6 @@ class BridgeCommand:
             bridge_command.name_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
-
         """
         return self.slash_variant.name_localizations
 
@@ -164,7 +181,6 @@ class BridgeCommand:
             bridge_command.description_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
-
         """
         return self.slash_variant.description_localizations
 
@@ -183,6 +199,13 @@ class BridgeCommand:
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
 
+    async def invoke(
+        self, ctx: BridgeExtContext | BridgeApplicationContext, /, *args, **kwargs
+    ):
+        if ctx.is_app:
+            return await self.slash_variant.invoke(ctx)
+        return await self.ext_variant.invoke(ctx)
+
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
 
@@ -195,12 +218,12 @@ class BridgeCommand:
         a :class:`~discord.DiscordException`.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the local error handler.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -219,12 +242,12 @@ class BridgeCommand:
         This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -243,12 +266,12 @@ class BridgeCommand:
         This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
 
         Parameters
-        -----------
+        ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
 
         Raises
-        -------
+        ------
         TypeError
             The coroutine passed is not actually a coroutine.
         """
@@ -280,13 +303,16 @@ class BridgeCommandGroup(BridgeCommand):
     mapped: Optional[:class:`.SlashCommand`]
         If :func:`map_to` is used, the mapped slash command.
     """
+
     def __init__(self, callback, *args, **kwargs):
         self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
         name = kwargs.pop("name", self.ext_variant.name)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(callback, name, *args, **kwargs)
-        self.subcommands: List[BridgeCommand] = []
+        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(
+            callback, name, *args, **kwargs
+        )
+        self.subcommands: list[BridgeCommand] = []
 
-        self.mapped: Optional[SlashCommand] = None
+        self.mapped: SlashCommand | None = None
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
@@ -299,10 +325,21 @@ class BridgeCommandGroup(BridgeCommand):
         kwargs: Optional[Dict[:class:`str`, Any]]
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
         """
+
         def wrap(callback):
-            slash = self.slash_variant.command(*args, **filter_params(kwargs, brief="description"), cls=BridgeSlashCommand)(callback)
-            ext = self.ext_variant.command(*args, **filter_params(kwargs, description="brief"), cls=BridgeExtCommand)(callback)
-            command = BridgeCommand(callback, parent=self, slash_variant=slash, ext_variant=ext)
+            slash = self.slash_variant.command(
+                *args,
+                **kwargs,
+                cls=BridgeSlashCommand,
+            )(callback)
+            ext = self.ext_variant.command(
+                *args,
+                **kwargs,
+                cls=BridgeExtCommand,
+            )(callback)
+            command = BridgeCommand(
+                callback, parent=self, slash_variant=slash, ext_variant=ext
+            )
             self.subcommands.append(command)
             return command
 
@@ -317,6 +354,7 @@ def bridge_command(**kwargs):
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
+
     def decorator(callback):
         return BridgeCommand(callback, **kwargs)
 
@@ -329,16 +367,24 @@ def bridge_group(**kwargs):
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
-        Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
+        Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`).
     """
+
     def decorator(callback):
         return BridgeCommandGroup(callback, **kwargs)
 
     return decorator
 
 
-def map_to(name, description = None):
+def map_to(name, description=None):
     """To be used with bridge command groups, map the main command to a slash subcommand.
+
+    Parameters
+    ----------
+    name: :class:`str`
+        The new name of the mapped command.
+    description: Optional[:class:`str`]
+        The new description of the mapped command.
 
     Example
     -------
@@ -360,13 +406,6 @@ def map_to(name, description = None):
 
         /config show
         /config toggle
-
-    Parameters
-    ----------
-    name: :class:`str`
-        The new name of the mapped command.
-    description: Optional[:class:`str`]
-        The new description of the mapped command.
     """
 
     def decorator(callback):
@@ -374,6 +413,55 @@ def map_to(name, description = None):
         return callback
 
     return decorator
+
+
+def guild_only():
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord).
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`.
+    """
+
+    def predicate(func: Callable | ApplicationCommand):
+        if isinstance(func, ApplicationCommand):
+            func.guild_only = True
+        else:
+            func.__guild_only__ = True
+
+        from ..commands import guild_only
+
+        return guild_only()(func)
+
+    return predicate
+
+
+def has_permissions(**perms: dict[str, bool]):
+    r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
+    :func:`~ext.commands.check` that locks the command to be run by people with certain
+    permissions inside guilds, and also registers the command as locked behind said permissions.
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions`
+    and :func:`discord.commands.default_permissions`.
+
+    Parameters
+    ----------
+    \*\*perms: Dict[:class:`str`, :class:`bool`]
+        An argument list of permissions to check for.
+    """
+
+    def predicate(func: Callable | ApplicationCommand):
+        from ..commands import has_permissions
+
+        func = has_permissions(**perms)(func)
+        Permissions(**perms)
+        if isinstance(func, ApplicationCommand):
+            func.default_member_permissions = perms
+        else:
+            func.__default_member_permissions__ = perms
+
+        return perms
+
+    return predicate
 
 
 class MentionableConverter(Converter):
@@ -384,6 +472,7 @@ class MentionableConverter(Converter):
             return await RoleConverter().convert(ctx, argument)
         except BadArgument:
             return await UserConverter().convert(ctx, argument)
+
 
 class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):
@@ -421,7 +510,7 @@ class BridgeOption(Option, Converter):
                     converted = converter(argument)
 
             if self.choices:
-                choices_names: List[Union[str, int, float]] = [
+                choices_names: list[str | int | float] = [
                     choice.name for choice in self.choices
                 ]
                 if converted in choices_names and (

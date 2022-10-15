@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Type
+from typing import TYPE_CHECKING, Any
 
 from .enums import ExpireBehaviour, try_enum
 from .errors import InvalidArgument
@@ -60,7 +60,7 @@ class IntegrationAccount:
     .. versionadded:: 1.4
 
     Attributes
-    -----------
+    ----------
     id: :class:`str`
         The account ID.
     name: :class:`str`
@@ -83,7 +83,7 @@ class Integration:
     .. versionadded:: 1.4
 
     Attributes
-    -----------
+    ----------
     id: :class:`int`
         The integration ID.
     name: :class:`str`
@@ -129,7 +129,7 @@ class Integration:
         self.user = User(state=self._state, data=user) if user else None
         self.enabled: bool = data["enabled"]
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the integration.
@@ -138,14 +138,14 @@ class Integration:
         do this.
 
         Parameters
-        -----------
+        ----------
         reason: :class:`str`
             The reason the integration was deleted. Shows up on the audit log.
 
             .. versionadded:: 2.0
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permission to delete the integration.
         HTTPException
@@ -201,10 +201,12 @@ class StreamIntegration(Integration):
     def _from_data(self, data: StreamIntegrationPayload) -> None:
         super()._from_data(data)
         self.revoked: bool = data["revoked"]
-        self.expire_behaviour: ExpireBehaviour = try_enum(ExpireBehaviour, data["expire_behavior"])
+        self.expire_behaviour: ExpireBehaviour = try_enum(
+            ExpireBehaviour, data["expire_behavior"]
+        )
         self.expire_grace_period: int = data["expire_grace_period"]
         self.synced_at: datetime.datetime = parse_time(data["synced_at"])
-        self._role_id: Optional[int] = _get_as_snowflake(data, "role_id")
+        self._role_id: int | None = _get_as_snowflake(data, "role_id")
         self.syncing: bool = data["syncing"]
         self.enable_emoticons: bool = data["enable_emoticons"]
         self.subscriber_count: int = data["subscriber_count"]
@@ -215,7 +217,7 @@ class StreamIntegration(Integration):
         return self.expire_behaviour
 
     @property
-    def role(self) -> Optional[Role]:
+    def role(self) -> Role | None:
         """Optional[:class:`Role`]: The role which the integration uses for subscribers."""
         return self.guild.get_role(self._role_id)  # type: ignore
 
@@ -234,7 +236,7 @@ class StreamIntegration(Integration):
         do this.
 
         Parameters
-        -----------
+        ----------
         expire_behaviour: :class:`ExpireBehaviour`
             The behaviour when an integration subscription lapses. Aliased to ``expire_behavior`` as well.
         expire_grace_period: :class:`int`
@@ -243,7 +245,7 @@ class StreamIntegration(Integration):
             Where emoticons should be synced for this integration (currently twitch only).
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permission to edit the integration.
         HTTPException
@@ -251,10 +253,12 @@ class StreamIntegration(Integration):
         InvalidArgument
             ``expire_behaviour`` did not receive a :class:`ExpireBehaviour`.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if expire_behaviour is not MISSING:
             if not isinstance(expire_behaviour, ExpireBehaviour):
-                raise InvalidArgument("expire_behaviour field must be of type ExpireBehaviour")
+                raise InvalidArgument(
+                    "expire_behaviour field must be of type ExpireBehaviour"
+                )
 
             payload["expire_behavior"] = expire_behaviour.value
 
@@ -277,7 +281,7 @@ class StreamIntegration(Integration):
         do this.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have permission to sync the integration.
         HTTPException
@@ -320,11 +324,11 @@ class IntegrationApplication:
     def __init__(self, *, data: IntegrationApplicationPayload, state):
         self.id: int = int(data["id"])
         self.name: str = data["name"]
-        self.icon: Optional[str] = data["icon"]
+        self.icon: str | None = data["icon"]
         self.description: str = data["description"]
         self.summary: str = data["summary"]
         user = data.get("bot")
-        self.user: Optional[User] = User(state=state, data=user) if user else None
+        self.user: User | None = User(state=state, data=user) if user else None
 
 
 class BotIntegration(Integration):
@@ -356,10 +360,12 @@ class BotIntegration(Integration):
 
     def _from_data(self, data: BotIntegrationPayload) -> None:
         super()._from_data(data)
-        self.application = IntegrationApplication(data=data["application"], state=self._state)
+        self.application = IntegrationApplication(
+            data=data["application"], state=self._state
+        )
 
 
-def _integration_factory(value: str) -> Tuple[Type[Integration], str]:
+def _integration_factory(value: str) -> tuple[type[Integration], str]:
     if value == "discord":
         return BotIntegration, value
     elif value in {"twitch", "youtube"}:
