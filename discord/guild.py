@@ -896,7 +896,7 @@ class Guild(Hashable):
         return self._members.get(user_id)
 
     async def get_or_fetch_member(self, member_id: int, /) -> Member | None:
-        """Looks up a user in the user cache or fetches if not found.
+        """Looks up a member in the guild cache or fetches if not found.
         Parameters
         ----------
         member_id: :class:`int`
