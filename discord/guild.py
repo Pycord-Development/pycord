@@ -895,6 +895,20 @@ class Guild(Hashable):
         """
         return self._members.get(user_id)
 
+    async def get_or_fetch_member(self, member_id: int, /) -> Member | None:
+        """Looks up a user in the user cache or fetches if not found.
+        Parameters
+        ----------
+        member_id: :class:`int`
+            The ID to search for.
+        Returns
+        -------
+        Optional[:class:`~discord.Member`]
+            The member or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr="member", id=member_id, default=None)
+    
     @property
     def premium_subscribers(self) -> list[Member]:
         """List[:class:`Member`]: A list of members who have "boosted" this guild."""
