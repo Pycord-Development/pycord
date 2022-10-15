@@ -139,3 +139,7 @@ img[src="_images/snake.svg"] {
 img[src="_images/snake_dark.svg"] {
   display: var(--dark-snake-display);
 }
+
+.exception-hierarchy-content dd {
+  margin-left: 0;
+}
