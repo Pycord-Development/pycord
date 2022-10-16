@@ -119,6 +119,7 @@ main .py-attribute-table-column > ul {
   user-select: none;
 }
 
+/* Theme Modification */
 .sidebar-brand-text {
   font-family: "Saira", monospace;
 }
@@ -135,6 +136,12 @@ h6 {
 strong {
   /* Sans Serif looks better than monospace here */
   font-family: "Saira", sans-serif;
+}
+
+.brand {
+  /* Mobile header text */
+  font-family: "Saira", monospace;
+  font-weight: 700;
 }
 
 img[src="_images/snake.svg"] {
