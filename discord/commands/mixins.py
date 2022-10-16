@@ -3,18 +3,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 import functools
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Coroutine,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar, Union
 
 from .. import abc, utils
 from ..errors import (
