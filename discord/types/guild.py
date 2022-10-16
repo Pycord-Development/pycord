@@ -22,8 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from typing import List, Literal, Optional, TypedDict
+import sys
+from typing import List, Literal, Optional
 
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel
@@ -37,40 +37,20 @@ from .user import User
 from .voice import GuildVoiceState
 from .welcome_screen import WelcomeScreen
 
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, Required, TypedDict
+else:
+    from typing_extensions import NotRequired, Required, TypedDict
+
 
 class Ban(TypedDict):
     reason: Optional[str]
     user: User
 
 
-class _UnavailableGuildOptional(TypedDict, total=False):
-    unavailable: bool
-
-
-class UnavailableGuild(_UnavailableGuildOptional):
+class UnavailableGuild(TypedDict):
+    unavailable: NotRequired[bool]
     id: Snowflake
-
-
-class _GuildOptional(TypedDict, total=False):
-    icon_hash: Optional[str]
-    owner: bool
-    permissions: str
-    widget_enabled: bool
-    widget_channel_id: Optional[Snowflake]
-    joined_at: Optional[str]
-    large: bool
-    member_count: int
-    voice_states: List[GuildVoiceState]
-    members: List[Member]
-    channels: List[GuildChannel]
-    presences: List[PartialPresenceUpdate]
-    threads: List[Thread]
-    max_presences: Optional[int]
-    max_members: int
-    premium_subscription_count: int
-    premium_progress_bar_enabled: bool
-    max_video_channel_users: int
-    guild_scheduled_events: List[ScheduledEvent]
 
 
 DefaultMessageNotificationLevel = Literal[0, 1]
@@ -137,7 +117,26 @@ class GuildPreview(_BaseGuildPreview, _GuildPreviewUnique):
     pass
 
 
-class Guild(_BaseGuildPreview, _GuildOptional):
+class Guild(_BaseGuildPreview):
+    icon_hash: NotRequired[Optional[str]]
+    owner: NotRequired[bool]
+    permissions: NotRequired[str]
+    widget_enabled: NotRequired[bool]
+    widget_channel_id: NotRequired[Optional[Snowflake]]
+    joined_at: NotRequired[Optional[str]]
+    large: NotRequired[bool]
+    member_count: NotRequired[int]
+    voice_states: NotRequired[List[GuildVoiceState]]
+    members: NotRequired[List[Member]]
+    channels: NotRequired[List[GuildChannel]]
+    presences: NotRequired[List[PartialPresenceUpdate]]
+    threads: NotRequired[List[Thread]]
+    max_presences: NotRequired[Optional[int]]
+    max_members: NotRequired[int]
+    premium_subscription_count: NotRequired[int]
+    premium_progress_bar_enabled: NotRequired[bool]
+    max_video_channel_users: NotRequired[int]
+    guild_scheduled_events: NotRequired[List[ScheduledEvent]]
     owner_id: Snowflake
     afk_channel_id: Optional[Snowflake]
     afk_timeout: int
@@ -177,11 +176,8 @@ class ChannelPositionUpdate(TypedDict):
     parent_id: Optional[Snowflake]
 
 
-class _RolePositionRequired(TypedDict):
-    id: Snowflake
-
-
-class RolePositionUpdate(_RolePositionRequired, total=False):
+class RolePositionUpdate(TypedDict, total=False):
+    id: Required[Snowflake]
     position: Optional[Snowflake]
 
 
