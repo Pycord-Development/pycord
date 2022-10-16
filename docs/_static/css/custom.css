@@ -132,6 +132,11 @@ h6 {
   font-family: "Saira", monospace;
 }
 
+strong {
+  /* Sans Serif looks better than monospace here */
+  font-family: "Saira", sans-serif;
+}
+
 img[src="_images/snake.svg"] {
   display: var(--light-snake-display);
 }
