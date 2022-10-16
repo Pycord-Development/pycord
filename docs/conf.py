@@ -217,7 +217,7 @@ html_theme_options = {
     "source_directory": "docs/",
     "light_css_variables": {
         # Theme
-        "color-brand-primary": "#5865f2",
+        # "color-brand-primary": "#5865f2",
         "font-stack": "'Outfit', sans-serif",
         # Custom
         **base_colors,
@@ -233,11 +233,11 @@ html_theme_options = {
     },
     "dark_css_variables": {
         # Theme
-        "color-foreground-primary": "#fff",
-        "color-brand-primary": "#5865f2",
-        "color-background-primary": "#17181a",
-        "color-background-secondary": "#1a1c1e",
-        "color-background-hover": "#33373a",
+        # "color-foreground-primary": "#fff",
+        # "color-brand-primary": "#5865f2",
+        # "color-background-primary": "#17181a",
+        # "color-background-secondary": "#1a1c1e",
+        # "color-background-hover": "#33373a",
         # Custom
         "attribute-table-title": "var(--grey-3)",
         "attribute-table-entry-border": "var(--grey-5)",
