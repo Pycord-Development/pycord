@@ -99,6 +99,8 @@ class BridgeSlashGroup(SlashCommandGroup):
     __slots__ = ("module",)
 
     def __init__(self, callback, *args, **kwargs):
+        if perms := getattr(callback, "__default_member_permissions__", None):
+            kwargs["default_member_permissions"] = perms
         super().__init__(*args, **kwargs)
         self.callback = callback
         self.__original_kwargs__["callback"] = callback
@@ -453,13 +455,13 @@ def has_permissions(**perms: dict[str, bool]):
         from ..commands import has_permissions
 
         func = has_permissions(**perms)(func)
-        Permissions(**perms)
+        _perms = Permissions(**perms)
         if isinstance(func, ApplicationCommand):
-            func.default_member_permissions = perms
+            func.default_member_permissions = _perms
         else:
-            func.__default_member_permissions__ = perms
+            func.__default_member_permissions__ = _perms
 
-        return perms
+        return func
 
     return predicate
 
