@@ -206,22 +206,20 @@ class ApplicationCommandMixin(ABC):
                 if guild_ids is not None and command.guild_ids != guild_ids:
                     return
                 return command
-
-        # If a top-level command was not found, attempt to search by qualified command name
-        if name.lower() == name and 1 < len(names := name.split()) <= 3 and all(names):
-            while len(names) > 1:
-                command = get(commands, name=names.pop(0))
-                if not isinstance(command, SlashCommandGroup):
+            elif (names := name.split())[0] == command.name and isinstance(command, SlashCommandGroup):
+                while len(names) > 1:
+                    command = get(commands, name=names.pop(0))
+                    if not isinstance(command, SlashCommandGroup) or (
+                        guild_ids is not None and command.guild_ids != guild_ids
+                    ):
+                        return
+                    commands = command.subcommands
+                command = get(commands, name=names.pop())
+                if not isinstance(command, type) or (
+                    guild_ids is not None and command.guild_ids != guild_ids
+                ):
                     return
-                if guild_ids is not None and command.guild_ids != guild_ids:
-                    return
-                commands = command.subcommands
-            command = get(commands, name=names.pop())
-            if not isinstance(command, type) or (
-                guild_ids is not None and command.guild_ids != guild_ids
-            ):
-                return
-            return command
+                return command
 
     async def get_desynced_commands(
         self,
