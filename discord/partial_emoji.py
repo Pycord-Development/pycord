@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Type, TypeVar, Union, TypedDict
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -158,6 +158,15 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     def _to_partial(self) -> PartialEmoji:
         return self
 
+    def _to_forum_tag_payload(self) -> Union[
+            TypedDict("TagPayload", {"emoji_id": int, "emoji_name": None}),
+            TypedDict("TagPayload", {"emoji_id": None, "emoji_name": str})
+    ]:
+        if self.id is None:
+            return {"emoji_id": None, "emoji_name": self.name}
+        else:
+            return {'emoji_id': self.id, 'emoji_name': None}
+
     @classmethod
     def with_state(
         cls: Type[PE],
@@ -172,11 +181,12 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return self
 
     def __str__(self) -> str:
+        # Emoji won't render if the name is empty
+        name = self.name or "_"
         if self.id is None:
-            return self.name
-        if self.animated:
-            return f"<a:{self.name}:{self.id}>"
-        return f"<:{self.name}:{self.id}>"
+            return name
+        animated_tag = "a" if self.animated else ""
+        return f"<{animated_tag}:{name}:{self.id}>"
 
     def __repr__(self):
         return f"<{self.__class__.__name__} animated={self.animated} name={self.name!r} id={self.id}>"

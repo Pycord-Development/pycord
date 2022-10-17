@@ -71,16 +71,24 @@ class TextChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[0]
 
 
+class DefaultReaction(TypedDict):
+    emoji_id: Optional[Snowflake]
+    emoji_name: Optional[str]
+
+
 class ForumTag(TypedDict):
     id: Snowflake
     name: str
     moderated: bool
-    emoji_id: Snowflake
+    emoji_id: Optional[Snowflake]
     emoji_name: Optional[str]
 
 
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[15]
+    available_tags: List[ForumTag]
+    default_reaction_emoji: Optional[DefaultReaction]
+    flags: int
 
 
 class NewsChannel(_BaseGuildChannel, _TextChannelOptional):
@@ -122,6 +130,8 @@ class _ThreadChannelOptional(TypedDict, total=False):
     rate_limit_per_user: int
     last_message_id: Optional[Snowflake]
     last_pin_timestamp: str
+    flags: int
+    applied_tags: List[Snowflake]
 
 
 class ThreadChannel(_BaseChannel, _ThreadChannelOptional):

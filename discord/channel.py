@@ -55,6 +55,7 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags
@@ -76,6 +77,7 @@ __all__ = (
     "GroupChannel",
     "PartialMessageable",
     "ForumChannel",
+    "ForumTag"
 )
 
 if TYPE_CHECKING:
@@ -83,7 +85,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .guild import GuildChannel as GuildChannelType
     from .member import Member, VoiceState
-    from .message import Message, PartialMessage
+    from .message import Message, PartialMessage, EmojiInputType
     from .role import Role
     from .state import ConnectionState
     from .types.channel import CategoryChannel as CategoryChannelPayload
@@ -93,6 +95,7 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
+    from .types.channel import ForumTag as ForumTagPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
@@ -114,6 +117,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "_type",
         "last_message_id",
         "default_auto_archive_duration",
+        "default_thread_slowmode_delay",
         "available_tags",
         "flags",
     )
@@ -147,6 +151,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             # Does this need coercion into `int`? No idea yet.
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
+            self.default_thread_slowmode_delay: int = data.get('default_thread_rate_limit_per_user', 0)
             self.available_tags: Optional[List[int]] = (
                 [int(tag_id) for tag_id in tag_ids]
                 if (tag_ids := data.get("available_tags")) is not None
@@ -225,6 +230,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         category: Optional[CategoryChannel] = ...,
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
         available_tags: List[int] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Union[Role, Member, Snowflake], PermissionOverwrite] = ...,
@@ -282,6 +288,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+            .. versionadded:: 2.3
         available_tags: List[:class:`int`]
             The set of tags that can be used in a forum channel.
 
@@ -810,6 +819,88 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return Thread(guild=self.guild, state=self._state, data=data)
 
 
+class ForumTag(Hashable):
+    """Represents a forum tag that can be added to a thread inside a :class:`ForumChannel`
+.
+    .. versionadded:: 2.3
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two forum tags are equal.
+
+        .. describe:: x != y
+
+            Checks if two forum tags are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the forum tag's hash.
+
+        .. describe:: str(x)
+
+            Returns the forum tag's name.
+
+    Attributes
+    -----------
+    id: :class:`int`
+        The tag ID.
+        Note that if the object was created manually then this will be ``0``.
+    name: :class:`str`
+        The name of the tag. Can only be up to 20 characters.
+    moderated: :class:`bool`
+        Whether this tag can only be added or removed by a moderator with
+        the :attr:`~Permissions.manage_threads` permission.
+    emoji: :class:`PartialEmoji`
+        The emoji that is used to represent this tag.
+        Note that if the emoji is a custom emoji, it will *not* have name information.
+
+    """
+    __slots__ = ("name", "id", "moderated", "emoji")
+
+    def __init__(self, *, name: str, emoji: EmojiInputType, moderated: bool = False) -> None:
+        self.name: str = name
+        self.id: int = 0
+        self.moderated: bool = moderated
+        self.emoji: PartialEmoji
+        if isinstance(emoji, _EmojiTag):
+            self.emoji = emoji._to_partial()
+        elif isinstance(emoji, str):
+            self.emoji = PartialEmoji.from_str(emoji)
+        else:
+            raise TypeError(f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}")
+
+    def __repr__(self) -> str:
+        return f'<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>'
+
+    def __str__(self) -> str:
+        return self.name
+
+    @classmethod
+    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> "ForumTag":
+        self = cls.__new__(cls)
+        self.name = data['name']
+        self.id = int(data['id'])
+        self.moderated = data.get('moderated', False)
+
+        emoji_name = data['emoji_name'] or ''
+        emoji_id = utils._get_as_snowflake(data, 'emoji_id') or None
+        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
+        return self
+
+    def to_dict(self) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {
+            'name': self.name,
+            'moderated': self.moderated,
+        } | self.emoji._to_forum_tag_payload()
+
+        if self.id:
+            payload['id'] = self.id
+
+        return payload
+
+
 class ForumChannel(_TextChannel):
     """Represents a Discord forum channel.
 
@@ -943,6 +1034,8 @@ class ForumChannel(_TextChannel):
             are used instead.
         view: :class:`discord.ui.View`
             A Discord UI View to add to the message.
+        applied_tags: List[:class:`discord.ForumTag`]
+            A list of tags to apply to the new thread.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
@@ -998,6 +1091,9 @@ class ForumChannel(_TextChannel):
             components = view.to_components()
         else:
             components = None
+
+        if applied_tags is not None:
+            applied_tags = [str(tag.id) for tag in applied_tags]
 
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
