@@ -37,8 +37,10 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Type,
+    TypeVar,
     Union,
-    overload, TypeVar, Type,
+    overload,
 )
 
 from . import abc, utils
@@ -896,19 +898,20 @@ class Guild(Hashable):
         return self._members.get(user_id)
 
     _FETCHABLE = TypeVar(
-        "_FETCHABLE", VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
+        "_FETCHABLE",
+        VoiceChannel,
+        TextChannel,
+        ForumChannel,
+        StageChannel,
+        CategoryChannel,
+        Thread,
+        Member,
     )
 
-    async def get_or_fetch(self, object_type: Type[_FETCHABLE], id: int, /) -> _FETCHABLE | None:
+    async def get_or_fetch(
+        self, object_type: type[_FETCHABLE], id: int, /
+    ) -> _FETCHABLE | None:
         """Shortcut method to get data from guild object if it's cached or fetch from api if it's not.
-
-        Usage
-        ----------
-        ``await GUILD_OBJECT.get_or_fetch(type=..., id=...)``
-
-        `type` can be one of these:
-            VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
-
 
         Parameters
         ----------
@@ -923,15 +926,31 @@ class Guild(Hashable):
 
         Optional[:class:`~Type[_FETCHABLE]`]
             The object of type that was specified or ``None`` if not found.
+
+        Usage
+        -----
+        ``await GUILD_OBJECT.get_or_fetch(type=..., id=...)``
+
+        `type` can be one of these:
+            VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
         """
 
         def get_attr_name(t: object_type) -> str:
             if t is Member:
                 return "member"
-            elif t in [VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread]:
+            elif t in [
+                VoiceChannel,
+                TextChannel,
+                ForumChannel,
+                StageChannel,
+                CategoryChannel,
+                Thread,
+            ]:
                 return "channel"
 
-            raise InvalidArgument(f"Class {object_type} cannot be used with discord.Guild.get_or_fetch()")
+            raise InvalidArgument(
+                f"Class {object_type} cannot be used with discord.Guild.get_or_fetch()"
+            )
 
         return await utils.get_or_fetch(
             obj=self, attr=get_attr_name(object_type), id=id, default=None
