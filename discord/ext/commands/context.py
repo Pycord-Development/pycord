@@ -83,7 +83,7 @@ class Context(BaseContext, Generic[BotT]):
         or invoked.
     """
 
-    command: Optional[Command]
+    command: Command | None
 
     def __init__(
         self,
