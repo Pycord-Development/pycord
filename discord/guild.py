@@ -38,7 +38,7 @@ from typing import (
     Sequence,
     Tuple,
     Union,
-    overload,
+    overload, TypeVar, Type,
 )
 
 from . import abc, utils
@@ -895,22 +895,46 @@ class Guild(Hashable):
         """
         return self._members.get(user_id)
 
-    async def get_or_fetch_member(self, member_id: int, /) -> Member | None:
-        """Looks up a member in the guild cache or fetches if not found.
+    _FETCHABLE = TypeVar(
+        "_FETCHABLE", VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
+    )
+
+    async def get_or_fetch(self, object_type: Type[_FETCHABLE], id: int, /) -> _FETCHABLE | None:
+        """Shortcut method to get data from guild object if it's cached or fetch from api if it's not.
+
+        Usage
+        ----------
+        ``await GUILD_OBJECT.get_or_fetch(type=..., id=...)``
+
+        `type` can be one of these:
+            VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
+
 
         Parameters
         ----------
-        member_id: :class:`int`
-            The ID to search for.
+        object_type: :class:`Type[_FETCHABLE]`
+            Type of object to fetch or get.
+
+        id: :class:`int`
+            ID of object to get.
 
         Returns
         -------
-        Optional[:class:`~discord.Member`]
-            The member or ``None`` if not found.
+
+        Optional[:class:`~Type[_FETCHABLE]`]
+            The object of type that was specified or ``None`` if not found.
         """
 
+        def get_attr_name(t: object_type) -> str:
+            if t is Member:
+                return "member"
+            elif t in [VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread]:
+                return "channel"
+
+            raise InvalidArgument(f"Class {object_type} cannot be used with discord.Guild.get_or_fetch()")
+
         return await utils.get_or_fetch(
-            obj=self, attr="member", id=member_id, default=None
+            obj=self, attr=get_attr_name(object_type), id=id, default=None
         )
 
     @property
