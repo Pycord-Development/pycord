@@ -53,7 +53,8 @@ __all__ = (
 
 
 class ReconnectWebSocket(Exception):
-    """Signals to safely reconnect the WebSocket."""
+    """Signals to safely reconnect the WebSocket.
+    """
 
     def __init__(self, shard_id, *, resume=True):
         self.shard_id = shard_id
@@ -62,7 +63,8 @@ class ReconnectWebSocket(Exception):
 
 
 class WebSocketClosure(Exception):
-    """An exception to make up for the fact that aiohttp doesn't signal closure."""
+    """An exception to make up for the fact that aiohttp doesn't signal closure.
+    """
 
 
 EventListener = namedtuple("EventListener", "predicate event result future")
@@ -392,7 +394,8 @@ class DiscordWebSocket:
         return future
 
     async def identify(self):
-        """Sends the IDENTIFY packet."""
+        """Sends the IDENTIFY packet.
+        """
         payload = {
             "op": self.IDENTIFY,
             "d": {
@@ -430,7 +433,8 @@ class DiscordWebSocket:
         _log.info("Shard ID %s has sent the IDENTIFY payload.", self.shard_id)
 
     async def resume(self):
-        """Sends the RESUME packet."""
+        """Sends the RESUME packet.
+        """
         payload = {
             "op": self.RESUME,
             "d": {
@@ -573,7 +577,8 @@ class DiscordWebSocket:
 
     @property
     def latency(self):
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
+        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
@@ -806,7 +811,8 @@ class DiscordVoiceWebSocket:
 
     @classmethod
     async def from_client(cls, client, *, resume=False, hook=None):
-        """Creates a voice websocket for the :class:`VoiceClient`."""
+        """Creates a voice websocket for the :class:`VoiceClient`.
+        """
         gateway = f"wss://{client.endpoint}/?v=4"
         http = client._state.http
         socket = await http.ws_connect(gateway, compress=15)
@@ -913,13 +919,15 @@ class DiscordVoiceWebSocket:
 
     @property
     def latency(self):
-        """:class:`float`: Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds."""
+        """:class:`float`: Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds.
+        """
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
     @property
     def average_latency(self):
-        """:class:`list`: Average of last 20 HEARTBEAT latencies."""
+        """:class:`list`: Average of last 20 HEARTBEAT latencies.
+        """
         heartbeat = self._keep_alive
         if heartbeat is None or not heartbeat.recent_ack_latencies:
             return float("inf")

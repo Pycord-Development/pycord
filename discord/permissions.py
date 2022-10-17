@@ -135,7 +135,8 @@ class Permissions(BaseFlags):
             setattr(self, key, value)
 
     def is_subset(self, other: Permissions) -> bool:
-        """Returns ``True`` if self has the same or fewer permissions as other."""
+        """Returns ``True`` if self has the same or fewer permissions as other.
+        """
         if isinstance(other, Permissions):
             return (self.value & other.value) == self.value
         else:
@@ -144,7 +145,8 @@ class Permissions(BaseFlags):
             )
 
     def is_superset(self, other: Permissions) -> bool:
-        """Returns ``True`` if self has the same or more permissions as other."""
+        """Returns ``True`` if self has the same or more permissions as other.
+        """
         if isinstance(other, Permissions):
             return (self.value | other.value) == self.value
         else:
@@ -153,11 +155,13 @@ class Permissions(BaseFlags):
             )
 
     def is_strict_subset(self, other: Permissions) -> bool:
-        """Returns ``True`` if the permissions on other are a strict subset of those on self."""
+        """Returns ``True`` if the permissions on other are a strict subset of those on self.
+        """
         return self.is_subset(other) and self != other
 
     def is_strict_superset(self, other: Permissions) -> bool:
-        """Returns ``True`` if the permissions on other are a strict superset of those on self."""
+        """Returns ``True`` if the permissions on other are a strict superset of those on self.
+        """
         return self.is_superset(other) and self != other
 
     __le__: Callable[[Permissions], bool] = is_subset
@@ -309,17 +313,20 @@ class Permissions(BaseFlags):
 
     @flag_value
     def create_instant_invite(self) -> int:
-        """:class:`bool`: Returns ``True`` if the user can create instant invites."""
+        """:class:`bool`: Returns ``True`` if the user can create instant invites.
+        """
         return 1 << 0
 
     @flag_value
     def kick_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if the user can kick users from the guild."""
+        """:class:`bool`: Returns ``True`` if the user can kick users from the guild.
+        """
         return 1 << 1
 
     @flag_value
     def ban_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can ban users from the guild."""
+        """:class:`bool`: Returns ``True`` if a user can ban users from the guild.
+        """
         return 1 << 2
 
     @flag_value
@@ -340,32 +347,38 @@ class Permissions(BaseFlags):
 
     @flag_value
     def manage_guild(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can edit guild properties."""
+        """:class:`bool`: Returns ``True`` if a user can edit guild properties.
+        """
         return 1 << 5
 
     @flag_value
     def add_reactions(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can add reactions to messages."""
+        """:class:`bool`: Returns ``True`` if a user can add reactions to messages.
+        """
         return 1 << 6
 
     @flag_value
     def view_audit_log(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can view the guild's audit log."""
+        """:class:`bool`: Returns ``True`` if a user can view the guild's audit log.
+        """
         return 1 << 7
 
     @flag_value
     def priority_speaker(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can be more easily heard while talking."""
+        """:class:`bool`: Returns ``True`` if a user can be more easily heard while talking.
+        """
         return 1 << 8
 
     @flag_value
     def stream(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can stream in a voice channel."""
+        """:class:`bool`: Returns ``True`` if a user can stream in a voice channel.
+        """
         return 1 << 9
 
     @flag_value
     def view_channel(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can view all or specific channels."""
+        """:class:`bool`: Returns ``True`` if a user can view all or specific channels.
+        """
         return 1 << 10
 
     @make_permission_alias("view_channel")
@@ -378,12 +391,14 @@ class Permissions(BaseFlags):
 
     @flag_value
     def send_messages(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can send messages from all or specific text channels."""
+        """:class:`bool`: Returns ``True`` if a user can send messages from all or specific text channels.
+        """
         return 1 << 11
 
     @flag_value
     def send_tts_messages(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can send TTS messages from all or specific text channels."""
+        """:class:`bool`: Returns ``True`` if a user can send TTS messages from all or specific text channels.
+        """
         return 1 << 12
 
     @flag_value
@@ -398,27 +413,32 @@ class Permissions(BaseFlags):
 
     @flag_value
     def embed_links(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user's messages will automatically be embedded by Discord."""
+        """:class:`bool`: Returns ``True`` if a user's messages will automatically be embedded by Discord.
+        """
         return 1 << 14
 
     @flag_value
     def attach_files(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can send files in their messages."""
+        """:class:`bool`: Returns ``True`` if a user can send files in their messages.
+        """
         return 1 << 15
 
     @flag_value
     def read_message_history(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can read a text channel's previous messages."""
+        """:class:`bool`: Returns ``True`` if a user can read a text channel's previous messages.
+        """
         return 1 << 16
 
     @flag_value
     def mention_everyone(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."""
+        """:class:`bool`: Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel.
+        """
         return 1 << 17
 
     @flag_value
     def external_emojis(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can use emojis from other guilds."""
+        """:class:`bool`: Returns ``True`` if a user can use emojis from other guilds.
+        """
         return 1 << 18
 
     @make_permission_alias("external_emojis")
@@ -439,42 +459,50 @@ class Permissions(BaseFlags):
 
     @flag_value
     def connect(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can connect to a voice channel."""
+        """:class:`bool`: Returns ``True`` if a user can connect to a voice channel.
+        """
         return 1 << 20
 
     @flag_value
     def speak(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can speak in a voice channel."""
+        """:class:`bool`: Returns ``True`` if a user can speak in a voice channel.
+        """
         return 1 << 21
 
     @flag_value
     def mute_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can mute other users."""
+        """:class:`bool`: Returns ``True`` if a user can mute other users.
+        """
         return 1 << 22
 
     @flag_value
     def deafen_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can deafen other users."""
+        """:class:`bool`: Returns ``True`` if a user can deafen other users.
+        """
         return 1 << 23
 
     @flag_value
     def move_members(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can move users between other voice channels."""
+        """:class:`bool`: Returns ``True`` if a user can move users between other voice channels.
+        """
         return 1 << 24
 
     @flag_value
     def use_voice_activation(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can use voice activation in voice channels."""
+        """:class:`bool`: Returns ``True`` if a user can use voice activation in voice channels.
+        """
         return 1 << 25
 
     @flag_value
     def change_nickname(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can change their nickname in the guild."""
+        """:class:`bool`: Returns ``True`` if a user can change their nickname in the guild.
+        """
         return 1 << 26
 
     @flag_value
     def manage_nicknames(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can change other user's nickname in the guild."""
+        """:class:`bool`: Returns ``True`` if a user can change other user's nickname in the guild.
+        """
         return 1 << 27
 
     @flag_value
@@ -495,12 +523,14 @@ class Permissions(BaseFlags):
 
     @flag_value
     def manage_webhooks(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can create, edit, or delete webhooks."""
+        """:class:`bool`: Returns ``True`` if a user can create, edit, or delete webhooks.
+        """
         return 1 << 29
 
     @flag_value
     def manage_emojis(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can create, edit, or delete emojis."""
+        """:class:`bool`: Returns ``True`` if a user can create, edit, or delete emojis.
+        """
         return 1 << 30
 
     @make_permission_alias("manage_emojis")
@@ -749,7 +779,8 @@ class PermissionOverwrite:
             self._values[key] = value
 
     def pair(self) -> tuple[Permissions, Permissions]:
-        """Tuple[:class:`Permissions`, :class:`Permissions`]: Returns the (allow, deny) pair from this overwrite."""
+        """Tuple[:class:`Permissions`, :class:`Permissions`]: Returns the (allow, deny) pair from this overwrite.
+        """
 
         allow = Permissions.none()
         deny = Permissions.none()
@@ -764,7 +795,8 @@ class PermissionOverwrite:
 
     @classmethod
     def from_pair(cls: type[PO], allow: Permissions, deny: Permissions) -> PO:
-        """Creates an overwrite from an allow/deny pair of :class:`Permissions`."""
+        """Creates an overwrite from an allow/deny pair of :class:`Permissions`.
+        """
         ret = cls()
         for key, value in allow:
             if value is True:

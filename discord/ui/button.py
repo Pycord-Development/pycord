@@ -138,7 +138,8 @@ class Button(Item[V]):
 
     @property
     def style(self) -> ButtonStyle:
-        """:class:`discord.ButtonStyle`: The style of the button."""
+        """:class:`discord.ButtonStyle`: The style of the button.
+        """
         return self._underlying.style
 
     @style.setter
@@ -163,7 +164,8 @@ class Button(Item[V]):
 
     @property
     def url(self) -> str | None:
-        """Optional[:class:`str`]: The URL this button sends you to."""
+        """Optional[:class:`str`]: The URL this button sends you to.
+        """
         return self._underlying.url
 
     @url.setter
@@ -174,7 +176,8 @@ class Button(Item[V]):
 
     @property
     def disabled(self) -> bool:
-        """:class:`bool`: Whether the button is disabled or not."""
+        """:class:`bool`: Whether the button is disabled or not.
+        """
         return self._underlying.disabled
 
     @disabled.setter
@@ -183,7 +186,8 @@ class Button(Item[V]):
 
     @property
     def label(self) -> str | None:
-        """Optional[:class:`str`]: The label of the button, if available."""
+        """Optional[:class:`str`]: The label of the button, if available.
+        """
         return self._underlying.label
 
     @label.setter
@@ -194,7 +198,8 @@ class Button(Item[V]):
 
     @property
     def emoji(self) -> PartialEmoji | None:
-        """Optional[:class:`.PartialEmoji`]: The emoji of the button, if available."""
+        """Optional[:class:`.PartialEmoji`]: The emoji of the button, if available.
+        """
         return self._underlying.emoji
 
     @emoji.setter

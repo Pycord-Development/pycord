@@ -39,7 +39,8 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 async def counter(ctx: discord.ApplicationContext):
-    """Starts a counter for pressing."""
+    """Starts a counter for pressing.
+    """
     await ctx.respond("Press!", view=EphemeralCounter())
 
 

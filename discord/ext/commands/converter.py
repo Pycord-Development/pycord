@@ -755,7 +755,8 @@ class RoleConverter(IDConverter[discord.Role]):
 
 
 class GameConverter(Converter[discord.Game]):
-    """Converts to :class:`~discord.Game`."""
+    """Converts to :class:`~discord.Game`.
+    """
 
     async def convert(self, ctx: Context, argument: str) -> discord.Game:
         return discord.Game(name=argument)

@@ -181,42 +181,50 @@ class Page:
 
     @property
     def content(self) -> Optional[str]:
-        """Gets the content for the page."""
+        """Gets the content for the page.
+        """
         return self._content
 
     @content.setter
     def content(self, value: Optional[str]):
-        """Sets the content for the page."""
+        """Sets the content for the page.
+        """
         self._content = value
 
     @property
     def embeds(self) -> Optional[List[Union[List[discord.Embed], discord.Embed]]]:
-        """Gets the embeds for the page."""
+        """Gets the embeds for the page.
+        """
         return self._embeds
 
     @embeds.setter
     def embeds(self, value: Optional[List[Union[List[discord.Embed], discord.Embed]]]):
-        """Sets the embeds for the page."""
+        """Sets the embeds for the page.
+        """
         self._embeds = value
 
     @property
     def custom_view(self) -> Optional[discord.ui.View]:
-        """Gets the custom view assigned to the page."""
+        """Gets the custom view assigned to the page.
+        """
         return self._custom_view
 
     @custom_view.setter
     def custom_view(self, value: Optional[discord.ui.View]):
-        """Assigns a custom view to be shown when the page is displayed."""
+        """Assigns a custom view to be shown when the page is displayed.
+        """
         self._custom_view = value
 
     @property
     def files(self) -> Optional[List[discord.File]]:
-        """Gets the files associated with the page."""
+        """Gets the files associated with the page.
+        """
         return self._files
 
     @files.setter
     def files(self, value: Optional[List[discord.File]]):
-        """Sets the files associated with the page."""
+        """Sets the files associated with the page.
+        """
         self._files = value
 
 
@@ -581,7 +589,8 @@ class Paginator(discord.ui.View):
         await self.goto_page(self.current_page, interaction=interaction)
 
     async def on_timeout(self) -> None:
-        """Disables all buttons when the view times out."""
+        """Disables all buttons when the view times out.
+        """
         if self.disable_on_timeout:
             for item in self.children:
                 item.disabled = True
@@ -727,7 +736,8 @@ class Paginator(discord.ui.View):
         return True
 
     def add_menu(self):
-        """Adds the default :class:`PaginatorMenu` instance to the paginator."""
+        """Adds the default :class:`PaginatorMenu` instance to the paginator.
+        """
         self.menu = PaginatorMenu(self.page_groups, placeholder=self.menu_placeholder)
         self.menu.paginator = self
         self.add_item(self.menu)
@@ -774,7 +784,8 @@ class Paginator(discord.ui.View):
             self.add_button(button)
 
     def add_button(self, button: PaginatorButton):
-        """Adds a :class:`PaginatorButton` to the paginator."""
+        """Adds a :class:`PaginatorButton` to the paginator.
+        """
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
@@ -798,7 +809,8 @@ class Paginator(discord.ui.View):
         button.paginator = self
 
     def remove_button(self, button_type: str):
-        """Removes a :class:`PaginatorButton` from the paginator."""
+        """Removes a :class:`PaginatorButton` from the paginator.
+        """
         if button_type not in self.buttons.keys():
             raise ValueError(
                 f"no button_type {button_type} was found in this paginator."
@@ -872,7 +884,8 @@ class Paginator(discord.ui.View):
         return self.buttons
 
     def update_custom_view(self, custom_view: discord.ui.View):
-        """Updates the custom view shown on the paginator."""
+        """Updates the custom view shown on the paginator.
+        """
         if isinstance(self.custom_view, discord.ui.View):
             for item in self.custom_view.children:
                 self.remove_item(item)
@@ -880,14 +893,16 @@ class Paginator(discord.ui.View):
             self.add_item(item)
 
     def get_page_group_content(self, page_group: PageGroup) -> List[Page]:
-        """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
+        """Returns a converted list of `Page` objects for the given page group based on the content of its pages.
+        """
         return [self.get_page_content(page) for page in page_group.pages]
 
     @staticmethod
     def get_page_content(
         page: Union[Page, str, discord.Embed, List[discord.Embed]]
     ) -> Page:
-        """Converts a page into a :class:`Page` object based on its content."""
+        """Converts a page into a :class:`Page` object based on its content.
+        """
         if isinstance(page, Page):
             return page
         elif isinstance(page, str):

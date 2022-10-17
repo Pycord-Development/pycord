@@ -744,7 +744,8 @@ class PartialWebhookGuild(Hashable):
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
+        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available.
+        """
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
@@ -1033,7 +1034,8 @@ class BaseWebhook(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the webhook's creation time in UTC."""
+        """:class:`datetime.datetime`: Returns the webhook's creation time in UTC.
+        """
         return utils.snowflake_time(self.id)
 
     @property
@@ -1149,7 +1151,8 @@ class Webhook(BaseWebhook):
 
     @property
     def url(self) -> str:
-        """:class:`str` : Returns the webhook's url."""
+        """:class:`str` : Returns the webhook's url.
+        """
         return f"https://discord.com/api/webhooks/{self.id}/{self.token}"
 
     @classmethod
