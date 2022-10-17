@@ -108,7 +108,7 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     def __init__(self, func: Callable, **kwargs) -> None:
         super().__init__(func, **kwargs)
         self.id: int | None = kwargs.get("id")
-        self.guild_ids: List[int] | None = kwargs.get("guild_ids", None)
+        self.guild_ids: list[int] | None = kwargs.get("guild_ids", None)
 
         # Permissions
         self.default_member_permissions: Permissions | None = getattr(
@@ -278,7 +278,7 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
-    def _match_option_param_names(self, params, options: List[Option]):
+    def _match_option_param_names(self, params, options: list[Option]):
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [

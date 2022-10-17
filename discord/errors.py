@@ -284,7 +284,7 @@ class CommandError(DiscordException):
     from :class:`.Bot`\, :func:`.on_command_error`.
     """
 
-    def __init__(self, message: Optional[str] = None, *args: Any) -> None:
+    def __init__(self, message: str | None = None, *args: Any) -> None:
         if message is not None:
             # clean-up @everyone and @here mentions
             m = message.replace("@everyone", "@\u200beveryone").replace(

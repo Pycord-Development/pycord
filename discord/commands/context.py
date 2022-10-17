@@ -80,16 +80,16 @@ class ApplicationContext(BaseContext):
         The command that this context belongs to.
     """
 
-    command: Optional[ApplicationCommand]
+    command: ApplicationCommand | None
 
     def __init__(
         self,
         bot: Bot,
         interaction: Interaction,
         *,
-        command: Optional[ApplicationCommand] = None,
-        args: List[Any] = None,
-        kwargs: Dict[str, Any] = None,
+        command: ApplicationCommand | None = None,
+        args: list[Any] = None,
+        kwargs: dict[str, Any] = None,
         **kwargs2,
     ):
         super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
