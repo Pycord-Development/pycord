@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, TypedDict, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
