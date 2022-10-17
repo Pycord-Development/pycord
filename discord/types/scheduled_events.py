@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Optional, TypedDict
+from typing import Literal, TypedDict
 
 from .member import Member
 from .snowflake import Snowflake
@@ -42,16 +42,16 @@ class ScheduledEvent(TypedDict):
     creator_id: Snowflake
     name: str
     description: str
-    image: Optional[str]
+    image: str | None
     scheduled_start_time: str
-    scheduled_end_time: Optional[str]
+    scheduled_end_time: str | None
     privacy_level: ScheduledEventPrivacyLevel
     status: ScheduledEventStatus
     entity_type: ScheduledEventLocationType
     entity_id: Snowflake
     entity_metadata: ScheduledEventEntityMetadata
     creator: User
-    user_count: Optional[int]
+    user_count: int | None
 
 
 class ScheduledEventEntityMetadata(TypedDict):
@@ -61,4 +61,4 @@ class ScheduledEventEntityMetadata(TypedDict):
 class ScheduledEventSubscriber(TypedDict):
     guild_scheduled_event_id: Snowflake
     user: User
-    member: Optional[Member]
+    member: Member | None

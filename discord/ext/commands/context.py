@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import inspect
 import re
-from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
 
 import discord.abc
 import discord.utils
@@ -124,33 +124,35 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         message: Message,
         bot: BotT,
         view: StringView,
-        args: List[Any] = MISSING,
-        kwargs: Dict[str, Any] = MISSING,
-        prefix: Optional[str] = None,
-        command: Optional[Command] = None,
-        invoked_with: Optional[str] = None,
-        invoked_parents: List[str] = MISSING,
-        invoked_subcommand: Optional[Command] = None,
-        subcommand_passed: Optional[str] = None,
+        args: list[Any] = MISSING,
+        kwargs: dict[str, Any] = MISSING,
+        prefix: str | None = None,
+        command: Command | None = None,
+        invoked_with: str | None = None,
+        invoked_parents: list[str] = MISSING,
+        invoked_subcommand: Command | None = None,
+        subcommand_passed: str | None = None,
         command_failed: bool = False,
-        current_parameter: Optional[inspect.Parameter] = None,
+        current_parameter: inspect.Parameter | None = None,
     ):
         self.message: Message = message
         self.bot: BotT = bot
-        self.args: List[Any] = args or []
-        self.kwargs: Dict[str, Any] = kwargs or {}
-        self.prefix: Optional[str] = prefix
-        self.command: Optional[Command] = command
+        self.args: list[Any] = args or []
+        self.kwargs: dict[str, Any] = kwargs or {}
+        self.prefix: str | None = prefix
+        self.command: Command | None = command
         self.view: StringView = view
-        self.invoked_with: Optional[str] = invoked_with
-        self.invoked_parents: List[str] = invoked_parents or []
-        self.invoked_subcommand: Optional[Command] = invoked_subcommand
-        self.subcommand_passed: Optional[str] = subcommand_passed
+        self.invoked_with: str | None = invoked_with
+        self.invoked_parents: list[str] = invoked_parents or []
+        self.invoked_subcommand: Command | None = invoked_subcommand
+        self.subcommand_passed: str | None = subcommand_passed
         self.command_failed: bool = command_failed
-        self.current_parameter: Optional[inspect.Parameter] = current_parameter
+        self.current_parameter: inspect.Parameter | None = current_parameter
         self._state: ConnectionState = self.message._state
 
-    async def invoke(self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
+    async def invoke(
+        self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs
+    ) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
@@ -200,7 +202,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             fail again.
 
         Parameters
-        ------------
+        ----------
         call_hooks: :class:`bool`
             Whether to call the before and after invoke hooks.
         restart: :class:`bool`
@@ -209,7 +211,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             The default is to start where we left off.
 
         Raises
-        -------
+        ------
         ValueError
             The context to reinvoke is not valid.
         """
@@ -271,18 +273,20 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return pattern.sub("@%s" % user.display_name.replace("\\", r"\\"), self.prefix)
 
     @property
-    def cog(self) -> Optional[Cog]:
+    def cog(self) -> Cog | None:
         """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
-        None if it does not exist."""
+        None if it does not exist.
+        """
 
         if self.command is None:
             return None
         return self.command.cog
 
     @discord.utils.cached_property
-    def guild(self) -> Optional[Guild]:
+    def guild(self) -> Guild | None:
         """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
-        None if not available."""
+        None if not available.
+        """
         return self.message.guild
 
     @discord.utils.cached_property
@@ -293,14 +297,14 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return self.message.channel
 
     @discord.utils.cached_property
-    def author(self) -> Union[User, Member]:
+    def author(self) -> User | Member:
         """Union[:class:`~discord.User`, :class:`.Member`]:
         Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
         """
         return self.message.author
 
     @discord.utils.cached_property
-    def me(self) -> Union[Member, ClientUser]:
+    def me(self) -> Member | ClientUser:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
@@ -309,7 +313,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return self.guild.me if self.guild is not None and self.guild.me is not None else self.bot.user  # type: ignore
 
     @property
-    def voice_client(self) -> Optional[VoiceProtocol]:
+    def voice_client(self) -> VoiceProtocol | None:
         r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
         g = self.guild
         return g.voice_client if g else None
@@ -335,12 +339,12 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             this returns :class:`None` on bad input or no help command.
 
         Parameters
-        ------------
+        ----------
         entity: Optional[Union[:class:`Command`, :class:`Cog`, :class:`str`]]
             The entity to show help for.
 
         Returns
-        --------
+        -------
         Any
             The result of the help command, if any.
         """
@@ -396,5 +400,5 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             await cmd.on_help_command_error(self, e)
 
     @discord.utils.copy_doc(Message.reply)
-    async def reply(self, content: Optional[str] = None, **kwargs: Any) -> Message:
+    async def reply(self, content: str | None = None, **kwargs: Any) -> Message:
         return await self.message.reply(content, **kwargs)

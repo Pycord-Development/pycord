@@ -22,8 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, overload
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -31,6 +33,10 @@ from discord.message import Message
 from discord.webhook import WebhookMessage
 
 from ..commands import Context
+
+if TYPE_CHECKING:
+    from .core import BridgeExtCommand, BridgeSlashCommand
+
 
 __all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
 
@@ -60,9 +66,7 @@ class BridgeContext(ABC):
     """
 
     @abstractmethod
-    async def _respond(
-        self, *args, **kwargs
-    ) -> Union[Union[Interaction, WebhookMessage], Message]:
+    async def _respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         ...
 
     @abstractmethod
@@ -70,12 +74,16 @@ class BridgeContext(ABC):
         ...
 
     @abstractmethod
-    async def _edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
+    async def _edit(self, *args, **kwargs) -> InteractionMessage | Message:
         ...
 
-    async def respond(
-        self, *args, **kwargs
-    ) -> Union[Union[Interaction, WebhookMessage], Message]:
+    @overload
+    async def invoke(
+        self, command: BridgeSlashCommand | BridgeExtCommand, *args, **kwargs
+    ) -> None:
+        ...
+
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         """|coro|
 
         Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`,
@@ -84,9 +92,7 @@ class BridgeContext(ABC):
         """
         return await self._respond(*args, **kwargs)
 
-    async def reply(
-        self, *args, **kwargs
-    ) -> Union[Union[Interaction, WebhookMessage], Message]:
+    async def reply(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         """|coro|
 
         Alias for :meth:`~.BridgeContext.respond`.
@@ -106,7 +112,7 @@ class BridgeContext(ABC):
         """
         return await self._defer(*args, **kwargs)
 
-    async def edit(self, *args, **kwargs) -> Union[InteractionMessage, Message]:
+    async def edit(self, *args, **kwargs) -> InteractionMessage | Message:
         """|coro|
 
         Edits the original response message with the respective approach to the current context. In
@@ -136,7 +142,7 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
         # This is needed in order to represent the correct class init signature on the docs
         super().__init__(*args, **kwargs)
 
-    async def _respond(self, *args, **kwargs) -> Union[Interaction, WebhookMessage]:
+    async def _respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
         return await self._get_super("respond")(*args, **kwargs)
 
     async def _defer(self, *args, **kwargs) -> None:
@@ -156,7 +162,7 @@ class BridgeExtContext(BridgeContext, Context):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._original_response_message: Optional[Message] = None
+        self._original_response_message: Message | None = None
 
     async def _respond(self, *args, **kwargs) -> Message:
         kwargs.pop("ephemeral", None)
@@ -169,19 +175,19 @@ class BridgeExtContext(BridgeContext, Context):
         kwargs.pop("ephemeral", None)
         return await self._get_super("trigger_typing")(*args, **kwargs)
 
-    async def _edit(self, *args, **kwargs) -> Optional[Message]:
+    async def _edit(self, *args, **kwargs) -> Message | None:
         if self._original_response_message:
             return await self._original_response_message.edit(*args, **kwargs)
 
     async def delete(
-        self, *, delay: Optional[float] = None, reason: Optional[str] = None
+        self, *, delay: float | None = None, reason: str | None = None
     ) -> None:
         """|coro|
 
         Deletes the original response message, if it exists.
 
         Parameters
-        -----------
+        ----------
         delay: Optional[:class:`float`]
             If provided, the number of seconds to wait before deleting the message.
         reason: Optional[:class:`str`]

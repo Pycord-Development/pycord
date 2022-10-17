@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .asset import Asset
@@ -89,10 +89,10 @@ class ScheduledEventLocation:
         self,
         *,
         state: ConnectionState,
-        value: Union[str, int, StageChannel, VoiceChannel],
+        value: str | int | StageChannel | VoiceChannel,
     ):
         self._state = state
-        self.value: Union[str, StageChannel, VoiceChannel, Object]
+        self.value: str | StageChannel | VoiceChannel | Object
         if isinstance(value, int):
             self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
         else:
@@ -189,7 +189,7 @@ class ScheduledEvent(Hashable):
         *,
         state: ConnectionState,
         guild: Guild,
-        creator: Optional[Member],
+        creator: Member | None,
         data: ScheduledEventPayload,
     ):
         self._state: ConnectionState = state
@@ -197,21 +197,27 @@ class ScheduledEvent(Hashable):
         self.id: int = int(data.get("id"))
         self.guild: Guild = guild
         self.name: str = data.get("name")
-        self.description: Optional[str] = data.get("description", None)
-        self._cover: Optional[str] = data.get("image", None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(data.get("scheduled_start_time"))
+        self.description: str | None = data.get("description", None)
+        self._cover: str | None = data.get("image", None)
+        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
+            data.get("scheduled_start_time")
+        )
         if end_time := data.get("scheduled_end_time", None):
             end_time = datetime.datetime.fromisoformat(end_time)
-        self.end_time: Optional[datetime.datetime] = end_time
-        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
-        self.subscriber_count: Optional[int] = data.get("user_count", None)
+        self.end_time: datetime.datetime | None = end_time
+        self.status: ScheduledEventStatus = try_enum(
+            ScheduledEventStatus, data.get("status")
+        )
+        self.subscriber_count: int | None = data.get("user_count", None)
         self.creator_id = data.get("creator_id", None)
-        self.creator: Optional[Member] = creator
+        self.creator: Member | None = creator
 
         entity_metadata = data.get("entity_metadata")
         channel_id = data.get("channel_id", None)
         if channel_id is None:
-            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
+            self.location = ScheduledEventLocation(
+                state=state, value=entity_metadata["location"]
+            )
         else:
             self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
@@ -237,7 +243,7 @@ class ScheduledEvent(Hashable):
         return utils.snowflake_time(self.id)
 
     @property
-    def interested(self) -> Optional[int]:
+    def interested(self) -> int | None:
         """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
 
@@ -247,7 +253,7 @@ class ScheduledEvent(Hashable):
         return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
-    def cover(self) -> Optional[Asset]:
+    def cover(self) -> Asset | None:
         """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
         if self._cover is None:
             return None
@@ -260,16 +266,20 @@ class ScheduledEvent(Hashable):
     async def edit(
         self,
         *,
-        reason: Optional[str] = None,
+        reason: str | None = None,
         name: str = MISSING,
         description: str = MISSING,
-        status: Union[int, ScheduledEventStatus] = MISSING,
-        location: Union[str, int, VoiceChannel, StageChannel, ScheduledEventLocation] = MISSING,
+        status: int | ScheduledEventStatus = MISSING,
+        location: str
+        | int
+        | VoiceChannel
+        | StageChannel
+        | ScheduledEventLocation = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
-        cover: Optional[bytes] = MISSING,
+        cover: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
-    ) -> Optional[ScheduledEvent]:
+    ) -> ScheduledEvent | None:
         """|coro|
 
         Edits the Scheduled Event's data
@@ -281,7 +291,7 @@ class ScheduledEvent(Hashable):
         Will return a new :class:`.ScheduledEvent` object if applicable.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The new name of the event.
         description: :class:`str`
@@ -302,23 +312,23 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
-        cover: Optional[:class:`Asset`]
+        cover: Optional[:class:`bytes`]
             The cover image of the scheduled event.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object. This is only returned when certain
+            fields are updated.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object. This is only returned when certain
-            fields are updated.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
 
         if name is not MISSING:
             payload["name"] = name
@@ -337,7 +347,9 @@ class ScheduledEvent(Hashable):
                 payload["image"] = utils._bytes_to_base64_data(cover)
 
         if location is not MISSING:
-            if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
+            if not isinstance(
+                location, (ScheduledEventLocation, utils._MissingSentinel)
+            ):
                 location = ScheduledEventLocation(state=self._state, value=location)
 
             if location.type is ScheduledEventLocationType.external:
@@ -351,7 +363,9 @@ class ScheduledEvent(Hashable):
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
             end_time = self.end_time
             if end_time is None:
-                raise ValidationError("end_time needs to be passed if location type is external.")
+                raise ValidationError(
+                    "end_time needs to be passed if location type is external."
+                )
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
@@ -360,8 +374,12 @@ class ScheduledEvent(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload, reason=reason)
-            return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
+            data = await self._state.http.edit_scheduled_event(
+                self.guild.id, self.id, **payload, reason=reason
+            )
+            return ScheduledEvent(
+                data=data, guild=self.guild, creator=self.creator, state=self._state
+            )
 
     async def delete(self) -> None:
         """|coro|
@@ -369,7 +387,7 @@ class ScheduledEvent(Hashable):
         Deletes the scheduled event.
 
         Raises
-        -------
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
@@ -377,7 +395,7 @@ class ScheduledEvent(Hashable):
         """
         await self._state.http.delete_scheduled_event(self.guild.id, self.id)
 
-    async def start(self, *, reason: Optional[str] = None) -> None:
+    async def start(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Starts the scheduled event. Shortcut from :meth:`.edit`.
@@ -387,25 +405,25 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.active, reason=reason)
 
-    async def complete(self, *, reason: Optional[str] = None) -> None:
+    async def complete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Ends/completes the scheduled event. Shortcut from :meth:`.edit`.
@@ -415,25 +433,25 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.active`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.completed, reason=reason)
 
-    async def cancel(self, *, reason: Optional[str] = None) -> None:
+    async def cancel(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Cancels the scheduled event. Shortcut from :meth:`.edit`.
@@ -443,21 +461,21 @@ class ScheduledEvent(Hashable):
             This method can only be used if :attr:`.status` is :attr:`ScheduledEventStatus.scheduled`.
 
         Parameters
-        -----------
+        ----------
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
 
-        Raises
+        Returns
         -------
+        Optional[:class:`.ScheduledEvent`]
+            The newly updated scheduled event object.
+
+        Raises
+        ------
         Forbidden
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
-
-        Returns
-        --------
-        Optional[:class:`.ScheduledEvent`]
-            The newly updated scheduled event object.
         """
         return await self.edit(status=ScheduledEventStatus.canceled, reason=reason)
 
@@ -466,8 +484,8 @@ class ScheduledEvent(Hashable):
         *,
         limit: int = 100,
         as_member: bool = False,
-        before: Optional[Union[Snowflake, datetime.datetime]] = None,
-        after: Optional[Union[Snowflake, datetime.datetime]] = None,
+        before: Snowflake | datetime.datetime | None = None,
+        after: Snowflake | datetime.datetime | None = None,
     ) -> AsyncIterator:
         """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
 
@@ -479,26 +497,8 @@ class ScheduledEvent(Hashable):
             Even is ``as_member`` is set to ``True``, if the user
             is outside the guild, it will be a :class:`User` object.
 
-        Examples
-        ---------
-
-        Usage ::
-
-            async for user in event.subscribers(limit=100):
-                print(user.name)
-
-        Flattening into a list: ::
-
-            users = await event.subscribers(limit=100).flatten()
-            # users is now a list of User...
-
-        Getting members instead of user objects: ::
-
-            async for member in event.subscribers(limit=100, as_member=True):
-                print(member.display_name)
-
         Parameters
-        -----------
+        ----------
         limit: Optional[:class:`int`]
             The maximum number of results to return.
         as_member: Optional[:class:`bool`]
@@ -514,17 +514,35 @@ class ScheduledEvent(Hashable):
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
 
-        Raises
-        -------
-        HTTPException
-            Fetching the subscribed users failed.
-
         Yields
-        -------
+        ------
         Union[:class:`User`, :class:`Member`]
             The subscribed :class:`Member`. If ``as_member`` is set to
             ``False`` or the user is outside the guild, it will be a
             :class:`User` object.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the subscribed users failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for user in event.subscribers(limit=100):
+                print(user.name)
+
+        Flattening into a list: ::
+
+            users = await event.subscribers(limit=100).flatten()
+            # users is now a list of User...
+
+        Getting members instead of user objects: ::
+
+            async for member in event.subscribers(limit=100, as_member=True):
+                print(member.display_name)
         """
         return ScheduledEventSubscribersIterator(
             event=self, limit=limit, with_member=as_member, before=before, after=after

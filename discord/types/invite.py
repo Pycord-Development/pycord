@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Optional, TypedDict, Union
+from typing import Literal, TypedDict, Union
 
 from .appinfo import PartialAppInfo
 from .channel import PartialChannel
@@ -52,11 +52,11 @@ class _InviteMetadata(TypedDict, total=False):
     max_age: int
     temporary: bool
     created_at: str
-    expires_at: Optional[str]
+    expires_at: str | None
 
 
 class VanityInvite(_InviteMetadata):
-    code: Optional[str]
+    code: str | None
 
 
 class IncompleteInvite(_InviteMetadata):

@@ -30,21 +30,7 @@ import os
 import pathlib
 import sys
 import types
-from typing import (
-    Any,
-    Callable,
-    ClassVar,
-    Dict,
-    Generator,
-    List,
-    Mapping,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Any, Callable, ClassVar, Generator, Mapping, TypeVar, overload
 
 import discord.utils
 
@@ -106,7 +92,7 @@ class CogMeta(type):
                 pass
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The cog name. By default, it is the name of the class with no modification.
     description: :class:`str`
@@ -139,12 +125,12 @@ class CogMeta(type):
     """
 
     __cog_name__: str
-    __cog_settings__: Dict[str, Any]
-    __cog_commands__: List[ApplicationCommand]
-    __cog_listeners__: List[Tuple[str, str]]
-    __cog_guild_ids__: List[int]
+    __cog_settings__: dict[str, Any]
+    __cog_commands__: list[ApplicationCommand]
+    __cog_listeners__: list[tuple[str, str]]
+    __cog_guild_ids__: list[int]
 
-    def __new__(cls: Type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
+    def __new__(cls: type[CogMeta], *args: Any, **kwargs: Any) -> CogMeta:
         name, bases, attrs = args
         attrs["__cog_name__"] = kwargs.pop("name", name)
         attrs["__cog_settings__"] = kwargs.pop("command_attrs", {})
@@ -162,7 +148,8 @@ class CogMeta(type):
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
         valid_commands = [
-            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand)) for j in reversed(new_cls.__mro__)
+            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand))
+            for j in reversed(new_cls.__mro__)
         ]
         if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
             not isinstance(i, _BaseCommand) for i in valid_commands
@@ -178,7 +165,9 @@ class CogMeta(type):
                 if elem in listeners:
                     del listeners[elem]
 
-                if getattr(value, "parent", None) and isinstance(value, ApplicationCommand):
+                if getattr(value, "parent", None) and isinstance(
+                    value, ApplicationCommand
+                ):
                     # Skip commands if they are a part of a group
                     continue
 
@@ -187,7 +176,9 @@ class CogMeta(type):
                     value = value.__func__
                 if isinstance(value, _filter):
                     if is_static_method:
-                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                        raise TypeError(
+                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                        )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
@@ -195,12 +186,18 @@ class CogMeta(type):
                 # a test to see if this value is a BridgeCommand
                 if hasattr(value, "add_to") and not getattr(value, "parent", None):
                     if is_static_method:
-                        raise TypeError(f"Command in method {base}.{elem!r} must not be staticmethod.")
+                        raise TypeError(
+                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                        )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
 
                     commands[f"ext_{elem}"] = value.ext_variant
-                    commands[f"application_{elem}"] = value.slash_variant
+                    commands[f"app_{elem}"] = value.slash_variant
+                    for cmd in getattr(value, "subcommands", []):
+                        commands[
+                            f"ext_{cmd.ext_variant.qualified_name}"
+                        ] = cmd.ext_variant
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -229,19 +226,38 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
 
-        lookup = {cmd.qualified_name: cmd for cmd in new_cls.__cog_commands__}
+        name_filter = lambda c: "app" if isinstance(c, ApplicationCommand) else "ext"
+
+        lookup = {
+            f"{name_filter(cmd)}_{cmd.qualified_name}": cmd
+            for cmd in new_cls.__cog_commands__
+        }
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if isinstance(command, ApplicationCommand) and not command.guild_ids and new_cls.__cog_guild_ids__:
+            if (
+                isinstance(command, ApplicationCommand)
+                and not command.guild_ids
+                and new_cls.__cog_guild_ids__
+            ):
                 command.guild_ids = new_cls.__cog_guild_ids__
 
             if not isinstance(command, SlashCommandGroup):
-                setattr(new_cls, command.callback.__name__, command)
+                # ignore bridge commands
+                cmd = getattr(new_cls, command.callback.__name__, None)
+                if hasattr(cmd, "add_to"):
+                    setattr(
+                        cmd,
+                        f"{name_filter(command).replace('app', 'slash')}_variant",
+                        command,
+                    )
+                else:
+                    setattr(new_cls, command.callback.__name__, command)
+
                 parent = command.parent
                 if parent is not None:
                     # Get the latest parent reference
-                    parent = lookup[parent.qualified_name]  # type: ignore
+                    parent = lookup[f"{name_filter(command)}_{parent.qualified_name}"]  # type: ignore
 
                     # Update our parent's reference to our self
                     parent.remove_command(command.name)  # type: ignore
@@ -274,18 +290,18 @@ class Cog(metaclass=CogMeta):
     """
 
     __cog_name__: ClassVar[str]
-    __cog_settings__: ClassVar[Dict[str, Any]]
-    __cog_commands__: ClassVar[List[ApplicationCommand]]
-    __cog_listeners__: ClassVar[List[Tuple[str, str]]]
-    __cog_guild_ids__: ClassVar[List[int]]
+    __cog_settings__: ClassVar[dict[str, Any]]
+    __cog_commands__: ClassVar[list[ApplicationCommand]]
+    __cog_listeners__: ClassVar[list[tuple[str, str]]]
+    __cog_guild_ids__: ClassVar[list[int]]
 
-    def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
+    def __new__(cls: type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
         return super().__new__(cls)
 
-    def get_commands(self) -> List[ApplicationCommand]:
+    def get_commands(self) -> list[ApplicationCommand]:
         r"""
         Returns
         --------
@@ -297,7 +313,11 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
+        return [
+            c
+            for c in self.__cog_commands__
+            if isinstance(c, ApplicationCommand) and c.parent is None
+        ]
 
     @property
     def qualified_name(self) -> str:
@@ -325,20 +345,25 @@ class Cog(metaclass=CogMeta):
             if isinstance(command, SlashCommandGroup):
                 yield from command.walk_commands()
 
-    def get_listeners(self) -> List[Tuple[str, Callable[..., Any]]]:
+    def get_listeners(self) -> list[tuple[str, Callable[..., Any]]]:
         """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog.
 
         Returns
-        --------
+        -------
         List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]
             The listeners defined in this cog.
         """
-        return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
+        return [
+            (name, getattr(self, method_name))
+            for name, method_name in self.__cog_listeners__
+        ]
 
     @classmethod
-    def _get_overridden_method(cls, method: FuncT) -> Optional[FuncT]:
+    def _get_overridden_method(cls, method: FuncT) -> FuncT | None:
         """Return None if the method is not overridden. Otherwise, returns the overridden method."""
-        return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
+        return getattr(
+            getattr(method, "__func__", method), "__cog_special_method__", method
+        )
 
     @classmethod
     def listener(cls, name: str = MISSING) -> Callable[[FuncT], FuncT]:
@@ -347,20 +372,22 @@ class Cog(metaclass=CogMeta):
         This is the cog equivalent of :meth:`.Bot.listen`.
 
         Parameters
-        ------------
+        ----------
         name: :class:`str`
             The name of the event being listened to. If not provided, it
             defaults to the function's name.
 
         Raises
-        --------
+        ------
         TypeError
             The function is not a coroutine function or a string was not passed as
             the name.
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(f"Cog.listener expected str but received {name.__class__.__name__!r} instead.")
+            raise TypeError(
+                f"Cog.listener expected str but received {name.__class__.__name__!r} instead."
+            )
 
         def decorator(func: FuncT) -> FuncT:
             actual = func
@@ -398,7 +425,6 @@ class Cog(metaclass=CogMeta):
 
         Subclasses must replace this if they want special unloading behaviour.
         """
-        pass
 
     @_cog_special_method
     def bot_check_once(self, ctx: ApplicationContext) -> bool:
@@ -409,7 +435,7 @@ class Cog(metaclass=CogMeta):
         ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The invocation context.
         """
@@ -424,7 +450,7 @@ class Cog(metaclass=CogMeta):
         ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The invocation context.
         """
@@ -439,14 +465,16 @@ class Cog(metaclass=CogMeta):
         ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.Context`
             The invocation context.
         """
         return True
 
     @_cog_special_method
-    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
+    async def cog_command_error(
+        self, ctx: ApplicationContext, error: Exception
+    ) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -456,13 +484,12 @@ class Cog(metaclass=CogMeta):
         This **must** be a coroutine.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context where the error happened.
         error: :class:`ApplicationCommandError`
             The error that happened.
         """
-        pass
 
     @_cog_special_method
     async def cog_before_invoke(self, ctx: ApplicationContext) -> None:
@@ -473,11 +500,10 @@ class Cog(metaclass=CogMeta):
         This **must** be a coroutine.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context.
         """
-        pass
 
     @_cog_special_method
     async def cog_after_invoke(self, ctx: ApplicationContext) -> None:
@@ -488,11 +514,10 @@ class Cog(metaclass=CogMeta):
         This **must** be a coroutine.
 
         Parameters
-        -----------
+        ----------
         ctx: :class:`.ApplicationContext`
             The invocation context.
         """
-        pass
 
     def _inject(self: CogT, bot) -> CogT:
         cls = self.__class__
@@ -506,6 +531,12 @@ class Cog(metaclass=CogMeta):
             command._set_cog(self)
 
             if isinstance(command, ApplicationCommand):
+                if isinstance(command, discord.SlashCommandGroup):
+                    for x in command.subcommands:
+                        if isinstance(x, discord.SlashCommandGroup):
+                            for y in x.subcommands:
+                                y.parent = x
+                        x.parent = command
                 bot.add_application_command(command)
 
             elif command.parent is None:
@@ -561,8 +592,8 @@ class Cog(metaclass=CogMeta):
 class CogMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__cogs: Dict[str, Cog] = {}
-        self.__extensions: Dict[str, types.ModuleType] = {}
+        self.__cogs: dict[str, Cog] = {}
+        self.__extensions: dict[str, types.ModuleType] = {}
 
     def add_cog(self, cog: Cog, *, override: bool = False) -> None:
         """Adds a "cog" to the bot.
@@ -575,7 +606,7 @@ class CogMixin:
             is already loaded.
 
         Parameters
-        -----------
+        ----------
         cog: :class:`.Cog`
             The cog to register to the bot.
         override: :class:`bool`
@@ -585,7 +616,7 @@ class CogMixin:
             .. versionadded:: 2.0
 
         Raises
-        -------
+        ------
         TypeError
             The cog does not inherit from :class:`.Cog`.
         ApplicationCommandError
@@ -608,26 +639,26 @@ class CogMixin:
         cog = cog._inject(self)
         self.__cogs[cog_name] = cog
 
-    def get_cog(self, name: str) -> Optional[Cog]:
+    def get_cog(self, name: str) -> Cog | None:
         """Gets the cog instance requested.
 
         If the cog is not found, ``None`` is returned instead.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the cog you are requesting.
             This is equivalent to the name passed via keyword
             argument in class creation or the class name if unspecified.
 
         Returns
-        --------
+        -------
         Optional[:class:`Cog`]
             The cog that was requested. If not found, returns ``None``.
         """
         return self.__cogs.get(name)
 
-    def remove_cog(self, name: str) -> Optional[Cog]:
+    def remove_cog(self, name: str) -> Cog | None:
         """Removes a cog from the bot and returns it.
 
         All registered commands and event listeners that the
@@ -636,7 +667,7 @@ class CogMixin:
         If no cog is found then this method has no effect.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The name of the cog to remove.
 
@@ -691,7 +722,8 @@ class CogMixin:
             remove = [
                 index
                 for index, event in enumerate(event_list)
-                if event.__module__ is not None and _is_submodule(name, event.__module__)
+                if event.__module__ is not None
+                and _is_submodule(name, event.__module__)
             ]
 
             for index in reversed(remove):
@@ -715,7 +747,9 @@ class CogMixin:
                 if _is_submodule(name, module):
                     del sys.modules[module]
 
-    def _load_from_module_spec(self, spec: importlib.machinery.ModuleSpec, key: str) -> None:
+    def _load_from_module_spec(
+        self, spec: importlib.machinery.ModuleSpec, key: str
+    ) -> None:
         # precondition: key not in self.__extensions
         lib = importlib.util.module_from_spec(spec)
         sys.modules[key] = lib
@@ -741,7 +775,7 @@ class CogMixin:
         else:
             self.__extensions[key] = lib
 
-    def _resolve_name(self, name: str, package: Optional[str]) -> str:
+    def _resolve_name(self, name: str, package: str | None) -> str:
         try:
             return importlib.util.resolve_name(name, package)
         except ImportError:
@@ -752,9 +786,9 @@ class CogMixin:
         self,
         name: str,
         *,
-        package: Optional[str] = None,
+        package: str | None = None,
         recursive: bool = False,
-    ) -> List[str]:
+    ) -> list[str]:
         ...
 
     @overload
@@ -762,15 +796,15 @@ class CogMixin:
         self,
         name: str,
         *,
-        package: Optional[str] = None,
+        package: str | None = None,
         recursive: bool = False,
         store: bool = False,
-    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+    ) -> dict[str, Exception | bool] | list[str] | None:
         ...
 
     def load_extension(
-        self, name, *, package = None, recursive = False, store = False
-    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+        self, name, *, package=None, recursive=False, store=False
+    ) -> dict[str, Exception | bool] | list[str] | None:
         """Loads an extension.
 
         An extension is a python module that contains commands, cogs, or
@@ -784,7 +818,7 @@ class CogMixin:
         the current working directory or a folder that contains multiple extensions.
 
         Parameters
-        -----------
+        ----------
         name: :class:`str`
             The extension or folder name to load. It must be dot separated
             like regular Python imports if accessing a submodule. e.g.
@@ -813,8 +847,18 @@ class CogMixin:
 
             .. versionadded:: 2.0
 
-        Raises
+        Returns
         -------
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing a list of loaded extensions or
+            nothing due to an encountered exception.
+
+        Raises
+        ------
         ExtensionNotFound
             The extension could not be imported.
             This is also raised if the name of the extension could not
@@ -825,16 +869,6 @@ class CogMixin:
             The extension does not have a setup function.
         ExtensionFailed
             The extension or its setup function had an execution error.
-
-        Returns
-        --------
-        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
-            If the store parameter is set to ``True``, a dictionary will be returned that
-            contains keys to represent the loaded extension names. The values bound to
-            each key can either be an exception that occurred when loading that extension
-            or a ``True`` boolean representing a successful load. If the store parameter
-            is set to ``False``, either a list containing a list of loaded extensions or
-            nothing due to an encountered exception.
         """
 
         name = self._resolve_name(name, package)
@@ -871,7 +905,9 @@ class CogMixin:
                 parts = list(ext_file.parts[:-1])
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
-                loaded = self.load_extension(".".join(parts), package=package, recursive=recursive, store=store)
+                loaded = self.load_extension(
+                    ".".join(parts), package=package, recursive=recursive, store=store
+                )
                 final_out.update(loaded) if store else final_out.extend(loaded)
 
         if isinstance(final_out, Exception):
@@ -883,31 +919,31 @@ class CogMixin:
     def load_extensions(
         self,
         *names: str,
-        package: Optional[str] = None,
+        package: str | None = None,
         recursive: bool = False,
-    ) -> List[str]:
+    ) -> list[str]:
         ...
 
     @overload
     def load_extensions(
         self,
         *names: str,
-        package: Optional[str] = None,
+        package: str | None = None,
         recursive: bool = False,
         store: bool = False,
-    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+    ) -> dict[str, Exception | bool] | list[str] | None:
         ...
 
     def load_extensions(
-        self, *names, package = None, recursive = False, store = False
-    ) -> Optional[Union[Dict[str, Union[Exception, bool]], List[str]]]:
+        self, *names, package=None, recursive=False, store=False
+    ) -> dict[str, Exception | bool] | list[str] | None:
         """Loads multiple extensions at once.
 
         This method simplifies the process of loading multiple
         extensions by handling the looping of ``load_extension``.
 
         Parameters
-        -----------
+        ----------
         names: :class:`str`
            The extension or folder names to load. It must be dot separated
            like regular Python imports if accessing a submodule. e.g.
@@ -936,8 +972,18 @@ class CogMixin:
 
             .. versionadded:: 2.0
 
+        Returns
+        -------
+        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+            If the store parameter is set to ``True``, a dictionary will be returned that
+            contains keys to represent the loaded extension names. The values bound to
+            each key can either be an exception that occurred when loading that extension
+            or a ``True`` boolean representing a successful load. If the store parameter
+            is set to ``False``, either a list containing names of loaded extensions or
+            nothing due to an encountered exception.
+
         Raises
-        --------
+        ------
         ExtensionNotFound
             A given extension could not be imported.
             This is also raised if the name of the extension could not
@@ -948,27 +994,21 @@ class CogMixin:
             A given extension does not have a setup function.
         ExtensionFailed
             A given extension or its setup function had an execution error.
-
-        Returns
-        --------
-        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
-            If the store parameter is set to ``True``, a dictionary will be returned that
-            contains keys to represent the loaded extension names. The values bound to
-            each key can either be an exception that occurred when loading that extension
-            or a ``True`` boolean representing a successful load. If the store parameter
-            is set to ``False``, either a list containing names of loaded extensions or
-            nothing due to an encountered exception.
         """
 
         loaded_extensions = {} if store else []
 
         for ext_path in names:
-            loaded = self.load_extension(ext_path, package=package, recursive=recursive, store=store)
-            loaded_extensions.update(loaded) if store else loaded_extensions.extend(loaded)
+            loaded = self.load_extension(
+                ext_path, package=package, recursive=recursive, store=store
+            )
+            loaded_extensions.update(loaded) if store else loaded_extensions.extend(
+                loaded
+            )
 
         return loaded_extensions
 
-    def unload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def unload_extension(self, name: str, *, package: str | None = None) -> None:
         """Unloads an extension.
 
         When the extension is unloaded, all commands, listeners, and cogs are
@@ -980,7 +1020,7 @@ class CogMixin:
         :meth:`~.Bot.load_extension`.
 
         Parameters
-        ------------
+        ----------
         name: :class:`str`
             The extension name to unload. It must be dot separated like
             regular Python imports if accessing a submodule. e.g.
@@ -993,7 +1033,7 @@ class CogMixin:
             .. versionadded:: 1.7
 
         Raises
-        -------
+        ------
         ExtensionNotFound
             The name of the extension could not
             be resolved using the provided ``package`` parameter.
@@ -1009,7 +1049,7 @@ class CogMixin:
         self._remove_module_references(lib.__name__)
         self._call_module_finalizers(lib, name)
 
-    def reload_extension(self, name: str, *, package: Optional[str] = None) -> None:
+    def reload_extension(self, name: str, *, package: str | None = None) -> None:
         """Atomically reloads an extension.
 
         This replaces the extension with the same extension, only refreshed. This is
@@ -1018,7 +1058,7 @@ class CogMixin:
         the bot will roll back to the prior working state.
 
         Parameters
-        ------------
+        ----------
         name: :class:`str`
             The extension name to reload. It must be dot separated like
             regular Python imports if accessing a submodule. e.g.
@@ -1031,7 +1071,7 @@ class CogMixin:
             .. versionadded:: 1.7
 
         Raises
-        -------
+        ------
         ExtensionNotLoaded
             The extension was not loaded.
         ExtensionNotFound
@@ -1050,7 +1090,11 @@ class CogMixin:
             raise errors.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
-        modules = {name: module for name, module in sys.modules.items() if _is_submodule(lib.__name__, name)}
+        modules = {
+            name: module
+            for name, module in sys.modules.items()
+            if _is_submodule(lib.__name__, name)
+        }
 
         try:
             # Unload and then load the module...

@@ -115,7 +115,7 @@ ApplicationCommand
 
 .. autoclass:: ApplicationCommand
     :members:
-    
+
 .. autofunction:: discord.commands.application_command
     :decorator:
 
@@ -129,7 +129,7 @@ SlashCommand
 
 .. autoclass:: SlashCommand
     :members:
-    
+
 .. autofunction:: discord.commands.slash_command
     :decorator:
 
@@ -148,7 +148,7 @@ Option
 
 .. autoclass:: Option
     :members:
-    
+
 .. autofunction:: discord.commands.option
     :decorator:
 
@@ -175,7 +175,7 @@ UserCommand
 
 .. autoclass:: UserCommand
     :members:
-    
+
 .. autofunction:: discord.commands.user_command
     :decorator:
 
@@ -186,7 +186,7 @@ MessageCommand
 
 .. autoclass:: MessageCommand
     :members:
-    
+
 .. autofunction:: discord.commands.message_command
     :decorator:
 
@@ -216,7 +216,7 @@ Cog
 
 .. autoclass:: Cog
     :members:
-    
+
 CogMeta
 ~~~~~~~~
 
@@ -397,7 +397,7 @@ Application Commands
 
     :param exception: The DiscordException associated to the error.
     :type exception: :class:`DiscordException`
-    
+
 .. function:: on_unknown_application_command(interaction)
 
     Called when an application command was not found in the bot's internal cache.
@@ -413,7 +413,7 @@ AutoMod
 
     Called when an auto moderation rule is created.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The newly created rule.
@@ -423,7 +423,7 @@ AutoMod
 
     Called when an auto moderation rule is updated.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The updated rule.
@@ -433,7 +433,7 @@ AutoMod
 
     Called when an auto moderation rule is deleted.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_configuration` must be enabled.
 
     :param rule: The deleted rule.
@@ -443,7 +443,7 @@ AutoMod
 
     Called when an auto moderation action is executed.
 
-    The bot must have :attr:`~Permissions.manage_guild` to receive this, and 
+    The bot must have :attr:`~Permissions.manage_guild` to receive this, and
     :attr:`Intents.auto_moderation_execution` must be enabled.
 
     :param payload: The event's data.
@@ -571,6 +571,11 @@ Connection
     the same as the client being fully prepared, see :func:`on_ready` for that.
 
     The warnings on :func:`on_ready` also apply.
+
+    .. warning::
+
+        Overriding this event will not call :meth:`Bot.sync_commands`.
+        As a result, :class:`ApplicationCommand` will not be registered.
 
 .. function:: on_shard_connect(shard_id)
 
@@ -1321,7 +1326,7 @@ Scheduled Events
 
 Stage Instances
 ~~~~~~~~~~~~~~~~
-.. function:: on_stage_instance_create(stage_instance) 
+.. function:: on_stage_instance_create(stage_instance)
               on_stage_instance_delete(stage_instance)
 
     Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`.
@@ -1493,7 +1498,7 @@ Utility Functions
 
 .. autofunction:: discord.utils.get
 
-.. autofunction:: discord.utils.snowflake_time
+.. autofunction:: discord.utils.get_or_fetch
 
 .. autofunction:: discord.utils.oauth_url
 
@@ -1503,6 +1508,12 @@ Utility Functions
 
 .. autofunction:: discord.utils.escape_mentions
 
+.. autofunction:: discord.utils.raw_mentions
+
+.. autofunction:: discord.utils.raw_channel_mentions
+
+.. autofunction:: discord.utils.raw_role_mentions
+
 .. autofunction:: discord.utils.resolve_invite
 
 .. autofunction:: discord.utils.resolve_template
@@ -1511,9 +1522,11 @@ Utility Functions
 
 .. autofunction:: discord.utils.utcnow
 
-.. autofunction:: discord.utils.format_dt
+.. autofunction:: discord.utils.snowflake_time
 
-.. autofunction:: discord.utils.as_chunks
+.. autofunction:: discord.utils.parse_time
+
+.. autofunction:: discord.utils.format_dt
 
 .. autofunction:: discord.utils.time_snowflake
 
@@ -1521,7 +1534,13 @@ Utility Functions
 
 .. autofunction:: discord.utils.basic_autocomplete
 
+.. autofunction:: discord.utils.as_chunks
+
 .. autofunction:: discord.utils.filter_params
+
+.. autofunction:: discord.utils.warn_deprecated
+
+.. autofunction:: discord.utils.deprecated
 
 .. _discord-api-enums:
 
@@ -2943,7 +2962,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.invitable`
 
         .. versionadded:: 2.0
-        
+
     .. attribute:: application_command_permission_update
 
         An application command's permissions were updated.
@@ -2957,7 +2976,7 @@ of :class:`enum.Enum`.
         - :attr:`~AuditLogDiff.command_id`
 
         .. versionadded:: 2.0
-        
+
 
 .. class:: AuditLogActionCategory
 
@@ -4014,7 +4033,7 @@ AuditLogDiff
         Non-moderators can now add other non-moderators to this thread.
 
         :type: :class:`bool`
-        
+
     .. attribute:: command_id
 
         This command's permissions were updated.
@@ -5161,10 +5180,10 @@ The following exceptions are thrown by the library.
 
 .. autoexception:: discord.ApplicationCommandError
     :members:
-    
+
 .. autoexception:: discord.CheckFailure
     :members:
-    
+
 .. autoexception:: discord.ApplicationCommandInvokeError
     :members:
 
