@@ -147,7 +147,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
             )
-            self.available_tags: List[int] | None = (
+            self.available_tags: list[int] | None = (
                 [int(tag_id) for tag_id in tag_ids]
                 if (tag_ids := data.get("available_tags")) is not None
                 else None
@@ -236,7 +236,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
-        available_tags: List[int] = ...,
+        available_tags: list[int] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
     ) -> TextChannel | None:
@@ -914,8 +914,8 @@ class ForumTag(Hashable):
         self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
         return self
 
-    def to_dict(self) -> Dict[str, Any]:
-        payload: Dict[str, Any] = {
+    def to_dict(self) -> dict[str, Any]:
+        payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
         } | self.emoji._to_forum_tag_payload()
