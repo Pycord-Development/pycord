@@ -59,8 +59,7 @@ bot = MyBot(
 
 @bot.command()
 async def guess(ctx: MyContext, number: int):
-    """Guess a random number from 1 to 6.
-    """
+    """Guess a random number from 1 to 6."""
     # Explained in a previous example, this
     # gives you a random number from 1-6.
     value = random.randint(1, 6)
@@ -72,8 +71,7 @@ async def guess(ctx: MyContext, number: int):
 
 @bot.slash_command()
 async def slash_guess(ctx: MyApplicationContext, number: int):
-    """Guess a random number from 1 to 6.
-    """
+    """Guess a random number from 1 to 6."""
     value = random.randint(1, 6)
     if number == value:
         await ctx.success(

@@ -130,8 +130,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), intents=inten
 
 @bot.command()
 async def tic(ctx: commands.Context):
-    """Starts a tic-tac-toe game with yourself.
-    """
+    """Starts a tic-tac-toe game with yourself."""
     # Setting the reference message to ctx.message makes the bot reply to the member's message.
     await ctx.send("Tic Tac Toe: X goes first", view=TicTacToe(), reference=ctx.message)
 

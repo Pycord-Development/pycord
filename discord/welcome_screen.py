@@ -138,14 +138,12 @@ class WelcomeScreen:
 
     @property
     def enabled(self) -> bool:
-        """:class:`bool`: Indicates whether the welcome screen is enabled or not.
-        """
+        """:class:`bool`: Indicates whether the welcome screen is enabled or not."""
         return "WELCOME_SCREEN_ENABLED" in self._guild.features
 
     @property
     def guild(self) -> Guild:
-        """:class:`Guild`: The guild this welcome screen belongs to.
-        """
+        """:class:`Guild`: The guild this welcome screen belongs to."""
         return self._guild
 
     @overload

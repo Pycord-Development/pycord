@@ -334,14 +334,12 @@ class AutoModRule(Hashable):
 
     @cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild this rule belongs to.
-        """
+        """Optional[:class:`Guild`]: The guild this rule belongs to."""
         return self._state._get_guild(self.guild_id)
 
     @cached_property
     def creator(self) -> Member | None:
-        """Optional[:class:`Member`]: The member who created this rule.
-        """
+        """Optional[:class:`Member`]: The member who created this rule."""
         if self.guild is None:
             return None
         return self.guild.get_member(self.creator_id)

@@ -40,8 +40,7 @@ bot = CounterBot()
 
 @bot.command()
 async def counter(ctx: commands.Context):
-    """Starts a counter for pressing.
-    """
+    """Starts a counter for pressing."""
     await ctx.send("Press!", view=Counter())
 
 
