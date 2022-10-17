@@ -41,7 +41,6 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .partial_emoji import PartialEmoji, _EmojiTag
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags
@@ -49,6 +48,7 @@ from .invite import Invite
 from .iterators import ArchivedThreadIterator
 from .mixins import Hashable
 from .object import Object
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .stage_instance import StageInstance
 from .threads import Thread
@@ -63,7 +63,7 @@ __all__ = (
     "GroupChannel",
     "PartialMessageable",
     "ForumChannel",
-    "ForumTag"
+    "ForumTag",
 )
 
 if TYPE_CHECKING:
@@ -71,17 +71,17 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .guild import GuildChannel as GuildChannelType
     from .member import Member, VoiceState
-    from .message import Message, PartialMessage, EmojiInputType
+    from .message import EmojiInputType, Message, PartialMessage
     from .role import Role
     from .state import ConnectionState
     from .types.channel import CategoryChannel as CategoryChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import ForumChannel as ForumChannelPayload
+    from .types.channel import ForumTag as ForumTagPayload
     from .types.channel import GroupDMChannel as GroupChannelPayload
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
-    from .types.channel import ForumTag as ForumTagPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
@@ -842,45 +842,47 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
 class ForumTag(Hashable):
     """Represents a forum tag that can be added to a thread inside a :class:`ForumChannel`
-.
-    .. versionadded:: 2.3
+    .
+        .. versionadded:: 2.3
 
-    .. container:: operations
+        .. container:: operations
 
-        .. describe:: x == y
+            .. describe:: x == y
 
-            Checks if two forum tags are equal.
+                Checks if two forum tags are equal.
 
-        .. describe:: x != y
+            .. describe:: x != y
 
-            Checks if two forum tags are not equal.
+                Checks if two forum tags are not equal.
 
-        .. describe:: hash(x)
+            .. describe:: hash(x)
 
-            Returns the forum tag's hash.
+                Returns the forum tag's hash.
 
-        .. describe:: str(x)
+            .. describe:: str(x)
 
-            Returns the forum tag's name.
+                Returns the forum tag's name.
 
-    Attributes
-    -----------
-    id: :class:`int`
-        The tag ID.
-        Note that if the object was created manually then this will be ``0``.
-    name: :class:`str`
-        The name of the tag. Can only be up to 20 characters.
-    moderated: :class:`bool`
-        Whether this tag can only be added or removed by a moderator with
-        the :attr:`~Permissions.manage_threads` permission.
-    emoji: :class:`PartialEmoji`
-        The emoji that is used to represent this tag.
-        Note that if the emoji is a custom emoji, it will *not* have name information.
-
+        Attributes
+        ----------
+        id: :class:`int`
+            The tag ID.
+            Note that if the object was created manually then this will be ``0``.
+        name: :class:`str`
+            The name of the tag. Can only be up to 20 characters.
+        moderated: :class:`bool`
+            Whether this tag can only be added or removed by a moderator with
+            the :attr:`~Permissions.manage_threads` permission.
+        emoji: :class:`PartialEmoji`
+            The emoji that is used to represent this tag.
+            Note that if the emoji is a custom emoji, it will *not* have name information.
     """
+
     __slots__ = ("name", "id", "moderated", "emoji")
 
-    def __init__(self, *, name: str, emoji: EmojiInputType, moderated: bool = False) -> None:
+    def __init__(
+        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
+    ) -> None:
         self.name: str = name
         self.id: int = 0
         self.moderated: bool = moderated
@@ -890,34 +892,36 @@ class ForumTag(Hashable):
         elif isinstance(emoji, str):
             self.emoji = PartialEmoji.from_str(emoji)
         else:
-            raise TypeError(f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}")
+            raise TypeError(
+                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
+            )
 
     def __repr__(self) -> str:
-        return f'<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>'
+        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
 
     def __str__(self) -> str:
         return self.name
 
     @classmethod
-    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> "ForumTag":
+    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> ForumTag:
         self = cls.__new__(cls)
-        self.name = data['name']
-        self.id = int(data['id'])
-        self.moderated = data.get('moderated', False)
+        self.name = data["name"]
+        self.id = int(data["id"])
+        self.moderated = data.get("moderated", False)
 
-        emoji_name = data['emoji_name'] or ''
-        emoji_id = utils._get_as_snowflake(data, 'emoji_id') or None
+        emoji_name = data["emoji_name"] or ""
+        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
         self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
         return self
 
     def to_dict(self) -> Dict[str, Any]:
         payload: Dict[str, Any] = {
-            'name': self.name,
-            'moderated': self.moderated,
+            "name": self.name,
+            "moderated": self.moderated,
         } | self.emoji._to_forum_tag_payload()
 
         if self.id:
-            payload['id'] = self.id
+            payload["id"] = self.id
 
         return payload
 

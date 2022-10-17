@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type, TypeVar, Union, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict, TypeVar, Union
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -160,14 +160,16 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     def _to_partial(self) -> PartialEmoji:
         return self
 
-    def _to_forum_tag_payload(self) -> Union[
-            TypedDict("TagPayload", {"emoji_id": int, "emoji_name": None}),
-            TypedDict("TagPayload", {"emoji_id": None, "emoji_name": str})
-    ]:
+    def _to_forum_tag_payload(
+        self,
+    ) -> (
+        TypedDict("TagPayload", {"emoji_id": int, "emoji_name": None})
+        | TypedDict("TagPayload", {"emoji_id": None, "emoji_name": str})
+    ):
         if self.id is None:
             return {"emoji_id": None, "emoji_name": self.name}
         else:
-            return {'emoji_id': self.id, 'emoji_name': None}
+            return {"emoji_id": self.id, "emoji_name": None}
 
     @classmethod
     def with_state(
