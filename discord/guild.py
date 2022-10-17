@@ -931,7 +931,7 @@ class Guild(Hashable):
         -----
         ``await GUILD_OBJECT.get_or_fetch(type=..., id=...)``
 
-        `type` can be one of these:
+        `object_type` can be one of these:
             VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member
         """
 
