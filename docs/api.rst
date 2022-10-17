@@ -1600,61 +1600,61 @@ of :class:`enum.Enum`.
 
     .. attribute:: text
 
-        A text channel. Value = 0.
+        A text channel.
 
     .. attribute:: voice
 
-        A voice channel. Value = 2.
+        A voice channel.
 
     .. attribute:: private
 
-        A private text channel. Also called a direct message. Value = 1.
+        A private text channel. Also called a direct message.
 
     .. attribute:: group
 
-        A private group text channel. Value = 3.
+        A private group text channel.
 
     .. attribute:: category
 
-        A category channel. Value = 4.
+        A category channel.
 
     .. attribute:: news
 
-        A guild news channel. Value = 5.
+        A guild news channel.
 
     .. attribute:: stage_voice
 
-        A guild stage voice channel. Value = 13.
+        A guild stage voice channel.
 
         .. versionadded:: 1.7
 
     .. attribute:: news_thread
 
-        A news thread. Value = 10.
+        A news thread.
 
         .. versionadded:: 2.0
 
     .. attribute:: public_thread
 
-        A public thread. Value = 11.
+        A public thread.
 
         .. versionadded:: 2.0
 
     .. attribute:: private_thread
 
-        A private thread. Value = 12.
+        A private thread.
 
         .. versionadded:: 2.0
 
     .. attribute:: directory
 
-        A guild directory entry, used in hub guilds, currently in experiment. Value = 14.
+        A guild directory entry, used in hub guilds, currently in experiment.
 
         .. versionadded:: 2.0
 
     .. attribute:: forum
 
-        User can only write in threads, similar functionality to a forum, currently in experiment. Value = 15.
+        User can only write in threads, similar functionality to a forum, currently in experiment.
 
         .. versionadded:: 2.0
 
