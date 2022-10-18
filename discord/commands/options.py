@@ -178,7 +178,8 @@ class Option:
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
-            description = inspect.getdoc(input_type)
+            if description is None:
+                description = inspect.getdoc(input_type)
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
