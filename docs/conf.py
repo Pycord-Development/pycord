@@ -46,7 +46,10 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinxext.opengraph",
+    "sphinx_autodoc_typehints",
 ]
+
+always_document_param_types = True
 
 ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
