@@ -572,6 +572,11 @@ Connection
 
     The warnings on :func:`on_ready` also apply.
 
+    .. warning::
+
+        Overriding this event will not call :meth:`Bot.sync_commands`.
+        As a result, :class:`ApplicationCommand` will not be registered.
+
 .. function:: on_shard_connect(shard_id)
 
     Similar to :func:`on_connect` except used by :class:`AutoShardedClient`
