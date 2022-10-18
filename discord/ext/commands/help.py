@@ -274,7 +274,7 @@ class HelpCommand:
 
         Internally instances of this class are deep copied every time
         the command itself is invoked to prevent a race condition
-        mentioned in :issue:`2123`.
+        mentioned in :dpy-issue:`2123`.
 
         This means that relying on the state of this class to be
         the same between command invocations would not work as expected.

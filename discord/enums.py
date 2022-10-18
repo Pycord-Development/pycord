@@ -210,6 +210,8 @@ else:
 
 
 class ChannelType(Enum):
+    """Channel type"""
+
     text = 0
     private = 1
     voice = 2
@@ -228,6 +230,8 @@ class ChannelType(Enum):
 
 
 class MessageType(Enum):
+    """Message type"""
+
     default = 0
     recipient_add = 1
     recipient_remove = 2
@@ -256,6 +260,8 @@ class MessageType(Enum):
 
 
 class VoiceRegion(Enum):
+    """Voice region"""
+
     us_west = "us-west"
     us_east = "us-east"
     us_south = "us-south"
@@ -285,6 +291,8 @@ class VoiceRegion(Enum):
 
 
 class SpeakingState(Enum):
+    """Speaking state"""
+
     none = 0
     voice = 1
     soundshare = 2
@@ -298,6 +306,8 @@ class SpeakingState(Enum):
 
 
 class VerificationLevel(Enum, comparable=True):
+    """Verification level"""
+
     none = 0
     low = 1
     medium = 2
@@ -309,6 +319,8 @@ class VerificationLevel(Enum, comparable=True):
 
 
 class ContentFilter(Enum, comparable=True):
+    """Content Filter"""
+
     disabled = 0
     no_role = 1
     all_members = 2
@@ -318,6 +330,8 @@ class ContentFilter(Enum, comparable=True):
 
 
 class Status(Enum):
+    """Status"""
+
     online = "online"
     offline = "offline"
     idle = "idle"
@@ -331,6 +345,8 @@ class Status(Enum):
 
 
 class DefaultAvatar(Enum):
+    """Default avatar"""
+
     blurple = 0
     grey = 1
     gray = 1
@@ -343,17 +359,23 @@ class DefaultAvatar(Enum):
 
 
 class NotificationLevel(Enum, comparable=True):
+    """Notification level"""
+
     all_messages = 0
     only_mentions = 1
 
 
 class AuditLogActionCategory(Enum):
+    """Audit log action category"""
+
     create = 1
     delete = 2
     update = 3
 
 
 class AuditLogAction(Enum):
+    """Audit log action"""
+
     guild_update = 1
     channel_create = 10
     channel_update = 11
@@ -505,6 +527,8 @@ class AuditLogAction(Enum):
 
 
 class UserFlags(Enum):
+    """User flags"""
+
     staff = 1
     partner = 2
     hypesquad = 4
@@ -529,6 +553,8 @@ class UserFlags(Enum):
 
 
 class ActivityType(Enum):
+    """Activity type"""
+
     unknown = -1
     playing = 0
     streaming = 1
@@ -542,17 +568,23 @@ class ActivityType(Enum):
 
 
 class TeamMembershipState(Enum):
+    """Team membership state"""
+
     invited = 1
     accepted = 2
 
 
 class WebhookType(Enum):
+    """Webhook Type"""
+
     incoming = 1
     channel_follower = 2
     application = 3
 
 
 class ExpireBehaviour(Enum):
+    """Expire Behaviour"""
+
     remove_role = 0
     kick = 1
 
@@ -561,11 +593,15 @@ ExpireBehavior = ExpireBehaviour
 
 
 class StickerType(Enum):
+    """Sticker type"""
+
     standard = 1
     guild = 2
 
 
 class StickerFormatType(Enum):
+    """Sticker format Type"""
+
     png = 1
     apng = 2
     lottie = 3
@@ -581,12 +617,16 @@ class StickerFormatType(Enum):
 
 
 class InviteTarget(Enum):
+    """Invite target"""
+
     unknown = 0
     stream = 1
     embedded_application = 2
 
 
 class InteractionType(Enum):
+    """Interaction type"""
+
     ping = 1
     application_command = 2
     component = 3
@@ -595,6 +635,8 @@ class InteractionType(Enum):
 
 
 class InteractionResponseType(Enum):
+    """Interaction response type"""
+
     pong = 1
     # ack = 2 (deprecated)
     # channel_message = 3 (deprecated)
@@ -607,6 +649,8 @@ class InteractionResponseType(Enum):
 
 
 class VideoQualityMode(Enum):
+    """Video quality mode"""
+
     auto = 1
     full = 2
 
@@ -615,6 +659,8 @@ class VideoQualityMode(Enum):
 
 
 class ComponentType(Enum):
+    """Component type"""
+
     action_row = 1
     button = 2
     select = 3  # alias for string_select
@@ -630,6 +676,8 @@ class ComponentType(Enum):
 
 
 class ButtonStyle(Enum):
+    """Button style"""
+
     primary = 1
     secondary = 2
     success = 3
@@ -649,6 +697,8 @@ class ButtonStyle(Enum):
 
 
 class InputTextStyle(Enum):
+    """Input text style"""
+
     short = 1
     singleline = 1
     paragraph = 2
@@ -657,6 +707,8 @@ class InputTextStyle(Enum):
 
 
 class ApplicationType(Enum):
+    """Application type"""
+
     game = 1
     music = 2
     ticketed_events = 3
@@ -664,12 +716,16 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
+    """Stage privacy level"""
+
     # public = 1 (deprecated)
     closed = 2
     guild_only = 2
 
 
 class NSFWLevel(Enum, comparable=True):
+    """NSFW level"""
+
     default = 0
     explicit = 1
     safe = 2
@@ -677,6 +733,8 @@ class NSFWLevel(Enum, comparable=True):
 
 
 class SlashCommandOptionType(Enum):
+    """Slash command option type"""
+
     sub_command = 1
     sub_command_group = 2
     string = 3
@@ -748,6 +806,8 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
+    """Embedded activity"""
+
     awkword = 879863881349087252
     betrayal = 773336526917861400
     checkers_in_the_park = 832013003968348200
@@ -782,6 +842,8 @@ class EmbeddedActivity(Enum):
 
 
 class ScheduledEventStatus(Enum):
+    """Scheduled event status"""
+
     scheduled = 1
     active = 2
     completed = 3
@@ -793,6 +855,8 @@ class ScheduledEventStatus(Enum):
 
 
 class ScheduledEventPrivacyLevel(Enum):
+    """Scheduled event privacy level"""
+
     guild_only = 2
 
     def __int__(self):
@@ -800,12 +864,16 @@ class ScheduledEventPrivacyLevel(Enum):
 
 
 class ScheduledEventLocationType(Enum):
+    """Scheduled event location type"""
+
     stage_instance = 1
     voice = 2
     external = 3
 
 
 class AutoModTriggerType(Enum):
+    """Automod trigger type"""
+
     keyword = 1
     harmful_link = 2
     spam = 3
@@ -813,16 +881,22 @@ class AutoModTriggerType(Enum):
 
 
 class AutoModEventType(Enum):
+    """Automod event type"""
+
     message_send = 1
 
 
 class AutoModActionType(Enum):
+    """Automod action type"""
+
     block_message = 1
     send_alert_message = 2
     timeout = 3
 
 
 class AutoModKeywordPresetType(Enum):
+    """Automod keyword preset type"""
+
     profanity = 1
     sexual_content = 2
     slurs = 3
