@@ -896,16 +896,16 @@ class Guild(Hashable):
         return self._members.get(user_id)
 
     _FETCHABLE = TypeVar(
-            "_FETCHABLE",
-            bound=Union[
-                VoiceChannel,
-                TextChannel,
-                ForumChannel,
-                StageChannel,
-                CategoryChannel,
-                Thread,
-                Member,
-            ]
+        "_FETCHABLE",
+        bound=Union[
+            VoiceChannel,
+            TextChannel,
+            ForumChannel,
+            StageChannel,
+            CategoryChannel,
+            Thread,
+            Member,
+        ],
     )
 
     async def get_or_fetch(
