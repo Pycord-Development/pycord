@@ -912,7 +912,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        object_type: :class:`Type[_FETCHABLE]`
+        object_type: :class:`Type[VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread, Member]`
             Type of object to fetch or get.
 
         object_id: :class:`int`
