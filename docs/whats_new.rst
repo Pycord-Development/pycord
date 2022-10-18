@@ -11,6 +11,164 @@ Changelog
 This page keeps a detailed human-friendly rendering of what's new and changed
 in specific versions.
 
+.. _vp2p2p2:
+
+2.2.2
+------
+
+Fixed
+~~~~~~~~~
+
+- Fixed `parent` attribute of second level subcommands being set to the base level command instead of the direct parent. (:issue:`1673`)
+
+.. _vp2p2p1:
+
+2.2.1
+------
+
+Added
+~~~~~~~~~
+
+- New `SlashCommand.qualified_id` attribute. (:issue:`1672`)
+
+Added
+~~~~~~~~~
+
+- Fixed a `TypeError` in `ban()` methods related to the new `delete_message_seconds` parameter. (:issue:`1666`)
+- Fixed broken `cog` and `parent` attributes on commands in cogs. (:issue:`1662`)
+- Fixed `SlashCommand.mention` for subcommands. (:issue:`1672`)
+
+.. _vp2p2p0:
+
+2.2.0
+------
+
+Added
+~~~~~~~~~
+
+- New Guild Feature `INVITES_DISABLED`. (:issue:`1613`)
+- `suppress` kwarg to :meth:`Messageable.send()`. (:issue:`1587`)
+- `proxy` and `proxy_auth` params to many Webhook related methods. (:issue:`1655`)
+- `delete_message_seconds` parameter in ban methods. (:issue:`1557`)
+- New :meth:`View.get_item()` method. (:issue:`1659`)
+- Permissions support for bridge commands. (:issue:`1642`)
+- New :meth:`BridgeCommand.invoke()` method. (:issue:`1642`)
+- New `raw_mentions`, `raw_role_mentions` and `raw_channel_mentions` functions in :func:`discord.utils`. (:issue:`1658`)
+- New methods `original_response`, `edit_original_response` & `delete_original_response` for Interaction objects. (:issue:`1609`)
+
+Deprecated
+~~~~~~~~~
+
+- The `delete_message_days` parameter in ban methods is now deprecated. Please use `delete_message_seconds` instead. (:issue:`1557`)
+- The `original_message`, `edit_original_message` & `delete_original_message` methods for :meth:`Interaction` are now deprecated. Please use the respective `original_response`, `edit_original_response` & `delete_original_response` methods instead. (:issue:`1609`)
+
+Fixed
+~~~~~~~~~
+
+- Various fixes to ext.bridge groups. (:issue:`1633` & :issue:`1631`)
+- Fix `VOICE_SERVER_UPDATE` error. (:issue:`1624`)
+- Removed unnecessary instance check in autocomplete. (:issue:`1643`)
+- Interaction responses are now passed the respective `proxy` and `proxy_auth` params as defined in `Client`. (:issue:`1655`)
+
+.. _vp2p1p3:
+
+2.1.3
+------
+
+Fixed
+~~~~~~~~~
+
+- Fix TypeError in :meth:`process_application_commands`. (:issue:`1622`)
+
+.. _vp2p1p2:
+
+2.1.2
+------
+
+Fixed
+~~~~~~~~~
+
+- Fix subcommands having MISSING cog attribute. (:issue:`1594` & :issue:`1605`)
+
+.. _vp2p1p1:
+
+2.1.1 
+------
+
+Fixed
+~~~~~~~~~
+
+- Bridge command detection in cogs. (:issue:`1592`)
+
+.. _vp2p1p0:
+
+2.1.0 
+------
+
+Added
+~~~~~~~~~
+
+- Support for add, sub, union, intersect, and inverse operations on classes inheriting from ``BaseFlags``. (:issue:`1486`)
+- A ``disable_on_timeout`` kwarg in the ``View`` constructor. (:issue:`1492`)
+- New ``mention`` property for ``SlashCommand`` objects, allowing a shortcut for the new command markdown syntax. (:issue:`1523`)
+- An ``app_commands_badge`` value on ``ApplicationFlags``. (:issue:`1535` and :issue:`1553`)
+- A new ``fetch_application`` method in the ``Client`` object. (:issue:`1536`)
+- New ``on_check_failure`` event method for the ``View`` class. (:issue:`799`)
+- A ``set_mfa_required`` method to Guild. (:issue:`1552`)
+- Support for command groups with bridge commands. (:issue:`1496`)
+- Support for ``Attachment`` type options for bridge commands. (:issue:`1496`)
+- ``is_app`` property for BridgeContext to better differentiate context types. (:issue:`1496`)
+- Support for localization on bridge commands. (:issue:`1496`)
+- A ``filter_params`` helper function in discord.utils. (:issue:`1496`)
+- Support for ``InteractionMessage`` via the ``message`` property of ``View``. (:issue:`1492`)
+
+Changed
+~~~~~~~~~
+
+- Use slash_variant and ext_variant attributes instead of get_application_command() and get_ext_command() methods on BridgeCommand. (:issue:`1496`)
+- Set `store` kwarg default to `False` in load_extension(s) method. (:issue:`1520`)
+- :func:`commands.has_permissions()` check now returns `True` in DM channels. (:issue:`1577`)
+
+Changed
+~~~~~~~~~
+
+- Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. (:issue:`1490`)
+- Fix type issues in options.py (:issue:`1473`)
+- Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. (:issue:`1521`)
+- Large code/documentation cleanup & minor bug fixes. (:issue:`1476`)
+- Fix `Option` with type `str` raising AttributeError when `min_length` or `max_length` kwargs are passed. (:issue:`1527`)
+- Fix :func:`load_extensions` parameters not being passed through correctly. (:issue:`1537`)
+- Fix :class:`SlashCommandGroup` descriptions to use the correct default string. (:issue:`1539` and :issue:`1586`)
+- Fix Enum type options breaking due to `from_datatype()` method & Fix minor typing import. (:issue:`1541`)
+- Adjust category and guild `_channels` attributes to work with NoneType positions. (:issue:`1530`)
+- Make :class:`SelectOption.emoji` a property. (:issue:`1550`)
+- Improve sticker creation by checking for minimum and maximum length on `name` and `description`. (:issue:`1546`)
+- Fix threads created with a base message being set to the wrong `message_reference`. (:issue:`1551`)
+- Avoid unnecessary call to :attr:`sync_commands` during runtime. (:issue:`1563`)
+- Fix bug in :meth:`Modal.on_timeout()` by using `custom_id` to create timeout task. (:issue:`1562`)
+- Respect limit argument in :meth:`Guild.bans()`. (:issue:`1573`)
+- Fix `before` argument in :func:`on_scheduled_event_update` event always set to `None` by converting ID to `int`. (:issue:`1580`)
+- Fix `__eq__` method :meth:`ApplicationCommand` accidentally comparing to self. (:issue:`1585`)
+- Apply `cog_check` method to :meth:`ApplicationCommand` invocations. (:issue:`1575`)
+- Fix :meth:`Interaction.edit_original_message()` using `ConnectionState` instead of `InteractionMessageState`. (:issue:`1565`)
+- Fix required parameters validation error. (:issue:`1589`)
+
+Security
+~~~~~~~~~
+
+- Improved fix for application-based bots without the bot scope (:issue:`1584`)
+
+.. _vp2p0p1:
+
+2.0.1
+------
+
+Security
+~~~~~~~~~
+
+- Fix for application-based bots without the bot scope (:issue:`1568`)
+
+
 .. _vp2p0p0:
 
 v2.0.0
