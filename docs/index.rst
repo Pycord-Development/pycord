@@ -40,8 +40,21 @@ If you're having trouble with something, these resources might help.
 - Report bugs in the :resource:`issue tracker <issues>`.
 - Ask in our :resource:`GitHub discussions page <discussions>`.
 
+Manuals
+---------
+
+These pages go into great detail about everything the API can do.
+
+Core API
+~~~~~~~~
+
+.. toctree::
+  :maxdepth: 1
+
+  api/index.rst
+
 Extensions
-------------
+~~~~~~~~~~
 
 These extensions help you during development when it comes to common tasks.
 
@@ -52,20 +65,6 @@ These extensions help you during development when it comes to common tasks.
   ext/tasks/index.rst
   ext/pages/index.rst
   ext/bridge/index.rst
-
-Manuals
----------
-
-These pages go into great detail about everything the API can do.
-
-.. toctree::
-  :maxdepth: 1
-
-  api
-  discord.ext.commands API Reference <ext/commands/api.rst>
-  discord.ext.tasks API Reference <ext/tasks/index.rst>
-  discord.ext.pages API Reference <ext/pages/index.rst>
-  discord.ext.bridge API Reference <ext/bridge/api.rst>
 
 Meta
 ------
