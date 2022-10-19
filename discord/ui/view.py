@@ -567,7 +567,7 @@ class ViewStore:
         return list(views.values())
 
     def __verify_integrity(self):
-        to_remove: list[tuple[int, int | None, str]] = []
+        to_remove = []
         for (k, (view, _)) in self._views.items():
             if view.is_finished():
                 to_remove.append(k)
@@ -578,13 +578,13 @@ class ViewStore:
     def add_view(self, view: View, message_id: int | None = None):
         self.__verify_integrity()
 
+        if message_id is not None:
+            self._synced_message_views[message_id] = view
+
         view._start_listening_from_store(self)
         for item in view.children:
             if item.is_dispatchable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
-
-        if message_id is not None:
-            self._synced_message_views[message_id] = view
 
     def remove_view(self, view: View):
         for item in view.children:
