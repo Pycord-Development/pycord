@@ -1154,7 +1154,7 @@ class HTTPClient:
         auto_archive_duration: threads.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
-        applied_tags: SnowflakeList | None,
+        applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
