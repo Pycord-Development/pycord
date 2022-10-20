@@ -740,7 +740,7 @@ New Features
 - |tasks| Add :meth:`Loop.change_interval <.ext.tasks.Loop.change_interval>` to change the sleep interval at runtime (:dpy-issue:`2158`, :dpy-issue:`2162`)
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix internal error when using :meth:`Guild.prune_members`.
 - |commands| Fix :attr:`.Command.invoked_subcommand` being invalid in many cases.
@@ -748,7 +748,7 @@ Bug Fixes
 - |tasks| The decorator interface now works as expected when stacking (:dpy-issue:`2154`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Improve performance of all Enum related code significantly.
     - This was done by replacing the ``enum.Enum`` code with an API compatible one.
@@ -767,25 +767,25 @@ Miscellaneous
 .. _vp1p1p1:
 
 v1.1.1
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Webhooks do not overwrite data on retrying their HTTP requests (:dpy-issue:`2140`)
 
 Miscellaneous
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Add back signal handling to :meth:`Client.run` due to issues some users had with proper cleanup.
 
 .. _vp1p1p0:
 
 v1.1.0
----------
+------
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - **There is a new extension dedicated to making background tasks easier.**
     - You can check the documentation here: :ref:`ext_tasks_api`.
@@ -801,7 +801,7 @@ New Features
 - Add support for voice kicking by passing ``None`` to :meth:`Member.move_to`.
 
 ``discord.ext.commands``
-++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
 - Add new :func:`~.commands.dm_only` check.
 - Support callable converters in :data:`~.commands.Greedy`
@@ -812,7 +812,7 @@ New Features
 
 
 Bug Fixes
-~~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix :exc:`AttributeError` when using ``__repr__`` on :class:`Widget`.
 - Fix issue with :attr:`abc.GuildChannel.overwrites` returning ``None`` for keys.
@@ -822,7 +822,7 @@ Bug Fixes
 - Tighten constraints of ``__eq__`` in :class:`Spotify` objects (:dpy-issue:`2113`, :dpy-issue:`2117`)
 
 ``discord.ext.commands``
-++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
 - Fix lambda converters in a non-module context (e.g. ``eval``).
 - Use message creation time for reference time when computing cooldowns.
@@ -833,7 +833,7 @@ Bug Fixes
 - Fix cog descriptions not showing in :class:`~.commands.MinimalHelpCommand` (:dpy-issue:`2139`)
 
 Miscellaneous
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 - Improve the performance of internal enum creation in the library by about 5x.
 - Make the output of ``python -m discord --version`` a bit more useful.
@@ -841,7 +841,7 @@ Miscellaneous
 - The signal handling in :meth:`Client.run` has been removed.
 
 ``discord.ext.commands``
-++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
 - Custom exception classes are now used for all default checks in the library (:dpy-issue:`2101`)
 
@@ -849,17 +849,17 @@ Miscellaneous
 .. _vp1p0p1:
 
 v1.0.1
---------
+------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with speaking state being cast to ``int`` when it was invalid.
 - Fix some issues with loop cleanup that some users experienced on Linux machines.
 - Fix voice handshake race condition (:dpy-issue:`2056`, :dpy-issue:`2063`)
 
 v1.0.0
---------
+------
 
 The changeset for this version are too big to be listed here, for more information please
 see :ref:`the migrating page <migrating_1_0>`.
@@ -868,10 +868,10 @@ see :ref:`the migrating page <migrating_1_0>`.
 .. _vp0p16p6:
 
 v0.16.6
---------
+-------
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix issue with :meth:`Client.create_server` that made it stop working.
 - Fix main thread being blocked upon calling ``StreamPlayer.stop``.
@@ -882,12 +882,12 @@ Bug Fixes
 .. _vp0p16p1:
 
 v0.16.1
---------
+-------
 
 This release is just a bug fix release with some better rate limit implementation.
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Servers are now properly chunked for user bots.
 - The CDN URL is now used instead of the API URL for assets.
@@ -898,16 +898,16 @@ Bug Fixes
 .. _vp0p16p0:
 
 v0.16.0
----------
+-------
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add :attr:`Channel.overwrites` to get all the permission overwrites of a channel.
 - Add :attr:`Server.features` to get information about partnered servers.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Timeout when waiting for offline members while triggering :func:`on_ready`.
 
@@ -923,17 +923,17 @@ Bug Fixes
 .. _vp0p15p1:
 
 v0.15.1
----------
+-------
 
 - Fix crash on duplicate or out of order reactions.
 
 .. _vp0p15p0:
 
 v0.15.0
---------
+-------
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Rich Embeds for messages are now supported.
 
@@ -952,10 +952,10 @@ For the command extension, the following changed:
 .. _vp0p14p3:
 
 v0.14.3
----------
+-------
 
 Bug Fixes
-~~~~~~~~~~~
+~~~~~~~~~
 
 - Fix crash when dealing with MESSAGE_REACTION_REMOVE
 - Fix incorrect buckets for reactions.
@@ -963,26 +963,26 @@ Bug Fixes
 .. _v0p14p2:
 
 v0.14.2
----------
+-------
 
 New Features
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - :meth:`Client.wait_for_reaction` now returns a namedtuple with ``reaction`` and ``user`` attributes.
     - This is for better support in the case that ``None`` is returned since tuple unpacking can lead to issues.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix bug that disallowed ``None`` to be passed for ``emoji`` parameter in :meth:`Client.wait_for_reaction`.
 
 .. _v0p14p1:
 
 v0.14.1
----------
+-------
 
 Bug fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix bug with `Reaction` not being visible at import.
     - This was also breaking the documentation.
@@ -990,12 +990,12 @@ Bug fixes
 .. _v0p14p0:
 
 v0.14.0
---------
+-------
 
 This update adds new API features and a couple of bug fixes.
 
 New Features
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add support for Manage Webhooks permission under :attr:`Permissions.manage_webhooks`
 - Add support for ``around`` argument in 3.5+ :meth:`Client.logs_from`.
@@ -1009,7 +1009,7 @@ New Features
     - :meth:`Client.wait_for_reaction` to wait for a reaction from a user.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix bug with Paginator still allowing lines that are too long.
 - Fix the :attr:`Permissions.manage_emojis` bit being incorrect.
@@ -1017,12 +1017,12 @@ Bug Fixes
 .. _v0p13p0:
 
 v0.13.0
----------
+-------
 
 This is a backwards compatible update with new features.
 
 New Features
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add the ability to manage emojis.
 
@@ -1045,7 +1045,7 @@ New Features
     - This is the only method that allows changing your status to invisible or do not disturb.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Paginator pages do not exceed their max_size anymore (:dpy-issue:`340`)
 - Do Not Disturb users no longer show up offline due to the new :class:`Status` changes.
@@ -1053,12 +1053,12 @@ Bug Fixes
 .. _v0p12p0:
 
 v0.12.0
----------
+-------
 
 This is a bug fix update that also comes with new features.
 
 New Features
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add custom emoji support.
 
@@ -1097,7 +1097,7 @@ For the command extension, the following are new:
 - Add a method to reset command cooldown.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix bug that caused the library to not work with the latest ``websockets`` library.
 - Fix bug that leaked keep alive threads (:dpy-issue:`309`)
@@ -1108,17 +1108,17 @@ Bug Fixes
 .. _v0p11p0:
 
 v0.11.0
---------
+-------
 
 This is a minor bug fix update that comes with a gateway update (v5 -> v6).
 
 Breaking Changes
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 - ``Permissions.change_nicknames`` has been renamed to :attr:`Permissions.change_nickname` to match the UI.
 
 New Features
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - Add the ability to prune members via :meth:`Client.prune_members`.
 - Switch the websocket gateway version to v6 from v5. This allows the library to work with group DMs and 1-on-1 calls.
@@ -1141,7 +1141,7 @@ For the command extension, the following are new:
 - ``UserInputError`` exception for the hierarchy for user input related errors.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - :attr:`Client.email` is now saved when using a token for user accounts.
 - Fix issue when removing roles out of order.
@@ -1164,7 +1164,7 @@ v0.10.0
 For breaking changes, see `0.10.0 migration <https://discordpy.readthedocs.io/en/stable/migrating_to_async.html#migrating-to-async>`_. The breaking changes listed there will not be enumerated below. Since this version is rather a big departure from v0.9.2, this change log will be non-exhaustive.
 
 New Features
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 - The library is now fully ``asyncio`` compatible, allowing you to write non-blocking code a lot more easily.
 - The library now fully handles 429s and unconditionally retries on 502s.
@@ -1197,7 +1197,7 @@ New Features
 - Add :func:`on_member_ban` and :func:`on_member_unban` events that trigger when a member is banned/unbanned.
 
 Performance Improvements
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 - All data classes now use ``__slots__`` which greatly reduce the memory usage of things kept in cache.
 - Due to the usage of ``asyncio``, the CPU usage of the library has gone down significantly.
@@ -1207,7 +1207,7 @@ Performance Improvements
 - While minor, change regex from ``\d+`` to ``[0-9]+`` to avoid unnecessary unicode character lookups.
 
 Bug Fixes
-~~~~~~~~~~
+~~~~~~~~~
 
 - Fix bug where guilds being updated did not edit the items in cache.
 - Fix bug where ``member.roles`` were empty upon joining instead of having the ``@everyone`` role.

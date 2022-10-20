@@ -21,7 +21,7 @@ for Discord.
 - Optimised for both speed and memory
 
 Getting started
------------------
+---------------
 
 Is this your first time using the library? This is the place to get started!
 
@@ -30,7 +30,7 @@ Is this your first time using the library? This is the place to get started!
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
 Getting help
---------------
+------------
 
 If you're having trouble with something, these resources might help.
 
@@ -41,7 +41,7 @@ If you're having trouble with something, these resources might help.
 - Ask in our :resource:`GitHub discussions page <discussions>`.
 
 Manuals
----------
+-------
 
 These pages go into great detail about everything the API can do.
 
@@ -67,7 +67,7 @@ These extensions help you during development when it comes to common tasks.
   ext/bridge/index.rst
 
 Meta
-------
+----
 
 If you're looking for something related to the project itself, it's here.
 
