@@ -27,17 +27,36 @@ the user of the library.
     impossible to have dynamic attributes to the data classes.
 
 
-ClientUser
-----------
+.. attributetable:: Asset
+
+.. autoclass:: Asset()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Spotify
+
+.. autoclass:: Spotify()
+    :members:
+
+.. attributetable:: VoiceState
+
+.. autoclass:: VoiceState()
+    :members:
+
+.. attributetable:: PartialMessageable
+
+.. autoclass:: PartialMessageable()
+    :members:
+    :inherited-members:
+
+Users
+-----
 
 .. attributetable:: ClientUser
 
 .. autoclass:: ClientUser()
     :members:
     :inherited-members:
-
-User
-----
 
 .. attributetable:: User
 
@@ -52,77 +71,23 @@ User
     .. automethod:: typing
         :async-with:
 
-Attachment
-----------
+Messages
+--------
 
 .. attributetable:: Attachment
 
 .. autoclass:: Attachment()
     :members:
 
-Asset
------
-
-.. attributetable:: Asset
-
-.. autoclass:: Asset()
-    :members:
-    :inherited-members:
-
-Message
--------
-
 .. attributetable:: Message
 
 .. autoclass:: Message()
     :members:
 
-Component
----------
-
-.. attributetable:: Component
-
-.. autoclass:: Component()
-    :members:
-
-ActionRow
----------
-
-.. attributetable:: ActionRow
-
-.. autoclass:: ActionRow()
-    :members:
-
-Button
-------
-
-.. attributetable:: Button
-
-.. autoclass:: Button()
-    :members:
-    :inherited-members:
-
-SelectMenu
-----------
-
-.. attributetable:: SelectMenu
-
-.. autoclass:: SelectMenu()
-    :members:
-    :inherited-members:
-
-
-DeletedReferencedMessage
-------------------------
-
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()
     :members:
-
-
-Reaction
---------
 
 .. attributetable:: Reaction
 
@@ -163,8 +128,62 @@ Guild
 
         :type: :class:`User`
 
-ScheduledEvent
---------------
+.. attributetable:: Member
+
+.. autoclass:: Member()
+    :members:
+    :inherited-members:
+    :exclude-members: history, typing
+
+    .. automethod:: history
+        :async-for:
+
+    .. automethod:: typing
+        :async-with:
+
+.. attributetable:: Template
+
+.. autoclass:: Template()
+    :members:
+
+.. attributetable:: AutoModRule
+
+.. autoclass:: AutoModRule()
+    :members:
+
+Invites
+~~~~~~~
+
+.. attributetable:: PartialInviteGuild
+
+.. autoclass:: PartialInviteGuild()
+    :members:
+
+.. attributetable:: PartialInviteChannel
+
+.. autoclass:: PartialInviteChannel()
+    :members:
+
+.. attributetable:: Invite
+
+.. autoclass:: Invite()
+    :members:
+
+Role
+~~~~
+
+.. attributetable:: Role
+
+.. autoclass:: Role()
+    :members:
+
+.. attributetable:: RoleTags
+
+.. autoclass:: RoleTags()
+    :members:
+
+Scheduled Event
+~~~~~~~~~~~~~~~
 
 .. attributetable:: ScheduledEvent
 
@@ -174,8 +193,21 @@ ScheduledEvent
 .. autoclass:: ScheduledEventLocation()
     :members:
 
+Welcome Screen
+~~~~~~~~~~~~~~
+
+.. attributetable:: WelcomeScreen
+
+.. autoclass:: WelcomeScreen()
+    :members:
+
+.. attributetable:: WelcomeScreenChannel
+
+.. autoclass:: WelcomeScreenChannel()
+    :members:
+
 Integration
------------
+~~~~~~~~~~~
 
 .. autoclass:: Integration()
     :members:
@@ -192,140 +224,27 @@ Integration
 .. autoclass:: StreamIntegration()
     :members:
 
-Interaction
------------
+Widget
+~~~~~~
 
-.. attributetable:: Interaction
+.. attributetable:: Widget
 
-.. autoclass:: Interaction()
+.. autoclass:: Widget()
     :members:
 
-InteractionResponse
--------------------
+.. attributetable:: WidgetChannel
 
-.. attributetable:: InteractionResponse
-
-.. autoclass:: InteractionResponse()
+.. autoclass:: WidgetChannel()
     :members:
 
-InteractionMessage
-------------------
+.. attributetable:: WidgetMember
 
-.. attributetable:: InteractionMessage
-
-.. autoclass:: InteractionMessage()
-    :members:
-
-MessageInteraction
-------------------
-
-.. attributetable:: MessageInteraction
-
-.. autoclass:: MessageInteraction()
-    :members:
-
-Member
-------
-
-.. attributetable:: Member
-
-.. autoclass:: Member()
-    :members:
-    :inherited-members:
-    :exclude-members: history, typing
-
-    .. automethod:: history
-        :async-for:
-
-    .. automethod:: typing
-        :async-with:
-
-Spotify
--------
-
-.. attributetable:: Spotify
-
-.. autoclass:: Spotify()
-    :members:
-
-VoiceState
-----------
-
-.. attributetable:: VoiceState
-
-.. autoclass:: VoiceState()
-    :members:
-
-Emoji
------
-
-.. attributetable:: Emoji
-
-.. autoclass:: Emoji()
+.. autoclass:: WidgetMember()
     :members:
     :inherited-members:
 
-PartialEmoji
-------------
-
-.. attributetable:: PartialEmoji
-
-.. autoclass:: PartialEmoji()
-    :members:
-    :inherited-members:
-
-Role
-----
-
-.. attributetable:: Role
-
-.. autoclass:: Role()
-    :members:
-
-RoleTags
---------
-
-.. attributetable:: RoleTags
-
-.. autoclass:: RoleTags()
-    :members:
-
-PartialMessageable
-------------------
-
-.. attributetable:: PartialMessageable
-
-.. autoclass:: PartialMessageable()
-    :members:
-    :inherited-members:
-
-TextChannel
------------
-
-.. attributetable:: TextChannel
-
-.. autoclass:: TextChannel()
-    :members:
-    :inherited-members:
-    :exclude-members: history, typing
-
-    .. automethod:: history
-        :async-for:
-
-    .. automethod:: typing
-        :async-with:
-
-ForumChannel
-------------
-
-.. attributetable:: ForumChannel
-
-.. autoclass:: ForumChannel()
-    :members:
-    :inherited-members:
-
-Thread
-------
+Threads
+~~~~~~~
 
 .. attributetable:: Thread
 
@@ -340,25 +259,13 @@ Thread
     .. automethod:: typing
         :async-with:
 
-ThreadMember
-------------
-
 .. attributetable:: ThreadMember
 
 .. autoclass:: ThreadMember()
     :members:
 
-VoiceChannel
-------------
-
-.. attributetable:: VoiceChannel
-
-.. autoclass:: VoiceChannel()
-    :members:
-    :inherited-members:
-
-StageChannel
-------------
+Stages
+~~~~~~
 
 .. attributetable:: StageChannel
 
@@ -366,26 +273,104 @@ StageChannel
     :members:
     :inherited-members:
 
-
-StageInstance
--------------
-
 .. attributetable:: StageInstance
 
 .. autoclass:: StageInstance()
     :members:
 
-CategoryChannel
----------------
+Interactions
+------------
+
+.. attributetable:: Interaction
+
+.. autoclass:: Interaction()
+    :members:
+
+.. attributetable:: InteractionResponse
+
+.. autoclass:: InteractionResponse()
+    :members:
+
+.. attributetable:: InteractionMessage
+
+.. autoclass:: InteractionMessage()
+    :members:
+
+.. attributetable:: MessageInteraction
+
+.. autoclass:: MessageInteraction()
+    :members:
+
+.. attributetable:: Component
+
+.. autoclass:: Component()
+    :members:
+
+.. attributetable:: ActionRow
+
+.. autoclass:: ActionRow()
+    :members:
+
+.. attributetable:: Button
+
+.. autoclass:: Button()
+    :members:
+    :inherited-members:
+
+.. attributetable:: SelectMenu
+
+.. autoclass:: SelectMenu()
+    :members:
+    :inherited-members:
+
+Emoji
+-----
+
+.. attributetable:: Emoji
+
+.. autoclass:: Emoji()
+    :members:
+    :inherited-members:
+
+.. attributetable:: PartialEmoji
+
+.. autoclass:: PartialEmoji()
+    :members:
+    :inherited-members:
+
+Channels
+--------
+
+.. attributetable:: TextChannel
+
+.. autoclass:: TextChannel()
+    :members:
+    :inherited-members:
+    :exclude-members: history, typing
+
+    .. automethod:: history
+        :async-for:
+
+    .. automethod:: typing
+        :async-with:
+
+.. attributetable:: ForumChannel
+
+.. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
+.. attributetable:: VoiceChannel
+
+.. autoclass:: VoiceChannel()
+    :members:
+    :inherited-members:
 
 .. attributetable:: CategoryChannel
 
 .. autoclass:: CategoryChannel()
     :members:
     :inherited-members:
-
-DMChannel
----------
 
 .. attributetable:: DMChannel
 
@@ -400,9 +385,6 @@ DMChannel
     .. automethod:: typing
         :async-with:
 
-GroupChannel
-------------
-
 .. attributetable:: GroupChannel
 
 .. autoclass:: GroupChannel()
@@ -416,225 +398,99 @@ GroupChannel
     .. automethod:: typing
         :async-with:
 
-PartialInviteGuild
-------------------
-
-.. attributetable:: PartialInviteGuild
-
-.. autoclass:: PartialInviteGuild()
-    :members:
-
-PartialInviteChannel
---------------------
-
-.. attributetable:: PartialInviteChannel
-
-.. autoclass:: PartialInviteChannel()
-    :members:
-
-Invite
-------
-
-.. attributetable:: Invite
-
-.. autoclass:: Invite()
-    :members:
-
-Template
+Stickers
 --------
-
-.. attributetable:: Template
-
-.. autoclass:: Template()
-    :members:
-
-WelcomeScreen
--------------
-
-.. attributetable:: WelcomeScreen
-
-.. autoclass:: WelcomeScreen()
-    :members:
-
-WelcomeScreenChannel
---------------------
-
-.. attributetable:: WelcomeScreenChannel
-
-.. autoclass:: WelcomeScreenChannel()
-    :members:
-
-WidgetChannel
--------------
-
-.. attributetable:: WidgetChannel
-
-.. autoclass:: WidgetChannel()
-    :members:
-
-WidgetMember
-------------
-
-.. attributetable:: WidgetMember
-
-.. autoclass:: WidgetMember()
-    :members:
-    :inherited-members:
-
-Widget
-------
-
-.. attributetable:: Widget
-
-.. autoclass:: Widget()
-    :members:
-
-StickerPack
------------
-
-.. attributetable:: StickerPack
-
-.. autoclass:: StickerPack()
-    :members:
-
-StickerItem
------------
-
-.. attributetable:: StickerItem
-
-.. autoclass:: StickerItem()
-    :members:
-
-Sticker
--------
 
 .. attributetable:: Sticker
 
 .. autoclass:: Sticker()
     :members:
 
-StandardSticker
----------------
+.. attributetable:: StickerPack
+
+.. autoclass:: StickerPack()
+    :members:
+
+.. attributetable:: StickerItem
+
+.. autoclass:: StickerItem()
+    :members:
 
 .. attributetable:: StandardSticker
 
 .. autoclass:: StandardSticker()
     :members:
 
-GuildSticker
-------------
-
 .. attributetable:: GuildSticker
 
 .. autoclass:: GuildSticker()
     :members:
 
-AutoModRule
------------
-
-.. attributetable:: AutoModRule
-
-.. autoclass:: AutoModRule()
-    :members:
-
-AutoModActionExecutionEvent
----------------------------
+Events
+------
 
 .. attributetable:: AutoModActionExecutionEvent
 
 .. autoclass:: AutoModActionExecutionEvent()
     :members:
 
-RawTypingEvent
---------------
-
 .. attributetable:: RawTypingEvent
 
 .. autoclass:: RawTypingEvent()
     :members:
-
-RawMessageDeleteEvent
----------------------
 
 .. attributetable:: RawMessageDeleteEvent
 
 .. autoclass:: RawMessageDeleteEvent()
     :members:
 
-RawBulkMessageDeleteEvent
--------------------------
-
 .. attributetable:: RawBulkMessageDeleteEvent
 
 .. autoclass:: RawBulkMessageDeleteEvent()
     :members:
-
-RawMessageUpdateEvent
----------------------
 
 .. attributetable:: RawMessageUpdateEvent
 
 .. autoclass:: RawMessageUpdateEvent()
     :members:
 
-RawReactionActionEvent
-----------------------
-
 .. attributetable:: RawReactionActionEvent
 
 .. autoclass:: RawReactionActionEvent()
     :members:
-
-RawReactionClearEvent
----------------------
 
 .. attributetable:: RawReactionClearEvent
 
 .. autoclass:: RawReactionClearEvent()
     :members:
 
-RawReactionClearEmojiEvent
---------------------------
-
 .. attributetable:: RawReactionClearEmojiEvent
 
 .. autoclass:: RawReactionClearEmojiEvent()
     :members:
-
-RawIntegrationDeleteEvent
--------------------------
 
 .. attributetable:: RawIntegrationDeleteEvent
 
 .. autoclass:: RawIntegrationDeleteEvent()
     :members:
 
-RawThreadDeleteEvent
---------------------
-
 .. attributetable:: RawThreadDeleteEvent
 
 .. autoclass:: RawThreadDeleteEvent()
     :members:
-
-RawScheduledEventSubscription
------------------------------
 
 .. attributetable:: RawScheduledEventSubscription
 
 .. autoclass:: RawScheduledEventSubscription()
     :members:
 
-PartialWebhookGuild
--------------------
+Webhooks
+--------
 
 .. attributetable:: PartialWebhookGuild
 
 .. autoclass:: PartialWebhookGuild()
     :members:
-
-PartialWebhookChannel
----------------------
 
 .. attributetable:: PartialWebhookChannel
 

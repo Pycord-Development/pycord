@@ -5,24 +5,28 @@ Bot UI Kit
 
 The library has helpers to help create component-based UIs.
 
-View
-----
+
+Shortcut decorators
+-------------------
+
+.. autofunction:: discord.ui.button
+    :decorator:
+
+.. autofunction:: discord.ui.select
+    :decorator:
+
+Objects
+-------
 
 .. attributetable:: discord.ui.View
 
 .. autoclass:: discord.ui.View
     :members:
 
-Item
-----
-
 .. attributetable:: discord.ui.Item
 
 .. autoclass:: discord.ui.Item
     :members:
-
-Button
-------
 
 .. attributetable:: discord.ui.Button
 
@@ -30,30 +34,17 @@ Button
     :members:
     :inherited-members:
 
-.. autofunction:: discord.ui.button
-
-Select
-------
-
 .. attributetable:: discord.ui.Select
 
 .. autoclass:: discord.ui.Select
     :members:
     :inherited-members:
 
-.. autofunction:: discord.ui.select
-
-Modal
------
-
 .. attributetable:: discord.ui.Modal
 
 .. autoclass:: discord.ui.Modal
     :members:
     :inherited-members:
-
-InputText
----------
 
 .. attributetable:: discord.ui.InputText
 

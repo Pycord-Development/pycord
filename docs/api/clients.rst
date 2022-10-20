@@ -6,10 +6,7 @@ Client Objects
 Bots
 ----
 
-Bot
-~~~
 .. attributetable:: Bot
-
 .. autoclass:: Bot
     :members:
     :inherited-members:
@@ -33,10 +30,7 @@ Bot
     .. automethod:: Bot.listen(name=None)
         :decorator:
 
-AutoShardedBot
-~~~~~~~~~~~~~~
 .. attributetable:: AutoShardedBot
-
 .. autoclass:: AutoShardedBot
     :members:
 
@@ -44,11 +38,7 @@ AutoShardedBot
 Clients
 -------
 
-Client
-~~~~~~
-
 .. attributetable:: Client
-
 .. autoclass:: Client
     :members:
     :exclude-members: fetch_guilds, event
@@ -59,10 +49,6 @@ Client
     .. automethod:: Client.fetch_guilds
         :async-for:
 
-AutoShardedClient
-~~~~~~~~~~~~~~~~~
-
 .. attributetable:: AutoShardedClient
-
 .. autoclass:: AutoShardedClient
     :members:

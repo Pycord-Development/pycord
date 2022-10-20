@@ -3,6 +3,48 @@
 Exceptions
 ==========
 
+Exception Hierarchy
+-------------------
+
+.. exception_hierarchy::
+
+    - :exc:`Exception`
+        - :exc:`DiscordException`
+            - :exc:`ClientException`
+                - :exc:`InvalidData`
+                - :exc:`InvalidArgument`
+                - :exc:`LoginFailure`
+                - :exc:`ConnectionClosed`
+                - :exc:`PrivilegedIntentsRequired`
+                - :exc:`InteractionResponded`
+            - :exc:`NoMoreItems`
+            - :exc:`GatewayNotFound`
+            - :exc:`HTTPException`
+                - :exc:`Forbidden`
+                - :exc:`NotFound`
+                - :exc:`DiscordServerError`
+            - :exc:`ApplicationCommandError`
+                - :exc:`CheckFailure`
+                - :exc:`ApplicationCommandInvokeError`
+            - :exc:`ExtensionError`
+                - :exc:`ExtensionAlreadyLoaded`
+                - :exc:`ExtensionNotLoaded`
+                - :exc:`NoEntryPointError`
+                - :exc:`ExtensionFailed`
+                - :exc:`ExtensionNotFound`
+            - :exc:`sinks.SinkException`
+                - :exc:`sinks.RecordingException`
+                - :exc:`sinks.WaveSinkError`
+                - :exc:`sinks.MP3SinkError`
+                - :exc:`sinks.MP4SinkError`
+                - :exc:`sinks.M4ASinkError`
+                - :exc:`sinks.MKVSinkError`
+                - :exc:`sinks.MKASinkError`
+                - :exc:`sinks.OGGSinkError`
+
+Objects
+-------
+
 The following exceptions are thrown by the library.
 
 .. autoexception:: DiscordException
@@ -82,43 +124,3 @@ The following exceptions are thrown by the library.
 .. autoexception:: discord.sinks.MKASinkError
 
 .. autoexception:: discord.sinks.OGGSinkError
-
-
-Exception Hierarchy
--------------------
-
-.. exception_hierarchy::
-
-    - :exc:`Exception`
-        - :exc:`DiscordException`
-            - :exc:`ClientException`
-                - :exc:`InvalidData`
-                - :exc:`InvalidArgument`
-                - :exc:`LoginFailure`
-                - :exc:`ConnectionClosed`
-                - :exc:`PrivilegedIntentsRequired`
-                - :exc:`InteractionResponded`
-            - :exc:`NoMoreItems`
-            - :exc:`GatewayNotFound`
-            - :exc:`HTTPException`
-                - :exc:`Forbidden`
-                - :exc:`NotFound`
-                - :exc:`DiscordServerError`
-            - :exc:`ApplicationCommandError`
-                - :exc:`CheckFailure`
-                - :exc:`ApplicationCommandInvokeError`
-            - :exc:`ExtensionError`
-                - :exc:`ExtensionAlreadyLoaded`
-                - :exc:`ExtensionNotLoaded`
-                - :exc:`NoEntryPointError`
-                - :exc:`ExtensionFailed`
-                - :exc:`ExtensionNotFound`
-            - :exc:`sinks.SinkException`
-                - :exc:`sinks.RecordingException`
-                - :exc:`sinks.WaveSinkError`
-                - :exc:`sinks.MP3SinkError`
-                - :exc:`sinks.MP4SinkError`
-                - :exc:`sinks.M4ASinkError`
-                - :exc:`sinks.MKVSinkError`
-                - :exc:`sinks.MKASinkError`
-                - :exc:`sinks.OGGSinkError`

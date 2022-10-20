@@ -4,7 +4,7 @@
 .. _cogs:
 
 Cogs
-======
+====
 
 There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that.
 
@@ -17,7 +17,7 @@ The gist:
 - Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call.
 
 Quick Example
----------------
+-------------
 
 This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`.
 
@@ -51,7 +51,7 @@ A couple of technical notes to take into consideration:
 - All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state.
 
 Cog Registration
--------------------
+----------------
 
 Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method.
 
@@ -62,7 +62,7 @@ Once you have defined your cogs, you need to tell the bot to register the cogs t
 This binds the cog to the bot, adding all commands and listeners to the bot automatically.
 
 Using Cogs
--------------
+----------
 
 Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:
 

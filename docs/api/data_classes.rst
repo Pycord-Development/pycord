@@ -16,93 +16,94 @@ impossible to have dynamic attributes to the data classes.
 The only exception to this rule is :class:`Object`, which is made with
 dynamic attributes in mind.
 
-
-Object
-------
-
 .. attributetable:: Object
 
 .. autoclass:: Object
     :members:
-
-Embed
------
-
-.. attributetable:: Embed
-
-.. autoclass:: Embed
-    :members:
-
-EmbedField
-----------
-
-.. attributetable:: EmbedField
-
-.. autoclass:: EmbedField
-    :members:
-
-AllowedMentions
----------------
-
-.. attributetable:: AllowedMentions
-
-.. autoclass:: AllowedMentions
-    :members:
-
-MessageReference
-----------------
-
-.. attributetable:: MessageReference
-
-.. autoclass:: MessageReference
-    :members:
-
-PartialMessage
---------------
-
-.. attributetable:: PartialMessage
-
-.. autoclass:: PartialMessage
-    :members:
-
-SelectOption
-------------
 
 .. attributetable:: SelectOption
 
 .. autoclass:: SelectOption
     :members:
 
-Intents
--------
-
 .. attributetable:: Intents
 
 .. autoclass:: Intents
     :members:
 
-MemberCacheFlags
-----------------
+.. attributetable:: ShardInfo
+
+.. autoclass:: ShardInfo()
+    :members:
+
+Message
+-------
+
+.. attributetable:: AllowedMentions
+
+.. autoclass:: AllowedMentions
+    :members:
+
+.. attributetable:: MessageReference
+
+.. autoclass:: MessageReference
+    :members:
+
+.. attributetable:: PartialMessage
+
+.. autoclass:: PartialMessage
+    :members:
+
+.. attributetable:: File
+
+.. autoclass:: File
+    :members:
+
+Embed
+~~~~~
+
+.. attributetable:: Embed
+
+.. autoclass:: Embed
+    :members:
+
+.. attributetable:: EmbedField
+
+.. autoclass:: EmbedField
+    :members:
+
+
+Flags
+-----
 
 .. attributetable:: MemberCacheFlags
 
 .. autoclass:: MemberCacheFlags
     :members:
 
-ApplicationFlags
-----------------
-
 .. attributetable:: ApplicationFlags
 
 .. autoclass:: ApplicationFlags
     :members:
 
-File
-----
+.. attributetable:: SystemChannelFlags
 
-.. attributetable:: File
+.. autoclass:: SystemChannelFlags()
+    :members:
 
-.. autoclass:: File
+.. attributetable:: MessageFlags
+
+.. autoclass:: MessageFlags()
+    :members:
+
+.. attributetable:: PublicUserFlags
+
+.. autoclass:: PublicUserFlags()
+    :members:
+
+.. attributetable:: ChannelFlags
+
+.. autoclass:: ChannelFlags()
     :members:
 
 Colour
@@ -113,14 +114,6 @@ Colour
 .. autoclass:: Colour
     :members:
 
-BaseActivity
-------------
-
-.. attributetable:: BaseActivity
-
-.. autoclass:: BaseActivity
-    :members:
-
 Activity
 --------
 
@@ -129,24 +122,20 @@ Activity
 .. autoclass:: Activity
     :members:
 
-Game
-----
+.. attributetable:: BaseActivity
+
+.. autoclass:: BaseActivity
+    :members:
 
 .. attributetable:: Game
 
 .. autoclass:: Game
     :members:
 
-Streaming
----------
-
 .. attributetable:: Streaming
 
 .. autoclass:: Streaming
     :members:
-
-CustomActivity
---------------
 
 .. attributetable:: CustomActivity
 
@@ -161,50 +150,7 @@ Permissions
 .. autoclass:: Permissions
     :members:
 
-PermissionOverwrite
--------------------
-
 .. attributetable:: PermissionOverwrite
 
 .. autoclass:: PermissionOverwrite
-    :members:
-
-ShardInfo
----------
-
-.. attributetable:: ShardInfo
-
-.. autoclass:: ShardInfo()
-    :members:
-
-SystemChannelFlags
-------------------
-
-.. attributetable:: SystemChannelFlags
-
-.. autoclass:: SystemChannelFlags()
-    :members:
-
-MessageFlags
-------------
-
-.. attributetable:: MessageFlags
-
-.. autoclass:: MessageFlags()
-    :members:
-
-PublicUserFlags
----------------
-
-.. attributetable:: PublicUserFlags
-
-.. autoclass:: PublicUserFlags()
-    :members:
-
-ChannelFlags
-------------
-
-.. attributetable:: ChannelFlags
-
-.. autoclass:: ChannelFlags()
     :members:
