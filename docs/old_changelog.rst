@@ -1,3 +1,4 @@
+:orphan:
 .. currentmodule:: discord
 
 .. |commands| replace:: [:ref:`ext.commands <discord_ext_commands>`]
