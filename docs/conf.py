@@ -48,6 +48,8 @@ extensions = [
     "sphinxext.opengraph",
 ]
 
+toc_object_entries_show_parents = "hide"
+
 ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
 
