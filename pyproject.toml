@@ -49,6 +49,9 @@ docs = [
     "sphinxcontrib_trio==1.1.2",
     "sphinxcontrib-websupport",
     "myst-parser",
+    "sphinxext-opengraph==0.6.3",
+    "sphinx-copybutton==0.5.0",
+    "furo@ git+https://github.com/BobDotCom/furo@temp",
 ]
 speed = [
     "orjson>=3.5.4",
