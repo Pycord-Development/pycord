@@ -15,6 +15,32 @@ import os
 import sys
 from importlib.metadata import version as get_version
 
+old_changelog = os.path.join(os.path.dirname(__file__), "..", "CHANGELOG.md")
+new_changelog = os.path.join(os.path.dirname(__file__), "changelog.md")
+
+with open(old_changelog) as f:
+    changelog_lines = f.readlines()
+
+# Inject relative documentation links
+for i, line in enumerate(changelog_lines):
+    if line.startswith("[version guarantees]: "):
+        changelog_lines[i] = "[version guarantees]: version_guarantees.rst\n"
+        break
+
+CHANGELOG_TEXT = (
+    "".join(changelog_lines)
+    + """
+## Older Versions
+
+A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
+"""
+)
+
+with open(new_changelog) as fr:
+    if fr.read() != CHANGELOG_TEXT:  # Only write if it's changed to avoid recompiling
+        with open(new_changelog, "w") as fw:
+            fw.write(CHANGELOG_TEXT)
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.

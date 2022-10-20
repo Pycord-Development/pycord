@@ -11,6 +11,10 @@ Changelog
 This page keeps a detailed human-friendly rendering of what's new and changed
 in specific versions.
 
+.. attention::
+    This page is no longer maintained. For an updated changelog for version 2.0+, please check out our
+    :doc:`new changelog <changelog>` instead.
+
 .. _vp2p0p0:
 
 v2.0.0
