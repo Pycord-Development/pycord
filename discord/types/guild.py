@@ -22,8 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
+
 import sys
-from typing import List, Literal, Optional
+from typing import Literal
 
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel
@@ -44,7 +46,7 @@ else:
 
 
 class Ban(TypedDict):
-    reason: Optional[str]
+    reason: str | None
     user: User
 
 
@@ -100,12 +102,12 @@ GuildFeature = Literal[
 
 class _BaseGuildPreview(UnavailableGuild):
     name: str
-    icon: Optional[str]
-    splash: Optional[str]
-    discovery_splash: Optional[str]
-    emojis: List[Emoji]
-    features: List[GuildFeature]
-    description: Optional[str]
+    icon: str | None
+    splash: str | None
+    discovery_splash: str | None
+    emojis: list[Emoji]
+    features: list[GuildFeature]
+    description: str | None
 
 
 class _GuildPreviewUnique(TypedDict):
@@ -118,43 +120,43 @@ class GuildPreview(_BaseGuildPreview, _GuildPreviewUnique):
 
 
 class Guild(_BaseGuildPreview):
-    icon_hash: NotRequired[Optional[str]]
+    icon_hash: NotRequired[str | None]
     owner: NotRequired[bool]
     permissions: NotRequired[str]
     widget_enabled: NotRequired[bool]
-    widget_channel_id: NotRequired[Optional[Snowflake]]
-    joined_at: NotRequired[Optional[str]]
+    widget_channel_id: NotRequired[Snowflake | None]
+    joined_at: NotRequired[str | None]
     large: NotRequired[bool]
     member_count: NotRequired[int]
-    voice_states: NotRequired[List[GuildVoiceState]]
-    members: NotRequired[List[Member]]
-    channels: NotRequired[List[GuildChannel]]
-    presences: NotRequired[List[PartialPresenceUpdate]]
-    threads: NotRequired[List[Thread]]
-    max_presences: NotRequired[Optional[int]]
+    voice_states: NotRequired[list[GuildVoiceState]]
+    members: NotRequired[list[Member]]
+    channels: NotRequired[list[GuildChannel]]
+    presences: NotRequired[list[PartialPresenceUpdate]]
+    threads: NotRequired[list[Thread]]
+    max_presences: NotRequired[int | None]
     max_members: NotRequired[int]
     premium_subscription_count: NotRequired[int]
     premium_progress_bar_enabled: NotRequired[bool]
     max_video_channel_users: NotRequired[int]
-    guild_scheduled_events: NotRequired[List[ScheduledEvent]]
+    guild_scheduled_events: NotRequired[list[ScheduledEvent]]
     owner_id: Snowflake
-    afk_channel_id: Optional[Snowflake]
+    afk_channel_id: Snowflake | None
     afk_timeout: int
     verification_level: VerificationLevel
     default_message_notifications: DefaultMessageNotificationLevel
     explicit_content_filter: ExplicitContentFilterLevel
-    roles: List[Role]
+    roles: list[Role]
     mfa_level: MFALevel
     nsfw_level: NSFWLevel
-    application_id: Optional[Snowflake]
-    system_channel_id: Optional[Snowflake]
+    application_id: Snowflake | None
+    system_channel_id: Snowflake | None
     system_channel_flags: int
-    rules_channel_id: Optional[Snowflake]
-    vanity_url_code: Optional[str]
-    banner: Optional[str]
+    rules_channel_id: Snowflake | None
+    vanity_url_code: str | None
+    banner: str | None
     premium_tier: PremiumTier
     preferred_locale: str
-    public_updates_channel_id: Optional[Snowflake]
+    public_updates_channel_id: Snowflake | None
 
 
 class InviteGuild(Guild, total=False):
@@ -166,19 +168,19 @@ class GuildWithCounts(Guild, _GuildPreviewUnique):
 
 
 class GuildPrune(TypedDict):
-    pruned: Optional[int]
+    pruned: int | None
 
 
 class ChannelPositionUpdate(TypedDict):
     id: Snowflake
-    position: Optional[int]
-    lock_permissions: Optional[bool]
-    parent_id: Optional[Snowflake]
+    position: int | None
+    lock_permissions: bool | None
+    parent_id: Snowflake | None
 
 
 class RolePositionUpdate(TypedDict, total=False):
     id: Required[Snowflake]
-    position: Optional[Snowflake]
+    position: Snowflake | None
 
 
 class GuildMFAModify(TypedDict):
