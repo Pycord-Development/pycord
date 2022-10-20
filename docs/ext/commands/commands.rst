@@ -169,7 +169,7 @@ toggled by the :attr:`.Command.rest_is_raw` argument in the decorator.
 .. _ext_commands_context:
 
 Invocation Context
------------------
+------------------
 
 As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`.
 
