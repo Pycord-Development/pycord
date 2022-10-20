@@ -22,20 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import types
 from collections import namedtuple
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    ClassVar,
-    Dict,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
 __all__ = (
     "Enum",
@@ -112,9 +103,9 @@ def _is_descriptor(obj):
 class EnumMeta(type):
     if TYPE_CHECKING:
         __name__: ClassVar[str]
-        _enum_member_names_: ClassVar[List[str]]
-        _enum_member_map_: ClassVar[Dict[str, Any]]
-        _enum_value_map_: ClassVar[Dict[Any, Any]]
+        _enum_member_names_: ClassVar[list[str]]
+        _enum_member_map_: ClassVar[dict[str, Any]]
+        _enum_value_map_: ClassVar[dict[Any, Any]]
 
     def __new__(cls, name, bases, attrs, *, comparable: bool = False):
         value_mapping = {}
@@ -430,8 +421,8 @@ class AuditLogAction(Enum):
     auto_moderation_block_message = 143
 
     @property
-    def category(self) -> Optional[AuditLogActionCategory]:
-        lookup: Dict[AuditLogAction, Optional[AuditLogActionCategory]] = {
+    def category(self) -> AuditLogActionCategory | None:
+        lookup: dict[AuditLogAction, AuditLogActionCategory | None] = {
             AuditLogAction.guild_update: AuditLogActionCategory.update,
             AuditLogAction.channel_create: AuditLogActionCategory.create,
             AuditLogAction.channel_update: AuditLogActionCategory.update,
@@ -488,7 +479,7 @@ class AuditLogAction(Enum):
         return lookup[self]
 
     @property
-    def target_type(self) -> Optional[str]:
+    def target_type(self) -> str | None:
         v = self.value
         if v == -1:
             return "all"
@@ -608,7 +599,7 @@ class StickerFormatType(Enum):
 
     @property
     def file_extension(self) -> str:
-        lookup: Dict[StickerFormatType, str] = {
+        lookup: dict[StickerFormatType, str] = {
             StickerFormatType.png: "png",
             StickerFormatType.apng: "png",
             StickerFormatType.lottie: "json",
@@ -900,13 +891,13 @@ class AutoModKeywordPresetType(Enum):
 T = TypeVar("T")
 
 
-def create_unknown_value(cls: Type[T], val: Any) -> T:
+def create_unknown_value(cls: type[T], val: Any) -> T:
     value_cls = cls._enum_value_cls_  # type: ignore
     name = f"unknown_{val}"
     return value_cls(name=name, value=val)
 
 
-def try_enum(cls: Type[T], val: Any) -> T:
+def try_enum(cls: type[T], val: Any) -> T:
     """A function that tries to turn the value into enum ``cls``.
 
     If it fails it returns a proxy invalid value instead.
