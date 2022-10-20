@@ -1304,7 +1304,7 @@ Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
 
 
-def basic_autocomplete(values: Values) -> AutocompleteFunc:
+def basic_autocomplete(values: Values, limit: bool = True) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -1316,6 +1316,8 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
     values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+    
+    limit: bool
 
     Returns
     -------
@@ -1354,8 +1356,12 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         def check(item: Any) -> bool:
             item = getattr(item, "name", item)
             return str(item).lower().startswith(str(ctx.value or "").lower())
-
-        gen = (val for val in _values if check(val))
+        
+        if limit:
+            gen = (val for val in _values if check(val))
+        else:
+            gen = (val for val in _values)
+            
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
