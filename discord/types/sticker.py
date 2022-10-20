@@ -25,10 +25,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, Union
+import sys
+from typing import Literal, Union
 
 from .snowflake import Snowflake
 from .user import User
+
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
 StickerFormatType = Literal[1, 2, 3]
 
@@ -53,11 +59,8 @@ class StandardSticker(BaseSticker):
     pack_id: Snowflake
 
 
-class _GuildStickerOptional(TypedDict, total=False):
-    user: User
-
-
-class GuildSticker(BaseSticker, _GuildStickerOptional):
+class GuildSticker(BaseSticker):
+    user: NotRequired[User]
     type: Literal[2]
     available: bool
     guild_id: Snowflake
@@ -76,11 +79,8 @@ class StickerPack(TypedDict):
     banner_asset_id: Snowflake
 
 
-class _CreateGuildStickerOptional(TypedDict, total=False):
-    description: str
-
-
-class CreateGuildSticker(_CreateGuildStickerOptional):
+class CreateGuildSticker(TypedDict):
+    description: NotRequired[str]
     name: str
     tags: str
 
