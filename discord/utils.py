@@ -1316,7 +1316,7 @@ def basic_autocomplete(values: Values, limit: bool = True) -> AutocompleteFunc:
     values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
-    
+
     limit: bool
 
     Returns
@@ -1356,12 +1356,12 @@ def basic_autocomplete(values: Values, limit: bool = True) -> AutocompleteFunc:
         def check(item: Any) -> bool:
             item = getattr(item, "name", item)
             return str(item).lower().startswith(str(ctx.value or "").lower())
-        
+
         if limit:
             gen = (val for val in _values if check(val))
         else:
             gen = (val for val in _values)
-            
+
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
