@@ -421,4 +421,8 @@ possible (see our [Version Guarantees] for more info).
   https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [2.0.0-beta.1]:
   https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
-[version guarantees]: https://docs.pycord.dev/en/stable/version_guarantees.html
+[version guarantees]: version_guarantees.rst
+
+## Older Versions
+
+A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
