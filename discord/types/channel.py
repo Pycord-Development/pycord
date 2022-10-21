@@ -22,12 +22,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from typing import List, Literal, Optional, TypedDict, Union
+import sys
+from typing import List, Literal, Optional, Union
 
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import PartialUser
+
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
+
 
 OverwriteType = Literal[0, 1]
 
@@ -82,12 +88,9 @@ class NewsChannel(_BaseGuildChannel, _TextChannelOptional):
 VideoQualityMode = Literal[1, 2]
 
 
-class _VoiceChannelOptional(TypedDict, total=False):
-    rtc_region: Optional[str]
-    video_quality_mode: VideoQualityMode
-
-
-class VoiceChannel(_BaseGuildChannel, _VoiceChannelOptional):
+class VoiceChannel(_BaseGuildChannel):
+    rtc_region: NotRequired[Optional[str]]
+    video_quality_mode: NotRequired[VideoQualityMode]
     type: Literal[2]
     bitrate: int
     user_limit: int
@@ -97,33 +100,24 @@ class CategoryChannel(_BaseGuildChannel):
     type: Literal[4]
 
 
-class _StageChannelOptional(TypedDict, total=False):
-    rtc_region: Optional[str]
-    topic: str
-
-
-class StageChannel(_BaseGuildChannel, _StageChannelOptional):
+class StageChannel(_BaseGuildChannel):
+    rtc_region: NotRequired[Optional[str]]
+    topic: NotRequired[str]
     type: Literal[13]
     bitrate: int
     user_limit: int
 
 
-class _ThreadChannelOptional(TypedDict, total=False):
-    member: ThreadMember
-    owner_id: Snowflake
-    rate_limit_per_user: int
-    last_message_id: Optional[Snowflake]
-    last_pin_timestamp: str
-
-
-class ThreadChannel(_BaseChannel, _ThreadChannelOptional):
+class ThreadChannel(_BaseChannel):
+    member: NotRequired[ThreadMember]
+    owner_id: NotRequired[Snowflake]
+    rate_limit_per_user: NotRequired[int]
+    last_message_id: NotRequired[Optional[Snowflake]]
+    last_pin_timestamp: NotRequired[str]
     type: Literal[10, 11, 12]
     guild_id: Snowflake
     parent_id: Snowflake
-    owner_id: Snowflake
     nsfw: bool
-    last_message_id: Optional[Snowflake]
-    rate_limit_per_user: int
     message_count: int
     member_count: int
     thread_metadata: ThreadMetadata

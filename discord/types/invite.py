@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, Union
+import sys
+from typing import Literal, Union
 
 from .appinfo import PartialAppInfo
 from .channel import PartialChannel
@@ -34,16 +35,12 @@ from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
 from .user import PartialUser
 
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
+
 InviteTargetType = Literal[1, 2]
-
-
-class _InviteOptional(TypedDict, total=False):
-    guild: InviteGuild
-    inviter: PartialUser
-    scheduled_event: ScheduledEvent
-    target_user: PartialUser
-    target_type: InviteTargetType
-    target_application: PartialAppInfo
 
 
 class _InviteMetadata(TypedDict, total=False):
@@ -64,23 +61,25 @@ class IncompleteInvite(_InviteMetadata):
     channel: PartialChannel
 
 
-class Invite(IncompleteInvite, _InviteOptional):
-    pass
+class Invite(IncompleteInvite):
+    guild: NotRequired[InviteGuild]
+    inviter: NotRequired[PartialUser]
+    scheduled_event: NotRequired[ScheduledEvent]
+    target_user: NotRequired[PartialUser]
+    target_type: NotRequired[InviteTargetType]
+    target_application: NotRequired[PartialAppInfo]
 
 
 class InviteWithCounts(Invite, _GuildPreviewUnique):
     pass
 
 
-class _GatewayInviteCreateOptional(TypedDict, total=False):
-    guild_id: Snowflake
-    inviter: PartialUser
-    target_type: InviteTargetType
-    target_user: PartialUser
-    target_application: PartialAppInfo
-
-
-class GatewayInviteCreate(_GatewayInviteCreateOptional):
+class GatewayInviteCreate(TypedDict):
+    guild_id: NotRequired[Snowflake]
+    inviter: NotRequired[PartialUser]
+    target_type: NotRequired[InviteTargetType]
+    target_user: NotRequired[PartialUser]
+    target_application: NotRequired[PartialAppInfo]
     channel_id: Snowflake
     code: str
     created_at: str
@@ -90,11 +89,8 @@ class GatewayInviteCreate(_GatewayInviteCreateOptional):
     uses: bool
 
 
-class _GatewayInviteDeleteOptional(TypedDict, total=False):
-    guild_id: Snowflake
-
-
-class GatewayInviteDelete(_GatewayInviteDeleteOptional):
+class GatewayInviteDelete(TypedDict):
+    guild_id: NotRequired[Snowflake]
     channel_id: Snowflake
     code: str
 

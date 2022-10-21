@@ -22,13 +22,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from typing import List, TypedDict
+import sys
+from typing import List
 
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -45,47 +50,36 @@ class BulkMessageDeleteEvent(_MessageEventOptional):
     channel_id: Snowflake
 
 
-class _ReactionActionEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-    member: Member
-
-
 class MessageUpdateEvent(_MessageEventOptional):
     id: Snowflake
     channel_id: Snowflake
 
 
-class ReactionActionEvent(_ReactionActionEventOptional):
+class _ReactionEventOptional(TypedDict, total=False):
+    guild_id: Snowflake
+
+
+class ReactionActionEvent(_ReactionEventOptional):
+    member: NotRequired[Member]
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
     emoji: PartialEmoji
 
 
-class _ReactionClearEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-
-
-class ReactionClearEvent(_ReactionClearEventOptional):
+class ReactionClearEvent(_ReactionEventOptional):
     channel_id: Snowflake
     message_id: Snowflake
 
 
-class _ReactionClearEmojiEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-
-
-class ReactionClearEmojiEvent(_ReactionClearEmojiEventOptional):
+class ReactionClearEmojiEvent(_ReactionEventOptional):
     channel_id: int
     message_id: int
     emoji: PartialEmoji
 
 
-class _IntegrationDeleteEventOptional(TypedDict, total=False):
-    application_id: Snowflake
-
-
-class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
+class IntegrationDeleteEvent(TypedDict):
+    application_id: NotRequired[Snowflake]
     id: Snowflake
     guild_id: Snowflake
 
@@ -97,12 +91,9 @@ class ThreadDeleteEvent(TypedDict, total=False):
     parent_id: Snowflake
 
 
-class _TypingEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-    member: Member
-
-
-class TypingEvent(_TypingEventOptional):
+class TypingEvent(TypedDict):
+    guild_id: NotRequired[Snowflake]
+    member: NotRequired[Member]
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int
@@ -114,15 +105,12 @@ class ScheduledEventSubscription(TypedDict, total=False):
     guild_id: Snowflake
 
 
-class _AutoModActionExecutionEventOptional(TypedDict, total=False):
-    channel_id: Snowflake
-    message_id: Snowflake
-    alert_system_message_id: Snowflake
-    matched_keyword: str
-    matched_content: str
-
-
-class AutoModActionExecutionEvent(_AutoModActionExecutionEventOptional):
+class AutoModActionExecutionEvent(TypedDict):
+    channel_id: NotRequired[Snowflake]
+    message_id: NotRequired[Snowflake]
+    alert_system_message_id: NotRequired[Snowflake]
+    matched_keyword: NotRequired[str]
+    matched_content: NotRequired[str]
     guild_id: Snowflake
     action: AutoModAction
     rule_id: Snowflake

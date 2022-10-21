@@ -25,16 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+import sys
 
 from .snowflake import Snowflake
 
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
-class _RoleOptional(TypedDict, total=False):
-    tags: RoleTags
 
-
-class Role(_RoleOptional):
+class Role(TypedDict):
+    tags: NotRequired[RoleTags]
     id: Snowflake
     name: str
     color: int

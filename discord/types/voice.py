@@ -22,23 +22,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from typing import List, Literal, Optional, TypedDict
+import sys
+from typing import List, Literal, Optional
 
 from .member import MemberWithUser
 from .snowflake import Snowflake
+
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
 SupportedModes = Literal[
     "xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"
 ]
 
 
-class _PartialVoiceStateOptional(TypedDict, total=False):
-    member: MemberWithUser
-    self_stream: bool
-
-
-class _VoiceState(_PartialVoiceStateOptional):
+class _VoiceState(TypedDict):
+    member: NotRequired[MemberWithUser]
+    self_stream: NotRequired[bool]
     user_id: Snowflake
     session_id: str
     deaf: bool
