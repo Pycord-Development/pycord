@@ -25,17 +25,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, Union
+import sys
+from typing import Literal, Union
 
 from .snowflake import Snowflake
 from .user import User
 
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
-class _IntegrationApplicationOptional(TypedDict, total=False):
-    bot: User
 
-
-class IntegrationApplication(_IntegrationApplicationOptional):
+class IntegrationApplication(TypedDict):
+    bot: NotRequired[User]
     id: Snowflake
     name: str
     icon: str | None

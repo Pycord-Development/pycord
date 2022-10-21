@@ -22,24 +22,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import sys
+from typing import List, Literal
 
-from typing import List, Literal, TypedDict
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
 
 
-class _EmbedFooterOptional(TypedDict, total=False):
-    icon_url: str
-    proxy_icon_url: str
-
-
-class EmbedFooter(_EmbedFooterOptional):
+class EmbedFooter(TypedDict):
+    icon_url: NotRequired[str]
+    proxy_icon_url: NotRequired[str]
     text: str
 
 
-class _EmbedFieldOptional(TypedDict, total=False):
-    inline: bool
-
-
-class EmbedField(_EmbedFieldOptional):
+class EmbedField(TypedDict):
+    inline: NotRequired[bool]
     name: str
     value: str
 

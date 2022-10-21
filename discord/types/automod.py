@@ -22,9 +22,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+import sys
+from typing import Literal
 
 from .snowflake import Snowflake
+
+if sys.version_info >= (3, 11):
+    from typing import NotRequired, TypedDict
+else:
+    from typing_extensions import NotRequired, TypedDict
+
 
 AutoModTriggerType = Literal[1, 2, 3, 4]
 
@@ -64,13 +71,10 @@ class AutoModRule(TypedDict):
     exempt_channels: list[Snowflake]
 
 
-class _CreateAutoModRuleOptional(TypedDict, total=False):
-    enabled: bool
-    exempt_roles: list[Snowflake]
-    exempt_channels: list[Snowflake]
-
-
-class CreateAutoModRule(_CreateAutoModRuleOptional):
+class CreateAutoModRule(TypedDict):
+    enabled: NotRequired[bool]
+    exempt_roles: NotRequired[list[Snowflake]]
+    exempt_channels: NotRequired[list[Snowflake]]
     name: str
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
