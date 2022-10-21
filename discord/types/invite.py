@@ -25,20 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import sys
 from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .appinfo import PartialAppInfo
 from .channel import PartialChannel
 from .guild import InviteGuild, _GuildPreviewUnique
 from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
 from .user import PartialUser
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
 
 InviteTargetType = Literal[1, 2]
 

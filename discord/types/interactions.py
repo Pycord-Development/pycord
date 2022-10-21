@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import sys
 from typing import TYPE_CHECKING, Literal, Union
 
 from ..permissions import Permissions
@@ -41,12 +40,7 @@ from .user import User
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
 
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
-
+from .._typed_dict import NotRequired, TypedDict
 
 ApplicationCommandType = Literal[1, 2, 3]
 

@@ -22,16 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from typing import List, Literal, Optional
+from __future__ import annotations
 
+from typing import Literal
+
+from .._typed_dict import NotRequired, TypedDict
 from .member import MemberWithUser
 from .snowflake import Snowflake
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
 
 SupportedModes = Literal[
     "xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"
@@ -56,7 +53,7 @@ class GuildVoiceState(_VoiceState):
 
 
 class VoiceState(_VoiceState, total=False):
-    channel_id: Optional[Snowflake]
+    channel_id: Snowflake | None
     guild_id: Snowflake
 
 
@@ -72,7 +69,7 @@ class VoiceRegion(TypedDict):
 class VoiceServerUpdate(TypedDict):
     token: str
     guild_id: Snowflake
-    endpoint: Optional[str]
+    endpoint: str | None
 
 
 class VoiceIdentify(TypedDict):
@@ -86,5 +83,5 @@ class VoiceReady(TypedDict):
     ssrc: int
     ip: str
     port: int
-    modes: List[SupportedModes]
+    modes: list[SupportedModes]
     heartbeat_interval: int
