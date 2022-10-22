@@ -25,16 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import sys
 from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .user import User
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
 
 
 class IntegrationApplication(TypedDict):

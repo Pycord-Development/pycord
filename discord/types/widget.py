@@ -22,17 +22,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from typing import List, Optional
+from __future__ import annotations
 
+from .._typed_dict import NotRequired, TypedDict
 from .activity import Activity
 from .snowflake import Snowflake
 from .user import User
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
 
 
 class WidgetChannel(TypedDict):
@@ -54,8 +49,8 @@ class WidgetMember(User, total=False):
 
 
 class Widget(TypedDict):
-    channels: NotRequired[List[WidgetChannel]]
-    members: NotRequired[List[WidgetMember]]
+    channels: NotRequired[list[WidgetChannel]]
+    members: NotRequired[list[WidgetMember]]
     presence_count: NotRequired[int]
     id: Snowflake
     name: str
@@ -64,4 +59,4 @@ class Widget(TypedDict):
 
 class WidgetSettings(TypedDict):
     enabled: bool
-    channel_id: Optional[Snowflake]
+    channel_id: Snowflake | None

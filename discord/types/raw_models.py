@@ -22,18 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from typing import List
+from __future__ import annotations
 
+from .._typed_dict import NotRequired, TypedDict
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -46,7 +41,7 @@ class MessageDeleteEvent(_MessageEventOptional):
 
 
 class BulkMessageDeleteEvent(_MessageEventOptional):
-    ids: List[Snowflake]
+    ids: list[Snowflake]
     channel_id: Snowflake
 
 

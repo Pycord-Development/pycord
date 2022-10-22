@@ -22,18 +22,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from typing import List, Literal, Optional, Union
+from __future__ import annotations
 
+from typing import Literal, Union
+
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import PartialUser
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
-
 
 OverwriteType = Literal[0, 1]
 
@@ -56,9 +52,9 @@ class _BaseChannel(TypedDict):
 class _BaseGuildChannel(_BaseChannel):
     guild_id: Snowflake
     position: int
-    permission_overwrites: List[PermissionOverwrite]
+    permission_overwrites: list[PermissionOverwrite]
     nsfw: bool
-    parent_id: Optional[Snowflake]
+    parent_id: Snowflake | None
 
 
 class PartialChannel(_BaseChannel):
@@ -67,7 +63,7 @@ class PartialChannel(_BaseChannel):
 
 class _TextChannelOptional(TypedDict, total=False):
     topic: str
-    last_message_id: Optional[Snowflake]
+    last_message_id: Snowflake | None
     last_pin_timestamp: str
     rate_limit_per_user: int
     default_auto_archive_duration: ThreadArchiveDuration
@@ -89,7 +85,7 @@ VideoQualityMode = Literal[1, 2]
 
 
 class VoiceChannel(_BaseGuildChannel):
-    rtc_region: NotRequired[Optional[str]]
+    rtc_region: NotRequired[str | None]
     video_quality_mode: NotRequired[VideoQualityMode]
     type: Literal[2]
     bitrate: int
@@ -101,7 +97,7 @@ class CategoryChannel(_BaseGuildChannel):
 
 
 class StageChannel(_BaseGuildChannel):
-    rtc_region: NotRequired[Optional[str]]
+    rtc_region: NotRequired[str | None]
     topic: NotRequired[str]
     type: Literal[13]
     bitrate: int
@@ -112,7 +108,7 @@ class ThreadChannel(_BaseChannel):
     member: NotRequired[ThreadMember]
     owner_id: NotRequired[Snowflake]
     rate_limit_per_user: NotRequired[int]
-    last_message_id: NotRequired[Optional[Snowflake]]
+    last_message_id: NotRequired[Snowflake | None]
     last_pin_timestamp: NotRequired[str]
     type: Literal[10, 11, 12]
     guild_id: Snowflake
@@ -137,13 +133,13 @@ GuildChannel = Union[
 class DMChannel(TypedDict):
     id: Snowflake
     type: Literal[1]
-    last_message_id: Optional[Snowflake]
-    recipients: List[PartialUser]
+    last_message_id: Snowflake | None
+    recipients: list[PartialUser]
 
 
 class GroupDMChannel(_BaseChannel):
     type: Literal[3]
-    icon: Optional[str]
+    icon: str | None
     owner_id: Snowflake
 
 

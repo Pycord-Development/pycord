@@ -24,9 +24,9 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-import sys
 from typing import Literal
 
+from .._typed_dict import NotRequired, Required, TypedDict
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel
 from .emoji import Emoji
@@ -38,11 +38,6 @@ from .threads import Thread
 from .user import User
 from .voice import GuildVoiceState
 from .welcome_screen import WelcomeScreen
-
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, Required, TypedDict
-else:
-    from typing_extensions import NotRequired, Required, TypedDict
 
 
 class Ban(TypedDict):

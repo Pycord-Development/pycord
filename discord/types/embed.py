@@ -22,13 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from typing import List, Literal
+from __future__ import annotations
 
-if sys.version_info >= (3, 11):
-    from typing import NotRequired, TypedDict
-else:
-    from typing_extensions import NotRequired, TypedDict
+from typing import Literal
+
+from .._typed_dict import NotRequired, TypedDict
 
 
 class EmbedFooter(TypedDict):
@@ -94,4 +92,4 @@ class Embed(TypedDict, total=False):
     video: EmbedVideo
     provider: EmbedProvider
     author: EmbedAuthor
-    fields: List[EmbedField]
+    fields: list[EmbedField]
