@@ -1545,7 +1545,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags,
+                    flags=flags.value,
                 )
             finally:
                 file.close()
@@ -1571,7 +1571,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags,
+                    flags=flags.value,
                 )
             finally:
                 for f in files:
@@ -1588,7 +1588,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
-                flags=flags,
+                flags=flags.value,
             )
 
         ret = state.create_message(channel=channel, data=data)
