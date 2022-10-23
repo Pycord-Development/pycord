@@ -1489,7 +1489,11 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = MessageFlags.suppress_embeds if suppress else MessageFlags.DEFAULT_VALUE
+        flags = (
+            MessageFlags.suppress_embeds.flag
+            if suppress
+            else MessageFlags.DEFAULT_VALUE
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1545,7 +1549,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags.value,
+                    flags=flags,
                 )
             finally:
                 file.close()
@@ -1571,7 +1575,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags.value,
+                    flags=flags,
                 )
             finally:
                 for f in files:
@@ -1588,7 +1592,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
-                flags=flags.value,
+                flags=flags,
             )
 
         ret = state.create_message(channel=channel, data=data)
