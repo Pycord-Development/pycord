@@ -1489,7 +1489,11 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = MessageFlags.suppress_embeds.flag if suppress else MessageFlags.DEFAULT_VALUE
+        flags = (
+            MessageFlags.suppress_embeds.flag
+            if suppress
+            else MessageFlags.DEFAULT_VALUE
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
