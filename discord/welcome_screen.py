@@ -127,7 +127,10 @@ class WelcomeScreen:
         self._update(data)
 
     def __repr__(self):
-        return f"<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}"
+        return (
+            "<WelcomeScreen"
+            f" description={self.description} welcome_channels={self.welcome_channels}"
+        )
 
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get("description")

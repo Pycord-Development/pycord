@@ -134,7 +134,8 @@ class Modal:
         for item in value:
             if not isinstance(item, InputText):
                 raise TypeError(
-                    f"all Modal children must be InputText, not {item.__class__.__name__}"
+                    "all Modal children must be InputText, not"
+                    f" {item.__class__.__name__}"
                 )
         self._weights = _ModalWeights(self._children)
         self._children = value

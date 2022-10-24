@@ -449,7 +449,8 @@ class GuildChannel:
             for target, perm in overwrites.items():
                 if not isinstance(perm, PermissionOverwrite):
                     raise InvalidArgument(
-                        f"Expected PermissionOverwrite received {perm.__class__.__name__}"
+                        "Expected PermissionOverwrite received"
+                        f" {perm.__class__.__name__}"
                     )
 
                 allow, deny = perm.pair()
@@ -1516,7 +1517,8 @@ class Messageable:
                 reference = reference.to_message_reference_dict()
             except AttributeError:
                 raise InvalidArgument(
-                    "reference parameter must be Message, MessageReference, or PartialMessage"
+                    "reference parameter must be Message, MessageReference, or"
+                    " PartialMessage"
                 ) from None
 
         if view:
