@@ -1178,7 +1178,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         try:
             if not await ctx.bot.can_run(ctx):
                 raise CheckFailure(
-                    f"The global check functions for command {self.qualified_name} failed."
+                    "The global check functions for command"
+                    f" {self.qualified_name} failed."
                 )
 
             cog = self.cog
