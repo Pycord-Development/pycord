@@ -171,8 +171,7 @@ class AppInfo:
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any.
-        """
+        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
@@ -254,8 +253,7 @@ class PartialAppInfo:
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any.
-        """
+        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")

@@ -107,14 +107,12 @@ async def color_searcher(ctx: discord.AutocompleteContext):
 
 
 async def get_colors(ctx: discord.AutocompleteContext):
-    """Returns a list of colors that begin with the characters entered so far.
-    """
+    """Returns a list of colors that begin with the characters entered so far."""
     return [color for color in COLORS if color.startswith(ctx.value.lower())]
 
 
 async def get_animals(ctx: discord.AutocompleteContext):
-    """Returns a list of animals that are (mostly) the color selected for the "color" option.
-    """
+    """Returns a list of animals that are (mostly) the color selected for the "color" option."""
     picked_color = ctx.options["color"]
     if picked_color == "red":
         return ["cardinal", "ladybug"]

@@ -210,8 +210,7 @@ def cached_slot_property(
 
 
 class SequenceProxy(Generic[T_co], collections.abc.Sequence):
-    """Read-only proxy of a Sequence.
-    """
+    """Read-only proxy of a Sequence."""
 
     def __init__(self, proxied: Sequence[T_co]):
         self.__proxied = proxied
@@ -770,8 +769,7 @@ def utcnow() -> datetime.datetime:
 
 
 def valid_icon_size(size: int) -> bool:
-    """Icons must be power of 2 within [16, 4096].
-    """
+    """Icons must be power of 2 within [16, 4096]."""
     return not size & (size - 1) and 4096 >= size >= 16
 
 
@@ -814,8 +812,7 @@ _IS_ASCII = re.compile(r"^[\x00-\x7f]+$")
 
 
 def _string_width(string: str, *, _IS_ASCII=_IS_ASCII) -> int:
-    """Returns string's width.
-    """
+    """Returns string's width."""
     match = _IS_ASCII.match(string)
     if match:
         return match.endpos

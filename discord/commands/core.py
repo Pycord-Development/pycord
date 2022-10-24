@@ -450,8 +450,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered.
-        """
+        """:class:`bool`: Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
     def before_invoke(self, coro):

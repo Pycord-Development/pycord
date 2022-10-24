@@ -72,8 +72,7 @@ __all__ = (
 
 
 class BridgeSlashCommand(SlashCommand):
-    """A subclass of :class:`.SlashCommand` that is used for bridge commands.
-    """
+    """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         self.brief = kwargs.pop("brief", None)
@@ -81,8 +80,7 @@ class BridgeSlashCommand(SlashCommand):
 
 
 class BridgeExtCommand(Command):
-    """A subclass of :class:`.ext.commands.Command` that is used for bridge commands.
-    """
+    """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
@@ -96,8 +94,7 @@ class BridgeExtCommand(Command):
 
 
 class BridgeSlashGroup(SlashCommandGroup):
-    """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands.
-    """
+    """A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."""
 
     __slots__ = ("module",)
 
@@ -124,8 +121,7 @@ class BridgeSlashGroup(SlashCommandGroup):
 
 
 class BridgeExtGroup(BridgeExtCommand, Group):
-    """A subclass of :class:`.ext.commands.Group` that is used for bridge commands.
-    """
+    """A subclass of :class:`.ext.commands.Group` that is used for bridge commands."""
 
 
 class BridgeCommand:
@@ -471,8 +467,7 @@ def has_permissions(**perms: dict[str, bool]):
 
 
 class MentionableConverter(Converter):
-    """A converter that can convert a mention to a user or a role.
-    """
+    """A converter that can convert a mention to a user or a role."""
 
     async def convert(self, ctx, argument):
         try:

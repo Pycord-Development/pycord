@@ -462,25 +462,21 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def mobile_status(self) -> Status:
-        """:class:`Status`: The member's status on a mobile device, if applicable.
-        """
+        """:class:`Status`: The member's status on a mobile device, if applicable."""
         return try_enum(Status, self._client_status.get("mobile", "offline"))
 
     @property
     def desktop_status(self) -> Status:
-        """:class:`Status`: The member's status on the desktop client, if applicable.
-        """
+        """:class:`Status`: The member's status on the desktop client, if applicable."""
         return try_enum(Status, self._client_status.get("desktop", "offline"))
 
     @property
     def web_status(self) -> Status:
-        """:class:`Status`: The member's status on the web client, if applicable.
-        """
+        """:class:`Status`: The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))
 
     def is_on_mobile(self) -> bool:
-        """:class:`bool`: A helper function that determines if a member is active on a mobile device.
-        """
+        """:class:`bool`: A helper function that determines if a member is active on a mobile device."""
         return "mobile" in self._client_status
 
     @property
@@ -532,8 +528,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the member.
-        """
+        """:class:`str`: Returns a string that allows you to mention the member."""
         return f"<@{self._user.id}>"
 
     @property
@@ -650,8 +645,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def voice(self) -> VoiceState | None:
-        """Optional[:class:`VoiceState`]: Returns the member's current voice state.
-        """
+        """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
     @property

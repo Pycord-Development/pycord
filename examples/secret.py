@@ -20,8 +20,7 @@ bot = commands.Bot(
 # The `hidden` keyword argument hides it from the help command.
 @bot.group(hidden=True)
 async def secret(ctx: commands.Context):
-    """What is this "secret" you speak of?
-    """
+    """What is this "secret" you speak of?"""
     if ctx.invoked_subcommand is None:
         await ctx.send("Shh!", delete_after=5)
 

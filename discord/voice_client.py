@@ -274,14 +274,12 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild we're connected to, if applicable.
-        """
+        """Optional[:class:`Guild`]: The guild we're connected to, if applicable."""
         return getattr(self.channel, "guild", None)
 
     @property
     def user(self) -> ClientUser:
-        """:class:`ClientUser`: The user connected to voice (i.e. ourselves).
-        """
+        """:class:`ClientUser`: The user connected to voice (i.e. ourselves)."""
         return self._state.user
 
     def checked_add(self, attr, value, limit):
@@ -545,8 +543,7 @@ class VoiceClient(VoiceProtocol):
         await self.channel.guild.change_voice_state(channel=channel)
 
     def is_connected(self) -> bool:
-        """:class:`bool`: Indicates if the voice client is connected to voice.
-        """
+        """:class:`bool`: Indicates if the voice client is connected to voice."""
         return self._connected.is_set()
 
     # audio related
@@ -842,31 +839,26 @@ class VoiceClient(VoiceProtocol):
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])
 
     def is_playing(self) -> bool:
-        """:class:`bool`: Indicates if we're currently playing audio.
-        """
+        """:class:`bool`: Indicates if we're currently playing audio."""
         return self._player is not None and self._player.is_playing()
 
     def is_paused(self) -> bool:
-        """:class:`bool`: Indicates if we're playing audio, but if we're paused.
-        """
+        """:class:`bool`: Indicates if we're playing audio, but if we're paused."""
         return self._player is not None and self._player.is_paused()
 
     def stop(self) -> None:
-        """Stops playing audio.
-        """
+        """Stops playing audio."""
         if self._player:
             self._player.stop()
             self._player = None
 
     def pause(self) -> None:
-        """Pauses the audio playing.
-        """
+        """Pauses the audio playing."""
         if self._player:
             self._player.pause()
 
     def resume(self) -> None:
-        """Resumes the audio playing.
-        """
+        """Resumes the audio playing."""
         if self._player:
             self._player.resume()
 

@@ -78,16 +78,14 @@ class Team:
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the team's icon asset, if any.
-        """
+        """Optional[:class:`.Asset`]: Retrieves the team's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="team")
 
     @property
     def owner(self) -> TeamMember | None:
-        """Optional[:class:`TeamMember`]: The team's owner.
-        """
+        """Optional[:class:`TeamMember`]: The team's owner."""
         return utils.get(self.members, id=self.owner_id)
 
 
