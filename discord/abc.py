@@ -229,12 +229,14 @@ class User(Snowflake, Protocol):
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the user's display name."""
+        """:class:`str`: Returns the user's display name.
+        """
         raise NotImplementedError
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the given user."""
+        """:class:`str`: Returns a string that allows you to mention the given user.
+        """
         raise NotImplementedError
 
 
@@ -523,7 +525,8 @@ class GuildChannel:
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the channel."""
+        """:class:`str`: The string that allows you to mention the channel.
+        """
         return f"<#{self.id}>"
 
     @property
@@ -536,7 +539,8 @@ class GuildChannel:
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """:class:`datetime.datetime`: Returns the channel's creation time in UTC.
+        """
         return utils.snowflake_time(self.id)
 
     def overwrites_for(self, obj: Role | User) -> PermissionOverwrite:

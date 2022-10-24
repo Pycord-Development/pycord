@@ -82,11 +82,13 @@ class ClientException(DiscordException):
 
 
 class NoMoreItems(DiscordException):
-    """Exception that is raised when an async iteration operation has no more items."""
+    """Exception that is raised when an async iteration operation has no more items.
+    """
 
 
 class GatewayNotFound(DiscordException):
-    """An exception that is raised when the gateway for Discord could not be found"""
+    """An exception that is raised when the gateway for Discord could not be found
+    """
 
     def __init__(self):
         message = "The gateway to connect to discord was not found."
@@ -94,7 +96,8 @@ class GatewayNotFound(DiscordException):
 
 
 class ValidationError(DiscordException):
-    """An Exception that is raised when there is a Validation Error."""
+    """An Exception that is raised when there is a Validation Error.
+    """
 
 
 def _flatten_error_dict(d: dict[str, Any], key: str = "") -> dict[str, str]:
