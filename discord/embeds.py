@@ -247,7 +247,6 @@ class Embed:
         timestamp: datetime.datetime = None,
         fields: list[EmbedField] | None = None,
     ):
-
         self.colour = colour if colour is not EmptyEmbed else color
         self.title = title
         self.type = type
@@ -402,7 +401,8 @@ class Embed:
             self._colour = Colour(value=value)
         else:
             raise TypeError(
-                f"Expected discord.Colour, int, or Embed.Empty but received {value.__class__.__name__} instead."
+                "Expected discord.Colour, int, or Embed.Empty but received"
+                f" {value.__class__.__name__} instead."
             )
 
     color = colour
@@ -421,7 +421,8 @@ class Embed:
             self._timestamp = value
         else:
             raise TypeError(
-                f"Expected datetime.datetime or Embed.Empty received {value.__class__.__name__} instead"
+                "Expected datetime.datetime or Embed.Empty received"
+                f" {value.__class__.__name__} instead"
             )
 
     @property

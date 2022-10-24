@@ -856,7 +856,10 @@ class ThreadMember(Hashable):
         self._from_data(data)
 
     def __repr__(self) -> str:
-        return f"<ThreadMember id={self.id} thread_id={self.thread_id} joined_at={self.joined_at!r}>"
+        return (
+            "<ThreadMember"
+            f" id={self.id} thread_id={self.thread_id} joined_at={self.joined_at!r}>"
+        )
 
     def _from_data(self, data: ThreadMemberPayload):
         try:
