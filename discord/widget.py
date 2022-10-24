@@ -89,7 +89,10 @@ class WidgetChannel:
         return self.name
 
     def __repr__(self) -> str:
-        return f"<WidgetChannel id={self.id} name={self.name!r} position={self.position!r}>"
+        return (
+            "<WidgetChannel"
+            f" id={self.id} name={self.name!r} position={self.position!r}>"
+        )
 
     @property
     def mention(self) -> str:

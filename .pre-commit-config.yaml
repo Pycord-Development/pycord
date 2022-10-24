@@ -27,11 +27,12 @@ repos:
     rev: 22.10.0
     hooks:
       - id: black
+        # See https://github.com/psf/black/issues/2188#issuecomment-1289317647 for why we can't use the --preview flag.
         args: [--safe, --quiet]
-  #  - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
-  #    rev: 1.0.1
-  #    hooks:
-  #      - id: black-disable-checker
+  - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
+    rev: 1.0.1
+    hooks:
+      - id: black-disable-checker
   #  - repo: https://github.com/PyCQA/flake8
   #    rev: 4.0.1
   #    hooks:

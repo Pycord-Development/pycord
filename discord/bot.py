@@ -505,7 +505,8 @@ class ApplicationCommandMixin(ABC):
             if kwargs.pop("_log", True):
                 if method == "bulk":
                     _log.debug(
-                        f"Bulk updating commands {[c['name'] for c in args[0]]} for guild {guild_id}"
+                        f"Bulk updating commands {[c['name'] for c in args[0]]} for"
+                        f" guild {guild_id}"
                     )
                 # TODO: Find where "cmd" is defined
                 elif method == "upsert":
@@ -636,7 +637,8 @@ class ApplicationCommandMixin(ABC):
             )
             if not cmd:
                 raise ValueError(
-                    f"Registered command {i['name']}, type {i.get('type')} not found in pending commands"
+                    f"Registered command {i['name']}, type {i.get('type')} not found in"
+                    " pending commands"
                 )
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
@@ -831,7 +833,6 @@ class ApplicationCommandMixin(ABC):
                     if guild_id is None:
                         await self.sync_commands()
                     else:
-
                         await self.sync_commands(check_guilds=[guild_id])
                 return self._bot.dispatch("unknown_application_command", interaction)
 

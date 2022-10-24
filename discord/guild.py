@@ -1885,7 +1885,8 @@ class Guild(Hashable):
                         features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
-                        "community field requires both rules_channel and public_updates_channel fields to be provided"
+                        "community field requires both rules_channel and"
+                        " public_updates_channel fields to be provided"
                     )
             else:
                 if "COMMUNITY" in features:
@@ -2265,7 +2266,8 @@ class Guild(Hashable):
 
         if not isinstance(days, int):
             raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
+                "Expected int for ``days``, received"
+                f" {days.__class__.__name__} instead."
             )
 
         role_ids = [str(role.id) for role in roles] if roles else []
@@ -2361,7 +2363,8 @@ class Guild(Hashable):
 
         if not isinstance(days, int):
             raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
+                "Expected int for ``days``, received"
+                f" {days.__class__.__name__} instead."
             )
 
         role_ids = [str(role.id) for role in roles] if roles else []
@@ -2986,7 +2989,6 @@ class Guild(Hashable):
 
         role_positions: list[dict[str, Any]] = []
         for role, position in positions.items():
-
             payload = {"id": role.id, "position": position}
 
             role_positions.append(payload)

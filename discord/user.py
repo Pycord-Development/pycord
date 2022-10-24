@@ -91,7 +91,8 @@ class BaseUser(_UserTag):
 
     def __repr__(self) -> str:
         return (
-            f"<BaseUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            "<BaseUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
             f" bot={self.bot} system={self.system}>"
         )
 
@@ -347,7 +348,8 @@ class ClientUser(BaseUser):
 
     def __repr__(self) -> str:
         return (
-            f"<ClientUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            "<ClientUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
             f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
         )
 
@@ -451,7 +453,10 @@ class User(BaseUser, discord.abc.Messageable):
         self._stored: bool = False
 
     def __repr__(self) -> str:
-        return f"<User id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
+        return (
+            "<User"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
+        )
 
     def __del__(self) -> None:
         try:

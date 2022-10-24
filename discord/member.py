@@ -323,7 +323,8 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def __repr__(self) -> str:
         return (
-            f"<Member id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
+            "<Member"
+            f" id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
             f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
         )
 

@@ -1,4 +1,4 @@
 -r requirements.txt
-pylint~=2.15.4
+pylint~=2.15.5
 mypy~=0.982
 pre-commit==2.20.0
