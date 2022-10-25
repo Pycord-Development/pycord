@@ -63,7 +63,7 @@ class Mocked:
                 if inspect.isawaitable(inner):
                     inner = await inner
                 if approach == "merge":
-                    inner = get_mock_response(self.name) | inner
+                    inner = dict(**get_mock_response(self.name), **inner)
                 return inner
 
             self.patcher = patch.object(HTTPClient, self.name, wrapped)
@@ -73,7 +73,7 @@ class Mocked:
                 return_value = {}
                 approach = "merge"
             if approach == "merge":
-                return_value = get_mock_response(self.name) | return_value
+                return_value = dict(**get_mock_response(self.name), **return_value)
             self.patcher = patch.object(HTTPClient, self.name, autospec=True)
             self.return_value = return_value
 
