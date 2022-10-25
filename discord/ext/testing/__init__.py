@@ -21,19 +21,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import pytest
 
-from discord.bot import Bot
-from discord.ext.testing import Test
-
-
-@pytest.fixture
-def client():
-    return Test(Bot())
-
-
-async def test_get_guild(client):
-    with client.patch("get_guild"):
-        guild = await client.fetch_guild(881207955029110855)
-        assert guild.name == "Pycord"
-        assert guild.id == 881207955029110855
+from .core import *
