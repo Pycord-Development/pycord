@@ -74,22 +74,22 @@ class TextChannel(_BaseGuildChannel, _TextChannelOptional):
 
 
 class DefaultReaction(TypedDict):
-    emoji_id: Optional[Snowflake]
-    emoji_name: Optional[str]
+    emoji_id: NotRequired(Snowflake | None)
+    emoji_name: NotRequired(str | None)
 
 
 class ForumTag(TypedDict):
     id: Snowflake
     name: str
     moderated: bool
-    emoji_id: Optional[Snowflake]
-    emoji_name: Optional[str]
+    emoji_id: NotRequired[Snowflake | None]
+    emoji_name: NotRequired[str | None]
 
 
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[15]
-    available_tags: List[ForumTag]
-    default_reaction_emoji: Optional[DefaultReaction]
+    available_tags: NotRequired(list[ForumTag] | None)
+    default_reaction_emoji: NotRequired(DefaultReaction | None)
     flags: int
 
 
