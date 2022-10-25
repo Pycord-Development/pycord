@@ -25,8 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, Union
+from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
 from .guild import (
@@ -268,13 +269,10 @@ class AuditEntryInfo(TypedDict):
     role_name: str
 
 
-class _AuditLogEntryOptional(TypedDict, total=False):
-    changes: list[AuditLogChange]
-    options: AuditEntryInfo
-    reason: str
-
-
-class AuditLogEntry(_AuditLogEntryOptional):
+class AuditLogEntry(TypedDict):
+    changes: NotRequired[list[AuditLogChange]]
+    options: NotRequired[AuditEntryInfo]
+    reason: NotRequired[str]
     target_id: str | None
     user_id: Snowflake | None
     id: Snowflake

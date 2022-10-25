@@ -480,14 +480,16 @@ class VoiceClient(VoiceProtocol):
                         break
                     if exc.code == 4014:
                         _log.info(
-                            "Disconnected from voice by force... potentially reconnecting."
+                            "Disconnected from voice by force... potentially"
+                            " reconnecting."
                         )
                         successful = await self.potential_reconnect()
                         if successful:
                             continue
 
                         _log.info(
-                            "Reconnect was unsuccessful, disconnecting from voice normally..."
+                            "Reconnect was unsuccessful, disconnecting from voice"
+                            " normally..."
                         )
                         await self.disconnect()
                         break

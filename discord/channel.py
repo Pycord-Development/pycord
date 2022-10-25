@@ -2173,7 +2173,10 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self._update(guild, data)
 
     def __repr__(self) -> str:
-        return f"<CategoryChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+        return (
+            "<CategoryChannel"
+            f" id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+        )
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
         # This data will always exist

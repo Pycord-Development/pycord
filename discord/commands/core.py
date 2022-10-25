@@ -374,7 +374,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         await injected(ctx)
 
     async def can_run(self, ctx: ApplicationContext) -> bool:
-
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(
                 f"The global check functions for command {self.name} failed."
@@ -1822,7 +1821,8 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
     # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for"
+            " list of supported locales."
         )
     error = None
     if not isinstance(name, str):
@@ -1831,8 +1831,10 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
         )
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
-            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
-            f"For more information, see {docs}/interactions/application-commands#application-command-object-"
+            r"Command names and options must follow the regex"
+            r" \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
+            "For more information, see"
+            f" {docs}/interactions/application-commands#application-command-object-"
             f'application-command-naming. Received "{name}"'
         )
     elif (
@@ -1851,16 +1853,19 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
 def validate_chat_input_description(description: Any, locale: str | None = None):
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for"
+            " list of supported locales."
         )
     error = None
     if not isinstance(description, str):
         error = TypeError(
-            f'Command and option description must be of type str. Received "{description}"'
+            "Command and option description must be of type str. Received"
+            f' "{description}"'
         )
     elif not 1 <= len(description) <= 100:
         error = ValidationError(
-            f'Command and option description must be 1-100 characters long. Received "{description}"'
+            "Command and option description must be 1-100 characters long. Received"
+            f' "{description}"'
         )
 
     if error:

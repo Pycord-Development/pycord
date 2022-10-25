@@ -182,7 +182,10 @@ class HTTPClient:
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
 
-        user_agent = "DiscordBot (https://github.com/Pycord-Development/pycord {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        user_agent = (
+            "DiscordBot (https://github.com/Pycord-Development/pycord {0})"
+            " Python/{1[0]}.{1[1]} aiohttp/{2}"
+        )
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
@@ -299,7 +302,8 @@ class HTTPClient:
                                 response, use_clock=self.use_clock
                             )
                             _log.debug(
-                                "A rate limit bucket has been exhausted (bucket: %s, retry: %s).",
+                                "A rate limit bucket has been exhausted (bucket: %s,"
+                                " retry: %s).",
                                 bucket,
                                 delta,
                             )
@@ -317,7 +321,10 @@ class HTTPClient:
                                 # Banned by Cloudflare more than likely.
                                 raise HTTPException(response, data)
 
-                            fmt = 'We are being rate limited. Retrying in %.2f seconds. Handled under the bucket "%s"'
+                            fmt = (
+                                "We are being rate limited. Retrying in %.2f seconds."
+                                ' Handled under the bucket "%s"'
+                            )
 
                             # sleep a bit
                             retry_after: float = data["retry_after"]
@@ -327,7 +334,8 @@ class HTTPClient:
                             is_global = data.get("global", False)
                             if is_global:
                                 _log.warning(
-                                    "Global rate limit has been hit. Retrying in %.2f seconds.",
+                                    "Global rate limit has been hit. Retrying in %.2f"
+                                    " seconds.",
                                     retry_after,
                                 )
                                 self._global_over.clear()
@@ -896,7 +904,7 @@ class HTTPClient:
             params["delete_message_seconds"] = delete_message_seconds
         elif delete_message_days:
             warn_deprecated(
-                "delete_message_days" "delete_message_seconds",
+                "delete_message_daysdelete_message_seconds",
                 "2.2",
                 reference="https://github.com/discord/discord-api-docs/pull/5219",
             )
@@ -2591,7 +2599,6 @@ class HTTPClient:
         embeds: list[embed.Embed] | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
     ):
-
         payload: dict[str, Any] = {}
         if content:
             payload["content"] = content

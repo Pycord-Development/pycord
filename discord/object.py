@@ -48,7 +48,7 @@ class Object(Hashable):
     objects (if any) actually inherit from this class.
 
     There are also some cases where some WebSocket events are received
-    in :issue:`strange order <21>` and when such events happened you would
+    in :dpy-issue:`strange order <21>` and when such events happened you would
     receive this class rather than the actual data class. These cases are
     extremely rare.
 

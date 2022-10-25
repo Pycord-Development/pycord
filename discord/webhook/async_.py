@@ -181,7 +181,8 @@ class AsyncWebhookAdapter:
                         if remaining == "0" and response.status != 429:
                             delta = utils._parse_ratelimit_header(response)
                             _log.debug(
-                                "Webhook ID %s has been pre-emptively rate limited, waiting %.2f seconds",
+                                "Webhook ID %s has been pre-emptively rate limited,"
+                                " waiting %.2f seconds",
                                 webhook_id,
                                 delta,
                             )
@@ -196,7 +197,8 @@ class AsyncWebhookAdapter:
 
                             retry_after: float = data["retry_after"]  # type: ignore
                             _log.warning(
-                                "Webhook ID %s is rate limited. Retrying in %.2f seconds",
+                                "Webhook ID %s is rate limited. Retrying in %.2f"
+                                " seconds",
                                 webhook_id,
                                 retry_after,
                             )

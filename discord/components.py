@@ -406,7 +406,8 @@ class SelectOption:
 
     def __repr__(self) -> str:
         return (
-            f"<SelectOption label={self.label!r} value={self.value!r} description={self.description!r} "
+            "<SelectOption"
+            f" label={self.label!r} value={self.value!r} description={self.description!r} "
             f"emoji={self.emoji!r} default={self.default!r}>"
         )
 
@@ -430,7 +431,8 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    f"expected emoji to be str, Emoji, or PartialEmoji not {value.__class__}"
+                    "expected emoji to be str, Emoji, or PartialEmoji not"
+                    f" {value.__class__}"
                 )
 
         self._emoji = value

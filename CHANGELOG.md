@@ -4,9 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when
-possible (see our
-[Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more
-info).
+possible (see our [Version Guarantees] for more info).
 
 ## [2.2.2] - 2022-10-05
 
@@ -423,3 +421,4 @@ info).
   https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [2.0.0-beta.1]:
   https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
+[version guarantees]: https://docs.pycord.dev/en/stable/version_guarantees.html

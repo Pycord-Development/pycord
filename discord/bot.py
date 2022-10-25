@@ -179,7 +179,7 @@ class ApplicationCommandMixin(ABC):
         self,
         name: str,
         guild_ids: list[int] | None = None,
-        type: type[ApplicationCommand] = SlashCommand,
+        type: type[ApplicationCommand] = ApplicationCommand,
     ) -> ApplicationCommand | None:
         """Get a :class:`.ApplicationCommand` from the internal list
         of commands.
@@ -189,21 +189,37 @@ class ApplicationCommandMixin(ABC):
         Parameters
         ----------
         name: :class:`str`
-            The name of the command to get.
+            The qualified name of the command to get.
         guild_ids: List[:class:`int`]
             The guild ids associated to the command to get.
         type: Type[:class:`.ApplicationCommand`]
-            The type of the command to get. Defaults to :class:`.SlashCommand`.
+            The type of the command to get. Defaults to :class:`.ApplicationCommand`.
 
         Returns
         -------
         Optional[:class:`.ApplicationCommand`]
             The command that was requested. If not found, returns ``None``.
         """
-
-        for command in self._application_commands.values():
+        commands = self._application_commands.values()
+        for command in commands:
             if command.name == name and isinstance(command, type):
                 if guild_ids is not None and command.guild_ids != guild_ids:
+                    return
+                return command
+            elif (names := name.split())[0] == command.name and isinstance(
+                command, SlashCommandGroup
+            ):
+                while len(names) > 1:
+                    command = get(commands, name=names.pop(0))
+                    if not isinstance(command, SlashCommandGroup) or (
+                        guild_ids is not None and command.guild_ids != guild_ids
+                    ):
+                        return
+                    commands = command.subcommands
+                command = get(commands, name=names.pop())
+                if not isinstance(command, type) or (
+                    guild_ids is not None and command.guild_ids != guild_ids
+                ):
                     return
                 return command
 
@@ -489,7 +505,8 @@ class ApplicationCommandMixin(ABC):
             if kwargs.pop("_log", True):
                 if method == "bulk":
                     _log.debug(
-                        f"Bulk updating commands {[c['name'] for c in args[0]]} for guild {guild_id}"
+                        f"Bulk updating commands {[c['name'] for c in args[0]]} for"
+                        f" guild {guild_id}"
                     )
                 # TODO: Find where "cmd" is defined
                 elif method == "upsert":
@@ -620,7 +637,8 @@ class ApplicationCommandMixin(ABC):
             )
             if not cmd:
                 raise ValueError(
-                    f"Registered command {i['name']}, type {i.get('type')} not found in pending commands"
+                    f"Registered command {i['name']}, type {i.get('type')} not found in"
+                    " pending commands"
                 )
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
@@ -815,7 +833,6 @@ class ApplicationCommandMixin(ABC):
                     if guild_id is None:
                         await self.sync_commands()
                     else:
-
                         await self.sync_commands(check_guilds=[guild_id])
                 return self._bot.dispatch("unknown_application_command", interaction)
 
