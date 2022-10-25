@@ -102,7 +102,6 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     This is a subclass of :class:`.Invokable`.
     """
 
-    __original_kwargs__: dict[str, Any]
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
