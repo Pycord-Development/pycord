@@ -41,7 +41,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           env_vars: OS,PYTHON
-          files: ./tests/coverage.xml
+          files: coverage.xml
           flags: pytest # optional
           name: codecov-umbrella # optional
           fail_ci_if_error: true # Enable once we have good coverage
