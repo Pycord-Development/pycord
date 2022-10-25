@@ -133,7 +133,7 @@ class ThreadChannel(_BaseChannel):
     message_count: int
     member_count: int
     thread_metadata: ThreadMetadata
-    applied_tags: NotRequired(List[Snowflake])
+    applied_tags: NotRequired(list[Snowflake] | None)
 
 
 GuildChannel = Union[
