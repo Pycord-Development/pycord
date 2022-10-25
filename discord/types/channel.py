@@ -119,6 +119,7 @@ class StageChannel(_BaseGuildChannel):
     bitrate: int
     user_limit: int
 
+
 class ThreadChannel(_BaseChannel):
     member: NotRequired[ThreadMember]
     owner_id: NotRequired[Snowflake]
