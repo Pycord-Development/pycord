@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 import pytest
 
+from discord import Route
 from discord.bot import Bot
 from discord.ext.testing import Test, get_mock_response
 
@@ -34,6 +35,10 @@ def client():
 
 async def test_get_guild(client):
     data = get_mock_response("get_guild")
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}", guild_id=1234), params={"with_counts": 1}
+    ):
+        await client.fetch_guild(1234)
     with client.patch("get_guild"):
         guild = await client.fetch_guild(881207955029110855)
     guild_dict = dict(

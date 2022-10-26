@@ -26,11 +26,12 @@ from __future__ import annotations
 import inspect
 import json
 import os
-from typing import Any, Callable, Literal
-from unittest.mock import AsyncMock, MagicMock, create_autospec, patch
+from typing import Any, Callable, Iterable, Literal, Sequence
+from unittest.mock import AsyncMock, MagicMock, patch
 
+from ... import MISSING, File
 from ...client import Client
-from ...http import HTTPClient
+from ...http import HTTPClient, Route
 
 __all__ = (
     "Test",
@@ -94,8 +95,6 @@ class Mocked:
 class Test:
     def __init__(self, client: Client):
         self.__client = client
-        self.__mock = create_autospec(client.http.request)
-        self.__patcher = patch.object(client.http, "request", self.__mock)
 
     def patch(
         self,
@@ -104,6 +103,40 @@ class Test:
         approach: Literal["merge", "replace"] = "replace",
     ) -> Mocked:
         return Mocked(name, return_value, approach)
+
+    def makes_request(
+        self,
+        route: Route,
+        *,
+        files: Sequence[File] | None | MISSING = MISSING,
+        form: Iterable[dict[str, Any]] | None | MISSING = MISSING,
+        **kwargs: Any,
+    ):
+        class _Request:
+            def __init__(self, client: Client, route, files, form, kwargs):
+                self.patcher = patch.object(client.http, "request", autospec=True)
+                self.route = route
+                self.files = files
+                self.form = form
+                self.kwargs = kwargs
+
+            def __enter__(self):
+                self.mock = self.patcher.start()
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                self.patcher.stop()
+                if self.files is not MISSING:
+                    self.kwargs["files"] = self.files
+                if self.form is not MISSING:
+                    self.kwargs["form"] = self.form
+                self.mock.assert_called_once_with(
+                    self.route,
+                    **self.kwargs,
+                )
+                return True
+
+        return _Request(self.__client, route, files, form, kwargs)
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.__client, name)
