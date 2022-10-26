@@ -77,7 +77,10 @@ async def text(
     await ctx.guild.create_text_channel(
         name,
         overwrites=overwrites,
-        topic="Top secret text channel. Any leakage of this channel may result in serious trouble.",
+        topic=(
+            "Top secret text channel. Any leakage of this channel may result in serious"
+            " trouble."
+        ),
         reason="Very secret business.",
     )
 

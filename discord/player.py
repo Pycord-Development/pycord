@@ -154,7 +154,8 @@ class FFmpegAudio(AudioSource):
         piping = subprocess_kwargs.get("stdin") == subprocess.PIPE
         if piping and isinstance(source, str):
             raise TypeError(
-                "parameter conflict: 'source' parameter cannot be a string when piping to stdin"
+                "parameter conflict: 'source' parameter cannot be a string when piping"
+                " to stdin"
             )
 
         args = [executable, *args]
@@ -393,7 +394,6 @@ class FFmpegOpusAudio(FFmpegAudio):
         before_options=None,
         options=None,
     ) -> None:
-
         args = []
         subprocess_kwargs = {
             "stdin": subprocess.PIPE if pipe else subprocess.DEVNULL,

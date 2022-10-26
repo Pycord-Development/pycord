@@ -25,8 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 
 ThreadType = Literal[10, 11, 12]
@@ -40,25 +41,19 @@ class ThreadMember(TypedDict):
     flags: int
 
 
-class _ThreadMetadataOptional(TypedDict, total=False):
-    invitable: bool
-    create_timestamp: str
-
-
-class ThreadMetadata(_ThreadMetadataOptional):
+class ThreadMetadata(TypedDict):
+    invitable: NotRequired[bool]
+    create_timestamp: NotRequired[str]
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
     locked: bool
 
 
-class _ThreadOptional(TypedDict, total=False):
-    member: ThreadMember
-    last_message_id: Snowflake | None
-    last_pin_timestamp: Snowflake | None
-
-
-class Thread(_ThreadOptional):
+class Thread(TypedDict):
+    member: NotRequired[ThreadMember]
+    last_message_id: NotRequired[Snowflake | None]
+    last_pin_timestamp: NotRequired[Snowflake | None]
     id: Snowflake
     guild_id: Snowflake
     parent_id: Snowflake

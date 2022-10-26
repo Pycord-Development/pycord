@@ -143,7 +143,10 @@ class CogMeta(type):
 
         commands = {}
         listeners = {}
-        no_bot_cog = "Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})"
+        no_bot_cog = (
+            "Commands or listeners must not start with cog_ or bot_ (in method"
+            " {0.__name__}.{1})"
+        )
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
@@ -177,7 +180,8 @@ class CogMeta(type):
                 if isinstance(value, _filter):
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                            f"Command in method {base}.{elem!r} must not be"
+                            " staticmethod."
                         )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
@@ -187,7 +191,8 @@ class CogMeta(type):
                 if hasattr(value, "add_to") and not getattr(value, "parent", None):
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                            f"Command in method {base}.{elem!r} must not be"
+                            " staticmethod."
                         )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
@@ -386,7 +391,8 @@ class Cog(metaclass=CogMeta):
 
         if name is not MISSING and not isinstance(name, str):
             raise TypeError(
-                f"Cog.listener expected str but received {name.__class__.__name__!r} instead."
+                "Cog.listener expected str but received"
+                f" {name.__class__.__name__!r} instead."
             )
 
         def decorator(func: FuncT) -> FuncT:
