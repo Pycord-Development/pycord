@@ -134,7 +134,6 @@ class Test:
                     self.route,
                     **self.kwargs,
                 )
-                return True
 
         return _Request(self.__client, route, files, form, kwargs)
 
