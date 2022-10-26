@@ -131,6 +131,20 @@ class Route:
         self.webhook_id: Snowflake | None = parameters.get("webhook_id")
         self.webhook_token: str | None = parameters.get("webhook_token")
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Route):
+            return False
+
+        return (
+            self.path == other.path
+            and self.method == other.method
+            and self.url == other.url
+            and self.channel_id == other.channel_id
+            and self.guild_id == other.guild_id
+            and self.webhook_id == other.webhook_id
+            and self.webhook_token == other.webhook_token
+        )
+
     @property
     def base(self) -> str:
         return f"https://discord.com/api/v{API_VERSION}"
