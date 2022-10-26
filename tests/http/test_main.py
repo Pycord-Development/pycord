@@ -21,6 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import random
+
 import pytest
 
 from discord import Route
@@ -38,6 +40,50 @@ async def test_logout(client):
 
 
 @pytest.mark.parametrize(
+    "user_id,recipients",
+    [(random.randrange(2**64), [random.randrange(2**64) for _ in range(10)])],
+)
+async def test_start_group(client, user_id, recipients):
+    """Test starting group."""
+    payload = {
+        "recipients": recipients,
+    }
+    with client.makes_request(
+        Route("POST", "/users/{user_id}/channels", user_id=user_id),
+        json=payload,
+    ):
+        await client.http.start_group(user_id, recipients)
+
+
+@pytest.mark.parametrize(
+    "channel_id",
+    [random.randrange(2**64)],
+)
+async def test_leave_group(client, channel_id):
+    """Test leaving group."""
+    with client.makes_request(
+        Route("DELETE", "/channels/{channel_id}", channel_id=channel_id),
+    ):
+        await client.http.leave_group(channel_id)
+
+
+@pytest.mark.parametrize(
+    "user_id",
+    [random.randrange(2**64)],
+)
+async def test_start_private_message(client, user_id):
+    """Test starting private message."""
+    payload = {
+        "recipient_id": user_id,
+    }
+    with client.makes_request(
+        Route("POST", "/users/@me/channels"),
+        json=payload,
+    ):
+        await client.http.start_private_message(user_id)
+
+
+@pytest.mark.parametrize(
     "with_counts",
     (True, False),
 )
@@ -48,3 +94,19 @@ async def test_get_guild(client, with_counts):
         params={"with_counts": int(with_counts)},
     ):
         await client.http.get_guild(1234, with_counts=with_counts)
+
+
+# async def test_static_login(client):
+#     """Test logging in with a static token."""
+#     await client.http.close()  # Test closing the client before it exists
+#     with client.makes_request(
+#         Route("GET", "/users/@me"),
+#     ):
+#         await client.http.static_login("token")
+#     assert client.http.token == "token"
+#
+#
+# @pytest.mark.order(after="test_static_login")
+# async def test_close(client):
+#     """Test closing the client."""
+#     await client.close()
