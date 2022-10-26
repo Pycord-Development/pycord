@@ -42,7 +42,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           env_vars: OS,PYTHON
           files: coverage.xml
-          flags: pytest # optional
+          flags: ${{ matrix.os }}-${{ matrix.python-version }} # optional
           name: codecov-umbrella # optional
           fail_ci_if_error: true # Enable once we have good coverage
           verbose: true # optional (default = false)
