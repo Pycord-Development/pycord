@@ -28,5 +28,5 @@ from discord.ext.testing import Test
 
 
 @pytest.fixture
-def client():
-    return Test(Bot())
+def client(event_loop):
+    return Test(Bot(loop=event_loop))
