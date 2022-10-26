@@ -568,7 +568,6 @@ class Client:
                 aiohttp.ClientError,
                 asyncio.TimeoutError,
             ) as exc:
-
                 self.dispatch("disconnect")
                 if not reconnect:
                     await self.close()
@@ -1770,7 +1769,8 @@ class Client:
 
         if not view.is_persistent():
             raise ValueError(
-                "View is not persistent. Items need to have a custom_id set and View must have no timeout"
+                "View is not persistent. Items need to have a custom_id set and View"
+                " must have no timeout"
             )
 
         self._connection.store_view(view, message_id)

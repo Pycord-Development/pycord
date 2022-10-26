@@ -523,7 +523,8 @@ class BridgeOption(Option, Converter):
                     choices = [choice.value for choice in self.choices]
                     if converted not in choices:
                         raise ValueError(
-                            f"{argument} is not a valid choice. Valid choices: {list(set(choices_names + choices))}"
+                            f"{argument} is not a valid choice. Valid choices:"
+                            f" {list(set(choices_names + choices))}"
                         )
 
             return converted

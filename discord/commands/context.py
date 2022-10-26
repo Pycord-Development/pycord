@@ -294,7 +294,8 @@ class ApplicationContext(discord.abc.Messageable):
             return self.interaction.response.send_message
         else:
             raise RuntimeError(
-                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
+                "Interaction was already issued a response. Try using"
+                f" {type(self).__name__}.send_followup() instead."
             )
 
     @property
@@ -304,7 +305,8 @@ class ApplicationContext(discord.abc.Messageable):
             return self.followup.send
         else:
             raise RuntimeError(
-                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
+                "Interaction was not yet issued a response. Try using"
+                f" {type(self).__name__}.respond() first."
             )
 
     @property

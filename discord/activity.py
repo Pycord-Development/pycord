@@ -664,7 +664,10 @@ class Spotify:
         return "Spotify"
 
     def __repr__(self) -> str:
-        return f"<Spotify title={self.title!r} artist={self.artist!r} track_id={self.track_id!r}>"
+        return (
+            "<Spotify"
+            f" title={self.title!r} artist={self.artist!r} track_id={self.track_id!r}>"
+        )
 
     @property
     def title(self) -> str:
@@ -790,7 +793,8 @@ class CustomActivity(BaseActivity):
             self.emoji = emoji
         else:
             raise TypeError(
-                f"Expected str, PartialEmoji, or None, received {type(emoji)!r} instead."
+                "Expected str, PartialEmoji, or None, received"
+                f" {type(emoji)!r} instead."
             )
 
     @property

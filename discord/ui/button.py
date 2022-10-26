@@ -122,7 +122,8 @@ class Button(Item[V]):
                 emoji = emoji._to_partial()
             else:
                 raise TypeError(
-                    f"expected emoji to be str, Emoji, or PartialEmoji not {emoji.__class__}"
+                    "expected emoji to be str, Emoji, or PartialEmoji not"
+                    f" {emoji.__class__}"
                 )
 
         self._underlying = ButtonComponent._raw_construct(
@@ -207,7 +208,8 @@ class Button(Item[V]):
             self._underlying.emoji = value._to_partial()
         else:
             raise TypeError(
-                f"expected str, Emoji, or PartialEmoji, received {value.__class__} instead"
+                "expected str, Emoji, or PartialEmoji, received"
+                f" {value.__class__} instead"
             )
 
     @classmethod

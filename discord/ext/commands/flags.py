@@ -231,7 +231,8 @@ def get_flags(
                     flag.max_args = 1
             else:
                 raise TypeError(
-                    f"Unsupported typing annotation {annotation!r} for {flag.name!r} flag"
+                    f"Unsupported typing annotation {annotation!r} for"
+                    f" {flag.name!r} flag"
                 )
 
         if flag.override is MISSING:
@@ -251,7 +252,8 @@ def get_flags(
             alias = alias.casefold() if case_insensitive else alias
             if alias in names:
                 raise TypeError(
-                    f"{flag.name!r} flag alias {alias!r} conflicts with previous flag or alias."
+                    f"{flag.name!r} flag alias {alias!r} conflicts with previous flag"
+                    " or alias."
                 )
             else:
                 names.add(alias)
