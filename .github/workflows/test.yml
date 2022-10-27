@@ -1,12 +1,9 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
-name: Python application
+name: Unit Tests
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  pytest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -16,16 +13,24 @@ jobs:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v3.1.0
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: "requirements-dev.txt"
+          check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8
           pip install -r requirements-dev.txt
+      - name: Setup cache
+        id: cache-pytest
+        uses: actions/cache@v3
+        with:
+          path: .pytest_cache
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-pytest
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -39,10 +44,30 @@ jobs:
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v3
         with:
-          #        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS,PYTHON
           files: ./coverage.xml
-          flags: pytest # optional
-          name: codecov-umbrella # optional
-          fail_ci_if_error: false # Enable once we have good coverage
-          verbose: true # optional (default = false)
+          flags: ${{ matrix.os }}-${{ matrix.python-version }}
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          verbose: true
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install ".[docs]"
+      - name: Check Links
+        run: |
+          cd docs
+          make linkcheck
+      - name: Compile to html
+        run: |
+          cd docs
+          make html
