@@ -294,7 +294,7 @@ class _Semaphore:
     `wait=False`.
 
     An asyncio.Queue could have been used to do this as well -- but it is
-    not as inefficient since internally that uses two queues and is a bit
+    not as efficient since internally that uses two queues and is a bit
     overkill for what is basically a counter.
     """
 
