@@ -1,0 +1,23 @@
+name: Checks
+on: [pull_request, push]
+jobs:
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          cache: "pip"
+      - run: pip install codespell==2.1.0
+      - run:
+          codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
+          --exclude-file=".github/workflows/codespell.yml"
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          cache: "pip"
+      - run: pip install bandit
+      - run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
