@@ -15,6 +15,21 @@ Shortcut decorators
 .. autofunction:: discord.ui.select
     :decorator:
 
+.. autofunction:: discord.ui.string_select
+    :decorator:
+
+.. autofunction:: discord.ui.user_select
+    :decorator:
+
+.. autofunction:: discord.ui.role_select
+    :decorator:
+
+.. autofunction:: discord.ui.mentionable_select
+    :decorator:
+
+.. autofunction:: discord.ui.channel_select
+    :decorator:
+
 Objects
 -------
 
@@ -37,6 +52,30 @@ Objects
 .. attributetable:: discord.ui.Select
 
 .. autoclass:: discord.ui.Select
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.UserSelect
+
+.. autoclass:: discord.ui.UserSelect
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.RoleSelect
+
+.. autoclass:: discord.ui.RoleSelect
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.MentionableSelect
+
+.. autoclass:: discord.ui.MentionableSelect
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.ChannelSelect
+
+.. autoclass:: discord.ui.ChannelSelect
     :members:
     :inherited-members:
 

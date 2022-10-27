@@ -414,12 +414,24 @@ of :class:`enum.Enum`.
     .. attribute:: button
 
         Represents a button component.
-    .. attribute:: select
+    .. attribute:: string_select
 
-        Represents a select component.
+        Represents a string select component.
     .. attribute:: input_text
 
         Represents an input_text component.
+    .. attribute:: user_select
+
+        Represents a user select component.
+    .. attribute:: role_select
+
+        Represents a role select component.
+    .. attribute:: mentionable_select
+
+        Represents a mentionable select component.
+    .. attribute:: channel_select
+
+        Represents a channel select component.
 
 .. class:: ButtonStyle
 
