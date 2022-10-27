@@ -7,6 +7,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
+          python-version: "3.11"
           cache: "pip"
           cache-dependency-path: "requirements-dev.txt"
       - name: Install dependencies
@@ -22,6 +23,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
+          python-version: "3.11"
           cache: "pip"
           cache-dependency-path: "requirements-dev.txt"
       - name: Install dependencies

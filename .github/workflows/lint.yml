@@ -8,6 +8,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
+          python-version: "3.11"
           cache: "pip"
           cache-dependency-path: "requirements-dev.txt"
       - name: Install dependencies
@@ -29,6 +30,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
+          python-version: "3.11"
           cache: "pip"
           cache-dependency-path: "requirements-dev.txt"
       - name: Install dependencies
@@ -41,8 +43,7 @@ jobs:
         with:
           path: .mypy_cache
           key: mypy
-      - name: Make mypy cache directory if cache miss
-        if: steps.cache-mypy.outputs.cache-hit != 'true'
-        run: mkdir --parents --verbose .mypy_cache
+      - name: Make mypy cache directory
+        run: mkdir -p -v .mypy_cache
       - name: Run type checks with Mypy
         run: mypy --non-interactive discord/
