@@ -109,9 +109,9 @@ def _transform_overwrites(
         ow_type = elem["type"]
         ow_id = int(elem["id"])
         target = None
-        if ow_type == "0":
+        if ow_type == 0:
             target = entry.guild.get_role(ow_id)
-        elif ow_type == "1":
+        elif ow_type == 1:
             target = entry._get_member(ow_id)
 
         if target is None:

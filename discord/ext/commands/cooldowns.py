@@ -192,7 +192,10 @@ class Cooldown:
         return Cooldown(self.rate, self.per)
 
     def __repr__(self) -> str:
-        return f"<Cooldown rate: {self.rate} per: {self.per} window: {self._window} tokens: {self._tokens}>"
+        return (
+            f"<Cooldown rate: {self.rate} per: {self.per} window:"
+            f" {self._window} tokens: {self._tokens}>"
+        )
 
 
 class CooldownMapping:

@@ -278,11 +278,13 @@ class Option:
 
         if self.min_value is not None and not isinstance(self.min_value, minmax_types):
             raise TypeError(
-                f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"'
+                f"Expected {minmax_typehint} for min_value, got"
+                f' "{type(self.min_value).__name__}"'
             )
         if self.max_value is not None and not isinstance(self.max_value, minmax_types):
             raise TypeError(
-                f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"'
+                f"Expected {minmax_typehint} for max_value, got"
+                f' "{type(self.max_value).__name__}"'
             )
 
         if self.min_length is not None:

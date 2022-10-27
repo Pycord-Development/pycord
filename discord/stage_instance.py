@@ -111,7 +111,10 @@ class StageInstance(Hashable):
             self.scheduled_event = self.guild.get_scheduled_event(int(event_id))
 
     def __repr__(self) -> str:
-        return f"<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
+        return (
+            "<StageInstance"
+            f" id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
+        )
 
     @cached_slot_property("_cs_channel")
     def channel(self) -> StageChannel | None:
