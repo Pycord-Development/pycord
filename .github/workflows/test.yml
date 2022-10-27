@@ -50,7 +50,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS,PYTHON
-          files: ./coverage.xml
+          files: coverage.xml
           flags: ${{ matrix.os }}-${{ matrix.python-version }}
           name: codecov-umbrella
           fail_ci_if_error: true
