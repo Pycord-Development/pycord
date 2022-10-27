@@ -8,7 +8,11 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           cache: "pip"
-      - run: pip install codespell==2.1.0
+          cache-dependency-path: "requirements-dev.txt"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
       - run:
           codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
           --exclude-file=".github/workflows/codespell.yml"
@@ -19,5 +23,9 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           cache: "pip"
-      - run: pip install bandit
+          cache-dependency-path: "requirements-dev.txt"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
       - run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
