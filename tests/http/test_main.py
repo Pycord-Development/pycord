@@ -31,7 +31,7 @@ from discord import Route
 from discord.ext.testing import get_mock_response
 
 from ..core import client
-from .core import channel_id, user_id
+from .core import channel_id, message_id, user_id
 
 
 async def test_logout(client):
@@ -76,6 +76,27 @@ async def test_start_private_message(client, user_id):
         json=payload,
     ):
         await client.http.start_private_message(user_id)
+
+
+async def test_get_message(client, channel_id, message_id):
+    """Test getting message."""
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/messages/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+    ):
+        await client.http.get_message(channel_id, message_id)
+
+
+async def test_get_channel(client, channel_id):
+    """Test getting channel."""
+    with client.makes_request(
+        Route("GET", "/channels/{channel_id}", channel_id=channel_id),
+    ):
+        await client.http.get_channel(channel_id)
 
 
 @pytest.mark.parametrize(
