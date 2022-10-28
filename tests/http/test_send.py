@@ -34,6 +34,7 @@ from ..core import client
 from .core import (
     channel_id,
     message_id,
+    powerset,
     random_allowed_mentions,
     random_amount,
     random_embed,
@@ -282,7 +283,19 @@ async def test_send_files(
         )
 
 
-async def test_edit_files(
+@pytest.mark.parametrize(
+    "exclude",
+    powerset(
+        [
+            "content",
+            "embeds",
+            "allowed_mentions",
+            "components",
+            "flags",
+        ]
+    ),
+)
+async def test_edit_files(  # TODO: Add attachments
     client,
     channel_id,
     message_id,
@@ -293,8 +306,19 @@ async def test_edit_files(
     components,
     flags,
     files,
+    exclude,
 ):
     """Test editing files."""
+    kwargs = {
+        "content": content,
+        # "embed": embed,
+        "embeds": embeds,
+        "allowed_mentions": allowed_mentions,
+        "components": components,
+        "flags": flags,
+    }
+    for key in exclude:
+        del kwargs[key]
     with client.makes_request(
         Route(
             "PATCH",
@@ -302,24 +326,6 @@ async def test_edit_files(
             channel_id=channel_id,
             message_id=message_id,
         ),
-        **edit_file_payload_helper(
-            content=content,
-            # embed=embed,
-            embeds=embeds,
-            allowed_mentions=allowed_mentions,
-            components=components,
-            flags=flags,
-            files=files,
-        ),
+        **edit_file_payload_helper(files=files, **kwargs),
     ):
-        await client.http.edit_files(
-            channel_id,
-            message_id,
-            files=files,
-            content=content,
-            # embed=embed,
-            embeds=embeds,
-            allowed_mentions=allowed_mentions,
-            components=components,
-            flags=flags,
-        )
+        await client.http.edit_files(channel_id, message_id, files=files, **kwargs)
