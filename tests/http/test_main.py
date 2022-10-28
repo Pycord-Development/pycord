@@ -34,6 +34,12 @@ from ..core import client
 from .core import after, around, before, channel_id, limit, message_id, reason, user_id
 
 
+def test_route_eq():
+    """Test route equality."""
+    route1 = Route("GET", "/channels/{channel_id}", channel_id=123)
+    assert route1 != 123
+
+
 async def test_logout(client):
     """Test logging out."""
     with client.makes_request(
