@@ -186,6 +186,20 @@ def random_amount(
     return [func(*args, **kwargs) for _ in range(random_count(maximum))]
 
 
+def random_dict() -> dict[str, str | int | bool]:
+    """Generate a random dictionary."""
+    value_type = random.choice([str, int, bool])
+    if value_type is str:
+        value = "test"  # TODO: Use random string in random_dict
+    elif value_type is int:
+        value = random.randrange(0, 100)
+    else:
+        value = random_bool()
+    return {  # TODO: Use random string in random_dict keys
+        str(random_snowflake()): value for _ in range(random_count())
+    }
+
+
 @pytest.fixture
 def user_id() -> int:
     """A random user ID fixture."""
@@ -208,3 +222,15 @@ def guild_id() -> int:
 def message_id() -> int:
     """A random message ID fixture."""
     return random_snowflake()
+
+
+@pytest.fixture
+def message_ids() -> list[int]:
+    """A random amount of message IDs fixture."""
+    return random_amount(random_snowflake)
+
+
+@pytest.fixture
+def reason() -> str:
+    """A random reason fixture."""
+    return "test"  # TODO: Randomize reason fixture

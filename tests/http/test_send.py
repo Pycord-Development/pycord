@@ -34,13 +34,16 @@ from ..core import client
 from .core import (
     channel_id,
     message_id,
+    message_ids,
     powerset,
     random_allowed_mentions,
     random_amount,
+    random_dict,
     random_embed,
     random_file,
     random_message_reference,
     random_sticker,
+    reason,
     user_id,
 )
 
@@ -329,3 +332,61 @@ async def test_edit_files(  # TODO: Add attachments
         **edit_file_payload_helper(files=files, **kwargs),
     ):
         await client.http.edit_files(channel_id, message_id, files=files, **kwargs)
+
+
+async def test_delete_message(
+    client,
+    channel_id,
+    message_id,
+    reason,
+):
+    """Test deleting a message."""
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/channels/{channel_id}/messages/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        reason=reason,
+    ):
+        await client.http.delete_message(channel_id, message_id, reason=reason)
+
+
+async def test_delete_messages(
+    client,
+    channel_id,
+    message_ids,
+    reason,
+):
+    """Test deleting multiple messages."""
+    with client.makes_request(
+        Route(
+            "POST",
+            "/channels/{channel_id}/messages/bulk-delete",
+            channel_id=channel_id,
+        ),
+        json={"messages": message_ids},
+        reason=reason,
+    ):
+        await client.http.delete_messages(channel_id, message_ids, reason=reason)
+
+
+@pytest.mark.parametrize("fields", [random_dict()])
+async def test_edit_message(
+    client,
+    channel_id,
+    message_id,
+    fields,
+):
+    """Test editing a message."""
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/channels/{channel_id}/messages/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        json=fields,
+    ):
+        await client.http.edit_message(channel_id, message_id, **fields)
