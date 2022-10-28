@@ -126,10 +126,10 @@ class Test:
 
             def __exit__(self, exc_type, exc_val, exc_tb):
                 self.patcher.stop()
-                if self.files is not MISSING:
-                    self.kwargs["files"] = self.files
                 if self.form is not MISSING:
                     self.kwargs["form"] = self.form
+                if self.files is not MISSING:
+                    self.kwargs["files"] = self.files
                 self.mock.assert_called_once_with(
                     self.route,
                     **self.kwargs,
