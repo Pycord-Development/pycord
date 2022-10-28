@@ -55,6 +55,9 @@ __all__ = (
     "channel_id",
     "guild_id",
     "message_id",
+    "emoji",
+    "limit",
+    "after",
 )
 
 V = TypeVar("V")
@@ -234,3 +237,21 @@ def message_ids() -> list[int]:
 def reason() -> str:
     """A random reason fixture."""
     return "test"  # TODO: Randomize reason fixture
+
+
+@pytest.fixture
+def emoji() -> str:
+    """A random emoji fixture."""
+    return "👍"  # TODO: Randomize emoji fixture
+
+
+@pytest.fixture
+def limit() -> int:
+    """A random limit fixture."""
+    return random.randrange(0, 1000)
+
+
+@pytest.fixture(params=(True, False))
+def after(request) -> int:
+    """A random after fixture."""
+    return random_snowflake() if request.param else None
