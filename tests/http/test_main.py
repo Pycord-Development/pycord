@@ -31,7 +31,7 @@ from discord import Route
 from discord.ext.testing import get_mock_response
 
 from ..core import client
-from .core import channel_id, message_id, user_id
+from .core import after, around, before, channel_id, limit, message_id, reason, user_id
 
 
 async def test_logout(client):
@@ -97,6 +97,81 @@ async def test_get_channel(client, channel_id):
         Route("GET", "/channels/{channel_id}", channel_id=channel_id),
     ):
         await client.http.get_channel(channel_id)
+
+
+async def test_logs_from(client, channel_id, limit, after, before, around):
+    """Test getting logs from."""
+    params = {
+        "limit": limit,
+    }
+    if after:
+        params["after"] = after
+    if before:
+        params["before"] = before
+    if around:
+        params["around"] = around
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/messages",
+            channel_id=channel_id,
+        ),
+        params=params,
+    ):
+        await client.http.logs_from(channel_id, limit, before, after, around)
+
+
+async def test_publish_message(client, channel_id, message_id):
+    """Test publishing message."""
+    with client.makes_request(
+        Route(
+            "POST",
+            "/channels/{channel_id}/messages/{message_id}/crosspost",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+    ):
+        await client.http.publish_message(channel_id, message_id)
+
+
+async def test_pin_message(client, channel_id, message_id, reason):
+    """Test pinning message."""
+    with client.makes_request(
+        Route(
+            "PUT",
+            "/channels/{channel_id}/pins/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        reason=reason,
+    ):
+        await client.http.pin_message(channel_id, message_id, reason)
+
+
+async def test_unpin_message(client, channel_id, message_id, reason):
+    """Test unpinning message."""
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/channels/{channel_id}/pins/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        reason=reason,
+    ):
+        await client.http.unpin_message(channel_id, message_id, reason)
+
+
+async def test_pins_from(client, channel_id):
+    """Test getting pins from a channel."""
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/pins",
+            channel_id=channel_id,
+        ),
+    ):
+        await client.http.pins_from(channel_id)
 
 
 @pytest.mark.parametrize(

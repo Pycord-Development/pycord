@@ -58,6 +58,9 @@ __all__ = (
     "emoji",
     "limit",
     "after",
+    "before",
+    "around",
+    "reason",
 )
 
 V = TypeVar("V")
@@ -254,4 +257,16 @@ def limit() -> int:
 @pytest.fixture(params=(True, False))
 def after(request) -> int:
     """A random after fixture."""
+    return random_snowflake() if request.param else None
+
+
+@pytest.fixture(params=(True, False))
+def before(request) -> int:
+    """A random before fixture."""
+    return random_snowflake() if request.param else None
+
+
+@pytest.fixture(params=(True, False))
+def around(request) -> int:
+    """A random around fixture."""
     return random_snowflake() if request.param else None
