@@ -30,10 +30,7 @@ import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
-from ..components import (
-    SelectMenu,
-    SelectOption,
-)
+from ..components import SelectMenu, SelectOption
 from ..emoji import Emoji
 from ..enums import ChannelType, ComponentType
 from ..errors import InvalidArgument
@@ -102,6 +99,7 @@ class Select(Item[V]):
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
+
     __item_repr_attributes__: tuple[str, ...] = (
         "select_type",
         "placeholder",
@@ -126,9 +124,7 @@ class Select(Item[V]):
         row: int | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
-            raise InvalidArgument(
-                "options parameter is only valid for string selects"
-            )
+            raise InvalidArgument("options parameter is only valid for string selects")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
@@ -317,10 +313,15 @@ class Select(Item[V]):
         self._underlying.options.append(option)
 
     @property
-    def values(self) -> list[str] | list[Member | User] | list[Role] | list[Member | User | Role] | list[GuildChannel | Thread]:
-        """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]], 
-        List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]: 
-        A list of values that have been selected by the user."""
+    def values(
+        self,
+    ) -> list[str] | list[Member | User] | list[Role] | list[
+        Member | User | Role
+    ] | list[GuildChannel | Thread]:
+        """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]],
+        List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]:
+        A list of values that have been selected by the user.
+        """
         select_type = self._underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values
@@ -333,12 +334,15 @@ class Select(Item[V]):
             for channel_id, _data in resolved_data.get("channels", {}).items():
                 if channel_id not in selected_values:
                     continue
-                if int(channel_id) in guild._channels or int(channel_id) in guild._threads:
+                if (
+                    int(channel_id) in guild._channels
+                    or int(channel_id) in guild._threads
+                ):
                     result = guild.get_channel_or_thread(int(channel_id))
                     _data["_invoke_flag"] = True
-                    result._update(_data) if isinstance(result, Thread) else result._update(
-                        guild, _data
-                    )
+                    result._update(_data) if isinstance(
+                        result, Thread
+                    ) else result._update(guild, _data)
                 else:
                     # NOTE:
                     # This is a fallback in case the channel/thread is not found in the
@@ -349,7 +353,10 @@ class Select(Item[V]):
                     obj_type = _threaded_guild_channel_factory(_data["type"])[0]
                     result = obj_type(state=state, data=_data, guild=guild)
                 resolved.append(result)
-        elif select_type in (ComponentType.user_select, ComponentType.mentionable_select):
+        elif select_type in (
+            ComponentType.user_select,
+            ComponentType.mentionable_select,
+        ):
             cache_flag = state.member_cache_flags.interaction
             resolved_user_data = resolved_data.get("users", {})
             resolved_member_data = resolved_data.get("members", {})
@@ -359,7 +366,9 @@ class Select(Item[V]):
                         member = dict(_member_data)
                         member["user"] = _data
                         _data = member
-                        result = guild._get_and_update_member(_data, int(_id), cache_flag)
+                        result = guild._get_and_update_member(
+                            _data, int(_id), cache_flag
+                        )
                     else:
                         result = User(state=state, data=_data)
                     resolved.append(result)
@@ -478,8 +487,7 @@ def select(
     """
     if select_type not in _select_types:
         raise ValueError(
-            "select_type must be one of "
-            + ", ".join([i.name for i in _select_types])
+            "select_type must be one of " + ", ".join([i.name for i in _select_types])
         )
 
     if options is not MISSING and select_type not in (

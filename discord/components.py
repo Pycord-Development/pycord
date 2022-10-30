@@ -293,7 +293,7 @@ class SelectMenu(Component):
 
     .. versionchanged:: 2.3
 
-        Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`, 
+        Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
         :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
 
     Attributes
@@ -312,15 +312,16 @@ class SelectMenu(Component):
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`SelectOption`]
         A list of options that can be selected in this menu.
-        Will be an empty list for all component types 
+        Will be an empty list for all component types
         except for :attr:`ComponentType.string_select`.
     channel_types: List[:class:`ChannelType`]
         A list of channel types that can be selected.
-        Will be an empty list for all component types 
+        Will be an empty list for all component types
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
+
     __slots__: tuple[str, ...] = (
         "custom_id",
         "placeholder",
