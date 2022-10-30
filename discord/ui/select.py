@@ -224,7 +224,7 @@ class Select(Item[V]):
     def channel_types(self, value: list[ChannelType]):
         if self._underlying.type is not ComponentType.channel_select:
             raise InvalidArgument("channel_types can only be set on channel selects")
-        self._underlying.disabled = bool(value)
+        self._underlying.channel_types = value
 
     @property
     def options(self) -> list[SelectOption]:
