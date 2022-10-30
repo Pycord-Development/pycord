@@ -55,30 +55,6 @@ Objects
     :members:
     :inherited-members:
 
-.. attributetable:: discord.ui.UserSelect
-
-.. autoclass:: discord.ui.UserSelect
-    :members:
-    :inherited-members:
-
-.. attributetable:: discord.ui.RoleSelect
-
-.. autoclass:: discord.ui.RoleSelect
-    :members:
-    :inherited-members:
-
-.. attributetable:: discord.ui.MentionableSelect
-
-.. autoclass:: discord.ui.MentionableSelect
-    :members:
-    :inherited-members:
-
-.. attributetable:: discord.ui.ChannelSelect
-
-.. autoclass:: discord.ui.ChannelSelect
-    :members:
-    :inherited-members:
-
 .. attributetable:: discord.ui.Modal
 
 .. autoclass:: discord.ui.Modal
