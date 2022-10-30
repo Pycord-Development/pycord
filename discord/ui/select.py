@@ -112,7 +112,7 @@ class Select(Item[V]):
 
     def __init__(
         self,
-        select_type: ComponentType,
+        select_type: ComponentType = ComponentType.string_select,
         *,
         custom_id: str | None = None,
         placeholder: str | None = None,
