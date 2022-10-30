@@ -31,15 +31,12 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import (
-    ChannelSelectMenu,
-    MentionableSelectMenu,
-    RoleSelectMenu,
     SelectMenu,
     SelectOption,
-    UserSelectMenu,
 )
 from ..emoji import Emoji
 from ..enums import ChannelType, ComponentType
+from ..errors import InvalidArgument
 from ..interactions import Interaction
 from ..member import Member
 from ..partial_emoji import PartialEmoji
@@ -51,10 +48,6 @@ from .item import Item, ItemCallbackType
 
 __all__ = (
     "Select",
-    "UserSelect",
-    "RoleSelect",
-    "MentionableSelect",
-    "ChannelSelect",
     "select",
     "user_select",
     "role_select",
@@ -63,7 +56,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from ..components import _BaseSelectMenu
+    from ..abc import GuildChannel
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
@@ -71,35 +64,75 @@ if TYPE_CHECKING:
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)
 
-_select_component_types = {
-    3: SelectMenu,
-    5: UserSelectMenu,
-    6: RoleSelectMenu,
-    7: MentionableSelectMenu,
-    8: ChannelSelectMenu,
-}
 
+class Select(Item[V]):
+    """Represents a UI select menu.
 
-class _BaseSelect(Item[V]):
+    This is usually represented as a drop down menu.
+
+    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
+
+    .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    custom_id: :class:`str`
+        The ID of the select menu that gets received during an interaction.
+        If not given then one is generated for you.
+    placeholder: Optional[:class:`str`]
+        The placeholder text that is shown if nothing is selected, if any.
+    min_values: :class:`int`
+        The minimum number of items that must be chosen for this select menu.
+        Defaults to 1 and must be between 1 and 25.
+    max_values: :class:`int`
+        The maximum number of items that must be chosen for this select menu.
+        Defaults to 1 and must be between 1 and 25.
+    options: List[:class:`discord.SelectOption`]
+        A list of options that can be selected in this menu.
+        Only valid for selects of type :attr:`discord.ComponentType.string_select`.
+    channel_types: List[:class:`discord.ChannelType`]
+        A list of channel types that can be selected in this menu.
+        Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
+    disabled: :class:`bool`
+        Whether the select is disabled or not.
+    row: Optional[:class:`int`]
+        The relative row this select menu belongs to. A Discord component can only have 5
+        rows. By default, items are arranged automatically into those 5 rows. If you'd
+        like to control the relative positioning of the row then passing an index is advised.
+        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
+        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    """
     __item_repr_attributes__: tuple[str, ...] = (
+        "select_type",
         "placeholder",
         "min_values",
         "max_values",
         "options",
+        "channel_types",
         "disabled",
     )
 
     def __init__(
         self,
-        select_type: int,
+        select_type: ComponentType,
         *,
         custom_id: str | None = None,
         placeholder: str | None = None,
         min_values: int = 1,
         max_values: int = 1,
+        options: list[SelectOption] = None,
+        channel_types: list[ChannelType] = None,
         disabled: bool = False,
         row: int | None = None,
     ) -> None:
+        if options and select_type is not ComponentType.string_select:
+            raise InvalidArgument(
+                "options parameter is only valid for string selects"
+            )
+        if channel_types and select_type is not ComponentType.channel_select:
+            raise InvalidArgument(
+                "channel_types parameter is only valid for channel selects"
+            )
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction = None  # type: ignore
@@ -116,15 +149,15 @@ class _BaseSelect(Item[V]):
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self._underlying: _BaseSelectMenu = _select_component_types[
-            select_type.value
-        ]._raw_construct(
+        self._underlying: SelectMenu = SelectMenu._raw_construct(
             custom_id=custom_id,
             type=select_type,
             placeholder=placeholder,
             min_values=min_values,
             max_values=max_values,
             disabled=disabled,
+            options=options or [],
+            channel_types=channel_types or [],
         )
         self.row = row
 
@@ -187,91 +220,15 @@ class _BaseSelect(Item[V]):
         self._underlying.disabled = bool(value)
 
     @property
-    def values(self) -> list[str]:
-        """List[:class:`str`]: A list of values that have been selected by the user."""
-        return self._selected_values
+    def channel_types(self) -> list[ChannelType]:
+        """List[:class:`discord.ChannelType`]: A list of channel types that can be selected in this menu."""
+        return self._underlying.channel_types
 
-    @property
-    def width(self) -> int:
-        return 5
-
-    def to_component_dict(self) -> SelectMenuPayload:
-        return self._underlying.to_dict()
-
-    def refresh_component(self, component: SelectMenu) -> None:
-        self._underlying = component
-
-    def refresh_state(self, interaction: Interaction) -> None:
-        data: ComponentInteractionData = interaction.data  # type: ignore
-        self._selected_values = data.get("values", [])
-        self._interaction = interaction
-
-    @classmethod
-    def from_component(cls: type[S], component: SelectMenu) -> S:
-        return cls(
-            custom_id=component.custom_id,
-            placeholder=component.placeholder,
-            min_values=component.min_values,
-            max_values=component.max_values,
-            options=component.options,
-            disabled=component.disabled,
-            row=None,
-        )
-
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    def is_dispatchable(self) -> bool:
-        return True
-
-
-class Select(_BaseSelect):
-    """Represents a UI select menu.
-
-    This is usually represented as a drop down menu.
-
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
-
-    .. versionadded:: 2.0
-
-    Parameters
-    ----------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    options: List[:class:`discord.SelectOption`]
-        A list of options that can be selected in this menu.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    """
-
-    _underlying: SelectMenu
-    __item_repr_attributes__: tuple[str, ...] = (
-        "placeholder",
-        "min_values",
-        "max_values",
-        "options",
-        "disabled",
-    )
-
-    def __init__(self, *, options: list[SelectOption] = MISSING, **kwargs) -> None:
-        super().__init__(ComponentType.string_select, **kwargs)
-        self._underlying.options = [] if options is MISSING else options
+    @channel_types.setter
+    def channel_types(self, value: list[ChannelType]):
+        if self._underlying.type is not ComponentType.channel_select:
+            raise InvalidArgument("channel_types can only be set on channel selects")
+        self._underlying.disabled = bool(value)
 
     @property
     def options(self) -> list[SelectOption]:
@@ -280,6 +237,8 @@ class Select(_BaseSelect):
 
     @options.setter
     def options(self, value: list[SelectOption]):
+        if self._underlying.type is not ComponentType.string_select:
+            raise InvalidArgument("options can only be set on string selects")
         if not isinstance(value, list):
             raise TypeError("options must be a list of SelectOption")
         if not all(isinstance(obj, SelectOption) for obj in value):
@@ -323,6 +282,8 @@ class Select(_BaseSelect):
         ValueError
             The number of options exceeds 25.
         """
+        if self._underlying.type is not ComponentType.string_select:
+            raise Exception("options can only be set on string selects")
 
         option = SelectOption(
             label=label,
@@ -347,301 +308,113 @@ class Select(_BaseSelect):
         ValueError
             The number of options exceeds 25.
         """
+        if self._underlying.type is not ComponentType.string_select:
+            raise Exception("options can only be set on string selects")
 
         if len(self._underlying.options) > 25:
             raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
 
-
-class UserSelect(_BaseSelect):
-    """Represents a UI select menu.
-
-    This is almost identical to a :class:`discord.ui.Select`,
-    except it allows you to select users and does not take
-    preset options.
-
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
-
-    .. versionadded:: 2.3
-
-    Parameters
-    ----------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    """
-
-    _underlying: UserSelectMenu
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(ComponentType.user_select, **kwargs)
-
     @property
-    def values(self) -> list[User, Member]:
-        """List[:class:`discord.User`, :class:`discord.Member`]:
-        A list of users that have been selected by the user.
-        """
+    def values(self) -> list[str] | list[Member | User] | list[Role] | list[Member | User | Role] | list[GuildChannel | Thread]:
+        """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]], 
+        List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]: 
+        A list of values that have been selected by the user."""
+        select_type = self._underlying.type
+        if select_type is ComponentType.string_select:
+            return self._selected_values
         resolved = []
-        selected_values = self._selected_values
+        selected_values = list(self._selected_values)
         state = self._interaction._state
-        cache_flag = state.member_cache_flags.interaction
         guild = self._interaction.guild
         resolved_data = self._interaction.data.get("resolved", {})
-        resolved_user_data = resolved_data.get("users", {})
-        resolved_member_data = resolved_data.get("members", {})
-        for _id in selected_values:
-            if (_data := resolved_user_data.get(_id)) is not None:
-                if (_member_data := resolved_member_data.get(_id)) is not None:
-                    member = dict(_member_data)
-                    member["user"] = _data
-                    _data = member
-                    result = guild._get_and_update_member(_data, int(_id), cache_flag)
+        if select_type is ComponentType.channel_select:
+            for channel_id, _data in resolved_data.get("channels", {}).items():
+                if channel_id not in selected_values:
+                    continue
+                if int(channel_id) in guild._channels or int(channel_id) in guild._threads:
+                    result = guild.get_channel_or_thread(int(channel_id))
+                    _data["_invoke_flag"] = True
+                    result._update(_data) if isinstance(result, Thread) else result._update(
+                        guild, _data
+                    )
                 else:
-                    result = User(state=state, data=_data)
+                    # NOTE:
+                    # This is a fallback in case the channel/thread is not found in the
+                    # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
+                    # permissions will be incorrect due to a lack of permission_overwrite data.
+                    # For threads, if this fallback occurs, info like thread owner id, message count,
+                    # flags, and more will be missing due to a lack of data sent by Discord.
+                    obj_type = _threaded_guild_channel_factory(_data["type"])[0]
+                    result = obj_type(state=state, data=_data, guild=guild)
                 resolved.append(result)
-        return resolved
-
-
-class RoleSelect(_BaseSelect):
-    """Represents a UI select menu.
-
-    This is almost identical to a :class:`discord.ui.Select`,
-    except it allows you to select roles and does not take
-    preset options.
-
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
-
-    .. versionadded:: 2.3
-
-    Parameters
-    ----------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    """
-
-    _underlying: RoleSelectMenu
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(ComponentType.role_select, **kwargs)
-
-    @property
-    def values(self) -> list[Role]:
-        """List[:class:`discord.Role`]:
-        A list of roles that have been selected by the user.
-        """
-        resolved = []
-        selected_values = self._selected_values
-        state = self._interaction._state
-        guild = self._interaction.guild
-        resolved_data = self._interaction.data.get("resolved", {})
-        for role_id, _data in resolved_data.get("roles", {}).items():
-            if role_id not in selected_values:
-                continue
-            resolved.append(Role(guild=guild, state=state, data=_data))
-        return resolved
-
-
-class MentionableSelect(_BaseSelect):
-    """Represents a UI select menu.
-
-    This is almost identical to a :class:`discord.ui.Select`,
-    except it allows you to select mentionables (roles/users)
-    and does not take preset options.
-
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
-
-    .. versionadded:: 2.3
-
-    Parameters
-    ----------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    """
-
-    _underlying: MentionableSelectMenu
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(ComponentType.mentionable_select, **kwargs)
-
-    @property
-    def values(self) -> list[User, Member]:
-        """List[:class:`discord.User`, :class:`discord.Member`, :class:`discord.Role`]:
-        A list of mentionables that have been selected by the user.
-        """
-        resolved = []
-        selected_values = self._selected_values
-        state = self._interaction._state
-        cache_flag = state.member_cache_flags.interaction
-        guild = self._interaction.guild
-        resolved_data = self._interaction.data.get("resolved", {})
-        resolved_user_data = resolved_data.get("users", {})
-        resolved_member_data = resolved_data.get("members", {})
-        resolved_role_data = resolved_data.get("roles", {})
-        for _id in selected_values:
-            if (_data := resolved_user_data.get(_id)) is not None:
-                if (_member_data := resolved_member_data.get(_id)) is not None:
-                    member = dict(_member_data)
-                    member["user"] = _data
-                    _data = member
-                    result = guild._get_and_update_member(_data, int(_id), cache_flag)
-                else:
-                    result = User(state=state, data=_data)
-                resolved.append(result)
-            elif (_data := resolved_role_data.get(_id)) is not None:
+        elif select_type in (ComponentType.user_select, ComponentType.mentionable_select):
+            cache_flag = state.member_cache_flags.interaction
+            resolved_user_data = resolved_data.get("users", {})
+            resolved_member_data = resolved_data.get("members", {})
+            for _id in selected_values:
+                if (_data := resolved_user_data.get(_id)) is not None:
+                    if (_member_data := resolved_member_data.get(_id)) is not None:
+                        member = dict(_member_data)
+                        member["user"] = _data
+                        _data = member
+                        result = guild._get_and_update_member(_data, int(_id), cache_flag)
+                    else:
+                        result = User(state=state, data=_data)
+                    resolved.append(result)
+        if select_type in (ComponentType.role_select, ComponentType.mentionable_select):
+            for role_id, _data in resolved_data.get("roles", {}).items():
+                if role_id not in selected_values:
+                    continue
                 resolved.append(Role(guild=guild, state=state, data=_data))
         return resolved
 
+    @property
+    def width(self) -> int:
+        return 5
 
-class ChannelSelect(_BaseSelect):
-    """Represents a UI select menu.
+    def to_component_dict(self) -> SelectMenuPayload:
+        return self._underlying.to_dict()
 
-    This is almost identical to a :class:`discord.ui.Select`,
-    except it allows you to select channels
-    and does not take preset options.
+    def refresh_component(self, component: SelectMenu) -> None:
+        self._underlying = component
 
-    In order to get the selected items that the user has chosen, use :attr:`Select.values`.
+    def refresh_state(self, interaction: Interaction) -> None:
+        data: ComponentInteractionData = interaction.data  # type: ignore
+        self._selected_values = data.get("values", [])
+        self._interaction = interaction
 
-    .. versionadded:: 2.3
-
-    Parameters
-    ----------
-    custom_id: :class:`str`
-        The ID of the select menu that gets received during an interaction.
-        If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    channel_types: List[:class:`discord.ChannelType`]
-        The channel types that should be selectable.
-        Defaults to all channel types.
-    row: Optional[:class:`int`]
-        The relative row this select menu belongs to. A Discord component can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    """
-
-    _underlying: ChannelSelectMenu
-
-    def __init__(self, *, channel_types: ChannelType = MISSING, **kwargs) -> None:
-        super().__init__(ComponentType.channel_select, **kwargs)
-        self._underlying.channel_types = (
-            [] if channel_types is MISSING else channel_types
+    @classmethod
+    def from_component(cls: type[S], component: SelectMenu) -> S:
+        return cls(
+            select_type=component.type,
+            custom_id=component.custom_id,
+            placeholder=component.placeholder,
+            min_values=component.min_values,
+            max_values=component.max_values,
+            options=component.options,
+            channel_types=component.channel_types,
+            disabled=component.disabled,
+            row=None,
         )
 
     @property
-    def values(self) -> list[Role]:
-        """List[:class:`discord.abc.GuildChannel`, :class:`discord.Thread`]:
-        A list of channels that have been selected by the user.
-        """
-        resolved = []
-        selected_values = self._selected_values
-        state = self._interaction._state
-        guild = self._interaction.guild
-        resolved_data = self._interaction.data.get("resolved", {})
-        for channel_id, _data in resolved_data.get("channels", {}).items():
-            if channel_id not in selected_values:
-                continue
-            if int(channel_id) in guild._channels or int(channel_id) in guild._threads:
-                result = guild.get_channel_or_thread(int(channel_id))
-                _data["_invoke_flag"] = True
-                result._update(_data) if isinstance(result, Thread) else result._update(
-                    guild, _data
-                )
-            else:
-                # NOTE:
-                # This is a fallback in case the channel/thread is not found in the
-                # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
-                # permissions will be incorrect due to a lack of permission_overwrite data.
-                # For threads, if this fallback occurs, info like thread owner id, message count,
-                # flags, and more will be missing due to a lack of data sent by Discord.
-                obj_type = _threaded_guild_channel_factory(_data["type"])[0]
-                result = obj_type(state=state, data=_data, guild=guild)
-            resolved.append(result)
-        return resolved
+    def type(self) -> ComponentType:
+        return self._underlying.type
 
-    @property
-    def channel_types(self):
-        """List[:class:`discord.ChannelType`]: A list of channel types that can be selected in this menu."""
-        return self._underlying.channel_types
-
-    @channel_types.setter
-    def channel_types(self, value: list[ChannelType]):
-        if not isinstance(value, list):
-            raise TypeError("channel types must be a list of ChannelType")
-        if not all(isinstance(obj, ChannelType) for obj in value):
-            raise TypeError("all list items must be a ChannelType")
-
-        self._underlying.channel_types = value
+    def is_dispatchable(self) -> bool:
+        return True
 
 
-_select_classes = {
-    ComponentType.select: Select,
-    ComponentType.string_select: Select,
-    ComponentType.user_select: UserSelect,
-    ComponentType.role_select: RoleSelect,
-    ComponentType.mentionable_select: MentionableSelect,
-    ComponentType.channel_select: ChannelSelect,
-}
+_select_types = (
+    ComponentType.select,
+    ComponentType.string_select,
+    ComponentType.user_select,
+    ComponentType.role_select,
+    ComponentType.mentionable_select,
+    ComponentType.channel_select,
+)
 
 
 def select(
@@ -703,10 +476,10 @@ def select(
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
     """
-    if select_type not in _select_classes:
+    if select_type not in _select_types:
         raise ValueError(
             "select_type must be one of "
-            + ", ".join([i.name for i in _select_classes.keys()])
+            + ", ".join([i.name for i in _select_types])
         )
 
     if options is not MISSING and select_type not in (
@@ -722,8 +495,8 @@ def select(
         if not inspect.iscoroutinefunction(func):
             raise TypeError("select function must be a coroutine function")
 
-        func.__discord_ui_model_type__ = _select_classes[select_type]
         model_kwargs = {
+            "select_type": select_type,
             "placeholder": placeholder,
             "custom_id": custom_id,
             "row": row,
@@ -736,6 +509,7 @@ def select(
         if channel_types:
             model_kwargs["channel_types"] = channel_types
 
+        func.__discord_ui_model_type__ = Select
         func.__discord_ui_model_kwargs__ = model_kwargs
 
         return func

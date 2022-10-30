@@ -36,12 +36,8 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
-from ..components import ChannelSelectMenu as ChannelSelectComponent
 from ..components import Component
-from ..components import MentionableSelectMenu as MentionableSelectComponent
-from ..components import RoleSelectMenu as RoleSelectComponent
 from ..components import SelectMenu as SelectComponent
-from ..components import UserSelectMenu as UserSelectComponent
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType

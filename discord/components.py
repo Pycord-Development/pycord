@@ -45,10 +45,6 @@ __all__ = (
     "ActionRow",
     "Button",
     "SelectMenu",
-    "UserSelectMenu",
-    "RoleSelectMenu",
-    "MentionableSelectMenu",
-    "ChannelSelectMenu",
     "SelectOption",
     "InputText",
 )
@@ -160,7 +156,6 @@ class InputText(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "style",
         "custom_id",
         "label",
@@ -283,41 +278,7 @@ class Button(Component):
         return payload  # type: ignore
 
 
-class _BaseSelectMenu(Component):
-    __slots__: tuple[str, ...] = (
-        "custom_id",
-        "placeholder",
-        "min_values",
-        "max_values",
-        "disabled",
-    )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-
-    def __init__(self, data: SelectMenuPayload):
-        self.type = try_enum(ComponentType, data["type"])
-        self.custom_id: str = data["custom_id"]
-        self.placeholder: str | None = data.get("placeholder")
-        self.min_values: int = data.get("min_values", 1)
-        self.max_values: int = data.get("max_values", 1)
-        self.disabled: bool = data.get("disabled", False)
-
-    def to_dict(self) -> SelectMenuPayload:
-        payload: SelectMenuPayload = {
-            "type": self.type.value,
-            "custom_id": self.custom_id,
-            "min_values": self.min_values,
-            "max_values": self.max_values,
-            "disabled": self.disabled,
-        }
-
-        if self.placeholder:
-            payload["placeholder"] = self.placeholder
-
-        return payload
-
-
-class SelectMenu(_BaseSelectMenu):
+class SelectMenu(Component):
     """Represents a select menu from the Discord Bot UI Kit.
 
     A select menu is functionally the same as a dropdown, however
@@ -330,8 +291,15 @@ class SelectMenu(_BaseSelectMenu):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.3
+
+        Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`, 
+        :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
+
     Attributes
     ----------
+    type: :class:`ComponentType`
+        The select menu's type.
     custom_id: Optional[:class:`str`]
         The ID of the select menu that gets received during an interaction.
     placeholder: Optional[:class:`str`]
@@ -344,164 +312,21 @@ class SelectMenu(_BaseSelectMenu):
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`SelectOption`]
         A list of options that can be selected in this menu.
+        Will be an empty list for all component types 
+        except for :attr:`ComponentType.string_select`.
+    channel_types: List[:class:`ChannelType`]
+        A list of channel types that can be selected.
+        Will be an empty list for all component types 
+        except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
-
     __slots__: tuple[str, ...] = (
         "custom_id",
         "placeholder",
         "min_values",
         "max_values",
         "options",
-        "disabled",
-    )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-
-    def __init__(self, data: SelectMenuPayload):
-        super().__init__(data)
-        self.options: list[SelectOption] = [
-            SelectOption.from_dict(option) for option in data.get("options", [])
-        ]
-
-    def to_dict(self) -> SelectMenuPayload:
-        payload: SelectMenuPayload = super().to_dict()
-        payload["options"] = [op.to_dict() for op in self.options]
-        return payload
-
-
-class UserSelectMenu(_BaseSelectMenu):
-    """Represents a user select menu from the Discord Bot UI Kit.
-
-    This is almost identical to a :class:`discord.SelectMenu`,
-    except it allows you to select users and does not take
-    preset options.
-
-    .. note::
-
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.UserSelect` not this one.
-
-    .. versionadded:: 2.3
-
-    Attributes
-    ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the select menu that gets received during an interaction.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 0 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    """
-
-
-class RoleSelectMenu(_BaseSelectMenu):
-    """Represents a user select menu from the Discord Bot UI Kit.
-
-    This is almost identical to a :class:`discord.SelectMenu`,
-    except it allows you to select roles and does not take
-    preset options.
-
-    .. note::
-
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.RoleSelect` not this one.
-
-    .. versionadded:: 2.3
-
-    Attributes
-    ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the select menu that gets received during an interaction.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 0 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    """
-
-
-class MentionableSelectMenu(_BaseSelectMenu):
-    """Represents a user select menu from the Discord Bot UI Kit.
-
-    This is almost identical to a :class:`discord.SelectMenu`,
-    except it allows you to select mentionables (roles and users)
-    and does not take preset options.
-
-    .. note::
-
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.MentionableSelect` not this one.
-
-    .. versionadded:: 2.3
-
-    Attributes
-    ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the select menu that gets received during an interaction.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 0 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    """
-
-
-class ChannelSelectMenu(_BaseSelectMenu):
-    """Represents a user select menu from the Discord Bot UI Kit.
-
-    This is almost identical to a :class:`discord.SelectMenu`,
-    except it allows you to select channels
-    and does not take preset options.
-
-    .. note::
-
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.ChannelSelect` not this one.
-
-    .. versionadded:: 2.3
-
-    Attributes
-    ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the select menu that gets received during an interaction.
-    placeholder: Optional[:class:`str`]
-        The placeholder text that is shown if nothing is selected, if any.
-    min_values: :class:`int`
-        The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 0 and 25.
-    max_values: :class:`int`
-        The maximum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
-    disabled: :class:`bool`
-        Whether the select is disabled or not.
-    channel_types: List[:class:`discord.ChannelType`]
-        The channels that should be made selectable.
-        Defaults to all channel types.
-    """
-
-    __slots__: tuple[str, ...] = (
-        "custom_id",
-        "placeholder",
-        "min_values",
-        "max_values",
         "channel_types",
         "disabled",
     )
@@ -509,14 +334,35 @@ class ChannelSelectMenu(_BaseSelectMenu):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: SelectMenuPayload):
-        super().__init__(data)
+        self.type = try_enum(ComponentType, data["type"])
+        self.custom_id: str = data["custom_id"]
+        self.placeholder: str | None = data.get("placeholder")
+        self.min_values: int = data.get("min_values", 1)
+        self.max_values: int = data.get("max_values", 1)
+        self.disabled: bool = data.get("disabled", False)
+        self.options: list[SelectOption] = [
+            SelectOption.from_dict(option) for option in data.get("options", [])
+        ]
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
 
     def to_dict(self) -> SelectMenuPayload:
-        payload: SelectMenuPayload = super().to_dict()
-        payload["channel_types"] = [ct.value for ct in self.channel_types]
+        payload: SelectMenuPayload = {
+            "type": self.type.value,
+            "custom_id": self.custom_id,
+            "min_values": self.min_values,
+            "max_values": self.max_values,
+            "disabled": self.disabled,
+        }
+
+        if self.type is ComponentType.string_select:
+            payload["options"] = [op.to_dict() for op in self.options]
+        if self.type is ComponentType.channel_select and self.channel_types:
+            payload["channel_types"] = [ct.value for ct in self.channel_types]
+        if self.placeholder:
+            payload["placeholder"] = self.placeholder
+
         return payload
 
 
@@ -645,18 +491,10 @@ def _component_factory(data: ComponentPayload) -> Component:
         return ActionRow(data)
     elif component_type == 2:
         return Button(data)  # type: ignore
-    elif component_type == 3:
-        return SelectMenu(data)  # type: ignore
     elif component_type == 4:
         return InputText(data)  # type: ignore
-    elif component_type == 5:
-        return UserSelectMenu(data)  # type: ignore
-    elif component_type == 6:
-        return RoleSelectMenu(data)  # type: ignore
-    elif component_type == 7:
-        return MentionableSelectMenu(data)  # type: ignore
-    elif component_type == 8:
-        return ChannelSelectMenu(data)  # type: ignore
+    elif component_type in (3, 5, 6, 7, 8):
+        return SelectMenu(data)  # type: ignore
     else:
         as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)
