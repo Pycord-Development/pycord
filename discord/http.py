@@ -904,7 +904,8 @@ class HTTPClient:
             params["delete_message_seconds"] = delete_message_seconds
         elif delete_message_days:
             warn_deprecated(
-                "delete_message_daysdelete_message_seconds",
+                "delete_message_days",
+                "delete_message_seconds",
                 "2.2",
                 reference="https://github.com/discord/discord-api-docs/pull/5219",
             )
