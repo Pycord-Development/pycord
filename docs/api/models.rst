@@ -323,30 +323,6 @@ Interactions
     :members:
     :inherited-members:
 
-.. attributetable:: UserSelectMenu
-
-.. autoclass:: UserSelectMenu()
-    :members:
-    :inherited-members:
-
-.. attributetable:: RoleSelectMenu
-
-.. autoclass:: RoleSelectMenu()
-    :members:
-    :inherited-members:
-
-.. attributetable:: MentionableSelectMenu
-
-.. autoclass:: MentionableSelectMenu()
-    :members:
-    :inherited-members:
-
-.. attributetable:: ChannelSelectMenu
-
-.. autoclass:: ChannelSelectMenu()
-    :members:
-    :inherited-members:
-
 Emoji
 -----
 
