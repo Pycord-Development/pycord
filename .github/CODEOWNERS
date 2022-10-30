@@ -2,4 +2,4 @@
 
 /tests/ @Pycord-Development/maintain-tests
 /discord/ext/testing/ @Pycord-Development/maintain-tests
-/.github/ @Pycord-Development/advisors
+/.github/ @Pycord-Development/project-leads
