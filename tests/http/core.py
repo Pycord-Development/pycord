@@ -27,7 +27,7 @@ import random
 import sys
 from io import BytesIO
 from itertools import chain, combinations
-from typing import Callable, Iterable, TypeVar
+from typing import Callable, Iterable, TypeVar, get_args
 
 if sys.version_info >= (3, 10):
     from typing import ParamSpec
@@ -37,7 +37,7 @@ else:
 import pytest
 
 from discord import File
-from discord.types import embed, message, sticker
+from discord.types import channel, embed, message, sticker
 
 __all__ = (
     "powerset",
@@ -51,6 +51,8 @@ __all__ = (
     "random_file",
     "random_count",
     "random_amount",
+    "random_overwrite",
+    "random_dict",
     "user_id",
     "channel_id",
     "guild_id",
@@ -192,24 +194,36 @@ def random_amount(
     return [func(*args, **kwargs) for _ in range(random_count(maximum))]
 
 
-def random_dict() -> dict[str, str | int | bool]:
+def random_dict(*, keys: Iterable[str] | None = None) -> dict[str, str | int | bool]:
     """Generate a random dictionary."""
-    value_type = random.choice([str, int, bool])
-    if value_type is str:
+    T = TypeVar("T", str, int, bool)
+    value_type: T = random.choice([str, int, bool])
 
-        def value():
-            return "test"  # TODO: Use random string in random_dict
-
-    elif value_type is int:
-
-        def value():
+    def value(key: str) -> T:
+        if value_type is str:
+            return f"value test{key}"
+        elif value_type is int:
             return random.randrange(0, 100)
+        elif value_type is bool:
+            return random_bool()
+        else:
+            raise TypeError(f"Unknown value type: {value_type}")
 
-    else:
-        value = random_bool
+    if keys is None:
+        keys = [f"test{i}" for i in range(random_count())]
     return {  # TODO: Use random string in random_dict keys
-        str(random_snowflake()): value() for _ in range(random_count())
+        key: value(key) for key in keys
     }
+
+
+def random_overwrite() -> channel.PermissionOverwrite:
+    """Generate a random overwrite."""
+    return channel.PermissionOverwrite(
+        id=random_snowflake(),
+        type=random.choice(get_args(channel.OverwriteType)),
+        allow=str(random_snowflake()),
+        deny=str(random_snowflake()),
+    )
 
 
 @pytest.fixture
