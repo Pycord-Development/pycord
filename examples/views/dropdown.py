@@ -60,7 +60,8 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 async def colour(ctx: discord.ApplicationContext):
-    """Sends a message with our dropdown that contains colour options."""
+    """Sends a message with our dropdown that contains colour options.
+    """
 
     # Create the view containing our dropdown
     view = DropdownView(bot)

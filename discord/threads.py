@@ -240,22 +240,26 @@ class Thread(Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """:class:`ChannelType`: The channel's Discord type.
+        """
         return self._type
 
     @property
     def parent(self) -> TextChannel | ForumChannel | None:
-        """Optional[:class:`TextChannel`]: The parent channel this thread belongs to."""
+        """Optional[:class:`TextChannel`]: The parent channel this thread belongs to.
+        """
         return self.guild.get_channel(self.parent_id)  # type: ignore
 
     @property
     def owner(self) -> Member | None:
-        """Optional[:class:`Member`]: The member this thread belongs to."""
+        """Optional[:class:`Member`]: The member this thread belongs to.
+        """
         return self.guild.get_member(self.owner_id)
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the thread."""
+        """:class:`str`: The string that allows you to mention the thread.
+        """
         return f"<#{self.id}>"
 
     @property
@@ -878,5 +882,6 @@ class ThreadMember(Hashable):
 
     @property
     def thread(self) -> Thread:
-        """:class:`Thread`: The thread this member belongs to."""
+        """:class:`Thread`: The thread this member belongs to.
+        """
         return self.parent

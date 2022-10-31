@@ -201,7 +201,8 @@ else:
 
 
 class ChannelType(Enum):
-    """Channel type"""
+    """Channel type
+    """
 
     text = 0
     private = 1
@@ -221,7 +222,8 @@ class ChannelType(Enum):
 
 
 class MessageType(Enum):
-    """Message type"""
+    """Message type
+    """
 
     default = 0
     recipient_add = 1
@@ -251,7 +253,8 @@ class MessageType(Enum):
 
 
 class VoiceRegion(Enum):
-    """Voice region"""
+    """Voice region
+    """
 
     us_west = "us-west"
     us_east = "us-east"
@@ -282,7 +285,8 @@ class VoiceRegion(Enum):
 
 
 class SpeakingState(Enum):
-    """Speaking state"""
+    """Speaking state
+    """
 
     none = 0
     voice = 1
@@ -297,7 +301,8 @@ class SpeakingState(Enum):
 
 
 class VerificationLevel(Enum, comparable=True):
-    """Verification level"""
+    """Verification level
+    """
 
     none = 0
     low = 1
@@ -310,7 +315,8 @@ class VerificationLevel(Enum, comparable=True):
 
 
 class ContentFilter(Enum, comparable=True):
-    """Content Filter"""
+    """Content Filter
+    """
 
     disabled = 0
     no_role = 1
@@ -321,7 +327,8 @@ class ContentFilter(Enum, comparable=True):
 
 
 class Status(Enum):
-    """Status"""
+    """Status
+    """
 
     online = "online"
     offline = "offline"
@@ -336,7 +343,8 @@ class Status(Enum):
 
 
 class DefaultAvatar(Enum):
-    """Default avatar"""
+    """Default avatar
+    """
 
     blurple = 0
     grey = 1
@@ -350,14 +358,16 @@ class DefaultAvatar(Enum):
 
 
 class NotificationLevel(Enum, comparable=True):
-    """Notification level"""
+    """Notification level
+    """
 
     all_messages = 0
     only_mentions = 1
 
 
 class AuditLogActionCategory(Enum):
-    """Audit log action category"""
+    """Audit log action category
+    """
 
     create = 1
     delete = 2
@@ -365,7 +375,8 @@ class AuditLogActionCategory(Enum):
 
 
 class AuditLogAction(Enum):
-    """Audit log action"""
+    """Audit log action
+    """
 
     guild_update = 1
     channel_create = 10
@@ -518,7 +529,8 @@ class AuditLogAction(Enum):
 
 
 class UserFlags(Enum):
-    """User flags"""
+    """User flags
+    """
 
     staff = 1
     partner = 2
@@ -544,7 +556,8 @@ class UserFlags(Enum):
 
 
 class ActivityType(Enum):
-    """Activity type"""
+    """Activity type
+    """
 
     unknown = -1
     playing = 0
@@ -559,14 +572,16 @@ class ActivityType(Enum):
 
 
 class TeamMembershipState(Enum):
-    """Team membership state"""
+    """Team membership state
+    """
 
     invited = 1
     accepted = 2
 
 
 class WebhookType(Enum):
-    """Webhook Type"""
+    """Webhook Type
+    """
 
     incoming = 1
     channel_follower = 2
@@ -574,7 +589,8 @@ class WebhookType(Enum):
 
 
 class ExpireBehaviour(Enum):
-    """Expire Behaviour"""
+    """Expire Behaviour
+    """
 
     remove_role = 0
     kick = 1
@@ -584,14 +600,16 @@ ExpireBehavior = ExpireBehaviour
 
 
 class StickerType(Enum):
-    """Sticker type"""
+    """Sticker type
+    """
 
     standard = 1
     guild = 2
 
 
 class StickerFormatType(Enum):
-    """Sticker format Type"""
+    """Sticker format Type
+    """
 
     png = 1
     apng = 2
@@ -608,7 +626,8 @@ class StickerFormatType(Enum):
 
 
 class InviteTarget(Enum):
-    """Invite target"""
+    """Invite target
+    """
 
     unknown = 0
     stream = 1
@@ -616,7 +635,8 @@ class InviteTarget(Enum):
 
 
 class InteractionType(Enum):
-    """Interaction type"""
+    """Interaction type
+    """
 
     ping = 1
     application_command = 2
@@ -626,7 +646,8 @@ class InteractionType(Enum):
 
 
 class InteractionResponseType(Enum):
-    """Interaction response type"""
+    """Interaction response type
+    """
 
     pong = 1
     # ack = 2 (deprecated)
@@ -640,7 +661,8 @@ class InteractionResponseType(Enum):
 
 
 class VideoQualityMode(Enum):
-    """Video quality mode"""
+    """Video quality mode
+    """
 
     auto = 1
     full = 2
@@ -650,7 +672,8 @@ class VideoQualityMode(Enum):
 
 
 class ComponentType(Enum):
-    """Component type"""
+    """Component type
+    """
 
     action_row = 1
     button = 2
@@ -662,7 +685,8 @@ class ComponentType(Enum):
 
 
 class ButtonStyle(Enum):
-    """Button style"""
+    """Button style
+    """
 
     primary = 1
     secondary = 2
@@ -683,7 +707,8 @@ class ButtonStyle(Enum):
 
 
 class InputTextStyle(Enum):
-    """Input text style"""
+    """Input text style
+    """
 
     short = 1
     singleline = 1
@@ -693,7 +718,8 @@ class InputTextStyle(Enum):
 
 
 class ApplicationType(Enum):
-    """Application type"""
+    """Application type
+    """
 
     game = 1
     music = 2
@@ -702,7 +728,8 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
-    """Stage privacy level"""
+    """Stage privacy level
+    """
 
     # public = 1 (deprecated)
     closed = 2
@@ -710,7 +737,8 @@ class StagePrivacyLevel(Enum):
 
 
 class NSFWLevel(Enum, comparable=True):
-    """NSFW level"""
+    """NSFW level
+    """
 
     default = 0
     explicit = 1
@@ -719,7 +747,8 @@ class NSFWLevel(Enum, comparable=True):
 
 
 class SlashCommandOptionType(Enum):
-    """Slash command option type"""
+    """Slash command option type
+    """
 
     sub_command = 1
     sub_command_group = 2
@@ -792,7 +821,8 @@ class SlashCommandOptionType(Enum):
 
 
 class EmbeddedActivity(Enum):
-    """Embedded activity"""
+    """Embedded activity
+    """
 
     awkword = 879863881349087252
     betrayal = 773336526917861400
@@ -828,7 +858,8 @@ class EmbeddedActivity(Enum):
 
 
 class ScheduledEventStatus(Enum):
-    """Scheduled event status"""
+    """Scheduled event status
+    """
 
     scheduled = 1
     active = 2
@@ -841,7 +872,8 @@ class ScheduledEventStatus(Enum):
 
 
 class ScheduledEventPrivacyLevel(Enum):
-    """Scheduled event privacy level"""
+    """Scheduled event privacy level
+    """
 
     guild_only = 2
 
@@ -850,7 +882,8 @@ class ScheduledEventPrivacyLevel(Enum):
 
 
 class ScheduledEventLocationType(Enum):
-    """Scheduled event location type"""
+    """Scheduled event location type
+    """
 
     stage_instance = 1
     voice = 2
@@ -858,7 +891,8 @@ class ScheduledEventLocationType(Enum):
 
 
 class AutoModTriggerType(Enum):
-    """Automod trigger type"""
+    """Automod trigger type
+    """
 
     keyword = 1
     harmful_link = 2
@@ -867,13 +901,15 @@ class AutoModTriggerType(Enum):
 
 
 class AutoModEventType(Enum):
-    """Automod event type"""
+    """Automod event type
+    """
 
     message_send = 1
 
 
 class AutoModActionType(Enum):
-    """Automod action type"""
+    """Automod action type
+    """
 
     block_message = 1
     send_alert_message = 2
@@ -881,7 +917,8 @@ class AutoModActionType(Enum):
 
 
 class AutoModKeywordPresetType(Enum):
-    """Automod keyword preset type"""
+    """Automod keyword preset type
+    """
 
     profanity = 1
     sexual_content = 2

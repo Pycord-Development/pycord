@@ -1053,7 +1053,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def cog_name(self) -> str | None:
-        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
+        """Optional[:class:`str`]: The name of the cog this command belongs to, if any.
+        """
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
     @property
@@ -1080,7 +1081,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def signature(self) -> str:
-        """:class:`str`: Returns a POSIX-like signature useful for help command output."""
+        """:class:`str`: Returns a POSIX-like signature useful for help command output.
+        """
         if self.usage is not None:
             return self.usage
 
@@ -1233,7 +1235,8 @@ class GroupMixin(Generic[CogT]):
 
     @property
     def commands(self) -> set[Command[CogT, Any, Any]]:
-        """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
+        """Set[:class:`.Command`]: A unique set of commands without aliases that are registered.
+        """
         return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:

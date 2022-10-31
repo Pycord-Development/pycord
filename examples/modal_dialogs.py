@@ -45,14 +45,16 @@ class MyModal(discord.ui.Modal):
 
 @bot.slash_command(name="modaltest")
 async def modal_slash(ctx: discord.ApplicationContext):
-    """Shows an example of a modal dialog being invoked from a slash command."""
+    """Shows an example of a modal dialog being invoked from a slash command.
+    """
     modal = MyModal(title="Slash Command Modal")
     await ctx.send_modal(modal)
 
 
 @bot.message_command(name="messagemodal")
 async def modal_message(ctx: discord.ApplicationContext, message: discord.Message):
-    """Shows an example of a modal dialog being invoked from a message command."""
+    """Shows an example of a modal dialog being invoked from a message command.
+    """
     modal = MyModal(title="Message Command Modal")
     modal.title = f"Modal for Message ID: {message.id}"
     await ctx.send_modal(modal)
@@ -60,7 +62,8 @@ async def modal_message(ctx: discord.ApplicationContext, message: discord.Messag
 
 @bot.user_command(name="usermodal")
 async def modal_user(ctx: discord.ApplicationContext, member: discord.Message):
-    """Shows an example of a modal dialog being invoked from a user command."""
+    """Shows an example of a modal dialog being invoked from a user command.
+    """
     modal = MyModal(title="User Command Modal")
     modal.title = f"Modal for User: {member.display_name}"
     await ctx.send_modal(modal)
@@ -68,7 +71,8 @@ async def modal_user(ctx: discord.ApplicationContext, member: discord.Message):
 
 @bot.command()
 async def modaltest(ctx: commands.Context):
-    """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)"""
+    """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)
+    """
 
     class MyView(discord.ui.View):
         @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
