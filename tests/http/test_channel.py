@@ -29,11 +29,13 @@ from typing import get_args
 import pytest
 
 from discord import Route
-from discord.types import channel, threads
+from discord.types import channel, guild, threads
 
 from ..core import client
 from .core import (
     channel_id,
+    guild_id,
+    powerset,
     random_bool,
     random_count,
     random_overwrite,
@@ -131,6 +133,20 @@ def default_auto_archive_duration(request) -> threads.ThreadArchiveDuration | No
     return request.param
 
 
+@pytest.fixture(params=powerset(["id", "position", "lock_permissions", "parent_id"]))
+def channel_position_updates_payload(
+    request, channel_id, position, locked, parent_id
+) -> list[guild.ChannelPositionUpdate]:
+    return [
+        guild.ChannelPositionUpdate(
+            id=channel_id if "id" in request.param else None,
+            position=position if "position" in request.param else None,
+            lock_permissions=locked if "lock_permissions" in request.param else None,
+            parent_id=parent_id if "parent_id" in request.param else None,
+        )
+    ]
+
+
 @pytest.mark.parametrize(
     "include",
     [
@@ -208,3 +224,93 @@ async def test_edit_channel(
         reason=reason,
     ):
         await client.http.edit_channel(channel_id, **payload, reason=reason)
+
+
+async def test_bulk_channel_update(
+    client,
+    guild_id,
+    channel_position_updates_payload,
+    reason,
+):
+    with client.makes_request(
+        Route("PATCH", "/guilds/{guild_id}/channels", guild_id=guild_id),
+        json=[channel_position_updates_payload],
+        reason=reason,
+    ):
+        await client.http.bulk_channel_update(
+            guild_id, [channel_position_updates_payload], reason=reason
+        )
+
+
+@pytest.mark.parametrize(
+    "include",
+    [
+        random.sample(
+            (
+                "name",
+                "parent_id",
+                "topic",
+                "bitrate",
+                "nsfw",
+                "user_limit",
+                "position",
+                "permission_overwrites",
+                "rate_limit_per_user",
+                "rtc_region",
+                "video_quality_mode",
+                "auto_archive_duration",
+            ),
+            i,
+        )
+        for i in range(12)
+    ],
+)
+async def test_create_channel(
+    client,
+    guild_id,
+    type_,
+    name,
+    parent_id,
+    topic,
+    bitrate,
+    nsfw,
+    user_limit,
+    position,
+    permission_overwrites,
+    rate_limit_per_user,
+    rtc_region,
+    video_quality_mode,
+    auto_archive_duration,
+    reason,
+    include,
+):
+    payload = {
+        "type": type_,
+        "name": name,
+        "parent_id": parent_id,
+        "topic": topic,
+        "bitrate": bitrate,
+        "nsfw": nsfw,
+        "user_limit": user_limit,
+        "position": position,
+        "permission_overwrites": permission_overwrites,
+        "rate_limit_per_user": rate_limit_per_user,
+        "rtc_region": rtc_region,
+        "video_quality_mode": video_quality_mode,
+        "auto_archive_duration": auto_archive_duration,
+    }
+    payload = {k: v for k, v in payload.items() if k in include}
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/channels", guild_id=guild_id),
+        json={"type": type_, **payload},
+        reason=reason,
+    ):
+        await client.http.create_channel(guild_id, type_, **payload, reason=reason)
+
+
+async def test_delete_channel(client, channel_id, reason):
+    with client.makes_request(
+        Route("DELETE", "/channels/{channel_id}", channel_id=channel_id),
+        reason=reason,
+    ):
+        await client.http.delete_channel(channel_id, reason=reason)

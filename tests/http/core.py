@@ -37,7 +37,7 @@ else:
 import pytest
 
 from discord import File
-from discord.types import channel, embed, message, sticker
+from discord.types import channel, embed, guild, message, sticker
 
 __all__ = (
     "powerset",
