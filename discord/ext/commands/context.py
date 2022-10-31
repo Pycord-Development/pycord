@@ -249,8 +249,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def valid(self) -> bool:
-        """:class:`bool`: Checks if the invocation context is valid to be invoked with.
-        """
+        """:class:`bool`: Checks if the invocation context is valid to be invoked with."""
         return self.prefix is not None and self.command is not None
 
     async def _get_channel(self) -> discord.abc.Messageable:

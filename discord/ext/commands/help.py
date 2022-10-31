@@ -96,8 +96,7 @@ class Paginator:
         self.clear()
 
     def clear(self):
-        """Clears the paginator to have no pages.
-        """
+        """Clears the paginator to have no pages."""
         if self.prefix is not None:
             self._current_page = [self.prefix]
             self._count = len(self.prefix) + self._linesep_len  # prefix + newline
@@ -156,8 +155,7 @@ class Paginator:
             self._count += self._linesep_len
 
     def close_page(self):
-        """Prematurely terminate a page.
-        """
+        """Prematurely terminate a page."""
         if self.suffix is not None:
             self._current_page.append(self.suffix)
         self._pages.append(self.linesep.join(self._current_page))
@@ -175,8 +173,7 @@ class Paginator:
 
     @property
     def pages(self):
-        """List[:class:`str`]: Returns the rendered list of pages.
-        """
+        """List[:class:`str`]: Returns the rendered list of pages."""
         # we have more than just the prefix in our current page
         if len(self._current_page) > (0 if self.prefix is None else 1):
             self.close_page()
@@ -384,8 +381,7 @@ class HelpCommand:
         self._command_impl.remove_check(func)
 
     def get_bot_mapping(self):
-        """Retrieves the bot mapping passed to :meth:`send_bot_help`.
-        """
+        """Retrieves the bot mapping passed to :meth:`send_bot_help`."""
         bot = self.context.bot
         mapping = {cog: cog.get_commands() for cog in bot.cogs.values()}
         mapping[None] = [c for c in bot.commands if not c.cog]
@@ -952,15 +948,13 @@ class DefaultHelpCommand(HelpCommand):
         super().__init__(**options)
 
     def shorten_text(self, text):
-        """:class:`str`: Shortens text to fit into the :attr:`width`.
-        """
+        """:class:`str`: Shortens text to fit into the :attr:`width`."""
         if len(text) > self.width:
             return f"{text[:self.width - 3].rstrip()}..."
         return text
 
     def get_ending_note(self):
-        """:class:`str`: Returns help command's ending note. This is mainly useful to override for i18n purposes.
-        """
+        """:class:`str`: Returns help command's ending note. This is mainly useful to override for i18n purposes."""
         command_name = self.invoked_with
         return (
             f"Type {self.context.clean_prefix}{command_name} command for more info on a"
@@ -1006,8 +1000,7 @@ class DefaultHelpCommand(HelpCommand):
             self.paginator.add_line(self.shorten_text(entry))
 
     async def send_pages(self):
-        """A helper utility to send the page output from :attr:`paginator` to the destination.
-        """
+        """A helper utility to send the page output from :attr:`paginator` to the destination."""
         destination = self.get_destination()
         for page in self.paginator.pages:
             await destination.send(page)
@@ -1165,8 +1158,7 @@ class MinimalHelpCommand(HelpCommand):
         super().__init__(**options)
 
     async def send_pages(self):
-        """A helper utility to send the page output from :attr:`paginator` to the destination.
-        """
+        """A helper utility to send the page output from :attr:`paginator` to the destination."""
         destination = self.get_destination()
         for page in self.paginator.pages:
             await destination.send(page)

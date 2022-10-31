@@ -257,14 +257,12 @@ class SystemChannelFlags(BaseFlags):
 
     @flag_value
     def join_notifications(self):
-        """:class:`bool`: Returns ``True`` if the system channel is used for member join notifications.
-        """
+        """:class:`bool`: Returns ``True`` if the system channel is used for member join notifications."""
         return 1
 
     @flag_value
     def premium_subscriptions(self):
-        """:class:`bool`: Returns ``True`` if the system channel is used for "Nitro boosting" notifications.
-        """
+        """:class:`bool`: Returns ``True`` if the system channel is used for "Nitro boosting" notifications."""
         return 2
 
     @flag_value
@@ -335,26 +333,22 @@ class MessageFlags(BaseFlags):
 
     @flag_value
     def crossposted(self):
-        """:class:`bool`: Returns ``True`` if the message is the original crossposted message.
-        """
+        """:class:`bool`: Returns ``True`` if the message is the original crossposted message."""
         return 1
 
     @flag_value
     def is_crossposted(self):
-        """:class:`bool`: Returns ``True`` if the message was crossposted from another channel.
-        """
+        """:class:`bool`: Returns ``True`` if the message was crossposted from another channel."""
         return 2
 
     @flag_value
     def suppress_embeds(self):
-        """:class:`bool`: Returns ``True`` if the message's embeds have been suppressed.
-        """
+        """:class:`bool`: Returns ``True`` if the message's embeds have been suppressed."""
         return 4
 
     @flag_value
     def source_message_deleted(self):
-        """:class:`bool`: Returns ``True`` if the source message for this crosspost has been deleted.
-        """
+        """:class:`bool`: Returns ``True`` if the source message for this crosspost has been deleted."""
         return 8
 
     @flag_value
@@ -450,86 +444,72 @@ class PublicUserFlags(BaseFlags):
 
     @flag_value
     def staff(self):
-        """:class:`bool`: Returns ``True`` if the user is a Discord Employee.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Discord Employee."""
         return UserFlags.staff.value
 
     @flag_value
     def partner(self):
-        """:class:`bool`: Returns ``True`` if the user is a Discord Partner.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Discord Partner."""
         return UserFlags.partner.value
 
     @flag_value
     def hypesquad(self):
-        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Events member.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Events member."""
         return UserFlags.hypesquad.value
 
     @flag_value
     def bug_hunter(self):
-        """:class:`bool`: Returns ``True`` if the user is a Bug Hunter
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Bug Hunter"""
         return UserFlags.bug_hunter.value
 
     @flag_value
     def premium_promo_dismissed(self):
-        """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion
-        """
+        """:class:`bool`: Returns ``True`` if the user is marked as dismissed Nitro promotion"""
         return UserFlags.premium_promo_dismissed.value
 
     @flag_value
     def hypesquad_bravery(self):
-        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Bravery member.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Bravery member."""
         return UserFlags.hypesquad_bravery.value
 
     @flag_value
     def hypesquad_brilliance(self):
-        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Brilliance member.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Brilliance member."""
         return UserFlags.hypesquad_brilliance.value
 
     @flag_value
     def hypesquad_balance(self):
-        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Balance member.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a HypeSquad Balance member."""
         return UserFlags.hypesquad_balance.value
 
     @flag_value
     def early_supporter(self):
-        """:class:`bool`: Returns ``True`` if the user is an Early Supporter.
-        """
+        """:class:`bool`: Returns ``True`` if the user is an Early Supporter."""
         return UserFlags.early_supporter.value
 
     @flag_value
     def team_user(self):
-        """:class:`bool`: Returns ``True`` if the user is a Team User.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Team User."""
         return UserFlags.team_user.value
 
     @flag_value
     def system(self):
-        """:class:`bool`: Returns ``True`` if the user is a system user (i.e. represents Discord officially).
-        """
+        """:class:`bool`: Returns ``True`` if the user is a system user (i.e. represents Discord officially)."""
         return UserFlags.system.value
 
     @flag_value
     def bug_hunter_level_2(self):
-        """:class:`bool`: Returns ``True`` if the user is a Bug Hunter Level 2
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Bug Hunter Level 2"""
         return UserFlags.bug_hunter_level_2.value
 
     @flag_value
     def verified_bot(self):
-        """:class:`bool`: Returns ``True`` if the user is a Verified Bot.
-        """
+        """:class:`bool`: Returns ``True`` if the user is a Verified Bot."""
         return UserFlags.verified_bot.value
 
     @flag_value
     def verified_bot_developer(self):
-        """:class:`bool`: Returns ``True`` if the user is an Early Verified Bot Developer.
-        """
+        """:class:`bool`: Returns ``True`` if the user is an Early Verified Bot Developer."""
         return UserFlags.verified_bot_developer.value
 
     @alias_flag_value
@@ -557,8 +537,7 @@ class PublicUserFlags(BaseFlags):
         return UserFlags.bot_http_interactions.value
 
     def all(self) -> list[UserFlags]:
-        """List[:class:`UserFlags`]: Returns all public flags the user has.
-        """
+        """List[:class:`UserFlags`]: Returns all public flags the user has."""
         return [
             public_flag
             for public_flag in UserFlags
@@ -632,8 +611,7 @@ class Intents(BaseFlags):
 
     @classmethod
     def all(cls: type[Intents]) -> Intents:
-        """A factory method that creates a :class:`Intents` with everything enabled.
-        """
+        """A factory method that creates a :class:`Intents` with everything enabled."""
         bits = max(cls.VALID_FLAGS.values()).bit_length()
         value = (1 << bits) - 1
         self = cls.__new__(cls)
@@ -642,8 +620,7 @@ class Intents(BaseFlags):
 
     @classmethod
     def none(cls: type[Intents]) -> Intents:
-        """A factory method that creates a :class:`Intents` with everything disabled.
-        """
+        """A factory method that creates a :class:`Intents` with everything disabled."""
         self = cls.__new__(cls)
         self.value = self.DEFAULT_VALUE
         return self
@@ -1191,8 +1168,7 @@ class MemberCacheFlags(BaseFlags):
 
     @classmethod
     def all(cls: type[MemberCacheFlags]) -> MemberCacheFlags:
-        """A factory method that creates a :class:`MemberCacheFlags` with everything enabled.
-        """
+        """A factory method that creates a :class:`MemberCacheFlags` with everything enabled."""
         bits = max(cls.VALID_FLAGS.values()).bit_length()
         value = (1 << bits) - 1
         self = cls.__new__(cls)
@@ -1201,8 +1177,7 @@ class MemberCacheFlags(BaseFlags):
 
     @classmethod
     def none(cls: type[MemberCacheFlags]) -> MemberCacheFlags:
-        """A factory method that creates a :class:`MemberCacheFlags` with everything disabled.
-        """
+        """A factory method that creates a :class:`MemberCacheFlags` with everything disabled."""
         self = cls.__new__(cls)
         self.value = self.DEFAULT_VALUE
         return self
@@ -1325,20 +1300,17 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def managed_emoji(self):
-        """:class:`bool`: Returns ``True`` if the application is a managed emoji.
-        """
+        """:class:`bool`: Returns ``True`` if the application is a managed emoji."""
         return 1 << 2
 
     @flag_value
     def group_dm_create(self):
-        """:class:`bool`: Returns ``True`` if the application can create group DMs.
-        """
+        """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
 
     @flag_value
     def rpc_has_connected(self):
-        """:class:`bool`: Returns ``True`` if the application has connected to RPC.
-        """
+        """:class:`bool`: Returns ``True`` if the application has connected to RPC."""
         return 1 << 11
 
     @flag_value
@@ -1378,14 +1350,12 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def embedded(self):
-        """:class:`bool`: Returns ``True`` if the application is embedded within the Discord client.
-        """
+        """:class:`bool`: Returns ``True`` if the application is embedded within the Discord client."""
         return 1 << 17
 
     @flag_value
     def gateway_message_content(self):
-        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds.
-        """
+        """:class:`bool`: Returns ``True`` if the application is allowed to read message contents in guilds."""
         return 1 << 18
 
     @flag_value
@@ -1452,6 +1422,5 @@ class ChannelFlags(BaseFlags):
 
     @flag_value
     def pinned(self):
-        """:class:`bool`: Returns ``True`` if the thread is pinned to the top of its parent forum channel.
-        """
+        """:class:`bool`: Returns ``True`` if the thread is pinned to the top of its parent forum channel."""
         return 1 << 1

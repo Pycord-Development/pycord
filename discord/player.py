@@ -101,8 +101,7 @@ class AudioSource:
         raise NotImplementedError
 
     def is_opus(self) -> bool:
-        """:class:`bool`: Checks if the audio source is already encoded in Opus.
-        """
+        """:class:`bool`: Checks if the audio source is already encoded in Opus."""
         return False
 
     def cleanup(self) -> None:
@@ -681,8 +680,7 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
 
     @property
     def volume(self) -> float:
-        """:class:`float`: Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%).
-        """
+        """:class:`float`: Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."""
         return self._volume
 
     @volume.setter

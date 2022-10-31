@@ -26,8 +26,7 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 async def google(ctx: discord.ApplicationContext, query: str):
-    """Returns a google link for a query.
-    """
+    """Returns a google link for a query."""
     await ctx.respond(f"Google Result for: `{query}`", view=Google(query))
 
 

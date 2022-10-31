@@ -239,26 +239,22 @@ class ScheduledEvent(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the scheduled event's creation time in UTC.
-        """
+        """:class:`datetime.datetime`: Returns the scheduled event's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def interested(self) -> int | None:
-        """An alias to :attr:`.subscriber_count`
-        """
+        """An alias to :attr:`.subscriber_count`"""
         return self.subscriber_count
 
     @property
     def url(self) -> str:
-        """:class:`str`: The url to reference the scheduled event.
-        """
+        """:class:`str`: The url to reference the scheduled event."""
         return f"https://discord.com/events/{self.guild.id}/{self.id}"
 
     @property
     def cover(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available.
-        """
+        """Optional[:class:`Asset`]: Returns the scheduled event cover image asset, if available."""
         if self._cover is None:
             return None
         return Asset._from_scheduled_event_cover(

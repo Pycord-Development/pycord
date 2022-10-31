@@ -157,8 +157,7 @@ aiohttp.hdrs.WEBSOCKET = "websocket"  # type: ignore
 
 
 class HTTPClient:
-    """Represents an HTTP client sending HTTP requests to the Discord API.
-    """
+    """Represents an HTTP client sending HTTP requests to the Discord API."""
 
     def __init__(
         self,
