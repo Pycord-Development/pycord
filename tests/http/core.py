@@ -196,13 +196,19 @@ def random_dict() -> dict[str, str | int | bool]:
     """Generate a random dictionary."""
     value_type = random.choice([str, int, bool])
     if value_type is str:
-        value = "test"  # TODO: Use random string in random_dict
+
+        def value():
+            return "test"  # TODO: Use random string in random_dict
+
     elif value_type is int:
-        value = random.randrange(0, 100)
+
+        def value():
+            return random.randrange(0, 100)
+
     else:
-        value = random_bool()
+        value = random_bool
     return {  # TODO: Use random string in random_dict keys
-        str(random_snowflake()): value for _ in range(random_count())
+        str(random_snowflake()): value() for _ in range(random_count())
     }
 
 
@@ -236,10 +242,10 @@ def message_ids() -> list[int]:
     return random_amount(random_snowflake)
 
 
-@pytest.fixture
-def reason() -> str:
+@pytest.fixture(params=[None, "test"])
+def reason(request) -> str:
     """A random reason fixture."""
-    return "test"  # TODO: Randomize reason fixture
+    return request.param  # TODO: Randomize reason fixture
 
 
 @pytest.fixture

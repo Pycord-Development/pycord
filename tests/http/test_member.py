@@ -24,13 +24,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import random
+from typing import Any
 
 import pytest
 
 from discord import Route
 
 from ..core import client
-from .core import guild_id, reason, user_id
+from .core import guild_id, random_dict, reason, user_id
 
 
 async def test_kick(client, guild_id, user_id, reason):
@@ -101,3 +102,125 @@ async def test_unban(client, guild_id, user_id, reason):
         reason=reason,
     ):
         await client.http.unban(user_id, guild_id, reason=reason)
+
+
+@pytest.mark.parametrize(
+    "mute",
+    (None, True, False),
+)
+@pytest.mark.parametrize(
+    "deafen",
+    (None, True, False),
+)
+async def test_guild_voice_state(client, user_id, guild_id, mute, deafen, reason):
+    """Test modifying a member's voice state."""
+    payload = {}
+    if mute is not None:
+        payload["mute"] = mute
+    if deafen is not None:
+        payload["deaf"] = deafen
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/members/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.guild_voice_state(
+            user_id, guild_id, mute=mute, deafen=deafen, reason=reason
+        )
+
+
+@pytest.mark.parametrize("payload", [random_dict()])
+async def test_edit_profile(client, guild_id, payload):
+    """Test editing the current user profile."""
+    with client.makes_request(Route("PATCH", "/users/@me"), json=payload):
+        await client.http.edit_profile(payload)
+
+
+@pytest.mark.parametrize(
+    "nickname",
+    ("test",),  # TODO: Randomize nickname param
+)
+async def test_change_my_nickname(
+    client, guild_id: int, nickname: str, reason: str | None
+):
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/members/@me",
+            guild_id=guild_id,
+        ),
+        json={"nick": nickname},
+        reason=reason,
+    ):
+        await client.http.change_my_nickname(guild_id, nickname, reason=reason)
+
+
+@pytest.mark.parametrize(
+    "nickname",
+    ("test",),  # TODO: Randomize nickname param
+)
+async def test_change_nickname(
+    client, guild_id: int, user_id: int, nickname: str, reason: str | None
+):
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/members/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        ),
+        json={"nick": nickname},
+        reason=reason,
+    ):
+        await client.http.change_nickname(guild_id, user_id, nickname, reason=reason)
+
+
+@pytest.mark.parametrize("payload", [random_dict()])
+async def test_edit_my_voice_state(client, guild_id: int, payload: dict[str, Any]):
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/voice-states/@me",
+            guild_id=guild_id,
+        ),
+        json=payload,
+    ):
+        await client.http.edit_my_voice_state(guild_id, payload)
+
+
+@pytest.mark.parametrize("payload", [random_dict()])
+async def test_edit_voice_state(
+    client, guild_id: int, user_id: int, payload: dict[str, Any]
+):
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/voice-states/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        ),
+        json=payload,
+    ):
+        await client.http.edit_voice_state(guild_id, user_id, payload)
+
+
+@pytest.mark.parametrize("payload", [random_dict()])
+async def test_edit_member(
+    client, guild_id: int, user_id: int, payload: dict[str, Any], reason: str | None
+):
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/members/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.edit_member(guild_id, user_id, **payload, reason=reason)
