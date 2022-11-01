@@ -237,7 +237,6 @@ class Button(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "style",
         "custom_id",
         "url",
@@ -325,7 +324,6 @@ class SelectMenu(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "placeholder",
         "min_values",
