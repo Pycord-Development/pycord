@@ -46,6 +46,7 @@ from .item import Item, ItemCallbackType
 __all__ = (
     "Select",
     "select",
+    "string_select",
     "user_select",
     "role_select",
     "mentionable_select",
