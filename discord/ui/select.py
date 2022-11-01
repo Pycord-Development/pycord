@@ -417,7 +417,6 @@ class Select(Item[V]):
 
 
 _select_types = (
-    ComponentType.select,
     ComponentType.string_select,
     ComponentType.user_select,
     ComponentType.role_select,

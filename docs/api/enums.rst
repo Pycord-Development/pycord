@@ -414,6 +414,12 @@ of :class:`enum.Enum`.
     .. attribute:: button
 
         Represents a button component.
+    .. attribute:: select
+
+        Represents a string select component.
+
+        .. deprecated:: 2.3.0
+            Use :attr:`ComponentType.string_select` instead.
     .. attribute:: string_select
 
         Represents a string select component.
