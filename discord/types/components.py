@@ -77,6 +77,7 @@ class SelectMenu(TypedDict):
     max_values: NotRequired[int]
     disabled: NotRequired[bool]
     channel_types: NotRequired[list[ChannelType]]
+    options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
 
