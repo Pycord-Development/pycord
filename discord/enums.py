@@ -664,7 +664,7 @@ class ComponentType(Enum):
 
     def __int__(self):
         return self.value
-        
+
     @property
     def select(self):
         return self.string_select
