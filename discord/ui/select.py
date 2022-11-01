@@ -78,7 +78,6 @@ class Select(Item[V]):
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         and :attr:`discord.ComponentType.channel_select`.
 
-
     Parameters
     ----------
     select_type: :class:`discord.ComponentType`
