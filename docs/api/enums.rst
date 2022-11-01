@@ -418,7 +418,7 @@ of :class:`enum.Enum`.
 
         Represents a string select component.
 
-        .. deprecated:: 2.3.0
+        .. deprecated:: 2.3
             Use :attr:`ComponentType.string_select` instead.
     .. attribute:: string_select
 

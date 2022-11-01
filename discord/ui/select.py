@@ -72,8 +72,20 @@ class Select(Item[V]):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.3
+
+        Added support for :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        and :attr:`discord.ComponentType.channel_select`.
+
+
     Parameters
     ----------
+    select_type: :class:`discord.ComponentType`
+        The type of select to create. Must be one of
+        :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        or :attr:`discord.ComponentType.channel_select`.
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         If not given then one is generated for you.
