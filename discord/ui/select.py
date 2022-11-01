@@ -131,7 +131,7 @@ class Select(Item[V]):
             )
         super().__init__()
         self._selected_values: list[str] = []
-        self._interaction: Interaction = None  # type: ignore
+        self._interaction: Interaction | None = None
         if min_values < 0 or min_values > 25:
             raise ValueError("min_values must be between 0 and 25")
         if max_values < 1 or max_values > 25:
