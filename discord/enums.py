@@ -654,8 +654,13 @@ class ComponentType(Enum):
 
     action_row = 1
     button = 2
-    select = 3
+    string_select = 3
+    select = string_select  # (deprecated) alias for string_select
     input_text = 4
+    user_select = 5
+    role_select = 6
+    mentionable_select = 7
+    channel_select = 8
 
     def __int__(self):
         return self.value
