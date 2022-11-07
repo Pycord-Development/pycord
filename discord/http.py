@@ -183,8 +183,7 @@ class HTTPClient:
         self.use_clock: bool = not unsync_clock
 
         user_agent = (
-            "DiscordBot (https://github.com/Pycord-Development/pycord {0})"
-            " Python/{1[0]}.{1[1]} aiohttp/{2}"
+            "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
         )
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
@@ -904,7 +903,8 @@ class HTTPClient:
             params["delete_message_seconds"] = delete_message_seconds
         elif delete_message_days:
             warn_deprecated(
-                "delete_message_daysdelete_message_seconds",
+                "delete_message_days",
+                "delete_message_seconds",
                 "2.2",
                 reference="https://github.com/discord/discord-api-docs/pull/5219",
             )
