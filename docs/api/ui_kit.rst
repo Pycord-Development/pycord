@@ -15,6 +15,21 @@ Shortcut decorators
 .. autofunction:: discord.ui.select
     :decorator:
 
+.. autofunction:: discord.ui.string_select
+    :decorator:
+
+.. autofunction:: discord.ui.user_select
+    :decorator:
+
+.. autofunction:: discord.ui.role_select
+    :decorator:
+
+.. autofunction:: discord.ui.mentionable_select
+    :decorator:
+
+.. autofunction:: discord.ui.channel_select
+    :decorator:
+
 Objects
 -------
 
