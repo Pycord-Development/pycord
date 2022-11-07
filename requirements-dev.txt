@@ -3,7 +3,7 @@ pylint~=2.15.5
 pytest~=7.2.0
 pytest-asyncio~=0.20.1
 # pytest-order~=1.0.1
-mypy~=0.982
+mypy~=0.990
 coverage~=6.5
 pre-commit==2.20.0
 codespell==2.2.2
