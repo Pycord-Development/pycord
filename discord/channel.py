@@ -88,6 +88,92 @@ if TYPE_CHECKING:
     from .webhook import Webhook
 
 
+class ForumTag(Hashable):
+    """Represents a forum tag that can be added to a thread inside a :class:`ForumChannel`
+    .
+        .. versionadded:: 2.3
+
+        .. container:: operations
+
+            .. describe:: x == y
+
+                Checks if two forum tags are equal.
+
+            .. describe:: x != y
+
+                Checks if two forum tags are not equal.
+
+            .. describe:: hash(x)
+
+                Returns the forum tag's hash.
+
+            .. describe:: str(x)
+
+                Returns the forum tag's name.
+
+        Attributes
+        ----------
+        id: :class:`int`
+            The tag ID.
+            Note that if the object was created manually then this will be ``0``.
+        name: :class:`str`
+            The name of the tag. Can only be up to 20 characters.
+        moderated: :class:`bool`
+            Whether this tag can only be added or removed by a moderator with
+            the :attr:`~Permissions.manage_threads` permission.
+        emoji: :class:`PartialEmoji`
+            The emoji that is used to represent this tag.
+            Note that if the emoji is a custom emoji, it will *not* have name information.
+    """
+
+    __slots__ = ("name", "id", "moderated", "emoji")
+
+    def __init__(
+        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
+    ) -> None:
+        self.name: str = name
+        self.id: int = 0
+        self.moderated: bool = moderated
+        self.emoji: PartialEmoji
+        if isinstance(emoji, _EmojiTag):
+            self.emoji = emoji._to_partial()
+        elif isinstance(emoji, str):
+            self.emoji = PartialEmoji.from_str(emoji)
+        else:
+            raise TypeError(
+                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
+            )
+
+    def __repr__(self) -> str:
+        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+
+    def __str__(self) -> str:
+        return self.name
+
+    @classmethod
+    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> ForumTag:
+        self = cls.__new__(cls)
+        self.name = data["name"]
+        self.id = int(data["id"])
+        self.moderated = data.get("moderated", False)
+
+        emoji_name = data["emoji_name"] or ""
+        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
+        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
+        return self
+
+    def to_dict(self) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "name": self.name,
+            "moderated": self.moderated,
+        } | self.emoji._to_forum_tag_payload()
+
+        if self.id:
+            payload["id"] = self.id
+
+        return payload
+
+
 class _TextChannel(discord.abc.GuildChannel, Hashable):
     __slots__ = (
         "name",
@@ -104,7 +190,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
-        "available_tags",
+        "available_tags",  # only available in forum channels
         "flags",
     )
 
@@ -146,11 +232,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
-            )
-            self.available_tags: list[int] | None = (
-                [int(tag_id) for tag_id in tag_ids]
-                if (tag_ids := data.get("available_tags")) is not None
-                else None
             )
             self.last_message_id: int | None = utils._get_as_snowflake(
                 data, "last_message_id"
@@ -236,7 +317,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
-        available_tags: list[int] = ...,
+        available_tags: list[ForumTag] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
     ) -> TextChannel | None:
@@ -295,11 +376,12 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
-            .. versionadded:: 2.3
-        available_tags: List[:class:`int`]
-            The set of tags that can be used in a forum channel.
 
-            .. versionadded:: 2.2
+            .. versionadded:: 2.3
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in a forum channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
 
         Returns
         -------
@@ -840,92 +922,6 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return Thread(guild=self.guild, state=self._state, data=data)
 
 
-class ForumTag(Hashable):
-    """Represents a forum tag that can be added to a thread inside a :class:`ForumChannel`
-    .
-        .. versionadded:: 2.3
-
-        .. container:: operations
-
-            .. describe:: x == y
-
-                Checks if two forum tags are equal.
-
-            .. describe:: x != y
-
-                Checks if two forum tags are not equal.
-
-            .. describe:: hash(x)
-
-                Returns the forum tag's hash.
-
-            .. describe:: str(x)
-
-                Returns the forum tag's name.
-
-        Attributes
-        ----------
-        id: :class:`int`
-            The tag ID.
-            Note that if the object was created manually then this will be ``0``.
-        name: :class:`str`
-            The name of the tag. Can only be up to 20 characters.
-        moderated: :class:`bool`
-            Whether this tag can only be added or removed by a moderator with
-            the :attr:`~Permissions.manage_threads` permission.
-        emoji: :class:`PartialEmoji`
-            The emoji that is used to represent this tag.
-            Note that if the emoji is a custom emoji, it will *not* have name information.
-    """
-
-    __slots__ = ("name", "id", "moderated", "emoji")
-
-    def __init__(
-        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
-    ) -> None:
-        self.name: str = name
-        self.id: int = 0
-        self.moderated: bool = moderated
-        self.emoji: PartialEmoji
-        if isinstance(emoji, _EmojiTag):
-            self.emoji = emoji._to_partial()
-        elif isinstance(emoji, str):
-            self.emoji = PartialEmoji.from_str(emoji)
-        else:
-            raise TypeError(
-                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
-            )
-
-    def __repr__(self) -> str:
-        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
-
-    def __str__(self) -> str:
-        return self.name
-
-    @classmethod
-    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> ForumTag:
-        self = cls.__new__(cls)
-        self.name = data["name"]
-        self.id = int(data["id"])
-        self.moderated = data.get("moderated", False)
-
-        emoji_name = data["emoji_name"] or ""
-        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
-        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
-        return self
-
-    def to_dict(self) -> dict[str, Any]:
-        payload: dict[str, Any] = {
-            "name": self.name,
-            "moderated": self.moderated,
-        } | self.emoji._to_forum_tag_payload()
-
-        if self.id:
-            payload["id"] = self.id
-
-        return payload
-
-
 class ForumChannel(_TextChannel):
     """Represents a Discord forum channel.
 
@@ -988,12 +984,21 @@ class ForumChannel(_TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+
+    available_tags: List[:class:`ForumTag`]
+        The set of tags that can be used in a forum channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
         self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload
     ):
         super().__init__(state=state, guild=guild, data=data)
+        self.available_tags: list[ForumTag] = [
+            ForumTag.from_data(state=state, data=tag)
+            for tag in data.get("available_tags", [])
+        ]
 
     def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
         super()._update(guild, data)
