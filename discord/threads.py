@@ -297,7 +297,8 @@ class Thread(Messageable, Hashable):
         """
         if isinstance(self.parent, ForumChannel):
             return [
-                tag for tag_id in self._applied_tags
+                tag
+                for tag_id in self._applied_tags
                 if (tag := self.parent.get_tag(tag_id)) is not None
             ]
         return []
