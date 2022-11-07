@@ -1008,6 +1008,14 @@ class ForumChannel(_TextChannel):
         """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
 
+    def get_tag(self, id: int, /) -> ForumTag | None:
+        """Returns the :class:`ForumTag` from this forum channel with the
+        given ID, if any.
+
+        .. versionadded:: 2.3
+        """
+        return utils.get(self.available_tags, id=id)
+
     async def create_thread(
         self,
         name: str,
