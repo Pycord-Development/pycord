@@ -61,7 +61,8 @@ def add_custom_jinja2(app) -> None:
 
 
 def add_builders(app) -> None:
-    """This is necessary because RTD injects their own for some reason."""
+    """This is necessary because RTD injects their own for some reason.
+    """
     app.set_translator("html", DPYHTML5Translator, override=True)
     app.add_builder(DPYStandaloneHTMLBuilder, override=True)
 

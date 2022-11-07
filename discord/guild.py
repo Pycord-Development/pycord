@@ -609,7 +609,8 @@ class Guild(Hashable):
 
     @property
     def channels(self) -> list[GuildChannel]:
-        """List[:class:`abc.GuildChannel`]: A list of channels that belong to this guild."""
+        """List[:class:`abc.GuildChannel`]: A list of channels that belong to this guild.
+        """
         return list(self._channels.values())
 
     @property
@@ -687,7 +688,8 @@ class Guild(Hashable):
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
-        """Optional[:class:`VoiceProtocol`]: Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+        """Optional[:class:`VoiceProtocol`]: Returns the :class:`VoiceProtocol` associated with this guild, if any.
+        """
         return self._state._get_voice_client(self.id)
 
     @property
@@ -815,7 +817,8 @@ class Guild(Hashable):
 
     @property
     def system_channel_flags(self) -> SystemChannelFlags:
-        """:class:`SystemChannelFlags`: Returns the guild's system channel settings."""
+        """:class:`SystemChannelFlags`: Returns the guild's system channel settings.
+        """
         return SystemChannelFlags._from_value(self._system_channel_flags)
 
     @property
@@ -845,7 +848,8 @@ class Guild(Hashable):
 
     @property
     def emoji_limit(self) -> int:
-        """:class:`int`: The maximum number of emoji slots this guild has."""
+        """:class:`int`: The maximum number of emoji slots this guild has.
+        """
         more_emoji = 200 if "MORE_EMOJI" in self.features else 50
         return max(more_emoji, self._PREMIUM_GUILD_LIMITS[self.premium_tier].emoji)
 
@@ -862,7 +866,8 @@ class Guild(Hashable):
 
     @property
     def bitrate_limit(self) -> float:
-        """:class:`float`: The maximum bitrate for voice channels this guild can have."""
+        """:class:`float`: The maximum bitrate for voice channels this guild can have.
+        """
         vip_guild = (
             self._PREMIUM_GUILD_LIMITS[1].bitrate
             if "VIP_REGIONS" in self.features
@@ -872,12 +877,14 @@ class Guild(Hashable):
 
     @property
     def filesize_limit(self) -> int:
-        """:class:`int`: The maximum number of bytes files can have when uploaded to this guild."""
+        """:class:`int`: The maximum number of bytes files can have when uploaded to this guild.
+        """
         return self._PREMIUM_GUILD_LIMITS[self.premium_tier].filesize
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members that belong to this guild."""
+        """List[:class:`Member`]: A list of members that belong to this guild.
+        """
         return list(self._members.values())
 
     def get_member(self, user_id: int, /) -> Member | None:
@@ -897,7 +904,8 @@ class Guild(Hashable):
 
     @property
     def premium_subscribers(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who have "boosted" this guild."""
+        """List[:class:`Member`]: A list of members who have "boosted" this guild.
+        """
         return [member for member in self.members if member.premium_since is not None]
 
     @property
@@ -926,7 +934,8 @@ class Guild(Hashable):
 
     @property
     def default_role(self) -> Role:
-        """:class:`Role`: Gets the @everyone role that all members have by default."""
+        """:class:`Role`: Gets the @everyone role that all members have by default.
+        """
         # The @everyone role is *always* given
         return self.get_role(self.id)  # type: ignore
 
@@ -982,19 +991,22 @@ class Guild(Hashable):
 
     @property
     def owner(self) -> Member | None:
-        """Optional[:class:`Member`]: The member that owns the guild."""
+        """Optional[:class:`Member`]: The member that owns the guild.
+        """
         return self.get_member(self.owner_id)  # type: ignore
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
+        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available.
+        """
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
 
     @property
     def banner(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's banner asset, if available."""
+        """Optional[:class:`Asset`]: Returns the guild's banner asset, if available.
+        """
         if self._banner is None:
             return None
         return Asset._from_guild_image(
@@ -1003,7 +1015,8 @@ class Guild(Hashable):
 
     @property
     def splash(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available."""
+        """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available.
+        """
         if self._splash is None:
             return None
         return Asset._from_guild_image(
@@ -1012,7 +1025,8 @@ class Guild(Hashable):
 
     @property
     def discovery_splash(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's discovery splash asset, if available."""
+        """Optional[:class:`Asset`]: Returns the guild's discovery splash asset, if available.
+        """
         if self._discovery_splash is None:
             return None
         return Asset._from_guild_image(
@@ -1047,7 +1061,8 @@ class Guild(Hashable):
 
     @property
     def shard_id(self) -> int:
-        """:class:`int`: Returns the shard ID for this guild if applicable."""
+        """:class:`int`: Returns the shard ID for this guild if applicable.
+        """
         count = self._state.shard_count
         if count is None:
             return 0
@@ -1055,12 +1070,14 @@ class Guild(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the guild's creation time in UTC."""
+        """:class:`datetime.datetime`: Returns the guild's creation time in UTC.
+        """
         return utils.snowflake_time(self.id)
 
     @property
     def invites_disabled(self) -> bool:
-        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled."""
+        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled.
+        """
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Member | None:
@@ -3716,7 +3733,8 @@ class Guild(Hashable):
 
     @property
     def scheduled_events(self) -> list[ScheduledEvent]:
-        """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
+        """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild.
+        """
         return list(self._scheduled_events.values())
 
     async def fetch_auto_moderation_rules(self) -> list[AutoModRule]:

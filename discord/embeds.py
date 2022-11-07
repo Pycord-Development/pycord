@@ -768,7 +768,8 @@ class Embed:
         return self
 
     def clear_fields(self) -> None:
-        """Removes all fields from this embed."""
+        """Removes all fields from this embed.
+        """
         self._fields.clear()
 
     def remove_field(self, index: int) -> None:

@@ -66,7 +66,8 @@ bot = PersistentViewBot()
 @bot.command()
 @commands.is_owner()
 async def prepare(ctx: commands.Context):
-    """Starts a persistent view."""
+    """Starts a persistent view.
+    """
     # In order for a persistent view to be listened to, it needs to be sent to an actual message.
     # Call this method once just to store it somewhere.
     # In a more complicated program you might fetch the message_id from a database for use later.

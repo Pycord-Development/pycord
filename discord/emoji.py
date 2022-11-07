@@ -155,12 +155,14 @@ class Emoji(_EmojiTag, AssetMixin):
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the emoji's creation time in UTC."""
+        """:class:`datetime.datetime`: Returns the emoji's creation time in UTC.
+        """
         return snowflake_time(self.id)
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the URL of the emoji."""
+        """:class:`str`: Returns the URL of the emoji.
+        """
         fmt = "gif" if self.animated else "png"
         return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
 
@@ -178,7 +180,8 @@ class Emoji(_EmojiTag, AssetMixin):
 
     @property
     def guild(self) -> Guild:
-        """:class:`Guild`: The guild this emoji belongs to."""
+        """:class:`Guild`: The guild this emoji belongs to.
+        """
         return self._state._get_guild(self.guild_id)
 
     def is_usable(self) -> bool:

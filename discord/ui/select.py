@@ -171,7 +171,8 @@ class Select(Item[V]):
 
     @property
     def custom_id(self) -> str:
-        """:class:`str`: The ID of the select menu that gets received during an interaction."""
+        """:class:`str`: The ID of the select menu that gets received during an interaction.
+        """
         return self._underlying.custom_id
 
     @custom_id.setter
@@ -184,7 +185,8 @@ class Select(Item[V]):
 
     @property
     def placeholder(self) -> str | None:
-        """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any."""
+        """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any.
+        """
         return self._underlying.placeholder
 
     @placeholder.setter
@@ -198,7 +200,8 @@ class Select(Item[V]):
 
     @property
     def min_values(self) -> int:
-        """:class:`int`: The minimum number of items that must be chosen for this select menu."""
+        """:class:`int`: The minimum number of items that must be chosen for this select menu.
+        """
         return self._underlying.min_values
 
     @min_values.setter
@@ -209,7 +212,8 @@ class Select(Item[V]):
 
     @property
     def max_values(self) -> int:
-        """:class:`int`: The maximum number of items that must be chosen for this select menu."""
+        """:class:`int`: The maximum number of items that must be chosen for this select menu.
+        """
         return self._underlying.max_values
 
     @max_values.setter
@@ -220,7 +224,8 @@ class Select(Item[V]):
 
     @property
     def disabled(self) -> bool:
-        """:class:`bool`: Whether the select is disabled or not."""
+        """:class:`bool`: Whether the select is disabled or not.
+        """
         return self._underlying.disabled
 
     @disabled.setter
@@ -229,7 +234,8 @@ class Select(Item[V]):
 
     @property
     def channel_types(self) -> list[ChannelType]:
-        """List[:class:`discord.ChannelType`]: A list of channel types that can be selected in this menu."""
+        """List[:class:`discord.ChannelType`]: A list of channel types that can be selected in this menu.
+        """
         return self._underlying.channel_types
 
     @channel_types.setter
@@ -240,7 +246,8 @@ class Select(Item[V]):
 
     @property
     def options(self) -> list[SelectOption]:
-        """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu."""
+        """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu.
+        """
         return self._underlying.options
 
     @options.setter

@@ -438,7 +438,8 @@ class SelectOption:
 
     @property
     def emoji(self) -> str | Emoji | PartialEmoji | None:
-        """Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]: The emoji of the option, if available."""
+        """Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]: The emoji of the option, if available.
+        """
         return self._emoji
 
     @emoji.setter

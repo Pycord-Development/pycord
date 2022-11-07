@@ -208,20 +208,24 @@ class Interaction:
 
     @property
     def client(self) -> Client:
-        """:class:`Client`: Returns the client that sent the interaction."""
+        """:class:`Client`: Returns the client that sent the interaction.
+        """
         return self._state._get_client()
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild the interaction was sent from."""
+        """Optional[:class:`Guild`]: The guild the interaction was sent from.
+        """
         return self._state and self._state._get_guild(self.guild_id)
 
     def is_command(self) -> bool:
-        """:class:`bool`: Indicates whether the interaction is an application command."""
+        """:class:`bool`: Indicates whether the interaction is an application command.
+        """
         return self.type == InteractionType.application_command
 
     def is_component(self) -> bool:
-        """:class:`bool`: Indicates whether the interaction is a message component."""
+        """:class:`bool`: Indicates whether the interaction is a message component.
+        """
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
@@ -257,7 +261,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_app_permissions")
     def app_permissions(self) -> Permissions:
-        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
+        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites.
+        """
         return Permissions(self._app_permissions)
 
     @utils.cached_slot_property("_cs_response")
@@ -271,7 +276,8 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
+        """:class:`Webhook`: Returns the followup webhook for followup interactions.
+        """
         payload = {
             "id": self.application_id,
             "type": 3,

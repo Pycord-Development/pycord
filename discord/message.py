@@ -199,7 +199,8 @@ class Attachment(Hashable):
         self.description: str | None = data.get("description")
 
     def is_spoiler(self) -> bool:
-        """:class:`bool`: Whether this attachment contains a spoiler."""
+        """:class:`bool`: Whether this attachment contains a spoiler.
+        """
         return self.filename.startswith("SPOILER_")
 
     def __repr__(self) -> str:
@@ -383,18 +384,21 @@ class DeletedReferencedMessage:
 
     @property
     def id(self) -> int:
-        """:class:`int`: The message ID of the deleted referenced message."""
+        """:class:`int`: The message ID of the deleted referenced message.
+        """
         # the parent's message id won't be None here
         return self._parent.message_id  # type: ignore
 
     @property
     def channel_id(self) -> int:
-        """:class:`int`: The channel ID of the deleted referenced message."""
+        """:class:`int`: The channel ID of the deleted referenced message.
+        """
         return self._parent.channel_id
 
     @property
     def guild_id(self) -> int | None:
-        """Optional[:class:`int`]: The guild ID of the deleted referenced message."""
+        """Optional[:class:`int`]: The guild ID of the deleted referenced message.
+        """
         return self._parent.guild_id
 
 
@@ -503,7 +507,8 @@ class MessageReference:
 
     @property
     def cached_message(self) -> Message | None:
-        """Optional[:class:`~discord.Message`]: The cached message, if found in the internal message cache."""
+        """Optional[:class:`~discord.Message`]: The cached message, if found in the internal message cache.
+        """
         return self._state and self._state._get_message(self.message_id)
 
     @property
@@ -1067,7 +1072,8 @@ class Message(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The message's creation time in UTC."""
+        """:class:`datetime.datetime`: The message's creation time in UTC.
+        """
         return utils.snowflake_time(self.id)
 
     @property
@@ -1079,7 +1085,8 @@ class Message(Hashable):
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to this message."""
+        """:class:`str`: Returns a URL that allows the client to jump to this message.
+        """
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
 
@@ -1873,12 +1880,14 @@ class PartialMessage(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The partial message's creation time in UTC."""
+        """:class:`datetime.datetime`: The partial message's creation time in UTC.
+        """
         return utils.snowflake_time(self.id)
 
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild that the partial message belongs to, if applicable."""
+        """Optional[:class:`Guild`]: The guild that the partial message belongs to, if applicable.
+        """
         return getattr(self.channel, "guild", None)
 
     async def fetch(self) -> Message:

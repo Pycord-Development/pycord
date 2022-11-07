@@ -267,7 +267,8 @@ class Loop(Generic[LF]):
 
     @property
     def current_loop(self) -> int:
-        """:class:`int`: The current iteration of the loop."""
+        """:class:`int`: The current iteration of the loop.
+        """
         return self._current_loop
 
     @property
@@ -362,7 +363,8 @@ class Loop(Generic[LF]):
         )
 
     def cancel(self) -> None:
-        """Cancels the internal task, if it is running."""
+        """Cancels the internal task, if it is running.
+        """
         if self._can_be_cancelled():
             self._task.cancel()
 
@@ -450,11 +452,13 @@ class Loop(Generic[LF]):
         return len(self._valid_exception) == old_length - len(exceptions)
 
     def get_task(self) -> asyncio.Task[None] | None:
-        """Optional[:class:`asyncio.Task`]: Fetches the internal task or ``None`` if there isn't one running."""
+        """Optional[:class:`asyncio.Task`]: Fetches the internal task or ``None`` if there isn't one running.
+        """
         return self._task if self._task is not MISSING else None
 
     def is_being_cancelled(self) -> bool:
-        """Whether the task is being cancelled."""
+        """Whether the task is being cancelled.
+        """
         return self._is_being_cancelled
 
     def failed(self) -> bool:
