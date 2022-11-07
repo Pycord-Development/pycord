@@ -208,25 +208,25 @@ class Interaction:
 
     @property
     def client(self) -> Client:
-        """:class:`Client`: Returns the client that sent the interaction."""
+        """Returns the client that sent the interaction."""
         return self._state._get_client()
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild the interaction was sent from."""
+        """The guild the interaction was sent from."""
         return self._state and self._state._get_guild(self.guild_id)
 
     def is_command(self) -> bool:
-        """:class:`bool`: Indicates whether the interaction is an application command."""
+        """Indicates whether the interaction is an application command."""
         return self.type == InteractionType.application_command
 
     def is_component(self) -> bool:
-        """:class:`bool`: Indicates whether the interaction is a message component."""
+        """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
     def channel(self) -> InteractionChannel | None:
-        """Optional[Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]]: The channel the
+        """The channel the
         interaction was sent from.
 
         Note that due to a Discord limitation, DM channels are not resolved since there is
@@ -249,7 +249,7 @@ class Interaction:
 
     @property
     def permissions(self) -> Permissions:
-        """:class:`Permissions`: The resolved permissions of the member in the channel, including overwrites.
+        """The resolved permissions of the member in the channel, including overwrites.
 
         In a non-guild context where this doesn't apply, an empty permissions object is returned.
         """
@@ -257,12 +257,12 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_app_permissions")
     def app_permissions(self) -> Permissions:
-        """:class:`Permissions`: The resolved permissions of the application in the channel, including overwrites."""
+        """The resolved permissions of the application in the channel, including overwrites."""
         return Permissions(self._app_permissions)
 
     @utils.cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
-        """:class:`InteractionResponse`: Returns an object responsible for handling responding to the interaction.
+        """Returns an object responsible for handling responding to the interaction.
 
         A response can only be done once. If secondary messages need to be sent, consider using :attr:`followup`
         instead.
@@ -271,7 +271,7 @@ class Interaction:
 
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
+        """Returns the followup webhook for followup interactions."""
         payload = {
             "id": self.application_id,
             "type": 3,
@@ -586,7 +586,7 @@ class InteractionResponse:
         self._response_lock = asyncio.Lock()
 
     def is_done(self) -> bool:
-        """:class:`bool`: Indicates whether an interaction response has been done before.
+        """Indicates whether an interaction response has been done before.
 
         An interaction can only be responded to once.
         """

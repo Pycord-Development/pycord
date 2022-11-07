@@ -172,8 +172,8 @@ class Paginator:
         return total + self._count
 
     @property
-    def pages(self):
-        """List[:class:`str`]: Returns the rendered list of pages."""
+    def pages(self) -> list[str]:
+        """Returns the rendered list of pages."""
         # we have more than just the prefix in our current page
         if len(self._current_page) > (0 if self.prefix is None else 1):
             self.close_page()
@@ -947,14 +947,14 @@ class DefaultHelpCommand(HelpCommand):
 
         super().__init__(**options)
 
-    def shorten_text(self, text):
-        """:class:`str`: Shortens text to fit into the :attr:`width`."""
+    def shorten_text(self, text: str) -> str:
+        """Shortens text to fit into the :attr:`width`."""
         if len(text) > self.width:
             return f"{text[:self.width - 3].rstrip()}..."
         return text
 
-    def get_ending_note(self):
-        """:class:`str`: Returns help command's ending note. This is mainly useful to override for i18n purposes."""
+    def get_ending_note(self) -> str:
+        """Returns help command's ending note. This is mainly useful to override for i18n purposes."""
         command_name = self.invoked_with
         return (
             f"Type {self.context.clean_prefix}{command_name} command for more info on a"

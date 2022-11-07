@@ -146,7 +146,7 @@ class BaseUser(_UserTag):
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the user.
+        """Returns a URL that allows the client to jump to the user.
 
         .. versionadded:: 2.0
         """
@@ -154,12 +154,12 @@ class BaseUser(_UserTag):
 
     @property
     def public_flags(self) -> PublicUserFlags:
-        """:class:`PublicUserFlags`: The publicly available flags the user has."""
+        """The publicly available flags the user has."""
         return PublicUserFlags._from_value(self._public_flags)
 
     @property
     def avatar(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns an :class:`Asset` for the avatar the user has.
+        """Returns an :class:`Asset` for the avatar the user has.
 
         If the user does not have a traditional avatar, ``None`` is returned.
         If you want the avatar that a user has displayed, consider :attr:`display_avatar`.
@@ -170,7 +170,7 @@ class BaseUser(_UserTag):
 
     @property
     def default_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the default avatar for a given user.
+        """Returns the default avatar for a given user.
         This is calculated by the user's discriminator.
         """
         return Asset._from_default_avatar(
@@ -179,7 +179,7 @@ class BaseUser(_UserTag):
 
     @property
     def display_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the user's display avatar.
+        """Returns the user's display avatar.
 
         For regular users this is just their default avatar or uploaded avatar.
 
@@ -189,7 +189,7 @@ class BaseUser(_UserTag):
 
     @property
     def banner(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the user's banner asset, if available.
+        """Returns the user's banner asset, if available.
 
         .. versionadded:: 2.0
 
@@ -202,7 +202,7 @@ class BaseUser(_UserTag):
 
     @property
     def accent_colour(self) -> Colour | None:
-        """Optional[:class:`Colour`]: Returns the user's accent colour, if applicable.
+        """Returns the user's accent colour, if applicable.
 
         There is an alias for this named :attr:`accent_color`.
 
@@ -218,7 +218,7 @@ class BaseUser(_UserTag):
 
     @property
     def accent_color(self) -> Colour | None:
-        """Optional[:class:`Colour`]: Returns the user's accent color, if applicable.
+        """Returns the user's accent color, if applicable.
 
         There is an alias for this named :attr:`accent_colour`.
 
@@ -232,7 +232,7 @@ class BaseUser(_UserTag):
 
     @property
     def colour(self) -> Colour:
-        """:class:`Colour`: A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered colour
         for the user. This always returns :meth:`Colour.default`.
 
         There is an alias for this named :attr:`color`.
@@ -241,7 +241,7 @@ class BaseUser(_UserTag):
 
     @property
     def color(self) -> Colour:
-        """:class:`Colour`: A property that returns a color denoting the rendered color
+        """A property that returns a color denoting the rendered color
         for the user. This always returns :meth:`Colour.default`.
 
         There is an alias for this named :attr:`colour`.
@@ -250,12 +250,12 @@ class BaseUser(_UserTag):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the given user."""
+        """Returns a string that allows you to mention the given user."""
         return f"<@{self.id}>"
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the user's creation time in UTC.
+        """Returns the user's creation time in UTC.
 
         This is when the user's Discord account was created.
         """
@@ -263,7 +263,7 @@ class BaseUser(_UserTag):
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the user's display name.
+        """Returns the user's display name.
 
         For regular users this is just their username, but
         if they have a guild specific nickname then that
@@ -477,7 +477,7 @@ class User(BaseUser, discord.abc.Messageable):
 
     @property
     def dm_channel(self) -> DMChannel | None:
-        """Optional[:class:`DMChannel`]: Returns the channel associated with this user if it exists.
+        """Returns the channel associated with this user if it exists.
 
         If this returns ``None``, you can create a DM channel by calling the
         :meth:`create_dm` coroutine function.
@@ -486,7 +486,7 @@ class User(BaseUser, discord.abc.Messageable):
 
     @property
     def mutual_guilds(self) -> list[Guild]:
-        """List[:class:`Guild`]: The guilds that the user shares with the client.
+        """The guilds that the user shares with the client.
 
         .. note::
 

@@ -257,7 +257,7 @@ class ShardInfo:
         self.shard_count: int | None = shard_count
 
     def is_closed(self) -> bool:
-        """:class:`bool`: Whether the shard connection is currently closed."""
+        """Whether the shard connection is currently closed."""
         return not self._parent.ws.open
 
     async def disconnect(self) -> None:
@@ -294,11 +294,11 @@ class ShardInfo:
 
     @property
     def latency(self) -> float:
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
         return self._parent.ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """Whether the websocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -405,7 +405,7 @@ class AutoShardedClient(Client):
         ]
 
     def get_shard(self, shard_id: int) -> ShardInfo | None:
-        """Optional[:class:`ShardInfo`]: Gets the shard information at a given shard ID or ``None`` if not found."""
+        """Gets the shard information at a given shard ID or ``None`` if not found."""
         try:
             parent = self.__shards[shard_id]
         except KeyError:

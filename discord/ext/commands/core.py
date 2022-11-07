@@ -679,7 +679,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def full_parent_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified parent command name.
+        """Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
         in ``?one two three`` the parent name would be ``one two``.
@@ -695,7 +695,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def parents(self) -> list[Group]:
-        """List[:class:`Group`]: Retrieves the parents of this command.
+        """Retrieves the parents of this command.
 
         If the command has no parents then it returns an empty :class:`list`.
 
@@ -713,7 +713,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def root_parent(self) -> Group | None:
-        """Optional[:class:`Group`]: Retrieves the root parent of this command.
+        """Retrieves the root parent of this command.
 
         If the command has no parents then it returns ``None``.
 
@@ -725,7 +725,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
+        """Retrieves the fully qualified command name.
 
         This is the full parent name with the command name as well.
         For example, in ``?one two three`` the qualified name would be
@@ -991,7 +991,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered.
+        """Checks whether the command has an error handler registered.
 
         .. versionadded:: 1.7
         """
@@ -1053,12 +1053,12 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def cog_name(self) -> str | None:
-        """Optional[:class:`str`]: The name of the cog this command belongs to, if any."""
+        """The name of the cog this command belongs to, if any."""
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
     @property
     def short_doc(self) -> str:
-        """:class:`str`: Gets the "short" documentation of a command.
+        """Gets the "short" documentation of a command.
 
         By default, this is the :attr:`.brief` attribute.
         If that lookup leads to an empty string then the first line of the
@@ -1080,7 +1080,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def signature(self) -> str:
-        """:class:`str`: Returns a POSIX-like signature useful for help command output."""
+        """Returns a POSIX-like signature useful for help command output."""
         if self.usage is not None:
             return self.usage
 
@@ -1233,7 +1233,7 @@ class GroupMixin(Generic[CogT]):
 
     @property
     def commands(self) -> set[Command[CogT, Any, Any]]:
-        """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
+        """A unique set of commands without aliases that are registered."""
         return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:
