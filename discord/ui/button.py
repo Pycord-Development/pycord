@@ -64,7 +64,7 @@ class Button(Item[V]):
     disabled: :class:`bool`
         Whether the button is disabled or not.
     label: Optional[:class:`str`]
-        The label of the button, if any.
+        The label of the button, if any. Maximum of 80 chars.
     emoji: Optional[Union[:class:`.PartialEmoji`, :class:`.Emoji`, :class:`str`]]
         The emoji of the button, if available.
     row: Optional[:class:`int`]
