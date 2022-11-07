@@ -27,6 +27,8 @@ from __future__ import annotations
 from typing import Literal, Union
 
 from .._typed_dict import NotRequired, TypedDict
+from ..enums import SortOrder
+from ..flags import ChannelFlags
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import PartialUser
@@ -67,6 +69,7 @@ class _TextChannelOptional(TypedDict, total=False):
     last_pin_timestamp: str
     rate_limit_per_user: int
     default_auto_archive_duration: ThreadArchiveDuration
+    default_thread_rate_limit_per_user: int
 
 
 class TextChannel(_BaseGuildChannel, _TextChannelOptional):
@@ -90,7 +93,8 @@ class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[15]
     available_tags: NotRequired(list[ForumTag] | None)
     default_reaction_emoji: NotRequired(DefaultReaction | None)
-    flags: int
+    default_sort_order: NotRequired(SortOrder | None)
+    flags: ChannelFlags
 
 
 class NewsChannel(_BaseGuildChannel, _TextChannelOptional):
@@ -134,6 +138,8 @@ class ThreadChannel(_BaseChannel):
     member_count: int
     thread_metadata: ThreadMetadata
     applied_tags: NotRequired(list[Snowflake] | None)
+    flags: ChannelFlags
+    total_message_sent: int
 
 
 GuildChannel = Union[

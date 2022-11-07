@@ -126,6 +126,10 @@ class Thread(Messageable, Hashable):
         Only available for threads created after 2022-01-09.
     flags: :class:`ChannelFlags`
         Extra features of the thread.
+    total_message_sent: :class:`int`
+        Number of messages ever sent in a thread.
+        It's similar to message_count on message creation,
+        but will not decrement the number when a message is deleted.
 
         .. versionadded:: 2.0
     """
@@ -151,6 +155,7 @@ class Thread(Messageable, Hashable):
         "archive_timestamp",
         "created_at",
         "flags",
+        "total_message_sent",
     )
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: ThreadPayload):
@@ -189,6 +194,7 @@ class Thread(Messageable, Hashable):
         self.message_count = data.get("message_count", None)
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+        self.total_message_sent = data.get("total_message_sent", None)
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
@@ -202,6 +208,11 @@ class Thread(Messageable, Hashable):
                 thread.message_count
                 if self.message_count is None
                 else self.message_count
+            )
+            self.total_message_sent = (
+                thread.total_message_sent
+                if self.total_message_sent is None
+                else self.total_message_sent
             )
             self.member_count = (
                 thread.member_count if self.member_count is None else self.member_count

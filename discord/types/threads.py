@@ -28,6 +28,7 @@ from __future__ import annotations
 from typing import Literal
 
 from .._typed_dict import NotRequired, TypedDict
+from ..flags import ChannelFlags
 from .snowflake import Snowflake
 
 ThreadType = Literal[10, 11, 12]
@@ -64,6 +65,8 @@ class Thread(TypedDict):
     message_count: int
     rate_limit_per_user: int
     thread_metadata: ThreadMetadata
+    flags: ChannelFlags
+    total_message_sent: int
 
 
 class ThreadPaginationPayload(TypedDict):
