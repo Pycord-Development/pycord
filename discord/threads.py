@@ -41,7 +41,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
-    from .channel import CategoryChannel, ForumChannel, TextChannel
+    from .channel import CategoryChannel, ForumChannel, ForumTag, TextChannel
     from .guild import Guild
     from .member import Member
     from .message import Message, PartialMessage
@@ -141,6 +141,7 @@ class Thread(Messageable, Hashable):
         "_type",
         "_state",
         "_members",
+        "_applied_tags",
         "owner_id",
         "parent_id",
         "last_message_id",
@@ -195,6 +196,7 @@ class Thread(Messageable, Hashable):
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.total_message_sent = data.get("total_message_sent", None)
+        self._applied_tags: list[int] = data.get("applied_tags", [])
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
@@ -286,6 +288,19 @@ class Thread(Messageable, Hashable):
         needed.
         """
         return list(self._members.values())
+
+    @property
+    def applied_tags(self) -> list[ForumTag]:
+        """List[:class:`ForumTag`]: A list of tags applied to this thread.
+
+        This is only available for threads in forum channels.
+        """
+        if isinstance(self.parent, ForumChannel):
+            return [
+                tag for tag_id in self._applied_tags
+                if (tag := self.parent.get_tag(tag_id)) is not None
+            ]
+        return []
 
     @property
     def last_message(self) -> Message | None:
