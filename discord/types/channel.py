@@ -77,8 +77,8 @@ class TextChannel(_BaseGuildChannel, _TextChannelOptional):
 
 
 class DefaultReaction(TypedDict):
-    emoji_id: NotRequired(Snowflake | None)
-    emoji_name: NotRequired(str | None)
+    emoji_id: NotRequired[Snowflake | None]
+    emoji_name: NotRequired[str | None]
 
 
 class ForumTag(TypedDict):
@@ -91,9 +91,9 @@ class ForumTag(TypedDict):
 
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     type: Literal[15]
-    available_tags: NotRequired(list[ForumTag] | None)
-    default_reaction_emoji: NotRequired(DefaultReaction | None)
-    default_sort_order: NotRequired(SortOrder | None)
+    available_tags: NotRequired[list[ForumTag] | None]
+    default_reaction_emoji: NotRequired[DefaultReaction | None]
+    default_sort_order: NotRequired[SortOrder | None]
     flags: ChannelFlags
 
 
@@ -137,7 +137,7 @@ class ThreadChannel(_BaseChannel):
     message_count: int
     member_count: int
     thread_metadata: ThreadMetadata
-    applied_tags: NotRequired(list[Snowflake] | None)
+    applied_tags: NotRequired[list[Snowflake] | None]
     flags: ChannelFlags
     total_message_sent: int
 
