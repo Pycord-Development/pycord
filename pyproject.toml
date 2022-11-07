@@ -49,7 +49,7 @@ docs = [
     "sphinxcontrib_trio==1.1.2",
     "sphinxcontrib-websupport",
     "myst-parser",
-    "sphinxext-opengraph==0.6.3",
+    "sphinxext-opengraph==0.7.2",
     "sphinx-copybutton==0.5.0",
     "furo@ git+https://github.com/BobDotCom/furo@temp",
 ]
