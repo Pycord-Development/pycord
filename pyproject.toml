@@ -52,6 +52,7 @@ docs = [
     "sphinxext-opengraph==0.7.2",
     "sphinx-copybutton==0.5.0",
     "furo@ git+https://github.com/BobDotCom/furo@temp",
+    "sphinx-autodoc-typehints==1.19.1",
 ]
 speed = [
     "orjson>=3.5.4",

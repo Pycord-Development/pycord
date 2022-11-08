@@ -334,19 +334,19 @@ class AutoModRule(Hashable):
 
     @cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild this rule belongs to."""
+        """The guild this rule belongs to."""
         return self._state._get_guild(self.guild_id)
 
     @cached_property
     def creator(self) -> Member | None:
-        """Optional[:class:`Member`]: The member who created this rule."""
+        """The member who created this rule."""
         if self.guild is None:
             return None
         return self.guild.get_member(self.creator_id)
 
     @cached_property
     def exempt_roles(self) -> list[Role | Object]:
-        """List[Union[:class:`Role`, :class:`Object`]]: The roles that are exempt
+        """The roles that are exempt
         from this rule.
 
         If a role is not found in the guild's cache,
@@ -363,8 +363,7 @@ class AutoModRule(Hashable):
     def exempt_channels(
         self,
     ) -> list[TextChannel | ForumChannel | VoiceChannel | Object]:
-        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]: The
-        channels that are exempt from this rule.
+        """The channels that are exempt from this rule.
 
         If a channel is not found in the guild's cache,
         then it will be returned as an :class:`Object`.
