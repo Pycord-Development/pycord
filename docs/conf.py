@@ -83,8 +83,10 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinxext.opengraph",
+    "sphinx_autodoc_typehints",
 ]
 
+always_document_param_types = True
 toc_object_entries_show_parents = "hide"
 
 ogp_site_url = "https://pycord.dev/"

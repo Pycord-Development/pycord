@@ -125,7 +125,7 @@ class StickerPack(Hashable):
 
     @property
     def banner(self) -> Asset:
-        """:class:`Asset`: The banner asset of the sticker pack."""
+        """The banner asset of the sticker pack."""
         return Asset._from_sticker_banner(self._state, self._banner)
 
     def __repr__(self) -> str:
@@ -298,7 +298,7 @@ class Sticker(_StickerTag):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the sticker's creation time in UTC."""
+        """Returns the sticker's creation time in UTC."""
         return snowflake_time(self.id)
 
 
@@ -444,7 +444,7 @@ class GuildSticker(Sticker):
 
     @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild that this sticker is from.
+        """The guild that this sticker is from.
         Could be ``None`` if the bot is not in the guild.
 
         .. versionadded:: 2.0

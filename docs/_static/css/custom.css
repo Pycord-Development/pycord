@@ -155,3 +155,7 @@ img[src="_images/snake_dark.svg"] {
 .exception-hierarchy-content dd {
   margin-left: 0;
 }
+
+.sidebar-logo {
+  max-width: 60%;
+}

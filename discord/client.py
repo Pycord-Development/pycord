@@ -273,7 +273,7 @@ class Client:
 
     @property
     def latency(self) -> float:
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This could be referred to as the Discord WebSocket protocol latency.
         """
@@ -281,7 +281,7 @@ class Client:
         return float("nan") if not ws else ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the WebSocket is currently rate limited.
+        """Whether the WebSocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -294,22 +294,22 @@ class Client:
 
     @property
     def user(self) -> ClientUser | None:
-        """Optional[:class:`.ClientUser`]: Represents the connected client. ``None`` if not logged in."""
+        """Represents the connected client. ``None`` if not logged in."""
         return self._connection.user
 
     @property
     def guilds(self) -> list[Guild]:
-        """List[:class:`.Guild`]: The guilds that the connected client is a member of."""
+        """The guilds that the connected client is a member of."""
         return self._connection.guilds
 
     @property
     def emojis(self) -> list[Emoji]:
-        """List[:class:`.Emoji`]: The emojis that the connected client has."""
+        """The emojis that the connected client has."""
         return self._connection.emojis
 
     @property
     def stickers(self) -> list[GuildSticker]:
-        """List[:class:`.GuildSticker`]: The stickers that the connected client has.
+        """The stickers that the connected client has.
 
         .. versionadded:: 2.0
         """
@@ -317,7 +317,7 @@ class Client:
 
     @property
     def cached_messages(self) -> Sequence[Message]:
-        """Sequence[:class:`.Message`]: Read-only list of messages the connected client has cached.
+        """Read-only list of messages the connected client has cached.
 
         .. versionadded:: 1.1
         """
@@ -325,7 +325,7 @@ class Client:
 
     @property
     def private_channels(self) -> list[PrivateChannel]:
-        """List[:class:`.abc.PrivateChannel`]: The private channels that the connected client is participating on.
+        """The private channels that the connected client is participating on.
 
         .. note::
 
@@ -336,7 +336,7 @@ class Client:
 
     @property
     def voice_clients(self) -> list[VoiceProtocol]:
-        """List[:class:`.VoiceProtocol`]: Represents a list of voice connections.
+        """Represents a list of voice connections.
 
         These are usually :class:`.VoiceClient` instances.
         """
@@ -344,7 +344,7 @@ class Client:
 
     @property
     def application_id(self) -> int | None:
-        """Optional[:class:`int`]: The client's application ID.
+        """The client's application ID.
 
         If this is not passed via ``__init__`` then this is retrieved
         through the gateway when an event contains the data. Usually
@@ -356,14 +356,14 @@ class Client:
 
     @property
     def application_flags(self) -> ApplicationFlags:
-        """:class:`~discord.ApplicationFlags`: The client's application flags.
+        """The client's application flags.
 
         .. versionadded:: 2.0
         """
         return self._connection.application_flags  # type: ignore
 
     def is_ready(self) -> bool:
-        """:class:`bool`: Specifies if the client's internal cache is ready for use."""
+        """Specifies if the client's internal cache is ready for use."""
         return self._ready.is_set()
 
     async def _run_event(
@@ -721,13 +721,16 @@ class Client:
     # properties
 
     def is_closed(self) -> bool:
-        """:class:`bool`: Indicates if the WebSocket connection is closed."""
+        """Indicates if the WebSocket connection is closed."""
         return self._closed
 
     @property
     def activity(self) -> ActivityTypes | None:
-        """Optional[:class:`.BaseActivity`]: The activity being used upon
-        logging in.
+        """The activity being used upon logging in.
+
+        Returns
+        -------
+        Optional[:class:`.BaseActivity`]
         """
         return create_activity(self._connection._activity)
 
@@ -742,9 +745,8 @@ class Client:
             raise TypeError("activity must derive from BaseActivity.")
 
     @property
-    def status(self):
-        """:class:`.Status`:
-        The status being used upon logging on to Discord.
+    def status(self) -> Status:
+        """The status being used upon logging on to Discord.
 
         .. versionadded: 2.0
         """
@@ -753,7 +755,7 @@ class Client:
         return Status.online
 
     @status.setter
-    def status(self, value):
+    def status(self, value: Status) -> None:
         if value is Status.offline:
             self._connection._status = "invisible"
         elif isinstance(value, Status):
@@ -763,7 +765,7 @@ class Client:
 
     @property
     def allowed_mentions(self) -> AllowedMentions | None:
-        """Optional[:class:`~discord.AllowedMentions`]: The allowed mention configuration.
+        """The allowed mention configuration.
 
         .. versionadded:: 1.4
         """
@@ -780,7 +782,7 @@ class Client:
 
     @property
     def intents(self) -> Intents:
-        """:class:`~discord.Intents`: The intents configured for this connection.
+        """The intents configured for this connection.
 
         .. versionadded:: 1.5
         """
@@ -790,7 +792,7 @@ class Client:
 
     @property
     def users(self) -> list[User]:
-        """List[:class:`~discord.User`]: Returns a list of all the users the bot can see."""
+        """Returns a list of all the users the bot can see."""
         return list(self._connection._users.values())
 
     async def fetch_application(self, application_id: int, /) -> PartialAppInfo:
@@ -1775,7 +1777,7 @@ class Client:
 
     @property
     def persistent_views(self) -> Sequence[View]:
-        """Sequence[:class:`.View`]: A sequence of persistent views added to the client.
+        """A sequence of persistent views added to the client.
 
         .. versionadded:: 2.0
         """
