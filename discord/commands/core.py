@@ -449,7 +449,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered."""
+        """Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
     def before_invoke(self, coro):
@@ -552,7 +552,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def full_parent_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified parent command name.
+        """Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
         in ``/one two three`` the parent name would be ``one two``.
@@ -567,7 +567,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
+        """Retrieves the fully qualified command name.
 
         This is the full parent name with the command name as well.
         For example, in ``/one two three`` the qualified name would be
@@ -583,7 +583,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_id(self) -> int:
-        """:class:`int`: Retrieves the fully qualified command ID.
+        """Retrieves the fully qualified command ID.
 
         This is the root parent ID. For example, in ``/one two three``
         the qualified ID would return ``one.id``.

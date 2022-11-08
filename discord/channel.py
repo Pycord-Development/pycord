@@ -150,7 +150,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return try_enum(ChannelType, self._type)
 
     @property
@@ -168,12 +168,12 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: Returns all members that can see this channel."""
+        """Returns all members that can see this channel."""
         return [m for m in self.guild.members if self.permissions_for(m).read_messages]
 
     @property
     def threads(self) -> list[Thread]:
-        """List[:class:`Thread`]: Returns all the threads that you can see.
+        """Returns all the threads that you can see.
 
         .. versionadded:: 2.0
         """
@@ -184,7 +184,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ]
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -739,7 +739,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self
 
     def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news/announcements channel."""
+        """Checks if the channel is a news/announcements channel."""
         return self._type == ChannelType.news.value
 
     @property
@@ -895,7 +895,7 @@ class ForumChannel(_TextChannel):
 
     @property
     def guidelines(self) -> str | None:
-        """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`."""
+        """The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
 
     async def create_thread(
@@ -1156,7 +1156,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: Returns all members that are currently inside this voice channel."""
+        """Returns all members that are currently inside this voice channel."""
         ret = []
         for user_id, state in self.guild._voice_states.items():
             if state.channel and state.channel.id == self.id:
@@ -1281,7 +1281,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         return self
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -1536,7 +1536,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -1769,7 +1769,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def requesting_to_speak(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are requesting to speak in the stage channel."""
+        """A list of members who are requesting to speak in the stage channel."""
         return [
             member
             for member in self.members
@@ -1778,7 +1778,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def speakers(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who have been permitted to speak in the stage channel.
+        """A list of members who have been permitted to speak in the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1792,7 +1792,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def listeners(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are listening in the stage channel.
+        """A list of members who are listening in the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1802,7 +1802,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def moderators(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are moderating the stage channel.
+        """A list of members who are moderating the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1815,7 +1815,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.stage_voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -1826,7 +1826,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def instance(self) -> StageInstance | None:
-        """Optional[:class:`StageInstance`]: The running stage instance of the stage channel.
+        """The running stage instance of the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -2085,11 +2085,11 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.category
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the category is NSFW."""
+        """Checks if the category is NSFW."""
         return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -2169,7 +2169,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def channels(self) -> list[GuildChannelType]:
-        """List[:class:`abc.GuildChannel`]: Returns the channels that are under this category.
+        """Returns the channels that are under this category.
 
         These are sorted by the official Discord UI, which places voice channels below the text channels.
         """
@@ -2183,7 +2183,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def text_channels(self) -> list[TextChannel]:
-        """List[:class:`TextChannel`]: Returns the text channels that are under this category."""
+        """Returns the text channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2194,7 +2194,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def voice_channels(self) -> list[VoiceChannel]:
-        """List[:class:`VoiceChannel`]: Returns the voice channels that are under this category."""
+        """Returns the voice channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2205,7 +2205,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def stage_channels(self) -> list[StageChannel]:
-        """List[:class:`StageChannel`]: Returns the stage channels that are under this category.
+        """Returns the stage channels that are under this category.
 
         .. versionadded:: 1.7
         """
@@ -2219,7 +2219,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def forum_channels(self) -> list[ForumChannel]:
-        """List[:class:`ForumChannel`]: Returns the forum channels that are under this category.
+        """Returns the forum channels that are under this category.
 
         .. versionadded:: 2.0
         """
@@ -2353,12 +2353,12 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.private
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+        """Returns a URL that allows the client to jump to the channel.
 
         .. versionadded:: 2.0
         """
@@ -2366,7 +2366,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the direct message channel's creation time in UTC."""
+        """Returns the direct message channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     def permissions_for(self, obj: Any = None, /) -> Permissions:
@@ -2512,24 +2512,24 @@ class GroupChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.group
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the channel's icon asset if available."""
+        """Returns the channel's icon asset if available."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="channel")
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+        """Returns a URL that allows the client to jump to the channel.
 
         .. versionadded:: 2.0
         """

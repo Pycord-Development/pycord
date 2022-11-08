@@ -199,7 +199,7 @@ class Attachment(Hashable):
         self.description: str | None = data.get("description")
 
     def is_spoiler(self) -> bool:
-        """:class:`bool`: Whether this attachment contains a spoiler."""
+        """Whether this attachment contains a spoiler."""
         return self.filename.startswith("SPOILER_")
 
     def __repr__(self) -> str:
@@ -383,18 +383,18 @@ class DeletedReferencedMessage:
 
     @property
     def id(self) -> int:
-        """:class:`int`: The message ID of the deleted referenced message."""
+        """The message ID of the deleted referenced message."""
         # the parent's message id won't be None here
         return self._parent.message_id  # type: ignore
 
     @property
     def channel_id(self) -> int:
-        """:class:`int`: The channel ID of the deleted referenced message."""
+        """The channel ID of the deleted referenced message."""
         return self._parent.channel_id
 
     @property
     def guild_id(self) -> int | None:
-        """Optional[:class:`int`]: The guild ID of the deleted referenced message."""
+        """The guild ID of the deleted referenced message."""
         return self._parent.guild_id
 
 
@@ -503,12 +503,12 @@ class MessageReference:
 
     @property
     def cached_message(self) -> Message | None:
-        """Optional[:class:`~discord.Message`]: The cached message, if found in the internal message cache."""
+        """The cached message, if found in the internal message cache."""
         return self._state and self._state._get_message(self.message_id)
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the referenced message.
+        """Returns a URL that allows the client to jump to the referenced message.
 
         .. versionadded:: 1.7
         """
@@ -986,7 +986,7 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of user IDs matched with
+        """A property that returns an array of user IDs matched with
         the syntax of ``<@user_id>`` in the message content.
 
         This allows you to receive the user IDs of mentioned users
@@ -996,14 +996,14 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_raw_channel_mentions")
     def raw_channel_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of channel IDs matched with
+        """A property that returns an array of channel IDs matched with
         the syntax of ``<#channel_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<#([0-9]{15,20})>", self.content)]
 
     @utils.cached_slot_property("_cs_raw_role_mentions")
     def raw_role_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of role IDs matched with
+        """A property that returns an array of role IDs matched with
         the syntax of ``<@&role_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<@&([0-9]{15,20})>", self.content)]
@@ -1017,7 +1017,7 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_clean_content")
     def clean_content(self) -> str:
-        """:class:`str`: A property that returns the content in a "cleaned up"
+        """A property that returns the content in a "cleaned up"
         manner. This basically means that mentions are transformed
         into the way the client shows it. e.g. ``<#id>`` will transform
         into ``#name``.
@@ -1067,24 +1067,24 @@ class Message(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The message's creation time in UTC."""
+        """The message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def edited_at(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the
+        """An aware UTC datetime object containing the
         edited time of the message.
         """
         return self._edited_timestamp
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to this message."""
+        """Returns a URL that allows the client to jump to this message."""
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
 
     def is_system(self) -> bool:
-        """:class:`bool`: Whether the message is a system message.
+        """Whether the message is a system message.
 
         A system message is a message that is constructed entirely by the Discord API
         in response to something.
@@ -1099,8 +1099,8 @@ class Message(Hashable):
         )
 
     @utils.cached_slot_property("_cs_system_content")
-    def system_content(self):
-        r""":class:`str`: A property that returns the content that is rendered
+    def system_content(self) -> str:
+        r"""A property that returns the content that is rendered
         regardless of the :attr:`Message.type`.
 
         In the case of :attr:`MessageType.default` and :attr:`MessageType.reply`\,
@@ -1873,12 +1873,12 @@ class PartialMessage(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The partial message's creation time in UTC."""
+        """The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild that the partial message belongs to, if applicable."""
+        """The guild that the partial message belongs to, if applicable."""
         return getattr(self.channel, "guild", None)
 
     async def fetch(self) -> Message:

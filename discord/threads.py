@@ -240,27 +240,27 @@ class Thread(Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return self._type
 
     @property
     def parent(self) -> TextChannel | ForumChannel | None:
-        """Optional[:class:`TextChannel`]: The parent channel this thread belongs to."""
+        """The parent channel this thread belongs to."""
         return self.guild.get_channel(self.parent_id)  # type: ignore
 
     @property
     def owner(self) -> Member | None:
-        """Optional[:class:`Member`]: The member this thread belongs to."""
+        """The member this thread belongs to."""
         return self.guild.get_member(self.owner_id)
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the thread."""
+        """The string that allows you to mention the thread."""
         return f"<#{self.id}>"
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the thread.
+        """Returns a URL that allows the client to jump to the thread.
 
         .. versionadded:: 2.0
         """
@@ -268,7 +268,7 @@ class Thread(Messageable, Hashable):
 
     @property
     def members(self) -> list[ThreadMember]:
-        """List[:class:`ThreadMember`]: A list of thread members in this thread.
+        """A list of thread members in this thread.
 
         This requires :attr:`Intents.members` to be properly filled. Most of the time however,
         this data is not provided by the gateway and a call to :meth:`fetch_members` is
@@ -358,7 +358,7 @@ class Thread(Messageable, Hashable):
         return self._state._get_message(self.id)
 
     def is_private(self) -> bool:
-        """:class:`bool`: Whether the thread is a private thread.
+        """Whether the thread is a private thread.
 
         A private thread is only viewable by those that have been explicitly
         invited or have :attr:`~.Permissions.manage_threads`.
@@ -366,7 +366,7 @@ class Thread(Messageable, Hashable):
         return self._type is ChannelType.private_thread
 
     def is_news(self) -> bool:
-        """:class:`bool`: Whether the thread is a news thread.
+        """Whether the thread is a news thread.
 
         A news thread is a thread that has a parent that is a news channel,
         i.e. :meth:`.TextChannel.is_news` is ``True``.
@@ -374,7 +374,7 @@ class Thread(Messageable, Hashable):
         return self._type is ChannelType.news_thread
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Whether the thread is NSFW or not.
+        """Whether the thread is NSFW or not.
 
         An NSFW thread is a thread that has a parent that is an NSFW channel,
         i.e. :meth:`.TextChannel.is_nsfw` is ``True``.
@@ -878,5 +878,5 @@ class ThreadMember(Hashable):
 
     @property
     def thread(self) -> Thread:
-        """:class:`Thread`: The thread this member belongs to."""
+        """The thread this member belongs to."""
         return self.parent

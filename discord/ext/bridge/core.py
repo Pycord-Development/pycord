@@ -155,8 +155,8 @@ class BridgeCommand:
         ) or BridgeExtCommand(callback, **kwargs)
 
     @property
-    def name_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns name_localizations from :attr:`slash_variant`
+    def name_localizations(self) -> dict[str, str]:
+        """Returns name_localizations from :attr:`slash_variant`
 
         You can edit/set name_localizations directly with
 
@@ -173,8 +173,8 @@ class BridgeCommand:
         self.slash_variant.name_localizations = value
 
     @property
-    def description_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns description_localizations from :attr:`slash_variant`
+    def description_localizations(self) -> dict[str, str]:
+        """Returns description_localizations from :attr:`slash_variant`
 
         You can edit/set description_localizations directly with
 

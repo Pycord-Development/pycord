@@ -109,12 +109,12 @@ class PartialInviteChannel:
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the channel."""
+        """The string that allows you to mention the channel."""
         return f"<#{self.id}>"
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """Returns the channel's creation time in UTC."""
         return snowflake_time(self.id)
 
 
@@ -192,19 +192,19 @@ class PartialInviteGuild:
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the guild's creation time in UTC."""
+        """Returns the guild's creation time in UTC."""
         return snowflake_time(self.id)
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
+        """Returns the guild's icon asset, if available."""
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
 
     @property
     def banner(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's banner asset, if available."""
+        """Returns the guild's banner asset, if available."""
         if self._banner is None:
             return None
         return Asset._from_guild_image(
@@ -213,7 +213,7 @@ class PartialInviteGuild:
 
     @property
     def splash(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available."""
+        """Returns the guild's invite splash asset, if available."""
         if self._splash is None:
             return None
         return Asset._from_guild_image(
@@ -498,12 +498,12 @@ class Invite(Hashable):
 
     @property
     def id(self) -> str:
-        """:class:`str`: Returns the proper code portion of the invite."""
+        """Returns the proper code portion of the invite."""
         return self.code
 
     @property
     def url(self) -> str:
-        """:class:`str`: A property that retrieves the invite URL."""
+        """A property that retrieves the invite URL."""
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     async def delete(self, *, reason: str | None = None):

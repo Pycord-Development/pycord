@@ -257,7 +257,7 @@ class ShardInfo:
         self.shard_count: int | None = shard_count
 
     def is_closed(self) -> bool:
-        """:class:`bool`: Whether the shard connection is currently closed."""
+        """Whether the shard connection is currently closed."""
         return not self._parent.ws.open
 
     async def disconnect(self) -> None:
@@ -294,11 +294,11 @@ class ShardInfo:
 
     @property
     def latency(self) -> float:
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
         return self._parent.ws.latency
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """Whether the websocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
@@ -383,7 +383,7 @@ class AutoShardedClient(Client):
 
     @property
     def latency(self) -> float:
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This operates similarly to :meth:`Client.latency` except it uses the average
         latency of every shard's latency. To get a list of shard latency, check the
@@ -395,7 +395,7 @@ class AutoShardedClient(Client):
 
     @property
     def latencies(self) -> list[tuple[int, float]]:
-        """List[Tuple[:class:`int`, :class:`float`]]: A list of latencies between a
+        """A list of latencies between a
         HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
@@ -405,7 +405,7 @@ class AutoShardedClient(Client):
         ]
 
     def get_shard(self, shard_id: int) -> ShardInfo | None:
-        """Optional[:class:`ShardInfo`]: Gets the shard information at a given shard ID or ``None`` if not found."""
+        """Gets the shard information at a given shard ID or ``None`` if not found."""
         try:
             parent = self.__shards[shard_id]
         except KeyError:
@@ -415,7 +415,7 @@ class AutoShardedClient(Client):
 
     @property
     def shards(self) -> dict[int, ShardInfo]:
-        """Mapping[:class:`int`, :class:`ShardInfo`]: Returns a mapping of shard IDs to their respective info object."""
+        """Returns a mapping of shard IDs to their respective info object."""
         return {
             shard_id: ShardInfo(parent, self.shard_count)
             for shard_id, parent in self.__shards.items()
@@ -571,7 +571,7 @@ class AutoShardedClient(Client):
             me.status = status_enum
 
     def is_ws_ratelimited(self) -> bool:
-        """:class:`bool`: Whether the websocket is currently rate limited.
+        """Whether the websocket is currently rate limited.
 
         This can be useful to know when deciding whether you should query members
         using HTTP or via the gateway.
