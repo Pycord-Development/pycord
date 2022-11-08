@@ -210,11 +210,11 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return hash((self.id, self.name))
 
     def is_custom_emoji(self) -> bool:
-        """:class:`bool`: Checks if this is a custom non-Unicode emoji."""
+        """Checks if this is a custom non-Unicode emoji."""
         return self.id is not None
 
     def is_unicode_emoji(self) -> bool:
-        """:class:`bool`: Checks if this is a Unicode emoji."""
+        """Checks if this is a Unicode emoji."""
         return self.id is None
 
     def _as_reaction(self) -> str:
@@ -224,7 +224,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     @property
     def created_at(self) -> datetime | None:
-        """Optional[:class:`datetime.datetime`]: Returns the emoji's creation time in UTC, or None if Unicode emoji.
+        """Returns the emoji's creation time in UTC, or None if Unicode emoji.
 
         .. versionadded:: 1.6
         """
@@ -235,7 +235,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the URL of the emoji, if it is custom.
+        """Returns the URL of the emoji, if it is custom.
 
         If this isn't a custom emoji then an empty string is returned
         """

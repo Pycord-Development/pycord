@@ -171,14 +171,14 @@ class AppInfo:
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
+        """Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
 
     @property
     def cover_image(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the cover image on a store embed, if any.
+        """Retrieves the cover image on a store embed, if any.
 
         This is only available if the application is a game sold on Discord.
         """
@@ -188,7 +188,7 @@ class AppInfo:
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: If this application is a game sold on Discord,
+        """If this application is a game sold on Discord,
         this field will be the guild to which it has been linked.
 
         .. versionadded:: 1.3
@@ -253,7 +253,7 @@ class PartialAppInfo:
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`.Asset`]: Retrieves the application's icon asset, if any."""
+        """Retrieves the application's icon asset, if any."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
