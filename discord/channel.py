@@ -1008,6 +1008,16 @@ class ForumChannel(_TextChannel):
         """The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
 
+    @property
+    def requires_tag(self) -> bool:
+        """Whether a tag is required to be specified when creating a thread in this forum channel.
+
+        Tags are specified in :attr:`applied_tags`.
+
+        .. versionadded:: 2.3
+        """
+        return self.flags.require_tag
+
     def get_tag(self, id: int, /) -> ForumTag | None:
         """Returns the :class:`ForumTag` from this forum channel with the
         given ID, if any.
