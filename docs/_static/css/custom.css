@@ -163,3 +163,9 @@ img[src="_images/snake_dark.svg"] {
 /*.sidebar-tree {*/
 /*  font-family: "Saira", monospace;*/
 /*}*/
+
+.has-selector-alternative {
+  transition: max-height 0.2s ease-out;
+  max-height: 0;
+  overflow: hidden;
+}
