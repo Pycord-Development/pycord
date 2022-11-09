@@ -126,12 +126,14 @@ class Thread(Messageable, Hashable):
         Only available for threads created after 2022-01-09.
     flags: :class:`ChannelFlags`
         Extra features of the thread.
+
+        .. versionadded:: 2.0
     total_message_sent: :class:`int`
         Number of messages ever sent in a thread.
         It's similar to message_count on message creation,
         but will not decrement the number when a message is deleted.
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.3
     """
 
     __slots__ = (
