@@ -384,6 +384,13 @@ class Thread(Messageable, Hashable):
         """
         return self._state._get_message(self.id)
 
+    def is_pinned(self) -> bool:
+        """Whether the thread is pinned to the top of its parent forum channel.
+
+        .. versionadded:: 2.3
+        """
+        return self.flags.pinned
+
     def is_private(self) -> bool:
         """Whether the thread is a private thread.
 
