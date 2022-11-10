@@ -111,7 +111,7 @@ def is_nsfw() -> Callable:
     """A decorator that limits the usage of a slash command to 18+ channels and users.
     In guilds, the command will only be able to be used in channels marked as NSFW.
     In DMs, users must have opted into age-restricted commands via privacy settings.
-    
+
     Note that apps intending to be listed in the App Directory cannot have NSFW commands.
 
     Example
