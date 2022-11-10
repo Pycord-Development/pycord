@@ -275,6 +275,7 @@ class ApplicationCommandMixin(ABC):
                 as_dict = cmd.to_dict()
                 to_check = {
                     "dm_permission": None,
+                    "nsfw": None,
                     "default_member_permissions": None,
                     "name": None,
                     "description": None,

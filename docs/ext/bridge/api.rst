@@ -73,6 +73,9 @@ Decorators
 .. automethod:: discord.ext.bridge.guild_only()
     :decorator:
 
+.. automethod:: discord.ext.bridge.is_nsfw()
+    :decorator:
+
 .. automethod:: discord.ext.bridge.has_permissions()
     :decorator:
 
