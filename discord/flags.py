@@ -538,8 +538,7 @@ class PublicUserFlags(BaseFlags):
 
     @flag_value
     def active_developer(self):
-        """:class:`bool`: Returns ``True`` if the user is an active developer.
-        Badge can be claimed in the [developer portal](https://discord.com/developers/active-developer).
+        """:class:`bool`: Returns ``True`` if the user is an [Active Developer] (https://support-dev.discord.com/hc/articles/10113997751447).
 
         .. versionadded:: 2.3
         """
