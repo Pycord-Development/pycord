@@ -536,6 +536,15 @@ class PublicUserFlags(BaseFlags):
         """
         return UserFlags.bot_http_interactions.value
 
+    @flag_value
+    def active_developer(self):
+        """:class:`bool`: Returns ``True`` if the user is an active developer.
+        Badge can be claimed in the [developer portal](https://discord.com/developers/active-developer).
+
+        .. versionadded:: 2.3
+        """
+        return UserFlags.active_developer.value
+
     def all(self) -> list[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
         return [
