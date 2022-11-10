@@ -379,7 +379,7 @@ html_js_files = ["js/custom.js"]
 
 # The name of a javascript file (relative to the configuration directory) that
 # implements a search results scorer. If empty, the default will be used.
-# html_search_scorer = "_static/scorer.js"
+html_search_scorer = "_static/scorer.js"
 
 # html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
