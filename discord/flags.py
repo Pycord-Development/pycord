@@ -538,7 +538,7 @@ class PublicUserFlags(BaseFlags):
 
     @flag_value
     def active_developer(self):
-        """:class:`bool`: Returns ``True`` if the user is an [Active Developer] (https://support-dev.discord.com/hc/articles/10113997751447).
+        """:class:`bool`: Returns ``True`` if the user is an Active Developer.
 
         .. versionadded:: 2.3
         """
