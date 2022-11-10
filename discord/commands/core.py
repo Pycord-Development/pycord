@@ -632,6 +632,7 @@ class SlashCommand(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
@@ -1068,6 +1069,7 @@ class SlashCommandGroup(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1222,6 +1224,7 @@ class SlashCommandGroup(ApplicationCommand):
             Whether the command should only be usable inside a guild.
         nsfw: :class:`bool`
             Whether the command should be restricted to 18+ channels and users.
+            Apps intending to be listed in the App Directory cannot have NSFW commands.
         default_member_permissions: :class:`~discord.Permissions`
             The default permissions a member needs to be able to run the command.
         checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1393,6 +1396,7 @@ class ContextMenuCommand(ApplicationCommand):
         Whether the command should only be usable inside a guild.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
