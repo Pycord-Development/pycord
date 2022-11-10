@@ -222,9 +222,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.guild_only: bool | None = getattr(
             func, "__guild_only__", kwargs.get("guild_only", None)
         )
-        self.nsfw: bool | None = getattr(
-            func, "__nsfw__", kwargs.get("nsfw", None)
-        )
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"

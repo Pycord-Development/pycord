@@ -28,11 +28,7 @@ from typing import Callable
 from ..permissions import Permissions
 from .core import ApplicationCommand
 
-__all__ = (
-    "default_permissions",
-    "guild_only",
-    "is_nsfw"
-)
+__all__ = ("default_permissions", "guild_only", "is_nsfw")
 
 
 def default_permissions(**perms: bool) -> Callable:
@@ -109,6 +105,7 @@ def guild_only() -> Callable:
         return command
 
     return inner
+
 
 def is_nsfw() -> Callable:
     """A decorator that limits the usage of a slash command to 18+ channels and users.

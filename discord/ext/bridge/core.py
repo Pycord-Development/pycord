@@ -68,7 +68,7 @@ __all__ = (
     "map_to",
     "guild_only",
     "has_permissions",
-    "is_nsfw"
+    "is_nsfw",
 )
 
 
@@ -447,7 +447,6 @@ def is_nsfw():
     .. warning::
 
         In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
-
     """
 
     def predicate(func: Callable | ApplicationCommand):
