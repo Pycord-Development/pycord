@@ -1383,7 +1383,7 @@ class ApplicationFlags(BaseFlags):
         return 1 << 23
 
     @flag_value
-    def active_application(self):
+    def active(self):
         """:class:`bool`: Returns ``True`` if the  app is considered active.
         Applications are considered active if they have had any command executions in the past 30 days.
 
