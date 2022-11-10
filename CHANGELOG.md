@@ -18,6 +18,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - New select types `user`, `role`, `mentionable`, and `channel` - Along with their
   respective types and shortcut decorators.
   ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
+- New user flag: `PublicUserFlags.active_developer`.
+  ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
 
 ### Fixed
 
