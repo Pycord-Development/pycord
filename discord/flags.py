@@ -1382,6 +1382,15 @@ class ApplicationFlags(BaseFlags):
         """
         return 1 << 23
 
+    @flag_value
+    def active_application(self):
+        """:class:`bool`: Returns ``True`` if the  app is considered active.
+        This means that it has had any global command executed in the past 30 days.
+
+        .. versionadded:: 2.3
+        """
+        return 1 << 24
+
 
 @fill_with_flags()
 class ChannelFlags(BaseFlags):
