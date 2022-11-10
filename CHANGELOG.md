@@ -18,6 +18,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - New select types `user`, `role`, `mentionable`, and `channel` - Along with their
   respective types and shortcut decorators.
   ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
+- Added support for age-restricted (NSFW) commands.
+  ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
 
 ### Fixed
 
