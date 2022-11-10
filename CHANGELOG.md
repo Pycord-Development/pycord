@@ -20,9 +20,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
 - Added support for age-restricted (NSFW) commands.
   ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
-- New user flag: `PublicUserFlags.active_developer`.
-  ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
-- New application flag: `ApplicationFlags.active_application`.
+- New flags: `PublicUserFlags.active_developer` & `ApplicationFlags.active_application`.
   ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
 
 ### Fixed
