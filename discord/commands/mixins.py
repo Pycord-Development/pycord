@@ -102,7 +102,7 @@ def unwrap_function(function: functools.partial | Callable) -> Callback:
 
 def wrap_callback(coro: Callback):
     @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
+    async def wrapper(*args, **kwargs):
         try:
             ret = await coro(*args, **kwargs)
         except CommandError:
@@ -113,7 +113,7 @@ def wrap_callback(coro: Callback):
             raise CommandInvokeError(exc) from exc
         return ret
 
-    return wrapped
+    return wrapper
 
 
 def hook_wrapped_callback(command: Invokable, ctx: BaseContext, coro: Callback):
