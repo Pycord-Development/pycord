@@ -39,10 +39,10 @@ from ..errors import (
     CommandOnCooldown,
     DisabledCommand,
 )
-from .cooldowns import BucketType, CooldownMapping, MaxConcurrency, Cooldown
+from .cooldowns import BucketType, Cooldown, CooldownMapping, MaxConcurrency
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec, Concatenate
+    from typing_extensions import Concatenate, ParamSpec
 
     from ..abc import MessageableChannel
     from ..bot import AutoShardedBot, Bot
@@ -65,7 +65,10 @@ CogT = TypeVar("CogT", bound="Cog")
 
 T = TypeVar("T")
 Coro = Coroutine[Any, Any, T]
-Callback = Callable[Concatenate[CogT, "BaseContext", P], Coro[T]] | Callable[Concatenate["BaseContext", P], Coro[T]]
+Callback = (
+    Callable[Concatenate[CogT, "BaseContext", P], Coro[T]]
+    | Callable[Concatenate["BaseContext", P], Coro[T]]
+)
 MaybeCoro = Union[T, Coro[T]]
 
 Check = Union[
@@ -79,7 +82,9 @@ Error = Union[
 ]
 ErrorT = TypeVar("ErrorT", bound="Error")
 
-Hook = Union[Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]]
+Hook = Union[
+    Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]
+]
 HookT = TypeVar("HookT", bound="Hook")
 
 
@@ -393,9 +398,7 @@ class Invokable(Generic[CogT, P, T]):
     ):
         self.callback: Callback = func
         self.parent: Invokable | None = (
-            parent
-            if isinstance(parent, _BaseCommand)
-            else None
+            parent if isinstance(parent, _BaseCommand) else None
         )
         self.cog: CogT | None = None
         self.module: Any = None
@@ -534,7 +537,7 @@ class Invokable(Generic[CogT, P, T]):
         new_args = (ctx, *args)
         if self.cog is not None:
             new_args = (self.cog, *args)
-        return await self.callback(*new_args, **kwargs)  
+        return await self.callback(*new_args, **kwargs)
 
     def update(self, **kwargs: Any) -> None:
         """Updates the :class:`Invokable` instance with updated attribute.

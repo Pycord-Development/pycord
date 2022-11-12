@@ -303,6 +303,7 @@ class ApplicationContext(BaseContext):
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_response
 
+
 class AutocompleteContext:
     """Represents context for a slash command's option autocomplete. This ***does not*** inherent from :class:`.BaseContext`.
 
