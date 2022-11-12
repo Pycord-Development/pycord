@@ -157,7 +157,6 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
         raise NotImplementedError
 
 
-
 class SlashCommand(ApplicationCommand):
     """A class that implements the protocol for a slash command.
 
