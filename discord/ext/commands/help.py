@@ -23,6 +23,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations
+
 import copy
 import functools
 import itertools
@@ -172,8 +174,8 @@ class Paginator:
         return total + self._count
 
     @property
-    def pages(self):
-        """List[:class:`str`]: Returns the rendered list of pages."""
+    def pages(self) -> list[str]:
+        """Returns the rendered list of pages."""
         # we have more than just the prefix in our current page
         if len(self._current_page) > (0 if self.prefix is None else 1):
             self.close_page()
@@ -181,8 +183,8 @@ class Paginator:
 
     def __repr__(self):
         return (
-            f"<Paginator prefix: {self.prefix!r} suffix: {self.suffix!r} linesep: {self.linesep!r} "
-            f"max_size: {self.max_size} count: {self._count}>"
+            f"<Paginator prefix: {self.prefix!r} suffix: {self.suffix!r} linesep:"
+            f" {self.linesep!r} max_size: {self.max_size} count: {self._count}>"
         )
 
 
@@ -274,7 +276,7 @@ class HelpCommand:
 
         Internally instances of this class are deep copied every time
         the command itself is invoked to prevent a race condition
-        mentioned in :issue:`2123`.
+        mentioned in :dpy-issue:`2123`.
 
         This means that relying on the state of this class to be
         the same between command invocations would not work as expected.
@@ -947,18 +949,20 @@ class DefaultHelpCommand(HelpCommand):
 
         super().__init__(**options)
 
-    def shorten_text(self, text):
-        """:class:`str`: Shortens text to fit into the :attr:`width`."""
+    def shorten_text(self, text: str) -> str:
+        """Shortens text to fit into the :attr:`width`."""
         if len(text) > self.width:
             return f"{text[:self.width - 3].rstrip()}..."
         return text
 
-    def get_ending_note(self):
-        """:class:`str`: Returns help command's ending note. This is mainly useful to override for i18n purposes."""
+    def get_ending_note(self) -> str:
+        """Returns help command's ending note. This is mainly useful to override for i18n purposes."""
         command_name = self.invoked_with
         return (
-            f"Type {self.context.clean_prefix}{command_name} command for more info on a command.\n"
-            f"You can also type {self.context.clean_prefix}{command_name} category for more info on a category."
+            f"Type {self.context.clean_prefix}{command_name} command for more info on a"
+            " command.\nYou can also type"
+            f" {self.context.clean_prefix}{command_name} category for more info on a"
+            " category."
         )
 
     def add_indented_commands(self, commands, *, heading, max_size=None):
@@ -1176,8 +1180,10 @@ class MinimalHelpCommand(HelpCommand):
         """
         command_name = self.invoked_with
         return (
-            f"Use `{self.context.clean_prefix}{command_name} [command]` for more info on a command.\n"
-            f"You can also use `{self.context.clean_prefix}{command_name} [category]` for more info on a category."
+            f"Use `{self.context.clean_prefix}{command_name} [command]` for more info"
+            " on a command.\nYou can also use"
+            f" `{self.context.clean_prefix}{command_name} [category]` for more info on"
+            " a category."
         )
 
     def get_command_signature(self, command):

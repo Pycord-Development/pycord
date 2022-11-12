@@ -125,7 +125,8 @@ class Permissions(BaseFlags):
     def __init__(self, permissions: int = 0, **kwargs: bool):
         if not isinstance(permissions, int):
             raise TypeError(
-                f"Expected int parameter, received {permissions.__class__.__name__} instead."
+                "Expected int parameter, received"
+                f" {permissions.__class__.__name__} instead."
             )
 
         self.value = permissions
@@ -140,7 +141,8 @@ class Permissions(BaseFlags):
             return (self.value & other.value) == self.value
         else:
             raise TypeError(
-                f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}"
+                f"cannot compare {self.__class__.__name__} with"
+                f" {other.__class__.__name__}"
             )
 
     def is_superset(self, other: Permissions) -> bool:
@@ -149,7 +151,8 @@ class Permissions(BaseFlags):
             return (self.value | other.value) == self.value
         else:
             raise TypeError(
-                f"cannot compare {self.__class__.__name__} with {other.__class__.__name__}"
+                f"cannot compare {self.__class__.__name__} with"
+                f" {other.__class__.__name__}"
             )
 
     def is_strict_subset(self, other: Permissions) -> bool:
@@ -749,7 +752,7 @@ class PermissionOverwrite:
             self._values[key] = value
 
     def pair(self) -> tuple[Permissions, Permissions]:
-        """Tuple[:class:`Permissions`, :class:`Permissions`]: Returns the (allow, deny) pair from this overwrite."""
+        """Returns the (allow, deny) pair from this overwrite."""
 
         allow = Permissions.none()
         deny = Permissions.none()

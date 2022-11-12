@@ -92,7 +92,7 @@ class Flag:
 
     @property
     def required(self) -> bool:
-        """:class:`bool`: Whether the flag is required.
+        """Whether the flag is required.
 
         A required flag has no default value.
         """
@@ -231,7 +231,8 @@ def get_flags(
                     flag.max_args = 1
             else:
                 raise TypeError(
-                    f"Unsupported typing annotation {annotation!r} for {flag.name!r} flag"
+                    f"Unsupported typing annotation {annotation!r} for"
+                    f" {flag.name!r} flag"
                 )
 
         if flag.override is MISSING:
@@ -251,7 +252,8 @@ def get_flags(
             alias = alias.casefold() if case_insensitive else alias
             if alias in names:
                 raise TypeError(
-                    f"{flag.name!r} flag alias {alias!r} conflicts with previous flag or alias."
+                    f"{flag.name!r} flag alias {alias!r} conflicts with previous flag"
+                    " or alias."
                 )
             else:
                 names.add(alias)
@@ -495,7 +497,7 @@ class FlagConverter(metaclass=FlagsMeta):
 
     @classmethod
     def get_flags(cls) -> dict[str, Flag]:
-        """Dict[:class:`str`, :class:`Flag`]: A mapping of flag name to flag object this converter has."""
+        """A mapping of flag name to flag object this converter has."""
         return cls.__commands_flags__.copy()
 
     @classmethod

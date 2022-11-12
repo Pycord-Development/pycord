@@ -151,14 +151,14 @@ class ApplicationContext(BaseContext):
 
     @cached_property
     def locale(self) -> str | None:
-        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.locale`.
         """
         return self.interaction.locale
 
     @cached_property
     def guild_locale(self) -> str | None:
-        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_locale`.
         """
         return self.interaction.guild_locale
@@ -169,14 +169,14 @@ class ApplicationContext(BaseContext):
 
     @cached_property
     def message(self) -> Message | None:
-        """Optional[:class:`.Message`]: Returns the message sent with this context's command.
+        """Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
         return self.interaction.message
 
     @cached_property
     def response(self) -> InteractionResponse:
-        """:class:`.InteractionResponse`: Returns the response object associated with this context's command.
+        """Returns the response object associated with this context's command.
         Shorthand for :attr:`.Interaction.response`.
         """
         return self.interaction.response
@@ -249,7 +249,8 @@ class ApplicationContext(BaseContext):
             return self.interaction.response.send_message
         else:
             raise RuntimeError(
-                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
+                "Interaction was already issued a response. Try using"
+                f" {type(self).__name__}.send_followup() instead."
             )
 
     @property
@@ -259,7 +260,8 @@ class ApplicationContext(BaseContext):
             return self.followup.send
         else:
             raise RuntimeError(
-                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
+                "Interaction was not yet issued a response. Try using"
+                f" {type(self).__name__}.respond() first."
             )
 
     @property
@@ -269,7 +271,7 @@ class ApplicationContext(BaseContext):
 
     @property
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
+        """Returns the followup webhook for followup interactions."""
         return self.interaction.followup
 
     async def delete(self, *, delay: float | None = None) -> None:
@@ -300,7 +302,6 @@ class ApplicationContext(BaseContext):
     @discord.utils.copy_doc(Interaction.edit_original_response)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_response
-
 
 class AutocompleteContext:
     """Represents context for a slash command's option autocomplete. This ***does not*** inherent from :class:`.BaseContext`.
@@ -338,7 +339,7 @@ class AutocompleteContext:
 
     @property
     def cog(self) -> Cog | None:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        """Returns the cog associated with this context's command.
         ``None`` if it does not exist.
         """
         if self.command is None:

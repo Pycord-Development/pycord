@@ -855,7 +855,8 @@ class TooManyFlags(FlagError):
         self.flag: Flag = flag
         self.values: list[str] = values
         super().__init__(
-            f"Too many flag values, expected {flag.max_args} but received {len(values)}."
+            f"Too many flag values, expected {flag.max_args} but received"
+            f" {len(values)}."
         )
 
 

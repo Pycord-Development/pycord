@@ -5,7 +5,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
   - repo: https://github.com/PyCQA/autoflake
-    rev: v1.7.6
+    rev: v1.7.7
     hooks:
       - id: autoflake
   #        args:
@@ -15,7 +15,7 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -27,11 +27,12 @@ repos:
     rev: 22.10.0
     hooks:
       - id: black
+        # See https://github.com/psf/black/issues/2188#issuecomment-1289317647 for why we can't use the --preview flag.
         args: [--safe, --quiet]
-  #  - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
-  #    rev: 1.0.1
-  #    hooks:
-  #      - id: black-disable-checker
+  - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
+    rev: v1.1.1
+    hooks:
+      - id: black-disable-checker
   #  - repo: https://github.com/PyCQA/flake8
   #    rev: 4.0.1
   #    hooks:
@@ -73,7 +74,7 @@ repos:
   #      - id: mypy
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.2
+    rev: v3.0.0-alpha.4
     hooks:
       - id: prettier
         args: [--prose-wrap=always, --print-width=88]

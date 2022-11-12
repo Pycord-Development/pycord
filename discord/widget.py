@@ -89,16 +89,19 @@ class WidgetChannel:
         return self.name
 
     def __repr__(self) -> str:
-        return f"<WidgetChannel id={self.id} name={self.name!r} position={self.position!r}>"
+        return (
+            "<WidgetChannel"
+            f" id={self.id} name={self.name!r} position={self.position!r}>"
+        )
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the channel."""
+        """The string that allows you to mention the channel."""
         return f"<#{self.id}>"
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """Returns the channel's creation time in UTC."""
         return snowflake_time(self.id)
 
 
@@ -206,7 +209,7 @@ class WidgetMember(BaseUser):
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the member's display name."""
+        """Returns the member's display name."""
         return self.nick or self.name
 
 
@@ -296,17 +299,17 @@ class Widget:
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the member's creation time in UTC."""
+        """Returns the member's creation time in UTC."""
         return snowflake_time(self.id)
 
     @property
     def json_url(self) -> str:
-        """:class:`str`: The JSON URL of the widget."""
+        """The JSON URL of the widget."""
         return f"https://discord.com/api/guilds/{self.id}/widget.json"
 
     @property
     def invite_url(self) -> str:
-        """Optional[:class:`str`]: The invite URL for the guild, if available."""
+        """The invite URL for the guild, if available."""
         return self._invite
 
     async def fetch_invite(self, *, with_counts: bool = True) -> Invite:

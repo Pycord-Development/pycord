@@ -4,9 +4,42 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when
-possible (see our
-[Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more
-info).
+possible (see our [Version Guarantees] for more info).
+
+## [Unreleased]
+
+These changes are available on the `master` branch, but have not yet been released.
+
+### Added
+
+- New brief Attribute to BridgeSlashCommand.
+  ([#1676](https://github.com/Pycord-Development/pycord/pull/1676))
+- Python 3.11 support. ([#1680](https://github.com/Pycord-Development/pycord/pull/1680))
+- New select types `user`, `role`, `mentionable`, and `channel` - Along with their
+  respective types and shortcut decorators.
+  ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
+- Added support for age-restricted (NSFW) commands.
+  ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
+- New flags: `PublicUserFlags.active_developer` & `ApplicationFlags.active`.
+  ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
+
+### Fixed
+
+- Fix bridge.has_permissions.
+  ([#1695](https://github.com/Pycord-Development/pycord/pull/1695))
+- Fix audit log overwrite type always resulting in `None`.
+  ([#1716](https://github.com/Pycord-Development/pycord/pull/1716))
+- Fixed error when using `suppress` kwarg in `send()`.
+  ([#1719](https://github.com/Pycord-Development/pycord/pull/1719) &
+  [#1723](https://github.com/Pycord-Development/pycord/pull/1723))
+
+### Changed
+
+- `get_application_command()` type kwarg now defaults to `ApplicationCommand`, so all
+  command types can be retrieved by default.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+- `get_application_command()` now supports retrieving subcommands and subcommand groups.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 
 ## [2.2.2] - 2022-10-05
 
@@ -423,3 +456,4 @@ info).
   https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [2.0.0-beta.1]:
   https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
+[version guarantees]: https://docs.pycord.dev/en/stable/version_guarantees.html

@@ -145,12 +145,12 @@ class Context(BaseContext, Generic[BotT]):
 
     @property
     def valid(self) -> bool:
-        """:class:`bool`: Checks if the invocation context is valid to be invoked with."""
+        """Checks if the invocation context is valid to be invoked with."""
         return self.prefix is not None and self.command is not None
 
     @property
     def clean_prefix(self) -> str:
-        """:class:`str`: The cleaned up invoke prefix. i.e. mentions are ``@name`` instead of ``<@id>``.
+        """The cleaned up invoke prefix. i.e. mentions are ``@name`` instead of ``<@id>``.
 
         .. versionadded:: 2.0
         """
@@ -195,7 +195,7 @@ class Context(BaseContext, Generic[BotT]):
         Any
             The result of the help command, if any.
         """
-        from .core import Command, Group, wrap_callback
+        from ...commands.mixins import wrap_callback
         from .errors import CommandError
 
         bot = self.bot

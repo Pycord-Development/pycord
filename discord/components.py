@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-from .enums import ButtonStyle, ComponentType, InputTextStyle, try_enum
+from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -39,7 +39,6 @@ if TYPE_CHECKING:
     from .types.components import InputText as InputTextComponentPayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
-
 
 __all__ = (
     "Component",
@@ -293,8 +292,15 @@ class SelectMenu(Component):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.3
+
+        Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
+        :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
+
     Attributes
     ----------
+    type: :class:`ComponentType`
+        The select menu's type.
     custom_id: Optional[:class:`str`]
         The ID of the select menu that gets received during an interaction.
     placeholder: Optional[:class:`str`]
@@ -307,6 +313,12 @@ class SelectMenu(Component):
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`SelectOption`]
         A list of options that can be selected in this menu.
+        Will be an empty list for all component types
+        except for :attr:`ComponentType.string_select`.
+    channel_types: List[:class:`ChannelType`]
+        A list of channel types that can be selected.
+        Will be an empty list for all component types
+        except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
@@ -317,21 +329,25 @@ class SelectMenu(Component):
         "min_values",
         "max_values",
         "options",
+        "channel_types",
         "disabled",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: SelectMenuPayload):
-        self.type = ComponentType.select
+        self.type = try_enum(ComponentType, data["type"])
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
+        self.disabled: bool = data.get("disabled", False)
         self.options: list[SelectOption] = [
             SelectOption.from_dict(option) for option in data.get("options", [])
         ]
-        self.disabled: bool = data.get("disabled", False)
+        self.channel_types: list[ChannelType] = [
+            try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
+        ]
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -339,10 +355,13 @@ class SelectMenu(Component):
             "custom_id": self.custom_id,
             "min_values": self.min_values,
             "max_values": self.max_values,
-            "options": [op.to_dict() for op in self.options],
             "disabled": self.disabled,
         }
 
+        if self.type is ComponentType.string_select:
+            payload["options"] = [op.to_dict() for op in self.options]
+        if self.type is ComponentType.channel_select and self.channel_types:
+            payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
 
@@ -350,7 +369,7 @@ class SelectMenu(Component):
 
 
 class SelectOption:
-    """Represents a select menu's option.
+    """Represents a :class:`discord.SelectMenu`'s option.
 
     These can be created by users.
 
@@ -406,7 +425,8 @@ class SelectOption:
 
     def __repr__(self) -> str:
         return (
-            f"<SelectOption label={self.label!r} value={self.value!r} description={self.description!r} "
+            "<SelectOption"
+            f" label={self.label!r} value={self.value!r} description={self.description!r} "
             f"emoji={self.emoji!r} default={self.default!r}>"
         )
 
@@ -418,7 +438,7 @@ class SelectOption:
 
     @property
     def emoji(self) -> str | Emoji | PartialEmoji | None:
-        """Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]: The emoji of the option, if available."""
+        """The emoji of the option, if available."""
         return self._emoji
 
     @emoji.setter
@@ -430,7 +450,8 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    f"expected emoji to be str, Emoji, or PartialEmoji not {value.__class__}"
+                    "expected emoji to be str, Emoji, or PartialEmoji not"
+                    f" {value.__class__}"
                 )
 
         self._emoji = value
@@ -472,7 +493,9 @@ def _component_factory(data: ComponentPayload) -> Component:
         return ActionRow(data)
     elif component_type == 2:
         return Button(data)  # type: ignore
-    elif component_type == 3:
+    elif component_type == 4:
+        return InputText(data)  # type: ignore
+    elif component_type in (3, 5, 6, 7, 8):
         return SelectMenu(data)  # type: ignore
     else:
         as_enum = try_enum(ComponentType, component_type)

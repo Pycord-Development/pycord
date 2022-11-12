@@ -609,12 +609,12 @@ class Guild(Hashable):
 
     @property
     def channels(self) -> list[GuildChannel]:
-        """List[:class:`abc.GuildChannel`]: A list of channels that belong to this guild."""
+        """A list of channels that belong to this guild."""
         return list(self._channels.values())
 
     @property
     def threads(self) -> list[Thread]:
-        """List[:class:`Thread`]: A list of threads that you have permission to view.
+        """A list of threads that you have permission to view.
 
         .. versionadded:: 2.0
         """
@@ -622,7 +622,7 @@ class Guild(Hashable):
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the guild.
+        """Returns a URL that allows the client to jump to the guild.
 
         .. versionadded:: 2.0
         """
@@ -630,7 +630,7 @@ class Guild(Hashable):
 
     @property
     def large(self) -> bool:
-        """:class:`bool`: Indicates if the guild is a 'large' guild.
+        """Indicates if the guild is a 'large' guild.
 
         A large guild is defined as having more than ``large_threshold`` count
         members, which for this library is set to the maximum of 250.
@@ -644,7 +644,7 @@ class Guild(Hashable):
 
     @property
     def voice_channels(self) -> list[VoiceChannel]:
-        """List[:class:`VoiceChannel`]: A list of voice channels that belong to this guild.
+        """A list of voice channels that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -654,7 +654,7 @@ class Guild(Hashable):
 
     @property
     def stage_channels(self) -> list[StageChannel]:
-        """List[:class:`StageChannel`]: A list of stage channels that belong to this guild.
+        """A list of stage channels that belong to this guild.
 
         .. versionadded:: 1.7
 
@@ -666,7 +666,7 @@ class Guild(Hashable):
 
     @property
     def forum_channels(self) -> list[ForumChannel]:
-        """List[:class:`ForumChannel`]: A list of forum channels that belong to this guild.
+        """A list of forum channels that belong to this guild.
 
         .. versionadded:: 2.0
 
@@ -678,7 +678,7 @@ class Guild(Hashable):
 
     @property
     def me(self) -> Member:
-        """:class:`Member`: Similar to :attr:`Client.user` except an instance of :class:`Member`.
+        """Similar to :attr:`Client.user` except an instance of :class:`Member`.
         This is essentially used to get the member version of yourself.
         """
         self_id = self._state.user.id
@@ -687,12 +687,12 @@ class Guild(Hashable):
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
-        """Optional[:class:`VoiceProtocol`]: Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
     def text_channels(self) -> list[TextChannel]:
-        """List[:class:`TextChannel`]: A list of text channels that belong to this guild.
+        """A list of text channels that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -702,7 +702,7 @@ class Guild(Hashable):
 
     @property
     def categories(self) -> list[CategoryChannel]:
-        """List[:class:`CategoryChannel`]: A list of categories that belong to this guild.
+        """A list of categories that belong to this guild.
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -806,7 +806,7 @@ class Guild(Hashable):
 
     @property
     def system_channel(self) -> TextChannel | None:
-        """Optional[:class:`TextChannel`]: Returns the guild's channel used for system messages.
+        """Returns the guild's channel used for system messages.
 
         If no channel is set, then this returns ``None``.
         """
@@ -815,12 +815,12 @@ class Guild(Hashable):
 
     @property
     def system_channel_flags(self) -> SystemChannelFlags:
-        """:class:`SystemChannelFlags`: Returns the guild's system channel settings."""
+        """Returns the guild's system channel settings."""
         return SystemChannelFlags._from_value(self._system_channel_flags)
 
     @property
     def rules_channel(self) -> TextChannel | None:
-        """Optional[:class:`TextChannel`]: Return's the guild's channel used for the rules.
+        """Return's the guild's channel used for the rules.
         The guild must be a Community guild.
 
         If no channel is set, then this returns ``None``.
@@ -832,7 +832,7 @@ class Guild(Hashable):
 
     @property
     def public_updates_channel(self) -> TextChannel | None:
-        """Optional[:class:`TextChannel`]: Return's the guild's channel where admins and
+        """Return's the guild's channel where admins and
         moderators of the guilds receive notices from Discord. The guild must be a
         Community guild.
 
@@ -845,13 +845,13 @@ class Guild(Hashable):
 
     @property
     def emoji_limit(self) -> int:
-        """:class:`int`: The maximum number of emoji slots this guild has."""
+        """The maximum number of emoji slots this guild has."""
         more_emoji = 200 if "MORE_EMOJI" in self.features else 50
         return max(more_emoji, self._PREMIUM_GUILD_LIMITS[self.premium_tier].emoji)
 
     @property
     def sticker_limit(self) -> int:
-        """:class:`int`: The maximum number of sticker slots this guild has.
+        """The maximum number of sticker slots this guild has.
 
         .. versionadded:: 2.0
         """
@@ -862,7 +862,7 @@ class Guild(Hashable):
 
     @property
     def bitrate_limit(self) -> float:
-        """:class:`float`: The maximum bitrate for voice channels this guild can have."""
+        """The maximum bitrate for voice channels this guild can have."""
         vip_guild = (
             self._PREMIUM_GUILD_LIMITS[1].bitrate
             if "VIP_REGIONS" in self.features
@@ -872,12 +872,12 @@ class Guild(Hashable):
 
     @property
     def filesize_limit(self) -> int:
-        """:class:`int`: The maximum number of bytes files can have when uploaded to this guild."""
+        """The maximum number of bytes files can have when uploaded to this guild."""
         return self._PREMIUM_GUILD_LIMITS[self.premium_tier].filesize
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members that belong to this guild."""
+        """A list of members that belong to this guild."""
         return list(self._members.values())
 
     def get_member(self, user_id: int, /) -> Member | None:
@@ -897,12 +897,12 @@ class Guild(Hashable):
 
     @property
     def premium_subscribers(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who have "boosted" this guild."""
+        """A list of members who have "boosted" this guild."""
         return [member for member in self.members if member.premium_since is not None]
 
     @property
     def roles(self) -> list[Role]:
-        """List[:class:`Role`]: Returns a :class:`list` of the guild's roles in hierarchy order.
+        """Returns a :class:`list` of the guild's roles in hierarchy order.
 
         The first element of this list will be the lowest role in the
         hierarchy.
@@ -926,13 +926,13 @@ class Guild(Hashable):
 
     @property
     def default_role(self) -> Role:
-        """:class:`Role`: Gets the @everyone role that all members have by default."""
+        """Gets the @everyone role that all members have by default."""
         # The @everyone role is *always* given
         return self.get_role(self.id)  # type: ignore
 
     @property
     def premium_subscriber_role(self) -> Role | None:
-        """Optional[:class:`Role`]: Gets the premium subscriber role, AKA "boost" role, in this guild.
+        """Gets the premium subscriber role, AKA "boost" role, in this guild.
 
         .. versionadded:: 1.6
         """
@@ -943,7 +943,7 @@ class Guild(Hashable):
 
     @property
     def self_role(self) -> Role | None:
-        """Optional[:class:`Role`]: Gets the role associated with this client's user, if any.
+        """Gets the role associated with this client's user, if any.
 
         .. versionadded:: 1.6
         """
@@ -956,7 +956,7 @@ class Guild(Hashable):
 
     @property
     def stage_instances(self) -> list[StageInstance]:
-        """List[:class:`StageInstance`]: Returns a :class:`list` of the guild's stage instances that
+        """Returns a :class:`list` of the guild's stage instances that
         are currently running.
 
         .. versionadded:: 2.0
@@ -982,19 +982,19 @@ class Guild(Hashable):
 
     @property
     def owner(self) -> Member | None:
-        """Optional[:class:`Member`]: The member that owns the guild."""
+        """The member that owns the guild."""
         return self.get_member(self.owner_id)  # type: ignore
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
+        """Returns the guild's icon asset, if available."""
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
 
     @property
     def banner(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's banner asset, if available."""
+        """Returns the guild's banner asset, if available."""
         if self._banner is None:
             return None
         return Asset._from_guild_image(
@@ -1003,7 +1003,7 @@ class Guild(Hashable):
 
     @property
     def splash(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's invite splash asset, if available."""
+        """Returns the guild's invite splash asset, if available."""
         if self._splash is None:
             return None
         return Asset._from_guild_image(
@@ -1012,7 +1012,7 @@ class Guild(Hashable):
 
     @property
     def discovery_splash(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's discovery splash asset, if available."""
+        """Returns the guild's discovery splash asset, if available."""
         if self._discovery_splash is None:
             return None
         return Asset._from_guild_image(
@@ -1021,7 +1021,7 @@ class Guild(Hashable):
 
     @property
     def member_count(self) -> int:
-        """:class:`int`: Returns the true member count regardless of it being loaded fully or not.
+        """Returns the true member count regardless of it being loaded fully or not.
 
         .. warning::
 
@@ -1032,7 +1032,7 @@ class Guild(Hashable):
 
     @property
     def chunked(self) -> bool:
-        """:class:`bool`: Returns a boolean indicating if the guild is "chunked".
+        """Returns a boolean indicating if the guild is "chunked".
 
         A chunked guild means that :attr:`member_count` is equal to the
         number of members stored in the internal :attr:`members` cache.
@@ -1047,7 +1047,7 @@ class Guild(Hashable):
 
     @property
     def shard_id(self) -> int:
-        """:class:`int`: Returns the shard ID for this guild if applicable."""
+        """Returns the shard ID for this guild if applicable."""
         count = self._state.shard_count
         if count is None:
             return 0
@@ -1055,12 +1055,12 @@ class Guild(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the guild's creation time in UTC."""
+        """Returns the guild's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def invites_disabled(self) -> bool:
-        """:class:`bool`: Returns a boolean indicating if the guild invites are disabled."""
+        """Returns a boolean indicating if the guild invites are disabled."""
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Member | None:
@@ -1885,7 +1885,8 @@ class Guild(Hashable):
                         features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
-                        "community field requires both rules_channel and public_updates_channel fields to be provided"
+                        "community field requires both rules_channel and"
+                        " public_updates_channel fields to be provided"
                     )
             else:
                 if "COMMUNITY" in features:
@@ -2265,7 +2266,8 @@ class Guild(Hashable):
 
         if not isinstance(days, int):
             raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
+                "Expected int for ``days``, received"
+                f" {days.__class__.__name__} instead."
             )
 
         role_ids = [str(role.id) for role in roles] if roles else []
@@ -2361,7 +2363,8 @@ class Guild(Hashable):
 
         if not isinstance(days, int):
             raise InvalidArgument(
-                f"Expected int for ``days``, received {days.__class__.__name__} instead."
+                "Expected int for ``days``, received"
+                f" {days.__class__.__name__} instead."
             )
 
         role_ids = [str(role.id) for role in roles] if roles else []
@@ -2986,7 +2989,6 @@ class Guild(Hashable):
 
         role_positions: list[dict[str, Any]] = []
         for role, position in positions.items():
-
             payload = {"id": role.id, "position": position}
 
             role_positions.append(payload)
@@ -3714,7 +3716,7 @@ class Guild(Hashable):
 
     @property
     def scheduled_events(self) -> list[ScheduledEvent]:
-        """List[:class:`.ScheduledEvent`]: A list of scheduled events in this guild."""
+        """A list of scheduled events in this guild."""
         return list(self._scheduled_events.values())
 
     async def fetch_auto_moderation_rules(self) -> list[AutoModRule]:

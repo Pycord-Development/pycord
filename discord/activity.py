@@ -124,7 +124,7 @@ class BaseActivity:
 
     @property
     def created_at(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user started doing this activity in UTC.
+        """When the user started doing this activity in UTC.
 
         .. versionadded:: 1.3
         """
@@ -279,7 +279,7 @@ class Activity(BaseActivity):
 
     @property
     def start(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user started doing this activity in UTC, if applicable."""
+        """When the user started doing this activity in UTC, if applicable."""
         try:
             timestamp = self.timestamps["start"] / 1000
         except KeyError:
@@ -289,7 +289,7 @@ class Activity(BaseActivity):
 
     @property
     def end(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user will stop doing this activity in UTC, if applicable."""
+        """When the user will stop doing this activity in UTC, if applicable."""
         try:
             timestamp = self.timestamps["end"] / 1000
         except KeyError:
@@ -299,7 +299,7 @@ class Activity(BaseActivity):
 
     @property
     def large_image_url(self) -> str | None:
-        """Optional[:class:`str`]: Returns a URL pointing to the large image asset of this activity if applicable."""
+        """Returns a URL pointing to the large image asset of this activity if applicable."""
         if self.application_id is None:
             return None
 
@@ -312,7 +312,7 @@ class Activity(BaseActivity):
 
     @property
     def small_image_url(self) -> str | None:
-        """Optional[:class:`str`]: Returns a URL pointing to the small image asset of this activity if applicable."""
+        """Returns a URL pointing to the small image asset of this activity if applicable."""
         if self.application_id is None:
             return None
 
@@ -325,12 +325,12 @@ class Activity(BaseActivity):
 
     @property
     def large_image_text(self) -> str | None:
-        """Optional[:class:`str`]: Returns the large image asset hover text of this activity if applicable."""
+        """Returns the large image asset hover text of this activity if applicable."""
         return self.assets.get("large_text", None)
 
     @property
     def small_image_text(self) -> str | None:
-        """Optional[:class:`str`]: Returns the small image asset hover text of this activity if applicable."""
+        """Returns the small image asset hover text of this activity if applicable."""
         return self.assets.get("small_text", None)
 
 
@@ -385,7 +385,7 @@ class Game(BaseActivity):
 
     @property
     def type(self) -> ActivityType:
-        """:class:`ActivityType`: Returns the game's type. This is for compatibility with :class:`Activity`.
+        """Returns the game's type. This is for compatibility with :class:`Activity`.
 
         It always returns :attr:`ActivityType.playing`.
         """
@@ -393,7 +393,7 @@ class Game(BaseActivity):
 
     @property
     def start(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user started playing this game in UTC, if applicable."""
+        """When the user started playing this game in UTC, if applicable."""
         if self._start:
             return datetime.datetime.fromtimestamp(
                 self._start / 1000, tz=datetime.timezone.utc
@@ -402,7 +402,7 @@ class Game(BaseActivity):
 
     @property
     def end(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user will stop playing this game in UTC, if applicable."""
+        """When the user will stop playing this game in UTC, if applicable."""
         if self._end:
             return datetime.datetime.fromtimestamp(
                 self._end / 1000, tz=datetime.timezone.utc
@@ -497,7 +497,7 @@ class Streaming(BaseActivity):
 
     @property
     def type(self) -> ActivityType:
-        """:class:`ActivityType`: Returns the game's type. This is for compatibility with :class:`Activity`.
+        """Returns the game's type. This is for compatibility with :class:`Activity`.
 
         It always returns :attr:`ActivityType.streaming`.
         """
@@ -510,8 +510,8 @@ class Streaming(BaseActivity):
         return f"<Streaming name={self.name!r}>"
 
     @property
-    def twitch_name(self):
-        """Optional[:class:`str`]: If provided, the twitch name of the user streaming.
+    def twitch_name(self) -> str | None:
+        """If provided, the twitch name of the user streaming.
 
         This corresponds to the ``large_image`` key of the :attr:`Streaming.assets`
         dictionary if it starts with ``twitch:``. Typically this is set by the Discord client.
@@ -595,7 +595,7 @@ class Spotify:
 
     @property
     def type(self) -> ActivityType:
-        """:class:`ActivityType`: Returns the activity's type. This is for compatibility with :class:`Activity`.
+        """Returns the activity's type. This is for compatibility with :class:`Activity`.
 
         It always returns :attr:`ActivityType.listening`.
         """
@@ -603,7 +603,7 @@ class Spotify:
 
     @property
     def created_at(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the user started listening in UTC.
+        """When the user started listening in UTC.
 
         .. versionadded:: 1.3
         """
@@ -614,7 +614,7 @@ class Spotify:
 
     @property
     def colour(self) -> Colour:
-        """:class:`Colour`: Returns the Spotify integration colour, as a :class:`Colour`.
+        """Returns the Spotify integration colour, as a :class:`Colour`.
 
         There is an alias for this named :attr:`color`
         """
@@ -622,7 +622,7 @@ class Spotify:
 
     @property
     def color(self) -> Colour:
-        """:class:`Colour`: Returns the Spotify integration colour, as a :class:`Colour`.
+        """Returns the Spotify integration colour, as a :class:`Colour`.
 
         There is an alias for this named :attr:`colour`
         """
@@ -643,7 +643,7 @@ class Spotify:
 
     @property
     def name(self) -> str:
-        """:class:`str`: The activity's name. This will always return "Spotify"."""
+        """The activity's name. This will always return "Spotify"."""
         return "Spotify"
 
     def __eq__(self, other: Any) -> bool:
@@ -664,21 +664,24 @@ class Spotify:
         return "Spotify"
 
     def __repr__(self) -> str:
-        return f"<Spotify title={self.title!r} artist={self.artist!r} track_id={self.track_id!r}>"
+        return (
+            "<Spotify"
+            f" title={self.title!r} artist={self.artist!r} track_id={self.track_id!r}>"
+        )
 
     @property
     def title(self) -> str:
-        """:class:`str`: The title of the song being played."""
+        """The title of the song being played."""
         return self._details
 
     @property
     def artists(self) -> list[str]:
-        """List[:class:`str`]: The artists of the song being played."""
+        """The artists of the song being played."""
         return self._state.split("; ")
 
     @property
     def artist(self) -> str:
-        """:class:`str`: The artist of the song being played.
+        """The artist of the song being played.
 
         This does not attempt to split the artist information into
         multiple artists. Useful if there's only a single artist.
@@ -687,12 +690,12 @@ class Spotify:
 
     @property
     def album(self) -> str:
-        """:class:`str`: The album that the song being played belongs to."""
+        """The album that the song being played belongs to."""
         return self._assets.get("large_text", "")
 
     @property
     def album_cover_url(self) -> str:
-        """:class:`str`: The album cover image URL from Spotify's CDN."""
+        """The album cover image URL from Spotify's CDN."""
         large_image = self._assets.get("large_image", "")
         if large_image[:8] != "spotify:":
             return ""
@@ -701,12 +704,12 @@ class Spotify:
 
     @property
     def track_id(self) -> str:
-        """:class:`str`: The track ID used by Spotify to identify this song."""
+        """The track ID used by Spotify to identify this song."""
         return self._sync_id
 
     @property
     def track_url(self) -> str:
-        """:class:`str`: The track URL to listen on Spotify.
+        """The track URL to listen on Spotify.
 
         .. versionadded:: 2.0
         """
@@ -714,26 +717,26 @@ class Spotify:
 
     @property
     def start(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: When the user started playing this song in UTC."""
+        """When the user started playing this song in UTC."""
         return datetime.datetime.fromtimestamp(
             self._timestamps["start"] / 1000, tz=datetime.timezone.utc
         )
 
     @property
     def end(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: When the user will stop playing this song in UTC."""
+        """When the user will stop playing this song in UTC."""
         return datetime.datetime.fromtimestamp(
             self._timestamps["end"] / 1000, tz=datetime.timezone.utc
         )
 
     @property
     def duration(self) -> datetime.timedelta:
-        """:class:`datetime.timedelta`: The duration of the song being played."""
+        """The duration of the song being played."""
         return self.end - self.start
 
     @property
     def party_id(self) -> str:
-        """:class:`str`: The party ID of the listening party."""
+        """The party ID of the listening party."""
         return self._party.get("id", "")
 
 
@@ -790,12 +793,13 @@ class CustomActivity(BaseActivity):
             self.emoji = emoji
         else:
             raise TypeError(
-                f"Expected str, PartialEmoji, or None, received {type(emoji)!r} instead."
+                "Expected str, PartialEmoji, or None, received"
+                f" {type(emoji)!r} instead."
             )
 
     @property
     def type(self) -> ActivityType:
-        """:class:`ActivityType`: Returns the activity's type. This is for compatibility with :class:`Activity`.
+        """Returns the activity's type. This is for compatibility with :class:`Activity`.
 
         It always returns :attr:`ActivityType.custom`.
         """

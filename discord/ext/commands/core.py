@@ -48,7 +48,7 @@ from ...commands import (
     slash_command,
     user_command,
 )
-from ...commands.mixins import CogT, Invokable, hooked_wrapped_callback, unwrap_function
+from ...commands.mixins import CogT, Invokable, hook_wrapped_callback, unwrap_function
 from ...enums import ChannelType
 from ...errors import *
 from .context import Context
@@ -466,7 +466,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
     @property
     def short_doc(self) -> str:
-        """:class:`str`: Gets the "short" documentation of a command.
+        """Gets the "short" documentation of a command.
 
         By default, this is the :attr:`.brief` attribute.
         If that lookup leads to an empty string then the first line of the
@@ -488,7 +488,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
     @property
     def signature(self) -> str:
-        """:class:`str`: Returns a POSIX-like signature useful for help command output."""
+        """Returns a POSIX-like signature useful for help command output."""
         if self.usage is not None:
             return self.usage
 
@@ -581,7 +581,7 @@ class GroupMixin(Generic[CogT]):
 
     @property
     def commands(self) -> set[Command[CogT, Any, Any]]:
-        """Set[:class:`.Command`]: A unique set of commands without aliases that are registered."""
+        """A unique set of commands without aliases that are registered."""
         return set(self.prefixed_commands.values())
 
     def recursively_remove_all_commands(self) -> None:
@@ -883,7 +883,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
             ctx.invoked_subcommand = self.prefixed_commands.get(trigger, None)
 
         if early_invoke:
-            injected = hooked_wrapped_callback(self, ctx, self.callback)
+            injected = hook_wrapped_callback(self, ctx, self.callback)
             await injected(*ctx.args, **ctx.kwargs)
 
         ctx.invoked_parents.append(ctx.invoked_with)  # type: ignore

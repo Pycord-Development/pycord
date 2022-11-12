@@ -110,7 +110,8 @@ def convert_emoji_reaction(emoji):
         return emoji.strip("<>")
 
     raise InvalidArgument(
-        f"emoji argument must be str, Emoji, or Reaction not {emoji.__class__.__name__}."
+        "emoji argument must be str, Emoji, or Reaction not"
+        f" {emoji.__class__.__name__}."
     )
 
 
@@ -198,7 +199,7 @@ class Attachment(Hashable):
         self.description: str | None = data.get("description")
 
     def is_spoiler(self) -> bool:
-        """:class:`bool`: Whether this attachment contains a spoiler."""
+        """Whether this attachment contains a spoiler."""
         return self.filename.startswith("SPOILER_")
 
     def __repr__(self) -> str:
@@ -375,22 +376,25 @@ class DeletedReferencedMessage:
         self._parent: MessageReference = parent
 
     def __repr__(self) -> str:
-        return f"<DeletedReferencedMessage id={self.id} channel_id={self.channel_id} guild_id={self.guild_id!r}>"
+        return (
+            "<DeletedReferencedMessage"
+            f" id={self.id} channel_id={self.channel_id} guild_id={self.guild_id!r}>"
+        )
 
     @property
     def id(self) -> int:
-        """:class:`int`: The message ID of the deleted referenced message."""
+        """The message ID of the deleted referenced message."""
         # the parent's message id won't be None here
         return self._parent.message_id  # type: ignore
 
     @property
     def channel_id(self) -> int:
-        """:class:`int`: The channel ID of the deleted referenced message."""
+        """The channel ID of the deleted referenced message."""
         return self._parent.channel_id
 
     @property
     def guild_id(self) -> int | None:
-        """Optional[:class:`int`]: The guild ID of the deleted referenced message."""
+        """The guild ID of the deleted referenced message."""
         return self._parent.guild_id
 
 
@@ -499,12 +503,12 @@ class MessageReference:
 
     @property
     def cached_message(self) -> Message | None:
-        """Optional[:class:`~discord.Message`]: The cached message, if found in the internal message cache."""
+        """The cached message, if found in the internal message cache."""
         return self._state and self._state._get_message(self.message_id)
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the referenced message.
+        """Returns a URL that allows the client to jump to the referenced message.
 
         .. versionadded:: 1.7
         """
@@ -982,7 +986,7 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of user IDs matched with
+        """A property that returns an array of user IDs matched with
         the syntax of ``<@user_id>`` in the message content.
 
         This allows you to receive the user IDs of mentioned users
@@ -992,14 +996,14 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_raw_channel_mentions")
     def raw_channel_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of channel IDs matched with
+        """A property that returns an array of channel IDs matched with
         the syntax of ``<#channel_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<#([0-9]{15,20})>", self.content)]
 
     @utils.cached_slot_property("_cs_raw_role_mentions")
     def raw_role_mentions(self) -> list[int]:
-        """List[:class:`int`]: A property that returns an array of role IDs matched with
+        """A property that returns an array of role IDs matched with
         the syntax of ``<@&role_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<@&([0-9]{15,20})>", self.content)]
@@ -1013,7 +1017,7 @@ class Message(Hashable):
 
     @utils.cached_slot_property("_cs_clean_content")
     def clean_content(self) -> str:
-        """:class:`str`: A property that returns the content in a "cleaned up"
+        """A property that returns the content in a "cleaned up"
         manner. This basically means that mentions are transformed
         into the way the client shows it. e.g. ``<#id>`` will transform
         into ``#name``.
@@ -1063,24 +1067,24 @@ class Message(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The message's creation time in UTC."""
+        """The message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def edited_at(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: An aware UTC datetime object containing the
+        """An aware UTC datetime object containing the
         edited time of the message.
         """
         return self._edited_timestamp
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to this message."""
+        """Returns a URL that allows the client to jump to this message."""
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
 
     def is_system(self) -> bool:
-        """:class:`bool`: Whether the message is a system message.
+        """Whether the message is a system message.
 
         A system message is a message that is constructed entirely by the Discord API
         in response to something.
@@ -1095,8 +1099,8 @@ class Message(Hashable):
         )
 
     @utils.cached_slot_property("_cs_system_content")
-    def system_content(self):
-        r""":class:`str`: A property that returns the content that is rendered
+    def system_content(self) -> str:
+        r"""A property that returns the content that is rendered
         regardless of the :attr:`Message.type`.
 
         In the case of :attr:`MessageType.default` and :attr:`MessageType.reply`\,
@@ -1117,9 +1121,15 @@ class Message(Hashable):
 
         if self.type is MessageType.recipient_remove:
             if self.channel.type is ChannelType.group:
-                return f"{self.author.name} removed {self.mentions[0].name} from the group."
+                return (
+                    f"{self.author.name} removed {self.mentions[0].name} from the"
+                    " group."
+                )
             else:
-                return f"{self.author.name} removed {self.mentions[0].name} from the thread."
+                return (
+                    f"{self.author.name} removed {self.mentions[0].name} from the"
+                    " thread."
+                )
 
         if self.type is MessageType.channel_name_change:
             return f"{self.author.name} changed the channel name: **{self.content}**"
@@ -1154,33 +1164,45 @@ class Message(Hashable):
             if not self.content:
                 return f"{self.author.name} just boosted the server!"
             else:
-                return f"{self.author.name} just boosted the server **{self.content}** times!"
+                return (
+                    f"{self.author.name} just boosted the server **{self.content}**"
+                    " times!"
+                )
 
         if self.type is MessageType.premium_guild_tier_1:
             if not self.content:
-                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 1!**"
+                return (
+                    f"{self.author.name} just boosted the server! {self.guild} has"
+                    " achieved **Level 1!**"
+                )
             else:
                 return (
-                    f"{self.author.name} just boosted the server **{self.content}** times!"
-                    f" {self.guild} has achieved **Level 1!**"
+                    f"{self.author.name} just boosted the server **{self.content}**"
+                    f" times! {self.guild} has achieved **Level 1!**"
                 )
 
         if self.type is MessageType.premium_guild_tier_2:
             if not self.content:
-                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 2!**"
+                return (
+                    f"{self.author.name} just boosted the server! {self.guild} has"
+                    " achieved **Level 2!**"
+                )
             else:
                 return (
-                    f"{self.author.name} just boosted the server **{self.content}** times!"
-                    f" {self.guild} has achieved **Level 2!**"
+                    f"{self.author.name} just boosted the server **{self.content}**"
+                    f" times! {self.guild} has achieved **Level 2!**"
                 )
 
         if self.type is MessageType.premium_guild_tier_3:
             if not self.content:
-                return f"{self.author.name} just boosted the server! {self.guild} has achieved **Level 3!**"
+                return (
+                    f"{self.author.name} just boosted the server! {self.guild} has"
+                    " achieved **Level 3!**"
+                )
             else:
                 return (
-                    f"{self.author.name} just boosted the server **{self.content}** times!"
-                    f" {self.guild} has achieved **Level 3!**"
+                    f"{self.author.name} just boosted the server **{self.content}**"
+                    f" times! {self.guild} has achieved **Level 3!**"
                 )
 
         if self.type is MessageType.channel_follow_add:
@@ -1192,27 +1214,36 @@ class Message(Hashable):
 
         if self.type is MessageType.guild_discovery_disqualified:
             return (
-                "This server has been removed from Server Discovery because it no longer passes all the"
-                " requirements. Check Server Settings for more details."
+                "This server has been removed from Server Discovery because it no"
+                " longer passes all the requirements. Check Server Settings for more"
+                " details."
             )
 
         if self.type is MessageType.guild_discovery_requalified:
-            return "This server is eligible for Server Discovery again and has been automatically relisted!"
+            return (
+                "This server is eligible for Server Discovery again and has been"
+                " automatically relisted!"
+            )
 
         if self.type is MessageType.guild_discovery_grace_period_initial_warning:
             return (
-                "This server has failed Discovery activity requirements for 1 week. If this server fails for"
-                " 4 weeks in a row, it will be automatically removed from Discovery."
+                "This server has failed Discovery activity requirements for 1 week. If"
+                " this server fails for 4 weeks in a row, it will be automatically"
+                " removed from Discovery."
             )
 
         if self.type is MessageType.guild_discovery_grace_period_final_warning:
             return (
-                "This server has failed Discovery activity requirements for 3 weeks in a row. If this server fails"
-                " for 1 more week, it will be removed from Discovery."
+                "This server has failed Discovery activity requirements for 3 weeks in"
+                " a row. If this server fails for 1 more week, it will be removed from"
+                " Discovery."
             )
 
         if self.type is MessageType.thread_created:
-            return f"{self.author.name} started a thread: **{self.content}**. See all **threads**."
+            return (
+                f"{self.author.name} started a thread: **{self.content}**. See all"
+                " **threads**."
+            )
 
         if self.type is MessageType.reply:
             return self.content
@@ -1225,7 +1256,10 @@ class Message(Hashable):
             return self.reference.resolved.content  # type: ignore
 
         if self.type is MessageType.guild_invite_reminder:
-            return "Wondering who to invite?\nStart by inviting anyone who can help you build the server!"
+            return (
+                "Wondering who to invite?\nStart by inviting anyone who can help you"
+                " build the server!"
+            )
 
     async def delete(
         self, *, delay: float | None = None, reason: str | None = None
@@ -1817,7 +1851,8 @@ class PartialMessage(Hashable):
             ChannelType.private_thread,
         ):
             raise TypeError(
-                f"Expected TextChannel, VoiceChannel, DMChannel or Thread not {type(channel)!r}"
+                "Expected TextChannel, VoiceChannel, DMChannel or Thread not"
+                f" {type(channel)!r}"
             )
 
         self.channel: PartialMessageableChannel = channel
@@ -1838,12 +1873,12 @@ class PartialMessage(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: The partial message's creation time in UTC."""
+        """The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild that the partial message belongs to, if applicable."""
+        """The guild that the partial message belongs to, if applicable."""
         return getattr(self.channel, "guild", None)
 
     async def fetch(self) -> Message:

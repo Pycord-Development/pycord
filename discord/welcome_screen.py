@@ -127,7 +127,10 @@ class WelcomeScreen:
         self._update(data)
 
     def __repr__(self):
-        return f"<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}"
+        return (
+            "<WelcomeScreen"
+            f" description={self.description} welcome_channels={self.welcome_channels}"
+        )
 
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get("description")
@@ -138,12 +141,12 @@ class WelcomeScreen:
 
     @property
     def enabled(self) -> bool:
-        """:class:`bool`: Indicates whether the welcome screen is enabled or not."""
+        """Indicates whether the welcome screen is enabled or not."""
         return "WELCOME_SCREEN_ENABLED" in self._guild.features
 
     @property
     def guild(self) -> Guild:
-        """:class:`Guild`: The guild this welcome screen belongs to."""
+        """The guild this welcome screen belongs to."""
         return self._guild
 
     @overload

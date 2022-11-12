@@ -265,7 +265,7 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @property
     def source(self) -> Message | Interaction:
-        """Union[:class:`.Message`, :class:`.Interaction`]: Property to return a message or interaction
+        """Property to return a message or interaction
         depending on the context.
         """
         raise NotImplementedError
@@ -276,22 +276,25 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @property
     def cog(self) -> Cog | None:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
-        None if it does not exist.
+        """Returns the cog associated with this context's command.
+        ``None`` if it does not exist.
         """
-
         if self.command is None:
             return None
         return self.command.cog
 
     @utils.cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command."""
+        """Returns the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.guild`.
+        """
         return self.source.guild
 
     @utils.cached_property
     def guild_id(self) -> int | None:
-        """Optional[:class:`int`]: Returns the ID of the guild associated with this context's command."""
+        """Returns the ID of the guild associated with this context's command.
+        Shorthand for :attr:`.Interaction.guild_id`.
+        """
         return getattr(self.source, "guild_id", self.guild.id if self.guild else None)
 
     @utils.cached_property
@@ -301,32 +304,36 @@ class BaseContext(abc.Messageable, Generic[BotT]):
 
     @utils.cached_property
     def channel_id(self) -> int | None:
-        """Optional[:class:`int`]: Returns the ID of the channel associated with this context's command."""
+        """Returns the ID of the channel associated with this context's command.
+        Shorthand for :attr:`.Interaction.channel_id`.
+        """
         return getattr(
             self.source, "channel_id", self.channel.id if self.channel else None
         )
 
     @utils.cached_property
     def author(self) -> User | Member:
-        """Union[:class:`.User`, :class:`.Member`]: Returns the author associated with this context's command."""
+        """Returns the user that sent this context's command.
+        Shorthand for :attr:`.Interaction.user`.
+        """
         return self.source.author
 
     @property
     def user(self) -> User | Member:
-        """Union[:class:`.User`, :class:`.Member`]: Alias for :attr:`BaseContext.author`."""
+        """Alias for :attr:`BaseContext.author`."""
         return self.author
 
     @utils.cached_property
     def me(self) -> Member | ClientUser:
-        """Union[:class:`.Member`, :class:`.ClientUser`]: Similar to :attr:`.Guild.me` except it may return the
-        :class:`.ClientUser` in private message contexts, or when :meth:`.Intents.guilds` is absent.
+        """Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser`
+        in private message contexts, or when :meth:`.Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
         return self.guild.me if self.guild and self.guild.me else self.bot.user  # type: ignore
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
-        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
+        """Returns the voice client associated with this context's command."""
         return self.guild.voice_client if self.guild else None
 
 
@@ -456,7 +463,7 @@ class Invokable(Generic[CogT, P, T]):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
+        """Retrieves the fully qualified command name.
 
         This is the full name of the parent command with the subcommand name as well.
         For example, in ``?one two three``, the qualified name would be
@@ -502,7 +509,7 @@ class Invokable(Generic[CogT, P, T]):
 
     @property
     def full_parent_name(self) -> str | None:
-        """:class:`str`: Retrieves the fully qualified parent command name.
+        """Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
         in ``/one two three`` the parent name would be ``one two``.
@@ -536,31 +543,8 @@ class Invokable(Generic[CogT, P, T]):
         """
         self.__init__(self.callback, **dict(self.__original_kwargs__, **kwargs))
 
-    def error(self, coro: ErrorT) -> ErrorT:
-        """A decorator that registers a coroutine as a local error handler.
-
-        A local error handler is an :func:`.on_command_error` event limited to
-        a single command. However, the :func:`.on_command_error` is still
-        invoked afterwards as the catch-all.
-
-        Parameters
-        ----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the local error handler.
-
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The error handler must be a coroutine.")
-
-        self.on_error = coro
-        return coro
-
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered."""
+        """Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
     def before_invoke(self, coro: HookT) -> HookT:
@@ -570,8 +554,7 @@ class Invokable(Generic[CogT, P, T]):
         called. This makes it a useful function to set up database
         connections or any type of set up required.
 
-        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
-
+        This pre-invoke hook takes a sole parameter, a :class:`.BaseContext`.
         See :meth:`.Bot.before_invoke` for more info.
 
         Parameters
@@ -597,7 +580,7 @@ class Invokable(Generic[CogT, P, T]):
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
 
-        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        This post-invoke hook takes a sole parameter, a :class:`.BaseContext`.
 
         See :meth:`.Bot.after_invoke` for more info.
 
@@ -750,7 +733,7 @@ class Invokable(Generic[CogT, P, T]):
 
         Parameters
         ----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context to use when checking the command's cooldown status.
 
         Returns
@@ -770,7 +753,7 @@ class Invokable(Generic[CogT, P, T]):
 
         Parameters
         ----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
@@ -786,7 +769,7 @@ class Invokable(Generic[CogT, P, T]):
 
         Parameters
         ----------
-        ctx: :class:`.ApplicationContext`
+        ctx: :class:`.BaseContext`
             The invocation context to retrieve the cooldown from.
 
         Returns
@@ -904,7 +887,7 @@ class Invokable(Generic[CogT, P, T]):
         # the invoked subcommand is None.
         ctx.invoked_subcommand = None
         ctx.subcommand_passed = None
-        injected = hooked_wrapped_callback(self, ctx, self.callback)
+        injected = hook_wrapped_callback(self, ctx, self.callback)
         await injected(*ctx.args, **ctx.kwargs)
 
     async def reinvoke(self, ctx: BaseContext, *, call_hooks: bool = False) -> None:

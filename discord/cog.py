@@ -144,7 +144,10 @@ class CogMeta(type):
 
         commands = {}
         listeners = {}
-        no_bot_cog = "Commands or listeners must not start with cog_ or bot_ (in method {0.__name__}.{1})"
+        no_bot_cog = (
+            "Commands or listeners must not start with cog_ or bot_ (in method"
+            " {0.__name__}.{1})"
+        )
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
@@ -178,7 +181,8 @@ class CogMeta(type):
                 if isinstance(value, _filter):
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                            f"Command in method {base}.{elem!r} must not be"
+                            " staticmethod."
                         )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
@@ -188,7 +192,8 @@ class CogMeta(type):
                 if hasattr(value, "add_to") and not getattr(value, "parent", None):
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be staticmethod."
+                            f"Command in method {base}.{elem!r} must not be"
+                            " staticmethod."
                         )
                     if elem.startswith(("cog_", "bot_")):
                         raise TypeError(no_bot_cog.format(base, elem))
@@ -322,12 +327,12 @@ class Cog(metaclass=CogMeta):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Returns the cog's specified name, not the class name."""
+        """Returns the cog's specified name, not the class name."""
         return self.__cog_name__
 
     @property
     def description(self) -> str:
-        """:class:`str`: Returns the cog's description, typically the cleaned docstring."""
+        """Returns the cog's description, typically the cleaned docstring."""
         return self.__cog_description__
 
     @description.setter
@@ -387,7 +392,8 @@ class Cog(metaclass=CogMeta):
 
         if name is not MISSING and not isinstance(name, str):
             raise TypeError(
-                f"Cog.listener expected str but received {name.__class__.__name__!r} instead."
+                "Cog.listener expected str but received"
+                f" {name.__class__.__name__!r} instead."
             )
 
         def decorator(func: FuncT) -> FuncT:
@@ -411,7 +417,7 @@ class Cog(metaclass=CogMeta):
         return decorator
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the cog has an error handler.
+        """Checks whether the cog has an error handler.
 
         .. versionadded:: 1.7
         """
@@ -693,7 +699,7 @@ class CogMixin:
 
     @property
     def cogs(self) -> Mapping[str, Cog]:
-        """Mapping[:class:`str`, :class:`Cog`]: A read-only mapping of cog name to cog."""
+        """A read-only mapping of cog name to cog."""
         return types.MappingProxyType(self.__cogs)
 
     # extensions
@@ -1115,5 +1121,5 @@ class CogMixin:
 
     @property
     def extensions(self) -> Mapping[str, types.ModuleType]:
-        """Mapping[:class:`str`, :class:`py:types.ModuleType`]: A read-only mapping of extension name to extension."""
+        """A read-only mapping of extension name to extension."""
         return types.MappingProxyType(self.__extensions)

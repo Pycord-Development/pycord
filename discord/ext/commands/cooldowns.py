@@ -23,6 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+# Cooldowns were moved to discord/commands/cooldowns.py
 from ...commands.cooldowns import *
 
 __all__ = (
