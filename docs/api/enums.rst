@@ -307,6 +307,10 @@ of :class:`enum.Enum`.
     .. attribute:: spammer
 
         The user is disabled for being a spammer.
+    .. attribute:: active_developer
+
+        The user is an Active Developer.
+
 
 .. class:: ActivityType
 
