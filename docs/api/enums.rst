@@ -292,6 +292,9 @@ of :class:`enum.Enum`.
     .. attribute:: bug_hunter_level_2
 
         The user is a Bug Hunter Level 2.
+    .. attribute:: underage_deleted
+
+        The user was deleted for being underage.
     .. attribute:: verified_bot
 
         The user is a Verified Bot.
@@ -307,6 +310,9 @@ of :class:`enum.Enum`.
     .. attribute:: spammer
 
         The user is disabled for being a spammer.
+    .. attribute:: active_developer
+
+        The user is an Active Developer.
 
 .. class:: ActivityType
 
