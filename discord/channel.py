@@ -36,6 +36,7 @@ from .enums import (
     ChannelType,
     EmbeddedActivity,
     InviteTarget,
+    SortOrder,
     StagePrivacyLevel,
     VideoQualityMode,
     VoiceRegion,
@@ -190,7 +191,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
-        "available_tags",  # only available in forum channels
+        "default_sort_order",
+        "available_tags",
         "flags",
     )
 
@@ -984,9 +986,12 @@ class ForumChannel(_TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
-
     available_tags: List[:class:`ForumTag`]
         The set of tags that can be used in a forum channel.
+
+        .. versionadded:: 2.3
+    default_sort_order: Optional[:class:`SortOrder`]
+        The default sort order type used to order posts in this channel.
 
         .. versionadded:: 2.3
     """
@@ -995,13 +1000,14 @@ class ForumChannel(_TextChannel):
         self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload
     ):
         super().__init__(state=state, guild=guild, data=data)
-        self.available_tags: list[ForumTag] = [
-            ForumTag.from_data(state=state, data=tag)
-            for tag in data.get("available_tags", [])
-        ]
 
     def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
         super()._update(guild, data)
+        self.available_tags: list[ForumTag] = [
+            ForumTag.from_data(state=self._state, data=tag)
+            for tag in (data.get("available_tags") or [])
+        ]
+        self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
 
     @property
     def guidelines(self) -> str | None:
