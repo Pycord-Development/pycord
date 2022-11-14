@@ -85,15 +85,18 @@ class RoleTags:
         self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
 
     def is_bot_managed(self) -> bool:
-        """Whether the role is associated with a bot."""
+        """Whether the role is associated with a bot.
+        """
         return self.bot_id is not None
 
     def is_premium_subscriber(self) -> bool:
-        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
+        """
         return self._premium_subscriber is None
 
     def is_integration(self) -> bool:
-        """Whether the role is managed by an integration."""
+        """Whether the role is managed by an integration.
+        """
         return self.integration_id is not None
 
     def __repr__(self) -> str:
@@ -261,7 +264,8 @@ class Role(Hashable):
             self.tags = None
 
     def is_default(self) -> bool:
-        """Checks if the role is the default role."""
+        """Checks if the role is the default role.
+        """
         return self.guild.id == self.id
 
     def is_bot_managed(self) -> bool:
@@ -299,32 +303,38 @@ class Role(Hashable):
 
     @property
     def permissions(self) -> Permissions:
-        """Returns the role's permissions."""
+        """Returns the role's permissions.
+        """
         return Permissions(self._permissions)
 
     @property
     def colour(self) -> Colour:
-        """Returns the role colour. An alias exists under ``color``."""
+        """Returns the role colour. An alias exists under ``color``.
+        """
         return Colour(self._colour)
 
     @property
     def color(self) -> Colour:
-        """Returns the role color. An alias exists under ``colour``."""
+        """Returns the role color. An alias exists under ``colour``.
+        """
         return self.colour
 
     @property
     def created_at(self) -> datetime.datetime:
-        """Returns the role's creation time in UTC."""
+        """Returns the role's creation time in UTC.
+        """
         return snowflake_time(self.id)
 
     @property
     def mention(self) -> str:
-        """Returns a string that allows you to mention a role."""
+        """Returns a string that allows you to mention a role.
+        """
         return f"<@&{self.id}>"
 
     @property
     def members(self) -> list[Member]:
-        """Returns all the members with this role."""
+        """Returns all the members with this role.
+        """
         all_members = self.guild.members
         if self.is_default():
             return all_members

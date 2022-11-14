@@ -59,7 +59,8 @@ async def say(
     ctx: discord.ApplicationContext,
     attachment: discord.Attachment,
 ):
-    """This demonstrates how to attach a file with a slash command."""
+    """This demonstrates how to attach a file with a slash command.
+    """
     if attachment:
         file = await attachment.to_file()
         await ctx.respond("Here's your file!", file=file)

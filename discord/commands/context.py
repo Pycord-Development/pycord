@@ -316,7 +316,8 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def followup(self) -> Webhook:
-        """Returns the followup webhook for followup interactions."""
+        """Returns the followup webhook for followup interactions.
+        """
         return self.interaction.followup
 
     async def delete(self, *, delay: float | None = None) -> None:
