@@ -191,6 +191,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
+        "default_thread_rate_limit_per_user",
         "default_sort_order",
         "available_tags",
         "flags",
@@ -234,6 +235,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
+            )
+            self.default_thread_rate_limit_per_user: int | None = data.get(
+                "default_thread_rate_limit_per_user"
             )
             self.last_message_id: int | None = utils._get_as_snowflake(
                 data, "last_message_id"
@@ -824,6 +828,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    default_thread_rate_limit_per_user: Optional[:class:`int`]
+        The initial `rate_limit_per_user` to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
@@ -992,6 +1000,10 @@ class ForumChannel(_TextChannel):
         .. versionadded:: 2.3
     default_sort_order: Optional[:class:`SortOrder`]
         The default sort order type used to order posts in this channel.
+
+        .. versionadded:: 2.3
+    default_thread_rate_limit_per_user: Optional[:class:`int`]
+        The initial `rate_limit_per_user` to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
     """
