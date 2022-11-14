@@ -1,6 +1,10 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -71,6 +75,7 @@ jobs:
           python -m pip install -U pip
           pip install ".[docs]"
       - name: Check Links
+        if: github.event_name == 'schedule'
         run: |
           cd docs
           make linkcheck
