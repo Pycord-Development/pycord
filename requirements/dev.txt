@@ -1,0 +1,6 @@
+-r _.txt
+pylint==2.15.5
+pre-commit==2.20.0
+codespell==2.2.2
+bandit==1.7.4
+flake8==5.0.4

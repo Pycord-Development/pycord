@@ -22,13 +22,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
-          cache-dependency-path: "tests/requirements.txt"
+          cache-dependency-path: "requirements/test.txt"
           check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8
-          pip install -r tests/requirements.txt
+          pip install -r requirements/test.txt
       - name: Setup cache
         id: cache-pytest
         uses: actions/cache@v3
@@ -62,6 +62,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+          cache: "pip"
+          cache-dependency-path: "requirements/docs.txt"
+          check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install -U pip
