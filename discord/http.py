@@ -1048,6 +1048,7 @@ class HTTPClient:
             "default_reaction_emoji",
             "available_tags",
             "applied_tags",
+            "default_sort_order",
         )
         payload = {k: v for k, v in options.items() if k in valid_keys}
         return self.request(r, reason=reason, json=payload)

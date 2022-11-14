@@ -323,6 +323,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         slowmode_delay: int = ...,
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        default_thread_rate_limit_per_user: int = ...,
         available_tags: list[ForumTag] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
@@ -384,8 +386,16 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             The new default slowmode delay in seconds for threads created in this channel.
 
             .. versionadded:: 2.3
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type to use to order posts in this forum channel.
+
+            .. versionadded:: 2.3
+        default_thread_rate_limit_per_user: Optional[:class:`int`]
+            The initial `rate_limit_per_user` to set on newly created threads in this forum channel.
+
+            .. versionadded:: 2.3
         available_tags: List[:class:`ForumTag`]
-            The set of tags that can be used in a forum channel. Must be less than `20`.
+            The set of tags that can be used in this forum channel. Must be less than `20`.
 
             .. versionadded:: 2.3
 
