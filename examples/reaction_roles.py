@@ -31,8 +31,7 @@ async def on_ready():
 
 @bot.event
 async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
-    """Gives a role based on a reaction emoji.
-    """
+    """Gives a role based on a reaction emoji."""
     # Make sure that the message the user is reacting to is the one we care about.
     if payload.message_id != role_message_id:
         return
@@ -63,8 +62,7 @@ async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
 
 @bot.event
 async def on_raw_reaction_remove(payload: discord.RawReactionActionEvent):
-    """Removes a role based on a reaction emoji.
-    """
+    """Removes a role based on a reaction emoji."""
     # Make sure that the message the user is reacting to is the one we care about.
     if payload.message_id != role_message_id:
         return

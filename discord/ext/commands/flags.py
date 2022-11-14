@@ -497,8 +497,7 @@ class FlagConverter(metaclass=FlagsMeta):
 
     @classmethod
     def get_flags(cls) -> dict[str, Flag]:
-        """A mapping of flag name to flag object this converter has.
-        """
+        """A mapping of flag name to flag object this converter has."""
         return cls.__commands_flags__.copy()
 
     @classmethod

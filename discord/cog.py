@@ -326,14 +326,12 @@ class Cog(metaclass=CogMeta):
 
     @property
     def qualified_name(self) -> str:
-        """Returns the cog's specified name, not the class name.
-        """
+        """Returns the cog's specified name, not the class name."""
         return self.__cog_name__
 
     @property
     def description(self) -> str:
-        """Returns the cog's description, typically the cleaned docstring.
-        """
+        """Returns the cog's description, typically the cleaned docstring."""
         return self.__cog_description__
 
     @description.setter
@@ -367,8 +365,7 @@ class Cog(metaclass=CogMeta):
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> FuncT | None:
-        """Return None if the method is not overridden. Otherwise, returns the overridden method.
-        """
+        """Return None if the method is not overridden. Otherwise, returns the overridden method."""
         return getattr(
             getattr(method, "__func__", method), "__cog_special_method__", method
         )
@@ -701,8 +698,7 @@ class CogMixin:
 
     @property
     def cogs(self) -> Mapping[str, Cog]:
-        """A read-only mapping of cog name to cog.
-        """
+        """A read-only mapping of cog name to cog."""
         return types.MappingProxyType(self.__cogs)
 
     # extensions
@@ -1124,6 +1120,5 @@ class CogMixin:
 
     @property
     def extensions(self) -> Mapping[str, types.ModuleType]:
-        """A read-only mapping of extension name to extension.
-        """
+        """A read-only mapping of extension name to extension."""
         return types.MappingProxyType(self.__extensions)

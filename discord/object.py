@@ -87,24 +87,20 @@ class Object(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """Returns the snowflake's creation time in UTC.
-        """
+        """Returns the snowflake's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def worker_id(self) -> int:
-        """Returns the worker id that made the snowflake.
-        """
+        """Returns the worker id that made the snowflake."""
         return (self.id & 0x3E0000) >> 17
 
     @property
     def process_id(self) -> int:
-        """Returns the process id that made the snowflake.
-        """
+        """Returns the process id that made the snowflake."""
         return (self.id & 0x1F000) >> 12
 
     @property
     def increment_id(self) -> int:
-        """Returns the increment id that made the snowflake.
-        """
+        """Returns the increment id that made the snowflake."""
         return self.id & 0xFFF

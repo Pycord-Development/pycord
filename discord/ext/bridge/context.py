@@ -126,8 +126,7 @@ class BridgeContext(ABC):
 
     @property
     def is_app(self) -> bool:
-        """Whether the context is an :class:`BridgeApplicationContext` or not.
-        """
+        """Whether the context is an :class:`BridgeApplicationContext` or not."""
         return isinstance(self, BridgeApplicationContext)
 
 

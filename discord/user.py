@@ -154,8 +154,7 @@ class BaseUser(_UserTag):
 
     @property
     def public_flags(self) -> PublicUserFlags:
-        """The publicly available flags the user has.
-        """
+        """The publicly available flags the user has."""
         return PublicUserFlags._from_value(self._public_flags)
 
     @property
@@ -251,8 +250,7 @@ class BaseUser(_UserTag):
 
     @property
     def mention(self) -> str:
-        """Returns a string that allows you to mention the given user.
-        """
+        """Returns a string that allows you to mention the given user."""
         return f"<@{self.id}>"
 
     @property

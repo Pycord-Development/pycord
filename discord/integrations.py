@@ -213,14 +213,12 @@ class StreamIntegration(Integration):
 
     @property
     def expire_behavior(self) -> ExpireBehaviour:
-        """An alias for :attr:`expire_behaviour`.
-        """
+        """An alias for :attr:`expire_behaviour`."""
         return self.expire_behaviour
 
     @property
     def role(self) -> Role | None:
-        """The role which the integration uses for subscribers.
-        """
+        """The role which the integration uses for subscribers."""
         return self.guild.get_role(self._role_id)  # type: ignore
 
     async def edit(

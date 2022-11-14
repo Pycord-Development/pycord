@@ -344,8 +344,7 @@ class OpusError(DiscordException):
 
 
 class OpusNotLoaded(DiscordException):
-    """An exception that is thrown for when libopus is not loaded.
-    """
+    """An exception that is thrown for when libopus is not loaded."""
 
 
 class _OpusStruct:
@@ -452,20 +451,17 @@ class Decoder(_OpusStruct):
 
     @staticmethod
     def packet_get_nb_frames(data):
-        """Gets the number of frames in an Opus packet
-        """
+        """Gets the number of frames in an Opus packet"""
         return _lib.opus_packet_get_nb_frames(data, len(data))
 
     @staticmethod
     def packet_get_nb_channels(data):
-        """Gets the number of channels in an Opus packet
-        """
+        """Gets the number of channels in an Opus packet"""
         return _lib.opus_packet_get_nb_channels(data)
 
     @classmethod
     def packet_get_samples_per_frame(cls, data):
-        """Gets the number of samples per frame from an Opus packet
-        """
+        """Gets the number of samples per frame from an Opus packet"""
         return _lib.opus_packet_get_samples_per_frame(data, cls.SAMPLING_RATE)
 
     def _set_gain(self, adjustment):
@@ -480,20 +476,17 @@ class Decoder(_OpusStruct):
         return _lib.opus_decoder_ctl(self._state, CTL_SET_GAIN, adjustment)
 
     def set_gain(self, dB):
-        """Sets the decoder gain in dB, from -128 to 128.
-        """
+        """Sets the decoder gain in dB, from -128 to 128."""
 
         dB_Q8 = max(-32768, min(32767, round(dB * 256)))  # dB * 2^n where n is 8 (Q8)
         return self._set_gain(dB_Q8)
 
     def set_volume(self, mult):
-        """Sets the output volume as a float percent, i.e. 0.5 for 50%, 1.75 for 175%, etc.
-        """
+        """Sets the output volume as a float percent, i.e. 0.5 for 50%, 1.75 for 175%, etc."""
         return self.set_gain(20 * math.log10(mult))  # amplitude ratio
 
     def _get_last_packet_duration(self):
-        """Gets the duration (in samples) of the last packet successfully decoded or concealed.
-        """
+        """Gets the duration (in samples) of the last packet successfully decoded or concealed."""
 
         ret = ctypes.c_int32()
         _lib.opus_decoder_ctl(self._state, CTL_LAST_PACKET_DURATION, ctypes.byref(ret))
