@@ -196,6 +196,7 @@ class Context(BaseContext, Generic[BotT]):
             The result of the help command, if any.
         """
         from ...commands.mixins import wrap_callback
+        from .core import Group
         from .errors import CommandError
 
         bot = self.bot
