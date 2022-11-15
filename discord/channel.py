@@ -308,112 +308,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             else None
         )
 
-    @overload
-    async def edit(
-        self,
-        *,
-        reason: str | None = ...,
-        name: str = ...,
-        topic: str = ...,
-        position: int = ...,
-        nsfw: bool = ...,
-        sync_permissions: bool = ...,
-        category: CategoryChannel | None = ...,
-        slowmode_delay: int = ...,
-        default_auto_archive_duration: ThreadArchiveDuration = ...,
-        default_thread_slowmode_delay: int = ...,
-        default_sort_order: SortOrder = ...,
-        available_tags: list[ForumTag] = ...,
-        type: ChannelType = ...,
-        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> TextChannel | None:
-        ...
-
-    @overload
-    async def edit(self) -> TextChannel | None:
-        ...
-
-    async def edit(self, *, reason=None, **options):
-        """|coro|
-
-        Edits the channel.
-
-        You must have the :attr:`~Permissions.manage_channels` permission to
-        use this.
-
-        .. versionchanged:: 1.3
-            The ``overwrites`` keyword-only parameter was added.
-
-        .. versionchanged:: 1.4
-            The ``type`` keyword-only parameter was added.
-
-        .. versionchanged:: 2.0
-            Edits are no longer in-place, the newly edited channel is returned instead.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The new channel name.
-        topic: :class:`str`
-            The new channel's topic.
-        position: :class:`int`
-            The new channel's position.
-        nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
-        sync_permissions: :class:`bool`
-            Whether to sync permissions with the channel's new or pre-existing
-            category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
-            The new category for this channel. Can be ``None`` to remove the
-            category.
-        slowmode_delay: :class:`int`
-            Specifies the slowmode rate limit for user in this channel, in seconds.
-            A value of `0` disables slowmode. The maximum value possible is `21600`.
-        type: :class:`ChannelType`
-            Change the type of this text channel. Currently, only conversion between
-            :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
-            is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
-        reason: Optional[:class:`str`]
-            The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to channel permissions. Useful for creating secret channels.
-        default_auto_archive_duration: :class:`int`
-            The new default auto archive duration in minutes for threads created in this channel.
-            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
-        default_thread_slowmode_delay: :class:`int`
-            The new default slowmode delay in seconds for threads created in this channel.
-
-            .. versionadded:: 2.3
-        default_sort_order: Optional[:class:`SortOrder`]
-            The default sort order type to use to order posts in this forum channel.
-
-            .. versionadded:: 2.3
-        available_tags: List[:class:`ForumTag`]
-            The set of tags that can be used in this forum channel. Must be less than `20`.
-
-            .. versionadded:: 2.3
-
-        Returns
-        -------
-        Optional[:class:`.TextChannel`]
-            The newly edited text channel. If the edit was only positional
-            then ``None`` is returned instead.
-
-        Raises
-        ------
-        InvalidArgument
-            If position is less than 0 or greater than the number of channels, or if
-            the permission overwrite information is not in proper form.
-        Forbidden
-            You do not have permissions to edit the channel.
-        HTTPException
-            Editing the channel failed.
-        """
-
-        payload = await self._edit(options, reason=reason)
-        if payload is not None:
-            # the payload will always be the proper channel payload
-            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
+    async def edit(self, **options) -> _TextChannel:
+        """Edits the channel."""
+        raise NotImplementedError
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
     async def clone(
@@ -862,6 +759,103 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         """Equivalent to :meth:`is_news`."""
         return self.is_news()
 
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        type: ChannelType = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> TextChannel | None:
+        ...
+
+    @overload
+    async def edit(self) -> TextChannel | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        .. versionchanged:: 1.3
+            The ``overwrites`` keyword-only parameter was added.
+
+        .. versionchanged:: 1.4
+            The ``type`` keyword-only parameter was added.
+
+        .. versionchanged:: 2.0
+            Edits are no longer in-place, the newly edited channel is returned instead.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        type: :class:`ChannelType`
+            Change the type of this text channel. Currently, only conversion between
+            :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
+            is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.TextChannel`]
+            The newly edited text channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
+
     async def create_thread(
         self,
         *,
@@ -1047,6 +1041,99 @@ class ForumChannel(_TextChannel):
         .. versionadded:: 2.3
         """
         return utils.get(self.available_tags, id=id)
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        available_tags: list[ForumTag] = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> "ForumChannel" | None:
+        ...
+
+    @overload
+    async def edit(self) -> "ForumChannel" | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type to use to order posts in this channel.
+
+            .. versionadded:: 2.3
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in this channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.ForumChannel`]
+            The newly edited forum channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     async def create_thread(
         self,
