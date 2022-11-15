@@ -401,7 +401,9 @@ class GuildChannel:
             pass
 
         try:
-            options["default_thread_rate_limit_per_user"] = options.pop("default_thread_slowmode_delay")
+            options["default_thread_rate_limit_per_user"] = options.pop(
+                "default_thread_slowmode_delay"
+            )
         except KeyError:
             pass
 
