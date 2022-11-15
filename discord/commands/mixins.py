@@ -41,6 +41,29 @@ from ..errors import (
 )
 from .cooldowns import BucketType, Cooldown, CooldownMapping, MaxConcurrency
 
+T = TypeVar("T")
+BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+CogT = TypeVar("CogT", bound="Cog")
+
+Coro = Coroutine[Any, Any, T]
+MaybeCoro = Union[T, Coro[T]]
+
+Check = Union[
+    Callable[[CogT, "BaseContext"], MaybeCoro[bool]],
+    Callable[["BaseContext"], MaybeCoro[bool]],
+]
+
+Error = Union[
+    Callable[[CogT, "BaseContext[Any]", CommandError], Coro[Any]],
+    Callable[["BaseContext[Any]", CommandError], Coro[Any]],
+]
+ErrorT = TypeVar("ErrorT", bound="Error")
+
+Hook = Union[
+    Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]
+]
+HookT = TypeVar("HookT", bound="Hook")
+
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
@@ -57,34 +80,13 @@ if TYPE_CHECKING:
 
     P = ParamSpec("P")
 
-    BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
-    CogT = TypeVar("CogT", bound="Cog")
-
-    T = TypeVar("T")
-    Coro = Coroutine[Any, Any, T]
     Callback = (
         Callable[Concatenate[CogT, "BaseContext", P], Coro[T]]
         | Callable[Concatenate["BaseContext", P], Coro[T]]
     )
-    MaybeCoro = Union[T, Coro[T]]
-
-    Check = Union[
-        Callable[[CogT, "BaseContext"], MaybeCoro[bool]],
-        Callable[["BaseContext"], MaybeCoro[bool]],
-    ]
-
-    Error = Union[
-        Callable[[CogT, "BaseContext[Any]", CommandError], Coro[Any]],
-        Callable[["BaseContext[Any]", CommandError], Coro[Any]],
-    ]
-    ErrorT = TypeVar("ErrorT", bound="Error")
-
-    Hook = Union[
-        Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]
-    ]
-    HookT = TypeVar("HookT", bound="Hook")
 else:
     P = TypeVar("P")
+    Callback = TypeVar("Callback")
 
 
 __all__ = (
