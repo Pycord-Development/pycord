@@ -297,6 +297,8 @@ class Thread(Messageable, Hashable):
 
         This is only available for threads in forum channels.
         """
+        from .channel import ForumChannel  # to prevent circular import
+
         if isinstance(self.parent, ForumChannel):
             return [
                 tag
