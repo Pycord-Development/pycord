@@ -1058,6 +1058,7 @@ class ForumChannel(_TextChannel):
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
         available_tags: list[ForumTag] = ...,
+        require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
     ) -> "ForumChannel" | None:
         ...
@@ -1110,6 +1111,10 @@ class ForumChannel(_TextChannel):
             .. versionadded:: 2.3
         available_tags: List[:class:`ForumTag`]
             The set of tags that can be used in this channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
+        require_tag: :class:`bool`
+            Whether a tag should be required to be specified when creating a thread in this channel.
 
             .. versionadded:: 2.3
 

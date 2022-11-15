@@ -406,6 +406,12 @@ class GuildChannel:
             pass
 
         try:
+            if options.pop("require_tag"):
+                options["flags"] = ChannelFlags.require_tag.flag
+        except KeyError:
+            pass
+
+        try:
             rtc_region = options.pop("rtc_region")
         except KeyError:
             pass
