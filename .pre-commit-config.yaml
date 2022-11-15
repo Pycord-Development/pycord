@@ -1,3 +1,6 @@
+ci:
+  autoupdate_commit_msg: "chore(pre-commit): pre-commit autoupdate"
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
@@ -15,7 +18,7 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.0
+    rev: v3.2.2
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
