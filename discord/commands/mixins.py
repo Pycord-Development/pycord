@@ -87,7 +87,6 @@ else:
     P = TypeVar("P")
 
 
-
 __all__ = (
     "Invokable",
     "_BaseCommand",
