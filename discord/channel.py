@@ -191,7 +191,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
-        "default_thread_rate_limit_per_user",
         "default_sort_order",
         "available_tags",
         "flags",
@@ -236,7 +235,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
             )
-            self.default_thread_rate_limit_per_user: int | None = data.get(
+            self.default_thread_slowmode_delay: int | None = data.get(
                 "default_thread_rate_limit_per_user"
             )
             self.last_message_id: int | None = utils._get_as_snowflake(
@@ -324,7 +323,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
-        default_thread_rate_limit_per_user: int = ...,
         available_tags: list[ForumTag] = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
@@ -388,10 +386,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             .. versionadded:: 2.3
         default_sort_order: Optional[:class:`SortOrder`]
             The default sort order type to use to order posts in this forum channel.
-
-            .. versionadded:: 2.3
-        default_thread_rate_limit_per_user: Optional[:class:`int`]
-            The initial `rate_limit_per_user` to set on newly created threads in this forum channel.
 
             .. versionadded:: 2.3
         available_tags: List[:class:`ForumTag`]
@@ -838,8 +832,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
-    default_thread_rate_limit_per_user: Optional[:class:`int`]
-        The initial `rate_limit_per_user` to set on newly created threads in this channel.
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
     """
@@ -1012,8 +1006,8 @@ class ForumChannel(_TextChannel):
         The default sort order type used to order posts in this channel.
 
         .. versionadded:: 2.3
-    default_thread_rate_limit_per_user: Optional[:class:`int`]
-        The initial `rate_limit_per_user` to set on newly created threads in this channel.
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
     """
