@@ -98,7 +98,7 @@ __all__ = (
 def unwrap_function(function: functools.partial | Callable) -> Callback:
     while True:
         if hasattr(function, "__wrapped__"):
-            function = function.__wrapped__  # type: ignore # function may or may not have attribute
+            function = getattr(function, "__wrapped__")
         elif isinstance(function, functools.partial):
             function = function.func
         else:
