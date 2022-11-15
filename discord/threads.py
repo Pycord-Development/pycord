@@ -599,6 +599,7 @@ class Thread(Messageable, Hashable):
         slowmode_delay: int = MISSING,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         pinned: bool = MISSING,
+        applied_tags: list[ForumTag] = MISSING,
         reason: str | None = None,
     ) -> Thread:
         """|coro|
@@ -633,6 +634,10 @@ class Thread(Messageable, Hashable):
             The reason for editing this thread. Shows up on the audit log.
         pinned: :class:`bool`
             Whether to pin the thread or not. This only works if the thread is part of a forum.
+        applied_tags: List[:class:`ForumTag`]
+            The set of tags to apply to the thread. Each tag object should have an ID set.
+
+            .. versionadded:: 2.3
 
         Returns
         -------
@@ -664,6 +669,8 @@ class Thread(Messageable, Hashable):
             flags = ChannelFlags._from_value(self.flags.value)
             flags.pinned = pinned
             payload["flags"] = flags.value
+        if applied_tags is not MISSING:
+            payload["applied_tags"] = [tag.id for tag in applied_tags]
 
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload
