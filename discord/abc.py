@@ -414,7 +414,9 @@ class GuildChannel:
             pass
 
         try:
-            options["available_tags"] = [tag.to_dict() for tag in options.pop("available_tags")]
+            options["available_tags"] = [
+                tag.to_dict() for tag in options.pop("available_tags")
+            ]
         except KeyError:
             pass
 
