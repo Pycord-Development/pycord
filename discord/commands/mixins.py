@@ -56,36 +56,36 @@ if TYPE_CHECKING:
     from ..voice_client import VoiceProtocol
 
     P = ParamSpec("P")
+
+    BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+    CogT = TypeVar("CogT", bound="Cog")
+
+    T = TypeVar("T")
+    Coro = Coroutine[Any, Any, T]
+    Callback = (
+        Callable[Concatenate[CogT, "BaseContext", P], Coro[T]]
+        | Callable[Concatenate["BaseContext", P], Coro[T]]
+    )
+    MaybeCoro = Union[T, Coro[T]]
+
+    Check = Union[
+        Callable[[CogT, "BaseContext"], MaybeCoro[bool]],
+        Callable[["BaseContext"], MaybeCoro[bool]],
+    ]
+
+    Error = Union[
+        Callable[[CogT, "BaseContext[Any]", CommandError], Coro[Any]],
+        Callable[["BaseContext[Any]", CommandError], Coro[Any]],
+    ]
+    ErrorT = TypeVar("ErrorT", bound="Error")
+
+    Hook = Union[
+        Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]
+    ]
+    HookT = TypeVar("HookT", bound="Hook")
 else:
     P = TypeVar("P")
 
-
-BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
-CogT = TypeVar("CogT", bound="Cog")
-
-T = TypeVar("T")
-Coro = Coroutine[Any, Any, T]
-Callback = (
-    Callable[Concatenate[CogT, "BaseContext", P], Coro[T]]
-    | Callable[Concatenate["BaseContext", P], Coro[T]]
-)
-MaybeCoro = Union[T, Coro[T]]
-
-Check = Union[
-    Callable[[CogT, "BaseContext"], MaybeCoro[bool]],
-    Callable[["BaseContext"], MaybeCoro[bool]],
-]
-
-Error = Union[
-    Callable[[CogT, "BaseContext[Any]", CommandError], Coro[Any]],
-    Callable[["BaseContext[Any]", CommandError], Coro[Any]],
-]
-ErrorT = TypeVar("ErrorT", bound="Error")
-
-Hook = Union[
-    Callable[[CogT, "BaseContext"], Coro[Any]], Callable[["BaseContext"], Coro[Any]]
-]
-HookT = TypeVar("HookT", bound="Hook")
 
 
 __all__ = (
