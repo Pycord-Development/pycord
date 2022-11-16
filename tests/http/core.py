@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import random
+import string
 import sys
 from io import BytesIO
 from itertools import chain, combinations
@@ -56,6 +57,8 @@ __all__ = (
     "random_overwrite",
     "random_dict",
     "random_archive_duration",
+    "random_bytes",
+    "random_string",
     "user_id",
     "channel_id",
     "guild_id",
@@ -75,6 +78,7 @@ __all__ = (
     "allowed_mentions",
     "stickers",
     "components",
+    "avatar",
 )
 
 V = TypeVar("V")
@@ -151,10 +155,10 @@ def random_sticker() -> sticker.StickerItem:
     )
 
 
-def random_file() -> File:  # TODO: Improve random_file helper
+def random_file(filename: str = "test.txt") -> File:  # TODO: Improve random_file helper
     """Generate a random file object."""
-    buf = BytesIO(b"test")
-    return File(buf, filename="test.txt")
+    buf = BytesIO(random_bytes())
+    return File(buf, filename=filename)
 
 
 def random_count(maximum: int = 10) -> int:
@@ -223,9 +227,7 @@ def random_dict(*, keys: Iterable[str] | None = None) -> dict[str, str | int | b
 
     if keys is None:
         keys = [f"test{i}" for i in range(random_count())]
-    return {  # TODO: Use random string in random_dict keys
-        key: value(key) for key in keys
-    }
+    return {random_string(): value(key) for key in keys}
 
 
 def random_overwrite() -> channel.PermissionOverwrite:
@@ -241,6 +243,17 @@ def random_overwrite() -> channel.PermissionOverwrite:
 def random_archive_duration() -> threads.ThreadArchiveDuration:
     """Generate a random archive duration."""
     return random.choice(get_args(threads.ThreadArchiveDuration))
+
+
+def random_bytes(length: int = 10) -> bytes:
+    """Generate random bytes"""
+    return random_string(length).encode()
+
+
+def random_string(length: int = 10) -> str:
+    """Generate a random string"""
+    letters = string.ascii_letters + string.digits  # + string.punctuation
+    return "".join(random.choices(list(letters), k=length))
 
 
 @pytest.fixture
@@ -273,10 +286,12 @@ def message_ids() -> list[int]:
     return random_amount(random_snowflake)
 
 
-@pytest.fixture(params=[None, "test"])
+@pytest.fixture(params=[None, "random"])
 def reason(request) -> str:
     """A random reason fixture."""
-    return request.param  # TODO: Randomize reason fixture
+    if request.param == "random":
+        return random_string()
+    return request.param
 
 
 @pytest.fixture
@@ -291,37 +306,46 @@ def limit() -> int:
     return random.randrange(0, 1000)
 
 
-@pytest.fixture(params=(True, False))
+@pytest.fixture(params=(None, "random"))
 def after(request) -> int | None:
     """A random after fixture."""
-    return random_snowflake() if request.param else None
+    if request.param == "random":
+        return random_snowflake()
+    return None
 
 
-@pytest.fixture(params=(True, False))
+@pytest.fixture(params=(None, "random"))
 def before(request) -> int | None:
     """A random before fixture."""
-    return random_snowflake() if request.param else None
+    if request.param == "random":
+        return random_snowflake()
+    return None
 
 
-@pytest.fixture(params=(True, False))
+@pytest.fixture(params=(None, "random"))
 def around(request) -> int | None:
     """A random around fixture."""
-    return random_snowflake() if request.param else None
+    if request.param == "random":
+        return random_snowflake()
+    return None
 
 
-@pytest.fixture(params=("test name",))  # TODO: Make name fixture random
-def name(request) -> str | None:
-    return request.param
+@pytest.fixture
+def name() -> str | None:
+    return random_string()
 
 
-@pytest.fixture(params=(random_bool(),))
-def invitable(request) -> bool | None:
-    return request.param
+@pytest.fixture
+def invitable() -> bool:
+    # Only checks one case to shorten tests
+    return random_bool()
 
 
-@pytest.fixture(params=(None, "Hello, World!"))
+@pytest.fixture(params=(None, "random"))
 def content(request) -> str | None:
-    return request.param
+    if request.param == "random":
+        return random_string()
+    return None
 
 
 @pytest.fixture(name="embed", params=(None, random_embed()))
@@ -352,3 +376,10 @@ def stickers(request) -> list[sticker.StickerItem] | None:
 @pytest.fixture(params=(None,))  # TODO: Add components to tests
 def components(request) -> components.Component | None:
     return request.param
+
+
+@pytest.fixture(params=(None, "random"))
+def avatar(request) -> bytes | None:
+    if request.param == "random":
+        return random_bytes()
+    return None
