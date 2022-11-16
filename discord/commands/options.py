@@ -235,7 +235,7 @@ class Option:
         self.default = kwargs.pop("default", None)
         self.choices: list[OptionChoice] = enum_choices or [
             o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", list())
+            for o in kwargs.pop("choices", [])
         ]
 
         if self.input_type == SlashCommandOptionType.integer:
