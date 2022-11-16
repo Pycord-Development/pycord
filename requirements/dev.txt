@@ -1,6 +1,6 @@
 -r _.txt
 pylint==2.15.5
-mypy==0.990
+mypy==0.991
 pre-commit==2.20.0
 codespell==2.2.2
 bandit==1.7.4

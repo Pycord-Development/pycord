@@ -310,7 +310,7 @@ class Member(discord.abc.Messageable, _UserTag):
         )
         self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
-        self.activities: tuple[ActivityTypes, ...] = tuple()
+        self.activities: tuple[ActivityTypes, ...] = ()
         self.nick: str | None = data.get("nick", None)
         self.pending: bool = data.get("pending", False)
         self._avatar: str | None = data.get("avatar")

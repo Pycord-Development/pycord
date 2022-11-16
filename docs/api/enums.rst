@@ -113,7 +113,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: forum
 
-        User can only write in threads, similar functionality to a forum, currently in experiment.
+        User can only write in threads, similar functionality to a forum.
 
         .. versionadded:: 2.0
 
