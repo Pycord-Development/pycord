@@ -110,11 +110,19 @@ class Test:
         *,
         files: Sequence[File] | None | MISSING = MISSING,
         form: Iterable[dict[str, Any]] | None | MISSING = MISSING,
+        side_effect: Any | Callable[[...], Any] | None = None,
         **kwargs: Any,
     ):
         class _Request:
-            def __init__(self, client: Client, route, files, form, kwargs):
-                self.patcher = patch.object(client.http, "request", autospec=True)
+            def __init__(
+                self, client: Client, route, files, form, *, side_effect, **kwargs
+            ):
+                if side_effect is None:
+                    self.patcher = patch.object(client.http, "request", autospec=True)
+                else:
+                    self.patcher = patch.object(
+                        client.http, "request", side_effect=side_effect
+                    )
                 self.route = route
                 self.files = files
                 self.form = form
@@ -135,7 +143,9 @@ class Test:
                     **self.kwargs,
                 )
 
-        return _Request(self.__client, route, files, form, kwargs)
+        return _Request(
+            self.__client, route, files, form, side_effect=side_effect, **kwargs
+        )
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.__client, name)
