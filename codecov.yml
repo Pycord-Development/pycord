@@ -1,3 +1,14 @@
 codecov:
   notify:
     after_n_builds: 12
+
+coverage:
+  http:
+    target: 55%
+    flags:
+      - http
+
+flags:
+  http:
+    paths:
+      - discord/http.py
