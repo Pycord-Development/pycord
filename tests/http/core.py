@@ -37,7 +37,9 @@ else:
 import pytest
 
 from discord import File
-from discord.types import channel, embed, guild, message, sticker
+from discord.types import channel
+from discord.types import embed as embed_type
+from discord.types import guild, message, sticker, threads
 
 __all__ = (
     "powerset",
@@ -53,6 +55,7 @@ __all__ = (
     "random_amount",
     "random_overwrite",
     "random_dict",
+    "random_archive_duration",
     "user_id",
     "channel_id",
     "guild_id",
@@ -63,6 +66,16 @@ __all__ = (
     "before",
     "around",
     "reason",
+    "name",
+    "invitable",
+    "content",
+    "rate_limit_per_user",
+    "embed",
+    "embeds",
+    "nonce",
+    "allowed_mentions",
+    "stickers",
+    "components",
 )
 
 V = TypeVar("V")
@@ -96,10 +109,10 @@ def random_snowflake() -> int:
     return random.randint(0, 2**64 - 1)
 
 
-def random_embed() -> embed.Embed:
+def random_embed() -> embed_type.Embed:
     """Generate a random embed object."""
     # TODO: Improve this
-    return embed.Embed(
+    return embed_type.Embed(
         title="Test",
     )
 
@@ -226,6 +239,11 @@ def random_overwrite() -> channel.PermissionOverwrite:
     )
 
 
+def random_archive_duration() -> threads.ThreadArchiveDuration:
+    """Generate a random archive duration."""
+    return random.choice(get_args(threads.ThreadArchiveDuration))
+
+
 @pytest.fixture
 def user_id() -> int:
     """A random user ID fixture."""
@@ -290,3 +308,53 @@ def before(request) -> int:
 def around(request) -> int:
     """A random around fixture."""
     return random_snowflake() if request.param else None
+
+
+@pytest.fixture(params=("test name",))  # TODO: Make name fixture random
+def name(request) -> str | None:
+    return request.param
+
+
+@pytest.fixture(params=(random_bool(),))
+def invitable(request) -> bool | None:
+    return request.param
+
+
+@pytest.fixture(params=(None, "Hello, World!"))
+def content(request) -> str | None:
+    return request.param
+
+
+@pytest.fixture(params=(random.randint(0, 21600),))
+def rate_limit_per_user(request) -> int | None:
+    return request.param
+
+
+@pytest.fixture(name="embed", params=(None, random_embed()))
+def embed(request) -> embed_type.Embed | None:
+    return request.param
+
+
+@pytest.fixture(params=(None, random_amount(random_embed)))
+def embeds(request) -> list[embed_type.Embed] | None:
+    return request.param
+
+
+@pytest.fixture(params=(None, "..."))  # TODO: Replace string value
+def nonce(request) -> str | None:
+    return request.param
+
+
+@pytest.fixture(params=(None, random_allowed_mentions()))
+def allowed_mentions(request) -> message.AllowedMentions | None:
+    return request.param
+
+
+@pytest.fixture(params=(None, [], random_amount(random_sticker)))
+def stickers(request) -> list[sticker.StickerItem] | None:
+    return request.param
+
+
+@pytest.fixture(params=(None,))  # TODO: Add components to send tests
+def components(request) -> components.Component | None:
+    return request.param

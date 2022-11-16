@@ -35,18 +35,17 @@ from ..core import client
 from .core import (
     channel_id,
     guild_id,
+    invitable,
+    name,
     powerset,
+    random_archive_duration,
     random_bool,
     random_count,
     random_overwrite,
     random_snowflake,
+    rate_limit_per_user,
     reason,
 )
-
-
-@pytest.fixture(params=("test name",))  # TODO: Make channel name random
-def name(request) -> str | None:
-    return request.param
 
 
 @pytest.fixture(params=(random_snowflake(),))
@@ -88,11 +87,6 @@ def permission_overwrites(request) -> list[channel.PermissionOverwrite] | None:
     return [random_overwrite() for _ in range(request.param)]
 
 
-@pytest.fixture(params=(random.randint(0, 21600),))
-def rate_limit_per_user(request) -> int | None:
-    return request.param
-
-
 @pytest.fixture(params=(random.choice(get_args(channel.ChannelType)),))
 def type_(request) -> channel.ChannelType:
     return request.param
@@ -123,14 +117,9 @@ def locked(request) -> bool | None:
     return request.param
 
 
-@pytest.fixture(params=(random_bool(),))
-def invitable(request) -> bool | None:
-    return request.param
-
-
-@pytest.fixture(params=(random.choice(get_args(threads.ThreadArchiveDuration)),))
-def default_auto_archive_duration(request) -> threads.ThreadArchiveDuration | None:
-    return request.param
+@pytest.fixture
+def default_auto_archive_duration() -> threads.ThreadArchiveDuration | None:
+    return random_archive_duration()
 
 
 @pytest.fixture(params=powerset(["id", "position", "lock_permissions", "parent_id"]))

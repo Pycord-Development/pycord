@@ -1,0 +1,174 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+from __future__ import annotations
+
+import random
+from typing import get_args
+
+import pytest
+
+from discord import Route
+from discord.types import channel, threads
+
+from ..core import client
+from .core import allowed_mentions, channel_id, components, content
+from .core import embed as embed_
+from .core import (
+    embeds,
+    invitable,
+    message_id,
+    name,
+    nonce,
+    random_archive_duration,
+    rate_limit_per_user,
+    reason,
+    stickers,
+)
+
+
+@pytest.fixture
+def auto_archive_duration() -> threads.ThreadArchiveDuration:
+    return random_archive_duration()
+
+
+@pytest.fixture(params=(random.choice(get_args(channel.ChannelType)),))
+def type_(request) -> channel.ChannelType:
+    return request.param
+
+
+async def test_start_thread_with_message(
+    client, channel_id, message_id, name, auto_archive_duration, reason
+):
+    payload = {
+        "name": name,
+        "auto_archive_duration": auto_archive_duration,
+    }
+    with client.makes_request(
+        Route(
+            "POST",
+            "/channels/{channel_id}/messages/{message_id}/threads",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.start_thread_with_message(
+            channel_id,
+            message_id,
+            name=name,
+            auto_archive_duration=auto_archive_duration,
+            reason=reason,
+        )
+
+
+async def test_start_thread_without_message(
+    client, channel_id, name, auto_archive_duration, type_, invitable, reason
+):
+    payload = {
+        "name": name,
+        "auto_archive_duration": auto_archive_duration,
+        "type": type_,
+        "invitable": invitable,
+    }
+    with client.makes_request(
+        Route(
+            "POST",
+            "/channels/{channel_id}/threads",
+            channel_id=channel_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.start_thread_without_message(
+            channel_id,
+            name=name,
+            auto_archive_duration=auto_archive_duration,
+            type=type_,
+            invitable=invitable,
+            reason=reason,
+        )
+
+
+async def test_start_forum_thread(
+    client,
+    channel_id,
+    content,
+    name,
+    auto_archive_duration,
+    rate_limit_per_user,
+    invitable,
+    reason,
+    embed,
+    embeds,
+    nonce,
+    allowed_mentions,
+    stickers,
+    components,
+):
+    payload = {
+        "name": name,
+        "auto_archive_duration": auto_archive_duration,
+        "invitable": invitable,
+    }
+    if content:
+        payload["content"] = content
+    if embed:
+        payload["embeds"] = [embed]
+    if embeds:
+        payload["embeds"] = embeds
+    if nonce:
+        payload["nonce"] = nonce
+    if allowed_mentions:
+        payload["allowed_mentions"] = allowed_mentions
+    if components:
+        payload["components"] = components
+    if stickers:
+        payload["sticker_ids"] = stickers
+    if rate_limit_per_user:
+        payload["rate_limit_per_user"] = rate_limit_per_user
+    with client.makes_request(
+        Route(
+            "POST",
+            "/channels/{channel_id}/threads?has_message=true",
+            channel_id=channel_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.start_forum_thread(
+            channel_id,
+            content=content,
+            name=name,
+            auto_archive_duration=auto_archive_duration,
+            rate_limit_per_user=rate_limit_per_user,
+            invitable=invitable,
+            reason=reason,
+            embed=embed,
+            embeds=embeds,
+            nonce=nonce,
+            allowed_mentions=allowed_mentions,
+            stickers=stickers,
+            components=components,
+        )

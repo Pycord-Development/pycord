@@ -31,10 +31,13 @@ from discord import Route, utils
 from discord.types import components, embed, message, sticker
 
 from ..core import client
+from .core import allowed_mentions, channel_id, components, content
+from .core import embed as embed_
 from .core import (
-    channel_id,
+    embeds,
     message_id,
     message_ids,
+    nonce,
     powerset,
     random_allowed_mentions,
     random_amount,
@@ -44,6 +47,7 @@ from .core import (
     random_message_reference,
     random_sticker,
     reason,
+    stickers,
     user_id,
 )
 
@@ -51,48 +55,13 @@ if TYPE_CHECKING:
     from discord.file import File
 
 
-@pytest.fixture(params=(None, "Hello, World!"))
-def content(request) -> str | None:
-    return request.param
-
-
 @pytest.fixture(params=(True, False))
 def tts(request) -> bool:
     return request.param
 
 
-@pytest.fixture(name="embed", params=(None, random_embed()))
-def _embed(request) -> embed.Embed | None:
-    return request.param
-
-
-@pytest.fixture(params=(None, random_amount(random_embed)))
-def embeds(request) -> list[embed.Embed] | None:
-    return request.param
-
-
-@pytest.fixture(params=(None, "..."))  # TODO: Replace string value
-def nonce(request) -> str | None:
-    return request.param
-
-
-@pytest.fixture(params=(None, random_allowed_mentions()))
-def allowed_mentions(request) -> message.AllowedMentions | None:
-    return request.param
-
-
 @pytest.fixture(params=(None, random_message_reference()))
 def message_reference(request) -> message.MessageReference | None:
-    return request.param
-
-
-@pytest.fixture(params=(None, [], random_amount(random_sticker)))
-def stickers(request) -> list[sticker.StickerItem] | None:
-    return request.param
-
-
-@pytest.fixture(params=(None,))  # TODO: Add components to send tests
-def components(request) -> components.Component | None:
     return request.param
 
 
