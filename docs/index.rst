@@ -59,12 +59,19 @@ Extensions
 These extensions help you during development when it comes to common tasks.
 
 .. toctree::
+  :caption: Extensions
   :maxdepth: 1
+  :hidden:
 
   ext/commands/index.rst
   ext/tasks/index.rst
   ext/pages/index.rst
   ext/bridge/index.rst
+
+- :doc:`ext/commands/index` - Bot commands framework
+- :doc:`ext/tasks/index` - asyncio.Task helpers
+- :doc:`ext/pages/index` - A pagination extension module
+- :doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands
 
 Meta
 ----
@@ -72,9 +79,16 @@ Meta
 If you're looking for something related to the project itself, it's here.
 
 .. toctree::
+  :caption: Meta
   :maxdepth: 1
+  :hidden:
 
   changelog
   version_guarantees
   migrating_to_v1
   migrating_to_v2
+
+- :doc:`changelog` - The changelog for the library.
+- :doc:`version_guarantees` - The version guarantees for the library.
+- :doc:`migrating_to_v1` - How to migrate from v0.x to v1.x.
+- :doc:`migrating_to_v2` - How to migrate from v1.x to v2.x.
