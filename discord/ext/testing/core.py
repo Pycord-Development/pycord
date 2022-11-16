@@ -93,6 +93,8 @@ class Mocked:
 
 
 class Test:
+    http: HTTPClient
+
     def __init__(self, client: Client):
         self.__client = client
 
