@@ -41,9 +41,9 @@ from .core import (
     name,
     nonce,
     random_archive_duration,
-    rate_limit_per_user,
     reason,
     stickers,
+    user_id,
 )
 
 
@@ -54,6 +54,11 @@ def auto_archive_duration() -> threads.ThreadArchiveDuration:
 
 @pytest.fixture(params=(random.choice(get_args(channel.ChannelType)),))
 def type_(request) -> channel.ChannelType:
+    return request.param
+
+
+@pytest.fixture(params=(random.randint(0, 21600), None))
+def rate_limit_per_user(request) -> int | None:
     return request.param
 
 
@@ -172,3 +177,45 @@ async def test_start_forum_thread(
             stickers=stickers,
             components=components,
         )
+
+
+async def test_join_thread(client, channel_id):
+    with client.makes_request(
+        Route(
+            "PUT", "/channels/{channel_id}/thread-members/@me", channel_id=channel_id
+        ),
+    ):
+        await client.http.join_thread(channel_id)
+
+
+async def test_add_user_to_thread(client, channel_id, user_id):
+    with client.makes_request(
+        Route(
+            "PUT",
+            "/channels/{channel_id}/thread-members/{user_id}",
+            channel_id=channel_id,
+            user_id=user_id,
+        ),
+    ):
+        await client.http.add_user_to_thread(channel_id, user_id)
+
+
+async def test_leave_thread(client, channel_id):
+    with client.makes_request(
+        Route(
+            "DELETE", "/channels/{channel_id}/thread-members/@me", channel_id=channel_id
+        ),
+    ):
+        await client.http.leave_thread(channel_id)
+
+
+async def test_remove_user_from_thread(client, channel_id, user_id):
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/channels/{channel_id}/thread-members/{user_id}",
+            channel_id=channel_id,
+            user_id=user_id,
+        ),
+    ):
+        await client.http.remove_user_from_thread(channel_id, user_id)

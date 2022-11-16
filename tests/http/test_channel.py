@@ -43,7 +43,6 @@ from .core import (
     random_count,
     random_overwrite,
     random_snowflake,
-    rate_limit_per_user,
     reason,
 )
 
@@ -120,6 +119,11 @@ def locked(request) -> bool | None:
 @pytest.fixture
 def default_auto_archive_duration() -> threads.ThreadArchiveDuration | None:
     return random_archive_duration()
+
+
+@pytest.fixture(params=(random.randint(0, 21600),))
+def rate_limit_per_user(request) -> int | None:
+    return request.param
 
 
 @pytest.fixture(params=powerset(["id", "position", "lock_permissions", "parent_id"]))

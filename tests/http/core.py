@@ -69,7 +69,6 @@ __all__ = (
     "name",
     "invitable",
     "content",
-    "rate_limit_per_user",
     "embed",
     "embeds",
     "nonce",
@@ -325,11 +324,6 @@ def content(request) -> str | None:
     return request.param
 
 
-@pytest.fixture(params=(random.randint(0, 21600),))
-def rate_limit_per_user(request) -> int | None:
-    return request.param
-
-
 @pytest.fixture(name="embed", params=(None, random_embed()))
 def embed(request) -> embed_type.Embed | None:
     return request.param
@@ -355,6 +349,6 @@ def stickers(request) -> list[sticker.StickerItem] | None:
     return request.param
 
 
-@pytest.fixture(params=(None,))  # TODO: Add components to send tests
+@pytest.fixture(params=(None,))  # TODO: Add components to tests
 def components(request) -> components.Component | None:
     return request.param
