@@ -2,13 +2,20 @@ codecov:
   notify:
     after_n_builds: 12
 
-coverage:
-  http:
-    target: 55%
-    flags:
-      - http
-
-flags:
-  http:
-    paths:
-      - discord/http.py
+flag_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+  #      - type: patch
+  #        target: 90%
+  individual_flags:
+    - name: http
+      paths:
+        - discord/http.py
+      statuses:
+        - type: project
+          target: 55%
+        - type: patch
+          target: 100%
