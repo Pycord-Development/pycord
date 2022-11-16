@@ -32,11 +32,13 @@ from discord import Route
 from discord.types import channel, threads
 
 from ..core import client
-from .core import allowed_mentions, channel_id, components, content
+from .core import allowed_mentions, before, channel_id, components, content
 from .core import embed as embed_
 from .core import (
     embeds,
+    guild_id,
     invitable,
+    limit,
     message_id,
     name,
     nonce,
@@ -219,3 +221,62 @@ async def test_remove_user_from_thread(client, channel_id, user_id):
         ),
     ):
         await client.http.remove_user_from_thread(channel_id, user_id)
+
+
+async def test_get_public_archived_threads(client, channel_id, before, limit):
+    params = {"limit": limit}
+    if before:
+        params["before"] = before
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/threads/archived/public",
+            channel_id=channel_id,
+        ),
+        params=params,
+    ):
+        await client.http.get_public_archived_threads(channel_id, before, limit)
+
+
+async def test_get_private_archived_threads(client, channel_id, before, limit):
+    params = {"limit": limit}
+    if before:
+        params["before"] = before
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/threads/archived/private",
+            channel_id=channel_id,
+        ),
+        params=params,
+    ):
+        await client.http.get_private_archived_threads(channel_id, before, limit)
+
+
+async def test_get_joined_private_archived_threads(client, channel_id, before, limit):
+    params = {"limit": limit}
+    if before:
+        params["before"] = before
+    with client.makes_request(
+        Route(
+            "GET",
+            "/channels/{channel_id}/users/@me/threads/archived/private",
+            channel_id=channel_id,
+        ),
+        params=params,
+    ):
+        await client.http.get_joined_private_archived_threads(channel_id, before, limit)
+
+
+async def test_get_active_threads(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id),
+    ):
+        await client.http.get_active_threads(guild_id)
+
+
+async def test_get_thread_members(client, channel_id):
+    with client.makes_request(
+        Route("GET", "/channels/{channel_id}/thread-members", channel_id=channel_id),
+    ):
+        await client.http.get_thread_members(channel_id)

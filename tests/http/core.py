@@ -292,19 +292,19 @@ def limit() -> int:
 
 
 @pytest.fixture(params=(True, False))
-def after(request) -> int:
+def after(request) -> int | None:
     """A random after fixture."""
     return random_snowflake() if request.param else None
 
 
 @pytest.fixture(params=(True, False))
-def before(request) -> int:
+def before(request) -> int | None:
     """A random before fixture."""
     return random_snowflake() if request.param else None
 
 
 @pytest.fixture(params=(True, False))
-def around(request) -> int:
+def around(request) -> int | None:
     """A random around fixture."""
     return random_snowflake() if request.param else None
 
