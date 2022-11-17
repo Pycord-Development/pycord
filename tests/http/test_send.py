@@ -46,15 +46,12 @@ from discord.ext.testing.fixtures import (
 )
 from discord.ext.testing.helpers import (
     powerset,
-    random_allowed_mentions,
     random_amount,
     random_dict,
-    random_embed,
     random_file,
     random_message_reference,
-    random_sticker,
 )
-from discord.types import components, embed, message, sticker
+from discord.types import message
 
 from ..core import client
 
