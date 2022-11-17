@@ -29,9 +29,10 @@ from typing import Any
 import pytest
 
 from discord import Route
+from discord.ext.testing.fixtures import guild_id, reason, user_id
+from discord.ext.testing.helpers import random_dict
 
 from ..core import client
-from .core import guild_id, random_dict, reason, user_id
 
 
 async def test_kick(client, guild_id, user_id, reason):

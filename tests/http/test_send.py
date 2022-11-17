@@ -28,16 +28,23 @@ from typing import TYPE_CHECKING
 import pytest
 
 from discord import Route, utils
-from discord.types import components, embed, message, sticker
-
-from ..core import client
-from .core import allowed_mentions, channel_id, components, content
-from .core import embed as embed_
-from .core import (
+from discord.ext.testing.fixtures import (
+    allowed_mentions,
+    channel_id,
+    components,
+    content,
+)
+from discord.ext.testing.fixtures import embed as embed_
+from discord.ext.testing.fixtures import (
     embeds,
     message_id,
     message_ids,
     nonce,
+    reason,
+    stickers,
+    user_id,
+)
+from discord.ext.testing.helpers import (
     powerset,
     random_allowed_mentions,
     random_amount,
@@ -46,10 +53,10 @@ from .core import (
     random_file,
     random_message_reference,
     random_sticker,
-    reason,
-    stickers,
-    user_id,
 )
+from discord.types import components, embed, message, sticker
+
+from ..core import client
 
 if TYPE_CHECKING:
     from discord.file import File

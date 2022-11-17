@@ -24,9 +24,9 @@ DEALINGS IN THE SOFTWARE.
 import pytest
 
 from discord import Route
+from discord.ext.testing.fixtures import after, before, guild_id, icon, limit, name
 
 from ..core import client
-from .core import after, before, guild_id, icon, limit, name
 
 
 async def test_get_guilds(client, limit, before, after):

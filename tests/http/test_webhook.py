@@ -24,9 +24,10 @@ DEALINGS IN THE SOFTWARE.
 import pytest
 
 from discord import Route
+from discord.ext.testing.fixtures import avatar, channel_id, guild_id, name, reason
+from discord.ext.testing.helpers import random_snowflake
 
 from ..core import client
-from .core import avatar, channel_id, guild_id, name, random_snowflake, reason
 
 
 @pytest.fixture

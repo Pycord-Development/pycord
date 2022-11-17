@@ -29,10 +29,7 @@ from typing import get_args
 import pytest
 
 from discord import Route
-from discord.types import channel, threads
-
-from ..core import client
-from .core import (
+from discord.ext.testing.fixtures import (
     allowed_mentions,
     applied_tags,
     before,
@@ -40,8 +37,8 @@ from .core import (
     components,
     content,
 )
-from .core import embed as embed_
-from .core import (
+from discord.ext.testing.fixtures import embed as embed_
+from discord.ext.testing.fixtures import (
     embeds,
     guild_id,
     invitable,
@@ -49,11 +46,14 @@ from .core import (
     message_id,
     name,
     nonce,
-    random_archive_duration,
     reason,
     stickers,
     user_id,
 )
+from discord.ext.testing.helpers import random_archive_duration
+from discord.types import channel, threads
+
+from ..core import client
 
 
 @pytest.fixture

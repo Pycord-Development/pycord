@@ -24,9 +24,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from discord import Route
+from discord.ext.testing.fixtures import (
+    after,
+    channel_id,
+    emoji,
+    limit,
+    message_id,
+    user_id,
+)
 
 from ..core import client
-from .core import after, channel_id, emoji, limit, message_id, user_id
 
 
 async def test_add_reaction(client, channel_id, message_id, emoji):
