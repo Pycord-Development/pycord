@@ -22,8 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from abc import ABC
+from __future__ import annotations
 
+from abc import ABC
 from discord.interactions import Interaction
 from discord.message import Message
 
@@ -36,6 +37,21 @@ __all__ = ("Bot", "AutoShardedBot")
 
 
 class BotBase(ABC):
+    _bridge_commands: list[BridgeCommand | BridgeCommandGroup]
+
+    @property
+    def bridge_commands(self) -> list[BridgeCommand | BridgeCommandGroup]:
+        """Returns all of the bot's bridge commands."""
+
+        if cmds := getattr(self, "_bridge_commands", []):
+            self._bridge_commands = cmds = []
+
+        return cmds
+
+    @bridge_commands.setter
+    def bridge_commands(self, cmds):
+        self._bridge_commands = cmds
+
     async def get_application_context(
         self, interaction: Interaction, cls=None
     ) -> BridgeApplicationContext:
@@ -56,6 +72,7 @@ class BotBase(ABC):
         """
         # Ignore the type hinting error here. All subclasses of BotBase pass the type checks.
         command.add_to(self)  # type: ignore
+        self._bridge_commands.append(command)
 
     def bridge_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
