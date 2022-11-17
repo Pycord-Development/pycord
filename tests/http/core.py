@@ -79,6 +79,7 @@ __all__ = (
     "stickers",
     "components",
     "avatar",
+    "applied_tags",
 )
 
 V = TypeVar("V")
@@ -256,6 +257,10 @@ def random_string(length: int = 10) -> str:
     return "".join(random.choices(list(letters), k=length))
 
 
+def random_snowflake_list() -> list[int]:
+    return random_amount(random_snowflake)
+
+
 @pytest.fixture
 def user_id() -> int:
     """A random user ID fixture."""
@@ -382,4 +387,11 @@ def components(request) -> components.Component | None:
 def avatar(request) -> bytes | None:
     if request.param == "random":
         return random_bytes()
+    return None
+
+
+@pytest.fixture(params=(None, "random"))
+def applied_tags(request) -> list[int] | None:
+    if request.param == "random":
+        return random_snowflake_list()
     return None

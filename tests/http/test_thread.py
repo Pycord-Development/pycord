@@ -32,7 +32,14 @@ from discord import Route
 from discord.types import channel, threads
 
 from ..core import client
-from .core import allowed_mentions, before, channel_id, components, content
+from .core import (
+    allowed_mentions,
+    applied_tags,
+    before,
+    channel_id,
+    components,
+    content,
+)
 from .core import embed as embed_
 from .core import (
     embeds,
@@ -126,6 +133,7 @@ async def test_start_forum_thread(
     auto_archive_duration,
     rate_limit_per_user,
     invitable,
+    applied_tags,
     reason,
     embed,
     embeds,
@@ -141,6 +149,8 @@ async def test_start_forum_thread(
     }
     if content:
         payload["content"] = content
+    if applied_tags:
+        payload["applied_tags"] = applied_tags
     if embed:
         payload["embeds"] = [embed]
     if embeds:
@@ -171,6 +181,7 @@ async def test_start_forum_thread(
             auto_archive_duration=auto_archive_duration,
             rate_limit_per_user=rate_limit_per_user,
             invitable=invitable,
+            applied_tags=applied_tags,
             reason=reason,
             embed=embed,
             embeds=embeds,
