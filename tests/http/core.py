@@ -80,6 +80,7 @@ __all__ = (
     "components",
     "avatar",
     "applied_tags",
+    "icon",
 )
 
 V = TypeVar("V")
@@ -385,6 +386,14 @@ def components(request) -> components.Component | None:
 
 @pytest.fixture(params=(None, "random"))
 def avatar(request) -> bytes | None:
+    if request.param == "random":
+        return random_bytes()
+    return None
+
+
+@pytest.fixture(params=(None, "random"))
+def icon(request) -> bytes | None:
+    """A random icon fixture"""
     if request.param == "random":
         return random_bytes()
     return None

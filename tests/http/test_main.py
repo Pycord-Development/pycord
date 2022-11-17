@@ -180,19 +180,6 @@ async def test_pins_from(client, channel_id):
         await client.http.pins_from(channel_id)
 
 
-@pytest.mark.parametrize(
-    "with_counts",
-    (True, False),
-)
-async def test_get_guild(client, with_counts):
-    get_mock_response("get_guild")
-    with client.makes_request(
-        Route("GET", "/guilds/{guild_id}", guild_id=1234),
-        params={"with_counts": int(with_counts)},
-    ):
-        await client.http.get_guild(1234, with_counts=with_counts)
-
-
 # async def test_static_login(client):
 #     """Test logging in with a static token."""
 #     await client.http.close()  # Test closing the client before it exists
