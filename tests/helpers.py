@@ -26,5 +26,6 @@ from typing import TypeVar
 
 V = TypeVar("V")
 
+
 async def coroutine(val: V) -> V:
     return val
