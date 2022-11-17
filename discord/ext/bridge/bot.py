@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC
+
 from discord.interactions import Interaction
 from discord.message import Message
 
