@@ -22,6 +22,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
 - New flags: `PublicUserFlags.active_developer` & `ApplicationFlags.active`.
   ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
+- Support for new forum features including tags, default slowmode, and default sort
+  order. ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Support for new thread attributes `total_message_sent` and `is_pinned`.
+  ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
 
 ### Fixed
 

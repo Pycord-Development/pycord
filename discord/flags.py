@@ -1441,3 +1441,12 @@ class ChannelFlags(BaseFlags):
     def pinned(self):
         """:class:`bool`: Returns ``True`` if the thread is pinned to the top of its parent forum channel."""
         return 1 << 1
+
+    @flag_value
+    def require_tag(self):
+        """:class:`bool`: Returns ``True`` if a tag is required to be specified when creating a thread in a
+        :class:`ForumChannel`.
+
+        .. versionadded:: 2.2
+        """
+        return 1 << 4

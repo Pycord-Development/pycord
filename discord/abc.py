@@ -401,6 +401,26 @@ class GuildChannel:
             pass
 
         try:
+            options["default_thread_rate_limit_per_user"] = options.pop(
+                "default_thread_slowmode_delay"
+            )
+        except KeyError:
+            pass
+
+        try:
+            if options.pop("require_tag"):
+                options["flags"] = ChannelFlags.require_tag.flag
+        except KeyError:
+            pass
+
+        try:
+            options["available_tags"] = [
+                tag.to_dict() for tag in options.pop("available_tags")
+            ]
+        except KeyError:
+            pass
+
+        try:
             rtc_region = options.pop("rtc_region")
         except KeyError:
             pass

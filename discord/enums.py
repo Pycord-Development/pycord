@@ -309,6 +309,16 @@ class VerificationLevel(Enum, comparable=True):
         return self.name
 
 
+class SortOrder(Enum):
+    """Forum Channel Sort Order"""
+
+    latest_activity = 0
+    creation_date = 1
+
+    def __str__(self):
+        return self.name
+
+
 class ContentFilter(Enum, comparable=True):
     """Content Filter"""
 

@@ -1057,6 +1057,12 @@ class HTTPClient:
             "locked",
             "invitable",
             "default_auto_archive_duration",
+            "flags",
+            "default_thread_rate_limit_per_user",
+            "default_reaction_emoji",
+            "available_tags",
+            "applied_tags",
+            "default_sort_order",
         )
         payload = {k: v for k, v in options.items() if k in valid_keys}
         return self.request(r, reason=reason, json=payload)
@@ -1171,6 +1177,7 @@ class HTTPClient:
         auto_archive_duration: threads.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
+        applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
@@ -1186,6 +1193,9 @@ class HTTPClient:
         }
         if content:
             payload["content"] = content
+
+        if applied_tags:
+            payload["applied_tags"] = applied_tags
 
         if embed:
             payload["embeds"] = [embed]

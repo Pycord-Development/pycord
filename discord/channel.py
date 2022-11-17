@@ -36,6 +36,7 @@ from .enums import (
     ChannelType,
     EmbeddedActivity,
     InviteTarget,
+    SortOrder,
     StagePrivacyLevel,
     VideoQualityMode,
     VoiceRegion,
@@ -48,6 +49,7 @@ from .invite import Invite
 from .iterators import ArchivedThreadIterator
 from .mixins import Hashable
 from .object import Object
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .stage_instance import StageInstance
 from .threads import Thread
@@ -62,6 +64,7 @@ __all__ = (
     "GroupChannel",
     "PartialMessageable",
     "ForumChannel",
+    "ForumTag",
 )
 
 if TYPE_CHECKING:
@@ -69,12 +72,13 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .guild import GuildChannel as GuildChannelType
     from .member import Member, VoiceState
-    from .message import Message, PartialMessage
+    from .message import EmojiInputType, Message, PartialMessage
     from .role import Role
     from .state import ConnectionState
     from .types.channel import CategoryChannel as CategoryChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import ForumChannel as ForumChannelPayload
+    from .types.channel import ForumTag as ForumTagPayload
     from .types.channel import GroupDMChannel as GroupChannelPayload
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
@@ -83,6 +87,92 @@ if TYPE_CHECKING:
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
     from .webhook import Webhook
+
+
+class ForumTag(Hashable):
+    """Represents a forum tag that can be added to a thread inside a :class:`ForumChannel`
+    .
+        .. versionadded:: 2.3
+
+        .. container:: operations
+
+            .. describe:: x == y
+
+                Checks if two forum tags are equal.
+
+            .. describe:: x != y
+
+                Checks if two forum tags are not equal.
+
+            .. describe:: hash(x)
+
+                Returns the forum tag's hash.
+
+            .. describe:: str(x)
+
+                Returns the forum tag's name.
+
+        Attributes
+        ----------
+        id: :class:`int`
+            The tag ID.
+            Note that if the object was created manually then this will be ``0``.
+        name: :class:`str`
+            The name of the tag. Can only be up to 20 characters.
+        moderated: :class:`bool`
+            Whether this tag can only be added or removed by a moderator with
+            the :attr:`~Permissions.manage_threads` permission.
+        emoji: :class:`PartialEmoji`
+            The emoji that is used to represent this tag.
+            Note that if the emoji is a custom emoji, it will *not* have name information.
+    """
+
+    __slots__ = ("name", "id", "moderated", "emoji")
+
+    def __init__(
+        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
+    ) -> None:
+        self.name: str = name
+        self.id: int = 0
+        self.moderated: bool = moderated
+        self.emoji: PartialEmoji
+        if isinstance(emoji, _EmojiTag):
+            self.emoji = emoji._to_partial()
+        elif isinstance(emoji, str):
+            self.emoji = PartialEmoji.from_str(emoji)
+        else:
+            raise TypeError(
+                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
+            )
+
+    def __repr__(self) -> str:
+        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+
+    def __str__(self) -> str:
+        return self.name
+
+    @classmethod
+    def from_data(cls, *, state: ConnectionState, data: ForumTagPayload) -> ForumTag:
+        self = cls.__new__(cls)
+        self.name = data["name"]
+        self.id = int(data["id"])
+        self.moderated = data.get("moderated", False)
+
+        emoji_name = data["emoji_name"] or ""
+        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
+        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
+        return self
+
+    def to_dict(self) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "name": self.name,
+            "moderated": self.moderated,
+        } | self.emoji._to_forum_tag_payload()
+
+        if self.id:
+            payload["id"] = self.id
+
+        return payload
 
 
 class _TextChannel(discord.abc.GuildChannel, Hashable):
@@ -100,6 +190,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "_type",
         "last_message_id",
         "default_auto_archive_duration",
+        "default_thread_slowmode_delay",
+        "default_sort_order",
+        "available_tags",
         "flags",
     )
 
@@ -141,6 +234,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
+            )
+            self.default_thread_slowmode_delay: int | None = data.get(
+                "default_thread_rate_limit_per_user"
             )
             self.last_message_id: int | None = utils._get_as_snowflake(
                 data, "last_message_id"
@@ -212,97 +308,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             else None
         )
 
-    @overload
-    async def edit(
-        self,
-        *,
-        reason: str | None = ...,
-        name: str = ...,
-        topic: str = ...,
-        position: int = ...,
-        nsfw: bool = ...,
-        sync_permissions: bool = ...,
-        category: CategoryChannel | None = ...,
-        slowmode_delay: int = ...,
-        default_auto_archive_duration: ThreadArchiveDuration = ...,
-        type: ChannelType = ...,
-        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> TextChannel | None:
-        ...
-
-    @overload
-    async def edit(self) -> TextChannel | None:
-        ...
-
-    async def edit(self, *, reason=None, **options):
-        """|coro|
-
-        Edits the channel.
-
-        You must have the :attr:`~Permissions.manage_channels` permission to
-        use this.
-
-        .. versionchanged:: 1.3
-            The ``overwrites`` keyword-only parameter was added.
-
-        .. versionchanged:: 1.4
-            The ``type`` keyword-only parameter was added.
-
-        .. versionchanged:: 2.0
-            Edits are no longer in-place, the newly edited channel is returned instead.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The new channel name.
-        topic: :class:`str`
-            The new channel's topic.
-        position: :class:`int`
-            The new channel's position.
-        nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
-        sync_permissions: :class:`bool`
-            Whether to sync permissions with the channel's new or pre-existing
-            category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
-            The new category for this channel. Can be ``None`` to remove the
-            category.
-        slowmode_delay: :class:`int`
-            Specifies the slowmode rate limit for user in this channel, in seconds.
-            A value of `0` disables slowmode. The maximum value possible is `21600`.
-        type: :class:`ChannelType`
-            Change the type of this text channel. Currently, only conversion between
-            :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
-            is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
-        reason: Optional[:class:`str`]
-            The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
-            The overwrites to apply to channel permissions. Useful for creating secret channels.
-        default_auto_archive_duration: :class:`int`
-            The new default auto archive duration in minutes for threads created in this channel.
-            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
-
-        Returns
-        -------
-        Optional[:class:`.TextChannel`]
-            The newly edited text channel. If the edit was only positional
-            then ``None`` is returned instead.
-
-        Raises
-        ------
-        InvalidArgument
-            If position is less than 0 or greater than the number of channels, or if
-            the permission overwrite information is not in proper form.
-        Forbidden
-            You do not have permissions to edit the channel.
-        HTTPException
-            Editing the channel failed.
-        """
-
-        payload = await self._edit(options, reason=reason)
-        if payload is not None:
-            # the payload will always be the proper channel payload
-            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
+    async def edit(self, **options) -> _TextChannel:
+        """Edits the channel."""
+        raise NotImplementedError
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
     async def clone(
@@ -721,6 +729,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
@@ -746,6 +758,103 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     def news(self) -> bool:
         """Equivalent to :meth:`is_news`."""
         return self.is_news()
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        type: ChannelType = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> TextChannel | None:
+        ...
+
+    @overload
+    async def edit(self) -> TextChannel | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        .. versionchanged:: 1.3
+            The ``overwrites`` keyword-only parameter was added.
+
+        .. versionchanged:: 1.4
+            The ``type`` keyword-only parameter was added.
+
+        .. versionchanged:: 2.0
+            Edits are no longer in-place, the newly edited channel is returned instead.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        type: :class:`ChannelType`
+            Change the type of this text channel. Currently, only conversion between
+            :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
+            is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.TextChannel`]
+            The newly edited text channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     async def create_thread(
         self,
@@ -883,6 +992,18 @@ class ForumChannel(_TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    available_tags: List[:class:`ForumTag`]
+        The set of tags that can be used in a forum channel.
+
+        .. versionadded:: 2.3
+    default_sort_order: Optional[:class:`SortOrder`]
+        The default sort order type used to order posts in this channel.
+
+        .. versionadded:: 2.3
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
@@ -892,11 +1013,132 @@ class ForumChannel(_TextChannel):
 
     def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
         super()._update(guild, data)
+        self.available_tags: list[ForumTag] = [
+            ForumTag.from_data(state=self._state, data=tag)
+            for tag in (data.get("available_tags") or [])
+        ]
+        self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
 
     @property
     def guidelines(self) -> str | None:
         """The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
+
+    @property
+    def requires_tag(self) -> bool:
+        """Whether a tag is required to be specified when creating a thread in this forum channel.
+
+        Tags are specified in :attr:`applied_tags`.
+
+        .. versionadded:: 2.3
+        """
+        return self.flags.require_tag
+
+    def get_tag(self, id: int, /) -> ForumTag | None:
+        """Returns the :class:`ForumTag` from this forum channel with the
+        given ID, if any.
+
+        .. versionadded:: 2.3
+        """
+        return utils.get(self.available_tags, id=id)
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        available_tags: list[ForumTag] = ...,
+        require_tag: bool = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> "ForumChannel" | None:
+        ...
+
+    @overload
+    async def edit(self) -> "ForumChannel" | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type to use to order posts in this channel.
+
+            .. versionadded:: 2.3
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in this channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
+        require_tag: :class:`bool`
+            Whether a tag should be required to be specified when creating a thread in this channel.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.ForumChannel`]
+            The newly edited forum channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     async def create_thread(
         self,
@@ -912,6 +1154,7 @@ class ForumChannel(_TextChannel):
         nonce=None,
         allowed_mentions=None,
         view=None,
+        applied_tags=None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         slowmode_delay: int = MISSING,
         reason: str | None = None,
@@ -955,6 +1198,8 @@ class ForumChannel(_TextChannel):
             are used instead.
         view: :class:`discord.ui.View`
             A Discord UI View to add to the message.
+        applied_tags: List[:class:`discord.ForumTag`]
+            A list of tags to apply to the new thread.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
@@ -1019,6 +1264,9 @@ class ForumChannel(_TextChannel):
         else:
             components = None
 
+        if applied_tags is not None:
+            applied_tags = [str(tag.id) for tag in applied_tags]
+
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
@@ -1078,6 +1326,7 @@ class ForumChannel(_TextChannel):
                 auto_archive_duration=auto_archive_duration
                 or self.default_auto_archive_duration,
                 rate_limit_per_user=slowmode_delay or self.slowmode_delay,
+                applied_tags=applied_tags,
                 reason=reason,
             )
         ret = Thread(guild=self.guild, state=self._state, data=data)
