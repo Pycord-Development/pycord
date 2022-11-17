@@ -208,17 +208,20 @@ class Guild(Hashable):
 
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
+        - ``APPLICATION_COMMAND_PERMISSIONS_V2``: Guild is using the old command permissions behavior.
         - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
+        - ``DEVELOPER_SUPPORT_SERVER``: Guild has been set as a support server on the App Directory.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
+        - ``FEATURABLE``: Guild can be featured in the Server Directory.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
         - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
-        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``INVITES_DISABLED``: Guild Invites are disabled.
+        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
         - ``MEMBER_PROFILES``: Unknown.
         - ``MEMBER_VERIFICATION_GATE_ENABLED``: Guild has Membership Screening enabled.
@@ -234,8 +237,10 @@ class Guild(Hashable):
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
+        - ``SEVEN_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 7 days.
         - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
         - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
+        - ``THREE_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 3 days.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
