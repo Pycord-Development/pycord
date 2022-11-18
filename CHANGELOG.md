@@ -46,9 +46,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 
 ### Removed
+
 - Removed the guild feature `PRIVATE_THREADS` due to paywall limitation removal.
   ([#1789](https://github.com/Pycord-Development/pycord/pull/1789))
-  
+
 ## [2.2.2] - 2022-10-05
 
 ### Fixed
