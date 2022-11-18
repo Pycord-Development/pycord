@@ -103,8 +103,8 @@ class Interaction:
         The channel ID the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
-    user: Union[:class:`User`, :class:`Member`]
-        The user or member that sent the interaction. Will not be present in PING interactions.
+    user: Optional[Union[:class:`User`, :class:`Member`]]
+        The user or member that sent the interaction. Will be `None` in PING interactions.
     message: Optional[:class:`Message`]
         The message that sent this interaction.
     token: :class:`str`
@@ -173,29 +173,28 @@ class Interaction:
 
         self._message_data = message_data
 
+        self.user: Optional[Union[User, Member]] = None
         self._permissions: int = 0
 
-        if self.type is not InteractionType.ping:
-            self.user: Union[User, Member]
-            # TODO: there's a potential data loss here
-            if self.guild_id:
-                guild = self.guild or self._state._get_guild(self.guild_id) or Object(id=self.guild_id)
-                try:
-                    member = data["member"]
-                except KeyError:
-                    pass
-                else:
-                    self._permissions = int(member.get("permissions", 0))
-                    if not isinstance(guild, Object):
-                        cache_flag = self._state.member_cache_flags.interaction
-                        self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
-                    else:
-                        self.user = Member(state=self._state, data=member, guild=guild)
+        # TODO: there's a potential data loss here
+        if self.guild_id:
+            guild = self.guild or self._state._get_guild(self.guild_id) or Object(id=self.guild_id)
+            try:
+                member = data["member"]  # type: ignore
+            except KeyError:
+                pass
             else:
-                try:
-                    self.user = User(state=self._state, data=data["user"])
-                except KeyError:
-                    pass
+                self._permissions = int(member.get("permissions", 0))
+                if not isinstance(guild, Object):
+                    cache_flag = self._state.member_cache_flags.interaction
+                    self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
+                else:
+                    self.user = Member(state=self._state, data=member, guild=guild)
+        else:
+            try:
+                self.user = User(state=self._state, data=data["user"])
+            except KeyError:
+                pass
 
     @property
     def client(self) -> Client:

@@ -200,7 +200,7 @@ class ApplicationContext(discord.abc.Messageable):
         """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command.
         Shorthand for :attr:`.Interaction.user`.
         """
-        return self.interaction.user
+        return self.interaction.user  # type: ignore # command user will never be None
 
     author = user
 
