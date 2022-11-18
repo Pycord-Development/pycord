@@ -21,7 +21,7 @@ for Discord.
 - Optimised for both speed and memory
 
 Getting started
------------------
+---------------
 
 Is this your first time using the library? This is the place to get started!
 
@@ -30,7 +30,7 @@ Is this your first time using the library? This is the place to get started!
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
 Getting help
---------------
+------------
 
 If you're having trouble with something, these resources might help.
 
@@ -40,42 +40,55 @@ If you're having trouble with something, these resources might help.
 - Report bugs in the :resource:`issue tracker <issues>`.
 - Ask in our :resource:`GitHub discussions page <discussions>`.
 
+Manuals
+-------
+
+These pages go into great detail about everything the API can do.
+
+Core API
+~~~~~~~~
+
+.. toctree::
+  :maxdepth: 1
+
+  api/index.rst
+
 Extensions
-------------
+~~~~~~~~~~
 
 These extensions help you during development when it comes to common tasks.
 
 .. toctree::
+  :caption: Extensions
   :maxdepth: 1
+  :hidden:
 
   ext/commands/index.rst
   ext/tasks/index.rst
   ext/pages/index.rst
   ext/bridge/index.rst
 
-Manuals
----------
-
-These pages go into great detail about everything the API can do.
-
-.. toctree::
-  :maxdepth: 1
-
-  api
-  discord.ext.commands API Reference <ext/commands/api.rst>
-  discord.ext.tasks API Reference <ext/tasks/index.rst>
-  discord.ext.pages API Reference <ext/pages/index.rst>
-  discord.ext.bridge API Reference <ext/bridge/api.rst>
+- :doc:`ext/commands/index` - Bot commands framework
+- :doc:`ext/tasks/index` - asyncio.Task helpers
+- :doc:`ext/pages/index` - A pagination extension module
+- :doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands
 
 Meta
-------
+----
 
 If you're looking for something related to the project itself, it's here.
 
 .. toctree::
+  :caption: Meta
   :maxdepth: 1
+  :hidden:
 
-  whats_new
+  changelog
   version_guarantees
   migrating_to_v1
   migrating_to_v2
+
+- :doc:`changelog` - The changelog for the library.
+- :doc:`version_guarantees` - The version guarantees for the library.
+- :doc:`migrating_to_v1` - How to migrate from v0.x to v1.x.
+- :doc:`migrating_to_v2` - How to migrate from v1.x to v2.x.

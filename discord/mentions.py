@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 __all__ = ("AllowedMentions",)
 
@@ -58,7 +58,7 @@ class AllowedMentions:
     via :meth:`abc.Messageable.send` for more fine-grained control.
 
     Attributes
-    ------------
+    ----------
     everyone: :class:`bool`
         Whether to allow everyone and here mentions. Defaults to ``True``.
     users: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
@@ -86,8 +86,8 @@ class AllowedMentions:
         self,
         *,
         everyone: bool = default,
-        users: Union[bool, List[Snowflake]] = default,
-        roles: Union[bool, List[Snowflake]] = default,
+        users: bool | list[Snowflake] = default,
+        roles: bool | list[Snowflake] = default,
         replied_user: bool = default,
     ):
         self.everyone = everyone
@@ -96,7 +96,7 @@ class AllowedMentions:
         self.replied_user = replied_user
 
     @classmethod
-    def all(cls: Type[A]) -> A:
+    def all(cls: type[A]) -> A:
         """A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True``
 
         .. versionadded:: 1.5
@@ -104,7 +104,7 @@ class AllowedMentions:
         return cls(everyone=True, users=True, roles=True, replied_user=True)
 
     @classmethod
-    def none(cls: Type[A]) -> A:
+    def none(cls: type[A]) -> A:
         """A factory method that returns a :class:`AllowedMentions` with all fields set to ``False``
 
         .. versionadded:: 1.5
@@ -144,8 +144,12 @@ class AllowedMentions:
         everyone = self.everyone if other.everyone is default else other.everyone
         users = self.users if other.users is default else other.users
         roles = self.roles if other.roles is default else other.roles
-        replied_user = self.replied_user if other.replied_user is default else other.replied_user
-        return AllowedMentions(everyone=everyone, roles=roles, users=users, replied_user=replied_user)
+        replied_user = (
+            self.replied_user if other.replied_user is default else other.replied_user
+        )
+        return AllowedMentions(
+            everyone=everyone, roles=roles, users=users, replied_user=replied_user
+        )
 
     def __repr__(self) -> str:
         return (

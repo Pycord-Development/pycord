@@ -1,0 +1,25 @@
+codecov:
+  notify:
+    after_n_builds: 12
+
+coverage:
+  status:
+    project:
+      default:
+        target: 0%
+      http:
+        target: 0%
+        flags:
+          - http
+    patch:
+      default:
+        target: 0%
+      http:
+        target: 0%
+        flags:
+          - http
+
+flags:
+  http:
+    paths:
+      - discord/http.py

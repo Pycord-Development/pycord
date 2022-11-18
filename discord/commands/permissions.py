@@ -28,10 +28,7 @@ from typing import Callable
 from ..permissions import Permissions
 from .core import ApplicationCommand
 
-__all__ = (
-    "default_permissions",
-    "guild_only",
-)
+__all__ = ("default_permissions", "guild_only", "is_nsfw")
 
 
 def default_permissions(**perms: bool) -> Callable:
@@ -47,12 +44,12 @@ def default_permissions(**perms: bool) -> Callable:
         should use an internal check such as :func:`~.ext.commands.has_permissions`.
 
     Parameters
-    ------------
+    ----------
     **perms: Dict[:class:`str`, :class:`bool`]
         An argument list of permissions to check for.
 
     Example
-    ---------
+    -------
 
     .. code-block:: python3
 
@@ -62,7 +59,6 @@ def default_permissions(**perms: bool) -> Callable:
         @default_permissions(manage_messages=True)
         async def test(ctx):
             await ctx.respond('You can manage messages.')
-
     """
 
     invalid = set(perms) - set(Permissions.VALID_FLAGS)
@@ -72,7 +68,9 @@ def default_permissions(**perms: bool) -> Callable:
     def inner(command: Callable):
         if isinstance(command, ApplicationCommand):
             if command.parent is not None:
-                raise RuntimeError("Permission restrictions can only be set on top-level commands")
+                raise RuntimeError(
+                    "Permission restrictions can only be set on top-level commands"
+                )
             command.default_member_permissions = Permissions(**perms)
         else:
             command.__default_member_permissions__ = Permissions(**perms)
@@ -86,7 +84,7 @@ def guild_only() -> Callable:
     The command won't be able to be used in private message channels.
 
     Example
-    ---------
+    -------
 
     .. code-block:: python3
 
@@ -96,7 +94,6 @@ def guild_only() -> Callable:
         @guild_only()
         async def test(ctx):
             await ctx.respond("You're in a guild.")
-
     """
 
     def inner(command: Callable):
@@ -104,6 +101,38 @@ def guild_only() -> Callable:
             command.guild_only = True
         else:
             command.__guild_only__ = True
+
+        return command
+
+    return inner
+
+
+def is_nsfw() -> Callable:
+    """A decorator that limits the usage of a slash command to 18+ channels and users.
+    In guilds, the command will only be able to be used in channels marked as NSFW.
+    In DMs, users must have opted into age-restricted commands via privacy settings.
+
+    Note that apps intending to be listed in the App Directory cannot have NSFW commands.
+
+    Example
+    -------
+
+    .. code-block:: python3
+
+        from discord import is_nsfw
+
+        @bot.slash_command()
+        @is_nsfw()
+        async def test(ctx):
+            await ctx.respond("This command is age restricted.")
+    """
+
+    def inner(command: Callable):
+        if isinstance(command, ApplicationCommand):
+            command.nsfw = True
+        else:
+            command.__nsfw__ = True
+
         return command
 
     return inner

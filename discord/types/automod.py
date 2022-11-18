@@ -22,8 +22,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, TypedDict
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 
 AutoModTriggerType = Literal[1, 2, 3, 4]
@@ -36,19 +37,19 @@ AutoModKeywordPresetType = Literal[1, 2, 3]
 
 
 class AutoModTriggerMetadata(TypedDict, total=False):
-    keyword_filter: List[str]
-    presets: List[AutoModKeywordPresetType]
+    keyword_filter: list[str]
+    presets: list[AutoModKeywordPresetType]
 
-        
+
 class AutoModActionMetadata(TypedDict, total=False):
     channel_id: Snowflake
     duration_seconds: int
-        
-        
+
+
 class AutoModAction(TypedDict):
     type: AutoModActionType
     metadata: AutoModActionMetadata
-    
+
 
 class AutoModRule(TypedDict):
     id: Snowflake
@@ -58,31 +59,28 @@ class AutoModRule(TypedDict):
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
     trigger_metadata: AutoModTriggerMetadata
-    actions: List[AutoModAction]
+    actions: list[AutoModAction]
     enabled: bool
-    exempt_roles: List[Snowflake]
-    exempt_channels: List[Snowflake]
-        
-        
-class _CreateAutoModRuleOptional(TypedDict, total=False):
-    enabled: bool
-    exempt_roles: List[Snowflake]
-    exempt_channels: List[Snowflake]
-        
-        
-class CreateAutoModRule(_CreateAutoModRuleOptional):
+    exempt_roles: list[Snowflake]
+    exempt_channels: list[Snowflake]
+
+
+class CreateAutoModRule(TypedDict):
+    enabled: NotRequired[bool]
+    exempt_roles: NotRequired[list[Snowflake]]
+    exempt_channels: NotRequired[list[Snowflake]]
     name: str
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
     trigger_metadata: AutoModTriggerMetadata
-    actions: List[AutoModAction]
-        
+    actions: list[AutoModAction]
+
 
 class EditAutoModRule(TypedDict, total=False):
     name: str
     event_type: AutoModEventType
     trigger_metadata: AutoModTriggerMetadata
-    actions: List[AutoModAction]
+    actions: list[AutoModAction]
     enabled: bool
-    exempt_roles: List[Snowflake]
-    exempt_channels: List[Snowflake]
+    exempt_roles: list[Snowflake]
+    exempt_channels: list[Snowflake]

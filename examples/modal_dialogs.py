@@ -6,7 +6,9 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
+bot = commands.Bot(
+    command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents
+)
 
 
 class MyModal(discord.ui.Modal):
@@ -29,8 +31,12 @@ class MyModal(discord.ui.Modal):
         embed = discord.Embed(
             title="Your Modal Results",
             fields=[
-                discord.EmbedField(name="First Input", value=self.children[0].value, inline=False),
-                discord.EmbedField(name="Second Input", value=self.children[1].value, inline=False),
+                discord.EmbedField(
+                    name="First Input", value=self.children[0].value, inline=False
+                ),
+                discord.EmbedField(
+                    name="Second Input", value=self.children[1].value, inline=False
+                ),
             ],
             color=discord.Color.random(),
         )
@@ -53,7 +59,7 @@ async def modal_message(ctx: discord.ApplicationContext, message: discord.Messag
 
 
 @bot.user_command(name="usermodal")
-async def modal_user(ctx: discord.ApplicationContext, member: discord.Message):
+async def modal_user(ctx: discord.ApplicationContext, member: discord.Member):
     """Shows an example of a modal dialog being invoked from a user command."""
     modal = MyModal(title="User Command Modal")
     modal.title = f"Modal for User: {member.display_name}"
@@ -66,7 +72,9 @@ async def modaltest(ctx: commands.Context):
 
     class MyView(discord.ui.View):
         @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback(
+            self, button: discord.ui.Button, interaction: discord.Interaction
+        ):
             modal = MyModal(title="Modal Triggered from Button")
             await interaction.response.send_modal(modal)
 
@@ -75,11 +83,17 @@ async def modaltest(ctx: commands.Context):
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(label="First Modal", description="Shows the first modal"),
-                discord.SelectOption(label="Second Modal", description="Shows the second modal"),
+                discord.SelectOption(
+                    label="First Modal", description="Shows the first modal"
+                ),
+                discord.SelectOption(
+                    label="Second Modal", description="Shows the second modal"
+                ),
             ],
         )
-        async def select_callback(self, select: discord.ui.Select, interaction: discord.Interaction):
+        async def select_callback(
+            self, select: discord.ui.Select, interaction: discord.Interaction
+        ):
             modal = MyModal(title="Temporary Title")
             modal.title = select.values[0]
             await interaction.response.send_modal(modal)

@@ -25,20 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    ClassVar,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-from .enums import ButtonStyle, ComponentType, InputTextStyle, try_enum
+from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -50,7 +39,6 @@ if TYPE_CHECKING:
     from .types.components import InputText as InputTextComponentPayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
-
 
 __all__ = (
     "Component",
@@ -78,14 +66,14 @@ class Component:
     .. versionadded:: 2.0
 
     Attributes
-    ------------
+    ----------
     type: :class:`ComponentType`
         The type of component.
     """
 
-    __slots__: Tuple[str, ...] = ("type",)
+    __slots__: tuple[str, ...] = ("type",)
 
-    __repr_info__: ClassVar[Tuple[str, ...]]
+    __repr_info__: ClassVar[tuple[str, ...]]
     type: ComponentType
 
     def __repr__(self) -> str:
@@ -93,7 +81,7 @@ class Component:
         return f"<{self.__class__.__name__} {attrs}>"
 
     @classmethod
-    def _raw_construct(cls: Type[C], **kwargs) -> C:
+    def _raw_construct(cls: type[C], **kwargs) -> C:
         self: C = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
@@ -104,7 +92,7 @@ class Component:
                 setattr(self, slot, value)
         return self
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
 
@@ -118,20 +106,22 @@ class ActionRow(Component):
     .. versionadded:: 2.0
 
     Attributes
-    ------------
+    ----------
     type: :class:`ComponentType`
         The type of component.
     children: List[:class:`Component`]
         The children components that this holds, if any.
     """
 
-    __slots__: Tuple[str, ...] = ("children",)
+    __slots__: tuple[str, ...] = ("children",)
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.children: List[Component] = [_component_factory(d) for d in data.get("components", [])]
+        self.children: list[Component] = [
+            _component_factory(d) for d in data.get("components", [])
+        ]
 
     def to_dict(self) -> ActionRowPayload:
         return {
@@ -143,6 +133,7 @@ class ActionRow(Component):
 class InputText(Component):
     """Represents an Input Text field from the Discord Bot UI Kit.
     This inherits from :class:`Component`.
+
     Attributes
     ----------
     style: :class:`.InputTextStyle`
@@ -164,7 +155,7 @@ class InputText(Component):
         The value that has been entered in the input text field.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "type",
         "style",
         "custom_id",
@@ -176,18 +167,18 @@ class InputText(Component):
         "value",
     )
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
         self.label: str = data.get("label", None)
-        self.placeholder: Optional[str] = data.get("placeholder", None)
-        self.min_length: Optional[int] = data.get("min_length", None)
-        self.max_length: Optional[int] = data.get("max_length", None)
+        self.placeholder: str | None = data.get("placeholder", None)
+        self.min_length: int | None = data.get("min_length", None)
+        self.max_length: int | None = data.get("max_length", None)
         self.required: bool = data.get("required", True)
-        self.value: Optional[str] = data.get("value", None)
+        self.value: str | None = data.get("value", None)
 
     def to_dict(self) -> InputTextComponentPayload:
         payload = {
@@ -229,7 +220,7 @@ class Button(Component):
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     style: :class:`.ButtonStyle`
         The style of the button.
     custom_id: Optional[:class:`str`]
@@ -245,7 +236,7 @@ class Button(Component):
         The emoji of the button, if available.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "style",
         "custom_id",
         "url",
@@ -254,16 +245,16 @@ class Button(Component):
         "emoji",
     )
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
-        self.custom_id: Optional[str] = data.get("custom_id")
-        self.url: Optional[str] = data.get("url")
+        self.custom_id: str | None = data.get("custom_id")
+        self.url: str | None = data.get("url")
         self.disabled: bool = data.get("disabled", False)
-        self.label: Optional[str] = data.get("label")
-        self.emoji: Optional[PartialEmoji]
+        self.label: str | None = data.get("label")
+        self.emoji: PartialEmoji | None
         try:
             self.emoji = PartialEmoji.from_dict(data["emoji"])
         except KeyError:
@@ -301,8 +292,15 @@ class SelectMenu(Component):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.3
+
+        Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
+        :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
+
     Attributes
-    ------------
+    ----------
+    type: :class:`ComponentType`
+        The select menu's type.
     custom_id: Optional[:class:`str`]
         The ID of the select menu that gets received during an interaction.
     placeholder: Optional[:class:`str`]
@@ -315,29 +313,41 @@ class SelectMenu(Component):
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`SelectOption`]
         A list of options that can be selected in this menu.
+        Will be an empty list for all component types
+        except for :attr:`ComponentType.string_select`.
+    channel_types: List[:class:`ChannelType`]
+        A list of channel types that can be selected.
+        Will be an empty list for all component types
+        except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "custom_id",
         "placeholder",
         "min_values",
         "max_values",
         "options",
+        "channel_types",
         "disabled",
     )
 
-    __repr_info__: ClassVar[Tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: SelectMenuPayload):
-        self.type = ComponentType.select
+        self.type = try_enum(ComponentType, data["type"])
         self.custom_id: str = data["custom_id"]
-        self.placeholder: Optional[str] = data.get("placeholder")
+        self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
-        self.options: List[SelectOption] = [SelectOption.from_dict(option) for option in data.get("options", [])]
         self.disabled: bool = data.get("disabled", False)
+        self.options: list[SelectOption] = [
+            SelectOption.from_dict(option) for option in data.get("options", [])
+        ]
+        self.channel_types: list[ChannelType] = [
+            try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
+        ]
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -345,10 +355,13 @@ class SelectMenu(Component):
             "custom_id": self.custom_id,
             "min_values": self.min_values,
             "max_values": self.max_values,
-            "options": [op.to_dict() for op in self.options],
             "disabled": self.disabled,
         }
 
+        if self.type is ComponentType.string_select:
+            payload["options"] = [op.to_dict() for op in self.options]
+        if self.type is ComponentType.channel_select and self.channel_types:
+            payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
 
@@ -356,14 +369,14 @@ class SelectMenu(Component):
 
 
 class SelectOption:
-    """Represents a select menu's option.
+    """Represents a :class:`discord.SelectMenu`'s option.
 
     These can be created by users.
 
     .. versionadded:: 2.0
 
     Attributes
-    -----------
+    ----------
     label: :class:`str`
         The label of the option. This is displayed to users.
         Can only be up to 100 characters.
@@ -378,7 +391,7 @@ class SelectOption:
         Whether this option is selected by default.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "label",
         "value",
         "description",
@@ -391,8 +404,8 @@ class SelectOption:
         *,
         label: str,
         value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
         default: bool = False,
     ) -> None:
         if len(label) > 100:
@@ -412,7 +425,8 @@ class SelectOption:
 
     def __repr__(self) -> str:
         return (
-            f"<SelectOption label={self.label!r} value={self.value!r} description={self.description!r} "
+            "<SelectOption"
+            f" label={self.label!r} value={self.value!r} description={self.description!r} "
             f"emoji={self.emoji!r} default={self.default!r}>"
         )
 
@@ -423,8 +437,8 @@ class SelectOption:
         return base
 
     @property
-    def emoji(self) -> Optional[Union[str, Emoji, PartialEmoji]]:
-        """Optional[Union[:class:`str`, :class:`Emoji`, :class:`PartialEmoji`]]: The emoji of the option, if available."""
+    def emoji(self) -> str | Emoji | PartialEmoji | None:
+        """The emoji of the option, if available."""
         return self._emoji
 
     @emoji.setter
@@ -435,7 +449,10 @@ class SelectOption:
             elif isinstance(value, _EmojiTag):
                 value = value._to_partial()
             else:
-                raise TypeError(f"expected emoji to be str, Emoji, or PartialEmoji not {value.__class__}")
+                raise TypeError(
+                    "expected emoji to be str, Emoji, or PartialEmoji not"
+                    f" {value.__class__}"
+                )
 
         self._emoji = value
 
@@ -476,7 +493,9 @@ def _component_factory(data: ComponentPayload) -> Component:
         return ActionRow(data)
     elif component_type == 2:
         return Button(data)  # type: ignore
-    elif component_type == 3:
+    elif component_type == 4:
+        return InputText(data)  # type: ignore
+    elif component_type in (3, 5, 6, 7, 8):
         return SelectMenu(data)  # type: ignore
     else:
         as_enum = try_enum(ComponentType, component_type)

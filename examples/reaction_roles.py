@@ -1,5 +1,4 @@
 import discord
-import asyncio
 
 intents = discord.Intents.default()
 intents.members = True  # < This may give you `read-only` warning, just ignore it.
@@ -8,18 +7,26 @@ intents.members = True  # < This may give you `read-only` warning, just ignore i
 
 bot = discord.Bot(intents=intents)
 
-role_message_id = 0  # ID of the message that can be reacted to for adding/removing a role.
+role_message_id = (
+    0  # ID of the message that can be reacted to for adding/removing a role.
+)
 
 emoji_to_role = {
-    discord.PartialEmoji(name="🔴"): 0,  # ID of the role associated with unicode emoji '🔴'.
-    discord.PartialEmoji(name="🟡"): 0,  # ID of the role associated with unicode emoji '🟡'.
-    discord.PartialEmoji(name="green", id=0): 0,  # ID of the role associated with a partial emoji's ID.
+    discord.PartialEmoji(
+        name="🔴"
+    ): 0,  # ID of the role associated with unicode emoji '🔴'.
+    discord.PartialEmoji(
+        name="🟡"
+    ): 0,  # ID of the role associated with unicode emoji '🟡'.
+    discord.PartialEmoji(
+        name="green", id=0
+    ): 0,  # ID of the role associated with a partial emoji's ID.
 }
 
 
 @bot.event
 async def on_ready():
-    print('Ready!')
+    print("Ready!")
 
 
 @bot.event

@@ -22,20 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import types
 from collections import namedtuple
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    ClassVar,
-    Dict,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
 __all__ = (
     "Enum",
@@ -84,23 +75,37 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
-        cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
-        cls.__lt__ = lambda self, other: isinstance(other, self.__class__) and self.value < other.value
-        cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
+        cls.__le__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value <= other.value
+        )
+        cls.__ge__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value >= other.value
+        )
+        cls.__lt__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value < other.value
+        )
+        cls.__gt__ = (
+            lambda self, other: isinstance(other, self.__class__)
+            and self.value > other.value
+        )
     return cls
 
 
 def _is_descriptor(obj):
-    return hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+    return (
+        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+    )
 
 
 class EnumMeta(type):
     if TYPE_CHECKING:
         __name__: ClassVar[str]
-        _enum_member_names_: ClassVar[List[str]]
-        _enum_member_map_: ClassVar[Dict[str, Any]]
-        _enum_value_map_: ClassVar[Dict[Any, Any]]
+        _enum_member_names_: ClassVar[list[str]]
+        _enum_member_map_: ClassVar[dict[str, Any]]
+        _enum_value_map_: ClassVar[dict[Any, Any]]
 
     def __new__(cls, name, bases, attrs, *, comparable: bool = False):
         value_mapping = {}
@@ -144,7 +149,9 @@ class EnumMeta(type):
         return (cls._enum_member_map_[name] for name in cls._enum_member_names_)
 
     def __reversed__(cls):
-        return (cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_))
+        return (
+            cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_)
+        )
 
     def __len__(cls):
         return len(cls._enum_member_names_)
@@ -194,6 +201,8 @@ else:
 
 
 class ChannelType(Enum):
+    """Channel type"""
+
     text = 0
     private = 1
     voice = 2
@@ -212,6 +221,8 @@ class ChannelType(Enum):
 
 
 class MessageType(Enum):
+    """Message type"""
+
     default = 0
     recipient_add = 1
     recipient_remove = 2
@@ -240,6 +251,8 @@ class MessageType(Enum):
 
 
 class VoiceRegion(Enum):
+    """Voice region"""
+
     us_west = "us-west"
     us_east = "us-east"
     us_south = "us-south"
@@ -269,6 +282,8 @@ class VoiceRegion(Enum):
 
 
 class SpeakingState(Enum):
+    """Speaking state"""
+
     none = 0
     voice = 1
     soundshare = 2
@@ -282,6 +297,8 @@ class SpeakingState(Enum):
 
 
 class VerificationLevel(Enum, comparable=True):
+    """Verification level"""
+
     none = 0
     low = 1
     medium = 2
@@ -292,7 +309,19 @@ class VerificationLevel(Enum, comparable=True):
         return self.name
 
 
+class SortOrder(Enum):
+    """Forum Channel Sort Order"""
+
+    latest_activity = 0
+    creation_date = 1
+
+    def __str__(self):
+        return self.name
+
+
 class ContentFilter(Enum, comparable=True):
+    """Content Filter"""
+
     disabled = 0
     no_role = 1
     all_members = 2
@@ -302,6 +331,8 @@ class ContentFilter(Enum, comparable=True):
 
 
 class Status(Enum):
+    """Status"""
+
     online = "online"
     offline = "offline"
     idle = "idle"
@@ -315,6 +346,8 @@ class Status(Enum):
 
 
 class DefaultAvatar(Enum):
+    """Default avatar"""
+
     blurple = 0
     grey = 1
     gray = 1
@@ -327,17 +360,23 @@ class DefaultAvatar(Enum):
 
 
 class NotificationLevel(Enum, comparable=True):
+    """Notification level"""
+
     all_messages = 0
     only_mentions = 1
 
 
 class AuditLogActionCategory(Enum):
+    """Audit log action category"""
+
     create = 1
     delete = 2
     update = 3
 
 
 class AuditLogAction(Enum):
+    """Audit log action"""
+
     guild_update = 1
     channel_create = 10
     channel_update = 11
@@ -388,12 +427,12 @@ class AuditLogAction(Enum):
     application_command_permission_update = 121
     auto_moderation_rule_create = 140
     auto_moderation_rule_update = 141
-    auto_moderation_rule_delete = 142 
+    auto_moderation_rule_delete = 142
     auto_moderation_block_message = 143
 
     @property
-    def category(self) -> Optional[AuditLogActionCategory]:
-        lookup: Dict[AuditLogAction, Optional[AuditLogActionCategory]] = {
+    def category(self) -> AuditLogActionCategory | None:
+        lookup: dict[AuditLogAction, AuditLogActionCategory | None] = {
             AuditLogAction.guild_update: AuditLogActionCategory.update,
             AuditLogAction.channel_create: AuditLogActionCategory.create,
             AuditLogAction.channel_update: AuditLogActionCategory.update,
@@ -450,7 +489,7 @@ class AuditLogAction(Enum):
         return lookup[self]
 
     @property
-    def target_type(self) -> Optional[str]:
+    def target_type(self) -> str | None:
         v = self.value
         if v == -1:
             return "all"
@@ -489,6 +528,8 @@ class AuditLogAction(Enum):
 
 
 class UserFlags(Enum):
+    """User flags"""
+
     staff = 1
     partner = 2
     hypesquad = 4
@@ -510,9 +551,12 @@ class UserFlags(Enum):
     discord_certified_moderator = 262144
     bot_http_interactions = 524288
     spammer = 1048576
+    active_developer = 4194304
 
 
 class ActivityType(Enum):
+    """Activity type"""
+
     unknown = -1
     playing = 0
     streaming = 1
@@ -526,17 +570,23 @@ class ActivityType(Enum):
 
 
 class TeamMembershipState(Enum):
+    """Team membership state"""
+
     invited = 1
     accepted = 2
 
 
 class WebhookType(Enum):
+    """Webhook Type"""
+
     incoming = 1
     channel_follower = 2
     application = 3
 
 
 class ExpireBehaviour(Enum):
+    """Expire Behaviour"""
+
     remove_role = 0
     kick = 1
 
@@ -545,18 +595,22 @@ ExpireBehavior = ExpireBehaviour
 
 
 class StickerType(Enum):
+    """Sticker type"""
+
     standard = 1
     guild = 2
 
 
 class StickerFormatType(Enum):
+    """Sticker format Type"""
+
     png = 1
     apng = 2
     lottie = 3
 
     @property
     def file_extension(self) -> str:
-        lookup: Dict[StickerFormatType, str] = {
+        lookup: dict[StickerFormatType, str] = {
             StickerFormatType.png: "png",
             StickerFormatType.apng: "png",
             StickerFormatType.lottie: "json",
@@ -565,12 +619,16 @@ class StickerFormatType(Enum):
 
 
 class InviteTarget(Enum):
+    """Invite target"""
+
     unknown = 0
     stream = 1
     embedded_application = 2
 
 
 class InteractionType(Enum):
+    """Interaction type"""
+
     ping = 1
     application_command = 2
     component = 3
@@ -579,6 +637,8 @@ class InteractionType(Enum):
 
 
 class InteractionResponseType(Enum):
+    """Interaction response type"""
+
     pong = 1
     # ack = 2 (deprecated)
     # channel_message = 3 (deprecated)
@@ -591,6 +651,8 @@ class InteractionResponseType(Enum):
 
 
 class VideoQualityMode(Enum):
+    """Video quality mode"""
+
     auto = 1
     full = 2
 
@@ -599,16 +661,25 @@ class VideoQualityMode(Enum):
 
 
 class ComponentType(Enum):
+    """Component type"""
+
     action_row = 1
     button = 2
-    select = 3
+    string_select = 3
+    select = string_select  # (deprecated) alias for string_select
     input_text = 4
+    user_select = 5
+    role_select = 6
+    mentionable_select = 7
+    channel_select = 8
 
     def __int__(self):
         return self.value
 
 
 class ButtonStyle(Enum):
+    """Button style"""
+
     primary = 1
     secondary = 2
     success = 3
@@ -628,6 +699,8 @@ class ButtonStyle(Enum):
 
 
 class InputTextStyle(Enum):
+    """Input text style"""
+
     short = 1
     singleline = 1
     paragraph = 2
@@ -636,6 +709,8 @@ class InputTextStyle(Enum):
 
 
 class ApplicationType(Enum):
+    """Application type"""
+
     game = 1
     music = 2
     ticketed_events = 3
@@ -643,12 +718,16 @@ class ApplicationType(Enum):
 
 
 class StagePrivacyLevel(Enum):
+    """Stage privacy level"""
+
     # public = 1 (deprecated)
     closed = 2
     guild_only = 2
 
 
 class NSFWLevel(Enum, comparable=True):
+    """NSFW level"""
+
     default = 0
     explicit = 1
     safe = 2
@@ -656,6 +735,8 @@ class NSFWLevel(Enum, comparable=True):
 
 
 class SlashCommandOptionType(Enum):
+    """Slash command option type"""
+
     sub_command = 1
     sub_command_group = 2
     string = 3
@@ -679,7 +760,9 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
-        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(datatype, types.UnionType)
+        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(
+            datatype, types.UnionType
+        )
 
         if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
             # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
@@ -716,13 +799,17 @@ class SlashCommandOptionType(Enum):
 
         from .commands.context import ApplicationContext
 
-        if not issubclass(datatype, ApplicationContext):  # TODO: prevent ctx being passed here in cog commands
+        if not issubclass(
+            datatype, ApplicationContext
+        ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
             )  # TODO: Improve the error message
 
 
 class EmbeddedActivity(Enum):
+    """Embedded activity"""
+
     awkword = 879863881349087252
     betrayal = 773336526917861400
     checkers_in_the_park = 832013003968348200
@@ -757,6 +844,8 @@ class EmbeddedActivity(Enum):
 
 
 class ScheduledEventStatus(Enum):
+    """Scheduled event status"""
+
     scheduled = 1
     active = 2
     completed = 3
@@ -768,6 +857,8 @@ class ScheduledEventStatus(Enum):
 
 
 class ScheduledEventPrivacyLevel(Enum):
+    """Scheduled event privacy level"""
+
     guild_only = 2
 
     def __int__(self):
@@ -775,44 +866,54 @@ class ScheduledEventPrivacyLevel(Enum):
 
 
 class ScheduledEventLocationType(Enum):
+    """Scheduled event location type"""
+
     stage_instance = 1
     voice = 2
     external = 3
 
-    
+
 class AutoModTriggerType(Enum):
+    """Automod trigger type"""
+
     keyword = 1
     harmful_link = 2
     spam = 3
     keyword_preset = 4
-    
+
 
 class AutoModEventType(Enum):
+    """Automod event type"""
+
     message_send = 1
-    
-    
+
+
 class AutoModActionType(Enum):
+    """Automod action type"""
+
     block_message = 1
     send_alert_message = 2
     timeout = 3
-    
-    
+
+
 class AutoModKeywordPresetType(Enum):
+    """Automod keyword preset type"""
+
     profanity = 1
     sexual_content = 2
     slurs = 3
-    
+
 
 T = TypeVar("T")
 
 
-def create_unknown_value(cls: Type[T], val: Any) -> T:
+def create_unknown_value(cls: type[T], val: Any) -> T:
     value_cls = cls._enum_value_cls_  # type: ignore
     name = f"unknown_{val}"
     return value_cls(name=name, value=val)
 
 
-def try_enum(cls: Type[T], val: Any) -> T:
+def try_enum(cls: type[T], val: Any) -> T:
     """A function that tries to turn the value into enum ``cls``.
 
     If it fails it returns a proxy invalid value instead.

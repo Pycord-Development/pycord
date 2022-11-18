@@ -94,7 +94,7 @@ class StringView:
         return False
 
     def read_rest(self):
-        result = self.buffer[self.index:]
+        result = self.buffer[self.index :]
         self.previous = self.index
         self.index = self.end
         return result
@@ -194,4 +194,7 @@ class StringView:
             result.append(current)
 
     def __repr__(self):
-        return f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof: {self.eof}>"
+        return (
+            f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof:"
+            f" {self.eof}>"
+        )

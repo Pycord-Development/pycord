@@ -25,18 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Coroutine,
-    Dict,
-    Generic,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
 
@@ -63,12 +52,12 @@ class Item(Generic[V]):
     .. versionadded:: 2.0
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = ("row",)
+    __item_repr_attributes__: tuple[str, ...] = ("row",)
 
     def __init__(self):
-        self._view: Optional[V] = None
-        self._row: Optional[int] = None
-        self._rendered_row: Optional[int] = None
+        self._view: V | None = None
+        self._row: int | None = None
+        self._rendered_row: int | None = None
         # This works mostly well but there is a gotcha with
         # the interaction with from_component, since that technically provides
         # a custom_id most dispatchable items would get this set to True even though
@@ -77,7 +66,7 @@ class Item(Generic[V]):
         # only called upon edit and we're mainly interested during initial creation time.
         self._provided_custom_id: bool = False
 
-    def to_component_dict(self) -> Dict[str, Any]:
+    def to_component_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
     def refresh_component(self, component: Component) -> None:
@@ -87,7 +76,7 @@ class Item(Generic[V]):
         return None
 
     @classmethod
-    def from_component(cls: Type[I], component: Component) -> I:
+    def from_component(cls: type[I], component: Component) -> I:
         return cls()
 
     @property
@@ -101,15 +90,17 @@ class Item(Generic[V]):
         return self._provided_custom_id
 
     def __repr__(self) -> str:
-        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
         return f"<{self.__class__.__name__} {attrs}>"
 
     @property
-    def row(self) -> Optional[int]:
+    def row(self) -> int | None:
         return self._row
 
     @row.setter
-    def row(self, value: Optional[int]):
+    def row(self, value: int | None):
         if value is None:
             self._row = None
         elif 5 > value >= 0:
@@ -122,8 +113,8 @@ class Item(Generic[V]):
         return 1
 
     @property
-    def view(self) -> Optional[V]:
-        """Optional[:class:`View`]: The underlying view for this item."""
+    def view(self) -> V | None:
+        """The underlying view for this item."""
         return self._view
 
     async def callback(self, interaction: Interaction):
@@ -134,8 +125,7 @@ class Item(Generic[V]):
         This can be overridden by subclasses.
 
         Parameters
-        -----------
+        ----------
         interaction: :class:`.Interaction`
             The interaction that triggered this UI item.
         """
-        pass

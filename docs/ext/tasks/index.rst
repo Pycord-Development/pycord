@@ -1,7 +1,7 @@
 .. _discord_ext_tasks:
 
-``discord.ext.tasks`` -- asyncio.Task helpers
-====================================================
+discord.ext.tasks
+=================
 
 .. versionadded:: 1.1.0
 
@@ -14,7 +14,7 @@ One of the most common operations when making a bot is having a loop run in the 
 The goal of this Pycord extension is to abstract all these worries away from you.
 
 Recipes
----------
+-------
 
 A simple background task in a :class:`~discord.ext.commands.Cog`:
 
@@ -133,7 +133,7 @@ Doing something during cancellation:
 .. _ext_tasks_api:
 
 API Reference
----------------
+-------------
 
 .. attributetable:: discord.ext.tasks.Loop
 

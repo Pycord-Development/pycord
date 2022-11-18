@@ -62,7 +62,7 @@ class BotBase(ABC):
         the internal command list via :meth:`~.Bot.add_bridge_command`.
 
         Returns
-        --------
+        -------
         Callable[..., :class:`BridgeCommand`]
             A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and
             traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`.
@@ -102,8 +102,6 @@ class Bot(BotBase, ExtBot):
     .. versionadded:: 2.0
     """
 
-    pass
-
 
 class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
@@ -111,5 +109,3 @@ class AutoShardedBot(BotBase, ExtAutoShardedBot):
 
     .. versionadded:: 2.0
     """
-
-    pass

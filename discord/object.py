@@ -48,7 +48,7 @@ class Object(Hashable):
     objects (if any) actually inherit from this class.
 
     There are also some cases where some WebSocket events are received
-    in :issue:`strange order <21>` and when such events happened you would
+    in :dpy-issue:`strange order <21>` and when such events happened you would
     receive this class rather than the actual data class. These cases are
     extremely rare.
 
@@ -67,7 +67,7 @@ class Object(Hashable):
             Returns the object's hash.
 
     Attributes
-    -----------
+    ----------
     id: :class:`int`
         The ID of the object.
     """
@@ -76,7 +76,9 @@ class Object(Hashable):
         try:
             id = int(id)
         except ValueError:
-            raise TypeError(f"id parameter must be convertible to int not {id.__class__!r}") from None
+            raise TypeError(
+                f"id parameter must be convertible to int not {id.__class__!r}"
+            ) from None
         else:
             self.id = id
 
@@ -85,20 +87,20 @@ class Object(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the snowflake's creation time in UTC."""
+        """Returns the snowflake's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def worker_id(self) -> int:
-        """:class:`int`: Returns the worker id that made the snowflake."""
+        """Returns the worker id that made the snowflake."""
         return (self.id & 0x3E0000) >> 17
 
     @property
     def process_id(self) -> int:
-        """:class:`int`: Returns the process id that made the snowflake."""
+        """Returns the process id that made the snowflake."""
         return (self.id & 0x1F000) >> 12
 
     @property
     def increment_id(self) -> int:
-        """:class:`int`: Returns the increment id that made the snowflake."""
+        """Returns the increment id that made the snowflake."""
         return self.id & 0xFFF

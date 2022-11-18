@@ -1,0 +1,6 @@
+* @Pycord-Development/maintainers
+
+/tests/ @Pycord-Development/maintain-tests
+/discord/ext/testing/ @Pycord-Development/maintain-tests
+/discord/ext/bridge/ @Pycord-Development/maintain-ext-bridge
+/.github/ @Pycord-Development/project-leads

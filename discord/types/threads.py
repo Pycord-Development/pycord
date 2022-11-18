@@ -25,8 +25,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, Optional, TypedDict
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
+from ..flags import ChannelFlags
 from .snowflake import Snowflake
 
 ThreadType = Literal[10, 11, 12]
@@ -40,25 +42,19 @@ class ThreadMember(TypedDict):
     flags: int
 
 
-class _ThreadMetadataOptional(TypedDict, total=False):
-    invitable: bool
-    create_timestamp: str
-
-
-class ThreadMetadata(_ThreadMetadataOptional):
+class ThreadMetadata(TypedDict):
+    invitable: NotRequired[bool]
+    create_timestamp: NotRequired[str]
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
     locked: bool
 
 
-class _ThreadOptional(TypedDict, total=False):
-    member: ThreadMember
-    last_message_id: Optional[Snowflake]
-    last_pin_timestamp: Optional[Snowflake]
-
-
-class Thread(_ThreadOptional):
+class Thread(TypedDict):
+    member: NotRequired[ThreadMember]
+    last_message_id: NotRequired[Snowflake | None]
+    last_pin_timestamp: NotRequired[Snowflake | None]
     id: Snowflake
     guild_id: Snowflake
     parent_id: Snowflake
@@ -69,9 +65,11 @@ class Thread(_ThreadOptional):
     message_count: int
     rate_limit_per_user: int
     thread_metadata: ThreadMetadata
+    flags: ChannelFlags
+    total_message_sent: int
 
 
 class ThreadPaginationPayload(TypedDict):
-    threads: List[Thread]
-    members: List[ThreadMember]
+    threads: list[Thread]
+    members: list[ThreadMember]
     has_more: bool

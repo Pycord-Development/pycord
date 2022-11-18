@@ -69,7 +69,7 @@ To install the development version, do the following:
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
-    
+
 or if you do not want to clone the repository:
 
 .. code:: sh
@@ -132,7 +132,7 @@ Traditional Commands Example
 
 You can find more examples in the examples directory.
 
-Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
+Note: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.
 
 Useful Links
 ------------
@@ -141,4 +141,3 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
-- `Unofficial Discord API Server <https://discord.gg/discord-api>`_

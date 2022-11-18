@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
 
@@ -80,9 +80,9 @@ class BaseUser(_UserTag):
         bot: bool
         system: bool
         _state: ConnectionState
-        _avatar: Optional[str]
-        _banner: Optional[str]
-        _accent_colour: Optional[int]
+        _avatar: str | None
+        _banner: str | None
+        _accent_colour: int | None
         _public_flags: int
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
@@ -91,7 +91,8 @@ class BaseUser(_UserTag):
 
     def __repr__(self) -> str:
         return (
-            f"<BaseUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            "<BaseUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
             f" bot={self.bot} system={self.system}>"
         )
 
@@ -119,7 +120,7 @@ class BaseUser(_UserTag):
         self.system = data.get("system", False)
 
     @classmethod
-    def _copy(cls: Type[BU], user: BU) -> BU:
+    def _copy(cls: type[BU], user: BU) -> BU:
         self = cls.__new__(cls)  # bypass __init__
 
         self.name = user.name
@@ -134,7 +135,7 @@ class BaseUser(_UserTag):
 
         return self
 
-    def _to_minimal_user_json(self) -> Dict[str, Any]:
+    def _to_minimal_user_json(self) -> dict[str, Any]:
         return {
             "username": self.name,
             "id": self.id,
@@ -145,20 +146,20 @@ class BaseUser(_UserTag):
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the user.
+        """Returns a URL that allows the client to jump to the user.
 
         .. versionadded:: 2.0
         """
         return f"https://discord.com/users/{self.id}"
-    
+
     @property
     def public_flags(self) -> PublicUserFlags:
-        """:class:`PublicUserFlags`: The publicly available flags the user has."""
+        """The publicly available flags the user has."""
         return PublicUserFlags._from_value(self._public_flags)
 
     @property
-    def avatar(self) -> Optional[Asset]:
-        """Optional[:class:`Asset`]: Returns an :class:`Asset` for the avatar the user has.
+    def avatar(self) -> Asset | None:
+        """Returns an :class:`Asset` for the avatar the user has.
 
         If the user does not have a traditional avatar, ``None`` is returned.
         If you want the avatar that a user has displayed, consider :attr:`display_avatar`.
@@ -169,14 +170,16 @@ class BaseUser(_UserTag):
 
     @property
     def default_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the default avatar for a given user.
+        """Returns the default avatar for a given user.
         This is calculated by the user's discriminator.
         """
-        return Asset._from_default_avatar(self._state, int(self.discriminator) % len(DefaultAvatar))
+        return Asset._from_default_avatar(
+            self._state, int(self.discriminator) % len(DefaultAvatar)
+        )
 
     @property
     def display_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the user's display avatar.
+        """Returns the user's display avatar.
 
         For regular users this is just their default avatar or uploaded avatar.
 
@@ -185,11 +188,10 @@ class BaseUser(_UserTag):
         return self.avatar or self.default_avatar
 
     @property
-    def banner(self) -> Optional[Asset]:
-        """Optional[:class:`Asset`]: Returns the user's banner asset, if available.
+    def banner(self) -> Asset | None:
+        """Returns the user's banner asset, if available.
 
         .. versionadded:: 2.0
-
 
         .. note::
             This information is only available via :meth:`Client.fetch_user`.
@@ -199,8 +201,8 @@ class BaseUser(_UserTag):
         return Asset._from_user_banner(self._state, self.id, self._banner)
 
     @property
-    def accent_colour(self) -> Optional[Colour]:
-        """Optional[:class:`Colour`]: Returns the user's accent colour, if applicable.
+    def accent_colour(self) -> Colour | None:
+        """Returns the user's accent colour, if applicable.
 
         There is an alias for this named :attr:`accent_color`.
 
@@ -215,8 +217,8 @@ class BaseUser(_UserTag):
         return Colour(self._accent_colour)
 
     @property
-    def accent_color(self) -> Optional[Colour]:
-        """Optional[:class:`Colour`]: Returns the user's accent color, if applicable.
+    def accent_color(self) -> Colour | None:
+        """Returns the user's accent color, if applicable.
 
         There is an alias for this named :attr:`accent_colour`.
 
@@ -230,7 +232,7 @@ class BaseUser(_UserTag):
 
     @property
     def colour(self) -> Colour:
-        """:class:`Colour`: A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered colour
         for the user. This always returns :meth:`Colour.default`.
 
         There is an alias for this named :attr:`color`.
@@ -239,7 +241,7 @@ class BaseUser(_UserTag):
 
     @property
     def color(self) -> Colour:
-        """:class:`Colour`: A property that returns a color denoting the rendered color
+        """A property that returns a color denoting the rendered color
         for the user. This always returns :meth:`Colour.default`.
 
         There is an alias for this named :attr:`colour`.
@@ -248,12 +250,12 @@ class BaseUser(_UserTag):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the given user."""
+        """Returns a string that allows you to mention the given user."""
         return f"<@{self.id}>"
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the user's creation time in UTC.
+        """Returns the user's creation time in UTC.
 
         This is when the user's Discord account was created.
         """
@@ -261,7 +263,7 @@ class BaseUser(_UserTag):
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the user's display name.
+        """Returns the user's display name.
 
         For regular users this is just their username, but
         if they have a guild specific nickname then that
@@ -273,7 +275,7 @@ class BaseUser(_UserTag):
         """Checks if the user is mentioned in the specified message.
 
         Parameters
-        -----------
+        ----------
         message: :class:`Message`
             The message to check if you're mentioned in.
 
@@ -311,7 +313,7 @@ class ClientUser(BaseUser):
             Returns the user's name with discriminator.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The user's username.
     id: :class:`int`
@@ -337,7 +339,7 @@ class ClientUser(BaseUser):
 
     if TYPE_CHECKING:
         verified: bool
-        locale: Optional[str]
+        locale: str | None
         mfa_enabled: bool
         _flags: int
 
@@ -346,7 +348,8 @@ class ClientUser(BaseUser):
 
     def __repr__(self) -> str:
         return (
-            f"<ClientUser id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            "<ClientUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
             f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
         )
 
@@ -358,7 +361,9 @@ class ClientUser(BaseUser):
         self._flags = data.get("flags", 0)
         self.mfa_enabled = data.get("mfa_enabled", False)
 
-    async def edit(self, *, username: str = MISSING, avatar: bytes = MISSING) -> ClientUser:
+    async def edit(
+        self, *, username: str = MISSING, avatar: bytes = MISSING
+    ) -> ClientUser:
         """|coro|
 
         Edits the current profile of the client.
@@ -376,12 +381,17 @@ class ClientUser(BaseUser):
             The edit is no longer in-place, instead the newly edited client user is returned.
 
         Parameters
-        -----------
+        ----------
         username: :class:`str`
             The new username you wish to change to.
         avatar: :class:`bytes`
             A :term:`py:bytes-like object` representing the image to upload.
             Could be ``None`` to denote no avatar.
+
+        Returns
+        -------
+        :class:`ClientUser`
+            The newly edited client user.
 
         Raises
         ------
@@ -389,13 +399,8 @@ class ClientUser(BaseUser):
             Editing your profile failed.
         InvalidArgument
             Wrong image format passed for ``avatar``.
-
-        Returns
-        ---------
-        :class:`ClientUser`
-            The newly edited client user.
         """
-        payload: Dict[str, Any] = {}
+        payload: dict[str, Any] = {}
         if username is not MISSING:
             payload["username"] = username
 
@@ -428,7 +433,7 @@ class User(BaseUser, discord.abc.Messageable):
             Returns the user's name with discriminator.
 
     Attributes
-    -----------
+    ----------
     name: :class:`str`
         The user's username.
     id: :class:`int`
@@ -448,7 +453,10 @@ class User(BaseUser, discord.abc.Messageable):
         self._stored: bool = False
 
     def __repr__(self) -> str:
-        return f"<User id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
+        return (
+            "<User"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
+        )
 
     def __del__(self) -> None:
         try:
@@ -468,8 +476,8 @@ class User(BaseUser, discord.abc.Messageable):
         return ch
 
     @property
-    def dm_channel(self) -> Optional[DMChannel]:
-        """Optional[:class:`DMChannel`]: Returns the channel associated with this user if it exists.
+    def dm_channel(self) -> DMChannel | None:
+        """Returns the channel associated with this user if it exists.
 
         If this returns ``None``, you can create a DM channel by calling the
         :meth:`create_dm` coroutine function.
@@ -477,8 +485,8 @@ class User(BaseUser, discord.abc.Messageable):
         return self._state._get_private_channel_by_user(self.id)
 
     @property
-    def mutual_guilds(self) -> List[Guild]:
-        """List[:class:`Guild`]: The guilds that the user shares with the client.
+    def mutual_guilds(self) -> list[Guild]:
+        """The guilds that the user shares with the client.
 
         .. note::
 
@@ -486,7 +494,9 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. versionadded:: 1.7
         """
-        return [guild for guild in self._state._guilds.values() if guild.get_member(self.id)]
+        return [
+            guild for guild in self._state._guilds.values() if guild.get_member(self.id)
+        ]
 
     async def create_dm(self) -> DMChannel:
         """|coro|

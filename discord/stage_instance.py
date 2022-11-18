@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .enums import StagePrivacyLevel, try_enum
 from .errors import InvalidArgument
@@ -61,7 +61,7 @@ class StageInstance(Hashable):
             Returns the stage instance's hash.
 
     Attributes
-    -----------
+    ----------
     id: :class:`int`
         The stage instance's ID.
     guild: :class:`Guild`
@@ -90,7 +90,9 @@ class StageInstance(Hashable):
         "_cs_channel",
     )
 
-    def __init__(self, *, state: ConnectionState, guild: Guild, data: StageInstancePayload) -> None:
+    def __init__(
+        self, *, state: ConnectionState, guild: Guild, data: StageInstancePayload
+    ) -> None:
         self._state = state
         self.guild = guild
         self._update(data)
@@ -99,7 +101,9 @@ class StageInstance(Hashable):
         self.id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.topic: str = data["topic"]
-        self.privacy_level: StagePrivacyLevel = try_enum(StagePrivacyLevel, data["privacy_level"])
+        self.privacy_level: StagePrivacyLevel = try_enum(
+            StagePrivacyLevel, data["privacy_level"]
+        )
         self.discoverable_disabled: bool = data.get("discoverable_disabled", False)
 
         self.scheduled_event = None
@@ -107,11 +111,14 @@ class StageInstance(Hashable):
             self.scheduled_event = self.guild.get_scheduled_event(int(event_id))
 
     def __repr__(self) -> str:
-        return f"<StageInstance id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
+        return (
+            "<StageInstance"
+            f" id={self.id} guild={self.guild!r} channel_id={self.channel_id} topic={self.topic!r}>"
+        )
 
     @cached_slot_property("_cs_channel")
-    def channel(self) -> Optional[StageChannel]:
-        """Optional[:class:`StageChannel`]: The channel that stage instance is running in."""
+    def channel(self) -> StageChannel | None:
+        """The channel that stage instance is running in."""
         # the returned channel will always be a StageChannel or None
         return self._state.get_channel(self.channel_id)  # type: ignore
 
@@ -123,7 +130,7 @@ class StageInstance(Hashable):
         *,
         topic: str = MISSING,
         privacy_level: StagePrivacyLevel = MISSING,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> None:
         """|coro|
 
@@ -133,7 +140,7 @@ class StageInstance(Hashable):
         use this.
 
         Parameters
-        -----------
+        ----------
         topic: :class:`str`
             The stage instance's new topic.
         privacy_level: :class:`StagePrivacyLevel`
@@ -158,14 +165,18 @@ class StageInstance(Hashable):
 
         if privacy_level is not MISSING:
             if not isinstance(privacy_level, StagePrivacyLevel):
-                raise InvalidArgument("privacy_level field must be of type PrivacyLevel")
+                raise InvalidArgument(
+                    "privacy_level field must be of type PrivacyLevel"
+                )
 
             payload["privacy_level"] = privacy_level.value
 
         if payload:
-            await self._state.http.edit_stage_instance(self.channel_id, **payload, reason=reason)
+            await self._state.http.edit_stage_instance(
+                self.channel_id, **payload, reason=reason
+            )
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(self, *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the stage instance.
@@ -174,7 +185,7 @@ class StageInstance(Hashable):
         use this.
 
         Parameters
-        -----------
+        ----------
         reason: :class:`str`
             The reason the stage instance was deleted. Shows up on the audit log.
 

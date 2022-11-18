@@ -25,8 +25,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, TypedDict, Union
+from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
+from .channel import ChannelType
 from .emoji import PartialEmoji
 
 ComponentType = Literal[1, 2, 3, 4]
@@ -36,59 +38,48 @@ InputTextStyle = Literal[1, 2]
 
 class ActionRow(TypedDict):
     type: Literal[1]
-    components: List[Component]
+    components: list[Component]
 
 
-class _ButtonComponentOptional(TypedDict, total=False):
-    custom_id: str
-    url: str
-    disabled: bool
-    emoji: PartialEmoji
-    label: str
-
-
-class ButtonComponent(_ButtonComponentOptional):
+class ButtonComponent(TypedDict):
+    custom_id: NotRequired[str]
+    url: NotRequired[str]
+    disabled: NotRequired[bool]
+    emoji: NotRequired[PartialEmoji]
+    label: NotRequired[str]
     type: Literal[2]
     style: ButtonStyle
 
 
-class _InputTextComponentOptional(TypedDict, total=False):
-    min_length: int
-    max_length: int
-    required: bool
-    placeholder: str
-    value: str
-
-
-class InputText(_InputTextComponentOptional):
+class InputText(TypedDict):
+    min_length: NotRequired[int]
+    max_length: NotRequired[int]
+    required: NotRequired[bool]
+    placeholder: NotRequired[str]
+    value: NotRequired[str]
     type: Literal[4]
     style: InputTextStyle
     custom_id: str
     label: str
 
 
-class _SelectMenuOptional(TypedDict, total=False):
-    placeholder: str
-    min_values: int
-    max_values: int
-    disabled: bool
-
-
-class _SelectOptionsOptional(TypedDict, total=False):
-    description: str
-    emoji: PartialEmoji
-
-
-class SelectOption(_SelectOptionsOptional):
+class SelectOption(TypedDict):
+    description: NotRequired[str]
+    emoji: NotRequired[PartialEmoji]
     label: str
     value: str
     default: bool
 
 
-class SelectMenu(_SelectMenuOptional):
-    type: Literal[3]
+class SelectMenu(TypedDict):
+    placeholder: NotRequired[str]
+    min_values: NotRequired[int]
+    max_values: NotRequired[int]
+    disabled: NotRequired[bool]
+    channel_types: NotRequired[list[ChannelType]]
+    options: NotRequired[list[SelectOption]]
+    type: Literal[3, 5, 6, 7, 8]
     custom_id: str
-    options: List[SelectOption]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]

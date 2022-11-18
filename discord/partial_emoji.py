@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -80,7 +80,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             Returns the emoji rendered for discord.
 
     Attributes
-    -----------
+    ----------
     name: Optional[:class:`str`]
         The custom emoji name, if applicable, or the unicode codepoint
         of the non-custom emoji. This can be ``None`` if the emoji
@@ -93,19 +93,21 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     __slots__ = ("animated", "name", "id", "_state")
 
-    _CUSTOM_EMOJI_RE = re.compile(r"<?(?P<animated>a)?:?(?P<name>\w+):(?P<id>[0-9]{13,20})>?")
+    _CUSTOM_EMOJI_RE = re.compile(
+        r"<?(?P<animated>a)?:?(?P<name>\w+):(?P<id>[0-9]{13,20})>?"
+    )
 
     if TYPE_CHECKING:
-        id: Optional[int]
+        id: int | None
 
-    def __init__(self, *, name: str, animated: bool = False, id: Optional[int] = None):
+    def __init__(self, *, name: str, animated: bool = False, id: int | None = None):
         self.animated = animated
         self.name = name
         self.id = id
-        self._state: Optional[ConnectionState] = None
+        self._state: ConnectionState | None = None
 
     @classmethod
-    def from_dict(cls: Type[PE], data: Union[PartialEmojiPayload, Dict[str, Any]]) -> PE:
+    def from_dict(cls: type[PE], data: PartialEmojiPayload | dict[str, Any]) -> PE:
         return cls(
             animated=data.get("animated", False),
             id=utils._get_as_snowflake(data, "id"),
@@ -113,7 +115,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         )
 
     @classmethod
-    def from_str(cls: Type[PE], value: str) -> PE:
+    def from_str(cls: type[PE], value: str) -> PE:
         """Converts a Discord string representation of an emoji to a :class:`PartialEmoji`.
 
         The formats accepted are:
@@ -128,12 +130,12 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         .. versionadded:: 2.0
 
         Parameters
-        ------------
+        ----------
         value: :class:`str`
             The string representation of an emoji.
 
         Returns
-        --------
+        -------
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
@@ -147,8 +149,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
         return cls(name=value, id=None, animated=False)
 
-    def to_dict(self) -> Dict[str, Any]:
-        o: Dict[str, Any] = {"name": self.name}
+    def to_dict(self) -> dict[str, Any]:
+        o: dict[str, Any] = {"name": self.name}
         if self.id:
             o["id"] = self.id
         if self.animated:
@@ -158,25 +160,37 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     def _to_partial(self) -> PartialEmoji:
         return self
 
+    def _to_forum_tag_payload(
+        self,
+    ) -> (
+        TypedDict("TagPayload", {"emoji_id": int, "emoji_name": None})
+        | TypedDict("TagPayload", {"emoji_id": None, "emoji_name": str})
+    ):
+        if self.id is None:
+            return {"emoji_id": None, "emoji_name": self.name}
+        else:
+            return {"emoji_id": self.id, "emoji_name": None}
+
     @classmethod
     def with_state(
-        cls: Type[PE],
+        cls: type[PE],
         state: ConnectionState,
         *,
         name: str,
         animated: bool = False,
-        id: Optional[int] = None,
+        id: int | None = None,
     ) -> PE:
         self = cls(name=name, animated=animated, id=id)
         self._state = state
         return self
 
     def __str__(self) -> str:
+        # Emoji won't render if the name is empty
+        name = self.name or "_"
         if self.id is None:
-            return self.name
-        if self.animated:
-            return f"<a:{self.name}:{self.id}>"
-        return f"<:{self.name}:{self.id}>"
+            return name
+        animated_tag = "a" if self.animated else ""
+        return f"<{animated_tag}:{name}:{self.id}>"
 
     def __repr__(self):
         return f"<{self.__class__.__name__} animated={self.animated} name={self.name!r} id={self.id}>"
@@ -196,11 +210,11 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return hash((self.id, self.name))
 
     def is_custom_emoji(self) -> bool:
-        """:class:`bool`: Checks if this is a custom non-Unicode emoji."""
+        """Checks if this is a custom non-Unicode emoji."""
         return self.id is not None
 
     def is_unicode_emoji(self) -> bool:
-        """:class:`bool`: Checks if this is a Unicode emoji."""
+        """Checks if this is a Unicode emoji."""
         return self.id is None
 
     def _as_reaction(self) -> str:
@@ -209,8 +223,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return f"{self.name}:{self.id}"
 
     @property
-    def created_at(self) -> Optional[datetime]:
-        """Optional[:class:`datetime.datetime`]: Returns the emoji's creation time in UTC, or None if Unicode emoji.
+    def created_at(self) -> datetime | None:
+        """Returns the emoji's creation time in UTC, or None if Unicode emoji.
 
         .. versionadded:: 1.6
         """
@@ -221,7 +235,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the URL of the emoji, if it is custom.
+        """Returns the URL of the emoji, if it is custom.
 
         If this isn't a custom emoji then an empty string is returned
         """

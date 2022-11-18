@@ -22,21 +22,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
-from typing import List, Literal, Optional, TypedDict
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
 from .member import MemberWithUser
 from .snowflake import Snowflake
 
-SupportedModes = Literal["xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"]
+SupportedModes = Literal[
+    "xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"
+]
 
 
-class _PartialVoiceStateOptional(TypedDict, total=False):
-    member: MemberWithUser
-    self_stream: bool
-
-
-class _VoiceState(_PartialVoiceStateOptional):
+class _VoiceState(TypedDict):
+    member: NotRequired[MemberWithUser]
+    self_stream: NotRequired[bool]
     user_id: Snowflake
     session_id: str
     deaf: bool
@@ -52,7 +53,7 @@ class GuildVoiceState(_VoiceState):
 
 
 class VoiceState(_VoiceState, total=False):
-    channel_id: Optional[Snowflake]
+    channel_id: Snowflake | None
     guild_id: Snowflake
 
 
@@ -68,7 +69,7 @@ class VoiceRegion(TypedDict):
 class VoiceServerUpdate(TypedDict):
     token: str
     guild_id: Snowflake
-    endpoint: Optional[str]
+    endpoint: str | None
 
 
 class VoiceIdentify(TypedDict):
@@ -82,5 +83,5 @@ class VoiceReady(TypedDict):
     ssrc: int
     ip: str
     port: int
-    modes: List[SupportedModes]
+    modes: list[SupportedModes]
     heartbeat_interval: int
