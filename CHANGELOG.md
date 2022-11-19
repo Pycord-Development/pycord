@@ -26,7 +26,7 @@ These changes are available on the `master` branch, but have not yet been releas
   order. ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
 - Support for new thread attributes `total_message_sent` and `is_pinned`.
   ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
-- Added `bridge_commands` attribute for access to bridge command objects.
+- Added `bridge_commands` attribute to `ext.bridge.Bot` for access to bridge command objects.
   ([#1787](https://github.com/Pycord-Development/pycord/pull/1787))
 
 ### Fixed
