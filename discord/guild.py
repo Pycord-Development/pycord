@@ -230,7 +230,6 @@ class Guild(Hashable):
         - ``PARTNERED``: Guild is a partnered server.
         - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
-        - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
