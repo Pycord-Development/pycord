@@ -26,6 +26,8 @@ These changes are available on the `master` branch, but have not yet been releas
   order. ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
 - Support for new thread attributes `total_message_sent` and `is_pinned`.
   ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Updated `Guild.features` to include new and previously missing features.
+  ([#1788](https://github.com/Pycord-Development/pycord/pull/1788))
 
 ### Fixed
 
