@@ -26,12 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 from .enums import ApplicationRoleConnectionMetadataType, try_enum
 from .utils import MISSING
 
 if TYPE_CHECKING:
     from .state import ConnectionState
-    from .types.guild import ApplicationRoleConnection as ApplicationRoleConnectionPayload
+    from .types.guild import (
+        ApplicationRoleConnection as ApplicationRoleConnectionPayload,
+    )
+
 
 class ApplicationRoleConnection:
     def __init__(
@@ -52,26 +56,27 @@ class ApplicationRoleConnection:
         self.description_localizations: dict[str, str] = description_localizations
 
     @classmethod
-    def from_dict(cls, data: ApplicationRoleConnectionPayload) -> ApplicationRoleConnection:
+    def from_dict(
+        cls, data: ApplicationRoleConnectionPayload
+    ) -> ApplicationRoleConnection:
         return cls(
-            type=try_enum(ApplicationRoleConnectionMetadataType, data['type']),
-            key=data['key'],
-            name=data['name'],
-            description=data['description'],
-            name_localizations=data.get('name_localizations'),
-            description_localizations=data.get('description_localizations'),
+            type=try_enum(ApplicationRoleConnectionMetadataType, data["type"]),
+            key=data["key"],
+            name=data["name"],
+            description=data["description"],
+            name_localizations=data.get("name_localizations"),
+            description_localizations=data.get("description_localizations"),
         )
 
     def to_dict(self) -> ApplicationRoleConnectionPayload:
         data = {
-            'type': self.type.value,
-            'key': self.key,
-            'name': self.name,
-            'description': self.description,
+            "type": self.type.value,
+            "key": self.key,
+            "name": self.name,
+            "description": self.description,
         }
         if self.name_localizations is not MISSING:
-            data['name_localizations'] = self.name_localizations
+            data["name_localizations"] = self.name_localizations
         if self.description_localizations is not MISSING:
-            data['description_localizations'] = self.description_localizations
+            data["description_localizations"] = self.description_localizations
         return data
-
