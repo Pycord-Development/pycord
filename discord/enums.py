@@ -888,6 +888,20 @@ class AutoModKeywordPresetType(Enum):
     slurs = 3
 
 
+class ApplicationRoleConnectionMetadataType(Enum):
+    """Application role connection metadata type"""
+    
+    integer_less_than_or_equal = 1
+    integer_greater_than_or_equal = 2
+    integer_equal = 3
+    integer_not_equal = 4
+    datetime_less_than_or_equal = 5
+    datetime_greater_than_or_equal = 6
+    boolean_equal = 7
+    boolean_not_equal = 8
+
+
+
 T = TypeVar("T")
 
 

@@ -56,6 +56,7 @@ if TYPE_CHECKING:
     from .file import File
     from .types import (
         appinfo,
+        application_role_connection,
         audit_log,
         automod,
         channel,
@@ -2805,6 +2806,31 @@ class HTTPClient:
             "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
             application_id=application_id,
             guild_id=guild_id,
+        )
+        return self.request(r, json=payload)
+
+    # Application Role Connections
+
+    def get_application_role_connection_metadata_records(
+        self,
+        application_id: Snowflake,
+    ) -> Response[application_role_connection.ApplicationRoleConnectionMetadata]:
+        r = Route(
+            "GET",
+            "/applications/{application_id}/role-connections/metadata",
+            application_id=application_id,
+        )
+        return self.request(r)
+
+    def update_application_role_connection_metadata_records(
+        self,
+        application_id: Snowflake,
+        payload,  # TODO: payload typehint, check return type
+    ) -> Response[None]:
+        r = Route(
+            "PUT",
+            "/applications/{application_id}/role-connections/metadata",
+            application_id=application_id,
         )
         return self.request(r, json=payload)
 
