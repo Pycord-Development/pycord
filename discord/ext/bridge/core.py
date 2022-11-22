@@ -68,6 +68,7 @@ __all__ = (
     "map_to",
     "guild_only",
     "has_permissions",
+    "is_nsfw",
 )
 
 
@@ -155,8 +156,8 @@ class BridgeCommand:
         ) or BridgeExtCommand(callback, **kwargs)
 
     @property
-    def name_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns name_localizations from :attr:`slash_variant`
+    def name_localizations(self) -> dict[str, str]:
+        """Returns name_localizations from :attr:`slash_variant`
 
         You can edit/set name_localizations directly with
 
@@ -173,8 +174,8 @@ class BridgeCommand:
         self.slash_variant.name_localizations = value
 
     @property
-    def description_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns description_localizations from :attr:`slash_variant`
+    def description_localizations(self) -> dict[str, str]:
+        """Returns description_localizations from :attr:`slash_variant`
 
         You can edit/set description_localizations directly with
 
@@ -433,6 +434,30 @@ def guild_only():
         from ..commands import guild_only
 
         return guild_only()(func)
+
+    return predicate
+
+
+def is_nsfw():
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord).
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`.
+
+    .. warning::
+
+        In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
+    """
+
+    def predicate(func: Callable | ApplicationCommand):
+        if isinstance(func, ApplicationCommand):
+            func.nsfw = True
+        else:
+            func.__nsfw__ = True
+
+        from ..commands import is_nsfw
+
+        return is_nsfw()(func)
 
     return predicate
 

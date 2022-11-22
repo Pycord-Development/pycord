@@ -92,7 +92,7 @@ class Flag:
 
     @property
     def required(self) -> bool:
-        """:class:`bool`: Whether the flag is required.
+        """Whether the flag is required.
 
         A required flag has no default value.
         """
@@ -497,7 +497,7 @@ class FlagConverter(metaclass=FlagsMeta):
 
     @classmethod
     def get_flags(cls) -> dict[str, Flag]:
-        """Dict[:class:`str`, :class:`Flag`]: A mapping of flag name to flag object this converter has."""
+        """A mapping of flag name to flag object this converter has."""
         return cls.__commands_flags__.copy()
 
     @classmethod

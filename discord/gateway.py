@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import asyncio
 import concurrent.futures
@@ -576,8 +577,8 @@ class DiscordWebSocket:
             del self._dispatch_listeners[index]
 
     @property
-    def latency(self):
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
+    def latency(self) -> float:
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
@@ -916,14 +917,14 @@ class DiscordVoiceWebSocket:
         _log.info("selected the voice protocol for use (%s)", mode)
 
     @property
-    def latency(self):
-        """:class:`float`: Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds."""
+    def latency(self) -> float:
+        """Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds."""
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
     @property
-    def average_latency(self):
-        """:class:`list`: Average of last 20 HEARTBEAT latencies."""
+    def average_latency(self) -> list[float] | float:
+        """Average of last 20 HEARTBEAT latencies."""
         heartbeat = self._keep_alive
         if heartbeat is None or not heartbeat.recent_ack_latencies:
             return float("inf")

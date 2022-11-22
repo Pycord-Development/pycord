@@ -6,6 +6,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when
 possible (see our [Version Guarantees] for more info).
 
+## [Unreleased]
+
+These changes are available on the `master` branch, but have not yet been released.
+
+### Added
+
+- New brief Attribute to BridgeSlashCommand.
+  ([#1676](https://github.com/Pycord-Development/pycord/pull/1676))
+- Python 3.11 support. ([#1680](https://github.com/Pycord-Development/pycord/pull/1680))
+- New select types `user`, `role`, `mentionable`, and `channel` - Along with their
+  respective types and shortcut decorators.
+  ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
+- Added support for age-restricted (NSFW) commands.
+  ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
+- New flags: `PublicUserFlags.active_developer` & `ApplicationFlags.active`.
+  ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
+- Support for new forum features including tags, default slowmode, and default sort
+  order. ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Support for new thread attributes `total_message_sent` and `is_pinned`.
+  ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Added `bridge_commands` attribute to `ext.bridge.Bot` for access to bridge command
+  objects. ([#1787](https://github.com/Pycord-Development/pycord/pull/1787))
+
+### Fixed
+
+- Fix bridge.has_permissions.
+  ([#1695](https://github.com/Pycord-Development/pycord/pull/1695))
+- Fix audit log overwrite type always resulting in `None`.
+  ([#1716](https://github.com/Pycord-Development/pycord/pull/1716))
+- Fixed error when using `suppress` kwarg in `send()`.
+  ([#1719](https://github.com/Pycord-Development/pycord/pull/1719) &
+  [#1723](https://github.com/Pycord-Development/pycord/pull/1723))
+
+### Changed
+
+- `get_application_command()` type kwarg now defaults to `ApplicationCommand`, so all
+  command types can be retrieved by default.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+- `get_application_command()` now supports retrieving subcommands and subcommand groups.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+
+### Removed
+
+- Removed the guild feature `PRIVATE_THREADS` due to paywall limitation removal.
+  ([#1789](https://github.com/Pycord-Development/pycord/pull/1789))
+
 ## [2.2.2] - 2022-10-05
 
 ### Fixed

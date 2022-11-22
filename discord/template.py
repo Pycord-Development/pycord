@@ -307,7 +307,7 @@ class Template:
 
     @property
     def url(self) -> str:
-        """:class:`str`: The template url.
+        """The template url.
 
         .. versionadded:: 2.0
         """

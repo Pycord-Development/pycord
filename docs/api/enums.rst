@@ -113,7 +113,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: forum
 
-        User can only write in threads, similar functionality to a forum, currently in experiment.
+        User can only write in threads, similar functionality to a forum.
 
         .. versionadded:: 2.0
 
@@ -292,6 +292,9 @@ of :class:`enum.Enum`.
     .. attribute:: bug_hunter_level_2
 
         The user is a Bug Hunter Level 2.
+    .. attribute:: underage_deleted
+
+        The user was deleted for being underage.
     .. attribute:: verified_bot
 
         The user is a Verified Bot.
@@ -307,6 +310,9 @@ of :class:`enum.Enum`.
     .. attribute:: spammer
 
         The user is disabled for being a spammer.
+    .. attribute:: active_developer
+
+        The user is an Active Developer.
 
 .. class:: ActivityType
 
@@ -416,10 +422,28 @@ of :class:`enum.Enum`.
         Represents a button component.
     .. attribute:: select
 
-        Represents a select component.
+        Represents a string select component.
+
+        .. deprecated:: 2.3
+            Use :attr:`ComponentType.string_select` instead.
+    .. attribute:: string_select
+
+        Represents a string select component.
     .. attribute:: input_text
 
         Represents an input_text component.
+    .. attribute:: user_select
+
+        Represents a user select component.
+    .. attribute:: role_select
+
+        Represents a role select component.
+    .. attribute:: mentionable_select
+
+        Represents a mentionable select component.
+    .. attribute:: channel_select
+
+        Represents a channel select component.
 
 .. class:: ButtonStyle
 

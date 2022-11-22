@@ -222,6 +222,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.guild_only: bool | None = getattr(
             func, "__guild_only__", kwargs.get("guild_only", None)
         )
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -449,7 +450,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered."""
+        """Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
     def before_invoke(self, coro):
@@ -552,7 +553,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def full_parent_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified parent command name.
+        """Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
         in ``/one two three`` the parent name would be ``one two``.
@@ -567,7 +568,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
+        """Retrieves the fully qualified command name.
 
         This is the full parent name with the command name as well.
         For example, in ``/one two three`` the qualified name would be
@@ -583,7 +584,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_id(self) -> int:
-        """:class:`int`: Retrieves the fully qualified command ID.
+        """Retrieves the fully qualified command ID.
 
         This is the root parent ID. For example, in ``/one two three``
         the qualified ID would return ``one.id``.
@@ -629,6 +630,9 @@ class SlashCommand(ApplicationCommand):
         Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
@@ -849,6 +853,9 @@ class SlashCommand(ApplicationCommand):
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
 
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
+
         if self.default_member_permissions is not None:
             as_dict[
                 "default_member_permissions"
@@ -1060,6 +1067,9 @@ class SlashCommandGroup(ApplicationCommand):
         isn't one.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1132,6 +1142,7 @@ class SlashCommandGroup(ApplicationCommand):
             "default_member_permissions", None
         )
         self.guild_only: bool | None = kwargs.get("guild_only", None)
+        self.nsfw: bool | None = kwargs.get("nsfw", None)
 
         self.name_localizations: dict[str, str] | None = kwargs.get(
             "name_localizations", None
@@ -1160,6 +1171,9 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
+
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
             as_dict[
@@ -1208,6 +1222,9 @@ class SlashCommandGroup(ApplicationCommand):
             This will be a global command if ``None`` is passed.
         guild_only: :class:`bool`
             Whether the command should only be usable inside a guild.
+        nsfw: :class:`bool`
+            Whether the command should be restricted to 18+ channels and users.
+            Apps intending to be listed in the App Directory cannot have NSFW commands.
         default_member_permissions: :class:`~discord.Permissions`
             The default permissions a member needs to be able to run the command.
         checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1377,6 +1394,9 @@ class ContextMenuCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
@@ -1475,6 +1495,9 @@ class ContextMenuCommand(ApplicationCommand):
 
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
+
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
             as_dict[

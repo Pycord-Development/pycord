@@ -64,7 +64,7 @@ class Button(Item[V]):
     disabled: :class:`bool`
         Whether the button is disabled or not.
     label: Optional[:class:`str`]
-        The label of the button, if any.
+        The label of the button, if any. Maximum of 80 chars.
     emoji: Optional[Union[:class:`.PartialEmoji`, :class:`.Emoji`, :class:`str`]]
         The emoji of the button, if available.
     row: Optional[:class:`int`]
@@ -139,7 +139,7 @@ class Button(Item[V]):
 
     @property
     def style(self) -> ButtonStyle:
-        """:class:`discord.ButtonStyle`: The style of the button."""
+        """The style of the button."""
         return self._underlying.style
 
     @style.setter
@@ -148,7 +148,7 @@ class Button(Item[V]):
 
     @property
     def custom_id(self) -> str | None:
-        """Optional[:class:`str`]: The ID of the button that gets received during an interaction.
+        """The ID of the button that gets received during an interaction.
 
         If this button is for a URL, it does not have a custom ID.
         """
@@ -164,7 +164,7 @@ class Button(Item[V]):
 
     @property
     def url(self) -> str | None:
-        """Optional[:class:`str`]: The URL this button sends you to."""
+        """The URL this button sends you to."""
         return self._underlying.url
 
     @url.setter
@@ -175,7 +175,7 @@ class Button(Item[V]):
 
     @property
     def disabled(self) -> bool:
-        """:class:`bool`: Whether the button is disabled or not."""
+        """Whether the button is disabled or not."""
         return self._underlying.disabled
 
     @disabled.setter
@@ -184,7 +184,7 @@ class Button(Item[V]):
 
     @property
     def label(self) -> str | None:
-        """Optional[:class:`str`]: The label of the button, if available."""
+        """The label of the button, if available."""
         return self._underlying.label
 
     @label.setter
@@ -195,7 +195,7 @@ class Button(Item[V]):
 
     @property
     def emoji(self) -> PartialEmoji | None:
-        """Optional[:class:`.PartialEmoji`]: The emoji of the button, if available."""
+        """The emoji of the button, if available."""
         return self._underlying.emoji
 
     @emoji.setter

@@ -444,6 +444,7 @@ class View:
         )
 
     def refresh(self, components: list[Component]):
+
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], Item] = {
             (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
@@ -483,15 +484,15 @@ class View:
             self.__cancel_callback = None
 
     def is_finished(self) -> bool:
-        """:class:`bool`: Whether the view has finished interacting."""
+        """Whether the view has finished interacting."""
         return self.__stopped.done()
 
     def is_dispatching(self) -> bool:
-        """:class:`bool`: Whether the view has been added for dispatching purposes."""
+        """Whether the view has been added for dispatching purposes."""
         return self.__cancel_callback is not None
 
     def is_persistent(self) -> bool:
-        """:class:`bool`: Whether the view is set up as persistent.
+        """Whether the view is set up as persistent.
 
         A persistent view has all their components with a set ``custom_id`` and
         a :attr:`timeout` set to ``None``.

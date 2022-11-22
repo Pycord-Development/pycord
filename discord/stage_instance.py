@@ -118,7 +118,7 @@ class StageInstance(Hashable):
 
     @cached_slot_property("_cs_channel")
     def channel(self) -> StageChannel | None:
-        """Optional[:class:`StageChannel`]: The channel that stage instance is running in."""
+        """The channel that stage instance is running in."""
         # the returned channel will always be a StageChannel or None
         return self._state.get_channel(self.channel_id)  # type: ignore
 
