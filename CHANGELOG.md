@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
 - Added `bridge_commands` attribute to `ext.bridge.Bot` for access to bridge command
   objects. ([#1787](https://github.com/Pycord-Development/pycord/pull/1787))
+- Updated `Guild.features` to include new and previously missing features.
+  ([#1788](https://github.com/Pycord-Development/pycord/pull/1788))
 
 ### Fixed
 
