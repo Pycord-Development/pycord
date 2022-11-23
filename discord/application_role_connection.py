@@ -30,8 +30,7 @@ from .enums import ApplicationRoleConnectionMetadataType, try_enum
 from .utils import MISSING
 
 if TYPE_CHECKING:
-    from .state import ConnectionState
-    from .types.guild import (
+    from .types.application_role_connection import (
         ApplicationRoleConnection as ApplicationRoleConnectionPayload,
     )
 
