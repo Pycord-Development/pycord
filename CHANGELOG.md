@@ -10,6 +10,8 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+## [2.3.0] - 2022-11-23
+
 ### Added
 
 - New brief Attribute to BridgeSlashCommand.
