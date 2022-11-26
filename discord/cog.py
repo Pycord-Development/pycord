@@ -232,7 +232,11 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
 
-        name_filter = lambda c: "app" if isinstance(c, ApplicationCommand) else ("bridge" if not hasattr(c, "add_to") else "ext")
+        name_filter = (
+            lambda c: "app"
+            if isinstance(c, ApplicationCommand)
+            else ("bridge" if not hasattr(c, "add_to") else "ext")
+        )
 
         lookup = {
             f"{name_filter(cmd)}_{cmd.qualified_name}": cmd
@@ -248,7 +252,9 @@ class CogMeta(type):
             ):
                 command.guild_ids = new_cls.__cog_guild_ids__
 
-            if not isinstance(command, SlashCommandGroup) and not hasattr(command, "add_to"):
+            if not isinstance(command, SlashCommandGroup) and not hasattr(
+                command, "add_to"
+            ):
                 # ignore bridge commands
                 cmd = getattr(new_cls, command.callback.__name__, None)
                 if hasattr(cmd, "add_to"):
