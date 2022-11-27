@@ -191,6 +191,10 @@ class BridgeCommand:
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
 
+    @property
+    def qualified_name(self) -> str:
+        return self.slash_variant.qualified_name
+
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
 
