@@ -3,12 +3,12 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
   - repo: https://github.com/PyCQA/autoflake
-    rev: v1.7.7
+    rev: v2.0.0
     hooks:
       - id: autoflake
   #        args:
@@ -82,7 +82,7 @@ repos:
       - id: prettier
         args: [--prose-wrap=always, --print-width=88]
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: 93b15ca # TODO: Change this when v8.0 is released
+    rev: v0.7.2 # TODO: Change this when v8.0 is released
     hooks:
       - id: pydocstringformatter
         args:
