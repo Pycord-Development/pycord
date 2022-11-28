@@ -438,7 +438,8 @@ class SelectOption:
 
     @property
     def emoji(self) -> str | Emoji | PartialEmoji | None:
-        """The emoji of the option, if available."""
+        """The emoji of the option, if available.
+        """
         return self._emoji
 
     @emoji.setter

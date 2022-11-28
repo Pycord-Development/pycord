@@ -31,7 +31,8 @@ async def finished_callback(sink, channel: discord.TextChannel, *args):
 
 @bot.command()
 async def start(ctx: discord.ApplicationContext, sink: Sinks):
-    """Record your voice!"""
+    """Record your voice!
+    """
     voice = ctx.author.voice
 
     if not voice:
@@ -51,7 +52,8 @@ async def start(ctx: discord.ApplicationContext, sink: Sinks):
 
 @bot.command()
 async def stop(ctx: discord.ApplicationContext):
-    """Stop recording."""
+    """Stop recording.
+    """
     if ctx.guild.id in connections:
         vc = connections[ctx.guild.id]
         vc.stop_recording()

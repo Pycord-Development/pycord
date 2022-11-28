@@ -177,7 +177,8 @@ class Cooldown:
         self._tokens -= 1
 
     def reset(self) -> None:
-        """Reset the cooldown to its initial state."""
+        """Reset the cooldown to its initial state.
+        """
         self._tokens = self.rate
         self._last = 0.0
 

@@ -255,22 +255,26 @@ class Thread(Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type."""
+        """The channel's Discord type.
+        """
         return self._type
 
     @property
     def parent(self) -> TextChannel | ForumChannel | None:
-        """The parent channel this thread belongs to."""
+        """The parent channel this thread belongs to.
+        """
         return self.guild.get_channel(self.parent_id)  # type: ignore
 
     @property
     def owner(self) -> Member | None:
-        """The member this thread belongs to."""
+        """The member this thread belongs to.
+        """
         return self.guild.get_member(self.owner_id)
 
     @property
     def mention(self) -> str:
-        """The string that allows you to mention the thread."""
+        """The string that allows you to mention the thread.
+        """
         return f"<#{self.id}>"
 
     @property
@@ -923,5 +927,6 @@ class ThreadMember(Hashable):
 
     @property
     def thread(self) -> Thread:
-        """The thread this member belongs to."""
+        """The thread this member belongs to.
+        """
         return self.parent

@@ -210,11 +210,13 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return hash((self.id, self.name))
 
     def is_custom_emoji(self) -> bool:
-        """Checks if this is a custom non-Unicode emoji."""
+        """Checks if this is a custom non-Unicode emoji.
+        """
         return self.id is not None
 
     def is_unicode_emoji(self) -> bool:
-        """Checks if this is a Unicode emoji."""
+        """Checks if this is a Unicode emoji.
+        """
         return self.id is None
 
     def _as_reaction(self) -> str:
