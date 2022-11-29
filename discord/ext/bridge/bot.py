@@ -1,19 +1,15 @@
 """
 The MIT License (MIT)
-
 Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
-
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
 the rights to use, copy, modify, merge, publish, distribute, sublicense,
 and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -82,7 +78,6 @@ class BotBase(ABC):
     def bridge_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
         the internal command list via :meth:`~.Bot.add_bridge_command`.
-
         Returns
         -------
         Callable[..., :class:`BridgeCommand`]
@@ -99,7 +94,6 @@ class BotBase(ABC):
 
     def bridge_group(self, **kwargs):
         """A decorator that is used to wrap a function as a bridge command group.
-
         Parameters
         ----------
         kwargs: Optional[Dict[:class:`str`, Any]]
@@ -116,11 +110,9 @@ class BotBase(ABC):
 
 class Bot(BotBase, ExtBot):
     """Represents a discord bot, with support for cross-compatibility between command types.
-
     This class is a subclass of :class:`.ext.commands.Bot` and as a result
     anything that you can do with a :class:`.ext.commands.Bot` you can do with
     this bot.
-
     .. versionadded:: 2.0
     """
 
@@ -128,6 +120,5 @@ class Bot(BotBase, ExtBot):
 class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
     :class:`.ext.commands.AutoShardedBot` instead.
-
     .. versionadded:: 2.0
     """
