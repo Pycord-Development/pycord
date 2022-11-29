@@ -177,8 +177,14 @@ class AutoModTriggerMetadata:
     ----------
     keyword_filter: List[:class:`str`]
         A list of substrings to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword`.
+    regex_patterns: List[:class:`str`]
+        A list of regex patterns to filter. Only for triggeres of type :attr:`AutoModTriggerType.keyword`.
     presets: List[:class:`AutoModKeywordPresetType`]
         A list of keyword presets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
+    allow_list: List[:class:`str`]
+        A list of substrings to allow, overriding keyword and regex matches. Only for triggeres of type :attr:`AutoModTriggerType.keyword` and :attr:`AutoModTriggerType.keyword_preset`.
+    mention_total_limit: :class:`int`
+        The total number of unique role and user mentions allowed.
     """
 
     # maybe add a table of action types and attributes?
