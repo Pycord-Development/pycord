@@ -195,7 +195,7 @@ class AutoModTriggerMetadata:
         "regex_patterns",
         "presets",
         "allow_list",
-        "mention_total_limit"
+        "mention_total_limit",
     )
 
     def __init__(
@@ -204,7 +204,7 @@ class AutoModTriggerMetadata:
         regex_patterns: list[str] = MISSING,
         presets: list[AutoModKeywordPresetType] = MISSING,
         allow_list: list[str] = MISSING,
-        mention_total_limit: int = MISSING
+        mention_total_limit: int = MISSING,
     ):
         self.keyword_filter = keyword_filter
         self.regex_patterns = regex_patterns
@@ -217,16 +217,16 @@ class AutoModTriggerMetadata:
 
         if self.keyword_filter is not MISSING:
             data["keyword_filter"] = self.keyword_filter
-        
+
         if self.regex_patterns is not MISSING:
             data["regex_patterns"] = self.regex_patterns
 
         if self.presets is not MISSING:
             data["presets"] = [wordset.value for wordset in self.presets]
-        
+
         if self.allow_list is not MISSING:
             data["allow_list"] = self.allow_list
-        
+
         if self.mention_total_limit is not MISSING:
             data["mention_total_limit"] = self.mention_total_limit
 
@@ -238,7 +238,7 @@ class AutoModTriggerMetadata:
 
         if (keyword_filter := data.get("keyword_filter")) is not None:
             kwargs["keyword_filter"] = keyword_filter
-        
+
         if (regex_patterns := data.get("regex_patterns")) is not None:
             kwargs["regex_patterns"] = regex_patterns
 
@@ -246,10 +246,10 @@ class AutoModTriggerMetadata:
             kwargs["presets"] = [
                 try_enum(AutoModKeywordPresetType, wordset) for wordset in presets
             ]
-        
+
         if (allow_list := data.get("allow_list")) is not None:
             kwargs["allow_list"] = allow_list
-        
+
         if (mention_total_limit := data.get("mention_total_limit")) is not None:
             kwargs["mention_total_limit"] = mention_total_limit
 
@@ -261,7 +261,7 @@ class AutoModTriggerMetadata:
             "regex_patterns",
             "presets",
             "allow_list",
-            "mention_total_limit"
+            "mention_total_limit",
         )
         inner = []
 

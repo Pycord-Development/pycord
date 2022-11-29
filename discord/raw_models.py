@@ -464,7 +464,9 @@ class AutoModActionExecutionEvent:
     def __init__(self, state: ConnectionState, data: AutoModActionExecution) -> None:
         self.action: AutoModAction = AutoModAction.from_dict(data["action"])
         self.rule_id: int = int(data["rule_id"])
-        self.rule_trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, int(data["rule_trigger_type"]))
+        self.rule_trigger_type: AutoModTriggerType = try_enum(
+            AutoModTriggerType, int(data["rule_trigger_type"])
+        )
         self.guild_id: int = int(data["guild_id"])
         self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
