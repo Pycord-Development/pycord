@@ -95,8 +95,7 @@ class Reaction:
 
     # TODO: typeguard
     def is_custom_emoji(self) -> bool:
-        """If this is a custom emoji.
-        """
+        """If this is a custom emoji."""
         return not isinstance(self.emoji, str)
 
     def __eq__(self, other: Any) -> bool:

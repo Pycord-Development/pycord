@@ -60,8 +60,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def join(self, ctx: commands.Context, *, channel: discord.VoiceChannel):
-        """Joins a voice channel
-        """
+        """Joins a voice channel"""
 
         if ctx.voice_client is not None:
             return await ctx.voice_client.move_to(channel)
@@ -70,8 +69,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def play(self, ctx: commands.Context, *, query: str):
-        """Plays a file from the local filesystem
-        """
+        """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
         ctx.voice_client.play(
@@ -82,8 +80,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def yt(self, ctx: commands.Context, *, url: str):
-        """Plays from a url (almost anything youtube_dl supports)
-        """
+        """Plays from a url (almost anything youtube_dl supports)"""
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
@@ -95,8 +92,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def stream(self, ctx: commands.Context, *, url: str):
-        """Streams from a url (same as yt, but doesn't predownload)
-        """
+        """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
@@ -108,8 +104,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def volume(self, ctx: commands.Context, volume: int):
-        """Changes the player's volume
-        """
+        """Changes the player's volume"""
 
         if ctx.voice_client is None:
             return await ctx.send("Not connected to a voice channel.")
@@ -119,8 +114,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx: commands.Context):
-        """Stops and disconnects the bot from voice
-        """
+        """Stops and disconnects the bot from voice"""
 
         await ctx.voice_client.disconnect(force=True)
 

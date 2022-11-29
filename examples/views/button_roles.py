@@ -16,8 +16,7 @@ role_ids = [...]
 
 class RoleButton(discord.ui.Button):
     def __init__(self, role: discord.Role):
-        """A button for one role. `custom_id` is needed for persistent views.
-        """
+        """A button for one role. `custom_id` is needed for persistent views."""
         super().__init__(
             label=role.name,
             style=discord.ButtonStyle.primary,
@@ -72,8 +71,7 @@ class ButtonRoleCog(commands.Cog):
     # Pass a list of guild IDs to restrict usage to the supplied guild IDs.
     @commands.slash_command(guild_ids=[...], description="Post the button role message")
     async def post(self, ctx: discord.ApplicationContext):
-        """Slash command to post a new view with a button for each role.
-        """
+        """Slash command to post a new view with a button for each role."""
 
         # timeout is None because we want this view to be persistent.
         view = discord.ui.View(timeout=None)

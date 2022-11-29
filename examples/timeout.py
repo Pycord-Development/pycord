@@ -9,8 +9,7 @@ bot = discord.Bot(debug_guilds=[...])
 async def timeout(
     ctx: discord.ApplicationContext, member: discord.Member, minutes: int
 ):
-    """Apply a timeout to a member.
-    """
+    """Apply a timeout to a member."""
 
     duration = datetime.timedelta(minutes=minutes)
     await member.timeout_for(duration)

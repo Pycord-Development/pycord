@@ -42,8 +42,7 @@ class BotBase(ABC):
 
     @property
     def bridge_commands(self) -> list[BridgeCommand | BridgeCommandGroup]:
-        """Returns all of the bot's bridge commands.
-        """
+        """Returns all of the bot's bridge commands."""
 
         if not (cmds := getattr(self, "_bridge_commands", None)):
             self._bridge_commands = cmds = []

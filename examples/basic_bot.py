@@ -30,15 +30,13 @@ async def on_ready():
 
 @bot.command()
 async def add(ctx: commands.Context, left: int, right: int):
-    """Adds two numbers together.
-    """
+    """Adds two numbers together."""
     await ctx.send(str(left + right))
 
 
 @bot.command()
 async def roll(ctx: commands.Context, dice: str):
-    """Rolls a die in NdN format.
-    """
+    """Rolls a die in NdN format."""
     try:
         rolls, limit = map(int, dice.split("d"))
     except ValueError:
@@ -52,23 +50,20 @@ async def roll(ctx: commands.Context, dice: str):
 
 @bot.command(description="For when you wanna settle the score some other way")
 async def choose(ctx: commands.Context, *choices: str):
-    """Chooses between multiple choices.
-    """
+    """Chooses between multiple choices."""
     await ctx.send(random.choice(choices))
 
 
 @bot.command()
 async def repeat(ctx: commands.Context, times: int, *, content: str = "repeating..."):
-    """Repeats a message multiple times.
-    """
+    """Repeats a message multiple times."""
     for _ in range(times):
         await ctx.send(content)
 
 
 @bot.command()
 async def joined(ctx: commands.Context, member: discord.Member):
-    """Says when a member joined.
-    """
+    """Says when a member joined."""
     await ctx.send(f"{member.name} joined in {member.joined_at}")
 
 
@@ -86,8 +81,7 @@ async def cool(ctx: commands.Context):
 
 @cool.command(name="bot")
 async def _bot(ctx: commands.Context):
-    """Is the bot cool?
-    """
+    """Is the bot cool?"""
     await ctx.send("Yes, the bot is cool.")
 
 

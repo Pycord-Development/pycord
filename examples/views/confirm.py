@@ -49,8 +49,7 @@ bot = Bot()
 
 @bot.command()
 async def ask(ctx: commands.Context):
-    """Asks the user a question to confirm something.
-    """
+    """Asks the user a question to confirm something."""
     # We create the View and assign it to a variable so that we can wait for it later.
     view = Confirm()
     await ctx.send("Do you want to continue?", view=view)
