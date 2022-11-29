@@ -39,7 +39,7 @@ from .enums import (
 from .mixins import Hashable
 from .object import Object
 
-__all__ = ("AutoModRule",)
+__all__ = ("AutoModRule", "AutoModAction",)
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -176,13 +176,18 @@ class AutoModTriggerMetadata:
     Attributes
     ----------
     keyword_filter: List[:class:`str`]
-        A list of substrings to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword`.
+        A list of substrings to filter.
+        Only for triggers of type :attr:`AutoModTriggerType.keyword`.
     regex_patterns: List[:class:`str`]
-        A list of regex patterns to filter. Only for triggeres of type :attr:`AutoModTriggerType.keyword`.
+        A list of regex patterns to filter using Rust-flavored regex, which is not
+        fully compatible with regex syntax supported by the builtin `re` module.
+        Only for triggers of type :attr:`AutoModTriggerType.keyword`.
     presets: List[:class:`AutoModKeywordPresetType`]
-        A list of keyword presets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
+        A list of keyword presets to filter.
+        Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
     allow_list: List[:class:`str`]
-        A list of substrings to allow, overriding keyword and regex matches. Only for triggeres of type :attr:`AutoModTriggerType.keyword` and :attr:`AutoModTriggerType.keyword_preset`.
+        A list of substrings to allow, overriding keyword and regex matches.
+        Only for triggers of type :attr:`AutoModTriggerType.keyword` and :attr:`AutoModTriggerType.keyword_preset`.
     mention_total_limit: :class:`int`
         The total number of unique role and user mentions allowed.
     """
