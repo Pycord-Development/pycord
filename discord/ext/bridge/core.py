@@ -1,19 +1,15 @@
 """
 The MIT License (MIT)
-
 Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
-
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
 the rights to use, copy, modify, merge, publish, distribute, sublicense,
 and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -127,7 +123,6 @@ class BridgeExtGroup(BridgeExtCommand, Group):
 
 class BridgeCommand:
     """Compatibility class between prefixed-based commands and slash commands.
-
     Parameters
     ----------
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
@@ -137,7 +132,6 @@ class BridgeCommand:
         Parent of the BridgeCommand.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
-
     Attributes
     ----------
     slash_variant: :class:`.BridgeSlashCommand`
@@ -158,11 +152,8 @@ class BridgeCommand:
     @property
     def name_localizations(self) -> dict[str, str]:
         """Returns name_localizations from :attr:`slash_variant`
-
         You can edit/set name_localizations directly with
-
         .. code-block:: python3
-
             bridge_command.name_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
@@ -176,11 +167,8 @@ class BridgeCommand:
     @property
     def description_localizations(self) -> dict[str, str]:
         """Returns description_localizations from :attr:`slash_variant`
-
         You can edit/set description_localizations directly with
-
         .. code-block:: python3
-
             bridge_command.description_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
@@ -197,7 +185,6 @@ class BridgeCommand:
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
-
         Parameters
         ----------
         bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
@@ -215,20 +202,16 @@ class BridgeCommand:
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
-
         This error handler is limited to the command it is defined to.
         However, higher scope handlers (per-cog and global) are still
         invoked afterwards as a catch-all. This handler also functions as
         the handler for both the prefixed and slash versions of the command.
-
         This error handler takes two parameters, a :class:`.BridgeContext` and
         a :class:`~discord.DiscordException`.
-
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the local error handler.
-
         Raises
         ------
         TypeError
@@ -241,18 +224,14 @@ class BridgeCommand:
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.
-
         This hook is called directly before the command is called, making
         it useful for any sort of set up required. This hook is called
         for both the prefixed and slash versions of the command.
-
         This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
-
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
-
         Raises
         ------
         TypeError
@@ -265,18 +244,14 @@ class BridgeCommand:
 
     def after_invoke(self, coro):
         """A decorator that registers a coroutine as a post-invoke hook.
-
         This hook is called directly after the command is called, making it
         useful for any sort of clean up required. This hook is called for
         both the prefixed and slash versions of the command.
-
         This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
-
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
-
         Raises
         ------
         TypeError
@@ -290,7 +265,6 @@ class BridgeCommand:
 
 class BridgeCommandGroup(BridgeCommand):
     """Compatibility class between prefixed-based commands and slash commands.
-
     Parameters
     ----------
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
@@ -298,7 +272,6 @@ class BridgeCommandGroup(BridgeCommand):
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
-
     Attributes
     ----------
     slash_variant: :class:`.SlashCommandGroup`
@@ -326,7 +299,6 @@ class BridgeCommandGroup(BridgeCommand):
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.
-
         Parameters
         ----------
         kwargs: Optional[Dict[:class:`str`, Any]]
@@ -355,7 +327,6 @@ class BridgeCommandGroup(BridgeCommand):
 
 def bridge_command(**kwargs):
     """A decorator that is used to wrap a function as a bridge command.
-
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
@@ -370,7 +341,6 @@ def bridge_command(**kwargs):
 
 def bridge_group(**kwargs):
     """A decorator that is used to wrap a function as a bridge command group.
-
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
@@ -385,32 +355,24 @@ def bridge_group(**kwargs):
 
 def map_to(name, description=None):
     """To be used with bridge command groups, map the main command to a slash subcommand.
-
     Parameters
     ----------
     name: :class:`str`
         The new name of the mapped command.
     description: Optional[:class:`str`]
         The new description of the mapped command.
-
     Example
     -------
-
     .. code-block:: python3
-
         @bot.bridge_group()
         @bridge.map_to("show")
         async def config(ctx: BridgeContext):
             ...
-
         @config.command()
         async def toggle(ctx: BridgeContext):
             ...
-
     Prefixed commands will not be affected, but slash commands will appear as:
-
     .. code-block::
-
         /config show
         /config toggle
     """
@@ -425,7 +387,6 @@ def map_to(name, description=None):
 def guild_only():
     """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
     that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord).
-
     Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`.
     """
 
@@ -445,11 +406,8 @@ def guild_only():
 def is_nsfw():
     """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
     that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord).
-
     Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`.
-
     .. warning::
-
         In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
     """
 
@@ -470,10 +428,8 @@ def has_permissions(**perms: dict[str, bool]):
     r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
-
     Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions`
     and :func:`discord.commands.default_permissions`.
-
     Parameters
     ----------
     \*\*perms: Dict[:class:`str`, :class:`bool`]
