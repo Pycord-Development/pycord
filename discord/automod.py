@@ -39,7 +39,10 @@ from .enums import (
 from .mixins import Hashable
 from .object import Object
 
-__all__ = ("AutoModRule", "AutoModAction",)
+__all__ = (
+    "AutoModRule",
+    "AutoModAction",
+)
 
 if TYPE_CHECKING:
     from .abc import Snowflake
