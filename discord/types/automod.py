@@ -27,7 +27,7 @@ from typing import Literal
 from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 
-AutoModTriggerType = Literal[1, 2, 3, 4, 5]
+AutoModTriggerType = Literal[1, 3, 4, 5]
 
 AutoModEventType = Literal[1]
 
@@ -38,7 +38,10 @@ AutoModKeywordPresetType = Literal[1, 2, 3]
 
 class AutoModTriggerMetadata(TypedDict, total=False):
     keyword_filter: list[str]
+    regex_patterns: list[str]
     presets: list[AutoModKeywordPresetType]
+    allow_list: list[str]
+    mention_total_limit: int
 
 
 class AutoModActionMetadata(TypedDict, total=False):
