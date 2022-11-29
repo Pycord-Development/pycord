@@ -27,7 +27,7 @@ from typing import Literal
 from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 
-AutoModTriggerType = Literal[1, 3, 4, 5]
+AutoModTriggerType = Literal[1, 2, 3, 4, 5]
 
 AutoModEventType = Literal[1]
 
