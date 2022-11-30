@@ -12,8 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`,
-  and `mention_total_limit`; and added the `mention_spam` trigger type.
+- Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
+  `mention_total_limit`; and added the `mention_spam` trigger type.
   ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
 
 ## [2.3.1] - 2022-11-27
