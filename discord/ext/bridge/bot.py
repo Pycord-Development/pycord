@@ -44,7 +44,7 @@ class BotBase(ABC):
     def bridge_commands(self) -> list[BridgeCommand | BridgeCommandGroup]:
         """Returns all of the bot's bridge commands."""
 
-        if cmds := getattr(self, "_bridge_commands", []):
+        if not (cmds := getattr(self, "_bridge_commands", None)):
             self._bridge_commands = cmds = []
 
         return cmds
@@ -73,6 +73,10 @@ class BotBase(ABC):
         """
         # Ignore the type hinting error here. All subclasses of BotBase pass the type checks.
         command.add_to(self)  # type: ignore
+
+        if getattr(self, "_bridge_commands", None) is None:
+            self._bridge_commands = []
+
         self._bridge_commands.append(command)
 
     def bridge_command(self, **kwargs):
