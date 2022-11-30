@@ -51,7 +51,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: attachment
 
-        An attachment. Currently in beta.
+        An attachment.
 
 .. class:: ChannelType
 
