@@ -254,6 +254,8 @@ class PageGroup:
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    use_styled_buttons: :class:`bool`
+        The same as ``use_default_buttons`` but uses emojis for labels
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
     loop_pages: :class:`bool`
@@ -264,7 +266,7 @@ class PageGroup:
         Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
         A list of PaginatorButtons to initialize the Paginator with.
-        If ``use_default_buttons`` is ``True``, this parameter is ignored.
+        If ``use_default_buttons`` or ``use_styled_buttons`` is ``True``, this parameter is ignored.
     trigger_on_display: :class:`bool`
         Whether to automatically trigger the callback associated with a `Page` whenever it is displayed.
         Has no effect if no callback exists for a `Page`.
@@ -284,6 +286,7 @@ class PageGroup:
         author_check: Optional[bool] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
+        use_styled_buttons: Optional[bool] = None,
         default_button_row: int = 0,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
@@ -303,6 +306,7 @@ class PageGroup:
         self.author_check = author_check
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
+        self.use_styled_buttons = use_styled_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
@@ -328,13 +332,14 @@ class Paginator(discord.ui.View):
         Whether to show a select menu that allows the user to switch between groups of pages.
     menu_placeholder: :class:`str`
         The placeholder text to show in the page group menu when no page group has been selected yet.
-        Defaults to "Select Page Group" if not provided.
+        Defaults to "Select page group..." if not provided.
     author_check: :class:`bool`
         Whether only the original user of the command can change pages.
     disable_on_timeout: :class:`bool`
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+    use_styled_buttons: :class:`bool`
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
     loop_pages: :class:`bool`
@@ -384,10 +389,11 @@ class Paginator(discord.ui.View):
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
-        menu_placeholder: str = "Select Page Group",
+        menu_placeholder: str = "Select page group...",
         author_check=True,
         disable_on_timeout=True,
         use_default_buttons=True,
+        use_styled_buttons=False,
         default_button_row: int = 0,
         loop_pages=False,
         custom_view: Optional[discord.ui.View] = None,
@@ -429,6 +435,7 @@ class Paginator(discord.ui.View):
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
         self.use_default_buttons = use_default_buttons
+        self.use_styled_buttons = use_styled_buttons
         self.default_button_row = default_button_row
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
@@ -438,8 +445,10 @@ class Paginator(discord.ui.View):
         if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
                 self.add_button(button)
-        elif not self.custom_buttons and self.use_default_buttons:
+        elif not self.custom_buttons and not self.use_styled_buttons and self.use_default_buttons:
             self.add_default_buttons()
+        elif self.use_styled_buttons:
+            self.add_styled_buttons()
 
         if self.show_menu:
             self.add_menu()
@@ -464,6 +473,7 @@ class Paginator(discord.ui.View):
         menu_placeholder: Optional[str] = None,
         disable_on_timeout: Optional[bool] = None,
         use_default_buttons: Optional[bool] = None,
+        use_styled_buttons: Optional[bool] = None,
         default_button_row: Optional[int] = None,
         loop_pages: Optional[bool] = None,
         custom_view: Optional[discord.ui.View] = None,
@@ -489,11 +499,13 @@ class Paginator(discord.ui.View):
             Whether only the original user of the command can change pages.
         menu_placeholder: :class:`str`
             The placeholder text to show in the page group menu when no page group has been selected yet.
-            Defaults to "Select Page Group" if not provided.
+            Defaults to "Select page group..." if not provided.
         disable_on_timeout: :class:`bool`
             Whether the buttons get disabled when the paginator view times out.
         use_default_buttons: :class:`bool`
             Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
+        use_styled_buttons: :class:`bool`
+            The same as ``use_default_buttons`` but uses emojis for labels
         default_button_row: Optional[:class:`int`]
             The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
         loop_pages: :class:`bool`
@@ -556,6 +568,11 @@ class Paginator(discord.ui.View):
             use_default_buttons
             if use_default_buttons is not None
             else self.use_default_buttons
+        )
+        self.use_styled_buttons = (
+            use_styled_buttons
+            if use_styled_buttons is not None
+            else self.use_styled_buttons
         )
         self.default_button_row = (
             default_button_row
@@ -766,6 +783,46 @@ class Paginator(discord.ui.View):
             PaginatorButton(
                 "last",
                 label=">>",
+                style=discord.ButtonStyle.blurple,
+                row=self.default_button_row,
+            ),
+        ]
+        for button in default_buttons:
+            self.add_button(button)
+
+    def add_styled_buttons(self):
+        """Adds the default paginator buttons like ``.add_default_Buttons`` but uses emojis for labels
+        """
+        default_buttons = [
+            PaginatorButton(
+                "first",
+                label="⏮",
+                style=discord.ButtonStyle.blurple,
+                row=self.default_button_row,
+            ),
+            PaginatorButton(
+                "prev",
+                label="◀",
+                style=discord.ButtonStyle.red,
+                loop_label="↪",
+                row=self.default_button_row,
+            ),
+            PaginatorButton(
+                "page_indicator",
+                style=discord.ButtonStyle.gray,
+                disabled=True,
+                row=self.default_button_row,
+            ),
+            PaginatorButton(
+                "next",
+                label="▶",
+                style=discord.ButtonStyle.green,
+                loop_label="↩",
+                row=self.default_button_row,
+            ),
+            PaginatorButton(
+                "last",
+                label="⏭",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
             ),
@@ -1272,6 +1329,7 @@ class PaginatorMenu(discord.ui.Select):
                     author_check=page_group.author_check,
                     disable_on_timeout=page_group.disable_on_timeout,
                     use_default_buttons=page_group.use_default_buttons,
+                    use_styled_buttons=page_group.use_styled_buttons,
                     default_button_row=page_group.default_button_row,
                     loop_pages=page_group.loop_pages,
                     custom_view=page_group.custom_view,
