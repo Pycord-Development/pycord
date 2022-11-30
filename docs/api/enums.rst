@@ -1909,6 +1909,13 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.4
 
+    .. attribute:: harmful_link
+
+        Represents a harmful link rule trigger.
+
+        .. deprecated:: 2.4
+            Removed by Discord and merged into `spam`.
+
 .. class:: AutoModEventType
 
     Represents an AutoMod event type.

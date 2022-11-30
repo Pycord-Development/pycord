@@ -197,6 +197,7 @@ class AutoModTriggerMetadata:
         .. versionadded:: 2.4
     mention_total_limit: :class:`int`
         The total number of unique role and user mentions allowed.
+        Only for triggers of type :attr:`AutoModTriggerType.mention_spam`.
 
         .. versionadded:: 2.4
     """
