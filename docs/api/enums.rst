@@ -1907,7 +1907,7 @@ of :class:`enum.Enum`.
 
         - :attr:`~AutoModTriggerMetadata.mention_total_limit`
 
-        .. versionadded:: 2.3
+        .. versionadded:: 2.4
 
 .. class:: AutoModEventType
 

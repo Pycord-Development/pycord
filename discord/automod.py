@@ -185,14 +185,20 @@ class AutoModTriggerMetadata:
         A list of regex patterns to filter using Rust-flavored regex, which is not
         fully compatible with regex syntax supported by the builtin `re` module.
         Only for triggers of type :attr:`AutoModTriggerType.keyword`.
+
+        .. versionadded:: 2.4
     presets: List[:class:`AutoModKeywordPresetType`]
         A list of keyword presets to filter.
         Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
     allow_list: List[:class:`str`]
         A list of substrings to allow, overriding keyword and regex matches.
         Only for triggers of type :attr:`AutoModTriggerType.keyword` and :attr:`AutoModTriggerType.keyword_preset`.
+
+        .. versionadded:: 2.4
     mention_total_limit: :class:`int`
         The total number of unique role and user mentions allowed.
+
+        .. versionadded:: 2.4
     """
 
     # maybe add a table of action types and attributes?
