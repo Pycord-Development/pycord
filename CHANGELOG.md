@@ -10,6 +10,17 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+_No changes yet_
+
+## [2.3.1] - 2022-11-27
+
+### Fixed
+
+- Fixed `AttributeError` relating to the new `bridge_commands` attribute on
+  `ext.bridge.Bot`. ([#1802](https://github.com/Pycord-Development/pycord/pull/1802))
+
+## [2.3.0] - 2022-11-23
+
 ### Added
 
 - New brief Attribute to BridgeSlashCommand.
@@ -28,6 +39,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
 - Added `bridge_commands` attribute to `ext.bridge.Bot` for access to bridge command
   objects. ([#1787](https://github.com/Pycord-Development/pycord/pull/1787))
+- Updated `Guild.features` to include new and previously missing features.
+  ([#1788](https://github.com/Pycord-Development/pycord/pull/1788))
 
 ### Fixed
 
@@ -441,7 +454,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...HEAD
+[2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
+[2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0

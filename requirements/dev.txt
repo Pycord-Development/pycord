@@ -1,5 +1,5 @@
 -r _.txt
-pylint==2.15.5
+pylint==2.15.7
 mypy==0.991
 pre-commit==2.20.0
 codespell==2.2.2
