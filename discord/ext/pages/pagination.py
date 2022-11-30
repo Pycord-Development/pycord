@@ -445,7 +445,11 @@ class Paginator(discord.ui.View):
         if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
                 self.add_button(button)
-        elif not self.custom_buttons and not self.use_styled_buttons and self.use_default_buttons:
+        elif (
+            not self.custom_buttons
+            and not self.use_styled_buttons
+            and self.use_default_buttons
+        ):
             self.add_default_buttons()
         elif self.use_styled_buttons:
             self.add_styled_buttons()
@@ -791,8 +795,7 @@ class Paginator(discord.ui.View):
             self.add_button(button)
 
     def add_styled_buttons(self):
-        """Adds the default paginator buttons like ``.add_default_Buttons`` but uses emojis for labels
-        """
+        """Adds the default paginator buttons like ``.add_default_Buttons`` but uses emojis for labels"""
         default_buttons = [
             PaginatorButton(
                 "first",
