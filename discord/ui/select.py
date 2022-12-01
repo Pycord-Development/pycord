@@ -168,6 +168,7 @@ class Select(Item[V]):
             channel_types=channel_types or [],
         )
         self.row = row
+        self.select_type = select_type
 
     @property
     def custom_id(self) -> str:
