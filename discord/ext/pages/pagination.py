@@ -254,7 +254,7 @@ class PageGroup:
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
-    use_styled_buttons: :class:`bool`
+    use_styled_buttons: :class:`bool` .. versionadded:: 2.4
         The same as ``use_default_buttons`` but uses emojis for labels, overwrites ``use_default_buttons`` when used.
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
@@ -339,7 +339,7 @@ class Paginator(discord.ui.View):
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
-    use_styled_buttons: :class:`bool`
+    use_styled_buttons: :class:`bool` .. versionadded:: 2.4
         The same as ``use_default_buttons`` but uses emojis for labels, overwrites ``use_default_buttons`` when used.
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
@@ -509,7 +509,7 @@ class Paginator(discord.ui.View):
             Whether the buttons get disabled when the paginator view times out.
         use_default_buttons: :class:`bool`
             Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
-        use_styled_buttons: :class:`bool`
+        use_styled_buttons: :class:`bool` .. versionadded:: 2.4
             The same as ``use_default_buttons`` but uses emojis for labels, overwrites ``use_default_buttons`` when used.
         default_button_row: Optional[:class:`int`]
             The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
