@@ -113,7 +113,7 @@ class Select(Item[V]):
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
-        "select_type",
+        "type",
         "placeholder",
         "min_values",
         "max_values",
@@ -168,21 +168,6 @@ class Select(Item[V]):
             channel_types=channel_types or [],
         )
         self.row = row
-
-    @property
-    def select_type(self) -> ComponentType:
-        """The type of select this is."""
-        return self._underlying.type
-
-    @select_type.setter
-    def select_type(self, value: ComponentType):
-        if self._underlying.options and value is not ComponentType.string_select:
-            raise InvalidArgument("options parameter is only valid for string selects")
-        if self._underlying.channel_types and value is not ComponentType.channel_select:
-            raise InvalidArgument(
-                "channel_types parameter is only valid for channel selects"
-            )
-        self._underlying.type = value
 
     @property
     def custom_id(self) -> str:
