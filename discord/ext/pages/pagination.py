@@ -254,8 +254,10 @@ class PageGroup:
         Whether the buttons get disabled when the paginator view times out.
     use_default_buttons: :class:`bool`
         Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)
-    use_styled_buttons: :class:`bool` .. versionadded:: 2.4
+    use_styled_buttons: :class:`bool`
         The same as ``use_default_buttons`` but uses emojis for labels, overwrites ``use_default_buttons`` when used.
+        
+        .. versionadded:: 2.4
     default_button_row: :class:`int`
         The row where the default paginator buttons are displayed. Has no effect if custom buttons are used.
     loop_pages: :class:`bool`
