@@ -18,6 +18,8 @@ _No changes yet_
 
 - Fixed another `AttributeError` relating to the new `bridge_commands` attribute on
   `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
+- Fixed an `AttributeError` in select relating to the select type.
+  ([#1814](https://github.com/Pycord-Development/pycord/pull/1814))
 
 ## [2.3.1] - 2022-11-27
 
