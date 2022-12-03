@@ -806,13 +806,13 @@ class Paginator(discord.ui.View):
         default_buttons = [
             PaginatorButton(
                 "first",
-                label="⏮",
+                emoji="⏮",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "prev",
-                label="◀",
+                emoji="◀",
                 style=discord.ButtonStyle.red,
                 loop_label="↪",
                 row=self.default_button_row,
@@ -825,14 +825,14 @@ class Paginator(discord.ui.View):
             ),
             PaginatorButton(
                 "next",
-                label="▶",
+                emoji="▶",
                 style=discord.ButtonStyle.green,
                 loop_label="↩",
                 row=self.default_button_row,
             ),
             PaginatorButton(
                 "last",
-                label="⏭",
+                emoji="⏭",
                 style=discord.ButtonStyle.blurple,
                 row=self.default_button_row,
             ),
