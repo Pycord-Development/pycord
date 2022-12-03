@@ -20,6 +20,8 @@ _No changes yet_
   `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
 - Fixed an `AttributeError` in select relating to the select type.
   ([#1814](https://github.com/Pycord-Development/pycord/pull/1814))
+- Fix `Thread.applied_tags` always returning an empty list.
+  ([#1817](https://github.com/Pycord-Development/pycord/pull/1817))
 
 ## [2.3.1] - 2022-11-27
 
