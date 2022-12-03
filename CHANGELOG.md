@@ -10,6 +10,8 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+_No changes yet_
+
 ## [2.3.2] - 2022-12-03
 
 ### Fixed
