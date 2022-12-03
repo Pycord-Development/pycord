@@ -462,7 +462,7 @@ _No changes yet_
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
 [unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
-[2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
+[2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
