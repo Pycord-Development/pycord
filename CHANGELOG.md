@@ -10,7 +10,12 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-_No changes yet_
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed another `AttributeError` relating to the new `bridge_commands` attribute on
+  `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
 
 ## [2.3.1] - 2022-11-27
 
@@ -454,7 +459,8 @@ _No changes yet_
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
+[2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
