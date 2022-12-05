@@ -319,7 +319,7 @@ class BridgeCommandGroup(BridgeCommand):
             callback,
             ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
             slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
-            parent=kwargs.pop("parent", None)
+            parent=kwargs.pop("parent", None),
         )
 
         self.subcommands: list[BridgeCommand] = []
