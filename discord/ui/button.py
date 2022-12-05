@@ -139,7 +139,8 @@ class Button(Item[V]):
 
     @property
     def style(self) -> ButtonStyle:
-        """The style of the button."""
+        """The style of the button.
+        """
         return self._underlying.style
 
     @style.setter
@@ -164,7 +165,8 @@ class Button(Item[V]):
 
     @property
     def url(self) -> str | None:
-        """The URL this button sends you to."""
+        """The URL this button sends you to.
+        """
         return self._underlying.url
 
     @url.setter
@@ -175,7 +177,8 @@ class Button(Item[V]):
 
     @property
     def disabled(self) -> bool:
-        """Whether the button is disabled or not."""
+        """Whether the button is disabled or not.
+        """
         return self._underlying.disabled
 
     @disabled.setter
@@ -184,7 +187,8 @@ class Button(Item[V]):
 
     @property
     def label(self) -> str | None:
-        """The label of the button, if available."""
+        """The label of the button, if available.
+        """
         return self._underlying.label
 
     @label.setter
@@ -195,7 +199,8 @@ class Button(Item[V]):
 
     @property
     def emoji(self) -> PartialEmoji | None:
-        """The emoji of the button, if available."""
+        """The emoji of the button, if available.
+        """
         return self._underlying.emoji
 
     @emoji.setter

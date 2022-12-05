@@ -294,17 +294,20 @@ class Client:
 
     @property
     def user(self) -> ClientUser | None:
-        """Represents the connected client. ``None`` if not logged in."""
+        """Represents the connected client. ``None`` if not logged in.
+        """
         return self._connection.user
 
     @property
     def guilds(self) -> list[Guild]:
-        """The guilds that the connected client is a member of."""
+        """The guilds that the connected client is a member of.
+        """
         return self._connection.guilds
 
     @property
     def emojis(self) -> list[Emoji]:
-        """The emojis that the connected client has."""
+        """The emojis that the connected client has.
+        """
         return self._connection.emojis
 
     @property
@@ -363,7 +366,8 @@ class Client:
         return self._connection.application_flags  # type: ignore
 
     def is_ready(self) -> bool:
-        """Specifies if the client's internal cache is ready for use."""
+        """Specifies if the client's internal cache is ready for use.
+        """
         return self._ready.is_set()
 
     async def _run_event(
@@ -721,7 +725,8 @@ class Client:
     # properties
 
     def is_closed(self) -> bool:
-        """Indicates if the WebSocket connection is closed."""
+        """Indicates if the WebSocket connection is closed.
+        """
         return self._closed
 
     @property
@@ -792,7 +797,8 @@ class Client:
 
     @property
     def users(self) -> list[User]:
-        """Returns a list of all the users the bot can see."""
+        """Returns a list of all the users the bot can see.
+        """
         return list(self._connection._users.values())
 
     async def fetch_application(self, application_id: int, /) -> PartialAppInfo:

@@ -628,7 +628,8 @@ class SyncWebhook(BaseWebhook):
 
     @property
     def url(self) -> str:
-        """Returns the webhook's url."""
+        """Returns the webhook's url.
+        """
         return f"https://discord.com/api/webhooks/{self.id}/{self.token}"
 
     @classmethod

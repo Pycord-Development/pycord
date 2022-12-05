@@ -19,7 +19,8 @@ bot = discord.Bot(intents=intents)
 
 @bot.slash_command(guild_ids=[...])  # Create a slash command
 async def hello(ctx: discord.ApplicationContext):
-    """Say hello to the bot"""  # The command description can be supplied as the docstring
+    """Say hello to the bot
+    """  # The command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
     # Note: interactions must be responded to within 3 seconds, if they're not, an
     # "Unknown interaction" error will be raised, you can circumvent this by using "ctx.defer()".
