@@ -152,7 +152,7 @@ class AutoModAction:
     def to_dict(self) -> dict:
         return {
             "type": self.type.value,
-            "metadata": self.metadata,
+            "metadata": self.metadata.to_dict(),
         }
 
     @classmethod
