@@ -99,8 +99,7 @@ class InputText:
 
     @property
     def style(self) -> InputTextStyle:
-        """The style of the input text field.
-        """
+        """The style of the input text field."""
         return self._underlying.style
 
     @style.setter
@@ -113,8 +112,7 @@ class InputText:
 
     @property
     def custom_id(self) -> str:
-        """The ID of the input text field that gets received during an interaction.
-        """
+        """The ID of the input text field that gets received during an interaction."""
         return self._underlying.custom_id
 
     @custom_id.setter
@@ -127,8 +125,7 @@ class InputText:
 
     @property
     def label(self) -> str:
-        """The label of the input text field.
-        """
+        """The label of the input text field."""
         return self._underlying.label
 
     @label.setter
@@ -141,8 +138,7 @@ class InputText:
 
     @property
     def placeholder(self) -> str | None:
-        """The placeholder text that is shown before anything is entered, if any.
-        """
+        """The placeholder text that is shown before anything is entered, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
@@ -155,8 +151,7 @@ class InputText:
 
     @property
     def min_length(self) -> int | None:
-        """The minimum number of characters that must be entered. Defaults to `0`.
-        """
+        """The minimum number of characters that must be entered. Defaults to `0`."""
         return self._underlying.min_length
 
     @min_length.setter
@@ -169,8 +164,7 @@ class InputText:
 
     @property
     def max_length(self) -> int | None:
-        """The maximum number of characters that can be entered.
-        """
+        """The maximum number of characters that can be entered."""
         return self._underlying.max_length
 
     @max_length.setter
@@ -183,8 +177,7 @@ class InputText:
 
     @property
     def required(self) -> bool | None:
-        """Whether the input text field is required or not. Defaults to `True`.
-        """
+        """Whether the input text field is required or not. Defaults to `True`."""
         return self._underlying.required
 
     @required.setter
@@ -195,8 +188,7 @@ class InputText:
 
     @property
     def value(self) -> str | None:
-        """The value entered in the text field.
-        """
+        """The value entered in the text field."""
         if self._input_value is not False:
             # only False on init, otherwise the value was either set or cleared
             return self._input_value  # type: ignore

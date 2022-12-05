@@ -171,8 +171,7 @@ class Select(Item[V]):
 
     @property
     def custom_id(self) -> str:
-        """The ID of the select menu that gets received during an interaction.
-        """
+        """The ID of the select menu that gets received during an interaction."""
         return self._underlying.custom_id
 
     @custom_id.setter
@@ -185,8 +184,7 @@ class Select(Item[V]):
 
     @property
     def placeholder(self) -> str | None:
-        """The placeholder text that is shown if nothing is selected, if any.
-        """
+        """The placeholder text that is shown if nothing is selected, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
@@ -200,8 +198,7 @@ class Select(Item[V]):
 
     @property
     def min_values(self) -> int:
-        """The minimum number of items that must be chosen for this select menu.
-        """
+        """The minimum number of items that must be chosen for this select menu."""
         return self._underlying.min_values
 
     @min_values.setter
@@ -212,8 +209,7 @@ class Select(Item[V]):
 
     @property
     def max_values(self) -> int:
-        """The maximum number of items that must be chosen for this select menu.
-        """
+        """The maximum number of items that must be chosen for this select menu."""
         return self._underlying.max_values
 
     @max_values.setter
@@ -224,8 +220,7 @@ class Select(Item[V]):
 
     @property
     def disabled(self) -> bool:
-        """Whether the select is disabled or not.
-        """
+        """Whether the select is disabled or not."""
         return self._underlying.disabled
 
     @disabled.setter
@@ -234,8 +229,7 @@ class Select(Item[V]):
 
     @property
     def channel_types(self) -> list[ChannelType]:
-        """A list of channel types that can be selected in this menu.
-        """
+        """A list of channel types that can be selected in this menu."""
         return self._underlying.channel_types
 
     @channel_types.setter
@@ -246,8 +240,7 @@ class Select(Item[V]):
 
     @property
     def options(self) -> list[SelectOption]:
-        """A list of options that can be selected in this menu.
-        """
+        """A list of options that can be selected in this menu."""
         return self._underlying.options
 
     @options.setter
