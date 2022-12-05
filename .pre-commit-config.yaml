@@ -18,7 +18,7 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.2
+    rev: v3.3.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -82,7 +82,7 @@ repos:
       - id: prettier
         args: [--prose-wrap=always, --print-width=88]
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: 93b15ca # TODO: Change this when v8.0 is released
+    rev: v0.7.2 # TODO: Change this when v8.0 is released
     hooks:
       - id: pydocstringformatter
         args:
