@@ -152,7 +152,7 @@ class AutoModAction:
     def to_dict(self) -> dict:
         return {
             "type": self.type.value,
-            "metadata": self.metadata,
+            "metadata": self.metadata.to_dict(),
         }
 
     @classmethod
@@ -424,9 +424,9 @@ class AutoModRule(Hashable):
             The new actions to perform when the rule is triggered.
         enabled: :class:`bool`
             Whether this rule is enabled.
-        exempt_roles: List[:class:`Snowflake`]
+        exempt_roles: List[:class:`abc.Snowflake`]
             The roles that will be exempt from this rule.
-        exempt_channels: List[:class:`Snowflake`]
+        exempt_channels: List[:class:`abc.Snowflake`]
             The channels that will be exempt from this rule.
         reason: Optional[:class:`str`]
             The reason for editing this rule. Shows up in the audit log.
