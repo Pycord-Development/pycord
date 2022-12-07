@@ -43,7 +43,7 @@ __all__ = (
     "AutoModRule",
     "AutoModAction",
     "AutoModActionMetadata",
-    "AutoModTriggerMetadata"
+    "AutoModTriggerMetadata",
 )
 
 if TYPE_CHECKING:
