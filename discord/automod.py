@@ -42,6 +42,8 @@ from .object import Object
 __all__ = (
     "AutoModRule",
     "AutoModAction",
+    "AutoModActionMetadata",
+    "AutoModTriggerMetadata"
 )
 
 if TYPE_CHECKING:
