@@ -1914,7 +1914,7 @@ of :class:`enum.Enum`.
         Represents a harmful link rule trigger.
 
         .. deprecated:: 2.4
-            Removed by Discord and merged into `spam`.
+            Removed by Discord and merged into :attr:`spam`.
 
 .. class:: AutoModEventType
 

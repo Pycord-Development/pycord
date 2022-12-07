@@ -170,9 +170,27 @@ class AutoModAction:
 
 
 class AutoModTriggerMetadata:
-    """Represents a rule's trigger metadata.
+    """Represents a rule's trigger metadata, defining additional data used to determine when a rule triggers.
 
-    Depending on the trigger type, different attributes will be used.
+    Depending on the trigger type, different metadata attributes will be used:
+
+    +-----------------------------+--------------------------------------------------------------------------------+
+    |   Attribute                 |   Trigger Types                                                                |
+    +=============================+================================================================================+
+    | :attr:`keyword_filter`      | :attr:`AutoModTriggerType.keyword`                                             |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`regex_patterns`      | :attr:`AutoModTriggerType.keyword`                                             |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`presets`             | :attr:`AutoModTriggerType.keyword_preset`                                      |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`allow_list`          | :attr:`AutoModTriggerType.keyword`\, :attr:`AutoModTriggerType.keyword_preset` |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`mention_total_limit` | :attr:`AutoModTriggerType.mention_spam`                                        |
+    +-----------------------------+--------------------------------------------------------------------------------+
+
+    Each attribute has limits that may change based on the trigger type.
+    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`_
+    for information on attribute limits. 
 
     .. versionadded:: 2.0
 
@@ -180,30 +198,26 @@ class AutoModTriggerMetadata:
     ----------
     keyword_filter: List[:class:`str`]
         A list of substrings to filter.
-        Only for triggers of type :attr:`AutoModTriggerType.keyword`.
+
     regex_patterns: List[:class:`str`]
         A list of regex patterns to filter using Rust-flavored regex, which is not
         fully compatible with regex syntax supported by the builtin `re` module.
-        Only for triggers of type :attr:`AutoModTriggerType.keyword`.
 
         .. versionadded:: 2.4
+
     presets: List[:class:`AutoModKeywordPresetType`]
-        A list of keyword presets to filter.
-        Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
+        A list of preset keyword sets to filter.
+
     allow_list: List[:class:`str`]
         A list of substrings to allow, overriding keyword and regex matches.
-        Only for triggers of type :attr:`AutoModTriggerType.keyword` and :attr:`AutoModTriggerType.keyword_preset`.
 
         .. versionadded:: 2.4
+
     mention_total_limit: :class:`int`
         The total number of unique role and user mentions allowed.
-        Only for triggers of type :attr:`AutoModTriggerType.mention_spam`.
 
         .. versionadded:: 2.4
     """
-
-    # maybe add a table of action types and attributes?
-    # wording for presets could change
 
     __slots__ = (
         "keyword_filter",

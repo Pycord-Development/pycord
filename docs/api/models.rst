@@ -159,6 +159,18 @@ AutoMod
 .. autoclass:: AutoModAction()
     :members:
 
+.. attributetable:: AutoModTriggerMetadata
+
+.. autoclass:: AutoModTriggerMetadata()
+    :members:
+
+.. attributetable:: AutoModActionMetadata
+
+.. autoclass:: AutoModActionMetadata()
+    :members:
+
+
+
 Invites
 ~~~~~~~
 
