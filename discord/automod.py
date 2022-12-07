@@ -170,7 +170,7 @@ class AutoModAction:
 
 
 class AutoModTriggerMetadata:
-    """Represents a rule's trigger metadata, defining additional data used to determine when a rule triggers.
+    r"""Represents a rule's trigger metadata, defining additional data used to determine when a rule triggers.
 
     Depending on the trigger type, different metadata attributes will be used:
 
@@ -190,7 +190,7 @@ class AutoModTriggerMetadata:
 
     Each attribute has limits that may change based on the trigger type.
     See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`_
-    for information on attribute limits. 
+    for information on attribute limits.
 
     .. versionadded:: 2.0
 
