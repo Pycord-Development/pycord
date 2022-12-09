@@ -2823,7 +2823,7 @@ class HTTPClient:
     def get_application_role_connection_metadata_records(
         self,
         application_id: Snowflake,
-    ) -> Response[application_role_connection.ApplicationRoleConnectionMetadata]:
+    ) -> Response[list[application_role_connection.ApplicationRoleConnectionMetadata]]:
         r = Route(
             "GET",
             "/applications/{application_id}/role-connections/metadata",
@@ -2834,8 +2834,8 @@ class HTTPClient:
     def update_application_role_connection_metadata_records(
         self,
         application_id: Snowflake,
-        payload,  # TODO: payload typehint, check return type
-    ) -> Response[None]:
+        payload: list[application_role_connection.ApplicationRoleConnectionMetadata],
+    ) -> Response[list[application_role_connection.ApplicationRoleConnectionMetadata]]:
         r = Route(
             "PUT",
             "/applications/{application_id}/role-connections/metadata",
