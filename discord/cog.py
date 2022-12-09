@@ -542,7 +542,7 @@ class Cog(metaclass=CogMeta):
 
         for index, command in enumerate(self.__cog_commands__):
             if hasattr(command, "add_to"):
-                bot._bridge_commands.append(command)
+                bot.bridge_commands.append(command)
                 continue
 
             command._set_cog(self)
