@@ -1791,7 +1791,7 @@ class Client:
 
         Fetches the bot's role connection metadata records.
 
-        .. versionadded:: 2.3.3
+        .. versionadded:: 2.4
 
         Returns
         -------
@@ -1810,7 +1810,7 @@ class Client:
 
         Updates the bot's role connection metadata records.
 
-        .. versionadded:: 2.3.3
+        .. versionadded:: 2.4
 
         Parameters
         ----------
