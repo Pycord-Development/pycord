@@ -11,7 +11,7 @@ possible (see our [Version Guarantees] for more info).
 These changes are available on the `master` branch, but have not yet been released.
 
 ## Added
-- `ApplicationRoleConnectionMetadata` class for application role connection metadata, along with the `fetch_role_connection_metadata_records` and `update_role_connection_metadata_records` methods in `Client`.
+- New `ApplicationRoleConnectionMetadata` class for application role connection metadata, along with the `fetch_role_connection_metadata_records` and `update_role_connection_metadata_records` methods in `Client`.
   ([#1791](https://github.com/Pycord-Development/pycord/pull/1791))
 
 ## [2.3.2] - 2022-12-03
