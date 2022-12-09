@@ -31,11 +31,31 @@ from .utils import MISSING
 
 if TYPE_CHECKING:
     from .types.application_role_connection import (
-        ApplicationRoleConnection as ApplicationRoleConnectionPayload,
+        ApplicationRoleConnectionMetadata as ApplicationRoleConnectionMetadataPayload,
     )
 
 
-class ApplicationRoleConnection:
+class ApplicationRoleConnectionMetadata:
+    r"""Represents role connection metadata for a Discord application.
+    
+    Attributes
+    ----------
+    type: :class:`ApplicationRoleConnectionMetadataType`
+        The type of metadata value.
+    key: :class:`str`
+        The key for this metadata field. 
+        May only be the ``a-z``, ``0-9``, or ``_`` characters, with a maximum of 50 characters.
+    name: :class:`str`
+        The name for this metadata field. Maximum 100 characters.
+    description: :class:`str`
+        The description for this metadata field. Maximum 200 characters.
+    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The name localizations for this metadata field. The values of this should be ``"locale": "name"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        The description localizations for this metadata field. The values of this should be ``"locale": "name"``.
+        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    """
     def __init__(
         self,
         *,
