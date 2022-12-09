@@ -37,13 +37,13 @@ if TYPE_CHECKING:
 
 class ApplicationRoleConnectionMetadata:
     r"""Represents role connection metadata for a Discord application.
-    
+
     Attributes
     ----------
     type: :class:`ApplicationRoleConnectionMetadataType`
         The type of metadata value.
     key: :class:`str`
-        The key for this metadata field. 
+        The key for this metadata field.
         May only be the ``a-z``, ``0-9``, or ``_`` characters, with a maximum of 50 characters.
     name: :class:`str`
         The name for this metadata field. Maximum 100 characters.
@@ -56,6 +56,7 @@ class ApplicationRoleConnectionMetadata:
         The description localizations for this metadata field. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     def __init__(
         self,
         *,
