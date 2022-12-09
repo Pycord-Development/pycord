@@ -27,6 +27,7 @@ from ._version import *
 from . import abc, opus, sinks, ui, utils
 from .activity import *
 from .appinfo import *
+from .application_role_connections import *
 from .asset import *
 from .audit_logs import *
 from .automod import *
