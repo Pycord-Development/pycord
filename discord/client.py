@@ -1783,8 +1783,10 @@ class Client:
         .. versionadded:: 2.0
         """
         return self._connection.persistent_views
-    
-    async def fetch_role_connection_metadata_records(self) -> list[ApplicationRoleConnectionMetadata]:
+
+    async def fetch_role_connection_metadata_records(
+        self,
+    ) -> list[ApplicationRoleConnectionMetadata]:
         """|coro|
 
         Fetches the bot's role connection metadata records.
@@ -1796,10 +1798,14 @@ class Client:
         List[:class:`.ApplicationRoleConnectionMetadata`]
             The bot's role connection metadata records.
         """
-        data = await self._connection.http.get_application_role_connection_metadata_records(self.application_id)
+        data = await self._connection.http.get_application_role_connection_metadata_records(
+            self.application_id
+        )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
-    
-    async def update_role_connection_metadata_records(self, *role_connection_metadata) -> list[ApplicationRoleConnectionMetadata]:
+
+    async def update_role_connection_metadata_records(
+        self, *role_connection_metadata
+    ) -> list[ApplicationRoleConnectionMetadata]:
         """|coro|
 
         Updates the bot's role connection metadata records.
@@ -1817,5 +1823,7 @@ class Client:
             The updated role connection metadata records.
         """
         payload = [r.to_dict() for r in role_connection_metadata]
-        data = await self._connection.http.update_application_role_connection_metadata_records(self.application_id, payload)
+        data = await self._connection.http.update_application_role_connection_metadata_records(
+            self.application_id, payload
+        )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
