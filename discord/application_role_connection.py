@@ -89,8 +89,8 @@ class ApplicationRoleConnectionMetadata:
 
     @classmethod
     def from_dict(
-        cls, data: ApplicationRoleConnectionPayload
-    ) -> ApplicationRoleConnection:
+        cls, data: ApplicationRoleConnectionMetadataPayload
+    ) -> ApplicationRoleConnectionMetadata:
         return cls(
             type=try_enum(ApplicationRoleConnectionMetadataType, data["type"]),
             key=data["key"],
@@ -100,7 +100,7 @@ class ApplicationRoleConnectionMetadata:
             description_localizations=data.get("description_localizations"),
         )
 
-    def to_dict(self) -> ApplicationRoleConnectionPayload:
+    def to_dict(self) -> ApplicationRoleConnectionMetadataPayload:
         data = {
             "type": self.type.value,
             "key": self.key,
