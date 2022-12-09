@@ -39,7 +39,7 @@ __all__ = ("ApplicationRoleConnectionMetadata",)
 
 class ApplicationRoleConnectionMetadata:
     r"""Represents role connection metadata for a Discord application.
-    
+
     .. versionadded:: 2.4
 
     Parameters
