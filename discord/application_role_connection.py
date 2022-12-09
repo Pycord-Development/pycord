@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 class ApplicationRoleConnectionMetadata:
     r"""Represents role connection metadata for a Discord application.
 
-    Attributes
+    Parameters
     ----------
     type: :class:`ApplicationRoleConnectionMetadataType`
         The type of metadata value.
