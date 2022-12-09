@@ -67,6 +67,7 @@ __all__ = (
     "AutoModEventType",
     "AutoModActionType",
     "AutoModKeywordPresetType",
+    "ApplicationRoleConnectionMetadataType",
 )
 
 
