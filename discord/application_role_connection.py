@@ -34,9 +34,8 @@ if TYPE_CHECKING:
         ApplicationRoleConnectionMetadata as ApplicationRoleConnectionMetadataPayload,
     )
 
-__all__ = (
-    "ApplicationRoleConnectionMetadata",
-)
+__all__ = ("ApplicationRoleConnectionMetadata",)
+
 
 class ApplicationRoleConnectionMetadata:
     r"""Represents role connection metadata for a Discord application.
@@ -59,7 +58,7 @@ class ApplicationRoleConnectionMetadata:
         The description localizations for this metadata field. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
-    
+
     __slots__ = (
         "type",
         "key",
