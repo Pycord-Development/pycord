@@ -1867,48 +1867,48 @@ of :class:`enum.Enum`.
     .. attribute:: guild_only
 
         Represents a scheduled event that is only available to members inside the guild.
-        
+
 .. class:: ApplicationRoleConnectionMetadataType
 
     Represents an application role connection metadata type.
-    
-    Each metadata type offers a comparison operation that allows guilds to 
-    configure role requirements based on metadata values stored by the bot. 
-    Bots specify a ``metadata value`` for each user and guilds specify the 
+
+    Each metadata type offers a comparison operation that allows guilds to
+    configure role requirements based on metadata values stored by the bot.
+    Bots specify a ``metadata value`` for each user and guilds specify the
     required ``guild's configured value`` within the guild role settings.
-    
+
     .. versionadded:: 2.4
-    
+
     .. attribute:: integer_less_than_or_equal
-    
+
         The metadata value (``integer``) is less than or equal to the guild's configured value (``integer``).
 
     .. attribute:: integer_greater_than_or_equal
-    
+
         The metadata value (``integer``) is greater than or equal to the guild's configured value (``integer``).
-        
+
     .. attribute:: integer_equal
-    
+
         The metadata value (``integer``) is equal to the guild's configured value (``integer``).
-            
+
     .. attribute:: integer_not_equal
-    
+
         The metadata value (``integer``) is not equal to the guild's configured value (``integer``).
-        
+
     .. attribute:: datetime_less_than_or_equal
-    
-        The metadata value (``datetime``) is less than or equal to the guild's configured value 
+
+        The metadata value (``datetime``) is less than or equal to the guild's configured value
         (``integer``; the number of days before the current date).
 
     .. attribute:: datetime_greater_than_or_equal
-    
-        The metadata value (``datetime``) is greater than or equal to the guild's configured value 
+
+        The metadata value (``datetime``) is greater than or equal to the guild's configured value
         (``integer``; the number of days before the current date).
-        
+
     .. attribute:: boolean_equal
-    
+
         The metadata value (``integer``) is equal to the guild's configured value (``integer``; 1).
-            
+
     .. attribute:: boolean_not_equal
-    
+
         The metadata value (``integer``) is not equal to the guild's configured value (``integer``; 1).
