@@ -303,7 +303,7 @@ of :class:`enum.Enum`.
         The user is an Early Verified Bot Developer.
     .. attribute:: discord_certified_moderator
 
-        The user is a Moderator Program Alumni.
+        The user is a Moderator Programs Alumni.
     .. attribute:: bot_http_interactions
 
         The bot has set an interactions endpoint url.
