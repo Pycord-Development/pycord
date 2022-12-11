@@ -198,7 +198,9 @@ class Thread(Messageable, Hashable):
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.total_message_sent = data.get("total_message_sent", None)
-        self._applied_tags: list[int] = data.get("applied_tags", [])
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
