@@ -16,7 +16,8 @@ _No changes yet_
 
 ### Fixed
 
-- Fixed bridge groups missing the ``parent`` attribute. ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
+- Fixed bridge groups missing the `parent` attribute.
+  ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
 
 ## [2.3.2] - 2022-12-03
 
