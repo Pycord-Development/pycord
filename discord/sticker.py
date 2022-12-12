@@ -125,7 +125,8 @@ class StickerPack(Hashable):
 
     @property
     def banner(self) -> Asset:
-        """The banner asset of the sticker pack."""
+        """The banner asset of the sticker pack.
+        """
         return Asset._from_sticker_banner(self._state, self._banner)
 
     def __repr__(self) -> str:
@@ -298,7 +299,8 @@ class Sticker(_StickerTag):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """Returns the sticker's creation time in UTC."""
+        """Returns the sticker's creation time in UTC.
+        """
         return snowflake_time(self.id)
 
 

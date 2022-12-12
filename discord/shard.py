@@ -257,7 +257,8 @@ class ShardInfo:
         self.shard_count: int | None = shard_count
 
     def is_closed(self) -> bool:
-        """Whether the shard connection is currently closed."""
+        """Whether the shard connection is currently closed.
+        """
         return not self._parent.ws.open
 
     async def disconnect(self) -> None:
@@ -294,7 +295,8 @@ class ShardInfo:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard.
+        """
         return self._parent.ws.latency
 
     def is_ws_ratelimited(self) -> bool:
@@ -405,7 +407,8 @@ class AutoShardedClient(Client):
         ]
 
     def get_shard(self, shard_id: int) -> ShardInfo | None:
-        """Gets the shard information at a given shard ID or ``None`` if not found."""
+        """Gets the shard information at a given shard ID or ``None`` if not found.
+        """
         try:
             parent = self.__shards[shard_id]
         except KeyError:
@@ -415,7 +418,8 @@ class AutoShardedClient(Client):
 
     @property
     def shards(self) -> dict[int, ShardInfo]:
-        """Returns a mapping of shard IDs to their respective info object."""
+        """Returns a mapping of shard IDs to their respective info object.
+        """
         return {
             shard_id: ShardInfo(parent, self.shard_count)
             for shard_id, parent in self.__shards.items()
