@@ -246,8 +246,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return try_enum(ChannelType, self._type)
 
     @property
@@ -265,8 +264,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def members(self) -> list[Member]:
-        """Returns all members that can see this channel.
-        """
+        """Returns all members that can see this channel."""
         return [m for m in self.guild.members if self.permissions_for(m).read_messages]
 
     @property
@@ -282,8 +280,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ]
 
     def is_nsfw(self) -> bool:
-        """Checks if the channel is NSFW.
-        """
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -312,8 +309,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         )
 
     async def edit(self, **options) -> _TextChannel:
-        """Edits the channel.
-        """
+        """Edits the channel."""
         raise NotImplementedError
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -755,14 +751,12 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self
 
     def is_news(self) -> bool:
-        """Checks if the channel is a news/announcements channel.
-        """
+        """Checks if the channel is a news/announcements channel."""
         return self._type == ChannelType.news.value
 
     @property
     def news(self) -> bool:
-        """Equivalent to :meth:`is_news`.
-        """
+        """Equivalent to :meth:`is_news`."""
         return self.is_news()
 
     @overload
@@ -1027,8 +1021,7 @@ class ForumChannel(_TextChannel):
 
     @property
     def guidelines(self) -> str | None:
-        """The channel's guidelines. An alias of :attr:`topic`.
-        """
+        """The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
 
     @property
@@ -1412,8 +1405,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
 
     @property
     def members(self) -> list[Member]:
-        """Returns all members that are currently inside this voice channel.
-        """
+        """Returns all members that are currently inside this voice channel."""
         ret = []
         for user_id, state in self.guild._voice_states.items():
             if state.channel and state.channel.id == self.id:
@@ -1538,8 +1530,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         return self
 
     def is_nsfw(self) -> bool:
-        """Checks if the channel is NSFW.
-        """
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -1794,8 +1785,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return ChannelType.voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -2028,8 +2018,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def requesting_to_speak(self) -> list[Member]:
-        """A list of members who are requesting to speak in the stage channel.
-        """
+        """A list of members who are requesting to speak in the stage channel."""
         return [
             member
             for member in self.members
@@ -2075,8 +2064,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return ChannelType.stage_voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -2346,13 +2334,11 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return ChannelType.category
 
     def is_nsfw(self) -> bool:
-        """Checks if the category is NSFW.
-        """
+        """Checks if the category is NSFW."""
         return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -2446,8 +2432,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def text_channels(self) -> list[TextChannel]:
-        """Returns the text channels that are under this category.
-        """
+        """Returns the text channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2458,8 +2443,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def voice_channels(self) -> list[VoiceChannel]:
-        """Returns the voice channels that are under this category.
-        """
+        """Returns the voice channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2618,8 +2602,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return ChannelType.private
 
     @property
@@ -2632,8 +2615,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """Returns the direct message channel's creation time in UTC.
-        """
+        """Returns the direct message channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     def permissions_for(self, obj: Any = None, /) -> Permissions:
@@ -2779,22 +2761,19 @@ class GroupChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """The channel's Discord type.
-        """
+        """The channel's Discord type."""
         return ChannelType.group
 
     @property
     def icon(self) -> Asset | None:
-        """Returns the channel's icon asset if available.
-        """
+        """Returns the channel's icon asset if available."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="channel")
 
     @property
     def created_at(self) -> datetime.datetime:
-        """Returns the channel's creation time in UTC.
-        """
+        """Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
