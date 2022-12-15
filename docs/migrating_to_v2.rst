@@ -126,7 +126,7 @@ Intents Changes
 
 :attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`,
 :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string
-or an empty array), directly causing :class:`ext.commands.Command`s to not run.
+or an empty array), directly causing :class:`ext.commands.Command` s to not run.
 See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information.
 
 

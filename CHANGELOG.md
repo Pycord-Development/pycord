@@ -12,6 +12,24 @@ These changes are available on the `master` branch, but have not yet been releas
 
 _No changes yet_
 
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed bridge groups missing the `parent` attribute.
+  ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
+
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed another `AttributeError` relating to the new `bridge_commands` attribute on
+  `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
+- Fixed an `AttributeError` in select relating to the select type.
+  ([#1814](https://github.com/Pycord-Development/pycord/pull/1814))
+- Fixed `Thread.applied_tags` always returning an empty list.
+  ([#1817](https://github.com/Pycord-Development/pycord/pull/1817))
+
 ## [2.3.1] - 2022-11-27
 
 ### Fixed
@@ -454,7 +472,8 @@ _No changes yet_
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
+[2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
