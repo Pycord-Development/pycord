@@ -2177,7 +2177,7 @@ class Guild(Hashable):
         limit: Optional[:class:`int`]
             The number of bans to retrieve. Defaults to 1000.
         before: Optional[:class:`.abc.Snowflake`]
-            Retrieve bans before given user id.
+            Retrieve bans before given user ID.
         after: Optional[:class:`.abc.Snowflake`]
             Retrieve bans after given user id.
 
