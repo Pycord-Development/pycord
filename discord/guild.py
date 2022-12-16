@@ -2163,7 +2163,7 @@ class Guild(Hashable):
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
         have the :attr:`~Permissions.ban_members` permission.
-        Provide a user id to before and after for pagination.
+        Provide a user ID to before and after for pagination.
         Users will always be returned in ascending order by user.id. If both before and after are provided, only before is respected.
 
         .. versionchanged:: 2.0
