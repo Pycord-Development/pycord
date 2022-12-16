@@ -2179,7 +2179,7 @@ class Guild(Hashable):
         before: Optional[:class:`.abc.Snowflake`]
             Retrieve bans before given user ID.
         after: Optional[:class:`.abc.Snowflake`]
-            Retrieve bans after given user id.
+            Retrieve bans after given user ID.
 
         Yields
         ------
