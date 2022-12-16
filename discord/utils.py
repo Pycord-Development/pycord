@@ -1105,16 +1105,16 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
 
     .. versionadded:: 2.0
 
+    .. warning::
+
+        The last chunk collected may not be as large as ``max_size``.
+
     Parameters
     ----------
     iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
         The iterator to chunk, can be sync or async.
     max_size: :class:`int`
         The maximum chunk size.
-
-    .. warning::
-
-        The last chunk collected may not be as large as ``max_size``.
 
     Returns
     -------
