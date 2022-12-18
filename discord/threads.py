@@ -41,7 +41,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
-    from .channel import CategoryChannel, ForumChannel, TextChannel
+    from .channel import CategoryChannel, ForumChannel, ForumTag, TextChannel
     from .guild import Guild
     from .member import Member
     from .message import Message, PartialMessage
@@ -128,6 +128,12 @@ class Thread(Messageable, Hashable):
         Extra features of the thread.
 
         .. versionadded:: 2.0
+    total_message_sent: :class:`int`
+        Number of messages ever sent in a thread.
+        It's similar to message_count on message creation,
+        but will not decrement the number when a message is deleted.
+
+        .. versionadded:: 2.3
     """
 
     __slots__ = (
@@ -137,6 +143,7 @@ class Thread(Messageable, Hashable):
         "_type",
         "_state",
         "_members",
+        "_applied_tags",
         "owner_id",
         "parent_id",
         "last_message_id",
@@ -151,6 +158,7 @@ class Thread(Messageable, Hashable):
         "archive_timestamp",
         "created_at",
         "flags",
+        "total_message_sent",
     )
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: ThreadPayload):
@@ -189,6 +197,10 @@ class Thread(Messageable, Hashable):
         self.message_count = data.get("message_count", None)
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+        self.total_message_sent = data.get("total_message_sent", None)
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
@@ -202,6 +214,11 @@ class Thread(Messageable, Hashable):
                 thread.message_count
                 if self.message_count is None
                 else self.message_count
+            )
+            self.total_message_sent = (
+                thread.total_message_sent
+                if self.total_message_sent is None
+                else self.total_message_sent
             )
             self.member_count = (
                 thread.member_count if self.member_count is None else self.member_count
@@ -275,6 +292,22 @@ class Thread(Messageable, Hashable):
         needed.
         """
         return list(self._members.values())
+
+    @property
+    def applied_tags(self) -> list[ForumTag]:
+        """List[:class:`ForumTag`]: A list of tags applied to this thread.
+
+        This is only available for threads in forum channels.
+        """
+        from .channel import ForumChannel  # to prevent circular import
+
+        if isinstance(self.parent, ForumChannel):
+            return [
+                tag
+                for tag_id in self._applied_tags
+                if (tag := self.parent.get_tag(tag_id)) is not None
+            ]
+        return []
 
     @property
     def last_message(self) -> Message | None:
@@ -356,6 +389,13 @@ class Thread(Messageable, Hashable):
             The message that started this thread or ``None`` if not found in the cache.
         """
         return self._state._get_message(self.id)
+
+    def is_pinned(self) -> bool:
+        """Whether the thread is pinned to the top of its parent forum channel.
+
+        .. versionadded:: 2.3
+        """
+        return self.flags.pinned
 
     def is_private(self) -> bool:
         """Whether the thread is a private thread.
@@ -561,6 +601,7 @@ class Thread(Messageable, Hashable):
         slowmode_delay: int = MISSING,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         pinned: bool = MISSING,
+        applied_tags: list[ForumTag] = MISSING,
         reason: str | None = None,
     ) -> Thread:
         """|coro|
@@ -595,6 +636,10 @@ class Thread(Messageable, Hashable):
             The reason for editing this thread. Shows up on the audit log.
         pinned: :class:`bool`
             Whether to pin the thread or not. This only works if the thread is part of a forum.
+        applied_tags: List[:class:`ForumTag`]
+            The set of tags to apply to the thread. Each tag object should have an ID set.
+
+            .. versionadded:: 2.3
 
         Returns
         -------
@@ -626,6 +671,8 @@ class Thread(Messageable, Hashable):
             flags = ChannelFlags._from_value(self.flags.value)
             flags.pinned = pinned
             payload["flags"] = flags.value
+        if applied_tags is not MISSING:
+            payload["applied_tags"] = [tag.id for tag in applied_tags]
 
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
         # The data payload will always be a Thread payload

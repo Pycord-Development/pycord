@@ -200,6 +200,7 @@ class CogMeta(type):
 
                     commands[f"ext_{elem}"] = value.ext_variant
                     commands[f"app_{elem}"] = value.slash_variant
+                    commands[elem] = value
                     for cmd in getattr(value, "subcommands", []):
                         commands[
                             f"ext_{cmd.ext_variant.qualified_name}"
@@ -230,9 +231,13 @@ class CogMeta(type):
 
         # Either update the command with the cog provided defaults or copy it.
         # r.e type ignore, type-checker complains about overriding a ClassVar
-        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) for c in new_cls.__cog_commands__)  # type: ignore
+        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
 
-        name_filter = lambda c: "app" if isinstance(c, ApplicationCommand) else "ext"
+        name_filter = (
+            lambda c: "app"
+            if isinstance(c, ApplicationCommand)
+            else ("bridge" if not hasattr(c, "add_to") else "ext")
+        )
 
         lookup = {
             f"{name_filter(cmd)}_{cmd.qualified_name}": cmd
@@ -248,7 +253,9 @@ class CogMeta(type):
             ):
                 command.guild_ids = new_cls.__cog_guild_ids__
 
-            if not isinstance(command, SlashCommandGroup):
+            if not isinstance(command, SlashCommandGroup) and not hasattr(
+                command, "add_to"
+            ):
                 # ignore bridge commands
                 cmd = getattr(new_cls, command.callback.__name__, None)
                 if hasattr(cmd, "add_to"):
@@ -535,6 +542,10 @@ class Cog(metaclass=CogMeta):
         # we've added so far for some form of atomic loading.
 
         for index, command in enumerate(self.__cog_commands__):
+            if hasattr(command, "add_to"):
+                bot.bridge_commands.append(command)
+                continue
+
             command._set_cog(self)
 
             if isinstance(command, ApplicationCommand):

@@ -34,7 +34,7 @@ dynamic = ["version", "dependencies", "optional-dependencies"]
 
 [project.urls]
 Homepage = "https://pycord.dev"
-Changelog = "https://github.com/Pycord-Development/pycord/blob/master/CHANGELOG.md"
+Changelog = "https://docs.pycord.dev/en/master/changelog.html"
 Source = "https://github.com/Pycord-Development/pycord"
 Documentation = "https://docs.pycord.dev"
 Tracker = "https://github.com/Pycord-Development/pycord/issues"

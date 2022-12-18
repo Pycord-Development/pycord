@@ -51,7 +51,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: attachment
 
-        An attachment. Currently in beta.
+        An attachment.
 
 .. class:: ChannelType
 
@@ -113,7 +113,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: forum
 
-        User can only write in threads, similar functionality to a forum, currently in experiment.
+        User can only write in threads, similar functionality to a forum.
 
         .. versionadded:: 2.0
 
@@ -303,7 +303,7 @@ of :class:`enum.Enum`.
         The user is an Early Verified Bot Developer.
     .. attribute:: discord_certified_moderator
 
-        The user is a Discord Certified Moderator.
+        The user is a Moderator Programs Alumni.
     .. attribute:: bot_http_interactions
 
         The bot has set an interactions endpoint url.

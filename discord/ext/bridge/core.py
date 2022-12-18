@@ -191,6 +191,10 @@ class BridgeCommand:
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
 
+    @property
+    def qualified_name(self) -> str:
+        return self.slash_variant.qualified_name
+
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
 
@@ -307,12 +311,17 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
 
+    ext_variant: BridgeExtGroup
+    slash_variant: BridgeSlashGroup
+
     def __init__(self, callback, *args, **kwargs):
-        self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        name = kwargs.pop("name", self.ext_variant.name)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(
-            callback, name, *args, **kwargs
+        super().__init__(
+            callback,
+            ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
+            slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
+            parent=kwargs.pop("parent", None),
         )
+
         self.subcommands: list[BridgeCommand] = []
 
         self.mapped: SlashCommand | None = None
