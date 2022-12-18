@@ -3650,6 +3650,7 @@ class Guild(Hashable):
         location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
+        cover: bytes = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
@@ -3672,6 +3673,8 @@ class Guild(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        cover: Optional[:class:`bytes`]
+            The cover image of the scheduled event
 
         Returns
         -------
@@ -3708,6 +3711,9 @@ class Guild(Hashable):
 
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
+
+        if cover is not MISSING:
+            payload["image"] = utils._bytes_to_base64_data(cover)
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload
