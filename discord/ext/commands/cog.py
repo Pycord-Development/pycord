@@ -54,7 +54,7 @@ class Cog(Cog):
 
         Yields
         ------
-        Union[:class:`.Invokable`]
+        :class:`.Invokable`
             A command or group from the cog.
         """
         from .core import GroupMixin
@@ -74,7 +74,7 @@ class Cog(Cog):
         r"""
         Returns
         --------
-        List[:class:`~discord.Invokable`]]
+        List[:class:`.Invokable`]
             A :class:`list` of commands that are defined inside this cog.
 
             .. note::

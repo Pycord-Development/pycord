@@ -348,7 +348,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 else:
                     raise errors.CheckFailure("The global check once functions failed.")
             except errors.CommandError as exc:
-                await ctx.command.dispatch_error(ctx, exc)
+                await ctx.command._dispatch_error(ctx, exc)
             else:
                 self.dispatch("command_completion", ctx)
         elif ctx.invoked_with:

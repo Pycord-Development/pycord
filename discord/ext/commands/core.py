@@ -289,7 +289,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         self.params = get_signature_parameters(func, globalns)
 
-    async def _dispatch_error(self, ctx: Context, error: Exception) -> None:
+    async def __dispatch_error(self, ctx: Context, error: Exception) -> None:
         ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
@@ -871,7 +871,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         ctx.subcommand_passed = None
         early_invoke = not self.invoke_without_command
         if early_invoke:
-            await self.prepare(ctx)
+            await self._prepare(ctx)
 
         view = ctx.view
         previous = view.index
@@ -905,7 +905,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
             await self._parse_arguments(ctx)
 
             if call_hooks:
-                await self.call_before_hooks(ctx)
+                await self._call_before_hooks(ctx)
 
         view = ctx.view
         previous = view.index
@@ -924,7 +924,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
                 raise
             finally:
                 if call_hooks:
-                    await self.call_after_hooks(ctx)
+                    await self._call_after_hooks(ctx)
 
         ctx.invoked_parents.append(ctx.invoked_with)  # type: ignore
 

@@ -139,7 +139,7 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
     def _get_signature_parameters(self):
         return OrderedDict(inspect.signature(self.callback).parameters)
 
-    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+    async def __dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         ctx.bot.dispatch("application_command_error", ctx, error)
 
     @property

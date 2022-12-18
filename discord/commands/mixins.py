@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 import functools
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar, Union, overload
 
 from .. import abc, utils
 from ..errors import (
@@ -139,7 +139,7 @@ def hook_wrapped_callback(command: Invokable, ctx: BaseContext, coro: Callback):
         finally:
             if command._max_concurrency is not None:
                 await command._max_concurrency.release(ctx)
-            await command.call_after_hooks(ctx)
+            await command._call_after_hooks(ctx)
 
         return ret
 
@@ -537,10 +537,29 @@ class Invokable(Generic[CogT, P, T]):
         """
         new_args = (ctx, *args)
         if self.cog is not None:
-            new_args = (self.cog, *args)
+            new_args = (self.cog, *new_args)
         return await self.callback(*new_args, **kwargs)
 
-    def update(self, **kwargs: Any) -> None:
+    @overload
+    def update(
+        self,
+        *,
+        func: Callback | None = ...,
+        name: str | None = ...,
+        enabled: bool = False,
+        cooldown_after_parsing: bool = ...,
+        parent: Invokable | None = ...,
+        checks: list[Check] = ...,
+        cooldown: CooldownMapping | None = ...,
+        max_concurrency: MaxConcurrency | None = ...,
+    ) -> None:
+        ...
+
+    @overload
+    def update(self) -> None:
+        ...
+
+    def update(self, **kwargs) -> None:
         """Updates the :class:`Invokable` instance with updated attribute.
 
         Similar to creating a new instance except it updates the current.
@@ -802,7 +821,7 @@ class Invokable(Generic[CogT, P, T]):
             if retry_after:
                 raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
 
-    async def call_before_hooks(self, ctx: BaseContext) -> None:
+    async def _call_before_hooks(self, ctx: BaseContext) -> None:
         # now that we're done preparing we can call the pre-command hooks
         # first, call the command local hook:
         cog = self.cog
@@ -827,7 +846,7 @@ class Invokable(Generic[CogT, P, T]):
         if hook is not None:
             await hook(ctx)
 
-    async def call_after_hooks(self, ctx: BaseContext) -> None:
+    async def _call_after_hooks(self, ctx: BaseContext) -> None:
         cog = self.cog
         if self._after_invoke is not None:
             instance = getattr(self._after_invoke, "__self__", cog)
@@ -850,7 +869,7 @@ class Invokable(Generic[CogT, P, T]):
         """Parses arguments and attaches them to the context class (Union[:class:`~ext.commands.Context`, :class:`.ApplicationContext`])"""
         raise NotImplementedError
 
-    async def prepare(self, ctx: BaseContext) -> None:
+    async def _prepare(self, ctx: BaseContext) -> None:
         ctx.command = self
 
         if not await self.can_run(ctx):
@@ -870,7 +889,7 @@ class Invokable(Generic[CogT, P, T]):
                 self._prepare_cooldowns(ctx)
                 await self._parse_arguments(ctx)
 
-            await self.call_before_hooks(ctx)
+            await self._call_before_hooks(ctx)
         except:
             if self._max_concurrency is not None:
                 await self._max_concurrency.release(ctx)  # type: ignore
@@ -884,7 +903,7 @@ class Invokable(Generic[CogT, P, T]):
         ctx: :class:`.BaseContext`
             The context to pass into the command.
         """
-        await self.prepare(ctx)
+        await self._prepare(ctx)
 
         # terminate the invoked_subcommand chain.
         # since we're in a regular command (and not a group) then
@@ -914,7 +933,7 @@ class Invokable(Generic[CogT, P, T]):
         await self._parse_arguments(ctx)
 
         if call_hooks:
-            await self.call_before_hooks(ctx)
+            await self._call_before_hooks(ctx)
 
         ctx.invoked_subcommand = None
         try:
@@ -924,14 +943,14 @@ class Invokable(Generic[CogT, P, T]):
             raise
         finally:
             if call_hooks:
-                await self.call_after_hooks(ctx)
+                await self._call_after_hooks(ctx)
 
-    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+    async def __dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         # since I don't want to copy paste code, subclassed Contexts
         # dispatch it to their corresponding events
         raise NotImplementedError
 
-    async def dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
 
@@ -949,4 +968,4 @@ class Invokable(Generic[CogT, P, T]):
                     wrapped = wrap_callback(local)
                     await wrapped(ctx, error)
         finally:
-            await self._dispatch_error(ctx, error)
+            await self.__dispatch_error(ctx, error)

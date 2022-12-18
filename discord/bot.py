@@ -1116,7 +1116,7 @@ class ApplicationCommandMixin(ABC):
             else:
                 raise CheckFailure("The global check once functions failed.")
         except DiscordException as exc:
-            await ctx.command.dispatch_error(ctx, exc)
+            await ctx.command._dispatch_error(ctx, exc)
         else:
             self._bot.dispatch("application_command_completion", ctx)
 

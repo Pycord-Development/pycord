@@ -96,7 +96,7 @@ class Context(BaseContext, Generic[BotT]):
         prefix: str | None = None,
         command: Command | None = None,
         current_parameter: inspect.Parameter | None = None,
-        **kwargs2,
+        **kwargs2: dict[str, Any],
     ):
         super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
 

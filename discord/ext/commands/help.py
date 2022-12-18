@@ -199,7 +199,7 @@ class _HelpCommandImpl(Command):
         self._original = inject
         self._injected = inject
 
-    async def prepare(self, ctx):
+    async def _prepare(self, ctx):
         self._injected = injected = self._original.copy()
         injected.context = ctx
         self.callback = injected.command_callback
@@ -211,7 +211,7 @@ class _HelpCommandImpl(Command):
             else:
                 self.on_error = on_error
 
-        await super().prepare(ctx)
+        await super()._prepare(ctx)
 
     async def _parse_arguments(self, ctx):
         # Make the parser think we don't have a cog so it doesn't
