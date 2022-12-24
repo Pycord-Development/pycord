@@ -37,36 +37,39 @@ To install the library without full voice support, you can just run the followin
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U py-cord
+    python3 -m pip install -U git+https://github.com/GidorStudios/pycord
 
     # Windows
-    py -3 -m pip install -U py-cord
+    py -3 -m pip install -U git+https://github.com/GidorStudios/pycord
 
 Otherwise to get voice support you should run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[voice]"
+    git clone https://github.com/GidorStudios/pycord
+    cd pycord
+    python3 -m pip install -U .[speed]
 
     # Windows
-    py -3 -m pip install -U py-cord[voice]
+    git clone https://github.com/GidorStudios/pycord
+    cd pycord
+    py -3 -m pip install -U .[voice]
 
 To install additional packages for speedup, run the following command:
 
 .. code:: sh
 
-    # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
-    # Windows
-    py -3 -m pip install -U py-cord[speed]
+    $ git clone https://github.com/GidorStudios/pycord
+    $ cd pycord
+    $ py -3 -m pip install -U .[speed]
 
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/Pycord-Development/pycord
+    $ git clone https://github.com/GidorStudios/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
 
@@ -75,9 +78,9 @@ or if you do not want to clone the repository:
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install git+https://github.com/Pycord-Development/pycord
+    python3 -m pip install git+https://github.com/GidorStudios/pycord
     # Windows
-    py -3 -m pip install git+https://github.com/Pycord-Development/pycord
+    py -3 -m pip install git+https://github.com/GidorStudios/pycord
 
 
 Optional Packages
