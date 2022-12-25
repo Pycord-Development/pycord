@@ -146,9 +146,27 @@ Guild
 .. autoclass:: Template()
     :members:
 
+AutoMod
+~~~~~~~
+
 .. attributetable:: AutoModRule
 
 .. autoclass:: AutoModRule()
+    :members:
+
+.. attributetable:: AutoModAction
+
+.. autoclass:: AutoModAction()
+    :members:
+
+.. attributetable:: AutoModActionMetadata
+
+.. autoclass:: AutoModActionMetadata()
+    :members:
+
+.. attributetable:: AutoModTriggerMetadata
+
+.. autoclass:: AutoModTriggerMetadata()
     :members:
 
 Invites
