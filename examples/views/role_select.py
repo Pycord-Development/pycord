@@ -1,10 +1,10 @@
 import discord
 
-# Role selects (dropdowns) are a new type of select menu/dropdown Discord has added to people can select guild/server roles from a dropdown
+# Role selects (dropdowns) are a new type of select menu/dropdown Discord has added so people can select server roles from a dropdown.
 
 # Defines a simple View that allows the user to use the Select menu.
-# In the view, we define the role_select with `discord.ui.role_select`
-# Using the decorator automatically sets `select_type` to `discord.ComponentType.role_select`, which is what you need
+# In this view, we define the role_select with `discord.ui.role_select`
+# Using the decorator automatically sets `select_type` to `discord.ComponentType.role_select`.
 class DropdownView(discord.ui.View):
     def __init__(self):
         super().__init__()

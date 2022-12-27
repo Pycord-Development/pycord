@@ -1,10 +1,10 @@
 import discord
 
-# Channel selects (dropdowns) are a new type of select menu/dropdown Discord has added to people can select channels from a dropdown
+# Channel selects (dropdowns) are a new type of select menu/dropdown Discord has added so users can select channels from a dropdown.
 
 # Defines a simple View that allows the user to use the Select menu.
-# In the view, we define the channel_select with `discord.ui.channel_select`
-# Using the decorator automatically sets `select_type` to `discord.ComponentType.channel_select`, which is what you need
+# In this view, we define the channel_select with `discord.ui.channel_select`
+# Using the decorator automatically sets `select_type` to `discord.ComponentType.channel_select`.
 class DropdownView(discord.ui.View):
     def __init__(self):
         super().__init__()
