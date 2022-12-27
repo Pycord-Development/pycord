@@ -8,9 +8,15 @@ import discord
 class DropdownView(discord.ui.View):
     def __init__(self):
         super().__init__()
-    @discord.ui.channel_select(placeholder='Select channels...', min_values=1, max_values=3) # Users can select a maximum of 3 channels in the dropdown
+
+    @discord.ui.channel_select(
+        placeholder="Select channels...", min_values=1, max_values=3
+    )  # Users can select a maximum of 3 channels in the dropdown
     async def channel_select_dropdown(self, select, interaction):
-      await interaction.response.send_message(f'You selected the following channels:' + f', '.join(f'{channel.mention}' for channel in select.values))
+        await interaction.response.send_message(
+            f"You selected the following channels:"
+            + f", ".join(f"{channel.mention}" for channel in select.values)
+        )
 
 
 bot = discord.Bot(debug_guilds=[...])
