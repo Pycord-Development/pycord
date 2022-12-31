@@ -1163,6 +1163,13 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         if self.auto_sync_commands:
             await self.sync_commands()
 
+        if not self.owner_id and not self.owner_ids:
+            app = await self.application_info()  # type: ignore
+            if app.team:
+                self.owner_ids = {m.id for m in app.team.members}
+            else:
+                self.owner_id = app.owner.id
+
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
 
