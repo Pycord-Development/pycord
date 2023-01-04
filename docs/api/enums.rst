@@ -250,7 +250,7 @@ of :class:`enum.Enum`.
     .. attribute:: role_subscription_purchase
 
         The system message denoting a role-subscription purchase.
-        
+
         .. versionadded:: 2.3
 
 .. class:: UserFlags
