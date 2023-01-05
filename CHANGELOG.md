@@ -15,7 +15,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
   `mention_total_limit`; and added the `mention_spam` trigger type.
   ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
-
 - Added new message types, `interaction_premium_upsell`, `stage_start`, `stage_end`,
   `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
   `guild_application_premium_subscription`.
