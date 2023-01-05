@@ -82,7 +82,7 @@ repos:
       - id: prettier
         args: [--prose-wrap=always, --print-width=88]
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v0.7.3 # TODO: Change this when v8.0 is released
+    rev: v0.7.3
     hooks:
       - id: pydocstringformatter
         args:
