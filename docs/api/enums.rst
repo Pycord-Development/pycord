@@ -1761,19 +1761,19 @@ of :class:`enum.Enum`.
         Represents the embedded application Awkword.
 
         .. warning::
-                
+
             This activity has been removed.
-    
+
     .. attribute:: awkword_dev
 
         Development version of :attr:`.awkword`.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: bash_out
-            
+
         Represents the embedded application Bash Out.
 
         .. versionadded:: 2.4
@@ -1787,13 +1787,13 @@ of :class:`enum.Enum`.
         Represents the embedded application Blazing 8s.
 
         .. versionadded:: 2.4
-    
+
     .. attribute:: blazing_8s_dev
 
         Development version of :attr:`.blazing_8s`.
 
         .. versionadded:: 2.4
-    
+
     .. attribute:: blazing_8s_qa
 
         QA version of :attr:`.blazing_8s`.
@@ -1805,9 +1805,9 @@ of :class:`enum.Enum`.
         Staging version of :attr:`.blazing_8s`.
 
         .. versionadded:: 2.4
-    
+
     .. attribute:: bobble_league
-            
+
         Represents the embedded application Bobble League.
 
         .. versionadded:: 2.4
@@ -1819,7 +1819,7 @@ of :class:`enum.Enum`.
     .. attribute:: checkers_in_the_park_dev
 
         Development version of :attr:`.checkers_in_the_park`.
-    
+
     .. attribute:: checkers_in_the_park_qa
 
         QA version of :attr:`.checkers_in_the_park`.
@@ -1849,7 +1849,7 @@ of :class:`enum.Enum`.
         Represents the embedded application Decoders Development.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: doodle_crew
@@ -1857,7 +1857,7 @@ of :class:`enum.Enum`.
         Represents the embedded application Doodle Crew.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: doodle_crew_dev
@@ -1865,13 +1865,13 @@ of :class:`enum.Enum`.
         Development version of :attr:`.doodle_crew`.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: fishington
 
         Represents the embedded application Fishington.io.
-    
+
     .. attribute:: know_what_i_meme
 
         Represents the embedded application Know What I Meme.
@@ -1887,7 +1887,7 @@ of :class:`enum.Enum`.
     .. attribute:: letter_league
 
         Represents the embedded application Letter League.
-    
+
     .. attribute:: letter_league_dev
 
         Development version of :attr:`.letter_league`.
@@ -1923,7 +1923,7 @@ of :class:`enum.Enum`.
         Development version of :attr:`.putt_party`.
 
         .. versionadded:: 2.4
-    
+
     .. attribute:: putt_party_qa
 
         QA version of :attr:`.putt_party`.
@@ -1941,17 +1941,17 @@ of :class:`enum.Enum`.
         Represents the embedded application Putts.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: sketch_heads
-    
+
         Represents the embedded application Sketch Heads.
 
         .. versionadded:: 2.4
 
     .. attribute:: sketch_heads_dev
-            
+
         Development version of :attr:`.sketch_heads`.
 
         .. versionadded:: 2.4
@@ -1961,7 +1961,7 @@ of :class:`enum.Enum`.
         Represents the embedded application Sketchy Artist.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: sketchy_artist_dev
@@ -1969,13 +1969,13 @@ of :class:`enum.Enum`.
         Development version of :attr:`.sketchy_artist`.
 
         .. warning::
-                
+
             This activity has been removed.
 
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
-    
+
     .. attribute:: spell_cast_staging
 
         Staging version of :attr:`.spell_cast`.
