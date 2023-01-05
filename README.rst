@@ -25,10 +25,15 @@ Fork Features
 - Createing thread from forum channel return Tuple[Thread,Message]
 - Create , delete , get tags
 - Add multiple users to thread 
+
 .. code:: py 
+
    thread.add_users(users : list[Snowflake])
+   
 - Add role/s members to thread 
+
 .. code:: py 
+
    add_users_from_role(self, role: Snowflake = None , role_id : int = None , roles : list[Role] = None , role_ids : list[int] = None)
 
 
