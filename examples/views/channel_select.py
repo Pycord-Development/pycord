@@ -9,7 +9,9 @@ class DropdownView(discord.ui.View):
     @discord.ui.channel_select(
         placeholder="Select channels...", min_values=1, max_values=3
     )  # Users can select a maximum of 3 channels in the dropdown
-    async def channel_select_dropdown(self, select: discord.ui.Select, interaction: discord.Interaction) -> None:
+    async def channel_select_dropdown(
+        self, select: discord.ui.Select, interaction: discord.Interaction
+    ) -> None:
         await interaction.response.send_message(
             f"You selected the following channels:"
             + f", ".join(f"{channel.mention}" for channel in select.values)
