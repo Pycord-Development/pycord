@@ -6,8 +6,6 @@ import discord
 # In this view, we define the channel_select with `discord.ui.channel_select`
 # Using the decorator automatically sets `select_type` to `discord.ComponentType.channel_select`.
 class DropdownView(discord.ui.View):
-    def __init__(self):
-        super().__init__()
 
     @discord.ui.channel_select(
         placeholder="Select channels...", min_values=1, max_values=3

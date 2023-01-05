@@ -6,8 +6,6 @@ import discord
 # In this view, we define the role_select with `discord.ui.role_select`
 # Using the decorator automatically sets `select_type` to `discord.ComponentType.role_select`.
 class DropdownView(discord.ui.View):
-    def __init__(self):
-        super().__init__()
 
     @discord.ui.role_select(
         placeholder="Select roles...", min_values=1, max_values=3
