@@ -242,6 +242,58 @@ of :class:`enum.Enum`.
         The system message denoting that an context menu command was executed.
 
         .. versionadded:: 2.0
+    .. attribute:: auto_moderation_action
+
+        The system message denoting an action by automod.
+
+        .. versionadded:: 2.3
+    .. attribute:: role_subscription_purchase
+
+        The system message denoting a role-subscription purchase.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: interaction_premium_upsell
+
+        The system message denoting an interaction premium upsell.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_start
+
+        The system message denoting that a stage event has started.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_end
+
+        The system message denoting that a stage event has ended.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_speaker
+
+        The system message denoting that a stage event has a new speaker.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_raise_hand
+
+        The system message denoting that a stage event has someone has raised their hand.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_topic
+
+        The system message denoting that a stage event has a new topic.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: guild_application_premium_subscription
+
+        The system message denoting that a member has subscribed to a guild application.
+
+        .. versionadded:: 2.4
 
 .. class:: UserFlags
 
@@ -1867,3 +1919,97 @@ of :class:`enum.Enum`.
     .. attribute:: guild_only
 
         Represents a scheduled event that is only available to members inside the guild.
+
+.. class:: AutoModTriggerType
+
+    Represents an AutoMod trigger type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: keyword
+
+        Represents a keyword rule trigger, which are customizable by a guild.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.keyword_filter`
+        - :attr:`~AutoModTriggerMetadata.regex_patterns`
+        - :attr:`~AutoModTriggerMetadata.allow_list`
+
+    .. attribute:: keyword_preset
+
+        Represents a preset keyword rule trigger.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.presets`
+        - :attr:`~AutoModTriggerMetadata.allow_list`
+
+    .. attribute:: spam
+
+        Represents the spam rule trigger.
+
+        There are no possible attributes for :class:`AutoModTriggerMetadata`.
+
+    .. attribute:: mention_spam
+
+        Represents a mention spam keyword rule trigger.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.mention_total_limit`
+
+        .. versionadded:: 2.4
+
+    .. attribute:: harmful_link
+
+        Represents a harmful link rule trigger.
+
+        .. deprecated:: 2.4
+            Removed by Discord and merged into :attr:`spam`.
+
+.. class:: AutoModEventType
+
+    Represents an AutoMod event type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: message_send
+
+        Represents a message send AutoMod event.
+
+.. class:: AutoModActionType
+
+    Represents the type of action AutoMod is performing.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: block_message
+
+        Represents a block message action.
+
+    .. attribute:: send_alert_message
+
+        Represents a send alert message action.
+
+    .. attribute:: timeout
+
+        Represents a timeout action.
+
+.. class:: AutoModKeywordPresetType
+
+    Represents an AutoMod keyword preset type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: profanity
+
+        Represents the profanity keyword preset rule.
+
+    .. attribute:: sexual_content
+
+        Represents the sexual content keyword preset rule.
+
+    .. attribute:: slurs
+
+        Represents the slurs keyword preset rule.

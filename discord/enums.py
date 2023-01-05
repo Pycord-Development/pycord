@@ -248,6 +248,14 @@ class MessageType(Enum):
     guild_invite_reminder = 22
     context_menu_command = 23
     auto_moderation_action = 24
+    role_subscription_purchase = 25
+    interaction_premium_upsell = 26
+    stage_start = 27
+    stage_end = 28
+    stage_speaker = 29
+    stage_raise_hand = 30
+    stage_topic = 31
+    guild_application_premium_subscription = 32
 
 
 class VoiceRegion(Enum):
@@ -880,6 +888,7 @@ class AutoModTriggerType(Enum):
     harmful_link = 2
     spam = 3
     keyword_preset = 4
+    mention_spam = 5
 
 
 class AutoModEventType(Enum):
