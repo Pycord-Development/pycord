@@ -246,7 +246,7 @@ of :class:`enum.Enum`.
 
         The system message denoting an action by automod.
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.3
     .. attribute:: role_subscription_purchase
 
         The system message denoting a role-subscription purchase.
