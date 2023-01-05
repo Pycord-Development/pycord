@@ -310,7 +310,7 @@ class Member(discord.abc.Messageable, _UserTag):
         )
         self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
-        self.activities: tuple[ActivityTypes, ...] = tuple()
+        self.activities: tuple[ActivityTypes, ...] = ()
         self.nick: str | None = data.get("nick", None)
         self.pending: bool = data.get("pending", False)
         self._avatar: str | None = data.get("avatar")
@@ -323,7 +323,8 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def __repr__(self) -> str:
         return (
-            f"<Member id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
+            "<Member"
+            f" id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
             f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
         )
 
@@ -442,14 +443,14 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def status(self) -> Status:
-        """:class:`Status`: The member's overall status.
+        """The member's overall status.
         If the value is unknown, then it will be a :class:`str` instead.
         """
         return try_enum(Status, self._client_status[None])
 
     @property
     def raw_status(self) -> str:
-        """:class:`str`: The member's overall status as a string value.
+        """The member's overall status as a string value.
 
         .. versionadded:: 1.5
         """
@@ -462,26 +463,26 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def mobile_status(self) -> Status:
-        """:class:`Status`: The member's status on a mobile device, if applicable."""
+        """The member's status on a mobile device, if applicable."""
         return try_enum(Status, self._client_status.get("mobile", "offline"))
 
     @property
     def desktop_status(self) -> Status:
-        """:class:`Status`: The member's status on the desktop client, if applicable."""
+        """The member's status on the desktop client, if applicable."""
         return try_enum(Status, self._client_status.get("desktop", "offline"))
 
     @property
     def web_status(self) -> Status:
-        """:class:`Status`: The member's status on the web client, if applicable."""
+        """The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))
 
     def is_on_mobile(self) -> bool:
-        """:class:`bool`: A helper function that determines if a member is active on a mobile device."""
+        """A helper function that determines if a member is active on a mobile device."""
         return "mobile" in self._client_status
 
     @property
     def colour(self) -> Colour:
-        """:class:`Colour`: A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered colour
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
@@ -500,7 +501,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def color(self) -> Colour:
-        """:class:`Colour`: A property that returns a color denoting the rendered color for
+        """A property that returns a color denoting the rendered color for
         the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
         is returned.
 
@@ -510,7 +511,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def roles(self) -> list[Role]:
-        """List[:class:`Role`]: A :class:`list` of :class:`Role` that the member belongs to. Note
+        """A :class:`list` of :class:`Role` that the member belongs to. Note
         that the first element of this list is always the default '@everyone'
         role.
 
@@ -528,12 +529,12 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the member."""
+        """Returns a string that allows you to mention the member."""
         return f"<@{self._user.id}>"
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the user's display name.
+        """Returns the user's display name.
 
         For regular users this is just their username, but
         if they have a guild specific nickname then that
@@ -543,7 +544,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def display_avatar(self) -> Asset:
-        """:class:`Asset`: Returns the member's display avatar.
+        """Returns the member's display avatar.
 
         For regular members this is just their avatar, but
         if they have a guild specific avatar then that
@@ -555,7 +556,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def guild_avatar(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns an :class:`Asset` for the guild avatar
+        """Returns an :class:`Asset` for the guild avatar
         the member has. If unavailable, ``None`` is returned.
 
         .. versionadded:: 2.0
@@ -568,7 +569,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def activity(self) -> ActivityTypes | None:
-        """Optional[Union[:class:`BaseActivity`, :class:`Spotify`]]: Returns the primary
+        """Returns the primary
         activity the user is currently doing. Could be ``None`` if no activity is being done.
 
         .. note::
@@ -607,7 +608,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def top_role(self) -> Role:
-        """:class:`Role`: Returns the member's highest role.
+        """Returns the member's highest role.
 
         This is useful for figuring where a member stands in the role
         hierarchy chain.
@@ -620,7 +621,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def guild_permissions(self) -> Permissions:
-        """:class:`Permissions`: Returns the member's guild permissions.
+        """Returns the member's guild permissions.
 
         This only takes into consideration the guild permissions
         and not most of the implied permissions or any of the
@@ -645,12 +646,12 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def voice(self) -> VoiceState | None:
-        """Optional[:class:`VoiceState`]: Returns the member's current voice state."""
+        """Returns the member's current voice state."""
         return self.guild._voice_state_for(self._user.id)
 
     @property
     def timed_out(self) -> bool:
-        """bool: Returns whether the member is timed out.
+        """Returns whether the member is timed out.
 
         .. versionadded:: 2.0
         """

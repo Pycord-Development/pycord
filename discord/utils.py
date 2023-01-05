@@ -38,6 +38,7 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
+from dataclasses import field
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -73,13 +74,19 @@ else:
 
 
 __all__ = (
+    "parse_time",
+    "warn_deprecated",
+    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
     "find",
     "get",
+    "get_or_fetch",
     "sleep_until",
     "utcnow",
+    "resolve_invite",
+    "resolve_template",
     "remove_markdown",
     "escape_markdown",
     "escape_mentions",
@@ -88,8 +95,8 @@ __all__ = (
     "raw_role_mentions",
     "as_chunks",
     "format_dt",
-    "basic_autocomplete",
     "generate_snowflake",
+    "basic_autocomplete",
     "filter_params",
 )
 
@@ -108,6 +115,11 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
+# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
+# field(default=MISSING) produces the same error, but passing a lambda to
+# default_factory produces the same behavior as default=MISSING and does not raise an
+# error.
+MissingField = field(default_factory=lambda: MISSING)
 
 
 class _cached_property:
@@ -252,6 +264,18 @@ def parse_time(timestamp: str | None) -> datetime.datetime | None:
 
 
 def parse_time(timestamp: str | None) -> datetime.datetime | None:
+    """A helper function to convert an ISO 8601 timestamp to a datetime object.
+
+    Parameters
+    ----------
+    timestamp: Optional[:class:`str`]
+        The timestamp to convert.
+
+    Returns
+    -------
+    Optional[:class:`datetime.datetime`]
+        The converted datetime object.
+    """
     if timestamp:
         return datetime.datetime.fromisoformat(timestamp)
     return None
@@ -285,7 +309,7 @@ def warn_deprecated(
     since: Optional[:class:`str`]
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str]
+    removed: Optional[:class:`str`]
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
     reference: Optional[:class:`str`]
@@ -326,7 +350,7 @@ def deprecated(
     since: Optional[:class:`str`]
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str]
+    removed: Optional[:class:`str`]
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
     reference: Optional[:class:`str`]
@@ -408,7 +432,8 @@ def oauth_url(
 
 
 def snowflake_time(id: int) -> datetime.datetime:
-    """
+    """Converts a Discord snowflake ID to a UTC-aware datetime object.
+
     Parameters
     ----------
     id: :class:`int`
@@ -542,8 +567,50 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
     return None
 
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING):
-    # TODO: Document this
+async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
+    """|coro|
+
+    Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
+    If the fetch also fails, an error will be raised.
+
+    Parameters
+    ----------
+    obj: Any
+        The object to use the get or fetch methods in
+    attr: :class:`str`
+        The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute.
+    id: :class:`int`
+        The ID of the object
+    default: Any
+        The default value to return if the object is not found, instead of raising an error.
+
+    Returns
+    -------
+    Any
+        The object found or the default value.
+
+    Raises
+    ------
+    :exc:`AttributeError`
+        The object is missing a ``get_`` or ``fetch_`` method
+    :exc:`NotFound`
+        Invalid ID for the object
+    :exc:`HTTPException`
+        An error occurred fetching the object
+    :exc:`Forbidden`
+        You do not have permission to fetch the object
+
+    Examples
+    --------
+
+    Getting a guild from a guild ID: ::
+
+        guild = await utils.get_or_fetch(client, 'guild', guild_id)
+
+    Getting a channel from the guild. If the channel is not found, return None: ::
+
+        channel = await utils.get_or_fetch(guild, 'channel', channel_id, default=None)
+    """
     getter = getattr(obj, f"get_{attr}")(id)
     if getter is None:
         try:
@@ -944,6 +1011,8 @@ def escape_mentions(text: str) -> str:
 def raw_mentions(text: str) -> list[int]:
     """Returns a list of user IDs matching ``<@user_id>`` in the string.
 
+    .. versionadded:: 2.2
+
     Parameters
     ----------
     text: :class:`str`
@@ -960,6 +1029,8 @@ def raw_mentions(text: str) -> list[int]:
 def raw_channel_mentions(text: str) -> list[int]:
     """Returns a list of channel IDs matching ``<@#channel_id>`` in the string.
 
+    .. versionadded:: 2.2
+
     Parameters
     ----------
     text: :class:`str`
@@ -975,6 +1046,8 @@ def raw_channel_mentions(text: str) -> list[int]:
 
 def raw_role_mentions(text: str) -> list[int]:
     """Returns a list of role IDs matching ``<@&role_id>`` in the string.
+
+    .. versionadded:: 2.2
 
     Parameters
     ----------
@@ -1032,16 +1105,16 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
 
     .. versionadded:: 2.0
 
+    .. warning::
+
+        The last chunk collected may not be as large as ``max_size``.
+
     Parameters
     ----------
     iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
         The iterator to chunk, can be sync or async.
     max_size: :class:`int`
         The maximum chunk size.
-
-    .. warning::
-
-        The last chunk collected may not be as large as ``max_size``.
 
     Returns
     -------

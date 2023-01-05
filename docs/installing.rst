@@ -20,7 +20,7 @@ is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is no
 .. _installing:
 
 Installing
------------
+----------
 
 .. note::
 

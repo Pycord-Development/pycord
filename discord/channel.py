@@ -46,6 +46,7 @@ from .enums import (
     ChannelType,
     EmbeddedActivity,
     InviteTarget,
+    SortOrder,
     StagePrivacyLevel,
     VideoQualityMode,
     VoiceRegion,
@@ -58,6 +59,7 @@ from .invite import Invite
 from .iterators import ArchivedThreadIterator
 from .mixins import Hashable
 from .object import Object
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .stage_instance import StageInstance
 from .tag import Tag
@@ -80,7 +82,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .guild import GuildChannel as GuildChannelType
     from .member import Member, VoiceState
-    from .message import Message, PartialMessage
+    from .message import EmojiInputType, Message, PartialMessage
     from .role import Role
     from .state import ConnectionState
     from .types.channel import CategoryChannel as CategoryChannelPayload
@@ -111,8 +113,10 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "_type",
         "last_message_id",
         "default_auto_archive_duration",
-        "flags",
+        "default_thread_slowmode_delay",
+        "default_sort_order",
         "available_tags",
+        "flags",
     )
 
     def __init__(
@@ -154,6 +158,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get(
                 "default_auto_archive_duration", 1440
             )
+            self.default_thread_slowmode_delay: int | None = data.get(
+                "default_thread_rate_limit_per_user"
+            )
             self.last_message_id: int | None = utils._get_as_snowflake(
                 data, "last_message_id"
             )
@@ -166,7 +173,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return try_enum(ChannelType, self._type)
 
     @property
@@ -184,12 +191,12 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: Returns all members that can see this channel."""
+        """Returns all members that can see this channel."""
         return [m for m in self.guild.members if self.permissions_for(m).read_messages]
 
     @property
     def threads(self) -> list[Thread]:
-        """List[:class:`Thread`]: Returns all the threads that you can see.
+        """Returns all the threads that you can see.
 
         .. versionadded:: 2.0
         """
@@ -200,7 +207,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ]
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -737,6 +744,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
@@ -755,13 +766,110 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         return self
 
     def is_news(self) -> bool:
-        """:class:`bool`: Checks if the channel is a news/announcements channel."""
+        """Checks if the channel is a news/announcements channel."""
         return self._type == ChannelType.news.value
 
     @property
     def news(self) -> bool:
         """Equivalent to :meth:`is_news`."""
         return self.is_news()
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        type: ChannelType = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> TextChannel | None:
+        ...
+
+    @overload
+    async def edit(self) -> TextChannel | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        .. versionchanged:: 1.3
+            The ``overwrites`` keyword-only parameter was added.
+
+        .. versionchanged:: 1.4
+            The ``type`` keyword-only parameter was added.
+
+        .. versionchanged:: 2.0
+            Edits are no longer in-place, the newly edited channel is returned instead.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        type: :class:`ChannelType`
+            Change the type of this text channel. Currently, only conversion between
+            :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
+            is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.TextChannel`]
+            The newly edited text channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     async def create_thread(
         self,
@@ -874,7 +982,6 @@ class ForumChannel(_TextChannel):
         .. note::
 
             :attr:`guidelines` exists as an alternative to this attribute.
-    available_tags: Optional[:class:`list`]
     position: Optional[:class:`int`]
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
@@ -900,6 +1007,18 @@ class ForumChannel(_TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    available_tags: List[:class:`ForumTag`]
+        The set of tags that can be used in a forum channel.
+
+        .. versionadded:: 2.3
+    default_sort_order: Optional[:class:`SortOrder`]
+        The default sort order type used to order posts in this channel.
+
+        .. versionadded:: 2.3
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
     """
 
     def __init__(
@@ -909,11 +1028,132 @@ class ForumChannel(_TextChannel):
 
     def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
         super()._update(guild, data)
+        self.available_tags: list[Tag] = [
+            Tag.from_data(state=self._state, data=tag)
+            for tag in (data.get("available_tags") or [])
+        ]
+        self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
 
     @property
     def guidelines(self) -> str | None:
-        """Optional[:class:`str`]: The channel's guidelines. An alias of :attr:`topic`."""
+        """The channel's guidelines. An alias of :attr:`topic`."""
         return self.topic
+
+    @property
+    def requires_tag(self) -> bool:
+        """Whether a tag is required to be specified when creating a thread in this forum channel.
+
+        Tags are specified in :attr:`applied_tags`.
+
+        .. versionadded:: 2.3
+        """
+        return self.flags.require_tag
+
+    def get_tag_sync(self, id: int, /) -> Tag | None:
+        """Returns the :class:`ForumTag` from this forum channel with the
+        given ID, if any.
+
+        .. versionadded:: 2.3
+        """
+        return utils.get(self.available_tags, id=id)
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        available_tags: list[Tag] = ...,
+        require_tag: bool = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> "ForumChannel" | None:
+        ...
+
+    @overload
+    async def edit(self) -> "ForumChannel" | None:
+        ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type to use to order posts in this channel.
+
+            .. versionadded:: 2.3
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in this channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
+        require_tag: :class:`bool`
+            Whether a tag should be required to be specified when creating a thread in this channel.
+
+            .. versionadded:: 2.3
+
+        Returns
+        -------
+        Optional[:class:`.ForumChannel`]
+            The newly edited forum channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
     async def create_tag(
         self,
@@ -1029,6 +1269,7 @@ class ForumChannel(_TextChannel):
         nonce=None,
         allowed_mentions=None,
         view=None,
+        applied_tags=None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         slowmode_delay: int = MISSING,
         reason: str | None = None,
@@ -1074,6 +1315,8 @@ class ForumChannel(_TextChannel):
             are used instead.
         view: :class:`discord.ui.View`
             A Discord UI View to add to the message.
+        applied_tags: List[:class:`discord.ForumTag`]
+            A list of tags to apply to the new thread.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
@@ -1284,7 +1527,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: Returns all members that are currently inside this voice channel."""
+        """Returns all members that are currently inside this voice channel."""
         ret = []
         for user_id, state in self.guild._voice_states.items():
             if state.channel and state.channel.id == self.id:
@@ -1409,7 +1652,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         return self
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW."""
         return self.nsfw
 
     @property
@@ -1664,7 +1907,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -1897,7 +2140,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def requesting_to_speak(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are requesting to speak in the stage channel."""
+        """A list of members who are requesting to speak in the stage channel."""
         return [
             member
             for member in self.members
@@ -1906,7 +2149,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def speakers(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who have been permitted to speak in the stage channel.
+        """A list of members who have been permitted to speak in the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1920,7 +2163,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def listeners(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are listening in the stage channel.
+        """A list of members who are listening in the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1930,7 +2173,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def moderators(self) -> list[Member]:
-        """List[:class:`Member`]: A list of members who are moderating the stage channel.
+        """A list of members who are moderating the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -1943,7 +2186,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.stage_voice
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -1954,7 +2197,7 @@ class StageChannel(VocalGuildChannel):
 
     @property
     def instance(self) -> StageInstance | None:
-        """Optional[:class:`StageInstance`]: The running stage instance of the stage channel.
+        """The running stage instance of the stage channel.
 
         .. versionadded:: 2.0
         """
@@ -2189,7 +2432,10 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self._update(guild, data)
 
     def __repr__(self) -> str:
-        return f"<CategoryChannel id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+        return (
+            "<CategoryChannel"
+            f" id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+        )
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
         # This data will always exist
@@ -2210,11 +2456,11 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.category
 
     def is_nsfw(self) -> bool:
-        """:class:`bool`: Checks if the category is NSFW."""
+        """Checks if the category is NSFW."""
         return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
@@ -2294,7 +2540,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def channels(self) -> list[GuildChannelType]:
-        """List[:class:`abc.GuildChannel`]: Returns the channels that are under this category.
+        """Returns the channels that are under this category.
 
         These are sorted by the official Discord UI, which places voice channels below the text channels.
         """
@@ -2308,7 +2554,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def text_channels(self) -> list[TextChannel]:
-        """List[:class:`TextChannel`]: Returns the text channels that are under this category."""
+        """Returns the text channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2319,7 +2565,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def voice_channels(self) -> list[VoiceChannel]:
-        """List[:class:`VoiceChannel`]: Returns the voice channels that are under this category."""
+        """Returns the voice channels that are under this category."""
         ret = [
             c
             for c in self.guild.channels
@@ -2330,7 +2576,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def stage_channels(self) -> list[StageChannel]:
-        """List[:class:`StageChannel`]: Returns the stage channels that are under this category.
+        """Returns the stage channels that are under this category.
 
         .. versionadded:: 1.7
         """
@@ -2344,7 +2590,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def forum_channels(self) -> list[ForumChannel]:
-        """List[:class:`ForumChannel`]: Returns the forum channels that are under this category.
+        """Returns the forum channels that are under this category.
 
         .. versionadded:: 2.0
         """
@@ -2478,12 +2724,12 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.private
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+        """Returns a URL that allows the client to jump to the channel.
 
         .. versionadded:: 2.0
         """
@@ -2491,7 +2737,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the direct message channel's creation time in UTC."""
+        """Returns the direct message channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     def permissions_for(self, obj: Any = None, /) -> Permissions:
@@ -2637,24 +2883,24 @@ class GroupChannel(discord.abc.Messageable, Hashable):
 
     @property
     def type(self) -> ChannelType:
-        """:class:`ChannelType`: The channel's Discord type."""
+        """The channel's Discord type."""
         return ChannelType.group
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the channel's icon asset if available."""
+        """Returns the channel's icon asset if available."""
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="channel")
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+        """Returns a URL that allows the client to jump to the channel.
 
         .. versionadded:: 2.0
         """

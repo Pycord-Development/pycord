@@ -3,7 +3,7 @@
 .. _ext_commands_cogs:
 
 Cogs
-======
+====
 
 There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that.
 
@@ -18,7 +18,7 @@ The gist:
 It should be noted that cogs are typically used alongside with :ref:`ext_commands_extensions`.
 
 Quick Example
----------------
+-------------
 
 This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`.
 
@@ -52,7 +52,7 @@ A couple of technical notes to take into consideration:
 - All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state.
 
 Cog Registration
--------------------
+----------------
 
 Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.commands.Bot.add_cog` method.
 
@@ -69,7 +69,7 @@ Note that we reference the cog by name, which we can override through :ref:`ext_
     bot.remove_cog('Greetings')
 
 Using Cogs
--------------
+----------
 
 Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:
 
@@ -106,7 +106,7 @@ Just as we remove a cog by its name, we can also retrieve it by its name as well
 .. _ext_commands_cogs_special_methods:
 
 Special Methods
------------------
+---------------
 
 As cogs get more complicated and have more commands, there comes a point where we want to customise the behaviour of the entire cog or bot.
 
@@ -125,7 +125,7 @@ You can visit the reference to get more detail.
 .. _ext_commands_cogs_meta_options:
 
 Meta Options
---------------
+------------
 
 At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can take various options to customise some of the behaviour. To do this, we pass keyword arguments to the class definition line. For example, to change the cog name we can pass the ``name`` keyword argument as follows:
 
@@ -137,7 +137,7 @@ At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can
 To see more options that you can set, see the documentation of :class:`.commands.CogMeta`.
 
 Inspection
-------------
+----------
 
 Since cogs ultimately are classes, we have some tools to help us inspect certain properties of the cog.
 

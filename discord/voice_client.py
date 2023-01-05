@@ -274,12 +274,12 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild we're connected to, if applicable."""
+        """The guild we're connected to, if applicable."""
         return getattr(self.channel, "guild", None)
 
     @property
     def user(self) -> ClientUser:
-        """:class:`ClientUser`: The user connected to voice (i.e. ourselves)."""
+        """The user connected to voice (i.e. ourselves)."""
         return self._state.user
 
     def checked_add(self, attr, value, limit):
@@ -441,7 +441,7 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def latency(self) -> float:
-        """:class:`float`: Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
         This could be referred to as the Discord Voice WebSocket latency and is
         an analogue of user's voice latencies as seen in the Discord client.
@@ -453,7 +453,7 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def average_latency(self) -> float:
-        """:class:`float`: Average of most recent 20 HEARTBEAT latencies in seconds.
+        """Average of most recent 20 HEARTBEAT latencies in seconds.
 
         .. versionadded:: 1.4
         """
@@ -480,14 +480,16 @@ class VoiceClient(VoiceProtocol):
                         break
                     if exc.code == 4014:
                         _log.info(
-                            "Disconnected from voice by force... potentially reconnecting."
+                            "Disconnected from voice by force... potentially"
+                            " reconnecting."
                         )
                         successful = await self.potential_reconnect()
                         if successful:
                             continue
 
                         _log.info(
-                            "Reconnect was unsuccessful, disconnecting from voice normally..."
+                            "Reconnect was unsuccessful, disconnecting from voice"
+                            " normally..."
                         )
                         await self.disconnect()
                         break
@@ -543,7 +545,7 @@ class VoiceClient(VoiceProtocol):
         await self.channel.guild.change_voice_state(channel=channel)
 
     def is_connected(self) -> bool:
-        """:class:`bool`: Indicates if the voice client is connected to voice."""
+        """Indicates if the voice client is connected to voice."""
         return self._connected.is_set()
 
     # audio related
@@ -839,11 +841,11 @@ class VoiceClient(VoiceProtocol):
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])
 
     def is_playing(self) -> bool:
-        """:class:`bool`: Indicates if we're currently playing audio."""
+        """Indicates if we're currently playing audio."""
         return self._player is not None and self._player.is_playing()
 
     def is_paused(self) -> bool:
-        """:class:`bool`: Indicates if we're playing audio, but if we're paused."""
+        """Indicates if we're playing audio, but if we're paused."""
         return self._player is not None and self._player.is_paused()
 
     def stop(self) -> None:
@@ -864,7 +866,7 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def source(self) -> AudioSource | None:
-        """Optional[:class:`AudioSource`]: The audio source being played, if playing.
+        """The audio source being played, if playing.
 
         This property can also be used to change the audio source currently being played.
         """

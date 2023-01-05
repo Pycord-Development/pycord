@@ -25,17 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict, Union
+from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .user import User
 
 
-class _IntegrationApplicationOptional(TypedDict, total=False):
-    bot: User
-
-
-class IntegrationApplication(_IntegrationApplicationOptional):
+class IntegrationApplication(TypedDict):
+    bot: NotRequired[User]
     id: Snowflake
     name: str
     icon: str | None

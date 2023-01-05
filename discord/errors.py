@@ -255,10 +255,11 @@ class PrivilegedIntentsRequired(ClientException):
     def __init__(self, shard_id: int | None):
         self.shard_id: int | None = shard_id
         msg = (
-            "Shard ID %s is requesting privileged intents that have not been explicitly enabled in the "
-            "developer portal. It is recommended to go to https://discord.com/developers/applications/ "
-            "and explicitly enable the privileged intents within your application's page. If this is not "
-            "possible, then consider disabling the privileged intents instead."
+            "Shard ID %s is requesting privileged intents that have not been explicitly"
+            " enabled in the developer portal. It is recommended to go to"
+            " https://discord.com/developers/applications/ and explicitly enable the"
+            " privileged intents within your application's page. If this is not"
+            " possible, then consider disabling the privileged intents instead."
         )
         super().__init__(msg % shard_id)
 
@@ -349,7 +350,10 @@ class ExtensionFailed(ExtensionError):
 
     def __init__(self, name: str, original: Exception) -> None:
         self.original: Exception = original
-        msg = f"Extension {name!r} raised an error: {original.__class__.__name__}: {original}"
+        msg = (
+            f"Extension {name!r} raised an error: {original.__class__.__name__}:"
+            f" {original}"
+        )
         super().__init__(msg, name=name)
 
 

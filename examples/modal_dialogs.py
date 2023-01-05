@@ -59,7 +59,7 @@ async def modal_message(ctx: discord.ApplicationContext, message: discord.Messag
 
 
 @bot.user_command(name="usermodal")
-async def modal_user(ctx: discord.ApplicationContext, member: discord.Message):
+async def modal_user(ctx: discord.ApplicationContext, member: discord.Member):
     """Shows an example of a modal dialog being invoked from a user command."""
     modal = MyModal(title="User Command Modal")
     modal.title = f"Modal for User: {member.display_name}"

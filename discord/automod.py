@@ -39,7 +39,12 @@ from .enums import (
 from .mixins import Hashable
 from .object import Object
 
-__all__ = ("AutoModRule",)
+__all__ = (
+    "AutoModRule",
+    "AutoModAction",
+    "AutoModActionMetadata",
+    "AutoModTriggerMetadata",
+)
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -152,7 +157,7 @@ class AutoModAction:
     def to_dict(self) -> dict:
         return {
             "type": self.type.value,
-            "metadata": self.metadata,
+            "metadata": self.metadata.to_dict(),
         }
 
     @classmethod
@@ -167,35 +172,76 @@ class AutoModAction:
 
 
 class AutoModTriggerMetadata:
-    """Represents a rule's trigger metadata.
+    r"""Represents a rule's trigger metadata, defining additional data used to determine when a rule triggers.
 
-    Depending on the trigger type, different attributes will be used.
+    Depending on the trigger type, different metadata attributes will be used:
+
+    +-----------------------------+--------------------------------------------------------------------------------+
+    |   Attribute                 |   Trigger Types                                                                |
+    +=============================+================================================================================+
+    | :attr:`keyword_filter`      | :attr:`AutoModTriggerType.keyword`                                             |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`regex_patterns`      | :attr:`AutoModTriggerType.keyword`                                             |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`presets`             | :attr:`AutoModTriggerType.keyword_preset`                                      |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`allow_list`          | :attr:`AutoModTriggerType.keyword`\, :attr:`AutoModTriggerType.keyword_preset` |
+    +-----------------------------+--------------------------------------------------------------------------------+
+    | :attr:`mention_total_limit` | :attr:`AutoModTriggerType.mention_spam`                                        |
+    +-----------------------------+--------------------------------------------------------------------------------+
+
+    Each attribute has limits that may change based on the trigger type.
+    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`_
+    for information on attribute limits.
 
     .. versionadded:: 2.0
 
     Attributes
     ----------
     keyword_filter: List[:class:`str`]
-        A list of substrings to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword`.
-    presets: List[:class:`AutoModKeywordPresetType`]
-        A list of keyword presets to filter. Only for triggers of type :attr:`AutoModTriggerType.keyword_preset`.
-    """
+        A list of substrings to filter.
 
-    # maybe add a table of action types and attributes?
-    # wording for presets could change
+    regex_patterns: List[:class:`str`]
+        A list of regex patterns to filter using Rust-flavored regex, which is not
+        fully compatible with regex syntax supported by the builtin `re` module.
+
+        .. versionadded:: 2.4
+
+    presets: List[:class:`AutoModKeywordPresetType`]
+        A list of preset keyword sets to filter.
+
+    allow_list: List[:class:`str`]
+        A list of substrings to allow, overriding keyword and regex matches.
+
+        .. versionadded:: 2.4
+
+    mention_total_limit: :class:`int`
+        The total number of unique role and user mentions allowed.
+
+        .. versionadded:: 2.4
+    """
 
     __slots__ = (
         "keyword_filter",
+        "regex_patterns",
         "presets",
+        "allow_list",
+        "mention_total_limit",
     )
 
     def __init__(
         self,
         keyword_filter: list[str] = MISSING,
+        regex_patterns: list[str] = MISSING,
         presets: list[AutoModKeywordPresetType] = MISSING,
+        allow_list: list[str] = MISSING,
+        mention_total_limit: int = MISSING,
     ):
         self.keyword_filter = keyword_filter
+        self.regex_patterns = regex_patterns
         self.presets = presets
+        self.allow_list = allow_list
+        self.mention_total_limit = mention_total_limit
 
     def to_dict(self) -> dict:
         data = {}
@@ -203,8 +249,17 @@ class AutoModTriggerMetadata:
         if self.keyword_filter is not MISSING:
             data["keyword_filter"] = self.keyword_filter
 
+        if self.regex_patterns is not MISSING:
+            data["regex_patterns"] = self.regex_patterns
+
         if self.presets is not MISSING:
             data["presets"] = [wordset.value for wordset in self.presets]
+
+        if self.allow_list is not MISSING:
+            data["allow_list"] = self.allow_list
+
+        if self.mention_total_limit is not MISSING:
+            data["mention_total_limit"] = self.mention_total_limit
 
         return data
 
@@ -215,17 +270,29 @@ class AutoModTriggerMetadata:
         if (keyword_filter := data.get("keyword_filter")) is not None:
             kwargs["keyword_filter"] = keyword_filter
 
+        if (regex_patterns := data.get("regex_patterns")) is not None:
+            kwargs["regex_patterns"] = regex_patterns
+
         if (presets := data.get("presets")) is not None:
             kwargs["presets"] = [
                 try_enum(AutoModKeywordPresetType, wordset) for wordset in presets
             ]
+
+        if (allow_list := data.get("allow_list")) is not None:
+            kwargs["allow_list"] = allow_list
+
+        if (mention_total_limit := data.get("mention_total_limit")) is not None:
+            kwargs["mention_total_limit"] = mention_total_limit
 
         return cls(**kwargs)
 
     def __repr__(self) -> str:
         repr_attrs = (
             "keyword_filter",
+            "regex_patterns",
             "presets",
+            "allow_list",
+            "mention_total_limit",
         )
         inner = []
 
@@ -334,19 +401,19 @@ class AutoModRule(Hashable):
 
     @cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild this rule belongs to."""
+        """The guild this rule belongs to."""
         return self._state._get_guild(self.guild_id)
 
     @cached_property
     def creator(self) -> Member | None:
-        """Optional[:class:`Member`]: The member who created this rule."""
+        """The member who created this rule."""
         if self.guild is None:
             return None
         return self.guild.get_member(self.creator_id)
 
     @cached_property
     def exempt_roles(self) -> list[Role | Object]:
-        """List[Union[:class:`Role`, :class:`Object`]]: The roles that are exempt
+        """The roles that are exempt
         from this rule.
 
         If a role is not found in the guild's cache,
@@ -363,8 +430,7 @@ class AutoModRule(Hashable):
     def exempt_channels(
         self,
     ) -> list[TextChannel | ForumChannel | VoiceChannel | Object]:
-        """List[Union[Union[:class:`TextChannel`, :class:`ForumChannel`, :class:`VoiceChannel`], :class:`Object`]]: The
-        channels that are exempt from this rule.
+        """The channels that are exempt from this rule.
 
         If a channel is not found in the guild's cache,
         then it will be returned as an :class:`Object`.
@@ -425,9 +491,9 @@ class AutoModRule(Hashable):
             The new actions to perform when the rule is triggered.
         enabled: :class:`bool`
             Whether this rule is enabled.
-        exempt_roles: List[:class:`Snowflake`]
+        exempt_roles: List[:class:`abc.Snowflake`]
             The roles that will be exempt from this rule.
-        exempt_channels: List[:class:`Snowflake`]
+        exempt_channels: List[:class:`abc.Snowflake`]
             The channels that will be exempt from this rule.
         reason: Optional[:class:`str`]
             The reason for editing this rule. Shows up in the audit log.

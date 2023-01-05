@@ -238,8 +238,8 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                     raise
 
                 raise TypeError(
-                    "command_prefix must be plain string, iterable of strings, or callable "
-                    f"returning either of these, not {ret.__class__.__name__}"
+                    "command_prefix must be plain string, iterable of strings, or"
+                    f" callable returning either of these, not {ret.__class__.__name__}"
                 )
 
             if not ret:
@@ -311,8 +311,9 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 for value in prefix:
                     if not isinstance(value, str):
                         raise TypeError(
-                            "Iterable command_prefix or list returned from get_prefix must "
-                            f"contain only strings, not {value.__class__.__name__}"
+                            "Iterable command_prefix or list returned from get_prefix"
+                            " must contain only strings, not"
+                            f" {value.__class__.__name__}"
                         )
 
                 # Getting here shouldn't happen

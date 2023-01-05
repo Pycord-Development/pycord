@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
 import asyncio
 import concurrent.futures
@@ -139,7 +140,8 @@ class KeepAliveHandler(threading.Thread):
         while not self._stop_ev.wait(self.interval):
             if self._last_recv + self.heartbeat_timeout < time.perf_counter():
                 _log.warning(
-                    "Shard ID %s has stopped responding to the gateway. Closing and restarting.",
+                    "Shard ID %s has stopped responding to the gateway. Closing and"
+                    " restarting.",
                     self.shard_id,
                 )
                 coro = self.ws.close(4000)
@@ -174,7 +176,10 @@ class KeepAliveHandler(threading.Thread):
                             msg = self.block_msg
                         else:
                             stack = "".join(traceback.format_stack(frame))
-                            msg = f"{self.block_msg}\nLoop thread traceback (most recent call last):\n{stack}"
+                            msg = (
+                                f"{self.block_msg}\nLoop thread traceback (most recent"
+                                f" call last):\n{stack}"
+                            )
                         _log.warning(msg, self.shard_id, total)
 
             except Exception:
@@ -572,8 +577,8 @@ class DiscordWebSocket:
             del self._dispatch_listeners[index]
 
     @property
-    def latency(self):
-        """:class:`float`: Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
+    def latency(self) -> float:
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
@@ -912,14 +917,14 @@ class DiscordVoiceWebSocket:
         _log.info("selected the voice protocol for use (%s)", mode)
 
     @property
-    def latency(self):
-        """:class:`float`: Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds."""
+    def latency(self) -> float:
+        """Latency between a HEARTBEAT and its HEARTBEAT_ACK in seconds."""
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
     @property
-    def average_latency(self):
-        """:class:`list`: Average of last 20 HEARTBEAT latencies."""
+    def average_latency(self) -> list[float] | float:
+        """Average of last 20 HEARTBEAT latencies."""
         heartbeat = self._keep_alive
         if heartbeat is None or not heartbeat.recent_ack_latencies:
             return float("inf")

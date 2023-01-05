@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, TypedDict, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from ..permissions import Permissions
 from .channel import ChannelType
@@ -40,48 +40,40 @@ from .user import User
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
 
+from .._typed_dict import NotRequired, TypedDict
 
 ApplicationCommandType = Literal[1, 2, 3]
 
 
-class _ApplicationCommandOptional(TypedDict, total=False):
-    options: list[ApplicationCommandOption]
-    type: ApplicationCommandType
-    name_localized: str
-    name_localizations: dict[str, str]
-    description_localized: str
-    description_localizations: dict[str, str]
-
-
-class ApplicationCommand(_ApplicationCommandOptional):
+class ApplicationCommand(TypedDict):
+    options: NotRequired[list[ApplicationCommandOption]]
+    type: NotRequired[ApplicationCommandType]
+    name_localized: NotRequired[str]
+    name_localizations: NotRequired[dict[str, str]]
+    description_localized: NotRequired[str]
+    description_localizations: NotRequired[dict[str, str]]
     id: Snowflake
     application_id: Snowflake
     name: str
     description: str
 
 
-class _ApplicationCommandOptionOptional(TypedDict, total=False):
-    choices: list[ApplicationCommandOptionChoice]
-    options: list[ApplicationCommandOption]
-    name_localizations: dict[str, str]
-    description_localizations: dict[str, str]
-
-
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
-class ApplicationCommandOption(_ApplicationCommandOptionOptional):
+class ApplicationCommandOption(TypedDict):
+    choices: NotRequired[list[ApplicationCommandOptionChoice]]
+    options: NotRequired[list[ApplicationCommandOption]]
+    name_localizations: NotRequired[dict[str, str]]
+    description_localizations: NotRequired[dict[str, str]]
     type: ApplicationCommandOptionType
     name: str
     description: str
     required: bool
 
 
-class _ApplicationCommandOptionChoiceOptional(TypedDict, total=False):
-    name_localizations: dict[str, str]
-
-
-class ApplicationCommandOptionChoice(_ApplicationCommandOptionChoiceOptional):
+class ApplicationCommandOptionChoice(TypedDict):
+    name_localizations: NotRequired[dict[str, str]]
     name: str
     value: str | int
 
@@ -182,23 +174,17 @@ class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
     attachments: dict[Snowflake, Attachment]
 
 
-class _ApplicationCommandInteractionDataOptional(TypedDict, total=False):
-    options: list[ApplicationCommandInteractionDataOption]
-    resolved: ApplicationCommandInteractionDataResolved
-    target_id: Snowflake
-    type: ApplicationCommandType
-
-
-class ApplicationCommandInteractionData(_ApplicationCommandInteractionDataOptional):
+class ApplicationCommandInteractionData(TypedDict):
+    options: NotRequired[list[ApplicationCommandInteractionDataOption]]
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    target_id: NotRequired[Snowflake]
+    type: NotRequired[ApplicationCommandType]
     id: Snowflake
     name: str
 
 
-class _ComponentInteractionDataOptional(TypedDict, total=False):
-    values: list[str]
-
-
-class ComponentInteractionData(_ComponentInteractionDataOptional):
+class ComponentInteractionData(TypedDict):
+    values: NotRequired[list[str]]
     custom_id: str
     component_type: ComponentType
 
@@ -206,19 +192,16 @@ class ComponentInteractionData(_ComponentInteractionDataOptional):
 InteractionData = Union[ApplicationCommandInteractionData, ComponentInteractionData]
 
 
-class _InteractionOptional(TypedDict, total=False):
-    data: InteractionData
-    guild_id: Snowflake
-    channel_id: Snowflake
-    member: Member
-    user: User
-    message: Message
-    locale: str
-    guild_locale: str
-    app_permissions: Permissions
-
-
-class Interaction(_InteractionOptional):
+class Interaction(TypedDict):
+    data: NotRequired[InteractionData]
+    guild_id: NotRequired[Snowflake]
+    channel_id: NotRequired[Snowflake]
+    member: NotRequired[Member]
+    user: NotRequired[User]
+    message: NotRequired[Message]
+    locale: NotRequired[str]
+    guild_locale: NotRequired[str]
+    app_permissions: NotRequired[Permissions]
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
@@ -238,11 +221,8 @@ class InteractionApplicationCommandCallbackData(TypedDict, total=False):
 InteractionResponseType = Literal[1, 4, 5, 6, 7]
 
 
-class _InteractionResponseOptional(TypedDict, total=False):
-    data: InteractionApplicationCommandCallbackData
-
-
-class InteractionResponse(_InteractionResponseOptional):
+class InteractionResponse(TypedDict):
+    data: NotRequired[InteractionApplicationCommandCallbackData]
     type: InteractionResponseType
 
 
@@ -253,12 +233,9 @@ class MessageInteraction(TypedDict):
     user: User
 
 
-class _EditApplicationCommandOptional(TypedDict, total=False):
-    description: str
-    options: list[ApplicationCommandOption] | None
-    type: ApplicationCommandType
-
-
-class EditApplicationCommand(_EditApplicationCommandOptional):
+class EditApplicationCommand(TypedDict):
+    description: NotRequired[str]
+    options: NotRequired[list[ApplicationCommandOption] | None]
+    type: NotRequired[ApplicationCommandType]
     name: str
     default_permission: bool

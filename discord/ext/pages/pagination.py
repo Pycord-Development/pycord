@@ -905,7 +905,8 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of embeds, a file, or a list of files."
+                "Page content must be a Page object, string, an embed, a list of"
+                " embeds, a file, or a list of files."
             )
 
     async def page_action(
@@ -979,7 +980,8 @@ class Paginator(discord.ui.View):
             (discord.Message, discord.MessageReference, discord.PartialMessage),
         ):
             raise TypeError(
-                f"expected Message, MessageReference, or PartialMessage not {reference.__class__!r}"
+                "expected Message, MessageReference, or PartialMessage not"
+                f" {reference.__class__!r}"
             )
 
         if allowed_mentions is not None and not isinstance(
@@ -1137,7 +1139,8 @@ class Paginator(discord.ui.View):
 
         if ephemeral and (self.timeout >= 900 or self.timeout is None):
             raise ValueError(
-                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
+                "paginator responses cannot be ephemeral if the paginator timeout is 15"
+                " minutes or greater"
             )
 
         self.update_buttons()

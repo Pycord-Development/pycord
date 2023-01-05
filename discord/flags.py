@@ -536,6 +536,14 @@ class PublicUserFlags(BaseFlags):
         """
         return UserFlags.bot_http_interactions.value
 
+    @flag_value
+    def active_developer(self):
+        """:class:`bool`: Returns ``True`` if the user is an Active Developer.
+
+        .. versionadded:: 2.3
+        """
+        return UserFlags.active_developer.value
+
     def all(self) -> list[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
         return [
@@ -1374,6 +1382,15 @@ class ApplicationFlags(BaseFlags):
         """
         return 1 << 23
 
+    @flag_value
+    def active(self):
+        """:class:`bool`: Returns ``True`` if the  app is considered active.
+        Applications are considered active if they have had any command executions in the past 30 days.
+
+        .. versionadded:: 2.3
+        """
+        return 1 << 24
+
 
 @fill_with_flags()
 class ChannelFlags(BaseFlags):
@@ -1424,3 +1441,12 @@ class ChannelFlags(BaseFlags):
     def pinned(self):
         """:class:`bool`: Returns ``True`` if the thread is pinned to the top of its parent forum channel."""
         return 1 << 1
+
+    @flag_value
+    def require_tag(self):
+        """:class:`bool`: Returns ``True`` if a tag is required to be specified when creating a thread in a
+        :class:`ForumChannel`.
+
+        .. versionadded:: 2.2
+        """
+        return 1 << 4

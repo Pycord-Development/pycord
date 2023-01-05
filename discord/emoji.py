@@ -139,7 +139,10 @@ class Emoji(_EmojiTag, AssetMixin):
         return f"<:{self.name}:{self.id}>"
 
     def __repr__(self) -> str:
-        return f"<Emoji id={self.id} name={self.name!r} animated={self.animated} managed={self.managed}>"
+        return (
+            "<Emoji"
+            f" id={self.id} name={self.name!r} animated={self.animated} managed={self.managed}>"
+        )
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _EmojiTag) and self.id == other.id
@@ -152,18 +155,18 @@ class Emoji(_EmojiTag, AssetMixin):
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the emoji's creation time in UTC."""
+        """Returns the emoji's creation time in UTC."""
         return snowflake_time(self.id)
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the URL of the emoji."""
+        """Returns the URL of the emoji."""
         fmt = "gif" if self.animated else "png"
         return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
 
     @property
     def roles(self) -> list[Role]:
-        """List[:class:`Role`]: A :class:`list` of roles that is allowed to use this emoji.
+        """A :class:`list` of roles that is allowed to use this emoji.
 
         If roles is empty, the emoji is unrestricted.
         """
@@ -175,11 +178,11 @@ class Emoji(_EmojiTag, AssetMixin):
 
     @property
     def guild(self) -> Guild:
-        """:class:`Guild`: The guild this emoji belongs to."""
+        """The guild this emoji belongs to."""
         return self._state._get_guild(self.guild_id)
 
     def is_usable(self) -> bool:
-        """:class:`bool`: Whether the bot can use this emoji.
+        """Whether the bot can use this emoji.
 
         .. versionadded:: 1.3
         """

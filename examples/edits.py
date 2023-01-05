@@ -27,7 +27,10 @@ async def on_message(message: discord.Message):
 
 @bot.event
 async def on_message_edit(before: discord.Message, after: discord.Message):
-    msg = f"**{before.author}** edited their message:\n{before.content} -> {after.content}"
+    msg = (
+        f"**{before.author}** edited their message:\n{before.content} ->"
+        f" {after.content}"
+    )
     await before.channel.send(msg)
 
 

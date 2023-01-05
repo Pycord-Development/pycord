@@ -113,7 +113,7 @@ class Modal:
 
     @property
     def title(self) -> str:
-        """:class:`str`: The title of the modal dialog."""
+        """The title of the modal dialog."""
         return self._title
 
     @title.setter
@@ -126,7 +126,7 @@ class Modal:
 
     @property
     def children(self) -> list[InputText]:
-        """List[:class:`InputText`]: The child components associated with the modal dialog."""
+        """The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
@@ -134,14 +134,15 @@ class Modal:
         for item in value:
             if not isinstance(item, InputText):
                 raise TypeError(
-                    f"all Modal children must be InputText, not {item.__class__.__name__}"
+                    "all Modal children must be InputText, not"
+                    f" {item.__class__.__name__}"
                 )
         self._weights = _ModalWeights(self._children)
         self._children = value
 
     @property
     def custom_id(self) -> str:
-        """:class:`str`: The ID of the modal dialog that gets received during an interaction."""
+        """The ID of the modal dialog that gets received during an interaction."""
         return self._custom_id
 
     @custom_id.setter

@@ -25,8 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .user import PartialUser
 
@@ -70,12 +71,9 @@ class ActivitySecrets(TypedDict, total=False):
     match: str
 
 
-class _ActivityEmojiOptional(TypedDict, total=False):
-    id: Snowflake
-    animated: bool
-
-
-class ActivityEmoji(_ActivityEmojiOptional):
+class ActivityEmoji(TypedDict):
+    id: NotRequired[Snowflake]
+    animated: NotRequired[bool]
     name: str
 
 
@@ -84,14 +82,11 @@ class ActivityButton(TypedDict):
     url: str
 
 
-class _SendableActivityOptional(TypedDict, total=False):
-    url: str | None
-
-
 ActivityType = Literal[0, 1, 2, 4, 5]
 
 
-class SendableActivity(_SendableActivityOptional):
+class SendableActivity(TypedDict):
+    url: NotRequired[str | None]
     name: str
     type: ActivityType
 

@@ -46,7 +46,7 @@ from .errors import (
 )
 from .gateway import DiscordClientWebSocketResponse
 from .tag import Tag
-from .utils import MISSING
+from .utils import MISSING , warn_deprecated
 
 _log = logging.getLogger(__name__)
 
@@ -183,7 +183,9 @@ class HTTPClient:
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
 
-        user_agent = "DiscordBot (https://github.com/Pycord-Development/pycord {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        user_agent = (
+            "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
+        )
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
@@ -300,7 +302,8 @@ class HTTPClient:
                                 response, use_clock=self.use_clock
                             )
                             _log.debug(
-                                "A rate limit bucket has been exhausted (bucket: %s, retry: %s).",
+                                "A rate limit bucket has been exhausted (bucket: %s,"
+                                " retry: %s).",
                                 bucket,
                                 delta,
                             )
@@ -318,7 +321,10 @@ class HTTPClient:
                                 # Banned by Cloudflare more than likely.
                                 raise HTTPException(response, data)
 
-                            fmt = 'We are being rate limited. Retrying in %.2f seconds. Handled under the bucket "%s"'
+                            fmt = (
+                                "We are being rate limited. Retrying in %.2f seconds."
+                                ' Handled under the bucket "%s"'
+                            )
 
                             # sleep a bit
                             retry_after: float = data["retry_after"]
@@ -328,7 +334,8 @@ class HTTPClient:
                             is_global = data.get("global", False)
                             if is_global:
                                 _log.warning(
-                                    "Global rate limit has been hit. Retrying in %.2f seconds.",
+                                    "Global rate limit has been hit. Retrying in %.2f"
+                                    " seconds.",
                                     retry_after,
                                 )
                                 self._global_over.clear()
@@ -456,6 +463,7 @@ class HTTPClient:
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
+        flags: int | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -487,6 +495,9 @@ class HTTPClient:
         if stickers:
             payload["sticker_ids"] = stickers
 
+        if flags:
+            payload["flags"] = flags
+
         return self.request(r, json=payload)
 
     def send_typing(self, channel_id: Snowflake) -> Response[None]:
@@ -508,6 +519,7 @@ class HTTPClient:
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
+        flags: int | None = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -528,6 +540,9 @@ class HTTPClient:
             payload["components"] = components
         if stickers:
             payload["sticker_ids"] = stickers
+
+        if flags:
+            payload["flags"] = flags
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -565,6 +580,7 @@ class HTTPClient:
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
+        flags: int | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -579,6 +595,7 @@ class HTTPClient:
             message_reference=message_reference,
             stickers=stickers,
             components=components,
+            flags=flags,
         )
 
     def edit_multipart_helper(
@@ -872,7 +889,8 @@ class HTTPClient:
         self,
         user_id: Snowflake,
         guild_id: Snowflake,
-        delete_message_days: int = 1,
+        delete_message_seconds: int = None,
+        delete_message_days: int = None,
         reason: str | None = None,
     ) -> Response[None]:
         r = Route(
@@ -881,9 +899,18 @@ class HTTPClient:
             guild_id=guild_id,
             user_id=user_id,
         )
-        params = {
-            "delete_message_days": delete_message_days,
-        }
+        params = {}
+
+        if delete_message_seconds:
+            params["delete_message_seconds"] = delete_message_seconds
+        elif delete_message_days:
+            warn_deprecated(
+                "delete_message_days",
+                "delete_message_seconds",
+                "2.2",
+                reference="https://github.com/discord/discord-api-docs/pull/5219",
+            )
+            params["delete_message_days"] = delete_message_days
 
         return self.request(r, params=params, reason=reason)
 
@@ -1018,7 +1045,12 @@ class HTTPClient:
             "locked",
             "invitable",
             "default_auto_archive_duration",
+            "flags",
+            "default_thread_rate_limit_per_user",
+            "default_reaction_emoji",
             "available_tags",
+            "applied_tags",
+            "default_sort_order",
         )
         payload = {k: v for k, v in options.items() if k in valid_keys}
         return self.request(r, reason=reason, json=payload)
@@ -1133,6 +1165,7 @@ class HTTPClient:
         auto_archive_duration: threads.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
+        applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
@@ -1177,9 +1210,10 @@ class HTTPClient:
         if tag:
             payload["applied_tags"] = [tag.id]
 
-        if tags:
+        if tags or applied_tags:
             payload["applied_tags"] = (
-                [tag_.id for tag_ in tags] + [tag.id] if tag else []
+                # made a set to remove duplicates
+                list(set([tag_.id for tag_ in tags or applied_tags] + [tag.id] if tag else [])) 
             )
 
         route = Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id)
@@ -2206,6 +2240,7 @@ class HTTPClient:
             "description",
             "entity_type",
             "entity_metadata",
+            "image",
         )
         payload = {k: v for k, v in payload.items() if k in valid_keys}
 
@@ -2575,7 +2610,6 @@ class HTTPClient:
         embeds: list[embed.Embed] | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
     ):
-
         payload: dict[str, Any] = {}
         if content:
             payload["content"] = content

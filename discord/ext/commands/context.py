@@ -249,7 +249,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def valid(self) -> bool:
-        """:class:`bool`: Checks if the invocation context is valid to be invoked with."""
+        """Checks if the invocation context is valid to be invoked with."""
         return self.prefix is not None and self.command is not None
 
     async def _get_channel(self) -> discord.abc.Messageable:
@@ -257,7 +257,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def clean_prefix(self) -> str:
-        """:class:`str`: The cleaned up invoke prefix. i.e. mentions are ``@name`` instead of ``<@id>``.
+        """The cleaned up invoke prefix. i.e. mentions are ``@name`` instead of ``<@id>``.
 
         .. versionadded:: 2.0
         """
@@ -274,7 +274,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def cog(self) -> Cog | None:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        """Returns the cog associated with this context's command.
         None if it does not exist.
         """
 
@@ -284,14 +284,14 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @discord.utils.cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
+        """Returns the guild associated with this context's command.
         None if not available.
         """
         return self.message.guild
 
     @discord.utils.cached_property
     def channel(self) -> MessageableChannel:
-        """Union[:class:`.abc.Messageable`]: Returns the channel associated with this context's command.
+        """Returns the channel associated with this context's command.
         Shorthand for :attr:`.Message.channel`.
         """
         return self.message.channel
@@ -314,7 +314,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
-        r"""Optional[:class:`.VoiceProtocol`]: A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
+        r"""A shortcut to :attr:`.Guild.voice_client`\, if applicable."""
         g = self.guild
         return g.voice_client if g else None
 

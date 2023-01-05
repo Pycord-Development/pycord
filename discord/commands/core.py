@@ -222,6 +222,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self.guild_only: bool | None = getattr(
             func, "__guild_only__", kwargs.get("guild_only", None)
         )
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -374,7 +375,6 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         await injected(ctx)
 
     async def can_run(self, ctx: ApplicationContext) -> bool:
-
         if not await ctx.bot.can_run(ctx):
             raise CheckFailure(
                 f"The global check functions for command {self.name} failed."
@@ -450,7 +450,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return coro
 
     def has_error_handler(self) -> bool:
-        """:class:`bool`: Checks whether the command has an error handler registered."""
+        """Checks whether the command has an error handler registered."""
         return hasattr(self, "on_error")
 
     def before_invoke(self, coro):
@@ -553,7 +553,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def full_parent_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified parent command name.
+        """Retrieves the fully qualified parent command name.
 
         This the base command name required to execute it. For example,
         in ``/one two three`` the parent name would be ``one two``.
@@ -568,7 +568,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def qualified_name(self) -> str:
-        """:class:`str`: Retrieves the fully qualified command name.
+        """Retrieves the fully qualified command name.
 
         This is the full parent name with the command name as well.
         For example, in ``/one two three`` the qualified name would be
@@ -581,6 +581,17 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             return f"{parent} {self.name}"
         else:
             return self.name
+
+    @property
+    def qualified_id(self) -> int:
+        """Retrieves the fully qualified command ID.
+
+        This is the root parent ID. For example, in ``/one two three``
+        the qualified ID would return ``one.id``.
+        """
+        if self.id is None:
+            return self.parent.qualified_id
+        return self.id
 
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
@@ -619,6 +630,9 @@ class SlashCommand(ApplicationCommand):
         Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
@@ -685,8 +699,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-
-        self._cog = MISSING
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
@@ -810,7 +822,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return self._cog
+        return getattr(self, "_cog", MISSING)
 
     @cog.setter
     def cog(self, val):
@@ -823,7 +835,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def mention(self) -> str:
-        return f"</{self.qualified_name}:{self.id}>"
+        return f"</{self.qualified_name}:{self.qualified_id}>"
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -840,6 +852,9 @@ class SlashCommand(ApplicationCommand):
 
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
+
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
             as_dict[
@@ -1052,6 +1067,9 @@ class SlashCommandGroup(ApplicationCommand):
         isn't one.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1116,7 +1134,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = None
+        self.cog = MISSING
         self.id = None
 
         # Permissions
@@ -1124,6 +1142,7 @@ class SlashCommandGroup(ApplicationCommand):
             "default_member_permissions", None
         )
         self.guild_only: bool | None = kwargs.get("guild_only", None)
+        self.nsfw: bool | None = kwargs.get("nsfw", None)
 
         self.name_localizations: dict[str, str] | None = kwargs.get(
             "name_localizations", None
@@ -1153,6 +1172,9 @@ class SlashCommandGroup(ApplicationCommand):
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
 
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
+
         if self.default_member_permissions is not None:
             as_dict[
                 "default_member_permissions"
@@ -1160,12 +1182,21 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
+    def add_command(self, command: SlashCommand) -> None:
+        # check if subcommand has no cog set
+        # also check if cog is MISSING because it
+        # might not have been set by the cog yet
+        if command.cog is MISSING and self.cog is not MISSING:
+            command.cog = self.cog
+
+        self.subcommands.append(command)
+
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
-            self.subcommands.append(command)
+            self.add_command(command)
             return command
 
         return wrap
@@ -1191,6 +1222,9 @@ class SlashCommandGroup(ApplicationCommand):
             This will be a global command if ``None`` is passed.
         guild_only: :class:`bool`
             Whether the command should only be usable inside a guild.
+        nsfw: :class:`bool`
+            Whether the command should be restricted to 18+ channels and users.
+            Apps intending to be listed in the App Directory cannot have NSFW commands.
         default_member_permissions: :class:`~discord.Permissions`
             The default permissions a member needs to be able to run the command.
         checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
@@ -1262,7 +1296,7 @@ class SlashCommandGroup(ApplicationCommand):
                 guild_ids=guild_ids,
                 parent=self,
             )
-            self.subcommands.append(group)
+            self.add_command(group)
             return group
 
         return inner
@@ -1360,6 +1394,9 @@ class ContextMenuCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
     cog: Optional[:class:`Cog`]
@@ -1458,6 +1495,9 @@ class ContextMenuCommand(ApplicationCommand):
 
         if self.guild_only is not None:
             as_dict["dm_permission"] = not self.guild_only
+
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
             as_dict[
@@ -1804,7 +1844,8 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
     # Must meet the regex ^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for"
+            " list of supported locales."
         )
     error = None
     if not isinstance(name, str):
@@ -1813,8 +1854,10 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
         )
     elif not re.match(r"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$", name):
         error = ValidationError(
-            r"Command names and options must follow the regex \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
-            f"For more information, see {docs}/interactions/application-commands#application-command-object-"
+            r"Command names and options must follow the regex"
+            r" \"^[-_\w\d\u0901-\u097D\u0E00-\u0E7F]{1,32}$\". "
+            "For more information, see"
+            f" {docs}/interactions/application-commands#application-command-object-"
             f'application-command-naming. Received "{name}"'
         )
     elif (
@@ -1833,16 +1876,19 @@ def validate_chat_input_name(name: Any, locale: str | None = None):
 def validate_chat_input_description(description: Any, locale: str | None = None):
     if locale is not None and locale not in valid_locales:
         raise ValidationError(
-            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for list of supported locales."
+            f"Locale '{locale}' is not a valid locale, see {docs}/reference#locales for"
+            " list of supported locales."
         )
     error = None
     if not isinstance(description, str):
         error = TypeError(
-            f'Command and option description must be of type str. Received "{description}"'
+            "Command and option description must be of type str. Received"
+            f' "{description}"'
         )
     elif not 1 <= len(description) <= 100:
         error = ValidationError(
-            f'Command and option description must be 1-100 characters long. Received "{description}"'
+            "Command and option description must be 1-100 characters long. Received"
+            f' "{description}"'
         )
 
     if error:

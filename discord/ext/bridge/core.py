@@ -68,6 +68,7 @@ __all__ = (
     "map_to",
     "guild_only",
     "has_permissions",
+    "is_nsfw",
 )
 
 
@@ -75,7 +76,7 @@ class BridgeSlashCommand(SlashCommand):
     """A subclass of :class:`.SlashCommand` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, brief="description")
+        self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
 
@@ -83,7 +84,6 @@ class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
-        kwargs = filter_params(kwargs, description="brief")
         super().__init__(func, **kwargs)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
@@ -100,6 +100,8 @@ class BridgeSlashGroup(SlashCommandGroup):
     __slots__ = ("module",)
 
     def __init__(self, callback, *args, **kwargs):
+        if perms := getattr(callback, "__default_member_permissions__", None):
+            kwargs["default_member_permissions"] = perms
         super().__init__(*args, **kwargs)
         self.callback = callback
         self.__original_kwargs__["callback"] = callback
@@ -154,8 +156,8 @@ class BridgeCommand:
         ) or BridgeExtCommand(callback, **kwargs)
 
     @property
-    def name_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns name_localizations from :attr:`slash_variant`
+    def name_localizations(self) -> dict[str, str]:
+        """Returns name_localizations from :attr:`slash_variant`
 
         You can edit/set name_localizations directly with
 
@@ -172,8 +174,8 @@ class BridgeCommand:
         self.slash_variant.name_localizations = value
 
     @property
-    def description_localizations(self):
-        """Dict[:class:`str`, :class:`str`]: Returns description_localizations from :attr:`slash_variant`
+    def description_localizations(self) -> dict[str, str]:
+        """Returns description_localizations from :attr:`slash_variant`
 
         You can edit/set description_localizations directly with
 
@@ -188,6 +190,10 @@ class BridgeCommand:
     @description_localizations.setter
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
+
+    @property
+    def qualified_name(self) -> str:
+        return self.slash_variant.qualified_name
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
@@ -305,12 +311,17 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
 
+    ext_variant: BridgeExtGroup
+    slash_variant: BridgeSlashGroup
+
     def __init__(self, callback, *args, **kwargs):
-        self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        name = kwargs.pop("name", self.ext_variant.name)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(
-            callback, name, *args, **kwargs
+        super().__init__(
+            callback,
+            ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
+            slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
+            parent=kwargs.pop("parent", None),
         )
+
         self.subcommands: list[BridgeCommand] = []
 
         self.mapped: SlashCommand | None = None
@@ -330,12 +341,12 @@ class BridgeCommandGroup(BridgeCommand):
         def wrap(callback):
             slash = self.slash_variant.command(
                 *args,
-                **filter_params(kwargs, brief="description"),
+                **kwargs,
                 cls=BridgeSlashCommand,
             )(callback)
             ext = self.ext_variant.command(
                 *args,
-                **filter_params(kwargs, description="brief"),
+                **kwargs,
                 cls=BridgeExtCommand,
             )(callback)
             command = BridgeCommand(
@@ -436,6 +447,30 @@ def guild_only():
     return predicate
 
 
+def is_nsfw():
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord).
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`.
+
+    .. warning::
+
+        In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
+    """
+
+    def predicate(func: Callable | ApplicationCommand):
+        if isinstance(func, ApplicationCommand):
+            func.nsfw = True
+        else:
+            func.__nsfw__ = True
+
+        from ..commands import is_nsfw
+
+        return is_nsfw()(func)
+
+    return predicate
+
+
 def has_permissions(**perms: dict[str, bool]):
     r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
@@ -454,13 +489,13 @@ def has_permissions(**perms: dict[str, bool]):
         from ..commands import has_permissions
 
         func = has_permissions(**perms)(func)
-        Permissions(**perms)
+        _perms = Permissions(**perms)
         if isinstance(func, ApplicationCommand):
-            func.default_member_permissions = perms
+            func.default_member_permissions = _perms
         else:
-            func.__default_member_permissions__ = perms
+            func.__default_member_permissions__ = _perms
 
-        return perms
+        return func
 
     return predicate
 
@@ -522,7 +557,8 @@ class BridgeOption(Option, Converter):
                     choices = [choice.value for choice in self.choices]
                     if converted not in choices:
                         raise ValueError(
-                            f"{argument} is not a valid choice. Valid choices: {list(set(choices_names + choices))}"
+                            f"{argument} is not a valid choice. Valid choices:"
+                            f" {list(set(choices_names + choices))}"
                         )
 
             return converted

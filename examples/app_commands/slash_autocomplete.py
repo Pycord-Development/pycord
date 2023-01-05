@@ -154,7 +154,8 @@ async def autocomplete_example(
     """
 
     await ctx.respond(
-        f"You picked {color} for the color, which allowed you to choose {animal} for the animal."
+        f"You picked {color} for the color, which allowed you to choose {animal} for"
+        " the animal."
     )
 
 

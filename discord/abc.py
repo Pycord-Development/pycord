@@ -229,12 +229,12 @@ class User(Snowflake, Protocol):
 
     @property
     def display_name(self) -> str:
-        """:class:`str`: Returns the user's display name."""
+        """Returns the user's display name."""
         raise NotImplementedError
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention the given user."""
+        """Returns a string that allows you to mention the given user."""
         raise NotImplementedError
 
 
@@ -401,6 +401,26 @@ class GuildChannel:
             pass
 
         try:
+            options["default_thread_rate_limit_per_user"] = options.pop(
+                "default_thread_slowmode_delay"
+            )
+        except KeyError:
+            pass
+
+        try:
+            if options.pop("require_tag"):
+                options["flags"] = ChannelFlags.require_tag.flag
+        except KeyError:
+            pass
+
+        try:
+            options["available_tags"] = [
+                tag.to_dict() for tag in options.pop("available_tags")
+            ]
+        except KeyError:
+            pass
+
+        try:
             rtc_region = options.pop("rtc_region")
         except KeyError:
             pass
@@ -449,7 +469,8 @@ class GuildChannel:
             for target, perm in overwrites.items():
                 if not isinstance(perm, PermissionOverwrite):
                     raise InvalidArgument(
-                        f"Expected PermissionOverwrite received {perm.__class__.__name__}"
+                        "Expected PermissionOverwrite received"
+                        f" {perm.__class__.__name__}"
                     )
 
                 allow, deny = perm.pair()
@@ -506,7 +527,7 @@ class GuildChannel:
 
     @property
     def changed_roles(self) -> list[Role]:
-        """List[:class:`~discord.Role`]: Returns a list of roles that have been overridden from
+        """Returns a list of roles that have been overridden from
         their default values in the :attr:`~discord.Guild.roles` attribute.
         """
         ret = []
@@ -523,12 +544,12 @@ class GuildChannel:
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the channel."""
+        """The string that allows you to mention the channel."""
         return f"<#{self.id}>"
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel.
+        """Returns a URL that allows the client to jump to the channel.
 
         .. versionadded:: 2.0
         """
@@ -536,7 +557,7 @@ class GuildChannel:
 
     @property
     def created_at(self) -> datetime:
-        """:class:`datetime.datetime`: Returns the channel's creation time in UTC."""
+        """Returns the channel's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     def overwrites_for(self, obj: Role | User) -> PermissionOverwrite:
@@ -605,7 +626,7 @@ class GuildChannel:
 
     @property
     def category(self) -> CategoryChannel | None:
-        """Optional[:class:`~discord.CategoryChannel`]: The category this channel belongs to.
+        """The category this channel belongs to.
 
         If there is no category then this is ``None``.
         """
@@ -613,7 +634,7 @@ class GuildChannel:
 
     @property
     def permissions_synced(self) -> bool:
-        """:class:`bool`: Whether the permissions for this channel are synced with the
+        """Whether the permissions for this channel are synced with the
         category it belongs to.
 
         If there is no category then this is ``False``.
@@ -1489,7 +1510,11 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = MessageFlags.suppress_embeds if suppress else MessageFlags.DEFAULT_VALUE
+        flags = (
+            MessageFlags.suppress_embeds.flag
+            if suppress
+            else MessageFlags.DEFAULT_VALUE
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1512,7 +1537,8 @@ class Messageable:
                 reference = reference.to_message_reference_dict()
             except AttributeError:
                 raise InvalidArgument(
-                    "reference parameter must be Message, MessageReference, or PartialMessage"
+                    "reference parameter must be Message, MessageReference, or"
+                    " PartialMessage"
                 ) from None
 
         if view:

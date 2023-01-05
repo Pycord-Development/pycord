@@ -4,19 +4,126 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when
-possible (see our
-[Version Guarantees](https://docs.pycord.dev/en/stable/version_guarantees.html) for more
-info).
+possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
+
+These changes are available on the `master` branch, but have not yet been released.
+
+### Added
+
+- Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
+  `mention_total_limit`; and added the `mention_spam` trigger type.
+  ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
+- Added missing `image` parameter to `Guild.create_scheduled_event()` method.
+  ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
+- Added new message types, `interaction_premium_upsell`, `stage_start`, `stage_end`,
+  `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
+  `guild_application_premium_subscription`.
+  ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
+
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed bridge groups missing the `parent` attribute.
+  ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
+
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed another `AttributeError` relating to the new `bridge_commands` attribute on
+  `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
+- Fixed an `AttributeError` in select relating to the select type.
+  ([#1814](https://github.com/Pycord-Development/pycord/pull/1814))
+- Fixed `Thread.applied_tags` always returning an empty list.
+  ([#1817](https://github.com/Pycord-Development/pycord/pull/1817))
+
+## [2.3.1] - 2022-11-27
+
+### Fixed
+
+- Fixed `AttributeError` relating to the new `bridge_commands` attribute on
+  `ext.bridge.Bot`. ([#1802](https://github.com/Pycord-Development/pycord/pull/1802))
+
+## [2.3.0] - 2022-11-23
+
+### Added
+
+- New brief Attribute to BridgeSlashCommand.
+  ([#1676](https://github.com/Pycord-Development/pycord/pull/1676))
+- Python 3.11 support. ([#1680](https://github.com/Pycord-Development/pycord/pull/1680))
+- New select types `user`, `role`, `mentionable`, and `channel` - Along with their
+  respective types and shortcut decorators.
+  ([#1702](https://github.com/Pycord-Development/pycord/pull/1702))
+- Added support for age-restricted (NSFW) commands.
+  ([#1775](https://github.com/Pycord-Development/pycord/pull/1775))
+- New flags: `PublicUserFlags.active_developer` & `ApplicationFlags.active`.
+  ([#1776](https://github.com/Pycord-Development/pycord/pull/1776))
+- Support for new forum features including tags, default slowmode, and default sort
+  order. ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Support for new thread attributes `total_message_sent` and `is_pinned`.
+  ([#1636](https://github.com/Pycord-Development/pycord/pull/1636))
+- Added `bridge_commands` attribute to `ext.bridge.Bot` for access to bridge command
+  objects. ([#1787](https://github.com/Pycord-Development/pycord/pull/1787))
+- Updated `Guild.features` to include new and previously missing features.
+  ([#1788](https://github.com/Pycord-Development/pycord/pull/1788))
+
+### Fixed
+
+- Fix bridge.has_permissions.
+  ([#1695](https://github.com/Pycord-Development/pycord/pull/1695))
+- Fix audit log overwrite type always resulting in `None`.
+  ([#1716](https://github.com/Pycord-Development/pycord/pull/1716))
+- Fixed error when using `suppress` kwarg in `send()`.
+  ([#1719](https://github.com/Pycord-Development/pycord/pull/1719) &
+  [#1723](https://github.com/Pycord-Development/pycord/pull/1723))
+
+### Changed
+
+- `get_application_command()` type kwarg now defaults to `ApplicationCommand`, so all
+  command types can be retrieved by default.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+- `get_application_command()` now supports retrieving subcommands and subcommand groups.
+  ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+
+### Removed
+
+- Removed the guild feature `PRIVATE_THREADS` due to paywall limitation removal.
+  ([#1789](https://github.com/Pycord-Development/pycord/pull/1789))
+
+## [2.2.2] - 2022-10-05
+
+### Fixed
+
+- Fixed `parent` attribute of second level subcommands being set to the base level
+  command instead of the direct parent.
+  ([#1673](https://github.com/Pycord-Development/pycord/pull/1673))
+
+## [2.2.1] - 2022-10-05
+
+### Added
+
+- New `SlashCommand.qualified_id` attribute.
+  ([#1672](https://github.com/Pycord-Development/pycord/pull/1672))
+
+### Fixed
+
+- Fixed a `TypeError` in `ban()` methods related to the new `delete_message_seconds`
+  parameter. ([#1666](https://github.com/Pycord-Development/pycord/pull/1666))
+- Fixed broken `cog` and `parent` attributes on commands in cogs.
+  ([#1662](https://github.com/Pycord-Development/pycord/pull/1662))
+- Fixed `SlashCommand.mention` for subcommands.
+  ([#1672](https://github.com/Pycord-Development/pycord/pull/1672))
 
 ## [2.2.0] - 2022-10-02
 
 ### Added
 
-- New Guild Feature `INVITES_DISABLED`
+- New Guild Feature `INVITES_DISABLED`.
   ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
-- `suppress` kwarg to `Messageable.send()`
+- `suppress` kwarg to `Messageable.send()`.
   ([#1587](https://github.com/Pycord-Development/pycord/pull/1587))
 - `proxy` and `proxy_auth` params to many Webhook related methods.
   ([#1655](https://github.com/Pycord-Development/pycord/pull/1655))
@@ -46,10 +153,10 @@ info).
 
 ### Fixed
 
-- Various fixes to ext.bridge groups
+- Various fixes to ext.bridge groups.
   ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
   [#1631](https://github.com/Pycord-Development/pycord/pull/1631))
-- Fix `VOICE_SERVER_UPDATE` error
+- Fix `VOICE_SERVER_UPDATE` error.
   ([#1624](https://github.com/Pycord-Development/pycord/pull/1624))
 - Removed unnecessary instance check in autocomplete.
   ([#1643](https://github.com/Pycord-Development/pycord/pull/1643))
@@ -375,7 +482,12 @@ info).
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
+[2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
+[2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
+[2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
+[2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
@@ -399,3 +511,4 @@ info).
   https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [2.0.0-beta.1]:
   https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
+[version guarantees]: https://docs.pycord.dev/en/stable/version_guarantees.html

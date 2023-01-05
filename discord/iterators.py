@@ -635,7 +635,6 @@ class GuildIterator(_AsyncIterator["Guild"]):
 
 class MemberIterator(_AsyncIterator["Member"]):
     def __init__(self, guild, limit=1000, after=None):
-
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
 
@@ -690,11 +689,6 @@ class MemberIterator(_AsyncIterator["Member"]):
 
 class BanIterator(_AsyncIterator["BanEntry"]):
     def __init__(self, guild, limit=None, before=None, after=None):
-        if isinstance(after, datetime.datetime):
-            after = Object(id=time_snowflake(after, high=True))
-
-        if isinstance(before, datetime.datetime):
-            before = Object(id=time_snowflake(before, high=True))
 
         self.guild = guild
         self.limit = limit

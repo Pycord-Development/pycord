@@ -101,7 +101,7 @@ class AudioSource:
         raise NotImplementedError
 
     def is_opus(self) -> bool:
-        """:class:`bool`: Checks if the audio source is already encoded in Opus."""
+        """Checks if the audio source is already encoded in Opus."""
         return False
 
     def cleanup(self) -> None:
@@ -154,7 +154,8 @@ class FFmpegAudio(AudioSource):
         piping = subprocess_kwargs.get("stdin") == subprocess.PIPE
         if piping and isinstance(source, str):
             raise TypeError(
-                "parameter conflict: 'source' parameter cannot be a string when piping to stdin"
+                "parameter conflict: 'source' parameter cannot be a string when piping"
+                " to stdin"
             )
 
         args = [executable, *args]
@@ -393,7 +394,6 @@ class FFmpegOpusAudio(FFmpegAudio):
         before_options=None,
         options=None,
     ) -> None:
-
         args = []
         subprocess_kwargs = {
             "stdin": subprocess.PIPE if pipe else subprocess.DEVNULL,
@@ -680,7 +680,7 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
 
     @property
     def volume(self) -> float:
-        """:class:`float`: Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."""
+        """Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."""
         return self._volume
 
     @volume.setter

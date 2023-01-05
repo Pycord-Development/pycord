@@ -288,16 +288,16 @@ class Asset(AssetMixin):
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the underlying URL of the asset."""
+        """Returns the underlying URL of the asset."""
         return self._url
 
     @property
     def key(self) -> str:
-        """:class:`str`: Returns the identifying key of the asset."""
+        """Returns the identifying key of the asset."""
         return self._key
 
     def is_animated(self) -> bool:
-        """:class:`bool`: Returns whether the asset is animated."""
+        """Returns whether the asset is animated."""
         return self._animated
 
     def replace(

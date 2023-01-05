@@ -192,7 +192,10 @@ class Cooldown:
         return Cooldown(self.rate, self.per)
 
     def __repr__(self) -> str:
-        return f"<Cooldown rate: {self.rate} per: {self.per} window: {self._window} tokens: {self._tokens}>"
+        return (
+            f"<Cooldown rate: {self.rate} per: {self.per} window:"
+            f" {self._window} tokens: {self._tokens}>"
+        )
 
 
 class CooldownMapping:
@@ -291,7 +294,7 @@ class _Semaphore:
     `wait=False`.
 
     An asyncio.Queue could have been used to do this as well -- but it is
-    not as inefficient since internally that uses two queues and is a bit
+    not as efficient since internally that uses two queues and is a bit
     overkill for what is basically a counter.
     """
 

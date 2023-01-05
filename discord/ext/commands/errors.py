@@ -593,7 +593,8 @@ class MaxConcurrencyReached(CommandError):
         plural = "%s times %s" if number > 1 else "%s time %s"
         fmt = plural % (number, suffix)
         super().__init__(
-            f"Too many people are using this command. It can only be used {fmt} concurrently."
+            "Too many people are using this command. It can only be used"
+            f" {fmt} concurrently."
         )
 
 
@@ -957,7 +958,8 @@ class TooManyFlags(FlagError):
         self.flag: Flag = flag
         self.values: list[str] = values
         super().__init__(
-            f"Too many flag values, expected {flag.max_args} but received {len(values)}."
+            f"Too many flag values, expected {flag.max_args} but received"
+            f" {len(values)}."
         )
 
 

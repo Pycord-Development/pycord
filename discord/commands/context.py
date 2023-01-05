@@ -144,35 +144,35 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def channel_id(self) -> int | None:
-        """:class:`int`: Returns the ID of the channel associated with this context's command.
+        """Returns the ID of the channel associated with this context's command.
         Shorthand for :attr:`.Interaction.channel_id`.
         """
         return self.interaction.channel_id
 
     @cached_property
     def guild(self) -> Guild | None:
-        """Optional[:class:`.Guild`]: Returns the guild associated with this context's command.
+        """Returns the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild`.
         """
         return self.interaction.guild
 
     @cached_property
     def guild_id(self) -> int | None:
-        """:class:`int`: Returns the ID of the guild associated with this context's command.
+        """Returns the ID of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_id`.
         """
         return self.interaction.guild_id
 
     @cached_property
     def locale(self) -> str | None:
-        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.locale`.
         """
         return self.interaction.locale
 
     @cached_property
     def guild_locale(self) -> str | None:
-        """:class:`str`: Returns the locale of the guild associated with this context's command.
+        """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_locale`.
         """
         return self.interaction.guild_locale
@@ -195,23 +195,23 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def message(self) -> Message | None:
-        """Optional[:class:`.Message`]: Returns the message sent with this context's command.
+        """Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
         return self.interaction.message
 
     @cached_property
-    def user(self) -> Member | User | None:
-        """Union[:class:`.Member`, :class:`.User`]: Returns the user that sent this context's command.
+    def user(self) -> Member | User:
+        """Returns the user that sent this context's command.
         Shorthand for :attr:`.Interaction.user`.
         """
-        return self.interaction.user
+        return self.interaction.user  # type: ignore # command user will never be None
 
-    author: Member | User | None = user
+    author = user
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
-        """Optional[:class:`.VoiceProtocol`]: Returns the voice client associated with this context's command.
+        """Returns the voice client associated with this context's command.
         Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable.
         """
         if self.interaction.guild is None:
@@ -221,7 +221,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def response(self) -> InteractionResponse:
-        """:class:`.InteractionResponse`: Returns the response object associated with this context's command.
+        """Returns the response object associated with this context's command.
         Shorthand for :attr:`.Interaction.response`.
         """
         return self.interaction.response
@@ -294,7 +294,8 @@ class ApplicationContext(discord.abc.Messageable):
             return self.interaction.response.send_message
         else:
             raise RuntimeError(
-                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
+                "Interaction was already issued a response. Try using"
+                f" {type(self).__name__}.send_followup() instead."
             )
 
     @property
@@ -304,7 +305,8 @@ class ApplicationContext(discord.abc.Messageable):
             return self.followup.send
         else:
             raise RuntimeError(
-                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
+                "Interaction was not yet issued a response. Try using"
+                f" {type(self).__name__}.respond() first."
             )
 
     @property
@@ -314,7 +316,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def followup(self) -> Webhook:
-        """:class:`Webhook`: Returns the followup webhook for followup interactions."""
+        """Returns the followup webhook for followup interactions."""
         return self.interaction.followup
 
     async def delete(self, *, delay: float | None = None) -> None:
@@ -348,7 +350,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def cog(self) -> Cog | None:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        """Returns the cog associated with this context's command.
         ``None`` if it does not exist.
         """
         if self.command is None:
@@ -393,7 +395,7 @@ class AutocompleteContext:
 
     @property
     def cog(self) -> Cog | None:
-        """Optional[:class:`.Cog`]: Returns the cog associated with this context's command.
+        """Returns the cog associated with this context's command.
         ``None`` if it does not exist.
         """
         if self.command is None:

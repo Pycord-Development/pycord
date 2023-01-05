@@ -227,7 +227,7 @@ class Loop(Generic[LF]):
 
     @property
     def seconds(self) -> float | None:
-        """Optional[:class:`float`]: Read-only value for the number of seconds
+        """Read-only value for the number of seconds
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
         .. versionadded:: 2.0
@@ -237,7 +237,7 @@ class Loop(Generic[LF]):
 
     @property
     def minutes(self) -> float | None:
-        """Optional[:class:`float`]: Read-only value for the number of minutes
+        """Read-only value for the number of minutes
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
         .. versionadded:: 2.0
@@ -247,7 +247,7 @@ class Loop(Generic[LF]):
 
     @property
     def hours(self) -> float | None:
-        """Optional[:class:`float`]: Read-only value for the number of hours
+        """Read-only value for the number of hours
         between each iteration. ``None`` if an explicit ``time`` value was passed instead.
 
         .. versionadded:: 2.0
@@ -257,7 +257,7 @@ class Loop(Generic[LF]):
 
     @property
     def time(self) -> list[datetime.time] | None:
-        """Optional[List[:class:`datetime.time`]]: Read-only list for the exact times this loop runs at.
+        """Read-only list for the exact times this loop runs at.
         ``None`` if relative times were passed instead.
 
         .. versionadded:: 2.0
@@ -267,12 +267,12 @@ class Loop(Generic[LF]):
 
     @property
     def current_loop(self) -> int:
-        """:class:`int`: The current iteration of the loop."""
+        """The current iteration of the loop."""
         return self._current_loop
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
-        """Optional[:class:`datetime.datetime`]: When the next iteration of the loop will occur.
+        """When the next iteration of the loop will occur.
 
         .. versionadded:: 1.3
         """
@@ -428,7 +428,7 @@ class Loop(Generic[LF]):
 
             This operation obviously cannot be undone!
         """
-        self._valid_exception = tuple()
+        self._valid_exception = ()
 
     def remove_exception_type(self, *exceptions: type[BaseException]) -> bool:
         r"""Removes exception types from being handled during the reconnect logic.
@@ -450,7 +450,7 @@ class Loop(Generic[LF]):
         return len(self._valid_exception) == old_length - len(exceptions)
 
     def get_task(self) -> asyncio.Task[None] | None:
-        """Optional[:class:`asyncio.Task`]: Fetches the internal task or ``None`` if there isn't one running."""
+        """Fetches the internal task or ``None`` if there isn't one running."""
         return self._task if self._task is not MISSING else None
 
     def is_being_cancelled(self) -> bool:
@@ -458,14 +458,14 @@ class Loop(Generic[LF]):
         return self._is_being_cancelled
 
     def failed(self) -> bool:
-        """:class:`bool`: Whether the internal task has failed.
+        """Whether the internal task has failed.
 
         .. versionadded:: 1.2
         """
         return self._has_failed
 
     def is_running(self) -> bool:
-        """:class:`bool`: Check if the task is currently running.
+        """Check if the task is currently running.
 
         .. versionadded:: 1.4
         """
@@ -631,7 +631,8 @@ class Loop(Generic[LF]):
             return [inner]
         if not isinstance(time, Sequence):
             raise TypeError(
-                f"Expected datetime.time or a sequence of datetime.time for ``time``, received {type(time)!r} instead."
+                "Expected datetime.time or a sequence of datetime.time for ``time``,"
+                f" received {type(time)!r} instead."
             )
         if not time:
             raise ValueError("time parameter must not be an empty sequence.")
@@ -640,8 +641,8 @@ class Loop(Generic[LF]):
         for index, t in enumerate(time):
             if not isinstance(t, dt):
                 raise TypeError(
-                    f"Expected a sequence of {dt!r} for ``time``, received {type(t).__name__!r}"
-                    f" at index {index} instead."
+                    f"Expected a sequence of {dt!r} for ``time``, received"
+                    f" {type(t).__name__!r} at index {index} instead."
                 )
             ret.append(t if t.tzinfo is not None else t.replace(tzinfo=utc))
 

@@ -85,15 +85,15 @@ class RoleTags:
         self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
 
     def is_bot_managed(self) -> bool:
-        """:class:`bool`: Whether the role is associated with a bot."""
+        """Whether the role is associated with a bot."""
         return self.bot_id is not None
 
     def is_premium_subscriber(self) -> bool:
-        """:class:`bool`: Whether the role is the premium subscriber, AKA "boost", role for the guild."""
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
         return self._premium_subscriber is None
 
     def is_integration(self) -> bool:
-        """:class:`bool`: Whether the role is managed by an integration."""
+        """Whether the role is managed by an integration."""
         return self.integration_id is not None
 
     def __repr__(self) -> str:
@@ -261,32 +261,32 @@ class Role(Hashable):
             self.tags = None
 
     def is_default(self) -> bool:
-        """:class:`bool`: Checks if the role is the default role."""
+        """Checks if the role is the default role."""
         return self.guild.id == self.id
 
     def is_bot_managed(self) -> bool:
-        """:class:`bool`: Whether the role is associated with a bot.
+        """Whether the role is associated with a bot.
 
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_bot_managed()
 
     def is_premium_subscriber(self) -> bool:
-        """:class:`bool`: Whether the role is the premium subscriber, AKA "boost", role for the guild.
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_premium_subscriber()
 
     def is_integration(self) -> bool:
-        """:class:`bool`: Whether the role is managed by an integration.
+        """Whether the role is managed by an integration.
 
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_integration()
 
     def is_assignable(self) -> bool:
-        """:class:`bool`: Whether the role is able to be assigned or removed by the bot.
+        """Whether the role is able to be assigned or removed by the bot.
 
         .. versionadded:: 2.0
         """
@@ -299,32 +299,32 @@ class Role(Hashable):
 
     @property
     def permissions(self) -> Permissions:
-        """:class:`Permissions`: Returns the role's permissions."""
+        """Returns the role's permissions."""
         return Permissions(self._permissions)
 
     @property
     def colour(self) -> Colour:
-        """:class:`Colour`: Returns the role colour. An alias exists under ``color``."""
+        """Returns the role colour. An alias exists under ``color``."""
         return Colour(self._colour)
 
     @property
     def color(self) -> Colour:
-        """:class:`Colour`: Returns the role color. An alias exists under ``colour``."""
+        """Returns the role color. An alias exists under ``colour``."""
         return self.colour
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the role's creation time in UTC."""
+        """Returns the role's creation time in UTC."""
         return snowflake_time(self.id)
 
     @property
     def mention(self) -> str:
-        """:class:`str`: Returns a string that allows you to mention a role."""
+        """Returns a string that allows you to mention a role."""
         return f"<@&{self.id}>"
 
     @property
     def members(self) -> list[Member]:
-        """List[:class:`Member`]: Returns all the members with this role."""
+        """Returns all the members with this role."""
         all_members = self.guild.members
         if self.is_default():
             return all_members
@@ -334,7 +334,7 @@ class Role(Hashable):
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the role's icon asset, if available.
+        """Returns the role's icon asset, if available.
 
         .. versionadded:: 2.0
         """

@@ -114,7 +114,7 @@ class Item(Generic[V]):
 
     @property
     def view(self) -> V | None:
-        """Optional[:class:`View`]: The underlying view for this item."""
+        """The underlying view for this item."""
         return self._view
 
     async def callback(self, interaction: Interaction):

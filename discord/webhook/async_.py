@@ -181,7 +181,8 @@ class AsyncWebhookAdapter:
                         if remaining == "0" and response.status != 429:
                             delta = utils._parse_ratelimit_header(response)
                             _log.debug(
-                                "Webhook ID %s has been pre-emptively rate limited, waiting %.2f seconds",
+                                "Webhook ID %s has been pre-emptively rate limited,"
+                                " waiting %.2f seconds",
                                 webhook_id,
                                 delta,
                             )
@@ -196,7 +197,8 @@ class AsyncWebhookAdapter:
 
                             retry_after: float = data["retry_after"]  # type: ignore
                             _log.warning(
-                                "Webhook ID %s is rate limited. Retrying in %.2f seconds",
+                                "Webhook ID %s is rate limited. Retrying in %.2f"
+                                " seconds",
                                 webhook_id,
                                 retry_after,
                             )
@@ -744,7 +746,7 @@ class PartialWebhookGuild(Hashable):
 
     @property
     def icon(self) -> Asset | None:
-        """Optional[:class:`Asset`]: Returns the guild's icon asset, if available."""
+        """Returns the guild's icon asset, if available."""
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
@@ -1001,14 +1003,14 @@ class BaseWebhook(Hashable):
         self.source_guild: PartialWebhookGuild | None = source_guild
 
     def is_partial(self) -> bool:
-        """:class:`bool`: Whether the webhook is a "partial" webhook.
+        """Whether the webhook is a "partial" webhook.
 
         .. versionadded:: 2.0
         """
         return self.channel_id is None
 
     def is_authenticated(self) -> bool:
-        """:class:`bool`: Whether the webhook is authenticated with a bot token.
+        """Whether the webhook is authenticated with a bot token.
 
         .. versionadded:: 2.0
         """
@@ -1016,7 +1018,7 @@ class BaseWebhook(Hashable):
 
     @property
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild this webhook belongs to.
+        """The guild this webhook belongs to.
 
         If this is a partial webhook, then this will always return ``None``.
         """
@@ -1024,7 +1026,7 @@ class BaseWebhook(Hashable):
 
     @property
     def channel(self) -> TextChannel | None:
-        """Optional[:class:`TextChannel`]: The text channel this webhook belongs to.
+        """The text channel this webhook belongs to.
 
         If this is a partial webhook, then this will always return ``None``.
         """
@@ -1033,12 +1035,12 @@ class BaseWebhook(Hashable):
 
     @property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the webhook's creation time in UTC."""
+        """Returns the webhook's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @property
     def avatar(self) -> Asset:
-        """:class:`Asset`: Returns an :class:`Asset` for the avatar the webhook has.
+        """Returns an :class:`Asset` for the avatar the webhook has.
 
         If the webhook does not have a traditional avatar, an asset for
         the default avatar is returned instead.
@@ -1149,7 +1151,7 @@ class Webhook(BaseWebhook):
 
     @property
     def url(self) -> str:
-        """:class:`str` : Returns the webhook's url."""
+        """Returns the webhook's url."""
         return f"https://discord.com/api/webhooks/{self.id}/{self.token}"
 
     @classmethod

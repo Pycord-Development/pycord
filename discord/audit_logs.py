@@ -109,9 +109,9 @@ def _transform_overwrites(
         ow_type = elem["type"]
         ow_id = int(elem["id"])
         target = None
-        if ow_type == "0":
+        if ow_type == 0:
             target = entry.guild.get_role(ow_id)
-        elif ow_type == "1":
+        elif ow_type == 1:
             target = entry._get_member(ow_id)
 
         if target is None:
@@ -528,7 +528,7 @@ class AuditLogEntry(Hashable):
 
     @utils.cached_property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the entry's creation time in UTC."""
+        """Returns the entry's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @utils.cached_property
@@ -557,24 +557,24 @@ class AuditLogEntry(Hashable):
 
     @utils.cached_property
     def category(self) -> enums.AuditLogActionCategory:
-        """Optional[:class:`AuditLogActionCategory`]: The category of the action, if applicable."""
+        """The category of the action, if applicable."""
         return self.action.category
 
     @utils.cached_property
     def changes(self) -> AuditLogChanges:
-        """:class:`AuditLogChanges`: The list of changes this entry has."""
+        """The list of changes this entry has."""
         obj = AuditLogChanges(self, self._changes, state=self._state)
         del self._changes
         return obj
 
     @utils.cached_property
     def before(self) -> AuditLogDiff:
-        """:class:`AuditLogDiff`: The target's prior state."""
+        """The target's prior state."""
         return self.changes.before
 
     @utils.cached_property
     def after(self) -> AuditLogDiff:
-        """:class:`AuditLogDiff`: The target's subsequent state."""
+        """The target's subsequent state."""
         return self.changes.after
 
     def _convert_target_guild(self, target_id: int) -> Guild:
