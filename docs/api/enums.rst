@@ -251,7 +251,49 @@ of :class:`enum.Enum`.
 
         The system message denoting a role-subscription purchase.
 
-        .. versionadded:: 2.3
+        .. versionadded:: 2.4
+    
+    .. attribute:: interaction_premium_upsell
+
+        The system message denoting an interaction premium upsell.
+
+        .. versionadded:: 2.4
+    
+    .. attribute:: stage_start
+
+        The system message denoting that a stage event has started.
+
+        .. versionadded:: 2.4
+    
+    .. attribute:: stage_end
+
+        The system message denoting that a stage event has ended.
+
+        .. versionadded:: 2.4
+    
+    .. attribute:: stage_speaker
+
+        The system message denoting that a stage event has a new speaker.
+
+        .. versionadded:: 2.4
+    
+    .. attribute:: stage_raise_hand
+
+        The system message denoting that a stage event has someone has raised their hand.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_topic
+
+        The system message denoting that a stage event has a new topic.
+
+        .. versionadded:: 2.4
+    
+    .. attribute:: guild_application_premium_subscription
+            
+        The system message denoting that a member has subscribed to a guild application.
+
+        .. versionadded:: 2.4
 
 .. class:: UserFlags
 
