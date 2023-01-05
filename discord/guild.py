@@ -2156,13 +2156,14 @@ class Guild(Hashable):
     def bans(
         self,
         limit: int | None = None,
-        before: SnowflakeTime | None = None,
-        after: SnowflakeTime | None = None,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
     ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
         have the :attr:`~Permissions.ban_members` permission.
+        Users will always be returned in ascending order sorted by user ID. If both the ``before`` and ``after`` parameters are provided, only before is respected.
 
         .. versionchanged:: 2.0
             The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
@@ -2174,14 +2175,10 @@ class Guild(Hashable):
         ----------
         limit: Optional[:class:`int`]
             The number of bans to retrieve. Defaults to 1000.
-        before: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
-            Retrieve bans before this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
-            If the datetime is naive, it is assumed to be local time.
-        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
-            Retrieve bans after this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
-            If the datetime is naive, it is assumed to be local time.
+        before: Optional[:class:`.abc.Snowflake`]
+            Retrieve bans before the given user.
+        after: Optional[:class:`.abc.Snowflake`]
+            Retrieve bans after the given user.
 
         Yields
         ------
@@ -3650,6 +3647,7 @@ class Guild(Hashable):
         location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
+        image: bytes = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
@@ -3672,6 +3670,8 @@ class Guild(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        image: Optional[:class:`bytes`]
+            The cover image of the scheduled event
 
         Returns
         -------
@@ -3708,6 +3708,9 @@ class Guild(Hashable):
 
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
+
+        if image is not MISSING:
+            payload["image"] = utils._bytes_to_base64_data(image)
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload

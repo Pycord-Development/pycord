@@ -10,7 +10,24 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-_No changes yet_
+### Added
+
+- Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
+  `mention_total_limit`; and added the `mention_spam` trigger type.
+  ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
+- Added missing `image` parameter to `Guild.create_scheduled_event()` method.
+  ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
+- Added new message types, `interaction_premium_upsell`, `stage_start`, `stage_end`,
+  `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
+  `guild_application_premium_subscription`.
+  ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
+
+## [2.3.2] - 2022-12-03
+
+### Fixed
+
+- Fixed bridge groups missing the `parent` attribute.
+  ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
 
 ## [2.3.2] - 2022-12-03
 
@@ -20,7 +37,7 @@ _No changes yet_
   `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
 - Fixed an `AttributeError` in select relating to the select type.
   ([#1814](https://github.com/Pycord-Development/pycord/pull/1814))
-- Fix `Thread.applied_tags` always returning an empty list.
+- Fixed `Thread.applied_tags` always returning an empty list.
   ([#1817](https://github.com/Pycord-Development/pycord/pull/1817))
 
 ## [2.3.1] - 2022-11-27
