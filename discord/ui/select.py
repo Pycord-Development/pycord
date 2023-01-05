@@ -113,7 +113,7 @@ class Select(Item[V]):
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
-        "select_type",
+        "type",
         "placeholder",
         "min_values",
         "max_values",
