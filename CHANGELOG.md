@@ -10,7 +10,7 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-## Added
+### Added
 
 - Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
   `mention_total_limit`; and added the `mention_spam` trigger type.
