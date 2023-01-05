@@ -15,7 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
   `mention_total_limit`; and added the `mention_spam` trigger type.
   ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
-- Added missing `image` parameter to `Guild.create_scheduled_event()` method. ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
+- Added missing `image` parameter to `Guild.create_scheduled_event()` method.
+  ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
 
 ## [2.3.2] - 2022-12-03
 
