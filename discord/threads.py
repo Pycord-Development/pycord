@@ -713,6 +713,95 @@ class Thread(Messageable, Hashable):
         """
         await self._state.http.add_user_to_thread(self.id, user.id)
 
+
+    async def add_users(self, *users: Snowflake):
+        """|coro|
+
+        Adds multiple users to this thread.
+
+        You must have :attr:`~Permissions.send_messages_in_threads`
+        to add a user to a public thread. If the thread is private and
+        :attr:`invitable` is ``False``, then
+        :attr:`~Permissions.manage_threads` is required.
+
+        Parameters
+        ----------
+        *users: :class:`abc.Snowflake`
+            The users to add to the thread.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to add the users to the thread.
+        HTTPException
+            Adding the users to the thread failed.
+        """
+        
+        result = {}
+
+        for user in users:
+            
+            try:
+                await self._state.http.add_user_to_thread(self.id, [user.id for user in users])
+                result[user] = {"status": "Success", "reason": None}
+            except Exception as e:
+                result[user] = {"status": "Failed", "reason": str(e)}
+
+        return result
+
+
+    async def add_users_from_role(self, role: Snowflake = None , role_id : int = None , roles : list[Role] = None , role_ids : list[int] = None):
+        """|coro|
+
+        Adds multiple users to this thread from role/s.
+
+        You must have :attr:`~Permissions.send_messages_in_threads`
+        to add a user to a public thread. If the thread is private and
+        :attr:`invitable` is ``False``, then
+        :attr:`~Permissions.manage_threads` is required.
+
+        Parameters
+        ----------
+        *users: :class:`abc.Snowflake`
+            The users to add to the thread.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to add the users to the thread.
+        HTTPException
+            Adding the users to the thread failed.
+        """
+        
+        result = {}
+        users = []
+
+        if role and isinstance(role, (Role, Snowflake)):
+            users = role.members
+        elif role_id:
+            users = self.guild.get_role(role_id).members
+        elif roles:
+            for role in roles:
+                users += role.members
+        elif role_ids:
+            for role_id in role_ids:
+                users += self.guild.get_role(role_id).members
+
+        unique_users = set(users)
+
+        for user in unique_users:
+                
+            try:
+                await self._state.http.add_user_to_thread(self.id, user.id)
+                result[user] = {"status": "Success", "reason": None}
+            except Exception as e:
+                result[user] = {"status": "Failed", "reason": str(e)}
+                
+            
+
+        return result
+
+
     async def remove_user(self, user: Snowflake):
         """|coro|
 
