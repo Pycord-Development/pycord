@@ -724,6 +724,29 @@ class Thread(Messageable, Hashable):
         """
         await self._state.http.join_thread(self.id)
 
+    async def pin(self, *, reason: str | None = None) -> None:
+        """|coro|
+
+        Pins the thread. If thread is in forum channel.
+
+        You must have :attr:`~Permissions.manage_messages` to pin a thread.
+
+        Parameters
+        ----------
+        reason: Optional[:class:`str`]
+            The reason for pinning this thread. Shows up on the audit log.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to pin the thread.
+        HTTPException
+            Pinning the thread failed.
+        """
+        if not isinstance(self.parent,ForumChannel):
+            raise TypeError("Thread is not in a forum channel")
+        await self.edit(pinned=True, reason=reason)
+
     async def leave(self):
         """|coro|
 
@@ -782,6 +805,10 @@ class Thread(Messageable, Hashable):
             You do not have permissions to add the users to the thread.
         HTTPException
             Adding the users to the thread failed.
+        
+        Returns
+        -------
+        dict[:class:`User`, dict[ status : :class:`str`, reason: :class:`str`]]
         """
         
         result = {}
@@ -790,9 +817,9 @@ class Thread(Messageable, Hashable):
             
             try:
                 await self._state.http.add_user_to_thread(self.id, [user.id for user in users])
-                result[user] = {"status": "Success", "reason": None}
+                result[user] = {"status": True, "reason": None}
             except Exception as e:
-                result[user] = {"status": "Failed", "reason": str(e)}
+                result[user] = {"status": False, "reason": str(e)}
 
         return result
 
@@ -818,6 +845,10 @@ class Thread(Messageable, Hashable):
             You do not have permissions to add the users to the thread.
         HTTPException
             Adding the users to the thread failed.
+
+        Returns
+        -------
+        dict[:class:`User`, dict[ status : :class:`str`, reason: :class:`str`]]
         """
         
         result = {}
@@ -840,9 +871,9 @@ class Thread(Messageable, Hashable):
                 
             try:
                 await self._state.http.add_user_to_thread(self.id, user.id)
-                result[user] = {"status": "Success", "reason": None}
+                result[user] = {"status": True, "reason": None}
             except Exception as e:
-                result[user] = {"status": "Failed", "reason": str(e)}
+                result[user] = {"status": False, "reason": str(e)}
                 
             
 
