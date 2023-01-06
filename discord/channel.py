@@ -1450,8 +1450,14 @@ class ForumChannel(_TextChannel):
                 tag=tag,
                 tags=tags,
             )
-        ret = Thread(guild=self.guild, state=self._state, data=data)
-        message = Message(channel=ret, state=self._state, data=data["message"])
+        ret = Thread(guild=self.guild, state=state, data=data)
+        message = None
+        try: 
+            from .message import  Message
+            message = Message(channel=ret, state=state, data=data["message"])
+        except Exception : 
+            message = await ret.fetch_message(data["message"]["id"]) 
+
         msg = ret.get_partial_message(data["last_message_id"])
         if view:
             state.store_view(view, msg.id)

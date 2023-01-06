@@ -743,9 +743,34 @@ class Thread(Messageable, Hashable):
         HTTPException
             Pinning the thread failed.
         """
+        from .channel import ForumChannel
         if not isinstance(self.parent,ForumChannel):
             raise TypeError("Thread is not in a forum channel")
         await self.edit(pinned=True, reason=reason)
+
+    async def unpin(self, *, reason: str | None = None) -> None:
+        """|coro|
+
+        Unpins the thread. If thread is in forum channel.
+
+        You must have :attr:`~Permissions.manage_messages` to unpin a thread.
+
+        Parameters
+        ----------
+        reason: Optional[:class:`str`]
+            The reason for unpinning this thread. Shows up on the audit log.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to unpin the thread.
+        HTTPException
+            Unpinning the thread failed.
+        """
+        from .channel import ForumChannel
+        if not isinstance(self.parent,ForumChannel):
+            raise TypeError("Thread is not in a forum channel")
+        await self.edit(pinned=False, reason=reason)
 
     async def leave(self):
         """|coro|
