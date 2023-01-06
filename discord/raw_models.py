@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import ChannelType, try_enum
+from .types.user import User
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -42,6 +43,7 @@ if TYPE_CHECKING:
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
+        GuildMemberRemoveEvent,
         IntegrationDeleteEvent,
         MessageDeleteEvent,
         MessageUpdateEvent,
@@ -64,6 +66,7 @@ __all__ = (
     "RawIntegrationDeleteEvent",
     "RawThreadDeleteEvent",
     "RawTypingEvent",
+    "RawMemberRemoveEvent",
     "RawScheduledEventSubscription",
     "AutoModActionExecutionEvent",
 )
@@ -368,6 +371,26 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawMemberRemoveEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_member_remove` event.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    user: Union[:class:`discord.User`, :class:`discord.Member`]
+        The user that left the guild.
+    guild_id: :class:`int`
+        The ID of the guild the user left.
+    """
+
+    __slots__ = ("user", "guild_id")
+
+    def __init__(self, data: GuildMemberRemoveEvent, user: User, /) -> None:
+        self.user: User | Member = user
+        self.guild_id: int = int(data["guild_id"])
 
 
 class RawScheduledEventSubscription(_RawReprMixin):

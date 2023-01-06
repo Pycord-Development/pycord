@@ -29,6 +29,7 @@ from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .user import User
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -92,6 +93,11 @@ class TypingEvent(TypedDict):
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int
+
+
+class GuildMemberRemoveEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
 
 
 class ScheduledEventSubscription(TypedDict, total=False):

@@ -61,6 +61,7 @@ from .message import Message
 from .object import Object
 from .partial_emoji import PartialEmoji
 from .raw_models import *
+from .raw_models import RawMemberRemoveEvent
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .stage_instance import StageInstance
@@ -1128,6 +1129,9 @@ class ConnectionState:
         self.dispatch("member_join", member)
 
     def parse_guild_member_remove(self, data) -> None:
+        user = self.store_user(data["user"])
+        raw = RawMemberRemoveEvent(data, user)
+
         guild = self._get_guild(int(data["guild_id"]))
         if guild is not None:
             try:
@@ -1135,9 +1139,9 @@ class ConnectionState:
             except AttributeError:
                 pass
 
-            user_id = int(data["user"]["id"])
-            member = guild.get_member(user_id)
+            member = guild.get_member(user.id)
             if member is not None:
+                raw.user = member
                 guild._remove_member(member)  # type: ignore
                 self.dispatch("member_remove", member)
         else:
@@ -1145,6 +1149,7 @@ class ConnectionState:
                 "GUILD_MEMBER_REMOVE referencing an unknown guild ID: %s. Discarding.",
                 data["guild_id"],
             )
+        self.dispatch("raw_member_remove", raw)
 
     def parse_guild_member_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
