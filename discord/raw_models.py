@@ -42,8 +42,8 @@ if TYPE_CHECKING:
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
-        MemberRemoveEvent,
         IntegrationDeleteEvent,
+        MemberRemoveEvent,
         MessageDeleteEvent,
         MessageUpdateEvent,
         ReactionActionEvent,
@@ -539,4 +539,3 @@ class RawMemberRemoveEvent(_RawReprMixin):
     def __init__(self, data: MemberRemoveEvent, user: User):
         self.user: User = user
         self.guild_id: int = int(data["guild_id"])
-

@@ -118,4 +118,3 @@ class AutoModActionExecutionEvent(TypedDict):
 class MemberRemoveEvent(TypedDict):
     guild_id: Snowflake
     user: User
-
