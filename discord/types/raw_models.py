@@ -29,6 +29,7 @@ from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .user import User
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -112,3 +113,9 @@ class AutoModActionExecutionEvent(TypedDict):
     rule_trigger_type: AutoModTriggerType
     user_id: Snowflake
     content: str
+
+
+class MemberRemoveEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
+

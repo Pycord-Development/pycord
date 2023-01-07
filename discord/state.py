@@ -1128,17 +1128,20 @@ class ConnectionState:
         self.dispatch("member_join", member)
 
     def parse_guild_member_remove(self, data) -> None:
-        guild = self._get_guild(int(data["guild_id"]))
+        user = User(data=data["user"], state=self)
+        raw = RawMemberRemoveEvent(data, user)
+        self.dispatch("raw_member_remove", raw)
+
+        guild = self._get_guild(raw.guild_id)
         if guild is not None:
             try:
                 guild._member_count -= 1
             except AttributeError:
                 pass
 
-            user_id = int(data["user"]["id"])
-            member = guild.get_member(user_id)
+            member = guild.get_member(user.id)
             if member is not None:
-                guild._remove_member(member)  # type: ignore
+                guild._remove_member(member)
                 self.dispatch("member_remove", member)
         else:
             _log.debug(
