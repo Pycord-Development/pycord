@@ -678,6 +678,7 @@ class Intents(BaseFlags):
 
         - :func:`on_member_join`
         - :func:`on_member_remove`
+        - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
 
