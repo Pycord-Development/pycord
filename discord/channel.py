@@ -1244,7 +1244,17 @@ class ForumChannel(_TextChannel):
 
         Gets a tag in this forum channel.
 
+        Note:
+            If name and id
+
         .. versionadded:: 2.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the tag to get.
+        id: :class:`int`
+            The id of the tag to get.
 
         Returns
         -------
@@ -1262,7 +1272,7 @@ class ForumChannel(_TextChannel):
         if name is None and id is None:
             raise InvalidArgument("You must provide a name or an id to get a tag.")
 
-        tag_data = list(filter(lambda x: x["name"] == name or x.get("id",-1) == id, self.available_tags))
+        tag_data = list(filter(lambda x: x.get("name") == name or x.get("id",-1) == id, self.available_tags))
         if len(tag_data) == 0:
             raise NotFound("Tag not found in this forum channel.You can try to create it with ``create_tag``.")
         return ForumTag(state=self._state, data=tag_data[0])
