@@ -1189,9 +1189,13 @@ class ForumChannel(_TextChannel):
         elif isinstance(emoji, str):
             data["emoji_name"] = emoji
 
-        forum_channel: ForumChannel = await self._state.http.edit_channel(
-            self.id,
-            available_tags=[data] + [tag_.to_dict() for tag_ in self.available_tags],
+        forum_channel = ForumChannel( 
+            state=self._state,
+            guild=self.guild,
+            data = await self._state.http.edit_channel(
+                self.id,
+                available_tags=[data] + [tag_.to_dict() for tag_ in self.available_tags],
+            )
         )
         tag_data = filter(lambda x: x["name"] == name, forum_channel.available_tags)
         return Tag(state=self._state, data=tag_data)

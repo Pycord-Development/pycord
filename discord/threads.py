@@ -53,7 +53,7 @@ if TYPE_CHECKING:
     from .types.threads import ThreadArchiveDuration
     from .types.threads import ThreadMember as ThreadMemberPayload
     from .types.threads import ThreadMetadata
-
+    from .tag import Tag
 
 class Thread(Messageable, Hashable):
     """Represents a Discord thread.
@@ -783,6 +783,39 @@ class Thread(Messageable, Hashable):
             Leaving the thread failed.
         """
         await self._state.http.leave_thread(self.id)
+
+    async def add_tag(self, tag: Tag = None , * , tag_id: int = None):
+        """|coro|
+
+        Adds a tag to this thread.
+
+        You must have :attr:`~Permissions.manage_threads` to add a tag to a thread.
+
+        Parameters
+        ----------
+        tag: :class:`Tag`
+            The tag to add to the thread.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to add the tag to the thread.
+        HTTPException
+            Adding the tag to the thread failed.
+        """
+        from .channel import ForumChannel
+        if isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is in a forum channel")
+
+        if tag is None and tag_id is None:
+            raise TypeError("tag or tag_id must be passed")
+
+        if tag is None:
+            forum_channel : ForumChannel = self.parent
+            tag = forum_channel.get_tag(tag_id)
+
+        await self._state.http.add_tag_to_thread(self.id, tag.id)
+
 
     async def add_user(self, user: Snowflake):
         """|coro|
