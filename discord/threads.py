@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Callable, Iterable
 
 from .abc import Messageable, _purge_messages_helper
 from .enums import ChannelType, try_enum
-from .errors import ClientException
+from .errors import ClientException , NotFound
 from .flags import ChannelFlags
 from .mixins import Hashable
 from .utils import MISSING, _get_as_snowflake, parse_time
@@ -53,7 +53,7 @@ if TYPE_CHECKING:
     from .types.threads import ThreadArchiveDuration
     from .types.threads import ThreadMember as ThreadMemberPayload
     from .types.threads import ThreadMetadata
-    from .tag import Tag
+    from .forum_tag import ForumTag
 
 class Thread(Messageable, Hashable):
     """Represents a Discord thread.
@@ -784,17 +784,30 @@ class Thread(Messageable, Hashable):
         """
         await self._state.http.leave_thread(self.id)
 
-    async def add_tag(self, tag: Tag = None , * , tag_id: int = None):
+    async def add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
         """|coro|
 
         Adds a tag to this thread.
+
+        Note:
+            * This method is only available for threads in a forum channel.
+            * Forum channel had given tag otherwise it will raise :exc:`NotFound` exception.\n
+            * It won't create a new tag so you have to create it first.
 
         You must have :attr:`~Permissions.manage_threads` to add a tag to a thread.
 
         Parameters
         ----------
-        tag: :class:`Tag`
-            The tag to add to the thread.
+        tag: :class:`ForumTag`
+            The tag to add to the thread.\n
+            If you have already created a tag then you can pass it here.\n
+            Do not create your ForumTag object , create it using :meth:`.ForumChannel.create_tag` method.\n
+        
+        id: :class:`int`
+            The id of the tag to add to the thread.\n
+        
+        name: :class:`str`
+            The name of the tag to add to the thread.\n
 
         Raises
         ------
@@ -807,14 +820,30 @@ class Thread(Messageable, Hashable):
         if isinstance(self.parent, ForumChannel):
             raise TypeError("Thread is in a forum channel")
 
-        if tag is None and tag_id is None:
-            raise TypeError("tag or tag_id must be passed")
+        if tag is None and id is None and name is None:
+            raise TypeError("tag , id or name must be passed")
+
+        tag_id = None
+        tag_name = None
+
+        if tag is not None:
+            tag_id = tag.id
+        elif id is not None:
+            tag_id = id
+
+        if tag is not None:
+            tag_name = tag.name
+        elif name is not None:
+            tag_name = name
+
+        
+        forum_channel : ForumChannel = self.parent
+        tag = await forum_channel.get_tag(id=tag_id, name=tag_name)
 
         if tag is None:
-            forum_channel : ForumChannel = self.parent
-            tag = forum_channel.get_tag(tag_id)
+            raise NotFound(f"Forum channel {forum_channel.id} does not have tag with id {tag_id} or name {tag_name}")
 
-        await self._state.http.add_tag_to_thread(self.id, tag.id)
+        await tag
 
 
     async def add_user(self, user: Snowflake):

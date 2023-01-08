@@ -16,18 +16,23 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .role import Role
     from .state import ConnectionState
-    from .types.emoji import Emoji as EmojiPayload
+    from .types.emoji import Emoji , PartialEmoji
 
 
-class Tag:
+class ForumTag:
 
     """
     An object that represents a tag that is able to be applied to a thread in a FORUM channel.
-    id:	snowflake	the id of the tag
-    name:	string	the name of the tag (0-20 characters)
-    moderated:	boolean	whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
-    emoji_id:	snowflake	the id of a guild's custom emoji *
-    emoji_name:	string	the unicode character of the emoji *
+    id:	``snowflake``	
+        the id of the tag
+    name:	``string``	
+        the name of the tag (0-20 characters)
+    moderated:	``boolean``	
+        whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission
+    emoji_id:	``snowflake``	
+        the id of a guild's custom emoji *
+    emoji_name:	``string``	
+        the unicode character of the emoji *
     """
 
     __slots__ = (
@@ -44,7 +49,7 @@ class Tag:
         self._update(data)
 
     def __repr__(self) -> str:
-        return f"<Tag id={self.id} name={self.name!r}>"
+        return f"<ForumTag id={self.id} name={self.name!r}>"
 
     def _update(self, data: dict):
         self.id = int(data["id"])
@@ -93,7 +98,7 @@ class Tag:
         return self.name
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, Tag):
+        if isinstance(other, ForumTag):
             return self.id == other.id
         return NotImplemented
 
@@ -114,3 +119,6 @@ class Tag:
 
     def __dict__(self) -> dict:
         return self.to_dict()
+
+    def get(self, key: str, default: Any = None) -> Any:
+        return getattr(self, key, default)

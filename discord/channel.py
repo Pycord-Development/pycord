@@ -52,7 +52,7 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, InvalidArgument
+from .errors import ClientException, InvalidArgument , NotFound
 from .file import File
 from .flags import ChannelFlags
 from .invite import Invite
@@ -62,7 +62,7 @@ from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .stage_instance import StageInstance
-from .tag import Tag
+from .forum_tag import ForumTag
 from .threads import Thread
 from .utils import MISSING
 
@@ -166,8 +166,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             )
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self._fill_overwrites(data)
-            self.available_tags: list[Tag] = [
-                Tag(state=self._state, data=tag)
+            self.available_tags: list[ForumTag] = [
+                ForumTag(state=self._state, data=tag)
                 for tag in data.get("available_tags", [])
             ]
 
@@ -1028,8 +1028,8 @@ class ForumChannel(_TextChannel):
 
     def _update(self, guild: Guild, data: ForumChannelPayload) -> None:
         super()._update(guild, data)
-        self.available_tags: list[Tag] = [
-            Tag.from_data(state=self._state, data=tag)
+        self.available_tags: list[ForumTag] = [
+            ForumTag.from_data(state=self._state, data=tag)
             for tag in (data.get("available_tags") or [])
         ]
         self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
@@ -1049,7 +1049,7 @@ class ForumChannel(_TextChannel):
         """
         return self.flags.require_tag
 
-    def get_tag_sync(self, id: int, /) -> Tag | None:
+    def get_tag_sync(self, id: int, /) -> ForumTag | None:
         """Returns the :class:`ForumTag` from this forum channel with the
         given ID, if any.
 
@@ -1072,7 +1072,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
-        available_tags: list[Tag] = ...,
+        available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
     ) -> "ForumChannel" | None:
@@ -1160,7 +1160,7 @@ class ForumChannel(_TextChannel):
         *,
         name: str,
         emoji: Emoji | PartialEmoji | str | None = None,
-    ) -> Tag:
+    ) -> ForumTag:
         """|coro|
 
         Creates a tag in this forum channel.
@@ -1169,7 +1169,7 @@ class ForumChannel(_TextChannel):
 
         Returns
         -------
-        :class:`Tag`
+        :class:`ForumTag`
             The created tag
 
         Raises
@@ -1178,7 +1178,7 @@ class ForumChannel(_TextChannel):
             You do not have permissions to create a tag.
         HTTPException
             Creating the tag failed.
-            Tag names must be unique.
+            ForumTag names must be unique.
         """
         data = {
             "name": name,
@@ -1189,21 +1189,24 @@ class ForumChannel(_TextChannel):
         elif isinstance(emoji, str):
             data["emoji_name"] = emoji
 
-        forum_channel = ForumChannel( 
-            state=self._state,
-            guild=self.guild,
-            data = await self._state.http.edit_channel(
-                self.id,
-                available_tags=[data] + [tag_.to_dict() for tag_ in self.available_tags],
-            )
-        )
-        tag_data = filter(lambda x: x["name"] == name, forum_channel.available_tags)
-        return Tag(state=self._state, data=tag_data)
+
+        data = await self._state.http.edit_channel(
+                        self.id,
+                        available_tags=[data] + [tag_.to_dict() for tag_ in self.available_tags],
+                    )
+        
+        self._update(self.guild,data)
+
+        # tag_data = filter(lambda x: x["name"] == name, self.available_tags)
+        return await self.get_tag(name=name)
 
     async def delete_tag(
         self,
+        tag: ForumTag = None,
         *,
-        tag: Tag,
+        id : int = None,
+        name: str = None,
+
     ) -> None:
         """|coro|
 
@@ -1213,8 +1216,7 @@ class ForumChannel(_TextChannel):
 
         Returns
         -------
-        :class:`Tag`
-            The created tag
+        ``None``
 
         Raises
         ------
@@ -1222,9 +1224,9 @@ class ForumChannel(_TextChannel):
             You do not have permissions to delete a tag.
         HTTPException
             Deleting the tag failed.
-            Tag names must be unique.
+            ForumTag names must be unique.
         """
-        forum_channel: ForumChannel = await self._state.http.edit_channel(
+        await self._state.http.edit_channel(
             self.id,
             available_tags=[
                 tag_.to_dict() for tag_ in self.available_tags if tag_.name != tag.name
@@ -1235,8 +1237,9 @@ class ForumChannel(_TextChannel):
     async def get_tag(
         self,
         *,
-        name: str,
-    ) -> Tag:
+        name: str = None,
+        id : int = None,
+    ) -> ForumTag:
         """|coro|
 
         Gets a tag in this forum channel.
@@ -1245,7 +1248,7 @@ class ForumChannel(_TextChannel):
 
         Returns
         -------
-        :class:`Tag`
+        :class:`ForumTag`
             The created tag
 
         Raises
@@ -1254,10 +1257,15 @@ class ForumChannel(_TextChannel):
             You do not have permissions to get a tag.
         HTTPException
             Getting the tag failed.
-            Tag names must be unique.
+            ForumTag names must be unique.
         """
-        tag_data = filter(lambda x: x["name"] == name, self.available_tags)
-        return Tag(state=self._state, data=tag_data)
+        if name is None and id is None:
+            raise InvalidArgument("You must provide a name or an id to get a tag.")
+
+        tag_data = list(filter(lambda x: x["name"] == name or x.get("id",-1) == id, self.available_tags))
+        if len(tag_data) == 0:
+            raise NotFound("Tag not found in this forum channel.You can try to create it with ``create_tag``.")
+        return ForumTag(state=self._state, data=tag_data[0])
 
     async def create_thread(
         self,
@@ -1277,8 +1285,8 @@ class ForumChannel(_TextChannel):
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         slowmode_delay: int = MISSING,
         reason: str | None = None,
-        tag: Tag | str | None = None,
-        tags: list[Tag] | None = None,
+        tag: ForumTag | str | None = None,
+        tags: list[ForumTag] | None = None,
     ) -> tuple[Thread, Message]:
         """|coro|
 
@@ -1332,9 +1340,9 @@ class ForumChannel(_TextChannel):
             If not provided, the forum channel's default slowmode is used.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
-        tag: :class:`Tag`
+        tag: :class:`ForumTag`
             The tag to use for the thread.
-        tags: List[:class:`Tag`]
+        tags: List[:class:`ForumTag`]
             A list of tags to use for the thread.
 
         Returns

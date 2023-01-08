@@ -32,6 +32,7 @@ from ..flags import ChannelFlags
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import PartialUser
+from ..forum_tag import ForumTag
 
 OverwriteType = Literal[0, 1]
 
@@ -81,12 +82,12 @@ class DefaultReaction(TypedDict):
     emoji_name: NotRequired[str | None]
 
 
-class ForumTag(TypedDict):
-    id: Snowflake
-    name: str
-    moderated: bool
-    emoji_id: NotRequired[Snowflake | None]
-    emoji_name: NotRequired[str | None]
+# class ForumTag(TypedDict):
+#     id: Snowflake
+#     name: str
+#     moderated: bool
+#     emoji_id: NotRequired[Snowflake | None]
+#     emoji_name: NotRequired[str | None]
 
 
 class ForumChannel(_BaseGuildChannel, _TextChannelOptional):

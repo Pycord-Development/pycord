@@ -45,7 +45,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
-from .tag import Tag
+from .forum_tag import ForumTag
 from .utils import MISSING , warn_deprecated
 
 _log = logging.getLogger(__name__)
@@ -1173,8 +1173,8 @@ class HTTPClient:
         allowed_mentions: message.AllowedMentions | None = None,
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
-        tag: Tag | None = None,
-        tags: list[Tag] | None = None,
+        tag: ForumTag | None = None,
+        tags: list[ForumTag] | None = None,
     ) -> Response[threads.Thread]:
         payload = {
             "name": name,
