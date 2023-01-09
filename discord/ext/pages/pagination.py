@@ -1383,3 +1383,39 @@ class ButtonTypes:
         if self.indicator == True:
             buttons.append(PaginatorButton(button_type="indicator", disabled=True))
         return buttons
+    def emojis(self):
+        buttons = [
+            PaginatorButton(
+                button_type="first", label="⏪", style=discord.ButtonStyle.blurple
+            ),
+            PaginatorButton(
+                button_type="prev", label="◀", style=discord.ButtonStyle.secondary
+            ),
+            PaginatorButton(
+                button_type="next", label="▶", style=discord.ButtonStyle.secondary
+            ),
+            PaginatorButton(
+                button_type="last", label="⏩", style=discord.ButtonStyle.blurple
+            ),
+        ]
+        if self.indicator == True:
+            buttons.append(PaginatorButton(button_type="indicator", disabled=True))
+        return buttons
+    def default(self):
+        buttons = [
+            PaginatorButton(
+                button_type="first", label="<<<", style=discord.ButtonStyle.blurple
+            ),
+            PaginatorButton(
+                button_type="prev", label="<", style=discord.ButtonStyle.secondary
+            ),
+            PaginatorButton(
+                button_type="next", label=">", style=discord.ButtonStyle.secondary
+            ),
+            PaginatorButton(
+                button_type="last", label=">>>", style=discord.ButtonStyle.blurple
+            ),
+        ]
+        if self.indicator == True:
+            buttons.append(PaginatorButton(button_type="indicator", disabled=True))
+        return buttons
