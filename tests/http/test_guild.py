@@ -21,12 +21,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from random import choice, randint, randrange, sample
+from typing import get_args
+
 import pytest
 
 from discord import Route
-from discord.ext.testing.fixtures import after, before, guild_id, icon, limit, name
+from discord.ext.testing.fixtures import (
+    after,
+    before,
+    channel_id,
+    guild_id,
+    icon,
+    limit,
+    name,
+    reason,
+    user_id,
+)
+from discord.ext.testing.helpers import (
+    random_bool,
+    random_bytes,
+    random_snowflake,
+    random_string,
+)
+from discord.types.guild import GuildFeature
 
 from ..core import client
+
+
+@pytest.fixture()
+def code():
+    return random_string(10)
+
+
+@pytest.fixture()
+def description():
+    return random_string(100)
 
 
 async def test_get_guilds(client, limit, before, after):
@@ -69,3 +99,227 @@ async def test_create_guild(client, name, icon):
         payload["icon"] = icon
     with client.makes_request(Route("POST", "/guilds"), json=payload):
         await client.http.create_guild(name, icon)
+
+
+@pytest.mark.parametrize(
+    "channel_id1,channel_id2, channel_id3",
+    ((random_snowflake(), random_snowflake(), random_snowflake()),),
+)
+@pytest.mark.parametrize("premium_progress_bar_enabled", (True, False))
+@pytest.mark.parametrize("verification_level", (randint(0, 4),))
+@pytest.mark.parametrize("default_message_notifications", (randint(0, 1),))
+@pytest.mark.parametrize("explicit_content_filter", (randint(0, 2),))
+@pytest.mark.parametrize("splash", (random_bytes(),))
+@pytest.mark.parametrize("discovery_splash", (random_bytes(),))
+@pytest.mark.parametrize("banner", (random_bytes(),))
+@pytest.mark.parametrize("system_channel_flags", (randint(0, 1 << 4),))
+@pytest.mark.parametrize("preferred_locale", (random_string(5),))
+@pytest.mark.parametrize(
+    "features",
+    (sample(get_args(GuildFeature), randint(0, len(get_args(GuildFeature)))),),
+)
+@pytest.mark.parametrize("afk_timeout", (choice((60, 300, 900, 1800, 3600)),))
+async def test_edit_guild(
+    client,
+    name,
+    verification_level,
+    default_message_notifications,
+    explicit_content_filter,
+    channel_id3,
+    afk_timeout,
+    icon,
+    user_id,
+    splash,
+    discovery_splash,
+    banner,
+    channel_id,
+    system_channel_flags,
+    channel_id1,
+    channel_id2,
+    preferred_locale,
+    features,
+    description,
+    premium_progress_bar_enabled,
+    reason,
+):
+    payload = {
+        "name": name,
+        "verification_level": verification_level,
+        "default_message_notifications": default_message_notifications,
+        "explicit_content_filter": explicit_content_filter,
+        "afk_channel_id": channel_id3,
+        "afk_timeout": afk_timeout,
+        "icon": icon,
+        "owner_id": user_id,
+        "splash": splash,
+        "discovery_splash": discovery_splash,
+        "banner": banner,
+        "system_channel_id": channel_id,
+        "system_channel_flags": system_channel_flags,
+        "rules_channel_id": channel_id1,
+        "public_updates_channel_id": channel_id2,
+        "preferred_locale": preferred_locale,
+        "features": features,
+        "description": description,
+        "premium_progress_bar_enabled": premium_progress_bar_enabled,
+    }
+    with client.makes_request(
+        Route("PATCH", "/guilds/{guild_id}", guild_id=guild_id),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.edit_guild(
+            guild_id,
+            reason=reason,
+            **payload,
+        )
+
+
+@pytest.mark.parametrize("required", [random_bool()])
+async def test_edit_guild_mfa(client, guild_id, required, reason):
+    payload = {"level": int(required)}
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.edit_guild_mfa(
+            guild_id,
+            required,
+            reason=reason,
+        )
+
+
+async def test_get_template(client, code):
+    with client.makes_request(Route("GET", "/guilds/templates/{code}", code=code)):
+        await client.http.get_template(code)
+
+
+async def test_guild_templates(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/templates", guild_id=guild_id)
+    ):
+        await client.http.guild_templates(guild_id)
+
+
+async def test_create_template(client, guild_id, name, icon):
+    payload = {"name": name, "icon": icon}
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/templates", guild_id=guild_id),
+        json=payload,
+    ):
+        await client.http.create_template(guild_id, payload)
+
+
+async def test_sync_template(client, guild_id, code):
+    with client.makes_request(
+        Route(
+            "PUT", "/guilds/{guild_id}/templates/{code}", guild_id=guild_id, code=code
+        )
+    ):
+        await client.http.sync_template(guild_id, code)
+
+
+async def test_edit_template(client, guild_id, code, name, description):
+    payload = {"name": name, "description": description}
+    with client.makes_request(
+        Route(
+            "PATCH", "/guilds/{guild_id}/templates/{code}", guild_id=guild_id, code=code
+        ),
+        json=payload,
+    ):
+        await client.http.edit_template(guild_id, code, payload)
+
+
+async def test_delete_template(client, guild_id, code):
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/guilds/{guild_id}/templates/{code}",
+            guild_id=guild_id,
+            code=code,
+        )
+    ):
+        await client.http.delete_template(guild_id, code)
+
+
+async def test_create_from_template(client, code, name, icon):
+    payload = {"name": name}
+    if icon is not None:
+        payload["icon"] = icon
+    with client.makes_request(
+        Route("POST", "/guilds/templates/{code}", code=code), json=payload
+    ):
+        await client.http.create_from_template(code, name, icon)
+
+
+@pytest.mark.parametrize("limit", [None, randrange(0, 1000)])
+async def test_get_bans(client, guild_id, limit, before, after):
+    params = {}
+    if limit is not None:
+        params["limit"] = limit
+    if before is not None:
+        params["before"] = before
+    if after is not None:
+        params["after"] = after
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id), params=params
+    ):
+        await client.http.get_bans(guild_id, limit=limit, before=before, after=after)
+
+
+async def test_get_ban(client, guild_id, user_id):
+    with client.makes_request(
+        Route(
+            "GET",
+            "/guilds/{guild_id}/bans/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        )
+    ):
+        await client.http.get_ban(user_id, guild_id)
+
+
+async def test_get_vanity_code(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id)
+    ):
+        await client.http.get_vanity_code(guild_id)
+
+
+async def test_change_vanity_code(client, guild_id, code, reason):
+    with client.makes_request(
+        Route("PATCH", "/guilds/{guild_id}/vanity-url", guild_id=guild_id),
+        json={"code": code},
+        reason=reason,
+    ):
+        await client.http.change_vanity_code(guild_id, code, reason=reason)
+
+
+async def test_get_all_guild_channels(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/channels", guild_id=guild_id)
+    ):
+        await client.http.get_all_guild_channels(guild_id)
+
+
+async def test_get_members(client, guild_id, limit, after):
+    payload = {"limit": limit}
+    if after is not None:
+        payload["after"] = after
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id), params=payload
+    ):
+        await client.http.get_members(guild_id, limit=limit, after=after)
+
+
+async def test_get_member(client, guild_id, user_id):
+    with client.makes_request(
+        Route(
+            "GET",
+            "/guilds/{guild_id}/members/{member_id}",
+            guild_id=guild_id,
+            member_id=user_id,
+        )
+    ):
+        await client.http.get_member(guild_id, user_id)
