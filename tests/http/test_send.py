@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from discord import Route, utils
+from discord import MessageFlags, Route, utils
 from discord.ext.testing.fixtures import (
     allowed_mentions,
     channel_id,
@@ -69,7 +69,9 @@ def message_reference(request) -> message.MessageReference | None:
     return request.param
 
 
-@pytest.fixture(params=(None,))  # TODO: Add flags to send tests
+@pytest.fixture(
+    params=(MessageFlags(suppress_embeds=True).value,)
+)  # this should maybe be optional
 def flags(request) -> int | None:
     return request.param
 
