@@ -253,6 +253,7 @@ async def test_create_from_template(client, code, name, icon):
         await client.http.create_from_template(code, name, icon)
 
 
+# limit is optional on this route
 @pytest.mark.parametrize("limit", [None, randrange(0, 1000)])
 async def test_get_bans(client, guild_id, limit, before, after):
     params = {}
