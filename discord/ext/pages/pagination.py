@@ -1383,6 +1383,7 @@ class ButtonTypes:
         if self.indicator == True:
             buttons.append(PaginatorButton(button_type="indicator", disabled=True))
         return buttons
+
     def emojis(self):
         buttons = [
             PaginatorButton(
@@ -1401,6 +1402,7 @@ class ButtonTypes:
         if self.indicator == True:
             buttons.append(PaginatorButton(button_type="indicator", disabled=True))
         return buttons
+
     def default(self):
         buttons = [
             PaginatorButton(
