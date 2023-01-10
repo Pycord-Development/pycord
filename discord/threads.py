@@ -845,6 +845,131 @@ class Thread(Messageable, Hashable):
 
         await tag
 
+    async def remove_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
+        """|coro|
+
+        Removes a tag from this thread.
+
+        Note:
+            * This method is only available for threads in a forum channel.
+            * Forum channel had given tag otherwise it will raise :exc:`NotFound` exception.\n
+            * It won't create a new tag so you have to create it first.
+
+        You must have :attr:`~Permissions.manage_threads` to remove a tag from a thread.
+
+        Parameters
+        ----------
+        tag: :class:`ForumTag`
+            The tag to remove from the thread.\n
+            If you have already created a tag then you can pass it here.\n
+            Do not create your ForumTag object , create it using :meth:`.ForumChannel.create_tag` method.\n
+        
+        id: :class:`int`
+            The id of the tag to remove from the thread.\n
+        
+        name: :class:`str`
+            The name of the tag to remove from the thread.\n
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to remove the tag from the thread.
+        HTTPException
+            Removing the tag from the thread failed.
+        """
+        from .channel import ForumChannel
+        if isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is in a forum channel")
+
+        if tag is None and id is None and name is None:
+            raise TypeError("tag , id or name must be passed")
+
+        tag_id = None
+        tag_name = None
+
+        if tag is not None:
+            tag_id = tag.id
+        elif id is not None:
+            tag_id = id
+
+        if tag is not None:
+            tag_name = tag.name
+        elif name is not None:
+            tag_name = name
+
+        
+        forum_channel : ForumChannel = self.parent
+        tag = await forum_channel.get_tag(id=tag_id, name=tag_name)
+
+        await self.edit(
+            applied_tags=[t for t in self.applied_tags if t.id != tag.id or t.name.lower() != tag.name.lower()]
+        )
+        await tag
+
+    async def resete_and_add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
+        """|coro|
+
+        Resets and adds a tag to this thread.
+
+        Note:
+            * This method is only available for threads in a forum channel.
+            * Forum channel had given tag otherwise it will raise :exc:`NotFound` exception.\n
+            * It won't create a new tag so you have to create it first.
+
+        You must have :attr:`~Permissions.manage_threads` to add a tag to a thread.
+
+        Parameters
+        ----------
+        tag: :class:`ForumTag`
+            The tag to add to the thread.\n
+            If you have already created a tag then you can pass it here.\n
+            Do not create your ForumTag object , create it using :meth:`.ForumChannel.create_tag` method.\n
+        
+        id: :class:`int`
+            The id of the tag to add to the thread.\n
+        
+        name: :class:`str`
+            The name of the tag to add to the thread.\n
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to add the tag to the thread.
+        HTTPException
+            Adding the tag to the thread failed.
+        """
+        from .channel import ForumChannel
+        if isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is in a forum channel")
+
+        if tag is None and id is None and name is None:
+            raise TypeError("tag , id or name must be passed")
+
+        tag_id = None
+        tag_name = None
+
+        if tag is not None:
+            tag_id = tag.id
+        elif id is not None:
+            tag_id = id
+
+        if tag is not None:
+            tag_name = tag.name
+        elif name is not None:
+            tag_name = name
+
+        
+        forum_channel : ForumChannel = self.parent
+        tag = await forum_channel.get_tag(id=tag_id, name=tag_name)
+
+        if tag is None:
+            raise NotFound(f"Forum channel {forum_channel.id} does not have tag with id {tag_id} or name {tag_name}")
+
+        await self.edit(
+            applied_tags=[tag]
+        )
+        await tag
+
 
     async def add_user(self, user: Snowflake):
         """|coro|

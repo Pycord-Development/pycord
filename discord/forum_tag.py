@@ -52,8 +52,8 @@ class ForumTag:
         return f"<ForumTag id={self.id} name={self.name!r}>"
 
     def _update(self, data: dict):
-        self.id = int(data["id"])
-        self.name = data["name"]
+        self.id : int = int(data["id"])
+        self.name : str = data["name"]
         self.moderated = data["moderated"]
         self.emoji_id = int(data["emoji_id"]) if data["emoji_id"] else None
         self.emoji_name = data["emoji_name"]
@@ -119,6 +119,9 @@ class ForumTag:
 
     def __dict__(self) -> dict:
         return self.to_dict()
+
+    def __getitem__(self, item):
+        return self.__dict__()[item]
 
     def get(self, key: str, default: Any = None) -> Any:
         return getattr(self, key, default)
