@@ -324,3 +324,81 @@ async def test_get_member(client, guild_id, user_id):
         )
     ):
         await client.http.get_member(guild_id, user_id)
+
+
+@pytest.fixture(params=[0, randint(1, 10)])
+def roles(request) -> list[str]:
+    return [str(random_snowflake()) for _ in range(request.param)]
+
+
+@pytest.fixture()
+def days() -> int:
+    return randint(1, 30)
+
+
+@pytest.mark.parametrize("compute_prune_count", [True, False])
+async def test_prune_members(
+    client, guild_id, days, compute_prune_count, roles, reason
+):
+    payload = {
+        "days": days,
+        "compute_prune_count": "true" if compute_prune_count else "false",
+    }
+    if roles:
+        payload["include_roles"] = ", ".join(roles)
+
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/prune", guild_id=guild_id),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.prune_members(
+            guild_id, days, compute_prune_count, roles, reason=reason
+        )
+
+
+async def test_estimate_pruned_members(client, guild_id, days, roles):
+    payload = {"days": days}
+    if roles:
+        payload["include_roles"] = ", ".join(roles)
+
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/prune", guild_id=guild_id), params=payload
+    ):
+        await client.http.estimate_pruned_members(guild_id, days, roles)
+
+
+@pytest.fixture()
+def sticker_id() -> int:
+    return random_snowflake()
+
+
+async def test_get_sticker(client, sticker_id):
+    with client.makes_request(
+        Route("GET", "/stickers/{sticker_id}", sticker_id=sticker_id)
+    ):
+        await client.http.get_sticker(sticker_id)
+
+
+async def test_list_premium_sticker_packs(client):
+    with client.makes_request(Route("GET", "/sticker-packs")):
+        await client.http.list_premium_sticker_packs()
+
+
+async def test_get_all_guild_stickers(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/stickers", guild_id=guild_id)
+    ):
+        await client.http.get_all_guild_stickers(guild_id)
+
+
+async def test_get_guild_sticker(client, guild_id, sticker_id):
+    with client.makes_request(
+        Route(
+            "GET",
+            "/guilds/{guild_id}/stickers/{sticker_id}",
+            guild_id=guild_id,
+            sticker_id=sticker_id,
+        )
+    ):
+        await client.http.get_guild_sticker(guild_id, sticker_id)
