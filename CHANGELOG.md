@@ -29,11 +29,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
 
-### Removed
-
-- Removed `EmbeddedActivity` values to update accordingly with the activities.
-  ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
-
 ## [2.3.2] - 2022-12-03
 
 ### Fixed
