@@ -801,6 +801,7 @@ class Paginator(discord.ui.View):
 
     def add_styled_buttons(self):
         """Adds the default paginator buttons like ``.add_default_Buttons`` but uses emojis for labels
+
         .. versionadded:: 2.4
         """
         default_buttons = [
