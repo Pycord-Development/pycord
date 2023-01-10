@@ -23,12 +23,13 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+from pathlib import Path
 from random import choice, randint, randrange, sample
-from typing import get_args
+from typing import Literal, get_args
 
 import pytest
 
-from discord import Route
+from discord import File, Route
 from discord.ext.testing.fixtures import (
     after,
     before,
@@ -41,6 +42,7 @@ from discord.ext.testing.fixtures import (
     user_id,
 )
 from discord.ext.testing.helpers import (
+    random_amount,
     random_bool,
     random_bytes,
     random_snowflake,
@@ -404,3 +406,195 @@ async def test_get_guild_sticker(client, guild_id, sticker_id):
         )
     ):
         await client.http.get_guild_sticker(guild_id, sticker_id)
+
+
+@pytest.fixture(
+    params=(
+        "png",
+        "json",  # Lottie
+        "txt",  # octet-stream
+    )
+)
+def file_type(request) -> Literal["png", "json", "txt"]:
+    return request.param
+
+
+@pytest.fixture()
+def sticker_file(file_type) -> File:
+    return File(Path(__file__).parent.parent / "assets" / ("test." + file_type))
+
+
+@pytest.fixture()
+def tags() -> str:
+    return random_string()
+
+
+async def test_create_guild_sticker(
+    client, guild_id, name, description, tags, sticker_file, file_type, reason
+):
+    if file_type == "json":
+        content_type = "application/json"
+    elif file_type == "txt":
+        content_type = "application/octet-stream"
+    else:
+        content_type = f"image/{file_type}"
+
+    form = [
+        {
+            "name": "file",
+            "value": sticker_file.fp,
+            "filename": sticker_file.filename,
+            "content_type": content_type,
+        }
+    ]
+
+    payload = {"name": name, "tags": tags, "description": description}
+
+    for k, v in payload.items():
+        form.append(
+            {
+                "name": k,
+                "value": v,
+            }
+        )
+
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/stickers", guild_id=guild_id),
+        form=form,
+        reason=reason,
+        files=[sticker_file],
+    ):
+        await client.http.create_guild_sticker(
+            guild_id,
+            payload,
+            sticker_file,
+            reason,
+        )
+
+
+async def test_modify_guild_sticker(
+    client, guild_id, sticker_id, name, description, tags, reason
+):
+    payload = {"name": name, "tags": tags, "description": description}
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/stickers/{sticker_id}",
+            guild_id=guild_id,
+            sticker_id=sticker_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.modify_guild_sticker(
+            guild_id,
+            sticker_id,
+            payload,
+            reason,
+        )
+
+
+async def test_delete_guild_sticker(client, guild_id, sticker_id, reason):
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/guilds/{guild_id}/stickers/{sticker_id}",
+            guild_id=guild_id,
+            sticker_id=sticker_id,
+        ),
+        reason=reason,
+    ):
+        await client.http.delete_guild_sticker(
+            guild_id,
+            sticker_id,
+            reason,
+        )
+
+
+async def test_get_all_custom_emojis(client, guild_id):
+    with client.makes_request(
+        Route("GET", "/guilds/{guild_id}/emojis", guild_id=guild_id)
+    ):
+        await client.http.get_all_custom_emojis(guild_id)
+
+
+@pytest.fixture()
+async def emoji_id() -> int:
+    return random_snowflake()
+
+
+async def test_get_custom_emoji(client, guild_id, emoji_id):
+    with client.makes_request(
+        Route(
+            "GET",
+            "/guilds/{guild_id}/emojis/{emoji_id}",
+            guild_id=guild_id,
+            emoji_id=emoji_id,
+        )
+    ):
+        await client.http.get_custom_emoji(guild_id, emoji_id)
+
+
+@pytest.mark.parametrize("roles", (random_amount(random_snowflake), None))
+@pytest.mark.parametrize("image", [random_bytes()])
+async def test_create_custom_emoji(client, guild_id, name, image, roles, reason):
+    payload = {
+        "name": name,
+        "image": image,
+        "roles": roles or [],
+    }
+
+    with client.makes_request(
+        Route("POST", "/guilds/{guild_id}/emojis", guild_id=guild_id),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.create_custom_emoji(
+            guild_id,
+            name,
+            image,
+            roles=roles,
+            reason=reason,
+        )
+
+
+async def test_delete_custom_emoji(client, guild_id, emoji_id, reason):
+    with client.makes_request(
+        Route(
+            "DELETE",
+            "/guilds/{guild_id}/emojis/{emoji_id}",
+            guild_id=guild_id,
+            emoji_id=emoji_id,
+        ),
+        reason=reason,
+    ):
+        await client.http.delete_custom_emoji(
+            guild_id,
+            emoji_id,
+            reason=reason,
+        )
+
+
+@pytest.mark.parametrize("roles", (random_amount(random_snowflake), None))
+async def test_edit_custom_emoji(client, guild_id, emoji_id, name, roles, reason):
+    payload = {
+        "name": name,
+        "roles": roles,
+    }
+
+    with client.makes_request(
+        Route(
+            "PATCH",
+            "/guilds/{guild_id}/emojis/{emoji_id}",
+            guild_id=guild_id,
+            emoji_id=emoji_id,
+        ),
+        json=payload,
+        reason=reason,
+    ):
+        await client.http.edit_custom_emoji(
+            guild_id,
+            emoji_id,
+            payload=payload,
+            reason=reason,
+        )
