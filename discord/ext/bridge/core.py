@@ -38,7 +38,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import filter_params, find, get
+from ...utils import MISSING, find, get
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
 from ..commands import (
@@ -155,45 +155,14 @@ class BridgeCommand:
             "ext_variant", None
         ) or BridgeExtCommand(callback, **kwargs)
 
-    @property
-    def name_localizations(self) -> dict[str, str]:
-        """Returns name_localizations from :attr:`slash_variant`
-
-        You can edit/set name_localizations directly with
-
-        .. code-block:: python3
-
-            bridge_command.name_localizations["en-UK"] = ...  # or any other locale
-            # or
-            bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
-        """
-        return self.slash_variant.name_localizations
-
-    @name_localizations.setter
-    def name_localizations(self, value):
-        self.slash_variant.name_localizations = value
-
-    @property
-    def description_localizations(self) -> dict[str, str]:
-        """Returns description_localizations from :attr:`slash_variant`
-
-        You can edit/set description_localizations directly with
-
-        .. code-block:: python3
-
-            bridge_command.description_localizations["en-UK"] = ...  # or any other locale
-            # or
-            bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
-        """
-        return self.slash_variant.description_localizations
-
-    @description_localizations.setter
-    def description_localizations(self, value):
-        self.slash_variant.description_localizations = value
-
-    @property
-    def qualified_name(self) -> str:
-        return self.slash_variant.qualified_name
+    def __getattr__(self, name):
+        result = getattr(self.slash_variant, name, MISSING)
+        try:
+            if result is MISSING:
+                return getattr(self.ext_variant, name)
+            return result
+        except AttributeError:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
