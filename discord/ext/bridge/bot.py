@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC
+from typing import Generator
 
 from discord.interactions import Interaction
 from discord.message import Message
@@ -49,7 +50,14 @@ class BotBase(ABC):
 
         return cmds
 
-    def walk_bridge_commands(self):
+    def walk_bridge_commands(self) -> Generator[BridgeCommand | BridgeCommandGroup, None, None]:
+        """An iterator that recursively walks through all the bot's bridge commands.
+
+        Yields
+        ------
+        Union[:class:`.BridgeCommand`, :class:`.BridgeCommandGroup`]
+            A bridge command or bridge group of the bot.
+        """
         for cmd in self._bridge_commands:
             yield cmd
             if isinstance(cmd, BridgeCommandGroup):

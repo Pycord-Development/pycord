@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, Generator
 
 import discord.commands.options
 from discord import (
@@ -291,18 +291,25 @@ class BridgeCommandGroup(BridgeCommand):
             parent=kwargs.pop("parent", None),
         )
 
-        self.subcommands: list[BridgeCommandGroup | BridgeCommand] = []
+        self.subcommands: list[BridgeCommand] = []
 
         self.mapped: SlashCommand | None = None
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
 
-    def walk_commands(self):
+    def walk_commands(self) -> Generator[BridgeCommand, None, None]:
+        """An iterator that recursively walks through all the bridge group's subcommands.
+
+        Yields
+        ------
+        :class:`.BridgeCommand`
+            A bridge command of this bridge group.
+        """
         for cmd in self.subcommands:
             yield cmd
-            if isinstance(cmd, BridgeCommandGroup):
-                yield from cmd.walk_commands()
+            # if isinstance(cmd, BridgeCommandGroup):
+            #     yield from cmd.walk_commands()
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.
@@ -331,6 +338,8 @@ class BridgeCommandGroup(BridgeCommand):
             return command
 
         return wrap
+
+    # TODO: another group decorator for sub-groups
 
 
 def bridge_command(**kwargs):
