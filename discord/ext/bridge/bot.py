@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC
-from typing import Iterator
+from collections.abc import Iterator
 
 from discord.interactions import Interaction
 from discord.message import Message
