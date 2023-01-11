@@ -22,6 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 from typing import Dict, List, Optional, Union
+from io import BufferedReader
 
 import discord
 from discord.ext.bridge import BridgeContext
@@ -166,10 +167,12 @@ class Page:
         """
 
     def update_files(self) -> Optional[List[discord.File]]:
-        """Updates the files associated with the page by re-uploading them.
+        """If possible, it updates the files associated with the page by re-uploading them.
         Typically used when the page is changed.
         """
         for file in self._files:
+            if not isinstance(file.fp, BufferedReader):
+                continue
             with open(file.fp.name, "rb") as fp:  # type: ignore
                 self._files[self._files.index(file)] = discord.File(
                     fp,  # type: ignore
