@@ -167,7 +167,7 @@ class Page:
         """
 
     def update_files(self) -> Optional[List[discord.File]]:
-        """If possible, it updates the files associated with the page by re-uploading them.
+        """Re-opens and reads new file contents for local files if they were updated.
         Typically used when the page is changed.
         """
         for file in self._files:
