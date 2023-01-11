@@ -138,10 +138,10 @@ class Option:
         .. note::
 
             Does not validate the input value against the autocomplete results.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
@@ -308,8 +308,8 @@ class Option:
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
-        self.name_localizations = kwargs.pop("name_localizations", None)
-        self.description_localizations = kwargs.pop("description_localizations", None)
+        self.name_localizations = kwargs.pop("name_localizations", {})
+        self.description_localizations = kwargs.pop("description_localizations", {})
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -320,9 +320,9 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
             "autocomplete": bool(self.autocomplete),
         }
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations:
             as_dict["description_localizations"] = self.description_localizations
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
@@ -353,7 +353,7 @@ class OptionChoice:
         The name of the choice. Shown in the UI when selecting an option.
     value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
         The value of the choice. If not provided, will use the value of ``name``.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -362,7 +362,7 @@ class OptionChoice:
         self,
         name: str,
         value: str | int | float | None = None,
-        name_localizations: dict[str, str] | None = None,
+        name_localizations: dict[str, str] = {},
     ):
         self.name = str(name)
         self.value = value if value is not None else name
@@ -370,7 +370,7 @@ class OptionChoice:
 
     def to_dict(self) -> dict[str, str | int | float]:
         as_dict = {"name": self.name, "value": self.value}
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
 
         return as_dict

@@ -155,16 +155,14 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
 
 def _validate_names(obj):
     validate_chat_input_name(obj.name)
-    if obj.name_localizations:
-        for locale, string in obj.name_localizations.items():
-            validate_chat_input_name(string, locale=locale)
+    for locale, string in obj.name_localizations.items():
+        validate_chat_input_name(string, locale=locale)
 
 
 def _validate_descriptions(obj):
     validate_chat_input_description(obj.description)
-    if obj.description_localizations:
-        for locale, string in obj.description_localizations.items():
-            validate_chat_input_description(string, locale=locale)
+    for locale, string in obj.description_localizations.items():
+        validate_chat_input_description(string, locale=locale)
 
 
 class _BaseCommand:
@@ -647,10 +645,10 @@ class SlashCommand(ApplicationCommand):
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -668,8 +666,8 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", {}
         )
         _validate_names(self)
 
@@ -680,8 +678,8 @@ class SlashCommand(ApplicationCommand):
         )
 
         self.description: str = description
-        self.description_localizations: dict[str, str] | None = kwargs.get(
-            "description_localizations", None
+        self.description_localizations: dict[str, str] = kwargs.get(
+            "description_localizations", {}
         )
         _validate_descriptions(self)
 
@@ -843,9 +841,9 @@ class SlashCommand(ApplicationCommand):
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
         }
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations:
             as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -1079,10 +1077,10 @@ class SlashCommandGroup(ApplicationCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -1144,11 +1142,11 @@ class SlashCommandGroup(ApplicationCommand):
         self.guild_only: bool | None = kwargs.get("guild_only", None)
         self.nsfw: bool | None = kwargs.get("nsfw", None)
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", {}
         )
-        self.description_localizations: dict[str, str] | None = kwargs.get(
-            "description_localizations", None
+        self.description_localizations: dict[str, str] = kwargs.get(
+            "description_localizations", {}
         )
 
     @property
@@ -1161,9 +1159,9 @@ class SlashCommandGroup(ApplicationCommand):
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
         }
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations:
             as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
@@ -1234,10 +1232,10 @@ class SlashCommandGroup(ApplicationCommand):
             :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
             :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
             event.
-        name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        name_localizations: Dict[:class:`str`, :class:`str`]
             The name localizations for this command. The values of this should be ``"locale": "name"``. See
             `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-        description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        description_localizations: Dict[:class:`str`, :class:`str`]
             The description localizations for this command. The values of this should be ``"locale": "description"``.
             See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
@@ -1411,7 +1409,7 @@ class ContextMenuCommand(ApplicationCommand):
     cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -1428,8 +1426,8 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", {}
         )
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
@@ -1504,7 +1502,7 @@ class ContextMenuCommand(ApplicationCommand):
                 "default_member_permissions"
             ] = self.default_member_permissions.value
 
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
 
         return as_dict
