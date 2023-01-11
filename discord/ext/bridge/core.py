@@ -25,8 +25,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING, Any, Callable
 from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any, Callable
 
 import discord.commands.options
 from discord import (
