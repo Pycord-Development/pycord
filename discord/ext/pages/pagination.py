@@ -166,7 +166,7 @@ class Page:
             The interaction associated with the callback, if any.
         """
 
-    def update_files(self) -> Optional[List[discord.File]]:
+    def update_files(self) -> list[discord.File] | None:
         """Re-opens and reads new file contents for local files if they were updated.
         Typically used when the page is changed.
         """
