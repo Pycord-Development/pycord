@@ -162,7 +162,9 @@ class BridgeCommand:
                 return getattr(self.ext_variant, name)
             return result
         except AttributeError:
-            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+            raise AttributeError(
+                f"'{self.__class__.__name__}' object has no attribute '{name}'"
+            )
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
@@ -306,10 +308,7 @@ class BridgeCommandGroup(BridgeCommand):
         :class:`.BridgeCommand`
             A bridge command of this bridge group.
         """
-        for cmd in self.subcommands:
-            yield cmd
-            # if isinstance(cmd, BridgeCommandGroup):
-            #     yield from cmd.walk_commands()
+        yield from self.subcommands
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.

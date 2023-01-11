@@ -23,8 +23,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 - Added new `EmbeddedActivity` values.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
-- Added functions (`bridge.Bot.walk_bridge_commands` & `BridgeCommandGroup.walk_commands`)
-  to cycle through all bridge commands and their children/subcommands.
+- Added functions (`bridge.Bot.walk_bridge_commands` &
+  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
+  children/subcommands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Changed

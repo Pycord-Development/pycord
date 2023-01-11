@@ -50,7 +50,9 @@ class BotBase(ABC):
 
         return cmds
 
-    def walk_bridge_commands(self) -> Generator[BridgeCommand | BridgeCommandGroup, None, None]:
+    def walk_bridge_commands(
+        self,
+    ) -> Generator[BridgeCommand | BridgeCommandGroup, None, None]:
         """An iterator that recursively walks through all the bot's bridge commands.
 
         Yields
