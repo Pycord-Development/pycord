@@ -322,12 +322,18 @@ class BridgeCommandGroup(BridgeCommand):
             parent=kwargs.pop("parent", None),
         )
 
-        self.subcommands: list[BridgeCommand] = []
+        self.subcommands: list[BridgeCommandGroup | BridgeCommand] = []
 
         self.mapped: SlashCommand | None = None
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
+
+    def walk_commands(self):
+        for cmd in self.subcommands:
+            yield cmd
+            if isinstance(cmd, BridgeCommandGroup):
+                yield from cmd.walk_commands()
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.

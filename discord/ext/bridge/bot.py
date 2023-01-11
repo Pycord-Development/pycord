@@ -49,6 +49,12 @@ class BotBase(ABC):
 
         return cmds
 
+    def walk_bridge_commands(self):
+        for cmd in self._bridge_commands:
+            yield cmd
+            if isinstance(cmd, BridgeCommandGroup):
+                yield from cmd.walk_commands()
+
     async def get_application_context(
         self, interaction: Interaction, cls=None
     ) -> BridgeApplicationContext:
