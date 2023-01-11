@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING, Any, Callable, Generator
+from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Iterator
 
 import discord.commands.options
 from discord import (
@@ -300,7 +301,7 @@ class BridgeCommandGroup(BridgeCommand):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
 
-    def walk_commands(self) -> Generator[BridgeCommand, None, None]:
+    def walk_commands(self) -> Iterator[BridgeCommand]:
         """An iterator that recursively walks through all the bridge group's subcommands.
 
         Yields
