@@ -30,7 +30,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
 
 ### Fixed
-- Fixed a bug in `Page.update_files` where file objects stored in memory were causing an `AttributeError`. ([#1869](https://github.com/Pycord-Development/pycord/pull/1869))
+
+- Fixed a bug in `Page.update_files` where file objects stored in memory were causing an
+  `AttributeError`. ([#1869](https://github.com/Pycord-Development/pycord/pull/1869))
 
 ## [2.3.2] - 2022-12-03
 
