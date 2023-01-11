@@ -666,9 +666,7 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] = kwargs.get(
-            "name_localizations", {}
-        )
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
         _validate_names(self)
 
         description = kwargs.get("description") or (
@@ -1142,9 +1140,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.guild_only: bool | None = kwargs.get("guild_only", None)
         self.nsfw: bool | None = kwargs.get("nsfw", None)
 
-        self.name_localizations: dict[str, str] = kwargs.get(
-            "name_localizations", {}
-        )
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
         self.description_localizations: dict[str, str] = kwargs.get(
             "description_localizations", {}
         )
@@ -1426,9 +1422,7 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] = kwargs.get(
-            "name_localizations", {}
-        )
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
