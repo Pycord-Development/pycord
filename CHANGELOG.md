@@ -28,9 +28,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
-- Changed the returned value, docstring and fixed a bug where types other than
-  `io.BufferedReader` in `Page.update_files` were throwing `AttributeError`.
-  ([#1869](https://github.com/Pycord-Development/pycord/pull/1869))
+
+### Fixed
+- Fixed a bug in `Page.update_files` where file objects stored in memory were causing an `AttributeError`. ([#1869](https://github.com/Pycord-Development/pycord/pull/1869))
 
 ## [2.3.2] - 2022-12-03
 
