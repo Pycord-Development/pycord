@@ -1329,7 +1329,6 @@ class ConnectionState:
             data.pop("guild_id")
             entry = AuditLogEntry(users={data["user_id"]: user}, data=data, guild=guild)
             self.dispatch("guild_audit_log_entry", entry)
-            
 
     def parse_guild_ban_add(self, data) -> None:
         # we make the assumption that GUILD_BAN_ADD is done
