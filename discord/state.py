@@ -45,6 +45,7 @@ from typing import (
 
 from . import utils
 from .activity import BaseActivity
+from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
@@ -1319,6 +1320,16 @@ class ConnectionState:
 
         self._remove_guild(guild)
         self.dispatch("guild_remove", guild)
+
+    def parse_guild_audit_log_entry_create(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        user = self.get_user(data["user_id"])
+
+        if guild is not None and user is not None:
+            data.pop("guild_id")
+            entry = AuditLogEntry(users={data["user_id"]: user}, data=data, guild=guild)
+            self.dispatch("guild_audit_log_entry", entry)
+            
 
     def parse_guild_ban_add(self, data) -> None:
         # we make the assumption that GUILD_BAN_ADD is done

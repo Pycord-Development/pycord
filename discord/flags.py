@@ -706,15 +706,25 @@ class Intents(BaseFlags):
         return 1 << 1
 
     @flag_value
-    def bans(self):
+    def moderation(self):
         """:class:`bool`: Whether guild ban related events are enabled.
 
         This corresponds to the following events:
 
         - :func:`on_member_ban`
         - :func:`on_member_unban`
+        - :func:`on_audit_log_entry`
 
         This does not correspond to any attributes or classes in the library in terms of cache.
+        """
+        return 1 << 2
+
+    @alias_flag_value
+    def bans(self):
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: fill in
+            Changed to an alias.
         """
         return 1 << 2
 
