@@ -31,6 +31,7 @@ import signal
 import sys
 import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from types import TracebackType
 
 import aiohttp
 
@@ -263,7 +264,11 @@ class Client:
 
         return self
 
-    async def __aexit__(self) -> None:
+    async def __aexit__(self,
+        exc_t: BaseException | None,
+        exc_v: BaseException | None,
+        exc_tb: TracebackType | None
+    ) -> None:
         if not self.is_closed():
             await self.close()
 
