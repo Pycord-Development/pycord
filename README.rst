@@ -42,7 +42,7 @@ To install the library without full voice support, run the following command:
     # Windows
     py -3 -m pip install -U py-cord
 
-Otherwise to get full voice support, run the following command:
+Otherwise, to get full voice support, run the following command:
 
 .. code:: sh
 
