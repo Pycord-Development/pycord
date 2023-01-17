@@ -610,6 +610,8 @@ Members/Users
 
     This requires :attr:`Intents.members` to be enabled.
 
+    .. versionadded:: 2.4
+
     :param payload: The raw event payload data.
     :type payload: :class:`RawMemberRemoveEvent`
 
