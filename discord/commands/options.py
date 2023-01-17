@@ -134,13 +134,13 @@ class Option:
         The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
         that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
         Must resolve to an iterable of :class:`str`.
-    channel_types: Optional[List[:class:`discord.ChannelType`]]
-        A list of channel types that can be selected in this option.
-        Only applies to Options with an :attr:`input_type` of :class:`discord.abc.GuildChannel`.
 
         .. note::
 
             Does not validate the input value against the autocomplete results.
+    channel_types: Optional[List[:class:`discord.ChannelType`]]
+        A list of channel types that can be selected in this option.
+        Only applies to Options with an :attr:`input_type` of :class:`discord.abc.GuildChannel`.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
