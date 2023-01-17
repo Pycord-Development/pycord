@@ -32,7 +32,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Fixed
 
 - Fixed a bug in `Page.update_files` where `io.BytesIO` files didn't send properly more
-  than once.
+  than once. ([#1881](https://github.com/Pycord-Development/pycord/pull/1881))
 
 - Fixed a bug in `Page.update_files` where file objects stored in memory were causing an
   `AttributeError`. ([#1869](https://github.com/Pycord-Development/pycord/pull/1869))
