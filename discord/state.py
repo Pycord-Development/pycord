@@ -965,24 +965,27 @@ class ConnectionState:
     def parse_thread_update(self, data) -> None:
         guild_id = int(data["guild_id"])
         guild = self._get_guild(guild_id)
+        raw = RawThreadUpdateEvent(data)
         if guild is None:
             _log.debug(
                 "THREAD_UPDATE referencing an unknown guild ID: %s. Discarding",
                 guild_id,
             )
             return
-
-        raw = RawThreadUpdateEvent(data)
-        thread = guild.get_thread(raw.thread_id)
-        if thread is not None:
-            old = copy.copy(thread)
-            thread._update(data)
-            self.dispatch("thread_update", old, thread)
         else:
-            thread = Thread(guild=guild, state=guild._state, data=data)
-            guild._add_thread(thread)
-            self.dispatch("thread_join", thread)
-        raw.thread = thread
+            thread = guild.get_thread(raw.thread_id)
+            if thread is not None:
+                old = copy.copy(thread)
+                thread._update(data)
+                if thread.archived:
+                    guild._remove_thread(thread)
+                self.dispatch("thread_update", old, thread)
+            else:
+                thread = Thread(guild=guild, state=guild._state, data=data)
+                if not thread.archived:
+                    guild._add_thread(thread)
+                self.dispatch("thread_join", thread)
+            raw.thread = thread
         self.dispatch("raw_thread_update", raw)
 
     def parse_thread_delete(self, data) -> None:
