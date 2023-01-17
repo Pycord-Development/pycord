@@ -43,8 +43,8 @@ if TYPE_CHECKING:
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
-        GuildMemberRemoveEvent,
         IntegrationDeleteEvent,
+        MemberRemoveEvent,
         MessageDeleteEvent,
         MessageUpdateEvent,
         ReactionActionEvent,
@@ -374,13 +374,13 @@ class RawTypingEvent(_RawReprMixin):
 
 
 class RawMemberRemoveEvent(_RawReprMixin):
-    """Represents the payload for a :func:`on_raw_member_remove` event.
+    """Represents the payload for an .func:`on_raw_member_remove` event.
 
-    .. versionadded:: 2.0
+    .. versionadded:: 2.4
 
     Attributes
     ----------
-    user: Union[:class:`discord.User`, :class:`discord.Member`]
+    user: :class:`discord.User`
         The user that left the guild.
     guild_id: :class:`int`
         The ID of the guild the user left.
@@ -388,8 +388,8 @@ class RawMemberRemoveEvent(_RawReprMixin):
 
     __slots__ = ("user", "guild_id")
 
-    def __init__(self, data: GuildMemberRemoveEvent, user: User, /) -> None:
-        self.user: User | Member = user
+    def __init__(self, data: MemberRemoveEvent, user: User):
+        self.user: User = user
         self.guild_id: int = int(data["guild_id"])
 
 

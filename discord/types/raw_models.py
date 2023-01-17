@@ -95,11 +95,6 @@ class TypingEvent(TypedDict):
     timestamp: int
 
 
-class GuildMemberRemoveEvent(TypedDict):
-    guild_id: Snowflake
-    user: User
-
-
 class ScheduledEventSubscription(TypedDict, total=False):
     event_id: Snowflake
     user_id: Snowflake
@@ -118,3 +113,8 @@ class AutoModActionExecutionEvent(TypedDict):
     rule_trigger_type: AutoModTriggerType
     user_id: Snowflake
     content: str
+
+
+class MemberRemoveEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
