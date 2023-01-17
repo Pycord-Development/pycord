@@ -326,7 +326,7 @@ class RawThreadUpdateEvent(_RawReprMixin):
     parent_id: :class:`int`
         The ID of the channel the thread belongs to.
     data: :class:`dict`
-        The raw data given by the gateway <https://discord.com/developers/docs/topics/gateway#thread-update>`_
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
     thread: :class:`discord.Thread` | None
         The thread, if it could be found in the internal cache.
     """
