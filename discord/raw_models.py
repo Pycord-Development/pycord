@@ -408,7 +408,7 @@ class RawTypingEvent(_RawReprMixin):
 
 
 class RawMemberRemoveEvent(_RawReprMixin):
-    """Represents the payload for an .func:`on_raw_member_remove` event.
+    """Represents the payload for an :func:`on_raw_member_remove` event.
 
     .. versionadded:: 2.4
 
