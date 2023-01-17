@@ -23,7 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from io import BufferedReader
 from typing import List
 
 import discord
