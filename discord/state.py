@@ -61,7 +61,6 @@ from .message import Message
 from .object import Object
 from .partial_emoji import PartialEmoji
 from .raw_models import *
-from .raw_models import RawMemberRemoveEvent
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .stage_instance import StageInstance
@@ -973,8 +972,8 @@ class ConnectionState:
             )
             return
 
-        thread_id = int(data["id"])
-        thread = guild.get_thread(thread_id)
+        raw = RawThreadUpdateEvent(data)
+        thread = guild.get_thread(raw.thread_id)
         if thread is not None:
             old = copy.copy(thread)
             thread._update(data)
@@ -983,6 +982,8 @@ class ConnectionState:
             thread = Thread(guild=guild, state=guild._state, data=data)
             guild._add_thread(thread)
             self.dispatch("thread_join", thread)
+        raw.thread = thread
+        self.dispatch("raw_thread_update", raw)
 
     def parse_thread_delete(self, data) -> None:
         guild_id = int(data["guild_id"])

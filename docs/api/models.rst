@@ -507,6 +507,11 @@ Events
 .. autoclass:: RawMemberRemoveEvent()
     :members:
 
+.. attributetable:: RawThreadUpdateEvent
+
+.. autoclass:: RawThreadUpdateEvent()
+    :members:
+
 Webhooks
 --------
 

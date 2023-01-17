@@ -52,6 +52,7 @@ if TYPE_CHECKING:
         ReactionClearEvent,
         ScheduledEventSubscription,
         ThreadDeleteEvent,
+        ThreadUpdateEvent,
         TypingEvent,
     )
 
@@ -64,6 +65,7 @@ __all__ = (
     "RawReactionClearEvent",
     "RawReactionClearEmojiEvent",
     "RawIntegrationDeleteEvent",
+    "RawThreadUpdateEvent",
     "RawThreadDeleteEvent",
     "RawTypingEvent",
     "RawMemberRemoveEvent",
@@ -306,6 +308,38 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: int | None = int(data["application_id"])
         except KeyError:
             self.application_id: int | None = None
+
+
+class RawThreadUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_thread_update` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The ID of the updated thread.
+    thread_type: :class:`discord.ChannelType`
+        The channel type of the updated thread.
+    guild_id: :class:`int`
+        The ID of the guild the thread belongs to.
+    parent_id: :class:`int`
+        The ID of the channel the thread belongs to.
+    data: :class:`dict`
+        The raw data given by the gateway <https://discord.com/developers/docs/topics/gateway#thread-update>`_
+    thread: :class:`discord.Thread` | None
+        The thread, if it could be found in the internal cache.
+    """
+
+    __slots__ = ("thread_id", "thread_type", "parent_id", "guild_id", "data", "thread")
+
+    def __init__(self, data: ThreadUpdateEvent) -> None:
+        self.thread_id: int = int(data["id"])
+        self.thread_type: ChannelType = try_enum(ChannelType, data["type"])
+        self.guild_id: int = int(data["guild_id"])
+        self.parent_id: int = int(data["parent_id"])
+        self.data: ThreadUpdateEvent = data
+        self.thread: Thread | None = None
 
 
 class RawThreadDeleteEvent(_RawReprMixin):

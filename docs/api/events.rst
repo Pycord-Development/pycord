@@ -1133,12 +1133,31 @@ Threads
 
     This requires :attr:`Intents.guilds` to be enabled.
 
+    If the thread could not be found in the internal cache, this event will not be called.
+    Threads will not be in the cache if they are archived. Alternatively,
+    :func:`on_raw_thread_update` is called regardless of the internal cache.
+
     .. versionadded:: 2.0
 
     :param before: The updated thread's old info.
     :type before: :class:`Thread`
     :param after: The updated thread's new info.
     :type after: :class:`Thread`
+
+
+.. function:: on_raw_thread_update(payload)
+
+    Called whenever a thread is updated.
+
+    Unlike :func:`on_thread_update` this is called regardless of if the thread is in the
+    internal thread cache or not.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.4
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawThreadUpdateEvent`
 
 Typing
 ------

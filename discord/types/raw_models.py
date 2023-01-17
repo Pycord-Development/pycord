@@ -29,6 +29,7 @@ from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .threads import Thread
 from .user import User
 
 
@@ -78,6 +79,9 @@ class IntegrationDeleteEvent(TypedDict):
     application_id: NotRequired[Snowflake]
     id: Snowflake
     guild_id: Snowflake
+
+
+ThreadUpdateEvent = Thread
 
 
 class ThreadDeleteEvent(TypedDict, total=False):
