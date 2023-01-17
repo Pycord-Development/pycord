@@ -173,15 +173,22 @@ class Page:
         Typically used when the page is changed.
         """
         for file in self._files:
-            if not isinstance(file.fp, BufferedReader):
-                continue
-            with open(file.fp.name, "rb") as fp:  # type: ignore
+            if not isinstance(file.fp, io.BufferedReader):
+                file.fp.seek(0)
                 self._files[self._files.index(file)] = discord.File(
-                    fp,  # type: ignore
+                    file.fp,  # type: ignore
                     filename=file.filename,
                     description=file.description,
                     spoiler=file.spoiler,
                 )
+            else:
+                with open(file.fp.name, "rb") as fp:  # type: ignore
+                    self._files[self._files.index(file)] = discord.File(
+                        fp,  # type: ignore
+                        filename=file.filename,
+                        description=file.description,
+                        spoiler=file.spoiler,
+                    )
         return self._files
 
     @property
