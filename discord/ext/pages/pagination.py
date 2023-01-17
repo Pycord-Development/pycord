@@ -23,7 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from io import BufferedReader
 from typing import List
 
 import discord
@@ -169,26 +168,14 @@ class Page:
         """
 
     def update_files(self) -> list[discord.File] | None:
-        """Re-opens and reads new file contents for local files if they were updated.
-        Typically used when the page is changed.
+        """Updates :class:`discord.File` objects so that they can be sent multiple
+        times. This is called internally each time the page is sent.
         """
         for file in self._files:
-            if not isinstance(file.fp, BufferedReader):
-                file.fp.seek(0)
-                self._files[self._files.index(file)] = discord.File(
-                    file.fp,  # type: ignore
-                    filename=file.filename,
-                    description=file.description,
-                    spoiler=file.spoiler,
-                )
-            else:
-                with open(file.fp.name, "rb") as fp:  # type: ignore
-                    self._files[self._files.index(file)] = discord.File(
-                        fp,  # type: ignore
-                        filename=file.filename,
-                        description=file.description,
-                        spoiler=file.spoiler,
-                    )
+            if file.fp.closed and (fn := getattr(file.fp, "name", None)):
+                file.fp = open(fn, "rb")
+            file.reset()
+            file.fp.close = lambda: None
         return self._files
 
     @property
