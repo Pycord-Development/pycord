@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from io import BufferedReader
 from __future__ import annotations
 
 from typing import List
@@ -172,7 +173,7 @@ class Page:
         Typically used when the page is changed.
         """
         for file in self._files:
-            if not isinstance(file.fp, io.BufferedReader):
+            if not isinstance(file.fp, BufferedReader):
                 file.fp.seek(0)
                 self._files[self._files.index(file)] = discord.File(
                     file.fp,  # type: ignore
