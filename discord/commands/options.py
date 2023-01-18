@@ -151,6 +151,7 @@ class Option:
     channel_types: Optional[List[:class:`discord.ChannelType`]]
         A list of channel types that can be selected in this option.
         Only applies to Options with an :attr:`input_type` of :class:`discord.abc.GuildChannel`.
+        If this argument is uses, :attr:`input_type` will be ignored.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
