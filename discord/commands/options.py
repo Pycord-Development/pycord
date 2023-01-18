@@ -29,7 +29,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union
 
 from ..abc import GuildChannel, Mentionable
-from ..channel import CategoryChannel, StageChannel, TextChannel, Thread, VoiceChannel
+from ..channel import CategoryChannel, StageChannel, TextChannel, Thread, VoiceChannel, ForumChannel, DMChannel
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
@@ -73,6 +73,8 @@ CHANNEL_TYPE_MAP = {
     StageChannel: ChannelType.stage_voice,
     CategoryChannel: ChannelType.category,
     Thread: ChannelType.public_thread,
+    ForumChannel: ChannelType.forum,
+    DMChannel: ChannelType.private,
 }
 
 
@@ -227,11 +229,12 @@ class Option:
                                 self._raw_type = input_type.__args__  # type: ignore # Union.__args__
                             else:
                                 self._raw_type = (input_type,)
-                        self.channel_types = [
-                            CHANNEL_TYPE_MAP[t]
-                            for t in self._raw_type
-                            if t is not GuildChannel
-                        ]
+                        if not self.channel_types:
+                            self.channel_types = [
+                                CHANNEL_TYPE_MAP[t]
+                                for t in self._raw_type
+                                if t is not GuildChannel
+                            ]
         self.required: bool = (
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
