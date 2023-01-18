@@ -788,7 +788,7 @@ class SlashCommandOptionType(Enum):
             "ThreadOption",
             "Thread",
             "ForumChannel",
-            "DMChannel"
+            "DMChannel",
         ]:
             return cls.channel
         if datatype.__name__ == "Role":

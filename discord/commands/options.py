@@ -29,7 +29,15 @@ from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union
 
 from ..abc import GuildChannel, Mentionable
-from ..channel import CategoryChannel, StageChannel, TextChannel, Thread, VoiceChannel, ForumChannel, DMChannel
+from ..channel import (
+    CategoryChannel,
+    DMChannel,
+    ForumChannel,
+    StageChannel,
+    TextChannel,
+    Thread,
+    VoiceChannel,
+)
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
