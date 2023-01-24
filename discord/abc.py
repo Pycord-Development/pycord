@@ -1542,7 +1542,7 @@ class Messageable:
                 ) from None
 
         # If the view is a class and not an object, raise an error.
-        if view and isinstance(view, type): # Yes, isinstance returns True if the view is not an instance (and if the class is type)
+        if view and isinstance(view, type):
             raise InvalidArgument(
                 f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
             )
