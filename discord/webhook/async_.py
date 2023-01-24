@@ -1693,7 +1693,7 @@ class Webhook(BaseWebhook):
             raise InvalidArgument(
                 f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
             )
-            
+
         if self.token is None:
             raise InvalidArgument(
                 "This webhook does not have a token associated with it"
