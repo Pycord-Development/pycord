@@ -1,6 +1,6 @@
 import asyncio
 
-import asyncinit
+from asyncinit import asyncinit
 
 import discord
 
