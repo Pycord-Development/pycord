@@ -1498,7 +1498,7 @@ class Messageable:
             raise InvalidArgument(
                 "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
             )
-        
+
         if embeds:
             for embed_to_send in embeds:
                 if isinstance(embed_to_send, type):
@@ -1506,20 +1506,18 @@ class Messageable:
                         "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
                     )
 
-
         # If the view is a class and not an object, raise an error.
         if view and isinstance(view, type):
             raise InvalidArgument(
                 f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
             )
-        
-        
+
         # Error if any of the files are classes
         if file and isinstance(file, type):
             raise InvalidArgument(
                 "Files being sent should be discord.File objects, not classes. Have you forgotten parentheses?"
             )
-        
+
         if files:
             for file_to_send in files:
                 if isinstance(file_to_send, type):
@@ -1532,8 +1530,6 @@ class Messageable:
             raise InvalidArgument(
                 "The argument you passed into allowed_mentions must be an object, not a class. Have you forgotten parentheses?"
             )
-
-            
 
         channel = await self._get_channel()
         state = self._state
