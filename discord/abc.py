@@ -1491,9 +1491,6 @@ class Messageable:
             :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`.
         """
 
-        # OBJECT CHECKING #
-
-        # Error if any of the embeds are classes
         if embed and isinstance(embed, type):
             raise InvalidArgument(
                 "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
@@ -1506,13 +1503,11 @@ class Messageable:
                         "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
                     )
 
-        # If the view is a class and not an object, raise an error.
         if view and isinstance(view, type):
             raise InvalidArgument(
                 f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
             )
 
-        # Error if any of the files are classes
         if file and isinstance(file, type):
             raise InvalidArgument(
                 "Files being sent should be discord.File objects, not classes. Have you forgotten parentheses?"
@@ -1525,7 +1520,6 @@ class Messageable:
                         "Files being sent should be discord.File objects, not classes. Have you forgotten parentheses?"
                     )
 
-        # Error if AllowedMentions is a class
         if allowed_mentions and isinstance(allowed_mentions, type):
             raise InvalidArgument(
                 "The argument you passed into allowed_mentions must be an object, not a class. Have you forgotten parentheses?"
