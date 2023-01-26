@@ -1491,6 +1491,50 @@ class Messageable:
             :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`.
         """
 
+        # OBJECT CHECKING #
+
+        # Error if any of the embeds are classes
+        if embed and isinstance(embed, type):
+            raise InvalidArgument(
+                "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
+            )
+        
+        if embeds:
+            for embed_to_send in embeds:
+                if isinstance(embed_to_send, type):
+                    raise InvalidArgument(
+                        "Embeds being sent must be discord.Embed objects, not classes. Have you forgotten parentheses?"
+                    )
+
+
+        # If the view is a class and not an object, raise an error.
+        if view and isinstance(view, type):
+            raise InvalidArgument(
+                f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
+            )
+        
+        
+        # Error if any of the files are classes
+        if file and isinstance(file, type):
+            raise InvalidArgument(
+                "Files being sent should be discord.File objects, not classes. Have you forgotten parentheses?"
+            )
+        
+        if files:
+            for file_to_send in files:
+                if isinstance(file_to_send, type):
+                    raise InvalidArgument(
+                        "Files being sent should be discord.File objects, not classes. Have you forgotten parentheses?"
+                    )
+
+        # Error if AllowedMentions is a class
+        if allowed_mentions and isinstance(allowed_mentions, type):
+            raise InvalidArgument(
+                "The argument you passed into allowed_mentions must be an object, not a class. Have you forgotten parentheses?"
+            )
+
+            
+
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
@@ -1540,12 +1584,6 @@ class Messageable:
                     "reference parameter must be Message, MessageReference, or"
                     " PartialMessage"
                 ) from None
-
-        # If the view is a class and not an object, raise an error.
-        if view and isinstance(view, type):
-            raise InvalidArgument(
-                f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
-            )
 
         if view:
             if not hasattr(view, "__discord_ui_view__"):

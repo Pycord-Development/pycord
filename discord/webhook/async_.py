@@ -1688,12 +1688,6 @@ class Webhook(BaseWebhook):
             giving it a view, or you specified both ``thread_name`` and ``thread``.
         """
 
-        # If the view is a class and not an object, raise an error.
-        if view is not MISSING and isinstance(view, type):
-            raise InvalidArgument(
-                f"The view you passed, {view.__name__}, should be an object, not a class. Have you forgotten parentheses?"
-            )
-
         if self.token is None:
             raise InvalidArgument(
                 "This webhook does not have a token associated with it"
