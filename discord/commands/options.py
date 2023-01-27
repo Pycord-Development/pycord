@@ -148,7 +148,7 @@ class Option:
         .. note::
 
             Does not validate the input value against the autocomplete results.
-    channel_types: Optional[List[:class:`discord.ChannelType`]]
+    channel_types: list[:class:`discord.ChannelType`] | None
         A list of channel types that can be selected in this option.
         Only applies to Options with an :attr:`input_type` of :class:`discord.abc.GuildChannel`.
         If this argument is used, :attr:`input_type` will be ignored.
