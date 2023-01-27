@@ -150,7 +150,7 @@ class Option:
             Does not validate the input value against the autocomplete results.
     channel_types: list[:class:`discord.ChannelType`] | None
         A list of channel types that can be selected in this option.
-        Only applies to Options with an :attr:`input_type` of :class:`discord.abc.GuildChannel`.
+        Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.channel`.
         If this argument is used, :attr:`input_type` will be ignored.
     name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
