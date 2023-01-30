@@ -87,6 +87,20 @@ class ApplicationRoleConnectionMetadata:
         self.description: str = description
         self.description_localizations: dict[str, str] = description_localizations
 
+    def __repr__(self):
+        return (
+            f"<ApplicationRoleConnectionMetadata "
+            f"type={self.type!r} "
+            f"key={self.key!r} "
+            f"name={self.name!r} "
+            f"description={self.description!r} "
+            f"name_localizations={self.name_localizations!r} "
+            f"description_localizations={self.description_localizations!r}>"
+        )
+
+    def __str__(self):
+        return self.name
+
     @classmethod
     def from_dict(
         cls, data: ApplicationRoleConnectionMetadataPayload
