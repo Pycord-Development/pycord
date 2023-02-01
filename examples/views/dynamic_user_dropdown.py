@@ -67,7 +67,7 @@ async def user_dynamic_menu(ctx: discord.ApplicationContext):
     """Sends a message with our dropdown that contains colour options."""
     await ctx.defer(ephemeral=True)
     view = DropdownView(interaction)
-    await interaction.followup.send(view=view)
+    await ctx.followup.send(view=view)
     await view.wait()
     # Waits for a menu selection
     selected_menu_item = view.children[0].value
