@@ -24,8 +24,6 @@ def external_user_specific_list_function(discord_id):
 class Dropdown(discord.ui.Select):
     def __init__(self, interaction):
         # In this example, we are passing in the interaction object from the calling interaction.
-        self.value = None
-        self.interaction = interaction
         self.discord_user = interaction.user.id
         self.users_menu_items = external_user_specific_list_function(self.discord_user)
         options = [
