@@ -80,4 +80,4 @@ async def on_ready():
     print("------")
 
 
-bot.run(input("Please provide your bot token: "))
+bot.run("token")
