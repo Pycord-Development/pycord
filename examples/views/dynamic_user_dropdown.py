@@ -65,7 +65,7 @@ class DropdownView(discord.ui.View):
 @bot.slash_command(name="dynamic_menu", description="Dynamic Menu Command")
 async def user_dynamic_menu(ctx: discord.ApplicationContext):
     """Sends a message with our dropdown that contains colour options."""
-    await interaction.response.defer(ephemeral=True)
+    await ctx.defer(ephemeral=True)
     view = DropdownView(interaction)
     await interaction.followup.send(view=view)
     await view.wait()
