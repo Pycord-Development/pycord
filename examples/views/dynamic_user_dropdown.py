@@ -74,7 +74,6 @@ async def user_dynamic_menu(interaction: discord.Interaction):
     # selected menu item is stored in selected_menu_item variable for further processing
     await interaction.followup.send(content=f"You Selected {selected_menu_item}")
     # In this example, we send a follow up message displaying the selected item
-    return
 
 
 @bot.event
