@@ -906,7 +906,7 @@ class Thread(Messageable, Hashable):
         )
         await tag
 
-    async def resete_and_add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
+    async def reset_and_add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
         """|coro|
 
         Resets and adds a tag to this thread.
@@ -970,6 +970,30 @@ class Thread(Messageable, Hashable):
         )
         await tag
 
+    async def reset_tags(self):
+        """|coro|
+
+        Resets all tags from this thread.
+
+        Note:
+            * This method is only available for threads in a forum channel.
+
+        You must have :attr:`~Permissions.manage_threads` to reset tags from a thread.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to reset tags from the thread.
+        HTTPException
+            Resetting tags from the thread failed.
+        """
+        from .channel import ForumChannel
+        if isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is in a forum channel")
+
+        await self.edit(
+            applied_tags=[]
+        )
 
     async def add_user(self, user: Snowflake):
         """|coro|
