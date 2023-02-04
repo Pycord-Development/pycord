@@ -1148,6 +1148,7 @@ class ForumChannel(_TextChannel):
             You do not have permissions to edit the channel.
         HTTPException
             Editing the channel failed.
+            
         """
 
         payload = await self._edit(options, reason=reason)
@@ -1164,7 +1165,7 @@ class ForumChannel(_TextChannel):
         """|coro|
 
         Creates a tag in this forum channel.
-        
+
 
         .. versionadded:: 2.0
 
