@@ -1164,6 +1164,7 @@ class ForumChannel(_TextChannel):
         """|coro|
 
         Creates a tag in this forum channel.
+        
 
         .. versionadded:: 2.0
 
