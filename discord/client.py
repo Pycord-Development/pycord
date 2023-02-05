@@ -246,12 +246,11 @@ class Client:
         self._ready: asyncio.Event = asyncio.Event()
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
+        self._event_handlers: dict[str, list[Coro]] = {}
 
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
-
-    # internals
 
     def _get_websocket(
         self, guild_id: int | None = None, *, shard_id: int | None = None
@@ -427,11 +426,16 @@ class Client:
                 for idx in reversed(removed):
                     del listeners[idx]
 
+        # Schedule the main handler registered with @event
         try:
             coro = getattr(self, method)
         except AttributeError:
             pass
         else:
+            self._schedule_event(coro, method, *args, **kwargs)
+
+        # Schedule additional handlers registered with @listen
+        for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
@@ -1132,6 +1136,119 @@ class Client:
         return asyncio.wait_for(future, timeout)
 
     # event registration
+    def add_listener(self, func: Coro, name: str = MISSING) -> None:
+        """The non decorator alternative to :meth:`.listen`.
+
+        Parameters
+        ----------
+        func: :ref:`coroutine <coroutine>`
+            The function to call.
+        name: :class:`str`
+            The name of the event to listen for. Defaults to ``func.__name__``.
+
+        Raises
+        ------
+        TypeError
+            The ``func`` parameter is not a coroutine function.
+        ValueError
+            The ``name`` (event name) does not start with 'on_'
+
+        Example
+        -------
+
+        .. code-block:: python3
+
+            async def on_ready(): pass
+            async def my_message(message): pass
+
+            client.add_listener(on_ready)
+            client.add_listener(my_message, 'on_message')
+        """
+        name = func.__name__ if name is MISSING else name
+
+        if not name.startswith("on_"):
+            raise ValueError("The 'name' parameter must start with 'on_'")
+
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Listeners must be coroutines")
+
+        if name in self._event_handlers:
+            self._event_handlers[name].append(func)
+        else:
+            self._event_handlers[name] = [func]
+
+        _log.debug(
+            "%s has successfully been registered as a handler for event %s",
+            func.__name__,
+            name
+        )
+
+    def remove_listener(self, func: Coro, name: str = MISSING) -> None:
+        """Removes a listener from the pool of listeners.
+
+        Parameters
+        ----------
+        func
+            The function that was used as a listener to remove.
+        name: :class:`str`
+            The name of the event we want to remove. Defaults to
+            ``func.__name__``.
+        """
+
+        name = func.__name__ if name is MISSING else name
+
+        if name in self._event_handlers:
+            try:
+                self._event_handlers[name].remove(func)
+            except ValueError:
+                pass
+
+    def listen(self, name: str = MISSING) -> Callable[[Coro], Coro]:
+        """A decorator that registers another function as an external
+        event listener. Basically this allows you to listen to multiple
+        events from different places e.g. such as :func:`.on_ready`
+
+        The functions being listened to must be a :ref:`coroutine <coroutine>`.
+
+        Raises
+        ------
+        TypeError
+            The function being listened to is not a coroutine.
+        ValueError
+            The ``name`` (event name) does not start with 'on_'
+
+        Example
+        -------
+
+        .. code-block:: python3
+
+            @client.listen()
+            async def on_message(message):
+                print('one')
+
+            # in some other file...
+
+            @client.listen('on_message')
+            async def my_message(message):
+                print('two')
+
+        Would print one and two in an unspecified order.
+        """
+
+        def decorator(func: Coro) -> Coro:
+            # Special case, where default should be overwritten
+            if name == "on_application_command_error":
+                return self.event(func)
+
+            self.add_listener(func, name)
+            return func
+
+        if asyncio.iscoroutinefunction(name):
+            coro = name
+            name = coro.__name__
+            return decorator(coro)
+
+        return decorator
 
     def event(self, coro: Coro) -> Coro:
         """A decorator that registers an event to listen to.
@@ -1139,6 +1256,12 @@ class Client:
         You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
 
         The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised.
+
+        .. note::
+
+            This replaces any default handlers.
+            Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers
+            instead of :py:meth:`~discord.Client.event` unless default method replacement is intended.
 
         Raises
         ------
