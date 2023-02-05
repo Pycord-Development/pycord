@@ -7,7 +7,7 @@ from .utils import MISSING, SnowflakeList, snowflake_time
 
 # from . import Emoji , PartialEmoji
 
-__all__ = ("Tag",)
+__all__ = ("ForumTag",)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -125,4 +125,3 @@ class ForumTag:
 
     def get(self, key: str, default: Any = None) -> Any:
         return getattr(self, key, default)
-        
