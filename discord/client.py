@@ -1180,7 +1180,7 @@ class Client:
         _log.debug(
             "%s has successfully been registered as a handler for event %s",
             func.__name__,
-            name
+            name,
         )
 
     def remove_listener(self, func: Coro, name: str = MISSING) -> None:
