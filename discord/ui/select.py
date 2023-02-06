@@ -327,9 +327,13 @@ class Select(Item[V]):
     @property
     def values(
         self,
-    ) -> list[str] | list[Member | User] | list[Role] | list[
-        Member | User | Role
-    ] | list[GuildChannel | Thread]:
+    ) -> (
+        list[str]
+        | list[Member | User]
+        | list[Role]
+        | list[Member | User | Role]
+        | list[GuildChannel | Thread]
+    ):
         """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]],
         List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]:
         A list of values that have been selected by the user.
