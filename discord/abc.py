@@ -478,9 +478,11 @@ class GuildChannel:
                     "allow": allow.value,
                     "deny": deny.value,
                     "id": target.id,
-                    "type": _Overwrites.ROLE
-                    if isinstance(target, Role)
-                    else _Overwrites.MEMBER,
+                    "type": (
+                        _Overwrites.ROLE
+                        if isinstance(target, Role)
+                        else _Overwrites.MEMBER
+                    ),
                 }
 
                 perms.append(payload)

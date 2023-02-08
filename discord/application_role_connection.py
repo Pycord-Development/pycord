@@ -89,7 +89,7 @@ class ApplicationRoleConnectionMetadata:
 
     def __repr__(self):
         return (
-            f"<ApplicationRoleConnectionMetadata "
+            "<ApplicationRoleConnectionMetadata "
             f"type={self.type!r} "
             f"key={self.key!r} "
             f"name={self.name!r} "

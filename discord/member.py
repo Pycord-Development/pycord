@@ -805,9 +805,9 @@ class Member(discord.abc.Messageable, _UserTag):
                 await http.edit_my_voice_state(guild_id, voice_state_payload)
             else:
                 if not suppress:
-                    voice_state_payload[
-                        "request_to_speak_timestamp"
-                    ] = datetime.datetime.utcnow().isoformat()
+                    voice_state_payload["request_to_speak_timestamp"] = (
+                        datetime.datetime.utcnow().isoformat()
+                    )
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
         if voice_channel is not MISSING:
@@ -818,9 +818,9 @@ class Member(discord.abc.Messageable, _UserTag):
 
         if communication_disabled_until is not MISSING:
             if communication_disabled_until is not None:
-                payload[
-                    "communication_disabled_until"
-                ] = communication_disabled_until.isoformat()
+                payload["communication_disabled_until"] = (
+                    communication_disabled_until.isoformat()
+                )
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
 

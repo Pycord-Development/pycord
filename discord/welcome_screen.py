@@ -73,7 +73,9 @@ class WelcomeScreenChannel:
         self.emoji = emoji
 
     def __repr__(self):
-        return f"WelcomeScreenChannel(channel={self.channel} description={self.description})"
+        return (
+            f"WelcomeScreenChannel(channel={self.channel} description={self.description})"
+        )
 
     def to_dict(self) -> WelcomeScreenChannelPayload:
         dict_: WelcomeScreenChannelPayload = {

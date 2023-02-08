@@ -451,8 +451,9 @@ class AuditLogEntry(Hashable):
                 channel_id = int(self.extra["channel_id"])
                 elems = {
                     "count": int(self.extra["count"]),
-                    "channel": self.guild.get_channel(channel_id)
-                    or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id) or Object(
+                        id=channel_id
+                    ),
                 }
                 self.extra: _AuditLogProxyMemberMoveOrMessageDelete = type(
                     "_AuditLogProxy", (), elems
@@ -469,8 +470,9 @@ class AuditLogEntry(Hashable):
                 # the pin actions have a dict with some information
                 channel_id = int(self.extra["channel_id"])
                 elems = {
-                    "channel": self.guild.get_channel(channel_id)
-                    or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id) or Object(
+                        id=channel_id
+                    ),
                     "message_id": int(self.extra["message_id"]),
                 }
                 self.extra: _AuditLogProxyPinAction = type(
@@ -491,8 +493,9 @@ class AuditLogEntry(Hashable):
             elif self.action.name.startswith("stage_instance"):
                 channel_id = int(self.extra["channel_id"])
                 elems = {
-                    "channel": self.guild.get_channel(channel_id)
-                    or Object(id=channel_id)
+                    "channel": self.guild.get_channel(channel_id) or Object(
+                        id=channel_id
+                    )
                 }
                 self.extra: _AuditLogProxyStageInstanceAction = type(
                     "_AuditLogProxy", (), elems

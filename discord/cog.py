@@ -201,9 +201,9 @@ class CogMeta(type):
                     commands[f"app_{elem}"] = value.slash_variant
                     commands[elem] = value
                     for cmd in getattr(value, "subcommands", []):
-                        commands[
-                            f"ext_{cmd.ext_variant.qualified_name}"
-                        ] = cmd.ext_variant
+                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = (
+                            cmd.ext_variant
+                        )
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -232,8 +232,8 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
 
-        name_filter = (
-            lambda c: "app"
+        name_filter = lambda c: (
+            "app"
             if isinstance(c, ApplicationCommand)
             else ("bridge" if not hasattr(c, "add_to") else "ext")
         )
@@ -1019,8 +1019,10 @@ class CogMixin:
             loaded = self.load_extension(
                 ext_path, package=package, recursive=recursive, store=store
             )
-            loaded_extensions.update(loaded) if store else loaded_extensions.extend(
-                loaded
+            (
+                loaded_extensions.update(loaded)
+                if store
+                else loaded_extensions.extend(loaded)
             )
 
         return loaded_extensions
