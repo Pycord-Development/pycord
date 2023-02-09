@@ -1321,6 +1321,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1340,6 +1341,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1359,6 +1361,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1378,6 +1381,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1398,6 +1402,7 @@ class Messageable:
         mention_author=None,
         view=None,
         suppress=None,
+        silent=None,
     ):
         """|coro|
 
@@ -1471,6 +1476,10 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
+        slient: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.4
 
         Returns
         -------
@@ -1510,11 +1519,10 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = (
-            MessageFlags.suppress_embeds.flag
-            if suppress
-            else MessageFlags.DEFAULT_VALUE
-        )
+        flags = MessageFlags(
+            suppress_embeds=bool(suppress),
+            suppress_notifications=bool(silent),
+        ).value
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
