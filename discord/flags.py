@@ -392,6 +392,17 @@ class MessageFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 256
+    
+    @flag_value
+    def suppress_notifications(self):
+        """:class:`bool`: Returns ``True`` if the source message does not trigger push and desktop notifications
+        
+        The user will still receive a mention
+
+        .. versionadded:: 2.4
+        """
+
+        return 4096
 
 
 @fill_with_flags()
