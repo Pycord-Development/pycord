@@ -13,6 +13,7 @@ overriding the specific events. The third way is through the use of :meth:`Clien
 event handlers instead of only one like in :meth:`Client.event`. For example: 
 
 .. code-block:: python
+    :emphasize-lines: 17, 22
 
     import discord
 
