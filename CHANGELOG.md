@@ -27,6 +27,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 - Added new `EmbeddedActivity` values.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
+- Added new `suppress_notifications` to `MessageFlags.
+  ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
 
 ### Changed
 
