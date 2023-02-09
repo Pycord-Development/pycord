@@ -10,7 +10,7 @@ This section outlines the different types of events listened by :class:`Client`.
 There are 3 ways to register an event, the first way is through the use of
 :meth:`Client.event`. The second way is through subclassing :class:`Client` and
 overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple
-event handlers instead of only one like in :meth:`Client.event`. For example: 
+event handlers instead of only one like in :meth:`Client.event`. For example:
 
 .. code-block:: python
     :emphasize-lines: 17, 22
@@ -34,7 +34,7 @@ event handlers instead of only one like in :meth:`Client.event`. For example:
     @client.event
     async def on_message(message: discord.Message):
         print(f"Received {message.content}")
-    
+
     # Assigns an ADDITIONAL handler
     @client.listen()
     async def on_message(message: discord.Message):
