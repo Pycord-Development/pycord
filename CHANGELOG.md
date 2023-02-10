@@ -37,7 +37,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bride_command`, `on_bridge_command_completion` and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
-  
+
 ### Changed
 
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
