@@ -1127,6 +1127,21 @@ Threads
     :param member: The member who joined or left.
     :type member: :class:`ThreadMember`
 
+
+.. function:: on_raw_thread_member_remove(payload)
+
+    Called when a :class:`ThreadMember` leaves a :class:`Thread`. Unlike :func:`on_thread_member_remove` this
+    is called regardless of the member being in the thread's internal cache of members or not.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.4
+
+    :param payload: The raw event payload data.
+    :type member: :class:`RawThreadMembersUpdateEvent`
+
+
+
 .. function:: on_thread_update(before, after)
 
     Called whenever a thread is updated.

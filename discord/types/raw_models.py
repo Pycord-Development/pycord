@@ -29,7 +29,7 @@ from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
-from .threads import Thread
+from .threads import Thread, ThreadMember
 from .user import User
 
 
@@ -122,3 +122,11 @@ class AutoModActionExecutionEvent(TypedDict):
 class MemberRemoveEvent(TypedDict):
     guild_id: Snowflake
     user: User
+
+
+class ThreadMembersUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    member_count: int
+    added_members: NotRequired[list[ThreadMember]]
+    removed_member_ids: NotRequired[list[Snowflake]]

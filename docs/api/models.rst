@@ -512,6 +512,13 @@ Events
 .. autoclass:: RawThreadUpdateEvent()
     :members:
 
+.. attributetable:: RawThreadMembersUpdateEvent
+
+.. autoclass:: RawThreadMembersUpdateEvent()
+    :members:
+
+
+
 Webhooks
 --------
 
