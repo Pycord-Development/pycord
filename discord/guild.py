@@ -1140,9 +1140,11 @@ class Guild(Hashable):
                 "allow": allow.value,
                 "deny": deny.value,
                 "id": target.id,
-                "type": abc._Overwrites.ROLE
-                if isinstance(target, Role)
-                else abc._Overwrites.MEMBER,
+                "type": (
+                    abc._Overwrites.ROLE
+                    if isinstance(target, Role)
+                    else abc._Overwrites.MEMBER
+                ),
             }
 
             perms.append(payload)

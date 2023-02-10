@@ -766,11 +766,15 @@ class Paginator(discord.ui.View):
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
-                label=button.label
-                if button.label or button.emoji
-                else button.button_type.capitalize()
-                if button.button_type != "page_indicator"
-                else f"{self.current_page + 1}/{self.page_count + 1}",
+                label=(
+                    button.label
+                    if button.label or button.emoji
+                    else (
+                        button.button_type.capitalize()
+                        if button.button_type != "page_indicator"
+                        else f"{self.current_page + 1}/{self.page_count + 1}"
+                    )
+                ),
                 disabled=button.disabled,
                 custom_id=button.custom_id,
                 emoji=button.emoji,
@@ -778,9 +782,11 @@ class Paginator(discord.ui.View):
             ),
             "label": button.label,
             "loop_label": button.loop_label,
-            "hidden": button.disabled
-            if button.button_type != "page_indicator"
-            else not self.show_indicator,
+            "hidden": (
+                button.disabled
+                if button.button_type != "page_indicator"
+                else not self.show_indicator
+            ),
         }
         self.buttons[button.button_type]["object"].callback = button.callback
         button.paginator = self

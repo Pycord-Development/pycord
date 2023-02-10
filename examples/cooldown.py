@@ -11,6 +11,7 @@ bot = commands.Bot(
 )
 bypassing_users = []  # used in the dynamic cooldown below
 
+
 # An application command with cooldown
 @bot.slash_command()
 @commands.cooldown(
