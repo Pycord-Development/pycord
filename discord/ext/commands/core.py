@@ -2010,9 +2010,11 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
         # ctx.guild is None doesn't narrow ctx.author to Member
         getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
         if any(
-            getter(id=item) is not None
-            if isinstance(item, int)
-            else getter(name=item) is not None
+            (
+                getter(id=item) is not None
+                if isinstance(item, int)
+                else getter(name=item) is not None
+            )
             for item in items
         ):
             return True
@@ -2072,9 +2074,11 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
         me = ctx.me
         getter = functools.partial(discord.utils.get, me.roles)
         if any(
-            getter(id=item) is not None
-            if isinstance(item, int)
-            else getter(name=item) is not None
+            (
+                getter(id=item) is not None
+                if isinstance(item, int)
+                else getter(name=item) is not None
+            )
             for item in items
         ):
             return True

@@ -327,9 +327,13 @@ class Select(Item[V]):
     @property
     def values(
         self,
-    ) -> list[str] | list[Member | User] | list[Role] | list[
-        Member | User | Role
-    ] | list[GuildChannel | Thread]:
+    ) -> (
+        list[str]
+        | list[Member | User]
+        | list[Role]
+        | list[Member | User | Role]
+        | list[GuildChannel | Thread]
+    ):
         """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]],
         List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]:
         A list of values that have been selected by the user.
@@ -352,9 +356,11 @@ class Select(Item[V]):
                 ):
                     result = guild.get_channel_or_thread(int(channel_id))
                     _data["_invoke_flag"] = True
-                    result._update(_data) if isinstance(
-                        result, Thread
-                    ) else result._update(guild, _data)
+                    (
+                        result._update(_data)
+                        if isinstance(result, Thread)
+                        else result._update(guild, _data)
+                    )
                 else:
                     # NOTE:
                     # This is a fallback in case the channel/thread is not found in the

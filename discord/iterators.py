@@ -689,7 +689,6 @@ class MemberIterator(_AsyncIterator["Member"]):
 
 class BanIterator(_AsyncIterator["BanEntry"]):
     def __init__(self, guild, limit=None, before=None, after=None):
-
         self.guild = guild
         self.limit = limit
         self.after = after
