@@ -24,10 +24,12 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+import datetime
 import re
 import warnings
-from datetime import date
 from importlib.metadata import PackageNotFoundError, version
+
+from ._typed_dict import TypedDict
 
 __all__ = ("__version__", "VersionInfo", "version_info")
 
@@ -56,20 +58,54 @@ except PackageNotFoundError:
         )
 
 
+class AdvancedVersionInfo(TypedDict):
+    serial: int
+    build: int | None
+    commit: str | None
+    date: datetime.date | None
+
+
 class VersionInfo(NamedTuple):
     major: int
     minor: int
     micro: int
-    release_level: Literal["alpha", "beta", "candidate", "final"]
-    serial: int
-    build: int | None = None
-    commit: str | None = None
-    date: date | None = None
+    releaselevel: Literal["alpha", "beta", "candidate", "final"]
+
+    # We can't set instance attributes on a NamedTuple, so we have to use a
+    # global variable to store the advanced version info.
+    @property
+    def advanced(self) -> AdvancedVersionInfo:
+        return _advanced
+
+    @advanced.setter
+    def advanced(self, value: object) -> None:
+        global _advanced
+        _advanced = value
 
     @property
-    @deprecated("release_level", "2.3")
-    def releaselevel(self) -> Literal["alpha", "beta", "candidate", "final"]:
-        return self.release_level
+    @deprecated("releaselevel", "2.4")
+    def release_level(self) -> Literal["alpha", "beta", "candidate", "final"]:
+        return self.releaselevel
+
+    @property
+    @deprecated('.advanced["serial"]', "2.4")
+    def serial(self) -> int:
+        return self.advanced["serial"]
+
+    @property
+    @deprecated('.advanced["build"]', "2.4")
+    def build(self) -> int | None:
+        return self.advanced["build"]
+
+    @property
+    @deprecated('.advanced["commit"]', "2.4")
+    def commit(self) -> str | None:
+        return self.advanced["commit"]
+
+    @property
+    @deprecated('.advanced["date"]', "2.4")
+    def date(self) -> datetime.date | None:
+        return self.advanced["date"]
 
 
 version_regex = re.compile(
@@ -97,7 +133,7 @@ else:
     raise RuntimeError("Invalid release level")
 
 if (raw_date := raw_info["date"] or raw_info["date1"]) is not None:
-    date_info = date(
+    date_info = datetime.date(
         int(raw_date[:4]),
         int(raw_date[4:6]),
         int(raw_date[6:]),
@@ -109,7 +145,10 @@ version_info: VersionInfo = VersionInfo(
     major=int(raw_info["major"] or 0) or None,
     minor=int(raw_info["minor"] or 0) or None,
     micro=int(raw_info["patch"] or 0) or None,
-    release_level=level_info,
+    releaselevel=level_info,
+)
+
+_advanced = AdvancedVersionInfo(
     serial=raw_info["serial"],
     build=int(raw_info["build"] or 0) or None,
     commit=raw_info["commit"],
