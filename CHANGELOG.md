@@ -29,6 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
 - Added new `suppress_notifications` to `MessageFlags`.
   ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
+- Added GIF sticker format type to the `StickerFormatType` enum.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
 
 ### Changed
 
@@ -41,6 +43,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `AttributeError`, and `io.BytesIO` files didn't send properly more than once.
   ([#1869](https://github.com/Pycord-Development/pycord/pull/1869) &
   [#1881](https://github.com/Pycord-Development/pycord/pull/1881))
+- Fixed an unhandled `KeyError` exception when receiving GIF stickers.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
 
 ## [2.3.2] - 2022-12-03
 
