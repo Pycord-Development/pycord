@@ -577,7 +577,7 @@ class AutoModActionExecutionEvent:
         )
 
 
-class RawThreadMembersUpdate(_RawReprMixin):
+class RawThreadMembersUpdateEvent(_RawReprMixin):
     """Represents the payload for an :func:`on_raw_thread_member_remove` event.
 
     .. versionadded:: 2.4
