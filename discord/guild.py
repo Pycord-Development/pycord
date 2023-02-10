@@ -2489,8 +2489,9 @@ class Guild(Hashable):
             factory, _ = _integration_factory(d["type"])
             if factory is None:
                 raise InvalidData(
-                    "Unknown integration type {type!r} for integration ID {id}"
-                    .format_map(d)
+                    "Unknown integration type {type!r} for integration ID {id}".format_map(
+                        d
+                    )
                 )
             return factory(guild=self, data=d)
 

@@ -857,9 +857,9 @@ class SlashCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = (
-                self.default_member_permissions.value
-            )
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1126,9 +1126,9 @@ class SlashCommandGroup(ApplicationCommand):
         validate_chat_input_name(self.name)
         validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: list[SlashCommand | SlashCommandGroup] = (
-            self.__initial_commands__
-        )
+        self.subcommands: list[
+            SlashCommand | SlashCommandGroup
+        ] = self.__initial_commands__
         self.guild_ids = guild_ids
         self.parent = parent
         self.attached_to_group: bool = False
@@ -1178,9 +1178,9 @@ class SlashCommandGroup(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = (
-                self.default_member_permissions.value
-            )
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         return as_dict
 
@@ -1502,9 +1502,9 @@ class ContextMenuCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict["default_member_permissions"] = (
-                self.default_member_permissions.value
-            )
+            as_dict[
+                "default_member_permissions"
+            ] = self.default_member_permissions.value
 
         if self.name_localizations is not None:
             as_dict["name_localizations"] = self.name_localizations

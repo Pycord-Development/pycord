@@ -189,9 +189,7 @@ class View:
         self._message: Message | InteractionMessage | None = None
 
     def __repr__(self) -> str:
-        return (
-            f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
-        )
+        return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
 
     async def __timeout_task_impl(self) -> None:
         while True:

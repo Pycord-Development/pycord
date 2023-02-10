@@ -249,9 +249,7 @@ class PartialAppInfo:
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
 
     def __repr__(self) -> str:
-        return (
-            f"<{self.__class__.__name__} id={self.id} name={self.name!r} description={self.description!r}>"
-        )
+        return f"<{self.__class__.__name__} id={self.id} name={self.name!r} description={self.description!r}>"
 
     @property
     def icon(self) -> Asset | None:

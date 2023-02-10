@@ -192,9 +192,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return f"<{animated_tag}:{name}:{self.id}>"
 
     def __repr__(self):
-        return (
-            f"<{self.__class__.__name__} animated={self.animated} name={self.name!r} id={self.id}>"
-        )
+        return f"<{self.__class__.__name__} animated={self.animated} name={self.name!r} id={self.id}>"
 
     def __eq__(self, other: Any) -> bool:
         if self.is_unicode_emoji():
