@@ -31,6 +31,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
 - Added GIF sticker format type to the `StickerFormatType` enum.
   ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
+- Added new raw events: `raw_member_remove`, `raw_thread_update`, and
+  `raw_thread_member_remove`.
+  ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
 
 ### Changed
 

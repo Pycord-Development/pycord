@@ -969,23 +969,28 @@ class ConnectionState:
     def parse_thread_update(self, data) -> None:
         guild_id = int(data["guild_id"])
         guild = self._get_guild(guild_id)
+        raw = RawThreadUpdateEvent(data)
         if guild is None:
             _log.debug(
                 "THREAD_UPDATE referencing an unknown guild ID: %s. Discarding",
                 guild_id,
             )
             return
-
-        thread_id = int(data["id"])
-        thread = guild.get_thread(thread_id)
-        if thread is not None:
-            old = copy.copy(thread)
-            thread._update(data)
-            self.dispatch("thread_update", old, thread)
         else:
-            thread = Thread(guild=guild, state=guild._state, data=data)
-            guild._add_thread(thread)
-            self.dispatch("thread_join", thread)
+            thread = guild.get_thread(raw.thread_id)
+            if thread is not None:
+                old = copy.copy(thread)
+                thread._update(data)
+                if thread.archived:
+                    guild._remove_thread(thread)
+                self.dispatch("thread_update", old, thread)
+            else:
+                thread = Thread(guild=guild, state=guild._state, data=data)
+                if not thread.archived:
+                    guild._add_thread(thread)
+                self.dispatch("thread_join", thread)
+            raw.thread = thread
+        self.dispatch("raw_thread_update", raw)
 
     def parse_thread_delete(self, data) -> None:
         guild_id = int(data["guild_id"])
@@ -1084,6 +1089,7 @@ class ConnectionState:
 
         thread_id = int(data["id"])
         thread: Thread | None = guild.get_thread(thread_id)
+        raw = RawThreadMembersUpdateEvent(data)
         if thread is None:
             _log.debug(
                 (
@@ -1108,6 +1114,7 @@ class ConnectionState:
         for member_id in removed_member_ids:
             if member_id != self_id:
                 member = thread._pop_member(member_id)
+                self.dispatch("raw_thread_member_remove", raw)
                 if member is not None:
                     self.dispatch("thread_member_remove", member)
             else:
@@ -1134,6 +1141,9 @@ class ConnectionState:
         self.dispatch("member_join", member)
 
     def parse_guild_member_remove(self, data) -> None:
+        user = self.store_user(data["user"])
+        raw = RawMemberRemoveEvent(data, user)
+
         guild = self._get_guild(int(data["guild_id"]))
         if guild is not None:
             try:
@@ -1141,9 +1151,9 @@ class ConnectionState:
             except AttributeError:
                 pass
 
-            user_id = int(data["user"]["id"])
-            member = guild.get_member(user_id)
+            member = guild.get_member(user.id)
             if member is not None:
+                raw.user = member
                 guild._remove_member(member)  # type: ignore
                 self.dispatch("member_remove", member)
         else:
@@ -1151,6 +1161,7 @@ class ConnectionState:
                 "GUILD_MEMBER_REMOVE referencing an unknown guild ID: %s. Discarding.",
                 data["guild_id"],
             )
+        self.dispatch("raw_member_remove", raw)
 
     def parse_guild_member_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
