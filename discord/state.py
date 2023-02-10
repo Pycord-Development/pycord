@@ -554,8 +554,10 @@ class ConnectionState:
             return await asyncio.wait_for(request.wait(), timeout=30.0)
         except asyncio.TimeoutError:
             _log.warning(
-                "Timed out waiting for chunks with query %r and limit %d for"
-                " guild_id %d",
+                (
+                    "Timed out waiting for chunks with query %r and limit %d for"
+                    " guild_id %d"
+                ),
                 query,
                 limit,
                 guild_id,
@@ -926,8 +928,10 @@ class ConnectionState:
 
         if channel is None:
             _log.debug(
-                "CHANNEL_PINS_UPDATE referencing an unknown channel ID: %s."
-                " Discarding.",
+                (
+                    "CHANNEL_PINS_UPDATE referencing an unknown channel ID: %s."
+                    " Discarding."
+                ),
                 channel_id,
             )
             return
@@ -1088,8 +1092,10 @@ class ConnectionState:
         raw = RawThreadMembersUpdateEvent(data)
         if thread is None:
             _log.debug(
-                "THREAD_MEMBERS_UPDATE referencing an unknown thread ID: %s."
-                " Discarding",
+                (
+                    "THREAD_MEMBERS_UPDATE referencing an unknown thread ID: %s."
+                    " Discarding"
+                ),
                 thread_id,
             )
             return
@@ -1212,8 +1218,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_STICKERS_UPDATE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_STICKERS_UPDATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1426,8 +1434,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_SCHEDULED_EVENT_CREATE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_SCHEDULED_EVENT_CREATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1447,8 +1457,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_SCHEDULED_EVENT_UPDATE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_SCHEDULED_EVENT_UPDATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1469,8 +1481,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_SCHEDULED_EVENT_DELETE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_SCHEDULED_EVENT_DELETE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1491,8 +1505,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_SCHEDULED_EVENT_USER_ADD referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_SCHEDULED_EVENT_USER_ADD referencing an unknown guild ID:"
+                    " %s. Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1513,8 +1529,10 @@ class ConnectionState:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
             _log.debug(
-                "GUILD_SCHEDULED_EVENT_USER_REMOVE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_SCHEDULED_EVENT_USER_REMOVE referencing an unknown guild ID:"
+                    " %s. Discarding."
+                ),
                 data["guild_id"],
             )
             return
@@ -1537,8 +1555,10 @@ class ConnectionState:
             self.dispatch("guild_integrations_update", guild)
         else:
             _log.debug(
-                "GUILD_INTEGRATIONS_UPDATE referencing an unknown guild ID: %s."
-                " Discarding.",
+                (
+                    "GUILD_INTEGRATIONS_UPDATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
                 data["guild_id"],
             )
 
@@ -1622,8 +1642,10 @@ class ConnectionState:
                 )
             else:
                 _log.debug(
-                    "STAGE_INSTANCE_UPDATE referencing unknown stage instance ID: %s."
-                    " Discarding.",
+                    (
+                        "STAGE_INSTANCE_UPDATE referencing unknown stage instance ID:"
+                        " %s. Discarding."
+                    ),
                     data["id"],
                 )
         else:
@@ -1680,8 +1702,10 @@ class ConnectionState:
                 self.dispatch("voice_state_update", member, before, after)
             else:
                 _log.debug(
-                    "VOICE_STATE_UPDATE referencing an unknown member ID: %s."
-                    " Discarding.",
+                    (
+                        "VOICE_STATE_UPDATE referencing an unknown member ID: %s."
+                        " Discarding."
+                    ),
                     data["user_id"],
                 )
 
@@ -1842,8 +1866,10 @@ class AutoShardedConnectionState(ConnectionState):
             else:
                 if self._guild_needs_chunking(guild):
                     _log.debug(
-                        "Guild ID %d requires chunking, will be done in the"
-                        " background.",
+                        (
+                            "Guild ID %d requires chunking, will be done in the"
+                            " background."
+                        ),
                         guild.id,
                     )
                     if len(current_bucket) >= max_concurrency:
@@ -1878,8 +1904,10 @@ class AutoShardedConnectionState(ConnectionState):
                 await utils.sane_wait_for(futures, timeout=timeout)
             except asyncio.TimeoutError:
                 _log.warning(
-                    "Shard ID %s failed to wait for chunks (timeout=%.2f) for %d"
-                    " guilds",
+                    (
+                        "Shard ID %s failed to wait for chunks (timeout=%.2f) for %d"
+                        " guilds"
+                    ),
                     shard_id,
                     timeout,
                     len(guilds),

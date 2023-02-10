@@ -140,8 +140,10 @@ class KeepAliveHandler(threading.Thread):
         while not self._stop_ev.wait(self.interval):
             if self._last_recv + self.heartbeat_timeout < time.perf_counter():
                 _log.warning(
-                    "Shard ID %s has stopped responding to the gateway. Closing and"
-                    " restarting.",
+                    (
+                        "Shard ID %s has stopped responding to the gateway. Closing and"
+                        " restarting."
+                    ),
                     self.shard_id,
                 )
                 coro = self.ws.close(4000)
