@@ -29,6 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
 - Added new `suppress_notifications` to `MessageFlags`.
   ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
+- Added GIF sticker format type to the `StickerFormatType` enum.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
 
 ### Changed
 
