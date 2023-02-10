@@ -379,7 +379,7 @@ class MessageFlags(BaseFlags):
     def loading(self):
         """:class:`bool`: Returns ``True`` if the source message is deferred.
 
-        The user sees a 'thinking' state
+        The user sees a 'thinking' state.
 
         .. versionadded:: 2.0
         """
@@ -392,6 +392,17 @@ class MessageFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 256
+
+    @flag_value
+    def suppress_notifications(self):
+        """:class:`bool`: Returns ``True`` if the source message does not trigger push and desktop notifications.
+
+        Users will still receive mentions.
+
+        .. versionadded:: 2.4
+        """
+
+        return 4096
 
 
 @fill_with_flags()

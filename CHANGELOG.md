@@ -17,12 +17,18 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
 - Added missing `image` parameter to `Guild.create_scheduled_event()` method.
   ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
+- New `ApplicationRoleConnectionMetadata` class for application role connection
+  metadata, along with the `fetch_role_connection_metadata_records` and
+  `update_role_connection_metadata_records` methods in `Client`.
+  ([#1791](https://github.com/Pycord-Development/pycord/pull/1791))
 - Added new message types, `interaction_premium_upsell`, `stage_start`, `stage_end`,
   `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
   `guild_application_premium_subscription`.
   ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 - Added new `EmbeddedActivity` values.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
+- Added new `suppress_notifications` to `MessageFlags`.
+  ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
 
 ### Changed
 
