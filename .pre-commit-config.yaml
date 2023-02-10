@@ -23,7 +23,7 @@ repos:
       - id: pyupgrade
         args: [--py38-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: 5.11.4
+    rev: 5.12.0
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
@@ -33,7 +33,7 @@ repos:
         # See https://github.com/psf/black/issues/2188#issuecomment-1289317647 for why we can't use the --preview flag.
         args: [--safe, --quiet]
   - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
-    rev: v1.1.1
+    rev: v1.1.3
     hooks:
       - id: black-disable-checker
   #  - repo: https://github.com/PyCQA/flake8
