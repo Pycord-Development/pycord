@@ -29,6 +29,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
 - Added new `suppress_notifications` to `MessageFlags.
   ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
+- Added new events `on_bride_command`, `on_bridge_command_completion` and
+  `on_bridge_command_error`.
+  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
 ### Changed
 
