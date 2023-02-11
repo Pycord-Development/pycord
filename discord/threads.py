@@ -879,8 +879,8 @@ class Thread(Messageable, Hashable):
             Removing the tag from the thread failed.
         """
         from .channel import ForumChannel
-        if isinstance(self.parent, ForumChannel):
-            raise TypeError("Thread is in a forum channel")
+        if not isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is not in a forum channel")
 
         if tag is None and id is None and name is None:
             raise TypeError("tag , id or name must be passed")
@@ -905,7 +905,7 @@ class Thread(Messageable, Hashable):
         await self.edit(
             applied_tags=[t for t in self.applied_tags if t.id != tag.id or t.name.lower() != tag.name.lower()]
         )
-        return tag
+
 
     async def reset_and_add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
         """|coro|
@@ -940,8 +940,8 @@ class Thread(Messageable, Hashable):
             Adding the tag to the thread failed.
         """
         from .channel import ForumChannel
-        if isinstance(self.parent, ForumChannel):
-            raise TypeError("Thread is in a forum channel")
+        if not isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is not in a forum channel")
 
         if tag is None and id is None and name is None:
             raise TypeError("tag , id or name must be passed")
@@ -969,7 +969,7 @@ class Thread(Messageable, Hashable):
         await self.edit(
             applied_tags=[tag]
         )
-        await tag
+
 
     async def reset_tags(self):
         """|coro|
