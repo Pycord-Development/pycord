@@ -844,7 +844,7 @@ class Thread(Messageable, Hashable):
         if tag is None:
             raise NotFound(f"Forum channel {forum_channel.id} does not have tag with id {tag_id} or name {tag_name}")
 
-        await tag
+        await self.edit(applied_tags=[tag for tag in self.applied_tags if tag.id != tag.id] + [tag])
 
     async def remove_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
         """|coro|
@@ -905,7 +905,7 @@ class Thread(Messageable, Hashable):
         await self.edit(
             applied_tags=[t for t in self.applied_tags if t.id != tag.id or t.name.lower() != tag.name.lower()]
         )
-        await tag
+        return tag
 
     async def reset_and_add_tag(self, tag: ForumTag = None , * , id: int = None , name: str = None ):
         """|coro|
