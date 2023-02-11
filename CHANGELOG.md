@@ -12,6 +12,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 _No changes yet_
 
+## [2.3.3] - 2023-02-10
+
+- Fixed an unhandled `KeyError` exception when receiving GIF stickers, causing crashes.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
+
 ## [2.3.2] - 2022-12-03
 
 ### Fixed
@@ -465,7 +470,8 @@ _No changes yet_
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...HEAD
+[2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
