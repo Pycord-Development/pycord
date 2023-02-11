@@ -153,7 +153,8 @@ class BotBase(ABC):
             The invocation context to invoke.
         """
         self._bot.dispatch("application_command", ctx)
-        self._bot.dispatch("bridge_command", ctx)
+        if br_cmd := isinstance(ctx.command, BridgeSlashCommand):
+            self._bot.dispatch("bridge_command", ctx)
         try:
             if await self._bot.can_run(ctx, call_once=True):
                 await ctx.command.invoke(ctx)
@@ -163,7 +164,8 @@ class BotBase(ABC):
             await ctx.command.dispatch_error(ctx, exc)
         else:
             self._bot.dispatch("application_command_completion", ctx)
-            self._bot.dispatch("bridge_command_completion", ctx)
+            if br_cmd:
+                self._bot.dispatch("bridge_command_completion", ctx)
 
 
 class Bot(BotBase, ExtBot):
