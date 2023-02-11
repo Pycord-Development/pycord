@@ -818,8 +818,8 @@ class Thread(Messageable, Hashable):
             Adding the tag to the thread failed.
         """
         from .channel import ForumChannel
-        if isinstance(self.parent, ForumChannel):
-            raise TypeError("Thread is in a forum channel")
+        if not isinstance(self.parent, ForumChannel):
+            raise TypeError("Thread is not in a forum channel")
 
         if tag is None and id is None and name is None:
             raise TypeError("tag , id or name must be passed")
