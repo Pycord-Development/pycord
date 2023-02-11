@@ -34,7 +34,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new raw events: `raw_member_remove`, `raw_thread_update`, and
   `raw_thread_member_remove`.
   ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
-- Added new events `on_bride_command`, `on_bridge_command_completion` and
+- Added new events `on_bride_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 

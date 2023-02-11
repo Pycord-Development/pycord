@@ -46,7 +46,7 @@ Event Reference
 These events function similar to :ref:`the regular events <discord-api-events>`, except they
 are custom to the bridge extension module.
 
-.. function:: discord.ext.bridge.on_command_error(ctx, error)
+.. function:: discord.ext.bridge.on_bridge_command_error(ctx, error)
 
     An error handler that is called when an error is raised
     inside a command either through user input error, check
@@ -57,7 +57,7 @@ are custom to the bridge extension module.
     :param error: The error that was raised.
     :type error: :class:`.CommandError` derived
 
-.. function:: discord.ext.bridge.on_command(ctx)
+.. function:: discord.ext.bridge.on_bridge_command(ctx)
 
     An event that is called when a command is found and is about to be invoked.
 
@@ -67,12 +67,12 @@ are custom to the bridge extension module.
     :param ctx: The invocation context.
     :type ctx: :class:`.Context`
 
-.. function:: discord.ext.bridge.on_command_completion(ctx)
+.. function:: discord.ext.bridge.on_bridge_command_completion(ctx)
 
     An event that is called when a command has completed its invocation.
 
     This event is called only if the command succeeded, i.e. all checks have
-    passed and the user input it correctly.
+    passed and users input them correctly.
 
     :param ctx: The invocation context.
     :type ctx: :class:`.Context`
