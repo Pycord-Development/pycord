@@ -75,12 +75,22 @@ class BridgeSlashCommand(SlashCommand):
         self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
+    async def dispatch_error(
+        self, ctx: BridgeApplicationContext, error: Exception
+    ) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
+
 
 class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
+
+    async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         if param.annotation is Attachment:

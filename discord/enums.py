@@ -67,6 +67,7 @@ __all__ = (
     "AutoModEventType",
     "AutoModActionType",
     "AutoModKeywordPresetType",
+    "ApplicationRoleConnectionMetadataType",
 )
 
 
@@ -488,7 +489,9 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
-            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
+            AuditLogAction.application_command_permission_update: (
+                AuditLogActionCategory.update
+            ),
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
@@ -615,6 +618,7 @@ class StickerFormatType(Enum):
     png = 1
     apng = 2
     lottie = 3
+    gif = 4
 
     @property
     def file_extension(self) -> str:
@@ -622,8 +626,10 @@ class StickerFormatType(Enum):
             StickerFormatType.png: "png",
             StickerFormatType.apng: "png",
             StickerFormatType.lottie: "json",
+            StickerFormatType.gif: "gif",
         }
-        return lookup[self]
+        # TODO: Improve handling of unknown sticker format types if possible
+        return lookup.get(self, "png")
 
 
 class InviteTarget(Enum):
@@ -928,6 +934,19 @@ class AutoModKeywordPresetType(Enum):
     profanity = 1
     sexual_content = 2
     slurs = 3
+
+
+class ApplicationRoleConnectionMetadataType(Enum):
+    """Application role connection metadata type"""
+
+    integer_less_than_or_equal = 1
+    integer_greater_than_or_equal = 2
+    integer_equal = 3
+    integer_not_equal = 4
+    datetime_less_than_or_equal = 5
+    datetime_greater_than_or_equal = 6
+    boolean_equal = 7
+    boolean_not_equal = 8
 
 
 T = TypeVar("T")
