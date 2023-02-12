@@ -40,6 +40,9 @@ _No changes yet_
   ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
 - Improved support for setting channel types & added new channel types for
   `discord.Option`. ([#1883](https://github.com/Pycord-Development/pycord/pull/1883))
+- Added new events `on_bride_command`, `on_bridge_command_completion`, and
+  `on_bridge_command_error`.
+  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
 ### Changed
 
