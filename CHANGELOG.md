@@ -10,6 +10,10 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+_No changes yet_
+
+## [2.4.0] - 2023-02-10
+
 ### Added
 
 - Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
@@ -17,17 +21,38 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1809](https://github.com/Pycord-Development/pycord/pull/1809))
 - Added missing `image` parameter to `Guild.create_scheduled_event()` method.
   ([#1831](https://github.com/Pycord-Development/pycord/pull/1831))
-- Added new message types, `interaction_premium_upsell`, `stage_start`, `stage_end`,
-  `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
+- New `ApplicationRoleConnectionMetadata` class for application role connection
+  metadata, along with the `fetch_role_connection_metadata_records` and
+  `update_role_connection_metadata_records` methods in `Client`.
+  ([#1791](https://github.com/Pycord-Development/pycord/pull/1791))
+- Added new message types, `role_subscription_purchase`, `interaction_premium_upsell`,
+  `stage_start`, `stage_end`, `stage_speaker`, `stage_raise_hand`, `stage_topic`, and
   `guild_application_premium_subscription`.
   ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 - Added new `EmbeddedActivity` values.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
+- Added new `suppress_notifications` to `MessageFlags`.
+  ([#1912](https://github.com/Pycord-Development/pycord/pull/1912))
+- Added GIF sticker format type to the `StickerFormatType` enum.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
+- Added new raw events: `raw_member_remove`, `raw_thread_update`, and
+  `raw_thread_member_remove`.
+  ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
+- Improved support for setting channel types & added new channel types for
+  `discord.Option`. ([#1883](https://github.com/Pycord-Development/pycord/pull/1883))
+- Added new events `on_bride_command`, `on_bridge_command_completion`, and
+  `on_bridge_command_error`.
+  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
 ### Changed
 
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
+- Advanced version info is now stored as a dict in `version_info.advanced` instead of
+  attributes on the `version_info` object.
+  ([#1920](https://github.com/Pycord-Development/pycord/pull/1920))
+- The `version_info.release_level` attribute has been reverted to its previous name,
+  `releaselevel`. ([#1920](https://github.com/Pycord-Development/pycord/pull/1920))
 
 ### Fixed
 
@@ -35,13 +60,15 @@ These changes are available on the `master` branch, but have not yet been releas
   `AttributeError`, and `io.BytesIO` files didn't send properly more than once.
   ([#1869](https://github.com/Pycord-Development/pycord/pull/1869) &
   [#1881](https://github.com/Pycord-Development/pycord/pull/1881))
-
-## [2.3.2] - 2022-12-03
-
-### Fixed
-
 - Fixed bridge groups missing the `parent` attribute.
   ([#1823](https://github.com/Pycord-Development/pycord/pull/1823))
+- Fixed issues with creating auto moderation rules.
+  ([#1822](https://github.com/Pycord-Development/pycord/pull/1822))
+
+## [2.3.3] - 2023-02-10
+
+- Fixed an unhandled `KeyError` exception when receiving GIF stickers, causing crashes.
+  ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
 
 ## [2.3.2] - 2022-12-03
 
@@ -101,6 +128,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 - `get_application_command()` now supports retrieving subcommands and subcommand groups.
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
+-
 
 ### Removed
 
@@ -496,7 +524,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0
+[2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
