@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import ChannelType, try_enum
+from .types.user import User
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -43,6 +44,7 @@ if TYPE_CHECKING:
     from .types.raw_models import (
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
+        MemberRemoveEvent,
         MessageDeleteEvent,
         MessageUpdateEvent,
         ReactionActionEvent,
@@ -50,6 +52,8 @@ if TYPE_CHECKING:
         ReactionClearEvent,
         ScheduledEventSubscription,
         ThreadDeleteEvent,
+        ThreadMembersUpdateEvent,
+        ThreadUpdateEvent,
         TypingEvent,
     )
 
@@ -62,10 +66,13 @@ __all__ = (
     "RawReactionClearEvent",
     "RawReactionClearEmojiEvent",
     "RawIntegrationDeleteEvent",
+    "RawThreadUpdateEvent",
     "RawThreadDeleteEvent",
     "RawTypingEvent",
+    "RawMemberRemoveEvent",
     "RawScheduledEventSubscription",
     "AutoModActionExecutionEvent",
+    "RawThreadMembersUpdateEvent",
 )
 
 
@@ -305,6 +312,38 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: int | None = None
 
 
+class RawThreadUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_thread_update` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The ID of the updated thread.
+    thread_type: :class:`discord.ChannelType`
+        The channel type of the updated thread.
+    guild_id: :class:`int`
+        The ID of the guild the thread belongs to.
+    parent_id: :class:`int`
+        The ID of the channel the thread belongs to.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
+    thread: :class:`discord.Thread` | None
+        The thread, if it could be found in the internal cache.
+    """
+
+    __slots__ = ("thread_id", "thread_type", "parent_id", "guild_id", "data", "thread")
+
+    def __init__(self, data: ThreadUpdateEvent) -> None:
+        self.thread_id: int = int(data["id"])
+        self.thread_type: ChannelType = try_enum(ChannelType, data["type"])
+        self.guild_id: int = int(data["guild_id"])
+        self.parent_id: int = int(data["parent_id"])
+        self.data: ThreadUpdateEvent = data
+        self.thread: Thread | None = None
+
+
 class RawThreadDeleteEvent(_RawReprMixin):
     """Represents the payload for :func:`on_raw_thread_delete` event.
 
@@ -368,6 +407,26 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawMemberRemoveEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_member_remove` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    user: :class:`discord.User`
+        The user that left the guild.
+    guild_id: :class:`int`
+        The ID of the guild the user left.
+    """
+
+    __slots__ = ("user", "guild_id")
+
+    def __init__(self, data: MemberRemoveEvent, user: User):
+        self.user: User = user
+        self.guild_id: int = int(data["guild_id"])
 
 
 class RawScheduledEventSubscription(_RawReprMixin):
@@ -516,3 +575,29 @@ class AutoModActionExecutionEvent:
             f"rule_id={self.rule_id!r} guild_id={self.guild_id!r} "
             f"user_id={self.user_id!r}>"
         )
+
+
+class RawThreadMembersUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_thread_member_remove` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The ID of the thread that was updated.
+    guild_id: :class:`int`
+        The ID of the guild the thread is in.
+    member_count: :class:`int`
+        The approximate number of members in the thread. Maximum of 50.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`_.
+    """
+
+    __slots__ = ("thread_id", "guild_id", "member_count", "data")
+
+    def __init__(self, data: ThreadMembersUpdateEvent) -> None:
+        self.thread_id = int(data["id"])
+        self.guild_id = int(data["guild_id"])
+        self.member_count = int(data["member_count"])
+        self.data = data

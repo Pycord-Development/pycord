@@ -142,11 +142,15 @@ class ForumTag(Hashable):
             self.emoji = PartialEmoji.from_str(emoji)
         else:
             raise TypeError(
-                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
+                "emoji must be a Emoji, PartialEmoji, or str and not"
+                f" {emoji.__class__!r}"
             )
 
     def __repr__(self) -> str:
-        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+        return (
+            "<ForumTag"
+            f" id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+        )
 
     def __str__(self) -> str:
         return self.name
