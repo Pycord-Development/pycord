@@ -1317,13 +1317,15 @@ class SlashCommandGroup(ApplicationCommand):
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
 
-    def walk_commands(self) -> Generator[SlashCommand, None, None]:
-        """An iterator that recursively walks through all slash commands in this group.
+    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup, None, None]:
+        """An iterator that recursively walks through all slash commands and groups in this group.
 
         Yields
         ------
         :class:`.SlashCommand`
             A slash command from the group.
+        :class:`.SlashCommandGroup`
+            A nested slash command group from the group.
         """
         for command in self.subcommands:
             if isinstance(command, SlashCommandGroup):
