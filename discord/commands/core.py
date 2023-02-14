@@ -1322,10 +1322,8 @@ class SlashCommandGroup(ApplicationCommand):
 
         Yields
         ------
-        :class:`.SlashCommand`
-            A slash command from the group.
-        :class:`.SlashCommandGroup`
-            A nested slash command group from the group.
+        :class:`.SlashCommand` | :class:`.SlashCommandGroup`
+            A nested slash command or slash command group from the group.
         """
         for command in self.subcommands:
             if isinstance(command, SlashCommandGroup):
