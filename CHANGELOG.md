@@ -12,8 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual behavior
-([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
+- Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
+  behavior ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 
 ## [2.4.0] - 2023-02-10
 
