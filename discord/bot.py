@@ -509,13 +509,13 @@ class ApplicationCommandMixin(ABC):
                         f"Bulk updating commands {[c['name'] for c in args[0]]} for"
                         f" guild {guild_id}"
                     )
-                # TODO: Find where "cmd" is defined
+                # cmd is defined from the for loop in line 603 and is a dict with three keys. 'id' value is an int, 'action' value is a str and 'command' value is a SlashCommand(Group)
                 elif method == "upsert":
-                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Creating command {cmd['command'].name} for guild {guild_id}")  # type: ignore
                 elif method == "edit":
-                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Editing command {cmd['command'].name} for guild {guild_id}")  # type: ignore
                 elif method == "delete":
-                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Deleting command {cmd['command'].name} for guild {guild_id}")  # type: ignore
             return _register(method, *args, **kwargs)
 
         pending_actions = []
