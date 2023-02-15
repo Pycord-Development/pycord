@@ -279,7 +279,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: stage_raise_hand
 
-        The system message denoting that a stage event has someone has raised their hand.
+        The system message denoting that a stage event has someone raising their hand.
 
         .. versionadded:: 2.4
 
