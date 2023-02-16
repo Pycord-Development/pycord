@@ -118,9 +118,10 @@ class BotBase(ABC):
         return decorator
 
     async def invoke(self, ctx: ExtContext | BridgeExtContext):
+        br_cmd = isinstance(ctx.command, BridgeExtCommand)
         if ctx.command is not None:
             self.dispatch("command", ctx)
-            if br_cmd := isinstance(ctx.command, BridgeExtCommand):
+            if br_cmd:
                 self.dispatch("bridge_command", ctx)
             try:
                 if await self.can_run(ctx, call_once=True):
