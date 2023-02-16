@@ -133,6 +133,7 @@ class BridgeExtGroup(BridgeExtCommand, Group):
 
 class BridgeCommand:
     """Compatibility class between prefixed-based commands and slash commands.
+
     Parameters
     ----------
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
@@ -142,6 +143,7 @@ class BridgeCommand:
         Parent of the BridgeCommand.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+
     Attributes
     ----------
     slash_variant: :class:`.BridgeSlashCommand`
@@ -195,6 +197,7 @@ class BridgeCommand:
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
+
         Parameters
         ----------
         bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
@@ -218,10 +221,12 @@ class BridgeCommand:
         the handler for both the prefixed and slash versions of the command.
         This error handler takes two parameters, a :class:`.BridgeContext` and
         a :class:`~discord.DiscordException`.
+
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the local error handler.
+
         Raises
         ------
         TypeError
@@ -238,10 +243,12 @@ class BridgeCommand:
         it useful for any sort of set up required. This hook is called
         for both the prefixed and slash versions of the command.
         This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
+
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the pre-invoke hook.
+
         Raises
         ------
         TypeError
@@ -258,10 +265,12 @@ class BridgeCommand:
         useful for any sort of clean up required. This hook is called for
         both the prefixed and slash versions of the command.
         This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`.
+
         Parameters
         ----------
         coro: :ref:`coroutine <coroutine>`
             The coroutine to register as the post-invoke hook.
+
         Raises
         ------
         TypeError
@@ -275,6 +284,7 @@ class BridgeCommand:
 
 class BridgeCommandGroup(BridgeCommand):
     """Compatibility class between prefixed-based commands and slash commands.
+
     Parameters
     ----------
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
@@ -282,6 +292,7 @@ class BridgeCommandGroup(BridgeCommand):
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
     kwargs: Optional[Dict[:class:`str`, Any]]
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
+
     Attributes
     ----------
     slash_variant: :class:`.SlashCommandGroup`
@@ -314,6 +325,7 @@ class BridgeCommandGroup(BridgeCommand):
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.
+
         Parameters
         ----------
         kwargs: Optional[Dict[:class:`str`, Any]]
@@ -342,6 +354,7 @@ class BridgeCommandGroup(BridgeCommand):
 
 def bridge_command(**kwargs):
     """A decorator that is used to wrap a function as a bridge command.
+
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
@@ -356,6 +369,7 @@ def bridge_command(**kwargs):
 
 def bridge_group(**kwargs):
     """A decorator that is used to wrap a function as a bridge command group.
+
     Parameters
     ----------
     kwargs: Optional[Dict[:class:`str`, Any]]
@@ -370,12 +384,14 @@ def bridge_group(**kwargs):
 
 def map_to(name, description=None):
     """To be used with bridge command groups, map the main command to a slash subcommand.
+
     Parameters
     ----------
     name: :class:`str`
         The new name of the mapped command.
     description: Optional[:class:`str`]
         The new description of the mapped command.
+
     Example
     -------
     .. code-block:: python3

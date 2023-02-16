@@ -82,6 +82,7 @@ class BotBase(ABC):
     def bridge_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
         the internal command list via :meth:`~.Bot.add_bridge_command`.
+
         Returns
         -------
         Callable[..., :class:`BridgeCommand`]
@@ -98,6 +99,7 @@ class BotBase(ABC):
 
     def bridge_group(self, **kwargs):
         """A decorator that is used to wrap a function as a bridge command group.
+
         Parameters
         ----------
         kwargs: Optional[Dict[:class:`str`, Any]]
