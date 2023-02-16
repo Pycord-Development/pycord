@@ -10,7 +10,10 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-_No changes yet_
+### Fixed
+
+- Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
+  behavior. ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 
 ## [2.4.0] - 2023-02-10
 
