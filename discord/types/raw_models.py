@@ -134,6 +134,7 @@ class ThreadMembersUpdateEvent(TypedDict):
 class AuditLogEntryEvent(TypedDict):
     id: Snowflake
     user_id: Snowflake
+    guild_id: Snowflake
     target_id: Snowflake
     action_type: int
     changes: NotRequired[list[dict]]
