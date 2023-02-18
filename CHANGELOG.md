@@ -10,6 +10,12 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Added
+
+- Added new events `on_bridge_command`, `on_bridge_command_completion`, and
+  `on_bridge_command_error`.
+  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
+
 ### Fixed
 
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
@@ -43,9 +49,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
 - Improved support for setting channel types & added new channel types for
   `discord.Option`. ([#1883](https://github.com/Pycord-Development/pycord/pull/1883))
-- Added new events `on_bride_command`, `on_bridge_command_completion`, and
-  `on_bridge_command_error`.
-  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
 ### Changed
 
