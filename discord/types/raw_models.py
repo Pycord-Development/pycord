@@ -136,6 +136,6 @@ class AuditLogEntryEvent(TypedDict):
     user_id: Snowflake
     target_id: Snowflake
     action_type: int
-    changes: NotRequired[list[AuditLogChange]]
+    changes: NotRequired[list[dict]]
     reason: NotRequired[str]
     options: NotRequired[dict]
