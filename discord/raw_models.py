@@ -29,7 +29,7 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import ChannelType, AuditLogAction, try_enum
+from .enums import AuditLogAction, ChannelType, try_enum
 from .types.user import User
 
 if TYPE_CHECKING:
@@ -40,9 +40,9 @@ if TYPE_CHECKING:
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
     from .threads import Thread
+    from .types.raw_models import AuditLogEntryEvent
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
-        AuditLogEntryEvent,
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MemberRemoveEvent,
@@ -74,7 +74,7 @@ __all__ = (
     "RawScheduledEventSubscription",
     "AutoModActionExecutionEvent",
     "RawThreadMembersUpdateEvent",
-    "RawAuditLogEntryEvent"
+    "RawAuditLogEntryEvent",
 )
 
 
@@ -642,7 +642,6 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         "extra",
         "changes",
     )
-    
 
     def __init__(self, data: AuditLogEntryEvent) -> None:
         self.id = int(data["id"])
