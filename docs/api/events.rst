@@ -85,7 +85,7 @@ Audit Logs
     .. versionadded:: 2.4
 
     :param entry: The audit log entry that was created.
-    :type rule: :class:`AuditLogEntry`
+    :type entry: :class:`AuditLogEntry`
 
 .. function:: on_raw_audit_log_entry(payload)
 
@@ -99,7 +99,7 @@ Audit Logs
     .. versionadded:: 2.4
 
     :param payload: The raw event payload data.
-    :type rule: :class:`RawAuditLogEntryEvent`
+    :type payload: :class:`RawAuditLogEntryEvent`
 
 AutoMod
 -------
