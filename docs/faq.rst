@@ -328,7 +328,7 @@ Quick example: ::
 Is there an event for audit log entries being created?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As of February 2023, it's now possible via the :func:`on_audit_log_entry` event.
+As of version 2.4.x, it's now possible via the :func:`on_audit_log_entry` event.
 
 Commands Extension
 -------------------
