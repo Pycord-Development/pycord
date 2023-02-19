@@ -717,7 +717,7 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
         """:class:`bool`: Alias of :attr:`.moderation`.
 
