@@ -602,7 +602,7 @@ class ApplicationCommandMixin(ABC):
                     registered = []
                 for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
-                        await register("delete", cmd["command"])
+                        await register("delete", cmd["id"])
                         continue
                     if cmd["action"] == "edit":
                         registered.append(
