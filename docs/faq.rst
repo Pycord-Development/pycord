@@ -328,7 +328,7 @@ Quick example: ::
 Is there an event for audit log entries being created?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As of version 2.4.x, it's now possible via the :func:`on_audit_log_entry` event.
+As of version 2.4.x, you can recieve audit log entries with the :func:`on_audit_log_entry` event.
 
 Commands Extension
 -------------------
