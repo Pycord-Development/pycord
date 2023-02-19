@@ -608,7 +608,7 @@ class RawThreadMembersUpdateEvent(_RawReprMixin):
 class RawAuditLogEntryEvent(_RawReprMixin):
     """Represents the payload for an :func:`on_raw_audit_log_entry` event.
 
-    .. versionadded:: 2.4
+    .. versionadded:: 2.5
 
     Attributes
     ----------
