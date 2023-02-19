@@ -82,7 +82,7 @@ Audit Logs
     The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
     :attr:`Intents.moderation` must be enabled.
 
-    .. versionadded:: 2.4
+    .. versionadded:: 2.5
 
     :param entry: The audit log entry that was created.
     :type entry: :class:`AuditLogEntry`
