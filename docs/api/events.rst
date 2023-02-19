@@ -91,7 +91,7 @@ Audit Logs
 
     Called when an audit log entry is created. Unlike
     :func:`on_audit_log_entry`, this is called regardless of the state of the internal
-    member cache.
+    user cache.
 
     The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
     :attr:`Intents.moderation` must be enabled.
