@@ -338,8 +338,8 @@ class Colour:
         """A factory method that returns a :class:`Color` corresponding to the
         embed colors on discord clients, with a value of:
 
-        - ``0x2F3136`` (dark)
-        - ``0xf2f3f5`` (light)
+        - ``0x2B2D31`` (dark)
+        - ``0xEEEFF1`` (light)
         - ``0x000000`` (amoled).
 
         .. versionadded:: 2.0
@@ -350,8 +350,8 @@ class Colour:
             The theme color to apply, must be one of "dark", "light", or "amoled".
         """
         themes_cls = {
-            "dark": 0x2F3136,
-            "light": 0xF2F3F5,
+            "dark": 0x2B2D31,
+            "light": 0xEEEFF1,
             "amoled": 0x000000,
         }
 
