@@ -118,10 +118,9 @@ class BotBase(ABC):
         return decorator
 
     async def invoke(self, ctx: ExtContext | BridgeExtContext):
-        br_cmd = isinstance(ctx.command, BridgeExtCommand)
         if ctx.command is not None:
             self.dispatch("command", ctx)
-            if br_cmd:
+            if isinstance(ctx.command, BridgeExtCommand):
                 self.dispatch("bridge_command", ctx)
             try:
                 if await self.can_run(ctx, call_once=True):
@@ -132,12 +131,12 @@ class BotBase(ABC):
                 await ctx.command.dispatch_error(ctx, exc)
             else:
                 self.dispatch("command_completion", ctx)
-                if br_cmd:
+                if isinstance(ctx.command, BridgeExtCommand):
                     self.dispatch("bridge_command_completion", ctx)
         elif ctx.invoked_with:
             exc = errors.CommandNotFound(f'Command "{ctx.invoked_with}" is not found')
             self.dispatch("command_error", ctx, exc)
-            if br_cmd:
+            if isinstance(ctx.command, BridgeExtCommand):
                 self.dispatch("bridge_command_error", ctx, exc)
 
     async def invoke_application_command(
