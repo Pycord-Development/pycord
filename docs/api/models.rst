@@ -517,6 +517,11 @@ Events
 .. autoclass:: RawThreadMembersUpdateEvent()
     :members:
 
+.. attributetable:: RawAuditLogEntryEvent
+
+.. autoclass:: RawAuditLogEntryEvent()
+    :members:
+
 
 
 Webhooks

@@ -45,6 +45,7 @@ from typing import (
 
 from . import utils
 from .activity import BaseActivity
+from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
@@ -1338,6 +1339,26 @@ class ConnectionState:
 
         self._remove_guild(guild)
         self.dispatch("guild_remove", guild)
+
+    def parse_guild_audit_log_entry_create(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is None:
+            _log.debug(
+                (
+                    "GUILD_AUDIT_LOG_ENTRY_CREATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
+                data["guild_id"],
+            )
+            return
+        payload = RawAuditLogEntryEvent(data)
+        payload.guild = guild
+        self.dispatch("raw_audit_log_entry", payload)
+        user = self.get_user(payload.user_id)
+        if user is not None:
+            data.pop("guild_id")
+            entry = AuditLogEntry(users={data["user_id"]: user}, data=data, guild=guild)
+            self.dispatch("audit_log_entry", entry)
 
     def parse_guild_ban_add(self, data) -> None:
         # we make the assumption that GUILD_BAN_ADD is done

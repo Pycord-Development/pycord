@@ -72,6 +72,35 @@ Application Commands
     :param interaction: The interaction associated to the unknown command.
     :type interaction: :class:`Interaction`
 
+Audit Logs
+----------
+
+.. function:: on_audit_log_entry(entry)
+
+    Called when an audit log entry is created.
+
+    The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
+    :attr:`Intents.moderation` must be enabled.
+
+    .. versionadded:: 2.5
+
+    :param entry: The audit log entry that was created.
+    :type entry: :class:`AuditLogEntry`
+
+.. function:: on_raw_audit_log_entry(payload)
+
+    Called when an audit log entry is created. Unlike
+    :func:`on_audit_log_entry`, this is called regardless of the state of the internal
+    user cache.
+
+    The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
+    :attr:`Intents.moderation` must be enabled.
+
+    .. versionadded:: 2.5
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawAuditLogEntryEvent`
+
 AutoMod
 -------
 .. function:: on_auto_moderation_rule_create(rule)
@@ -120,7 +149,7 @@ Bans
 
     Called when user gets banned from a :class:`Guild`.
 
-    This requires :attr:`Intents.bans` to be enabled.
+    This requires :attr:`Intents.moderation` to be enabled.
 
     :param guild: The guild the user got banned from.
     :type guild: :class:`Guild`
@@ -133,7 +162,7 @@ Bans
 
     Called when a :class:`User` gets unbanned from a :class:`Guild`.
 
-    This requires :attr:`Intents.bans` to be enabled.
+    This requires :attr:`Intents.moderation` to be enabled.
 
     :param guild: The guild the user got unbanned from.
     :type guild: :class:`Guild`

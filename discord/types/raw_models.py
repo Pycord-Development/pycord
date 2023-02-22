@@ -130,3 +130,14 @@ class ThreadMembersUpdateEvent(TypedDict):
     member_count: int
     added_members: NotRequired[list[ThreadMember]]
     removed_member_ids: NotRequired[list[Snowflake]]
+
+
+class AuditLogEntryEvent(TypedDict):
+    id: Snowflake
+    user_id: Snowflake
+    guild_id: Snowflake
+    target_id: Snowflake
+    action_type: int
+    changes: NotRequired[list[dict]]
+    reason: NotRequired[str]
+    options: NotRequired[dict]
