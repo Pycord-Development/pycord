@@ -77,9 +77,9 @@ if TYPE_CHECKING:
         DMChannel,
         GroupChannel,
         PartialMessageable,
+        StageChannel,
         TextChannel,
         VoiceChannel,
-        StageChannel
     )
     from .client import Client
     from .embeds import Embed

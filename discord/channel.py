@@ -1358,7 +1358,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "video_quality_mode",
         "last_message_id",
         "flags",
-        "nsfw"
+        "nsfw",
     )
 
     def __init__(
@@ -2068,24 +2068,31 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             last message, consider using either :meth:`history`
             or :meth:`fetch_message` with the :attr:`last_message_id`
             attribute.
+
         Returns
-        ---------
+        -------
         Optional[:class:`Message`]
             The last message in this channel or ``None`` if not found.
         """
-        return self._state._get_message(self.last_message_id) if self.last_message_id else None
+        return (
+            self._state._get_message(self.last_message_id)
+            if self.last_message_id
+            else None
+        )
 
     def get_partial_message(self, message_id: int, /) -> PartialMessage:
         """Creates a :class:`PartialMessage` from the message ID.
         This is useful if you want to work with a message and only have its ID without
         doing an unnecessary API call.
         .. versionadded:: 1.6
+
         Parameters
-        ------------
+        ----------
         message_id: :class:`int`
             The message ID to create a partial message for.
+
         Returns
-        ---------
+        -------
         :class:`PartialMessage`
             The partial message.
         """
@@ -2094,7 +2101,9 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         return PartialMessage(channel=self, id=message_id)
 
-    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: Optional[str] = None) -> None:
+    async def delete_messages(
+        self, messages: Iterable[Snowflake], *, reason: Optional[str] = None
+    ) -> None:
         """|coro|
         Deletes a list of messages. This is similar to :meth:`Message.delete`
         except it bulk deletes multiple messages.
@@ -2105,12 +2114,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         are older than 14 days old.
         You must have the :attr:`~Permissions.manage_messages` permission to
         use this.
+
         Parameters
-        -----------
+        ----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
         reason: Optional[:class:`str`]
             The reason for deleting the messages. Shows up on the audit log.
+
         Raises
         ------
         ClientException
@@ -2140,16 +2151,16 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
-            self,
-            *,
-            limit: Optional[int] = 100,
-            check: Callable[[Message], bool] = MISSING,
-            before: Optional[SnowflakeTime] = None,
-            after: Optional[SnowflakeTime] = None,
-            around: Optional[SnowflakeTime] = None,
-            oldest_first: Optional[bool] = False,
-            bulk: bool = True,
-            reason: Optional[str] = None,
+        self,
+        *,
+        limit: Optional[int] = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: Optional[SnowflakeTime] = None,
+        after: Optional[SnowflakeTime] = None,
+        around: Optional[SnowflakeTime] = None,
+        oldest_first: Optional[bool] = False,
+        bulk: bool = True,
+        reason: Optional[str] = None,
     ) -> List[Message]:
         """|coro|
         Purges a list of messages that meet the criteria given by the predicate
@@ -2159,15 +2170,9 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         delete messages even if they are your own.
         The :attr:`~Permissions.read_message_history` permission is
         also needed to retrieve message history.
-        Examples
-        ---------
-        Deleting bot's messages ::
-            def is_me(m):
-                return m.author == client.user
-            deleted = await channel.purge(limit=100, check=is_me)
-            await channel.send(f'Deleted {len(deleted)} message(s)')
+
         Parameters
-        -----------
+        ----------
         limit: Optional[:class:`int`]
             The number of messages to search through. This is not the number
             of messages that will be deleted, though it can be.
@@ -2188,16 +2193,26 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             fall back to single delete if messages are older than two weeks.
         reason: Optional[:class:`str`]
             The reason for deleting the messages. Shows up on the audit log.
-        Raises
+
+        Returns
         -------
+        List[:class:`.Message`]
+            The list of messages that were deleted.
+
+        Raises
+        ------
         Forbidden
             You do not have proper permissions to do the actions required.
         HTTPException
             Purging the messages failed.
-        Returns
+
+        Examples
         --------
-        List[:class:`.Message`]
-            The list of messages that were deleted.
+        Deleting bot's messages ::
+            def is_me(m):
+                return m.author == client.user
+            deleted = await channel.purge(limit=100, check=is_me)
+            await channel.send(f'Deleted {len(deleted)} message(s)')
         """
         return await discord.abc._purge_messages_helper(
             self,
@@ -2215,14 +2230,16 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         """|coro|
         Gets the list of webhooks from this channel.
         Requires :attr:`~.Permissions.manage_webhooks` permissions.
-        Raises
-        -------
-        Forbidden
-            You don't have permissions to get the webhooks.
+
         Returns
-        --------
+        -------
         List[:class:`Webhook`]
             The webhooks for this channel.
+
+        Raises
+        ------
+        Forbidden
+            You don't have permissions to get the webhooks.
         """
 
         from .webhook import Webhook
@@ -2231,15 +2248,16 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         return [Webhook.from_state(d, state=self._state) for d in data]
 
     async def create_webhook(
-            self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None
+        self, *, name: str, avatar: Optional[bytes] = None, reason: Optional[str] = None
     ) -> Webhook:
         """|coro|
         Creates a webhook for this channel.
         Requires :attr:`~.Permissions.manage_webhooks` permissions.
         .. versionchanged:: 1.1
             Added the ``reason`` keyword-only parameter.
+
         Parameters
-        -------------
+        ----------
         name: :class:`str`
             The webhook's name.
         avatar: Optional[:class:`bytes`]
@@ -2247,16 +2265,18 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             This operates similarly to :meth:`~ClientUser.edit`.
         reason: Optional[:class:`str`]
             The reason for creating this webhook. Shows up in the audit logs.
-        Raises
+
+        Returns
         -------
+        :class:`Webhook`
+            The created webhook.
+
+        Raises
+        ------
         HTTPException
             Creating the webhook failed.
         Forbidden
             You do not have permissions to create a webhook.
-        Returns
-        --------
-        :class:`Webhook`
-            The created webhook.
         """
 
         from .webhook import Webhook
@@ -2264,7 +2284,9 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
 
-        data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
+        data = await self._state.http.create_webhook(
+            self.id, name=str(name), avatar=avatar, reason=reason
+        )
         return Webhook.from_state(data, state=self._state)
 
     def is_nsfw(self) -> bool:
