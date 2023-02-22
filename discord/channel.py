@@ -2059,7 +2059,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         return self
 
     @property
-    def last_message(self) -> Optional[Message]:
+    def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
         The message might not be valid or point to an existing message.
         .. admonition:: Reliable Fetching
@@ -2102,7 +2102,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         return PartialMessage(channel=self, id=message_id)
 
     async def delete_messages(
-        self, messages: Iterable[Snowflake], *, reason: Optional[str] = None
+        self, messages: Iterable[Snowflake], *, reason: str | None = None
     ) -> None:
         """|coro|
         Deletes a list of messages. This is similar to :meth:`Message.delete`
@@ -2153,14 +2153,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     async def purge(
         self,
         *,
-        limit: Optional[int] = 100,
+        limit: int | None = 100,
         check: Callable[[Message], bool] = MISSING,
-        before: Optional[SnowflakeTime] = None,
-        after: Optional[SnowflakeTime] = None,
-        around: Optional[SnowflakeTime] = None,
-        oldest_first: Optional[bool] = False,
+        before: SnowFlakeTime | None = None,
+        after: SnowFlakeTime | None = None,
+        around: SnowFlakeTime | None = None,
+        oldest_first: bool | None = False,
         bulk: bool = True,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> List[Message]:
         """|coro|
         Purges a list of messages that meet the criteria given by the predicate
