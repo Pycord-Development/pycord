@@ -616,8 +616,10 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         The action that was done.
     id: :class:`int`
         The entry ID.
+    guild_id: :class:`int`
+        The ID of the guild this action came from.
     user_id: :class:`int`
-        The ID of the user who initiated this action
+        The ID of the user who initiated this action.
     target_id: :class:`int`
         The ID of the target that got changed.
     reason: Optional[:class:`str`]
@@ -636,6 +638,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
     __slots__ = (
         "id",
         "user_id",
+        "guild_id",
         "target_id",
         "action_type",
         "reason",
