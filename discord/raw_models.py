@@ -620,7 +620,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         The ID of the guild this action came from.
     user_id: :class:`int`
         The ID of the user who initiated this action.
-    target_id: :class:`int`
+    target_id: Optional[:class:`int`]
         The ID of the target that got changed.
     reason: Optional[:class:`str`]
         The reason this action was done.
@@ -650,7 +650,9 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.id = int(data["id"])
         self.user_id = int(data["user_id"])
         self.guild_id = int(data["guild_id"])
-        self.target_id = int(data["target_id"])
+        self.target_id = data.get("target_id")
+        if self.target_id:
+            self.target_id = int(self.target_id)
         self.action_type = try_enum(AuditLogAction, int(data["action_type"]))
         self.reason = data.get("reason")
         self.extra = data.get("options")
