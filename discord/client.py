@@ -1286,6 +1286,64 @@ class Client:
         _log.debug("%s has successfully been registered as an event", coro.__name__)
         return coro
 
+    def once(
+        self, name: str = MISSING, check: Callable[..., bool] | None = None
+    ) -> Coro:
+        """A decorator that registers an event to listen to only once.
+
+        You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
+
+        The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the event we want to listen to. This is passed to
+            :py:meth:`~discord.Client.wait_for`. Defaults to ``func.__name__``.
+        check: Optional[Callable[..., :class:`bool`]]
+            A predicate to check what to wait for. The arguments must meet the
+            parameters of the event being waited for.
+
+        Raises
+        ------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+
+        Example
+        -------
+
+        .. code-block:: python3
+
+            @client.once()
+            async def ready():
+                print('Ready!')
+        """
+
+        def decorator(func: Coro) -> Coro:
+            if not asyncio.iscoroutinefunction(func):
+                raise TypeError("event registered must be a coroutine function")
+
+            async def wrapped() -> None:
+                nonlocal name
+                nonlocal check
+
+                name = func.__name__ if name is MISSING else name
+
+                args = await self.wait_for(name, check=check)
+
+                arg_len = func.__code__.co_argcount
+                if arg_len == 0 and args is None:
+                    await func()
+                elif arg_len == 1:
+                    await func(args)
+                else:
+                    await func(*args)
+
+            self.loop.create_task(wrapped())
+            return func
+
+        return decorator
+
     async def change_presence(
         self,
         *,
