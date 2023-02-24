@@ -10,7 +10,7 @@ Bots
 .. autoclass:: Bot
     :members:
     :inherited-members:
-    :exclude-members: command, event, message_command, slash_command, user_command, listen
+    :exclude-members: command, event, message_command, slash_command, user_command, listen, once
 
     .. automethod:: Bot.command(**kwargs)
         :decorator:
@@ -29,6 +29,9 @@ Bots
 
     .. automethod:: Bot.listen(name=None)
         :decorator:
+    
+    .. automethod:: Bot.once(name=None, check=None)
+        :decorator:
 
 .. attributetable:: AutoShardedBot
 .. autoclass:: AutoShardedBot
@@ -41,13 +44,16 @@ Clients
 .. attributetable:: Client
 .. autoclass:: Client
     :members:
-    :exclude-members: fetch_guilds, event
+    :exclude-members: fetch_guilds, event, once
 
     .. automethod:: Client.event()
         :decorator:
 
     .. automethod:: Client.fetch_guilds
         :async-for:
+
+    .. automethod:: Client.once(name=None, check=None)
+        :decorator:
 
 .. attributetable:: AutoShardedClient
 .. autoclass:: AutoShardedClient
