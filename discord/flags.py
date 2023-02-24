@@ -717,12 +717,22 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
-        """:class:`bool`: Whether guild ban related events are enabled.
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: 2.5
+            Changed to an alias.
+        """
+        return 1 << 2
+
+    @flag_value
+    def moderation(self):
+        """:class:`bool`: Whether guild moderation related events are enabled.
 
         This corresponds to the following events:
 
+        - :func:`on_audit_log_entry`
         - :func:`on_member_ban`
         - :func:`on_member_unban`
 

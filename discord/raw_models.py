@@ -29,7 +29,7 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import ChannelType, try_enum
+from .enums import AuditLogAction, ChannelType, try_enum
 from .types.user import User
 
 if TYPE_CHECKING:
@@ -40,6 +40,7 @@ if TYPE_CHECKING:
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
     from .threads import Thread
+    from .types.raw_models import AuditLogEntryEvent
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
@@ -73,6 +74,7 @@ __all__ = (
     "RawScheduledEventSubscription",
     "AutoModActionExecutionEvent",
     "RawThreadMembersUpdateEvent",
+    "RawAuditLogEntryEvent",
 )
 
 
@@ -600,4 +602,59 @@ class RawThreadMembersUpdateEvent(_RawReprMixin):
         self.thread_id = int(data["id"])
         self.guild_id = int(data["guild_id"])
         self.member_count = int(data["member_count"])
+        self.data = data
+
+
+class RawAuditLogEntryEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_audit_log_entry` event.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    action_type: :class:`AuditLogAction`
+        The action that was done.
+    id: :class:`int`
+        The entry ID.
+    guild_id: :class:`int`
+        The ID of the guild this action came from.
+    user_id: :class:`int`
+        The ID of the user who initiated this action.
+    target_id: Optional[:class:`int`]
+        The ID of the target that got changed.
+    reason: Optional[:class:`str`]
+        The reason this action was done.
+    changes: Optional[:class:`list`]
+        The changes that were made to the target.
+    extra: Any
+        Extra information that this entry has that might be useful.
+        For most actions, this is ``None``. However, in some cases it
+        contains extra information. See :class:`AuditLogAction` for
+        which actions have this field filled out.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`_.
+    """
+
+    __slots__ = (
+        "id",
+        "user_id",
+        "guild_id",
+        "target_id",
+        "action_type",
+        "reason",
+        "extra",
+        "changes",
+    )
+
+    def __init__(self, data: AuditLogEntryEvent) -> None:
+        self.id = int(data["id"])
+        self.user_id = int(data["user_id"])
+        self.guild_id = int(data["guild_id"])
+        self.target_id = data.get("target_id")
+        if self.target_id:
+            self.target_id = int(self.target_id)
+        self.action_type = try_enum(AuditLogAction, int(data["action_type"]))
+        self.reason = data.get("reason")
+        self.extra = data.get("options")
+        self.changes = data.get("changes")
         self.data = data
