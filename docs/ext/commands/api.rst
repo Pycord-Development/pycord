@@ -48,7 +48,7 @@ Bot
 
     .. automethod:: Bot.listen(name=None)
         :decorator:
-    
+
     .. automethod:: Bot.once(name=None, check=None)
         :decorator:
 
