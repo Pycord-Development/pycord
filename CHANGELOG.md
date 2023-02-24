@@ -15,6 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
+- Added a `@client.once()` decorator that works like a one-time event listener.
+  ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
 
 ### Fixed
 
