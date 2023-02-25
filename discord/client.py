@@ -377,9 +377,9 @@ class Client:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
             pass
-        except Exception:
+        except Exception as exc:
             try:
-                await self.on_error(event_name, *args, **kwargs)
+                await self.on_error(event_name, exc, *args, **kwargs)
             except asyncio.CancelledError:
                 pass
 
@@ -439,7 +439,7 @@ class Client:
         for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
 
-    async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
+    async def on_error(self, event_method: str, exception: Exception, *args: Any, **kwargs: Any) -> None:
         """|coro|
 
         The default error handler provided by the client.
@@ -449,7 +449,9 @@ class Client:
         Check :func:`~discord.on_error` for more details.
         """
         print(f"Ignoring exception in {event_method}", file=sys.stderr)
-        traceback.print_exc()
+        traceback.print_exception(
+            type(exception), exception, exception.__traceback__, file=sys.stderr
+        )
 
     # hooks
 
