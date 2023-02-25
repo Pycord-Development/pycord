@@ -16,6 +16,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
+### Changed
+
+- `Client.on_error` now has an `exception` parameter for easier error handling. 
+
 ### Fixed
 
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
