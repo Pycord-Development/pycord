@@ -19,7 +19,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Changed
 
 - `Client.on_error()` now has an `exception` parameter for easier error handling.
-  ([#1943](https://github.com/Pycord-Development/pycord/pull/1943))
+  ([#1943](https://github.com/Pycord-Development/pycord/pull/1945))
 
 ### Fixed
 
