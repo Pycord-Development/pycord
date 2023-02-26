@@ -451,9 +451,7 @@ class Client:
         Check :func:`~discord.on_error` for more details.
         """
         print(f"Ignoring exception in {event_method}", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        traceback.print_exc()
 
     # hooks
 
