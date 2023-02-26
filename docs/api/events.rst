@@ -7,9 +7,13 @@ Event Reference
 
 This section outlines the different types of events listened by :class:`Client`.
 
-There are two ways to register an event, the first way is through the use of
+There are 3 ways to register an event, the first way is through the use of
 :meth:`Client.event`. The second way is through subclassing :class:`Client` and
-overriding the specific events. For example: ::
+overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple
+event handlers instead of only one like in :meth:`Client.event`. For example:
+
+.. code-block:: python
+    :emphasize-lines: 17, 22
 
     import discord
 
@@ -20,6 +24,21 @@ overriding the specific events. For example: ::
 
             if message.content.startswith('$hello'):
                 await message.channel.send('Hello World!')
+
+
+    intents = discord.Intents.default()
+    intents.message_content = True # Needed to see message content
+    client = MyClient(intents=intents)
+
+    # Overrides the 'on_message' method defined in MyClient
+    @client.event
+    async def on_message(message: discord.Message):
+        print(f"Received {message.content}")
+
+    # Assigns an ADDITIONAL handler
+    @client.listen()
+    async def on_message(message: discord.Message):
+        print(f"Received {message.content}")
 
 
 If an event handler raises an exception, :func:`on_error` will be called
