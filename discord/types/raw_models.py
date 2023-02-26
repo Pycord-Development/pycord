@@ -62,17 +62,20 @@ class ReactionActionEvent(_ReactionEventOptional):
     channel_id: Snowflake
     message_id: Snowflake
     emoji: PartialEmoji
+    burst: bool
 
 
 class ReactionClearEvent(_ReactionEventOptional):
     channel_id: Snowflake
     message_id: Snowflake
+    burst: bool
 
 
 class ReactionClearEmojiEvent(_ReactionEventOptional):
     channel_id: int
     message_id: int
     emoji: PartialEmoji
+    burst: bool
 
 
 class IntegrationDeleteEvent(TypedDict):

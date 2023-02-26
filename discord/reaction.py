@@ -75,6 +75,8 @@ class Reaction:
         If the user sent this reaction.
     message: :class:`Message`
         Message this reaction is for.
+    burst: :class:`bool`
+        Whether this reaction is a burst (super) reaction.
     """
 
     __slots__ = ("message", "count", "emoji", "me")
@@ -92,6 +94,7 @@ class Reaction:
         )
         self.count: int = data.get("count", 1)
         self.me: bool = data.get("me")
+        self.burst: bool = data.get("burst")
 
     # TODO: typeguard
     def is_custom_emoji(self) -> bool:

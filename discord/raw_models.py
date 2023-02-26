@@ -192,6 +192,8 @@ class RawReactionActionEvent(_RawReprMixin):
         The guild ID where the reaction got added or removed, if applicable.
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being used.
+    burst: :class:`bool`
+        Whether this reaction is a burst (super) reaction.
     member: Optional[:class:`Member`]
         The member who added the reaction. Only available if `event_type` is `REACTION_ADD`
         and the reaction is inside a guild.
@@ -212,6 +214,7 @@ class RawReactionActionEvent(_RawReprMixin):
         "channel_id",
         "guild_id",
         "emoji",
+        "burst",
         "event_type",
         "member",
     )
@@ -225,6 +228,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.emoji: PartialEmoji = emoji
         self.event_type: str = event_type
         self.member: Member | None = None
+        self.burst: bool = data.get("burst")
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -250,6 +254,10 @@ class RawReactionClearEvent(_RawReprMixin):
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
+        # For some reason this event has `burst` even though it makes no sense
+        # It's been included for now, but subject to change?
+        # May also indicate there's a separate route to clear burst reactions
+        self.burst: bool = data.get("burst")
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -272,14 +280,17 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         The guild ID where the reactions got cleared.
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being removed.
+    burst: :class:`bool`
+        Whether this reaction is a burst (super) reaction.
     """
 
-    __slots__ = ("message_id", "channel_id", "guild_id", "emoji")
+    __slots__ = ("message_id", "channel_id", "guild_id", "emoji", "burst")
 
     def __init__(self, data: ReactionClearEmojiEvent, emoji: PartialEmoji) -> None:
         self.emoji: PartialEmoji = emoji
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
+        self.burst: bool = data.get("burst")
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
