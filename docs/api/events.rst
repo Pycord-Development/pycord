@@ -269,7 +269,7 @@ Connection
 
     :param event: The name of the event that raised the exception.
     :type event: :class:`str`
-    
+
     :param exception: The exception raised by the event.
     :type event: :class:`Exception`
 

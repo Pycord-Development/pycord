@@ -439,7 +439,9 @@ class Client:
         for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
 
-    async def on_error(self, event_method: str, exception: Exception, *args: Any, **kwargs: Any) -> None:
+    async def on_error(
+        self, event_method: str, exception: Exception, *args: Any, **kwargs: Any
+    ) -> None:
         """|coro|
 
         The default error handler provided by the client.
