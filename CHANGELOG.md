@@ -15,7 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
-- Added support for text-related features in `StageChannel`  ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
+- Added support for text-related features in `StageChannel`
+  ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
 
 ### Fixed
 
