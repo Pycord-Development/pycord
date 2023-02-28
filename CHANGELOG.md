@@ -15,6 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
+- Added the `@client.once()` decorator, which serves as a one-time event listener.
+  ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
 - Added support for text-related features in `StageChannel`
   ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
 
