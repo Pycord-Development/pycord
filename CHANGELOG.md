@@ -25,7 +25,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
   behavior. ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
 - Fixed the voice ip discovery due to recent [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486) 
-  ([#1954](https://github.com/Pycord-Development/pycord/pull/1954))
+  ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
 
 ## [2.4.0] - 2023-02-10
 
