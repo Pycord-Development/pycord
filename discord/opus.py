@@ -398,7 +398,7 @@ class Encoder(_OpusStruct):
         if req not in band_ctl:
             raise KeyError(
                 f"{req!r} is not a valid bandwidth setting. Try one of:"
-                f' {",".join(band_ctl)}'
+                f" {','.join(band_ctl)}"
             )
 
         k = band_ctl[req]
@@ -408,7 +408,7 @@ class Encoder(_OpusStruct):
         if req not in signal_ctl:
             raise KeyError(
                 f"{req!r} is not a valid bandwidth setting. Try one of:"
-                f' {",".join(signal_ctl)}'
+                f" {','.join(signal_ctl)}"
             )
 
         k = signal_ctl[req]

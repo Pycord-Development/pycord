@@ -379,7 +379,7 @@ class MessageFlags(BaseFlags):
     def loading(self):
         """:class:`bool`: Returns ``True`` if the source message is deferred.
 
-        The user sees a 'thinking' state
+        The user sees a 'thinking' state.
 
         .. versionadded:: 2.0
         """
@@ -392,6 +392,17 @@ class MessageFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 256
+
+    @flag_value
+    def suppress_notifications(self):
+        """:class:`bool`: Returns ``True`` if the source message does not trigger push and desktop notifications.
+
+        Users will still receive mentions.
+
+        .. versionadded:: 2.4
+        """
+
+        return 4096
 
 
 @fill_with_flags()
@@ -678,6 +689,7 @@ class Intents(BaseFlags):
 
         - :func:`on_member_join`
         - :func:`on_member_remove`
+        - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
 
@@ -705,12 +717,22 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
-        """:class:`bool`: Whether guild ban related events are enabled.
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: 2.5
+            Changed to an alias.
+        """
+        return 1 << 2
+
+    @flag_value
+    def moderation(self):
+        """:class:`bool`: Whether guild moderation related events are enabled.
 
         This corresponds to the following events:
 
+        - :func:`on_audit_log_entry`
         - :func:`on_member_ban`
         - :func:`on_member_unban`
 

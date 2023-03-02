@@ -29,7 +29,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import ChannelType, try_enum
+from .enums import AuditLogAction, ChannelType, try_enum
+from .types.user import User
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -39,10 +40,12 @@ if TYPE_CHECKING:
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
     from .threads import Thread
+    from .types.raw_models import AuditLogEntryEvent
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
+        MemberRemoveEvent,
         MessageDeleteEvent,
         MessageUpdateEvent,
         ReactionActionEvent,
@@ -50,6 +53,8 @@ if TYPE_CHECKING:
         ReactionClearEvent,
         ScheduledEventSubscription,
         ThreadDeleteEvent,
+        ThreadMembersUpdateEvent,
+        ThreadUpdateEvent,
         TypingEvent,
     )
 
@@ -62,10 +67,14 @@ __all__ = (
     "RawReactionClearEvent",
     "RawReactionClearEmojiEvent",
     "RawIntegrationDeleteEvent",
+    "RawThreadUpdateEvent",
     "RawThreadDeleteEvent",
     "RawTypingEvent",
+    "RawMemberRemoveEvent",
     "RawScheduledEventSubscription",
     "AutoModActionExecutionEvent",
+    "RawThreadMembersUpdateEvent",
+    "RawAuditLogEntryEvent",
 )
 
 
@@ -305,6 +314,38 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
             self.application_id: int | None = None
 
 
+class RawThreadUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_thread_update` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The ID of the updated thread.
+    thread_type: :class:`discord.ChannelType`
+        The channel type of the updated thread.
+    guild_id: :class:`int`
+        The ID of the guild the thread belongs to.
+    parent_id: :class:`int`
+        The ID of the channel the thread belongs to.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
+    thread: :class:`discord.Thread` | None
+        The thread, if it could be found in the internal cache.
+    """
+
+    __slots__ = ("thread_id", "thread_type", "parent_id", "guild_id", "data", "thread")
+
+    def __init__(self, data: ThreadUpdateEvent) -> None:
+        self.thread_id: int = int(data["id"])
+        self.thread_type: ChannelType = try_enum(ChannelType, data["type"])
+        self.guild_id: int = int(data["guild_id"])
+        self.parent_id: int = int(data["parent_id"])
+        self.data: ThreadUpdateEvent = data
+        self.thread: Thread | None = None
+
+
 class RawThreadDeleteEvent(_RawReprMixin):
     """Represents the payload for :func:`on_raw_thread_delete` event.
 
@@ -368,6 +409,26 @@ class RawTypingEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawMemberRemoveEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_member_remove` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    user: :class:`discord.User`
+        The user that left the guild.
+    guild_id: :class:`int`
+        The ID of the guild the user left.
+    """
+
+    __slots__ = ("user", "guild_id")
+
+    def __init__(self, data: MemberRemoveEvent, user: User):
+        self.user: User = user
+        self.guild_id: int = int(data["guild_id"])
 
 
 class RawScheduledEventSubscription(_RawReprMixin):
@@ -516,3 +577,84 @@ class AutoModActionExecutionEvent:
             f"rule_id={self.rule_id!r} guild_id={self.guild_id!r} "
             f"user_id={self.user_id!r}>"
         )
+
+
+class RawThreadMembersUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_thread_member_remove` event.
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The ID of the thread that was updated.
+    guild_id: :class:`int`
+        The ID of the guild the thread is in.
+    member_count: :class:`int`
+        The approximate number of members in the thread. Maximum of 50.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`_.
+    """
+
+    __slots__ = ("thread_id", "guild_id", "member_count", "data")
+
+    def __init__(self, data: ThreadMembersUpdateEvent) -> None:
+        self.thread_id = int(data["id"])
+        self.guild_id = int(data["guild_id"])
+        self.member_count = int(data["member_count"])
+        self.data = data
+
+
+class RawAuditLogEntryEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_audit_log_entry` event.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    action_type: :class:`AuditLogAction`
+        The action that was done.
+    id: :class:`int`
+        The entry ID.
+    guild_id: :class:`int`
+        The ID of the guild this action came from.
+    user_id: :class:`int`
+        The ID of the user who initiated this action.
+    target_id: Optional[:class:`int`]
+        The ID of the target that got changed.
+    reason: Optional[:class:`str`]
+        The reason this action was done.
+    changes: Optional[:class:`list`]
+        The changes that were made to the target.
+    extra: Any
+        Extra information that this entry has that might be useful.
+        For most actions, this is ``None``. However, in some cases it
+        contains extra information. See :class:`AuditLogAction` for
+        which actions have this field filled out.
+    data: :class:`dict`
+        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`_.
+    """
+
+    __slots__ = (
+        "id",
+        "user_id",
+        "guild_id",
+        "target_id",
+        "action_type",
+        "reason",
+        "extra",
+        "changes",
+    )
+
+    def __init__(self, data: AuditLogEntryEvent) -> None:
+        self.id = int(data["id"])
+        self.user_id = int(data["user_id"])
+        self.guild_id = int(data["guild_id"])
+        self.target_id = data.get("target_id")
+        if self.target_id:
+            self.target_id = int(self.target_id)
+        self.action_type = try_enum(AuditLogAction, int(data["action_type"]))
+        self.reason = data.get("reason")
+        self.extra = data.get("options")
+        self.changes = data.get("changes")
+        self.data = data

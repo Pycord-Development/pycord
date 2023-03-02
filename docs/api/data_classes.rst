@@ -154,3 +154,11 @@ Permissions
 
 .. autoclass:: PermissionOverwrite
     :members:
+
+Application Role Connections
+-----------------------------
+
+.. attributetable:: ApplicationRoleConnectionMetadata
+
+.. autoclass:: ApplicationRoleConnectionMetadata
+    :members:

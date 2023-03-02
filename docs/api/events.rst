@@ -7,9 +7,14 @@ Event Reference
 
 This section outlines the different types of events listened by :class:`Client`.
 
-There are two ways to register an event, the first way is through the use of
+There are 4 ways to register an event, the first way is through the use of
 :meth:`Client.event`. The second way is through subclassing :class:`Client` and
-overriding the specific events. For example: ::
+overriding the specific events. The third way is through the use of :meth:`Client.listen`,
+which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`.
+The fourth way is through the use of :meth:`Client.once`, which serves as a one-time event listener. For example:
+
+.. code-block:: python
+    :emphasize-lines: 17, 22
 
     import discord
 
@@ -20,6 +25,26 @@ overriding the specific events. For example: ::
 
             if message.content.startswith('$hello'):
                 await message.channel.send('Hello World!')
+
+
+    intents = discord.Intents.default()
+    intents.message_content = True # Needed to see message content
+    client = MyClient(intents=intents)
+
+    # Overrides the 'on_message' method defined in MyClient
+    @client.event
+    async def on_message(message: discord.Message):
+        print(f"Received {message.content}")
+
+    # Assigns an ADDITIONAL handler
+    @client.listen()
+    async def on_message(message: discord.Message):
+        print(f"Received {message.content}")
+
+    # Runs only for the 1st 'on_message' event. Can be useful for listening to 'on_ready'
+    @client.once()
+    async def message(message: discord.Message):
+        print(f"Received {message.content}")
 
 
 If an event handler raises an exception, :func:`on_error` will be called
@@ -72,6 +97,35 @@ Application Commands
     :param interaction: The interaction associated to the unknown command.
     :type interaction: :class:`Interaction`
 
+Audit Logs
+----------
+
+.. function:: on_audit_log_entry(entry)
+
+    Called when an audit log entry is created.
+
+    The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
+    :attr:`Intents.moderation` must be enabled.
+
+    .. versionadded:: 2.5
+
+    :param entry: The audit log entry that was created.
+    :type entry: :class:`AuditLogEntry`
+
+.. function:: on_raw_audit_log_entry(payload)
+
+    Called when an audit log entry is created. Unlike
+    :func:`on_audit_log_entry`, this is called regardless of the state of the internal
+    user cache.
+
+    The bot must have :attr:`~Permissions.view_audit_log` to receive this, and
+    :attr:`Intents.moderation` must be enabled.
+
+    .. versionadded:: 2.5
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawAuditLogEntryEvent`
+
 AutoMod
 -------
 .. function:: on_auto_moderation_rule_create(rule)
@@ -120,7 +174,7 @@ Bans
 
     Called when user gets banned from a :class:`Guild`.
 
-    This requires :attr:`Intents.bans` to be enabled.
+    This requires :attr:`Intents.moderation` to be enabled.
 
     :param guild: The guild the user got banned from.
     :type guild: :class:`Guild`
@@ -133,7 +187,7 @@ Bans
 
     Called when a :class:`User` gets unbanned from a :class:`Guild`.
 
-    This requires :attr:`Intents.bans` to be enabled.
+    This requires :attr:`Intents.moderation` to be enabled.
 
     :param guild: The guild the user got unbanned from.
     :type guild: :class:`Guild`
@@ -581,14 +635,39 @@ Invites
 Members/Users
 -------------
 .. function:: on_member_join(member)
-              on_member_remove(member)
 
-    Called when a :class:`Member` leaves or joins a :class:`Guild`.
+    Called when a :class:`Member` joins a :class:`Guild`.
 
     This requires :attr:`Intents.members` to be enabled.
 
-    :param member: The member who joined or left.
+    :param member: The member who joined.
     :type member: :class:`Member`
+
+.. function:: on_member_remove(member)
+
+    Called when a :class:`Member` leaves a :class:`Guild`.
+
+    If the guild or member could not be found in the internal cache, this event will not
+    be called. Alternatively, :func:`on_raw_member_remove` is called regardless of the
+    internal cache.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    :param member: The member who left.
+    :type member: :class:`Member`
+
+.. function:: on_raw_member_remove(payload)
+
+    Called when a :class:`Member` leaves a :class:`Guild`. Unlike
+    :func:`on_member_remove`, this is called regardless of the state of the internal
+    member cache.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.4
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawMemberRemoveEvent`
 
 .. function:: on_member_update(before, after)
 
@@ -1102,11 +1181,30 @@ Threads
     :param member: The member who joined or left.
     :type member: :class:`ThreadMember`
 
+
+.. function:: on_raw_thread_member_remove(payload)
+
+    Called when a :class:`ThreadMember` leaves a :class:`Thread`. Unlike :func:`on_thread_member_remove` this
+    is called regardless of the member being in the thread's internal cache of members or not.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.4
+
+    :param payload: The raw event payload data.
+    :type member: :class:`RawThreadMembersUpdateEvent`
+
+
+
 .. function:: on_thread_update(before, after)
 
     Called whenever a thread is updated.
 
     This requires :attr:`Intents.guilds` to be enabled.
+
+    If the thread could not be found in the internal cache, this event will not be called.
+    Threads will not be in the cache if they are archived. Alternatively,
+    :func:`on_raw_thread_update` is called regardless of the internal cache.
 
     .. versionadded:: 2.0
 
@@ -1114,6 +1212,21 @@ Threads
     :type before: :class:`Thread`
     :param after: The updated thread's new info.
     :type after: :class:`Thread`
+
+
+.. function:: on_raw_thread_update(payload)
+
+    Called whenever a thread is updated.
+
+    Unlike :func:`on_thread_update` this is called regardless of if the thread is in the
+    internal thread cache or not.
+
+    This requires :attr:`Intents.guilds` to be enabled.
+
+    .. versionadded:: 2.4
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawThreadUpdateEvent`
 
 Typing
 ------

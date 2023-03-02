@@ -279,7 +279,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: stage_raise_hand
 
-        The system message denoting that a stage event has someone has raised their hand.
+        The system message denoting that someone in a stage event is raising their hand.
 
         .. versionadded:: 2.4
 
@@ -1643,6 +1643,12 @@ of :class:`enum.Enum`.
 
         Represents a sticker with a lottie image.
 
+    .. attribute:: gif
+
+        Represents a sticker with a gif image.
+
+        .. versionadded:: 2.4
+
 .. class:: InviteTarget
 
     Represents the invite type for voice channel invites.
@@ -1750,29 +1756,83 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.0
 
+    .. attribute:: ask_away
+
+        Represents the embedded application Ask Away.
+
+        .. versionadded:: 2.4
+
     .. attribute:: awkword
 
         Represents the embedded application Awkword.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: awkword_dev
+
+        Development version of :attr:`.awkword`.
+
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: bash_out
+
+        Represents the embedded application Bash Out.
+
+        .. versionadded:: 2.4
+
     .. attribute:: betrayal
 
-        Represents the embedded application Betrayal.io
+        Represents the embedded application Betrayal.io.
+
+    .. attribute:: blazing_8s
+
+        Represents the embedded application Blazing 8s.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_dev
+
+        Development version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_qa
+
+        QA version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_staging
+
+        Staging version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: bobble_league
+
+        Represents the embedded application Bobble League.
+
+        .. versionadded:: 2.4
 
     .. attribute:: checkers_in_the_park
 
-        Represents the embedded application Checkers in the Park Prod.
+        Represents the embedded application Checkers in the Park.
 
     .. attribute:: checkers_in_the_park_dev
 
-        Represents the embedded application Checkers in the Park Development.
-
-    .. attribute:: checkers_in_the_park_staging
-
-        Represents the embedded application Checkers in the Park Staging.
+        Development version of :attr:`.checkers_in_the_park`.
 
     .. attribute:: checkers_in_the_park_qa
 
-        Represents the embedded application Checkers in the Park QA.
+        QA version of :attr:`.checkers_in_the_park`.
+
+    .. attribute:: checkers_in_the_park_staging
+
+        Staging version of :attr:`.checkers_in_the_park`.
 
     .. attribute:: chess_in_the_park
 
@@ -1780,71 +1840,153 @@ of :class:`enum.Enum`.
 
     .. attribute:: chess_in_the_park_dev
 
-        Represents the embedded application Chess in the Park Development.
+        Development version of :attr:`.chess_in_the_park`.
 
-    .. attribute:: chest_in_the_park_staging
+    .. attribute:: chess_in_the_park_qa
 
-        Represents the embedded application Chess in the Park Staging.
+        QA version of :attr:`.chess_in_the_park`.
 
-    .. attribute:: chest_in_the_park_qa
+    .. attribute:: chess_in_the_park_staging
 
-        Represents the embedded application Chess in the Park QA.
+        Staging version of :attr:`.chess_in_the_park`.
+
+    .. attribute:: decoders_dev
+
+        Represents the embedded application Decoders Development.
+
+        .. warning::
+
+            This activity has been removed.
 
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: doodle_crew_dev
+
+        Development version of :attr:`.doodle_crew`.
+
+        .. warning::
+
+            This activity has been removed.
+
     .. attribute:: fishington
 
-        Represents the embedded application Fishington.io
+        Represents the embedded application Fishington.io.
 
-    .. attribute:: letter_tile
+    .. attribute:: know_what_i_meme
 
-        Represents the embedded application Letter Tile.
+        Represents the embedded application Know What I Meme.
 
-    .. attribute:: ocho
+        .. versionadded:: 2.4
 
-        Represents the embedded application Ocho.
+    .. attribute:: land
 
-    .. attribute:: ocho_dev
+        Represents the embedded application Land.io.
 
-        Represents the embedded application Ocho Development.
+        .. versionadded:: 2.4
 
-    .. attribute:: ocho_staging
+    .. attribute:: letter_league
 
-        Represents the embedded application Ocho Staging.
+        Represents the embedded application Letter League.
 
-    .. attribute:: ocho_qa
+    .. attribute:: letter_league_dev
 
-        Represents the embedded application Ocho QA.
+        Development version of :attr:`.letter_league`.
 
-    .. attribute:: poker_night_staging
-
-        Represents the embedded application Poker Night Staging.
+        .. versionadded:: 2.4
 
     .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
 
+    .. attribute:: poker_night_dev
+
+        Development version of :attr:`.poker_night`.
+
+        .. versionadded:: 2.4
+
     .. attribute:: poker_night_qa
 
-        Represents the embedded application Poker QA.
+        QA version of :attr:`.poker_night`.
+
+    .. attribute:: poker_night_staging
+
+        Staging version of :attr:`.poker_night`.
+
+    .. attribute:: putt_party
+
+        Represents the embedded application Putt Party.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_dev
+
+        Development version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_qa
+
+        QA version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_staging
+
+        Staging version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
 
     .. attribute:: putts
 
         Represents the embedded application Putts.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: sketch_heads
+
+        Represents the embedded application Sketch Heads.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: sketch_heads_dev
+
+        Development version of :attr:`.sketch_heads`.
+
+        .. versionadded:: 2.4
+
     .. attribute:: sketchy_artist
 
         Represents the embedded application Sketchy Artist.
 
+        .. warning::
+
+            This activity has been removed.
+
     .. attribute:: sketchy_artist_dev
 
-        Represents the embedded application Sketchy Artist development version.
+        Development version of :attr:`.sketchy_artist`.
+
+        .. warning::
+
+            This activity has been removed.
 
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
+
+    .. attribute:: spell_cast_staging
+
+        Staging version of :attr:`.spell_cast`.
+
+        .. versionadded:: 2.4
 
     .. attribute:: watch_together
 
@@ -1860,7 +2002,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: word_snacks_dev
 
-        Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
+        Development version of :attr:`.word_snacks`.
 
     .. attribute:: youtube_together
 
@@ -1919,6 +2061,51 @@ of :class:`enum.Enum`.
     .. attribute:: guild_only
 
         Represents a scheduled event that is only available to members inside the guild.
+
+.. class:: ApplicationRoleConnectionMetadataType
+
+    Represents an application role connection metadata type.
+
+    Each metadata type offers a comparison operation that allows guilds to
+    configure role requirements based on metadata values stored by the bot.
+    Bots specify a ``metadata value`` for each user and guilds specify the
+    required ``guild's configured value`` within the guild role settings.
+
+    .. versionadded:: 2.4
+
+    .. attribute:: integer_less_than_or_equal
+
+        The metadata value (``integer``) is less than or equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_greater_than_or_equal
+
+        The metadata value (``integer``) is greater than or equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_equal
+
+        The metadata value (``integer``) is equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_not_equal
+
+        The metadata value (``integer``) is not equal to the guild's configured value (``integer``).
+
+    .. attribute:: datetime_less_than_or_equal
+
+        The metadata value (``datetime``) is less than or equal to the guild's configured value
+        (``integer``; the number of days before the current date).
+
+    .. attribute:: datetime_greater_than_or_equal
+
+        The metadata value (``datetime``) is greater than or equal to the guild's configured value
+        (``integer``; the number of days before the current date).
+
+    .. attribute:: boolean_equal
+
+        The metadata value (``integer``) is equal to the guild's configured value (``integer``; 1).
+
+    .. attribute:: boolean_not_equal
+
+        The metadata value (``integer``) is not equal to the guild's configured value (``integer``; 1).
 
 .. class:: AutoModTriggerType
 

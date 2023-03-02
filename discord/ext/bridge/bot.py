@@ -26,13 +26,24 @@ from __future__ import annotations
 
 from abc import ABC
 
+from discord.commands import ApplicationContext
+from discord.errors import CheckFailure, DiscordException
 from discord.interactions import Interaction
 from discord.message import Message
 
 from ..commands import AutoShardedBot as ExtAutoShardedBot
 from ..commands import Bot as ExtBot
+from ..commands import Context as ExtContext
+from ..commands import errors
 from .context import BridgeApplicationContext, BridgeExtContext
-from .core import BridgeCommand, BridgeCommandGroup, bridge_command, bridge_group
+from .core import (
+    BridgeCommand,
+    BridgeCommandGroup,
+    BridgeExtCommand,
+    BridgeSlashCommand,
+    bridge_command,
+    bridge_group,
+)
 
 __all__ = ("Bot", "AutoShardedBot")
 
@@ -105,6 +116,56 @@ class BotBase(ABC):
             return result
 
         return decorator
+
+    async def invoke(self, ctx: ExtContext | BridgeExtContext):
+        if ctx.command is not None:
+            self.dispatch("command", ctx)
+            if isinstance(ctx.command, BridgeExtCommand):
+                self.dispatch("bridge_command", ctx)
+            try:
+                if await self.can_run(ctx, call_once=True):
+                    await ctx.command.invoke(ctx)
+                else:
+                    raise errors.CheckFailure("The global check once functions failed.")
+            except errors.CommandError as exc:
+                await ctx.command.dispatch_error(ctx, exc)
+            else:
+                self.dispatch("command_completion", ctx)
+                if isinstance(ctx.command, BridgeExtCommand):
+                    self.dispatch("bridge_command_completion", ctx)
+        elif ctx.invoked_with:
+            exc = errors.CommandNotFound(f'Command "{ctx.invoked_with}" is not found')
+            self.dispatch("command_error", ctx, exc)
+            if isinstance(ctx.command, BridgeExtCommand):
+                self.dispatch("bridge_command_error", ctx, exc)
+
+    async def invoke_application_command(
+        self, ctx: ApplicationContext | BridgeApplicationContext
+    ) -> None:
+        """|coro|
+
+        Invokes the application command given under the invocation
+        context and handles all the internal event dispatch mechanisms.
+
+        Parameters
+        ----------
+        ctx: :class:`.ApplicationCommand`
+            The invocation context to invoke.
+        """
+        self._bot.dispatch("application_command", ctx)
+        if br_cmd := isinstance(ctx.command, BridgeSlashCommand):
+            self._bot.dispatch("bridge_command", ctx)
+        try:
+            if await self._bot.can_run(ctx, call_once=True):
+                await ctx.command.invoke(ctx)
+            else:
+                raise CheckFailure("The global check once functions failed.")
+        except DiscordException as exc:
+            await ctx.command.dispatch_error(ctx, exc)
+        else:
+            self._bot.dispatch("application_command_completion", ctx)
+            if br_cmd:
+                self._bot.dispatch("bridge_command_completion", ctx)
 
 
 class Bot(BotBase, ExtBot):

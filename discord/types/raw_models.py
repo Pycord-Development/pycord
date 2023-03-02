@@ -29,6 +29,8 @@ from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .threads import Thread, ThreadMember
+from .user import User
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -79,6 +81,9 @@ class IntegrationDeleteEvent(TypedDict):
     guild_id: Snowflake
 
 
+ThreadUpdateEvent = Thread
+
+
 class ThreadDeleteEvent(TypedDict, total=False):
     thread_id: Snowflake
     thread_type: int
@@ -112,3 +117,27 @@ class AutoModActionExecutionEvent(TypedDict):
     rule_trigger_type: AutoModTriggerType
     user_id: Snowflake
     content: str
+
+
+class MemberRemoveEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
+
+
+class ThreadMembersUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    member_count: int
+    added_members: NotRequired[list[ThreadMember]]
+    removed_member_ids: NotRequired[list[Snowflake]]
+
+
+class AuditLogEntryEvent(TypedDict):
+    id: Snowflake
+    user_id: Snowflake
+    guild_id: Snowflake
+    target_id: NotRequired[Snowflake]
+    action_type: int
+    changes: NotRequired[list[dict]]
+    reason: NotRequired[str]
+    options: NotRequired[dict]
