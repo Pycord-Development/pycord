@@ -1,7 +1,7 @@
 sphinx==5.3.0
 sphinxcontrib_trio==1.1.2
 sphinxcontrib-websupport==1.2.4
-myst-parser==0.19.0
+myst-parser==0.19.1
 sphinxext-opengraph==0.8.1
 sphinx-copybutton==0.5.1
 furo@ git+https://github.com/pradyunsg/furo@193643f
