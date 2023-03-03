@@ -1243,6 +1243,11 @@ class Client:
             async def my_message(message):
                 print('two')
 
+            # listen to the first event only
+            @client.listen('on_ready', once=True)
+            async def on_ready():
+                print('ready!')
+
         Would print one and two in an unspecified order.
         """
 
