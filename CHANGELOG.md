@@ -29,8 +29,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the voice ip discovery due to the recent
   [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
-  
+
 ### Removed
+
 - Removed `@client.once()` in favour of `@client.listen(once=True)`
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
