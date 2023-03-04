@@ -15,10 +15,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
-- Added support for one-time event listeners in `@client.listen()`.
-  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+- Added the `@client.once()` decorator, which serves as a one-time event listener.
+  ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
 - Added support for text-related features in `StageChannel`
   ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
+- Added support for one-time event listeners in `@client.listen()`.
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
 ### Fixed
 
@@ -27,6 +29,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the voice ip discovery due to the recent
   [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
+  
+### Removed
+- Removed `@client.once()` in favour of `@client.listen(once=True)`
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
 ## [2.4.0] - 2023-02-10
 
