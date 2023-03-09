@@ -1798,6 +1798,8 @@ class PartialMessage(Hashable):
     - :meth:`TextChannel.get_partial_message`
     - :meth:`Thread.get_partial_message`
     - :meth:`DMChannel.get_partial_message`
+    - :meth:`VoiceChannel.get_partial_message`
+    - :meth:`StageChannel.get_partial_message`
 
     Note that this class is trimmed down and has no rich attributes.
 
@@ -1819,7 +1821,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
@@ -1844,6 +1846,7 @@ class PartialMessage(Hashable):
         if channel.type not in (
             ChannelType.text,
             ChannelType.voice,
+            ChannelType.stage_voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,
@@ -1851,7 +1854,7 @@ class PartialMessage(Hashable):
             ChannelType.private_thread,
         ):
             raise TypeError(
-                "Expected TextChannel, VoiceChannel, DMChannel or Thread not"
+                "Expected TextChannel, VoiceChannel, StageChannel, DMChannel or Thread not"
                 f" {type(channel)!r}"
             )
 

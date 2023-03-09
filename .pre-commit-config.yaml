@@ -76,7 +76,7 @@ repos:
   #      - id: mypy
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.4
+    rev: v3.0.0-alpha.6
     hooks:
       - id: prettier
         args: [--prose-wrap=always, --print-width=88]
