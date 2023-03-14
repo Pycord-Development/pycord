@@ -1,3 +1,5 @@
+This is a fork of Pycord used in the SkyKings Public bot.
+
 Pycord
 ======
 
