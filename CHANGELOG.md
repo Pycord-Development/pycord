@@ -27,6 +27,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the voice ip discovery due to the recent
   [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
+- Fixed `reason` being passed to wrong method in `guild.create_auto_moderation_rule`.
+  ([#1960](https://github.com/Pycord-Development/pycord/pull/1960))
 
 ## [2.4.0] - 2023-02-10
 
