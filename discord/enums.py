@@ -67,6 +67,7 @@ __all__ = (
     "AutoModEventType",
     "AutoModActionType",
     "AutoModKeywordPresetType",
+    "ApplicationRoleConnectionMetadataType",
 )
 
 
@@ -488,7 +489,9 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
-            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
+            AuditLogAction.application_command_permission_update: (
+                AuditLogActionCategory.update
+            ),
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
@@ -615,6 +618,7 @@ class StickerFormatType(Enum):
     png = 1
     apng = 2
     lottie = 3
+    gif = 4
 
     @property
     def file_extension(self) -> str:
@@ -622,8 +626,10 @@ class StickerFormatType(Enum):
             StickerFormatType.png: "png",
             StickerFormatType.apng: "png",
             StickerFormatType.lottie: "json",
+            StickerFormatType.gif: "gif",
         }
-        return lookup[self]
+        # TODO: Improve handling of unknown sticker format types if possible
+        return lookup.get(self, "png")
 
 
 class InviteTarget(Enum):
@@ -787,6 +793,8 @@ class SlashCommandOptionType(Enum):
             "CategoryChannel",
             "ThreadOption",
             "Thread",
+            "ForumChannel",
+            "DMChannel",
         ]:
             return cls.channel
         if datatype.__name__ == "Role":
@@ -818,32 +826,47 @@ class SlashCommandOptionType(Enum):
 class EmbeddedActivity(Enum):
     """Embedded activity"""
 
+    ask_away = 976052223358406656
     awkword = 879863881349087252
+    awkword_dev = 879863923543785532
+    bash_out = 1006584476094177371
     betrayal = 773336526917861400
+    blazing_8s = 832025144389533716
+    blazing_8s_dev = 832013108234289153
+    blazing_8s_qa = 832025114077298718
+    blazing_8s_staging = 832025061657280566
+    bobble_league = 947957217959759964
     checkers_in_the_park = 832013003968348200
     checkers_in_the_park_dev = 832012682520428625
-    checkers_in_the_park_staging = 832012938398400562
     checkers_in_the_park_qa = 832012894068801636
+    checkers_in_the_park_staging = 832012938398400562
     chess_in_the_park = 832012774040141894
     chess_in_the_park_dev = 832012586023256104
-    chest_in_the_park_staging = 832012730599735326
-    chest_in_the_park_qa = 832012815819604009
+    chess_in_the_park_qa = 832012815819604009
+    chess_in_the_park_staging = 832012730599735326
     decoders_dev = 891001866073296967
     doodle_crew = 878067389634314250
     doodle_crew_dev = 878067427668275241
     fishington = 814288819477020702
-    letter_tile = 879863686565621790
-    ocho = 832025144389533716
-    ocho_dev = 832013108234289153
-    ocho_staging = 832025061657280566
-    ocho_qa = 832025114077298718
+    know_what_i_meme = 950505761862189096
+    land = 903769130790969345
+    letter_league = 879863686565621790
+    letter_league_dev = 879863753519292467
     poker_night = 755827207812677713
-    poker_night_staging = 763116274876022855
+    poker_night_dev = 763133495793942528
     poker_night_qa = 801133024841957428
+    poker_night_staging = 763116274876022855
+    putt_party = 945737671223947305
+    putt_party_dev = 910224161476083792
+    putt_party_qa = 945748195256979606
+    putt_party_staging = 945732077960188005
     putts = 832012854282158180
+    sketch_heads = 902271654783242291
+    sketch_heads_dev = 902271746701414431
     sketchy_artist = 879864070101172255
     sketchy_artist_dev = 879864104980979792
     spell_cast = 852509694341283871
+    spell_cast_staging = 893449443918086174
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
     word_snacks = 879863976006127627
@@ -911,6 +934,19 @@ class AutoModKeywordPresetType(Enum):
     profanity = 1
     sexual_content = 2
     slurs = 3
+
+
+class ApplicationRoleConnectionMetadataType(Enum):
+    """Application role connection metadata type"""
+
+    integer_less_than_or_equal = 1
+    integer_greater_than_or_equal = 2
+    integer_equal = 3
+    integer_not_equal = 4
+    datetime_less_than_or_equal = 5
+    datetime_greater_than_or_equal = 6
+    boolean_equal = 7
+    boolean_not_equal = 8
 
 
 T = TypeVar("T")

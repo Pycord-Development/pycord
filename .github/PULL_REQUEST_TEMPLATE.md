@@ -20,3 +20,4 @@
 - [ ] If code changes were made then they have been tested.
   - [ ] I have updated the documentation to reflect the changes.
 - [ ] If `type: ignore` comments were used, a comment is also left explaining why.
+- [ ] I have updated the changelog to include these changes.

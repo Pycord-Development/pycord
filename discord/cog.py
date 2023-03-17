@@ -233,8 +233,8 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
 
-        name_filter = (
-            lambda c: "app"
+        name_filter = lambda c: (
+            "app"
             if isinstance(c, ApplicationCommand)
             else ("bridge" if not hasattr(c, "add_to") else "ext")
         )
@@ -736,7 +736,7 @@ class CogMixin:
                 self.remove_application_command(cmd)
 
         # remove all the listeners from the module
-        for event_list in self.extra_events.copy().values():
+        for event_list in self._event_handlers.copy().values():
             remove = [
                 index
                 for index, event in enumerate(event_list)
@@ -1020,8 +1020,10 @@ class CogMixin:
             loaded = self.load_extension(
                 ext_path, package=package, recursive=recursive, store=store
             )
-            loaded_extensions.update(loaded) if store else loaded_extensions.extend(
-                loaded
+            (
+                loaded_extensions.update(loaded)
+                if store
+                else loaded_extensions.extend(loaded)
             )
 
         return loaded_extensions

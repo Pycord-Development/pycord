@@ -502,6 +502,28 @@ Events
 .. autoclass:: RawScheduledEventSubscription()
     :members:
 
+.. attributetable:: RawMemberRemoveEvent
+
+.. autoclass:: RawMemberRemoveEvent()
+    :members:
+
+.. attributetable:: RawThreadUpdateEvent
+
+.. autoclass:: RawThreadUpdateEvent()
+    :members:
+
+.. attributetable:: RawThreadMembersUpdateEvent
+
+.. autoclass:: RawThreadMembersUpdateEvent()
+    :members:
+
+.. attributetable:: RawAuditLogEntryEvent
+
+.. autoclass:: RawAuditLogEntryEvent()
+    :members:
+
+
+
 Webhooks
 --------
 
