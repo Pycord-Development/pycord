@@ -15,6 +15,18 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
+- Added the `@client.once()` decorator, which serves as a one-time event listener.
+  ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
+- Added support for text-related features in `StageChannel`.
+  ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
+
+## [2.4.1] - 2023-03-20
+
+### Changed
+
+- Updated the values of the `Color.embed_background()` classmethod to correspond with
+  new theme colors in the app.
+  ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
 
 ### Fixed
 
@@ -535,7 +547,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0
 [2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
