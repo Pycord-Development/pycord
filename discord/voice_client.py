@@ -798,6 +798,7 @@ class VoiceClient(VoiceProtocol):
 
         self.user_timestamps = {}
         self.starting_time = time.perf_counter()
+        self.first_packet_timestamp: float
         while self.recording:
             ready, _, err = select.select([self.socket], [], [self.socket], 0.01)
             if not ready:
@@ -824,18 +825,42 @@ class VoiceClient(VoiceProtocol):
             print(result)
 
     def recv_decoded_audio(self, data):
-        if data.ssrc not in self.user_timestamps:
+        
+        # Add silence when they were not being recorded.
+        if data.ssrc not in self.user_timestamps:  # First packet from user
+
+            if not self.user_timestamps:  # First packet from anyone
+                self.first_packet_timestamp = data.receive_time
+                silence = 0
+
+            else:  # Already received a packet from someone else
+
+                silence = (
+                    int((data.receive_time - self.first_packet_timestamp) * 48000)
+                    # - 960
+                )  # not adding insane silence
+
+                print(silence, silence / 48000, "here", end=" ")
+
             self.user_timestamps.update({data.ssrc: data.timestamp})
-            # Add silence when they were not being recorded.
-            silence = 0
-        else:
-            silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
+
+        else:  # Already received a packet from user
+            silence = (
+                data.timestamp - self.user_timestamps[data.ssrc] - 960
+            )  # seems to be adding lots of silence
+
             self.user_timestamps[data.ssrc] = data.timestamp
+
+        if silence:
+            print(silence, silence / 48000, len(data.decoded_data), end=" ")
 
         data.decoded_data = (
             struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
+        if silence:
+            print(len(data.decoded_data))
+
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])
