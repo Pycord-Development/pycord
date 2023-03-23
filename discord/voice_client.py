@@ -825,7 +825,7 @@ class VoiceClient(VoiceProtocol):
             print(result)
 
     def recv_decoded_audio(self, data):
-        
+
         # Add silence when they were not being recorded.
         if data.ssrc not in self.user_timestamps:  # First packet from user
 
@@ -840,26 +840,32 @@ class VoiceClient(VoiceProtocol):
                     # - 960
                 )  # not adding insane silence
 
-                print(silence, silence / 48000, "here", end=" ")
+                # print(silence, silence / 48000, "here", end=" ")
 
-            self.user_timestamps.update({data.ssrc: data.timestamp})
+            self.user_timestamps.update({data.ssrc: data.receive_time})
 
         else:  # Already received a packet from user
-            silence = (
-                data.timestamp - self.user_timestamps[data.ssrc] - 960
+            silence = max(
+                0,
+                int(
+                    (
+                        (data.receive_time - self.user_timestamps[data.ssrc]) * 48000
+                        - 960
+                    )
+                ),
             )  # seems to be adding lots of silence
 
-            self.user_timestamps[data.ssrc] = data.timestamp
+            self.user_timestamps[data.ssrc] = data.receive_time
 
-        if silence:
-            print(silence, silence / 48000, len(data.decoded_data), end=" ")
+        # if silence:
+        #     print(silence, silence / 48000, len(data.decoded_data), end=" ")
 
         data.decoded_data = (
             struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
-        if silence:
-            print(len(data.decoded_data))
+        # if silence:
+        #     print(len(data.decoded_data))
 
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
