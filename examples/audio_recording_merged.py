@@ -22,7 +22,6 @@ async def finished_callback(sink: MP3Sink, channel: discord.TextChannel):
     longest = pydub.AudioSegment.empty()
 
     for user_id, audio in sink.audio_data.items():
-
         mention_strs.append(f"<@{user_id}>")
 
         seg = pydub.AudioSegment.from_file(audio.file, format="mp3")
