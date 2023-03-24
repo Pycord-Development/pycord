@@ -530,9 +530,7 @@ class Paginator(discord.ui.View):
                 self.page_groups[self.default_page_group]
             )
         self.page_count = max(len(self.pages) - 1, 0)
-        self.current_page = (
-            current_page if current_page <= self.page_count else 0
-        )
+        self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
         self.show_disabled = (
             show_disabled if show_disabled is not None else self.show_disabled
