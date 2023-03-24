@@ -700,7 +700,7 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
-    def start_recording(self, sink, callback, *args):
+    def start_recording(self, sink, callback, *args, sync_start=False):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
         Must be in a voice channel to use.
@@ -716,6 +716,9 @@ class VoiceClient(VoiceProtocol):
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
+        sync_start: :class:`bool`
+            If True, the recordings of subsequent users will start with silence.
+            This is useful for recording audio just as it was heard.
 
         Raises
         ------
@@ -738,6 +741,7 @@ class VoiceClient(VoiceProtocol):
         self.decoder = opus.DecodeManager(self)
         self.decoder.start()
         self.recording = True
+        self.sync_start = sync_start
         self.sink = sink
         sink.init(self)
 
@@ -829,43 +833,28 @@ class VoiceClient(VoiceProtocol):
         # Add silence when they were not being recorded.
         if data.ssrc not in self.user_timestamps:  # First packet from user
 
-            if not self.user_timestamps:  # First packet from anyone
+            if (
+                not self.user_timestamps or not self.sync_start
+            ):  # First packet from anyone
                 self.first_packet_timestamp = data.receive_time
                 silence = 0
 
-            else:  # Already received a packet from someone else
+            else:  # Previously received a packet from someone else
 
                 silence = (
                     int((data.receive_time - self.first_packet_timestamp) * 48000)
-                    # - 960
-                )  # not adding insane silence
+                    - 1920
+                )
 
-                # print(silence, silence / 48000, "here", end=" ")
+        else:  # Previously received a packet from user
+            silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
 
-            self.user_timestamps.update({data.ssrc: data.receive_time})
-
-        else:  # Already received a packet from user
-            silence = max(
-                0,
-                int(
-                    (
-                        (data.receive_time - self.user_timestamps[data.ssrc]) * 48000
-                        - 960
-                    )
-                ),
-            )  # seems to be adding lots of silence
-
-            self.user_timestamps[data.ssrc] = data.receive_time
-
-        # if silence:
-        #     print(silence, silence / 48000, len(data.decoded_data), end=" ")
+        self.user_timestamps.update({data.ssrc: data.timestamp})
 
         data.decoded_data = (
-            struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
+            struct.pack("<h", 0) * max(0, silence) * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
-        # if silence:
-        #     print(len(data.decoded_data))
 
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
