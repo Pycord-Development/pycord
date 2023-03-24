@@ -829,10 +829,8 @@ class VoiceClient(VoiceProtocol):
             print(result)
 
     def recv_decoded_audio(self, data):
-
         # Add silence when they were not being recorded.
         if data.ssrc not in self.user_timestamps:  # First packet from user
-
             if (
                 not self.user_timestamps or not self.sync_start
             ):  # First packet from anyone
@@ -840,7 +838,6 @@ class VoiceClient(VoiceProtocol):
                 silence = 0
 
             else:  # Previously received a packet from someone else
-
                 silence = (
                     int((data.receive_time - self.first_packet_timestamp) * 48000)
                     - 1920
