@@ -21,7 +21,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
 - Added support for one-time event listeners in `@client.listen()`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
-- Added `current_page` argument to Paginator.update(
+- Added `current_page` argument to Paginator.update()
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added `sync_start` argument to `VoiceClient.start_recording()`. This adds silence to
   the start of audio recordings
