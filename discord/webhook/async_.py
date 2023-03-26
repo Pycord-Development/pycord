@@ -38,7 +38,7 @@ import aiohttp
 
 from .. import utils
 from ..asset import Asset
-from ..channel import PartialMessageable
+from ..channel import ForumChannel, PartialMessageable
 from ..enums import WebhookType, try_enum
 from ..errors import (
     DiscordServerError,
@@ -52,7 +52,6 @@ from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
 from ..threads import Thread
-from ..channel import ForumChannel
 from ..user import BaseUser, User
 
 __all__ = (
