@@ -52,6 +52,7 @@ from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
 from ..threads import Thread
+from ..channel import ForumChannel
 from ..user import BaseUser, User
 
 __all__ = (
