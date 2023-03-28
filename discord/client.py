@@ -1193,7 +1193,8 @@ class Client:
             "%s has successfully been registered as a handler for event %s with once %s",
             func.__name__,
             name,
-            once,
+            once
+            
         )
 
     def remove_listener(self, func: Coro, name: str = MISSING) -> None:
