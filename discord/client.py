@@ -442,8 +442,11 @@ class Client:
         # Schedule additional handlers registered with @listen
         for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
-            if coro._once:
-                once_listeners.append(coro)
+            try:
+                if coro._once:
+                    once_listeners.append(coro)
+            except AttributeError:
+                continue
 
         # remove the once listeners
         for coro in once_listeners:
