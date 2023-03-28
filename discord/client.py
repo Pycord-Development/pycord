@@ -444,12 +444,10 @@ class Client:
             self._schedule_event(coro, method, *args, **kwargs)
 
             try:
-
                 if coro._once:  # added using @listen()
                     once_listeners.append(coro)
 
             except AttributeError:  # added using @Cog.add_listener()
-
                 # https://github.com/Pycord-Development/pycord/pull/1989
                 # Although methods are similar to functions, attributes can't be added to them.
                 # This means that we can't add the `_once` attribute in the `add_listener` method
