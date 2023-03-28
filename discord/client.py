@@ -1147,7 +1147,7 @@ class Client:
         return asyncio.wait_for(future, timeout)
 
     # event registration
-    def add_listener(self, func: Coro, name: str = MISSING) -> None:
+    def add_listener(self, func: Coro, name: str = MISSING, once: bool = False) -> None:
         """The non decorator alternative to :meth:`.listen`.
 
         Parameters
@@ -1176,6 +1176,7 @@ class Client:
             client.add_listener(my_message, 'on_message')
         """
         name = func.__name__ if name is MISSING else name
+        func._once = once
 
         if not name.startswith("on_"):
             raise ValueError("The 'name' parameter must start with 'on_'")
@@ -1189,9 +1190,11 @@ class Client:
             self._event_handlers[name] = [func]
 
         _log.debug(
-            "%s has successfully been registered as a handler for event %s",
+            "%s has successfully been registered as a handler for event %s with once %s",
             func.__name__,
             name,
+            once
+            
         )
 
     def remove_listener(self, func: Coro, name: str = MISSING) -> None:
@@ -1256,8 +1259,7 @@ class Client:
             if name == "on_application_command_error":
                 return self.event(func)
 
-            func._once = once
-            self.add_listener(func, name)
+            self.add_listener(func, name, once)
             return func
 
         if asyncio.iscoroutinefunction(name):
