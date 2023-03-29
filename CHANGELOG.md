@@ -31,6 +31,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Fixed
+
+- Fixed `AttributeError` caused by
+  [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
+  in cogs ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+
 ## [2.4.1] - 2023-03-20
 
 ### Changed
@@ -48,9 +54,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
 - Fixed `reason` being passed to wrong method in `guild.create_auto_moderation_rule`.
   ([#1960](https://github.com/Pycord-Development/pycord/pull/1960))
-- Fixed `AttributeError` caused by
-  [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
-  in cogs ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
 
 ## [2.4.0] - 2023-02-10
 
