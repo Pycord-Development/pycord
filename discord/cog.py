@@ -735,7 +735,7 @@ class CogMixin:
                 self.remove_application_command(cmd)
 
         # remove all the listeners from the module
-        for event_list in self.extra_events.copy().values():
+        for event_list in self._event_handlers.copy().values():
             remove = [
                 index
                 for index, event in enumerate(event_list)

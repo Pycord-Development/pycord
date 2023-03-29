@@ -3832,5 +3832,7 @@ class Guild(Hashable):
         if exempt_channels:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
 
-        data = await self._state.http.create_auto_moderation_rule(self.id, payload)
-        return AutoModRule(state=self._state, data=data, reason=reason)
+        data = await self._state.http.create_auto_moderation_rule(
+            self.id, payload, reason=reason
+        )
+        return AutoModRule(state=self._state, data=data)
