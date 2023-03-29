@@ -1340,7 +1340,7 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def application_auto_moderation_rule_create_badge(self):
-        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API"""
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API."""
         return 1 << 6
 
     @flag_value
