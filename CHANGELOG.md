@@ -23,6 +23,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Added `current_page` argument to Paginator.update()
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+- Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
+  ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
 
 ### Removed
 
