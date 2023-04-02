@@ -64,7 +64,7 @@ class EmbedProxy:
         inner = ", ".join(
             (f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_"))
         )
-        return f"EmbedProxy({inner})"
+        return f"{type(self).__name__}({inner})"
 
     def __getattr__(self, attr: str) -> _EmptyEmbed:
         return EmptyEmbed
@@ -125,11 +125,12 @@ class EmbedAuthor(EmbedProxy):
         name: str,
         url: MaybeEmpty[str] = EmptyEmbed,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
+        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed
     ) -> None:
         layer = {
             k: v
             for k, v in locals().items()
-            if k in {"name", "url", "icon_url"} and v is not EmptyEmbed
+            if k in {"name", "url", "icon_url", "proxy_icon_url"} and v is not EmptyEmbed
         }
         super().__init__(layer)
 
@@ -151,11 +152,12 @@ class EmbedFooter(EmbedProxy):
         self,
         text: str,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
+        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed
     ) -> None:
         layer = {
             k: v
             for k, v in locals().items()
-            if k in {"text", "icon_url"} and v is not EmptyEmbed
+            if k in {"text", "icon_url", "proxy_icon_url"} and v is not EmptyEmbed
         }
         super().__init__(layer)
 
@@ -499,14 +501,14 @@ class Embed:
             )
 
     @property
-    def footer(self) -> _EmbedFooterProxy:
+    def footer(self) -> EmbedFooter:
         """Returns an ``EmbedProxy`` denoting the footer contents.
 
         See :meth:`set_footer` for possible values you can access.
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_footer", {}))  # type: ignore
+        return EmbedFooter(**getattr(self, "_footer", {}))
 
     def set_footer(
         self: E,
@@ -691,14 +693,14 @@ class Embed:
         return EmbedProxy(getattr(self, "_provider", {}))  # type: ignore
 
     @property
-    def author(self) -> _EmbedAuthorProxy:
+    def author(self) -> EmbedAuthor:
         """Returns an ``EmbedProxy`` denoting the author contents.
 
         See :meth:`set_author` for possible values you can access.
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_author", {}))  # type: ignore
+        return EmbedAuthor(**getattr(self, "_author", {}))  # type: ignore
 
     def set_author(
         self: E,
