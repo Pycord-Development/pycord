@@ -12,6 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added possibility to start bot via async context manager.
+  ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
