@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Change default for all `name_localizations` & `description_localizations` attributes
+  from being `None` to be `MISSING`.
+  ([#1866](https://github.com/Pycord-Development/pycord/pull/1866))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
@@ -22,7 +25,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for one-time event listeners in `@client.listen()`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Added `current_page` argument to Paginator.update().
-  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 
@@ -88,9 +91,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
-- Change default for all `name_localizations` & `description_localizations` attributes
-  from being `None` to an empty dictionary.
-  ([#1866](https://github.com/Pycord-Development/pycord/pull/1866))
 - Advanced version info is now stored as a dict in `version_info.advanced` instead of
   attributes on the `version_info` object.
   ([#1920](https://github.com/Pycord-Development/pycord/pull/1920))

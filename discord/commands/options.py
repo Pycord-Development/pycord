@@ -38,6 +38,7 @@ from ..channel import (
     Thread,
     VoiceChannel,
 )
+from ..utils import MISSING
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
@@ -323,8 +324,8 @@ class Option:
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
-        self.name_localizations = kwargs.pop("name_localizations", {})
-        self.description_localizations = kwargs.pop("description_localizations", {})
+        self.name_localizations = kwargs.pop("name_localizations", MISSING)
+        self.description_localizations = kwargs.pop("description_localizations", MISSING)
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -335,9 +336,9 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
             "autocomplete": bool(self.autocomplete),
         }
-        if self.name_localizations:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
@@ -377,7 +378,7 @@ class OptionChoice:
         self,
         name: str,
         value: str | int | float | None = None,
-        name_localizations: dict[str, str] = {},
+        name_localizations: dict[str, str] = MISSING,
     ):
         self.name = str(name)
         self.value = value if value is not None else name
@@ -385,7 +386,7 @@ class OptionChoice:
 
     def to_dict(self) -> dict[str, str | int | float]:
         as_dict = {"name": self.name, "value": self.value}
-        if self.name_localizations:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
 
         return as_dict

@@ -666,7 +666,7 @@ class SlashCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", MISSING)
         _validate_names(self)
 
         description = kwargs.get("description") or (
@@ -677,7 +677,7 @@ class SlashCommand(ApplicationCommand):
 
         self.description: str = description
         self.description_localizations: dict[str, str] = kwargs.get(
-            "description_localizations", {}
+            "description_localizations", MISSING
         )
         _validate_descriptions(self)
 
@@ -839,9 +839,9 @@ class SlashCommand(ApplicationCommand):
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
         }
-        if self.name_localizations:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -1142,9 +1142,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.guild_only: bool | None = kwargs.get("guild_only", None)
         self.nsfw: bool | None = kwargs.get("nsfw", None)
 
-        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", MISSING)
         self.description_localizations: dict[str, str] = kwargs.get(
-            "description_localizations", {}
+            "description_localizations", MISSING
         )
 
     @property
@@ -1157,9 +1157,9 @@ class SlashCommandGroup(ApplicationCommand):
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
         }
-        if self.name_localizations:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
@@ -1424,7 +1424,7 @@ class ContextMenuCommand(ApplicationCommand):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
-        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", {})
+        self.name_localizations: dict[str, str] = kwargs.get("name_localizations", MISSING)
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
