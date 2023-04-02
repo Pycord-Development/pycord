@@ -117,16 +117,19 @@ class EmbedAuthor(EmbedProxy):
     url: :class:`str`
         The url of the hyperlink created on the author name.
     icon_url: :class:`str`
-        Url of the author icon image."""
+        Url of the author icon image.
+    """
+
     def __init__(
-            self,
-            name: str,
-            url: MaybeEmpty[str] = EmptyEmbed,
-            icon_url: MaybeEmpty[str] = EmptyEmbed,
+        self,
+        name: str,
+        url: MaybeEmpty[str] = EmptyEmbed,
+        icon_url: MaybeEmpty[str] = EmptyEmbed,
     ) -> None:
         layer = {
-            k: v for k, v in locals().items() if k in {"name", "url", "icon_url"}
-            and v is not EmptyEmbed
+            k: v
+            for k, v in locals().items()
+            if k in {"name", "url", "icon_url"} and v is not EmptyEmbed
         }
         super().__init__(layer)
 
@@ -141,15 +144,18 @@ class EmbedFooter(EmbedProxy):
     text: :class:`str`
        The text inside the footer.
     icon_url: :class:`str`
-        Url of the footer icon image."""
+        Url of the footer icon image.
+    """
+
     def __init__(
-            self,
-            text: str,
-            icon_url: MaybeEmpty[str] = EmptyEmbed,
+        self,
+        text: str,
+        icon_url: MaybeEmpty[str] = EmptyEmbed,
     ) -> None:
         layer = {
-            k: v for k, v in locals().items() if k in {"text", "icon_url"}
-            and v is not EmptyEmbed
+            k: v
+            for k, v in locals().items()
+            if k in {"text", "icon_url"} and v is not EmptyEmbed
         }
         super().__init__(layer)
 
@@ -323,7 +329,7 @@ class Embed:
 
         if author is not EmptyEmbed:
             self.set_author(**author.__dict__)
-        
+
         if footer is not EmptyEmbed:
             self.set_footer(**footer.__dict__)
 
