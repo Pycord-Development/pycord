@@ -115,9 +115,9 @@ class EmbedAuthor(EmbedProxy):
     name: :class:`str`
         The name of the author.
     url: :class:`str`
-        The url of the hyperlink created on the author name.
+        The URL of the hyperlink created on the author name.
     icon_url: :class:`str`
-        Url of the author icon image.
+        URL of the author icon image.
     """
 
     def __init__(
@@ -144,7 +144,7 @@ class EmbedFooter(EmbedProxy):
     text: :class:`str`
        The text inside the footer.
     icon_url: :class:`str`
-        Url of the footer icon image.
+        URL of the footer icon image.
     """
 
     def __init__(
