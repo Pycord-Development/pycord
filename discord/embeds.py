@@ -115,7 +115,7 @@ class EmbedAuthor(EmbedProxy):
     name: :class:`str`
         The name of the author.
     url: :class:`str`
-        The URL of the hyperlink created on the author name.
+        The URL of the hyperlink created in the author's name.
     icon_url: :class:`str`
         The URL of the author icon image.
     """
