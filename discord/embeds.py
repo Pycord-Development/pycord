@@ -125,12 +125,13 @@ class EmbedAuthor(EmbedProxy):
         name: str,
         url: MaybeEmpty[str] = EmptyEmbed,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
-        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed
+        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed,
     ) -> None:
         layer = {
             k: v
             for k, v in locals().items()
-            if k in {"name", "url", "icon_url", "proxy_icon_url"} and v is not EmptyEmbed
+            if k in {"name", "url", "icon_url", "proxy_icon_url"}
+            and v is not EmptyEmbed
         }
         super().__init__(layer)
 
@@ -152,7 +153,7 @@ class EmbedFooter(EmbedProxy):
         self,
         text: str,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
-        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed
+        proxy_icon_url: MaybeEmpty[str] = EmptyEmbed,
     ) -> None:
         layer = {
             k: v
