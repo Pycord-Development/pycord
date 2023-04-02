@@ -31,6 +31,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 
 ### Changed
+
 - Attributes are now dynamically fetched on bridge commands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
