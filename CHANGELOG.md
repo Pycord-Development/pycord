@@ -33,7 +33,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Suppressed FFMPEG output when recording VC
+- Suppressed FFMPEG output when recording voice channels.
   ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 
 ### Fixed
