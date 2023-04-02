@@ -142,11 +142,15 @@ class ForumTag(Hashable):
             self.emoji = PartialEmoji.from_str(emoji)
         else:
             raise TypeError(
-                f"emoji must be a Emoji, PartialEmoji, or str and not {emoji.__class__!r}"
+                "emoji must be a Emoji, PartialEmoji, or str and not"
+                f" {emoji.__class__!r}"
             )
 
     def __repr__(self) -> str:
-        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+        return (
+            "<ForumTag"
+            f" id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
+        )
 
     def __str__(self) -> str:
         return self.name
@@ -1354,6 +1358,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "video_quality_mode",
         "last_message_id",
         "flags",
+        "nsfw",
     )
 
     def __init__(
@@ -1397,6 +1402,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             self.bitrate: int = data.get("bitrate")
             self.user_limit: int = data.get("user_limit")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
+            self.nsfw: bool = data.get("nsfw", False)
             self._fill_overwrites(data)
 
     @property
@@ -1506,11 +1512,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
     """
 
-    __slots__ = "nsfw"
-
     def _update(self, guild: Guild, data: VoiceChannelPayload):
         super()._update(guild, data)
-        self.nsfw: bool = data.get("nsfw", False)
 
     def __repr__(self) -> str:
         attrs = [
@@ -1940,7 +1943,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         )
 
 
-class StageChannel(VocalGuildChannel):
+class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     """Represents a Discord guild stage channel.
 
     .. versionadded:: 1.7
@@ -1993,9 +1996,16 @@ class StageChannel(VocalGuildChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+    last_message_id: Optional[:class:`int`]
+        The ID of the last message sent to this channel. It may not always point to an existing or valid message.
+        .. versionadded:: 2.5
     """
 
     __slots__ = ("topic",)
+
+    def _update(self, guild: Guild, data: StageChannelPayload) -> None:
+        super()._update(guild, data)
+        self.topic = data.get("topic")
 
     def __repr__(self) -> str:
         attrs = [
@@ -2011,10 +2021,6 @@ class StageChannel(VocalGuildChannel):
         ]
         joined = " ".join("%s=%r" % t for t in attrs)
         return f"<{self.__class__.__name__} {joined}>"
-
-    def _update(self, guild: Guild, data: StageChannelPayload) -> None:
-        super()._update(guild, data)
-        self.topic = data.get("topic")
 
     @property
     def requesting_to_speak(self) -> list[Member]:
@@ -2048,6 +2054,263 @@ class StageChannel(VocalGuildChannel):
         return [
             member for member in self.members if member.voice and member.voice.suppress
         ]
+
+    async def _get_channel(self):
+        return self
+
+    def is_nsfw(self) -> bool:
+        """Checks if the channel is NSFW."""
+        return self.nsfw
+
+    @property
+    def last_message(self) -> Message | None:
+        """Fetches the last message from this channel in cache.
+
+        The message might not be valid or point to an existing message.
+
+        .. admonition:: Reliable Fetching
+            :class: helpful
+
+            For a slightly more reliable method of fetching the
+            last message, consider using either :meth:`history`
+            or :meth:`fetch_message` with the :attr:`last_message_id`
+            attribute.
+
+        Returns
+        -------
+        Optional[:class:`Message`]
+            The last message in this channel or ``None`` if not found.
+        """
+        return (
+            self._state._get_message(self.last_message_id)
+            if self.last_message_id
+            else None
+        )
+
+    def get_partial_message(self, message_id: int, /) -> PartialMessage:
+        """Creates a :class:`PartialMessage` from the message ID.
+
+        This is useful if you want to work with a message and only have its ID without
+        doing an unnecessary API call.
+
+        .. versionadded:: 1.6
+
+        Parameters
+        ----------
+        message_id: :class:`int`
+            The message ID to create a partial message for.
+
+        Returns
+        -------
+        :class:`PartialMessage`
+            The partial message.
+        """
+
+        from .message import PartialMessage
+
+        return PartialMessage(channel=self, id=message_id)
+
+    async def delete_messages(
+        self, messages: Iterable[Snowflake], *, reason: str | None = None
+    ) -> None:
+        """|coro|
+
+        Deletes a list of messages. This is similar to :meth:`Message.delete`
+        except it bulk deletes multiple messages.
+
+        As a special case, if the number of messages is 0, then nothing
+        is done. If the number of messages is 1 then single message
+        delete is done. If it's more than two, then bulk delete is used.
+
+        You cannot bulk delete more than 100 messages or messages that
+        are older than 14 days old.
+
+        You must have the :attr:`~Permissions.manage_messages` permission to
+        use this.
+
+        Parameters
+        ----------
+        messages: Iterable[:class:`abc.Snowflake`]
+            An iterable of messages denoting which ones to bulk delete.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
+
+        Raises
+        ------
+        ClientException
+            The number of messages to delete was more than 100.
+        Forbidden
+            You do not have proper permissions to delete the messages.
+        NotFound
+            If single delete, then the message was already deleted.
+        HTTPException
+            Deleting the messages failed.
+        """
+        if not isinstance(messages, (list, tuple)):
+            messages = list(messages)
+
+        if len(messages) == 0:
+            return  # do nothing
+
+        if len(messages) == 1:
+            message_id: int = messages[0].id
+            await self._state.http.delete_message(self.id, message_id, reason=reason)
+            return
+
+        if len(messages) > 100:
+            raise ClientException("Can only bulk delete messages up to 100 messages")
+
+        message_ids: SnowflakeList = [m.id for m in messages]
+        await self._state.http.delete_messages(self.id, message_ids, reason=reason)
+
+    async def purge(
+        self,
+        *,
+        limit: int | None = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = False,
+        bulk: bool = True,
+        reason: str | None = None,
+    ) -> list[Message]:
+        """|coro|
+
+        Purges a list of messages that meet the criteria given by the predicate
+        ``check``. If a ``check`` is not provided then all messages are deleted
+        without discrimination.
+
+        You must have the :attr:`~Permissions.manage_messages` permission to
+        delete messages even if they are your own.
+        The :attr:`~Permissions.read_message_history` permission is
+        also needed to retrieve message history.
+
+        Parameters
+        ----------
+        limit: Optional[:class:`int`]
+            The number of messages to search through. This is not the number
+            of messages that will be deleted, though it can be.
+        check: Callable[[:class:`Message`], :class:`bool`]
+            The function used to check if a message should be deleted.
+            It must take a :class:`Message` as its sole parameter.
+        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``before`` in :meth:`history`.
+        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``after`` in :meth:`history`.
+        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+            Same as ``around`` in :meth:`history`.
+        oldest_first: Optional[:class:`bool`]
+            Same as ``oldest_first`` in :meth:`history`.
+        bulk: :class:`bool`
+            If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
+            a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
+            fall back to single delete if messages are older than two weeks.
+        reason: Optional[:class:`str`]
+            The reason for deleting the messages. Shows up on the audit log.
+
+        Returns
+        -------
+        List[:class:`.Message`]
+            The list of messages that were deleted.
+
+        Raises
+        ------
+        Forbidden
+            You do not have proper permissions to do the actions required.
+        HTTPException
+            Purging the messages failed.
+
+        Examples
+        --------
+
+        Deleting bot's messages ::
+
+            def is_me(m):
+                return m.author == client.user
+
+            deleted = await channel.purge(limit=100, check=is_me)
+            await channel.send(f'Deleted {len(deleted)} message(s)')
+        """
+        return await discord.abc._purge_messages_helper(
+            self,
+            limit=limit,
+            check=check,
+            before=before,
+            after=after,
+            around=around,
+            oldest_first=oldest_first,
+            bulk=bulk,
+            reason=reason,
+        )
+
+    async def webhooks(self) -> list[Webhook]:
+        """|coro|
+
+        Gets the list of webhooks from this channel.
+
+        Requires :attr:`~.Permissions.manage_webhooks` permissions.
+
+        Returns
+        -------
+        List[:class:`Webhook`]
+            The webhooks for this channel.
+
+        Raises
+        ------
+        Forbidden
+            You don't have permissions to get the webhooks.
+        """
+
+        from .webhook import Webhook
+
+        data = await self._state.http.channel_webhooks(self.id)
+        return [Webhook.from_state(d, state=self._state) for d in data]
+
+    async def create_webhook(
+        self, *, name: str, avatar: bytes | None = None, reason: str | None = None
+    ) -> Webhook:
+        """|coro|
+
+        Creates a webhook for this channel.
+
+        Requires :attr:`~.Permissions.manage_webhooks` permissions.
+
+        .. versionchanged:: 1.1
+            Added the ``reason`` keyword-only parameter.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The webhook's name.
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the webhook's default avatar.
+            This operates similarly to :meth:`~ClientUser.edit`.
+        reason: Optional[:class:`str`]
+            The reason for creating this webhook. Shows up in the audit logs.
+
+        Returns
+        -------
+        :class:`Webhook`
+            The created webhook.
+
+        Raises
+        ------
+        HTTPException
+            Creating the webhook failed.
+        Forbidden
+            You do not have permissions to create a webhook.
+        """
+
+        from .webhook import Webhook
+
+        if avatar is not None:
+            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+
+        data = await self._state.http.create_webhook(
+            self.id, name=str(name), avatar=avatar, reason=reason
+        )
+        return Webhook.from_state(data, state=self._state)
 
     @property
     def moderators(self) -> list[Member]:
