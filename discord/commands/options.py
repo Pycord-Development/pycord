@@ -38,10 +38,10 @@ from ..channel import (
     Thread,
     VoiceChannel,
 )
-from ..utils import MISSING
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
+from ..utils import MISSING
 
 if TYPE_CHECKING:
     from ..ext.commands import Converter
@@ -325,7 +325,9 @@ class Option:
         self.autocomplete = kwargs.pop("autocomplete", None)
 
         self.name_localizations = kwargs.pop("name_localizations", MISSING)
-        self.description_localizations = kwargs.pop("description_localizations", MISSING)
+        self.description_localizations = kwargs.pop(
+            "description_localizations", MISSING
+        )
 
     def to_dict(self) -> dict:
         as_dict = {
