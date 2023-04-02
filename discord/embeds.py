@@ -34,6 +34,8 @@ from .colour import Colour
 __all__ = (
     "Embed",
     "EmbedField",
+    "EmbedAuthor",
+    "EmbedFooter",
 )
 
 
@@ -101,6 +103,55 @@ if TYPE_CHECKING:
         url: MaybeEmpty[str]
         icon_url: MaybeEmpty[str]
         proxy_icon_url: MaybeEmpty[str]
+
+
+class EmbedAuthor(EmbedProxy):
+    """Represents the author on the :class:`Embed` object.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the author.
+    url: :class:`str`
+        The url of the hyperlink created on the author name.
+    icon_url: :class:`str`
+        Url of the author icon image."""
+    def __init__(
+            self,
+            name: str,
+            url: MaybeEmpty[str] = EmptyEmbed,
+            icon_url: MaybeEmpty[str] = EmptyEmbed,
+    ) -> None:
+        layer = {
+            k: v for k, v in locals().items() if k in {"name", "url", "icon_url"}
+            and v is not EmptyEmbed
+        }
+        super().__init__(layer)
+
+
+class EmbedFooter(EmbedProxy):
+    """Represents the footer on the :class:`Embed` object.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    text: :class:`str`
+       The text inside the footer.
+    icon_url: :class:`str`
+        Url of the footer icon image."""
+    def __init__(
+            self,
+            text: str,
+            icon_url: MaybeEmpty[str] = EmptyEmbed,
+    ) -> None:
+        layer = {
+            k: v for k, v in locals().items() if k in {"text", "icon_url"}
+            and v is not EmptyEmbed
+        }
+        super().__init__(layer)
 
 
 class EmbedField:
@@ -246,6 +297,10 @@ class Embed:
         description: MaybeEmpty[Any] = EmptyEmbed,
         timestamp: datetime.datetime = None,
         fields: list[EmbedField] | None = None,
+        author: MaybeEmpty[EmbedAuthor] = EmptyEmbed,
+        footer: MaybeEmpty[EmbedFooter] = EmptyEmbed,
+        image: MaybeEmpty[str] = EmptyEmbed,
+        thumbnail: MaybeEmpty[str] = EmptyEmbed,
     ):
         self.colour = colour if colour is not EmptyEmbed else color
         self.title = title
@@ -265,6 +320,18 @@ class Embed:
         if timestamp:
             self.timestamp = timestamp
         self._fields: list[EmbedField] = fields or []
+
+        if author is not EmptyEmbed:
+            self.set_author(**author.__dict__)
+        
+        if footer is not EmptyEmbed:
+            self.set_footer(**footer.__dict__)
+
+        if image is not EmptyEmbed:
+            self.set_image(url=image)
+
+        if thumbnail is not EmptyEmbed:
+            self.set_thumbnail(url=thumbnail)
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
