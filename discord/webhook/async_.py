@@ -1958,6 +1958,7 @@ class Webhook(BaseWebhook):
 
         message = self._create_message(data)
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, message_id)
         return message
 
