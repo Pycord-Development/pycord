@@ -45,6 +45,7 @@ from typing import (
 
 from . import utils
 from .activity import BaseActivity
+from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
@@ -671,8 +672,13 @@ class ConnectionState:
         self.dispatch("message", message)
         if self._messages is not None:
             self._messages.append(message)
-        # we ensure that the channel is either a TextChannel, VoiceChannel, or Thread
-        if channel and channel.__class__ in (TextChannel, VoiceChannel, Thread):
+        # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
+        if channel and channel.__class__ in (
+            TextChannel,
+            VoiceChannel,
+            StageChannel,
+            Thread,
+        ):
             channel.last_message_id = message.id  # type: ignore
 
     def parse_message_delete(self, data) -> None:
@@ -1338,6 +1344,26 @@ class ConnectionState:
 
         self._remove_guild(guild)
         self.dispatch("guild_remove", guild)
+
+    def parse_guild_audit_log_entry_create(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is None:
+            _log.debug(
+                (
+                    "GUILD_AUDIT_LOG_ENTRY_CREATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
+                data["guild_id"],
+            )
+            return
+        payload = RawAuditLogEntryEvent(data)
+        payload.guild = guild
+        self.dispatch("raw_audit_log_entry", payload)
+        user = self.get_user(payload.user_id)
+        if user is not None:
+            data.pop("guild_id")
+            entry = AuditLogEntry(users={data["user_id"]: user}, data=data, guild=guild)
+            self.dispatch("audit_log_entry", entry)
 
     def parse_guild_ban_add(self, data) -> None:
         # we make the assumption that GUILD_BAN_ADD is done

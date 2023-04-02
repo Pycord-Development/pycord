@@ -10,7 +10,50 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-_No changes yet_
+### Added
+
+- Added new events `on_bridge_command`, `on_bridge_command_completion`, and
+  `on_bridge_command_error`.
+  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
+- Added the `@client.once()` decorator, which serves as a one-time event listener.
+  ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
+- Added support for text-related features in `StageChannel`.
+  ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
+- Added support for one-time event listeners in `@client.listen()`.
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+- Added `current_page` argument to Paginator.update().
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+- Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
+  ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+
+### Removed
+
+- Removed `@client.once()` in favour of `@client.listen(once=True)`.
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+
+### Fixed
+
+- Fixed `AttributeError` caused by
+  [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
+  in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+
+## [2.4.1] - 2023-03-20
+
+### Changed
+
+- Updated the values of the `Color.embed_background()` classmethod to correspond with
+  new theme colors in the app.
+  ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
+
+### Fixed
+
+- Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
+  behavior. ([#1838](https://github.com/Pycord-Development/pycord/pull/1838))
+- Fixed the voice ip discovery due to the recent
+  [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
+  ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
+- Fixed `reason` being passed to wrong method in `guild.create_auto_moderation_rule`.
+  ([#1960](https://github.com/Pycord-Development/pycord/pull/1960))
 
 ## [2.4.0] - 2023-02-10
 
@@ -40,9 +83,6 @@ _No changes yet_
   ([#1880](https://github.com/Pycord-Development/pycord/pull/1880))
 - Improved support for setting channel types & added new channel types for
   `discord.Option`. ([#1883](https://github.com/Pycord-Development/pycord/pull/1883))
-- Added new events `on_bride_command`, `on_bridge_command_completion`, and
-  `on_bridge_command_error`.
-  ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 
 ### Changed
 
@@ -527,7 +567,8 @@ _No changes yet_
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0
 [2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2

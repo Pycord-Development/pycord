@@ -77,6 +77,7 @@ if TYPE_CHECKING:
         DMChannel,
         GroupChannel,
         PartialMessageable,
+        StageChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -97,7 +98,7 @@ if TYPE_CHECKING:
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable
+        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
@@ -1292,6 +1293,8 @@ class Messageable:
     The following implement this ABC:
 
     - :class:`~discord.TextChannel`
+    - :class:`~discord.VoiceChannel`
+    - :class:`~discord.StageChannel`
     - :class:`~discord.DMChannel`
     - :class:`~discord.GroupChannel`
     - :class:`~discord.User`

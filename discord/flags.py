@@ -717,12 +717,22 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
-        """:class:`bool`: Whether guild ban related events are enabled.
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: 2.5
+            Changed to an alias.
+        """
+        return 1 << 2
+
+    @flag_value
+    def moderation(self):
+        """:class:`bool`: Whether guild moderation related events are enabled.
 
         This corresponds to the following events:
 
+        - :func:`on_audit_log_entry`
         - :func:`on_member_ban`
         - :func:`on_member_unban`
 
@@ -1067,7 +1077,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
+            As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content
             of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
             intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
@@ -1327,6 +1337,14 @@ class ApplicationFlags(BaseFlags):
     def group_dm_create(self):
         """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
+
+    @flag_value
+    def application_auto_moderation_rule_create_badge(self):
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 6
 
     @flag_value
     def rpc_has_connected(self):
