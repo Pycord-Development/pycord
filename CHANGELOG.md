@@ -39,6 +39,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Fixed scheduled events breaking when changing the location from external to a channel.
+  ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
+- Fixed `TypeError` being raised when passing `name` argument to bridge groups.
+  ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 
 ## [2.4.1] - 2023-03-20
 
