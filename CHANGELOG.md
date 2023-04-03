@@ -36,8 +36,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
-- Fixed `view.message` not being set when view is sent using webhooks, including
-  `interaction.followup` or when message is edited.
+- Fixed `View.message` not being set when view is sent using webhooks, including
+  `Interaction.followup.send` or when a message is edited.
   ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
 
 ## [2.4.1] - 2023-03-20
