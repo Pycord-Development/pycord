@@ -39,6 +39,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `View.message` not being set when view is sent using webhooks, including
   `Interaction.followup.send` or when a message is edited.
   ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
+- Fixed scheduled events breaking when changing the location from external to a channel.
+  ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
 
 ## [2.4.1] - 2023-03-20
 
