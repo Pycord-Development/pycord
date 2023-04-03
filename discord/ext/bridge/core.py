@@ -325,10 +325,12 @@ class BridgeCommandGroup(BridgeCommand):
     slash_variant: BridgeSlashGroup
 
     def __init__(self, callback, *args, **kwargs):
+        ext_var = BridgeExtGroup(callback, *args, **kwargs)
+        kwargs.update({"name": ext_var.name})
         super().__init__(
             callback,
-            ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
-            slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
+            ext_variant=ext_var,
+            slash_variant=BridgeSlashGroup(callback, *args, **kwargs),
             parent=kwargs.pop("parent", None),
         )
 
