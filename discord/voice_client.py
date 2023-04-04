@@ -700,14 +700,7 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
-    def start_recording(
-        self,
-        sink,
-        callback,
-        *args,
-        sync_start: bool = False,
-        receive_time: bool = False,
-    ):
+    def start_recording(self, sink, callback, *args, sync_start: bool = False):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
         Must be in a voice channel to use.
@@ -749,7 +742,6 @@ class VoiceClient(VoiceProtocol):
         self.decoder.start()
         self.recording = True
         self.sync_start = sync_start
-        self.receive_time = receive_time
         self.sink = sink
         sink.init(self)
 
@@ -843,29 +835,21 @@ class VoiceClient(VoiceProtocol):
                 not self.user_timestamps or not self.sync_start
             ):  # First packet from anyone
                 self.first_packet_timestamp = data.receive_time
-
                 silence = 0
 
             else:  # Previously received a packet from someone else
                 silence = (
-                    (data.receive_time - self.first_packet_timestamp - self.ws.latency)
-                    * 48000
-                ) - 960
+                    int((data.receive_time - self.first_packet_timestamp) * 48000)
+                    - 1920
+                )
 
         else:  # Previously received a packet from user
-            if self.receive_time:
-                silence = (
-                    (data.receive_time - self.user_timestamps[data.ssrc]) * 48000
-                ) - 960
-            else:
-                silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
+            silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
 
-        self.user_timestamps.update(
-            {data.ssrc: data.receive_time if self.receive_time else data.timestamp}
-        )
+        self.user_timestamps.update({data.ssrc: data.timestamp})
 
         data.decoded_data = (
-            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
+            struct.pack("<h", 0) * max(0, silence) * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
 
