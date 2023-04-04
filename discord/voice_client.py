@@ -841,15 +841,15 @@ class VoiceClient(VoiceProtocol):
                 ) - 960
 
         else:  # Previously received a packet from user
-            # fmt: off
-            dRT = (data.receive_time - self.user_timestamps[data.ssrc][1]) * 48000 # delta receive time
-            dT = data.timestamp - self.user_timestamps[data.ssrc][0] # delta timestamp
+            dRT = (
+                data.receive_time - self.user_timestamps[data.ssrc][1]
+            ) * 48000  # delta receive time
+            dT = data.timestamp - self.user_timestamps[data.ssrc][0]  # delta timestamp
             diff = abs(100 - dT * 100 / dRT)
             if diff > 100 or dT != 960:  # If the difference is more than 100%
                 silence = dRT - 960
             else:
                 silence = dT - 960
-            # fmt: on
 
         self.user_timestamps.update({data.ssrc: (data.timestamp, data.receive_time)})
 
