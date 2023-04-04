@@ -31,6 +31,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Fixed
+
+- Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
+  ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
+
 ## [2.4.1] - 2023-03-20
 
 ### Changed
