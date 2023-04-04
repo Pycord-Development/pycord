@@ -842,7 +842,7 @@ class VoiceClient(VoiceProtocol):
 
         else:  # Previously received a packet from user
             # fmt: off
-            dRT = (data.receive_time - self.user_timestamps[data.ssrc][1]) * 48000 # delta receive time 
+            dRT = (data.receive_time - self.user_timestamps[data.ssrc][1]) * 48000 # delta receive time
             dT = data.timestamp - self.user_timestamps[data.ssrc][0] # delta timestamp
             diff = abs(100 - dT * 100 / dRT)
             if diff > 100 or dT != 960:  # If the difference is more than 100%
