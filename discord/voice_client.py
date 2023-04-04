@@ -800,7 +800,7 @@ class VoiceClient(VoiceProtocol):
         # it by user, handles pcm files and
         # silence that should be added.
 
-        self.user_timestamps = {}
+        self.user_timestamps: dict[int, tuple[int, float]] = {}
         self.starting_time = time.perf_counter()
         self.first_packet_timestamp: float
         while self.recording:
@@ -820,15 +820,13 @@ class VoiceClient(VoiceProtocol):
 
         self.stopping_time = time.perf_counter()
         self.sink.cleanup()
-        callback = asyncio.run_coroutine_threadsafe(
-            callback(self.sink, *args), self.loop
-        )
+        callback = asyncio.run_coroutine_threadsafe(callback(sink, *args), self.loop)
         result = callback.result()
 
         if result is not None:
             print(result)
 
-    def recv_decoded_audio(self, data):
+    def recv_decoded_audio(self, data: RawData):
         # Add silence when they were not being recorded.
         if data.ssrc not in self.user_timestamps:  # First packet from user
             if (
@@ -839,17 +837,24 @@ class VoiceClient(VoiceProtocol):
 
             else:  # Previously received a packet from someone else
                 silence = (
-                    int((data.receive_time - self.first_packet_timestamp) * 48000)
-                    - 1920
-                )
+                    (data.receive_time - self.first_packet_timestamp) * 48000
+                ) - 960
 
         else:  # Previously received a packet from user
-            silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
+            # fmt: off
+            dRT = (data.receive_time - self.user_timestamps[data.ssrc][1]) * 48000 # delta receive time 
+            dT = data.timestamp - self.user_timestamps[data.ssrc][0] # delta timestamp
+            diff = abs(100 - dT * 100 / dRT)
+            if diff > 100 or dT != 960:  # If the difference is more than 100%
+                silence = dRT - 960
+            else:
+                silence = dT - 960
+            # fmt: on
 
-        self.user_timestamps.update({data.ssrc: data.timestamp})
+        self.user_timestamps.update({data.ssrc: (data.timestamp, data.receive_time)})
 
         data.decoded_data = (
-            struct.pack("<h", 0) * max(0, silence) * opus._OpusStruct.CHANNELS
+            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
 
