@@ -266,7 +266,9 @@ class ApplicationContext(discord.abc.Messageable):
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
-    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
+    async def respond(
+        self, *args, **kwargs
+    ) -> Interaction | WebhookMessage | InteractionMessage:
         """|coro|
 
         Sends either a response or a message using the followup webhook determined by whether the interaction

@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Any, Coroutine, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Literal, Union, overload
 
 from . import utils
 from .channel import ChannelType, PartialMessageable
@@ -698,6 +698,60 @@ class InteractionResponse:
             )
             self._responded = True
 
+    @overload
+    async def send_message(
+        self,
+        content: str | None = ...,
+        *,
+        embed: Embed = ...,
+        embeds: list[Embed] = ...,
+        view: View = ...,
+        tts: bool = ...,
+        ephemeral: bool = ...,
+        allowed_mentions: AllowedMentions = ...,
+        file: File = ...,
+        files: list[File] = ...,
+        delete_after: float = ...,
+        return_message: Literal[False] = ...,
+    ) -> Interaction:
+        ...
+
+    @overload
+    async def send_message(
+        self,
+        content: str | None = ...,
+        *,
+        embed: Embed = ...,
+        embeds: list[Embed] = ...,
+        view: View = ...,
+        tts: bool = ...,
+        ephemeral: bool = ...,
+        allowed_mentions: AllowedMentions = ...,
+        file: File = ...,
+        files: list[File] = ...,
+        delete_after: float = ...,
+        return_message: Literal[True] = ...,
+    ) -> InteractionMessage:
+        ...
+
+    @overload
+    async def send_message(
+        self,
+        content: str | None = ...,
+        *,
+        embed: Embed = ...,
+        embeds: list[Embed] = ...,
+        view: View = ...,
+        tts: bool = ...,
+        ephemeral: bool = ...,
+        allowed_mentions: AllowedMentions = ...,
+        file: File = ...,
+        files: list[File] = ...,
+        delete_after: float = ...,
+        return_message: bool = ...,
+    ) -> Union[Interaction, InteractionMessage]:
+        ...
+
     async def send_message(
         self,
         content: Any | None = None,
@@ -711,7 +765,8 @@ class InteractionResponse:
         file: File = None,
         files: list[File] = None,
         delete_after: float = None,
-    ) -> Interaction:
+        return_message: bool = False,
+    ) -> Union[Interaction, InteractionMessage]:
         """|coro|
 
         Responds to this interaction by sending a message.
@@ -744,6 +799,8 @@ class InteractionResponse:
             The file to upload.
         files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
+        return_message: :class:`bool`
+            Indicates if the message object should be returned instead of the interaction object.
 
         Returns
         -------
@@ -839,17 +896,22 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
+        msg = None
+
+        if return_message:
+            msg = await self._parent.original_response()
+
         if view is not None:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
-            view.message = await self._parent.original_response()
+            view.message = msg or await self._parent.original_response()
             self._parent._state.store_view(view)
 
         self._responded = True
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
-        return self._parent
+        return msg or self._parent
 
     async def edit_message(
         self,
