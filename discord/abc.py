@@ -1481,7 +1481,7 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
-        slient: :class:`bool`
+        silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.4
