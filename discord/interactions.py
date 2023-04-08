@@ -749,7 +749,7 @@ class InteractionResponse:
         files: list[File] = ...,
         delete_after: float = ...,
         return_message: bool = ...,
-    ) -> Union[Interaction, InteractionMessage]:
+    ) -> Interaction | InteractionMessage:
         ...
 
     async def send_message(
@@ -766,7 +766,7 @@ class InteractionResponse:
         files: list[File] = None,
         delete_after: float = None,
         return_message: bool = False,
-    ) -> Union[Interaction, InteractionMessage]:
+    ) -> Interaction | InteractionMessage:
         """|coro|
 
         Responds to this interaction by sending a message.
