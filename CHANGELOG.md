@@ -29,7 +29,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Changed
 
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
-  ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
+  ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 
 ### Removed
 
