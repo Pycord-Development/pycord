@@ -26,6 +26,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 
+### Changed
+
+- Changed file upload size limit from 8 MB to 25 MB to correspond with API.
+  ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
+
 ### Removed
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
