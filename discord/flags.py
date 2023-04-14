@@ -404,6 +404,14 @@ class MessageFlags(BaseFlags):
 
         return 4096
 
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+        
+        .. versionadded:: 2.4
+        """
+        return 8192
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):

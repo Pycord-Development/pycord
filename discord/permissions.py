@@ -610,6 +610,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 40
 
+    @flag_value
+    def send_voice_messages(self) -> int:
+        """:class:`bool`: Returns ``True`` if a umember can send voice messages.
+
+        .. versionadded:: 2.4
+        """
+        return 1 << 46
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
@@ -727,6 +735,7 @@ class PermissionOverwrite:
         use_external_stickers: bool | None
         start_embedded_activities: bool | None
         moderate_members: bool | None
+        send_voice_messages: bool | None
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}
