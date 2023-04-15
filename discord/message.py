@@ -173,12 +173,12 @@ class Attachment(Hashable):
     duration_secs: Optional[:class:`float`]
         The duration of the audio file (currently for voice messages).
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.5
 
     waveform: Optional[:class:`str`]
         The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.5
     """
 
     __slots__ = (
