@@ -22,9 +22,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for one-time event listeners in `@client.listen()`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Added `current_page` argument to Paginator.update().
-  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+
+### Changed
+
+- Changed file-upload size limit from 8 MB to 25 MB accordingly.
+  ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 
 ### Removed
 
