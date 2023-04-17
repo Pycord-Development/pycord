@@ -324,9 +324,9 @@ class Guild(Hashable):
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
-        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
-        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=8388608),
-        1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=8388608),
+        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=26214400),
+        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=26214400),
+        1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=26214400),
         2: _GuildLimit(emoji=150, stickers=30, bitrate=256e3, filesize=52428800),
         3: _GuildLimit(emoji=250, stickers=60, bitrate=384e3, filesize=104857600),
     }
@@ -1140,9 +1140,11 @@ class Guild(Hashable):
                 "allow": allow.value,
                 "deny": deny.value,
                 "id": target.id,
-                "type": abc._Overwrites.ROLE
-                if isinstance(target, Role)
-                else abc._Overwrites.MEMBER,
+                "type": (
+                    abc._Overwrites.ROLE
+                    if isinstance(target, Role)
+                    else abc._Overwrites.MEMBER
+                ),
             }
 
             perms.append(payload)
@@ -2156,14 +2158,13 @@ class Guild(Hashable):
     def bans(
         self,
         limit: int | None = None,
-        before: Snowflake | None = None,
-        after: Snowflake | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
     ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
         have the :attr:`~Permissions.ban_members` permission.
-        Users will always be returned in ascending order sorted by user ID. If both the ``before`` and ``after`` parameters are provided, only before is respected.
 
         .. versionchanged:: 2.0
             The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
@@ -2175,10 +2176,14 @@ class Guild(Hashable):
         ----------
         limit: Optional[:class:`int`]
             The number of bans to retrieve. Defaults to 1000.
-        before: Optional[:class:`.abc.Snowflake`]
-            Retrieve bans before the given user.
-        after: Optional[:class:`.abc.Snowflake`]
-            Retrieve bans after the given user.
+        before: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans before this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve bans after this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
 
         Yields
         ------
@@ -3830,5 +3835,7 @@ class Guild(Hashable):
         if exempt_channels:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
 
-        data = await self._state.http.create_auto_moderation_rule(self.id, payload)
-        return AutoModRule(state=self._state, data=data, reason=reason)
+        data = await self._state.http.create_auto_moderation_rule(
+            self.id, payload, reason=reason
+        )
+        return AutoModRule(state=self._state, data=data)

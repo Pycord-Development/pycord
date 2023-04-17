@@ -79,12 +79,22 @@ class BridgeSlashCommand(SlashCommand):
         self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
+    async def dispatch_error(
+        self, ctx: BridgeApplicationContext, error: Exception
+    ) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
+
 
 class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
+
+    async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         if param.annotation is Attachment:
@@ -315,10 +325,12 @@ class BridgeCommandGroup(BridgeCommand):
     slash_variant: BridgeSlashGroup
 
     def __init__(self, callback, *args, **kwargs):
+        ext_var = BridgeExtGroup(callback, *args, **kwargs)
+        kwargs.update({"name": ext_var.name})
         super().__init__(
             callback,
-            ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
-            slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
+            ext_variant=ext_var,
+            slash_variant=BridgeSlashGroup(callback, *args, **kwargs),
             parent=kwargs.pop("parent", None),
         )
 
@@ -520,10 +532,15 @@ class AttachmentConverter(Converter):
             return attach
 
 
+class BooleanConverter(Converter):
+    async def convert(self, ctx, arg: bool):
+        return _convert_to_bool(str(arg))
+
+
 BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.string: str,
     SlashCommandOptionType.integer: int,
-    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
+    SlashCommandOptionType.boolean: BooleanConverter,
     SlashCommandOptionType.user: UserConverter,
     SlashCommandOptionType.channel: GuildChannelConverter,
     SlashCommandOptionType.role: RoleConverter,
@@ -567,3 +584,4 @@ class BridgeOption(Option, Converter):
 
 
 discord.commands.options.Option = BridgeOption
+discord.Option = BridgeOption

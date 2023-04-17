@@ -10,6 +10,7 @@ allowed_content_types = [
 
 # Discord doesn't support creating private emojis by default, its semi-implemented feature and can be done by bots only.
 
+
 # This command is publicly available, to set up command permissions look for other examples in repo
 @bot.command(guild_ids=[...])
 async def add_private_emoji(

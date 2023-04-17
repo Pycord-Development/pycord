@@ -159,7 +159,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         This only fires if you do not specify any listeners for command error.
         """
-        if self.extra_events.get("on_command_error", None):
+        if self._event_handlers.get("on_command_error", None):
             return
 
         command = context.command
