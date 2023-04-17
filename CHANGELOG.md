@@ -45,6 +45,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
 - Fixed scheduled events breaking when changing the location from external to a channel.
   ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
+- Fixed boolean converter breaking for bridge commands. Fix bridge command Options not
+  working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 
