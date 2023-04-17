@@ -208,17 +208,20 @@ class Guild(Hashable):
 
         - ``ANIMATED_BANNER``: Guild can upload an animated banner.
         - ``ANIMATED_ICON``: Guild can upload an animated icon.
+        - ``APPLICATION_COMMAND_PERMISSIONS_V2``: Guild is using the old command permissions behavior.
         - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
         - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
         - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
         - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
         - ``COMMUNITY``: Guild is a community server.
+        - ``DEVELOPER_SUPPORT_SERVER``: Guild has been set as a support server on the App Directory.
         - ``DISCOVERABLE``: Guild shows up in Server Discovery.
+        - ``FEATURABLE``: Guild can be featured in the Server Directory.
         - ``HAS_DIRECTORY_ENTRY``: Unknown.
         - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
         - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
-        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``INVITES_DISABLED``: Guild Invites are disabled.
+        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
         - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
         - ``MEMBER_PROFILES``: Unknown.
         - ``MEMBER_VERIFICATION_GATE_ENABLED``: Guild has Membership Screening enabled.
@@ -230,12 +233,13 @@ class Guild(Hashable):
         - ``PARTNERED``: Guild is a partnered server.
         - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
         - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
-        - ``PRIVATE_THREADS``: Guild has access to create private threads.
         - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
         - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
         - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
+        - ``SEVEN_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 7 days.
         - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
         - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
+        - ``THREE_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 3 days.
         - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
         - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
         - ``VERIFIED``: Guild is a verified server.
@@ -588,7 +592,7 @@ class Guild(Hashable):
         except KeyError:
             pass
 
-        empty_tuple = tuple()
+        empty_tuple = ()
         for presence in data.get("presences", []):
             user_id = int(presence["user"]["id"])
             member = self.get_member(user_id)
@@ -1136,9 +1140,11 @@ class Guild(Hashable):
                 "allow": allow.value,
                 "deny": deny.value,
                 "id": target.id,
-                "type": abc._Overwrites.ROLE
-                if isinstance(target, Role)
-                else abc._Overwrites.MEMBER,
+                "type": (
+                    abc._Overwrites.ROLE
+                    if isinstance(target, Role)
+                    else abc._Overwrites.MEMBER
+                ),
             }
 
             perms.append(payload)
@@ -3646,6 +3652,7 @@ class Guild(Hashable):
         location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
+        image: bytes = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
@@ -3668,6 +3675,8 @@ class Guild(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        image: Optional[:class:`bytes`]
+            The cover image of the scheduled event
 
         Returns
         -------
@@ -3704,6 +3713,9 @@ class Guild(Hashable):
 
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
+
+        if image is not MISSING:
+            payload["image"] = utils._bytes_to_base64_data(image)
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload
@@ -3823,5 +3835,7 @@ class Guild(Hashable):
         if exempt_channels:
             payload["exempt_channels"] = [c.id for c in exempt_channels]
 
-        data = await self._state.http.create_auto_moderation_rule(self.id, payload)
-        return AutoModRule(state=self._state, data=data, reason=reason)
+        data = await self._state.http.create_auto_moderation_rule(
+            self.id, payload, reason=reason
+        )
+        return AutoModRule(state=self._state, data=data)

@@ -68,6 +68,7 @@ __all__ = (
     "map_to",
     "guild_only",
     "has_permissions",
+    "is_nsfw",
 )
 
 
@@ -78,12 +79,22 @@ class BridgeSlashCommand(SlashCommand):
         self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
+    async def dispatch_error(
+        self, ctx: BridgeApplicationContext, error: Exception
+    ) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
+
 
 class BridgeExtCommand(Command):
     """A subclass of :class:`.ext.commands.Command` that is used for bridge commands."""
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
+
+    async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
+        await super().dispatch_error(ctx, error)
+        ctx.bot.dispatch("bridge_command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         if param.annotation is Attachment:
@@ -189,6 +200,10 @@ class BridgeCommand:
     @description_localizations.setter
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
+
+    @property
+    def qualified_name(self) -> str:
+        return self.slash_variant.qualified_name
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
@@ -306,12 +321,19 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
 
+    ext_variant: BridgeExtGroup
+    slash_variant: BridgeSlashGroup
+
     def __init__(self, callback, *args, **kwargs):
-        self.ext_variant: BridgeExtGroup = BridgeExtGroup(callback, *args, **kwargs)
-        name = kwargs.pop("name", self.ext_variant.name)
-        self.slash_variant: BridgeSlashGroup = BridgeSlashGroup(
-            callback, name, *args, **kwargs
+        ext_var = BridgeExtGroup(callback, *args, **kwargs)
+        kwargs.update({"name": ext_var.name})
+        super().__init__(
+            callback,
+            ext_variant=ext_var,
+            slash_variant=BridgeSlashGroup(callback, *args, **kwargs),
+            parent=kwargs.pop("parent", None),
         )
+
         self.subcommands: list[BridgeCommand] = []
 
         self.mapped: SlashCommand | None = None
@@ -433,6 +455,30 @@ def guild_only():
         from ..commands import guild_only
 
         return guild_only()(func)
+
+    return predicate
+
+
+def is_nsfw():
+    """Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check`
+    that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord).
+
+    Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`.
+
+    .. warning::
+
+        In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
+    """
+
+    def predicate(func: Callable | ApplicationCommand):
+        if isinstance(func, ApplicationCommand):
+            func.nsfw = True
+        else:
+            func.__nsfw__ = True
+
+        from ..commands import is_nsfw
+
+        return is_nsfw()(func)
 
     return predicate
 

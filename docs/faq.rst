@@ -9,8 +9,6 @@ Frequently Asked Questions
 This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a
 new question or submit one via pull requests.
 
-.. contents:: Questions
-    :local:
 
 Coroutines
 ----------
@@ -330,8 +328,7 @@ Quick example: ::
 Is there an event for audit log entries being created?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Since Discord does not dispatch this information in the gateway, the library cannot provide this information.
-This is currently a Discord limitation.
+As of version 2.5, you can receive audit log entries with the :func:`on_audit_log_entry` event.
 
 Commands Extension
 -------------------

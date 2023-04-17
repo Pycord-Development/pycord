@@ -1,7 +1,7 @@
 .. _discord_ext_pages:
 
-``discord.ext.pages`` -- A pagination extension module
-======================================================
+discord.ext.pages
+=================
 
 .. versionadded:: 2.0
 

@@ -428,7 +428,7 @@ class Loop(Generic[LF]):
 
             This operation obviously cannot be undone!
         """
-        self._valid_exception = tuple()
+        self._valid_exception = ()
 
     def remove_exception_type(self, *exceptions: type[BaseException]) -> bool:
         r"""Removes exception types from being handled during the reconnect logic.

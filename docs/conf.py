@@ -36,6 +36,7 @@ A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 """
 )
 
+
 # Only write if it's changed to avoid recompiling the docs
 def write_new():
     with open(new_changelog, "w") as fw:

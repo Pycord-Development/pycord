@@ -13,6 +13,9 @@ Command Permission Decorators
 .. autofunction:: discord.commands.guild_only
     :decorator:
 
+.. autofunction:: discord.commands.is_nsfw
+    :decorator:
+
 
 Commands
 --------

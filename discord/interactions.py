@@ -104,7 +104,7 @@ class Interaction:
     application_id: :class:`int`
         The application ID that the interaction was for.
     user: Optional[Union[:class:`User`, :class:`Member`]]
-        The user or member that sent the interaction.
+        The user or member that sent the interaction. Will be `None` in PING interactions.
     message: Optional[:class:`Message`]
         The message that sent this interaction.
     token: :class:`str`

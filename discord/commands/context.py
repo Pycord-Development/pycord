@@ -201,13 +201,13 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.message
 
     @cached_property
-    def user(self) -> Member | User | None:
+    def user(self) -> Member | User:
         """Returns the user that sent this context's command.
         Shorthand for :attr:`.Interaction.user`.
         """
-        return self.interaction.user
+        return self.interaction.user  # type: ignore # command user will never be None
 
-    author: Member | User | None = user
+    author = user
 
     @property
     def voice_client(self) -> VoiceProtocol | None:

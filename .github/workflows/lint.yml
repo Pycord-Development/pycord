@@ -14,11 +14,11 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
-          cache-dependency-path: "requirements-dev.txt"
+          cache-dependency-path: "requirements/dev.txt"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          pip install -r requirements/dev.txt
       - name: Setup cache
         id: cache-pylint
         uses: actions/cache@v3
@@ -36,11 +36,11 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
-          cache-dependency-path: "requirements-dev.txt"
+          cache-dependency-path: "requirements/dev.txt"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          pip install -r requirements/dev.txt
       - name: Setup cache
         id: cache-mypy
         uses: actions/cache@v3

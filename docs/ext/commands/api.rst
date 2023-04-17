@@ -46,7 +46,7 @@ Bot
     .. automethod:: Bot.group(*args, **kwargs)
         :decorator:
 
-    .. automethod:: Bot.listen(name=None)
+    .. automethod:: Bot.listen(name=None, once=False)
         :decorator:
 
 AutoShardedBot

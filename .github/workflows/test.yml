@@ -1,6 +1,10 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -22,13 +26,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
-          cache-dependency-path: "requirements-dev.txt"
+          cache-dependency-path: "requirements/dev.txt"
           check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8
-          pip install -r requirements-dev.txt
+          pip install -r requirements/dev.txt
       - name: Setup cache
         id: cache-pytest
         uses: actions/cache@v3
@@ -63,11 +67,15 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+          cache: "pip"
+          cache-dependency-path: "requirements/docs.txt"
+          check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install -U pip
           pip install ".[docs]"
       - name: Check Links
+        if: github.event_name == 'schedule'
         run: |
           cd docs
           make linkcheck

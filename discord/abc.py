@@ -77,6 +77,7 @@ if TYPE_CHECKING:
         DMChannel,
         GroupChannel,
         PartialMessageable,
+        StageChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -97,7 +98,7 @@ if TYPE_CHECKING:
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable
+        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
@@ -401,6 +402,26 @@ class GuildChannel:
             pass
 
         try:
+            options["default_thread_rate_limit_per_user"] = options.pop(
+                "default_thread_slowmode_delay"
+            )
+        except KeyError:
+            pass
+
+        try:
+            if options.pop("require_tag"):
+                options["flags"] = ChannelFlags.require_tag.flag
+        except KeyError:
+            pass
+
+        try:
+            options["available_tags"] = [
+                tag.to_dict() for tag in options.pop("available_tags")
+            ]
+        except KeyError:
+            pass
+
+        try:
             rtc_region = options.pop("rtc_region")
         except KeyError:
             pass
@@ -458,9 +479,11 @@ class GuildChannel:
                     "allow": allow.value,
                     "deny": deny.value,
                     "id": target.id,
-                    "type": _Overwrites.ROLE
-                    if isinstance(target, Role)
-                    else _Overwrites.MEMBER,
+                    "type": (
+                        _Overwrites.ROLE
+                        if isinstance(target, Role)
+                        else _Overwrites.MEMBER
+                    ),
                 }
 
                 perms.append(payload)
@@ -1270,6 +1293,8 @@ class Messageable:
     The following implement this ABC:
 
     - :class:`~discord.TextChannel`
+    - :class:`~discord.VoiceChannel`
+    - :class:`~discord.StageChannel`
     - :class:`~discord.DMChannel`
     - :class:`~discord.GroupChannel`
     - :class:`~discord.User`
@@ -1301,6 +1326,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1320,6 +1346,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1339,6 +1366,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1358,6 +1386,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1378,6 +1407,7 @@ class Messageable:
         mention_author=None,
         view=None,
         suppress=None,
+        silent=None,
     ):
         """|coro|
 
@@ -1451,6 +1481,10 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.4
 
         Returns
         -------
@@ -1490,11 +1524,10 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = (
-            MessageFlags.suppress_embeds.flag
-            if suppress
-            else MessageFlags.DEFAULT_VALUE
-        )
+        flags = MessageFlags(
+            suppress_embeds=bool(suppress),
+            suppress_notifications=bool(silent),
+        ).value
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]

@@ -32,7 +32,7 @@ Installing
 
 **Python 3.8 or higher is required**
 
-To install the library without full voice support, you can just run the following command:
+To install the library without full voice support, run the following command:
 
 .. code:: sh
 
@@ -42,7 +42,7 @@ To install the library without full voice support, you can just run the followin
     # Windows
     py -3 -m pip install -U py-cord
 
-Otherwise to get voice support you should run the following command:
+Otherwise, to get full voice support, run the following command:
 
 .. code:: sh
 
@@ -130,7 +130,7 @@ Traditional Commands Example
 
     bot.run("token")
 
-You can find more examples in the examples directory.
+You can find more code examples in the ``examples`` directory.
 
 Note: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.
 
