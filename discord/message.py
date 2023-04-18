@@ -1468,6 +1468,7 @@ class Message(Hashable):
         message = Message(state=self._state, channel=self.channel, data=data)
 
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, self.id)
 
         if delete_after is not None:
@@ -2021,5 +2022,6 @@ class PartialMessage(Hashable):
             # data isn't unbound
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
+                view.message = msg
                 self._state.store_view(view, self.id)
             return msg
