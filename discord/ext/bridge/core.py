@@ -516,10 +516,15 @@ class AttachmentConverter(Converter):
             return attach
 
 
+class BooleanConverter(Converter):
+    async def convert(self, ctx, arg: bool):
+        return _convert_to_bool(str(arg))
+
+
 BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.string: str,
     SlashCommandOptionType.integer: int,
-    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
+    SlashCommandOptionType.boolean: BooleanConverter,
     SlashCommandOptionType.user: UserConverter,
     SlashCommandOptionType.channel: GuildChannelConverter,
     SlashCommandOptionType.role: RoleConverter,
@@ -563,3 +568,4 @@ class BridgeOption(Option, Converter):
 
 
 discord.commands.options.Option = BridgeOption
+discord.Option = BridgeOption

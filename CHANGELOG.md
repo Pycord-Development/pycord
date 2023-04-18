@@ -12,10 +12,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added functions (`bridge.Bot.walk_bridge_commands` &
-  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
-  children/subcommands.
-  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
+- Added possibility to start bot via async context manager.
+  ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
+- Added new parameters (`author`, `footer`, `image`, `thumbnail`) to `discord.Embed`.
+  ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
@@ -26,12 +26,18 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for one-time event listeners in `@client.listen()`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Added `current_page` argument to Paginator.update().
-  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added functions (`bridge.Bot.walk_bridge_commands` &
+  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
+  children/subcommands.
+  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Changed
 
+- Changed file-upload size limit from 8 MB to 25 MB accordingly.
+  ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 - Attributes are now dynamically fetched on bridge commands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
@@ -40,15 +46,27 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Changed
+
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
+
 ### Fixed
 
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Editing a webhook message if the thread is a forum post or if the thread is a private
+  thread ([#1981](https://github.com/Pycord-Development/pycord/pull/1981))
+- Fixed `View.message` not being set when view is sent using webhooks, including
+  `Interaction.followup.send` or when a message is edited.
+  ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
 - Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
   ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
 - Fixed scheduled events breaking when changing the location from external to a channel.
   ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
+- Fixed boolean converter breaking for bridge commands. Fix bridge command Options not
+  working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 

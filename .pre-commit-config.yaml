@@ -1,5 +1,6 @@
 ci:
   autoupdate_commit_msg: "chore(pre-commit): pre-commit autoupdate"
+  autofix_commit_msg: "style(pre-commit): auto fixes from pre-commit.com hooks"
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -27,7 +28,7 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 23.3.0
     hooks:
       - id: black
         args: [--safe, --quiet]
