@@ -12,6 +12,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added possibility to start bot via async context manager.
+  ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
+- Added new parameters (`author`, `footer`, `image`, `thumbnail`) to `discord.Embed`.
+  ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
@@ -39,11 +43,21 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Changed
+
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
+
 ### Fixed
 
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Editing a webhook message if the thread is a forum post or if the thread is a private
+  thread ([#1981](https://github.com/Pycord-Development/pycord/pull/1981))
+- Fixed `View.message` not being set when view is sent using webhooks, including
+  `Interaction.followup.send` or when a message is edited.
+  ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
 - Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
   ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
 - Fixed scheduled events breaking when changing the location from external to a channel.
