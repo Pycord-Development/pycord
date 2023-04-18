@@ -72,6 +72,18 @@ Embed
 .. autoclass:: EmbedField
     :members:
 
+.. attributetable:: EmbedAuthor
+
+.. autoclass:: EmbedAuthor
+    :members:
+
+
+.. attributetable:: EmbedFooter
+
+.. autoclass:: EmbedFooter
+    :members:
+
+
 
 Flags
 -----
