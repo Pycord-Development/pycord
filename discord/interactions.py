@@ -440,6 +440,7 @@ class Interaction:
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, message.id)
 
         if delete_after is not None:
@@ -976,6 +977,7 @@ class InteractionResponse:
                     file.close()
 
         if view and not view.is_finished():
+            view.message = msg
             state.store_view(view, message_id)
 
         self._responded = True
