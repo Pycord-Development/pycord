@@ -64,6 +64,8 @@ class MKASink(Sink):
             "s16le",
             "-ar",
             "48000",
+            "-loglevel",
+            "error",
             "-ac",
             "2",
             "-i",

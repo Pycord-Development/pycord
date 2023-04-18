@@ -36,6 +36,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Changed
+
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
+
 ### Fixed
 
 - Fixed `AttributeError` caused by
