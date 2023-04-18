@@ -24,20 +24,38 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for one-time event listeners in `@client.listen()`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Added `current_page` argument to Paginator.update().
-  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983)
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+
+### Changed
+
+- Changed file-upload size limit from 8 MB to 25 MB accordingly.
+  ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 
 ### Removed
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
+### Changed
+
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
+
 ### Fixed
 
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
+  ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
+- Fixed scheduled events breaking when changing the location from external to a channel.
+  ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
+- Fixed boolean converter breaking for bridge commands. Fix bridge command Options not
+  working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
+- Fixed `TypeError` being raised when passing `name` argument to bridge groups.
+  ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 
 ## [2.4.1] - 2023-03-20
 
