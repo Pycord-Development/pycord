@@ -12,21 +12,75 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added possibility to start bot via async context manager.
+  ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
+- Added new parameters (`author`, `footer`, `image`, `thumbnail`) to `discord.Embed`.
+  ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
 - Added the `@client.once()` decorator, which serves as a one-time event listener.
   ([#1940](https://github.com/Pycord-Development/pycord/pull/1940))
-- Added support for text-related features in `StageChannel`
+- Added support for text-related features in `StageChannel`.
   ([#1936](https://github.com/Pycord-Development/pycord/pull/1936))
+- Added support for one-time event listeners in `@client.listen()`.
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+- Added `current_page` argument to Paginator.update().
+  ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
+- Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
+  ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+
+### Changed
+
+- Changed file-upload size limit from 8 MB to 25 MB accordingly.
+  ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
+
+### Removed
+
+- Removed `@client.once()` in favour of `@client.listen(once=True)`.
+  ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+
+### Changed
+
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
+
+### Fixed
+
+- Fixed `AttributeError` caused by
+  [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
+  in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Editing a webhook message if the thread is a forum post or if the thread is a private
+  thread ([#1981](https://github.com/Pycord-Development/pycord/pull/1981))
+- Fixed `View.message` not being set when view is sent using webhooks, including
+  `Interaction.followup.send` or when a message is edited.
+  ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
+- Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
+  ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
+- Fixed scheduled events breaking when changing the location from external to a channel.
+  ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
+- Fixed boolean converter breaking for bridge commands. Fix bridge command Options not
+  working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
+- Fixed `TypeError` being raised when passing `name` argument to bridge groups.
+  ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
+
+## [2.4.1] - 2023-03-20
+
+### Changed
+
+- Updated the values of the `Color.embed_background()` classmethod to correspond with
+  new theme colors in the app.
+  ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
 
 ### Fixed
 
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
-  behavior. ([#1852](https://github.com/Pycord-Development/pycord/pull/1852))
+  behavior. ([#1838](https://github.com/Pycord-Development/pycord/pull/1838))
 - Fixed the voice ip discovery due to the recent
   [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
+- Fixed `reason` being passed to wrong method in `guild.create_auto_moderation_rule`.
+  ([#1960](https://github.com/Pycord-Development/pycord/pull/1960))
 
 ## [2.4.0] - 2023-02-10
 
@@ -537,7 +591,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0
 [2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
