@@ -359,6 +359,8 @@ class ScheduledEvent(Hashable):
                 payload["channel_id"] = location.value.id
                 payload["entity_metadata"] = None
 
+            payload["entity_type"] = location.type.value
+
         location = location if location is not MISSING else self.location
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
             end_time = self.end_time
