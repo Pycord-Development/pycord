@@ -98,7 +98,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete>`_.
 
         .. versionadded:: 2.5
     """
@@ -130,7 +130,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
     cached_messages: List[:class:`Message`]
         The cached messages, if found in the internal message cache.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk>`_.
 
         .. versionadded:: 2.5
     """
@@ -166,7 +166,7 @@ class RawMessageUpdateEvent(_RawReprMixin):
         .. versionadded:: 1.7
 
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
@@ -215,7 +215,7 @@ class RawReactionActionEvent(_RawReprMixin):
 
         .. versionadded:: 1.3
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-add>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-add>`_.
 
         .. versionadded:: 2.5
     """
@@ -260,7 +260,7 @@ class RawReactionClearEvent(_RawReprMixin):
     guild_id: Optional[:class:`int`]
         The guild ID where the reactions got cleared.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all>`_.
 
         .. versionadded:: 2.5
     """
@@ -294,7 +294,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being removed.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji>`_.
 
         .. versionadded:: 2.5
     """
@@ -327,7 +327,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     guild_id: :class:`int`
         The guild ID where the integration got deleted.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#integration-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#integration-delete>`_.
 
         .. versionadded:: 2.5
     """
@@ -361,7 +361,7 @@ class RawThreadUpdateEvent(_RawReprMixin):
     parent_id: :class:`int`
         The ID of the channel the thread belongs to.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
     thread: :class:`discord.Thread` | None
         The thread, if it could be found in the internal cache.
     """
@@ -396,7 +396,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
     thread: Optional[:class:`discord.Thread`]
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-delete>`_.
 
         .. versionadded:: 2.5
     """
@@ -430,7 +430,7 @@ class RawTypingEvent(_RawReprMixin):
     member: Optional[:class:`Member`]
         The member who started typing. Only available if the member started typing in a guild.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#typing-start>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#typing-start>`_.
 
         .. versionadded:: 2.5
     """
@@ -464,7 +464,7 @@ class RawMemberRemoveEvent(_RawReprMixin):
     guild_id: :class:`int`
         The ID of the guild the user left.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-member-remove>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-member-remove>`_.
 
         .. versionadded:: 2.5
     """
@@ -495,7 +495,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
         Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
         the event called.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add>`_.
 
         .. versionadded:: 2.5
     """
@@ -555,7 +555,7 @@ class AutoModActionExecutionEvent:
     matched_content: :class:`str`
         The substring in the content that was matched.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution>`_.
 
         .. versionadded:: 2.5
     """
@@ -650,7 +650,7 @@ class RawThreadMembersUpdateEvent(_RawReprMixin):
     member_count: :class:`int`
         The approximate number of members in the thread. Maximum of 50.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`_.
 
         .. versionadded:: 2.5
     """
@@ -691,7 +691,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         contains extra information. See :class:`AuditLogAction` for
         which actions have this field filled out.
     data: :class:`dict`
-        The raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`_.
     """
 
     __slots__ = (
