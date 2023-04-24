@@ -155,14 +155,16 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
 
 def _validate_names(obj):
     validate_chat_input_name(obj.name)
-    for locale, string in obj.name_localizations.items():
-        validate_chat_input_name(string, locale=locale)
+    if obj.name_localizations:
+        for locale, string in obj.name_localizations.items():
+            validate_chat_input_name(string, locale=locale)
 
 
 def _validate_descriptions(obj):
     validate_chat_input_description(obj.description)
-    for locale, string in obj.description_localizations.items():
-        validate_chat_input_description(string, locale=locale)
+    if obj.description_localizations:
+        for locale, string in obj.description_localizations.items():
+            validate_chat_input_description(string, locale=locale)
 
 
 class _BaseCommand:
