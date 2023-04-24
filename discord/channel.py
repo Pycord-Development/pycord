@@ -2838,7 +2838,9 @@ class DMChannel(discord.abc.Messageable, Hashable):
         self, *, me: ClientUser, state: ConnectionState, data: DMChannelPayload
     ):
         self._state: ConnectionState = state
-        self.recipient: User | None = state.store_user(data["recipients"][0])
+        self.recipient: User | None = None
+        if r := data.get("recipients"):
+            self.recipient: state.store_user(r[0])
         self.me: ClientUser = me
         self.id: int = int(data["id"])
 

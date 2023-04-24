@@ -29,7 +29,7 @@ import asyncio
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
-from .channel import ChannelType, PartialMessageable
+from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import InteractionResponseType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
@@ -56,6 +56,8 @@ if TYPE_CHECKING:
         StageChannel,
         TextChannel,
         VoiceChannel,
+        DMChannel,
+        GroupChannel
     )
     from .client import Client
     from .commands import OptionChoice
@@ -77,6 +79,8 @@ if TYPE_CHECKING:
         ForumChannel,
         CategoryChannel,
         Thread,
+        DMChannel,
+        GroupChannel,
         PartialMessageable,
     ]
 
@@ -99,8 +103,10 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+        The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
-        The channel ID the interaction was sent from.
+        The ID of the channel the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
     user: Optional[Union[:class:`User`, :class:`Member`]]
@@ -124,6 +130,7 @@ class Interaction:
         "id",
         "type",
         "guild_id",
+        "channel",
         "channel_id",
         "data",
         "application_id",
@@ -134,6 +141,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "_channel_data",
         "_message_data",
         "_permissions",
         "_app_permissions",
@@ -169,13 +177,7 @@ class Interaction:
         self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Message | None = None
-
-        if message_data := data.get("message"):
-            self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
-            )
-
-        self._message_data = message_data
+        self.channel = None
 
         self.user: User | Member | None = None
         self._permissions: int = 0
@@ -206,6 +208,26 @@ class Interaction:
             except KeyError:
                 pass
 
+        if channel := data.get("channel"):
+            if (ch_type := channel.get('type')) is not None:
+                factory, ch_type = _threaded_channel_factory(ch_type)
+
+                if ch_type in (ChannelType.group, ChannelType.private):
+                    self.channel = factory(me=self.user, data=channel, state=self._state)
+                elif self.guild:
+                    self.channel = factory(guild=self.guild, state=self._state, data=channel)
+        else:
+            self.channel = self.cached_channel
+            
+        self._channel_data = channel
+
+        if message_data := data.get("message"):
+            self.message = Message(
+                state=self._state, channel=self.channel, data=message_data
+            )
+
+        self._message_data = message_data
+
     @property
     def client(self) -> Client:
         """Returns the client that sent the interaction."""
@@ -225,7 +247,7 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
-    def channel(self) -> InteractionChannel | None:
+    def cached_channel(self) -> InteractionChannel | None:
         """The channel the
         interaction was sent from.
 
