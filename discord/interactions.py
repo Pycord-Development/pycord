@@ -38,7 +38,12 @@ from .message import Attachment, Message
 from .object import Object
 from .permissions import Permissions
 from .user import User
-from .webhook.async_ import Webhook, WebhookMessage, async_context, handle_message_parameters
+from .webhook.async_ import (
+    Webhook,
+    WebhookMessage,
+    async_context,
+    handle_message_parameters,
+)
 
 __all__ = (
     "Interaction",
@@ -532,9 +537,7 @@ class Interaction:
         """
         try:
             if not self.response.is_done():
-                return await self.response.send_message(
-                    *args, **kwargs
-                )
+                return await self.response.send_message(*args, **kwargs)
             else:
                 return await self.followup.send(*args, **kwargs)
         except discord.errors.InteractionResponded:
@@ -553,9 +556,7 @@ class Interaction:
         """
         try:
             if not self.response.is_done():
-                return await self.response.edit_message(
-                    *args, **kwargs
-                )
+                return await self.response.edit_message(*args, **kwargs)
             else:
                 return await self.edit_original_response(*args, **kwargs)
         except discord.errors.InteractionResponded:

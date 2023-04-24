@@ -268,7 +268,9 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     @discord.utils.copy_doc(Interaction.respond)
-    def respond(self, *args, **kwargs) ->  Callable[..., Awaitable[Interaction | WebhookMessage]]:
+    def respond(
+        self, *args, **kwargs
+    ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
         return self.interaction.respond
 
     @property
