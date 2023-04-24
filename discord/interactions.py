@@ -540,7 +540,7 @@ class Interaction:
                 return await self.response.send_message(*args, **kwargs)
             else:
                 return await self.followup.send(*args, **kwargs)
-        except discord.errors.InteractionResponded:
+        except InteractionResponded:
             return await self.followup.send(*args, **kwargs)
 
     async def edit(self, *args, **kwargs) -> InteractionMessage | None:
@@ -559,7 +559,7 @@ class Interaction:
                 return await self.response.edit_message(*args, **kwargs)
             else:
                 return await self.edit_original_response(*args, **kwargs)
-        except discord.errors.InteractionResponded:
+        except InteractionResponded:
             return await self.edit_original_response(*args, **kwargs)
 
     def to_dict(self) -> dict[str, Any]:
