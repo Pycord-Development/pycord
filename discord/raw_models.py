@@ -228,7 +228,7 @@ class RawReactionActionEvent(_RawReprMixin):
         "emoji",
         "event_type",
         "member",
-        "data"
+        "data",
     )
 
     def __init__(
@@ -577,7 +577,7 @@ class AutoModActionExecutionEvent:
         "message",
         "alert_system_message_id",
         "alert_system_message",
-        "data"
+        "data",
     )
 
     def __init__(self, state: ConnectionState, data: AutoModActionExecution) -> None:
@@ -703,7 +703,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         "reason",
         "extra",
         "changes",
-        "data"
+        "data",
     )
 
     def __init__(self, data: AuditLogEntryEvent) -> None:
