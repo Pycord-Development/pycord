@@ -66,7 +66,7 @@ class Attachment(TypedDict):
     size: int
     url: str
     proxy_url: str
-    duration_secs: NotRequired[float | None]
+    duration_secs: NotRequired[float]
     waveform: NotRequired[str]
 
 
