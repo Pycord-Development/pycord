@@ -52,12 +52,12 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
+        DMChannel,
         ForumChannel,
+        GroupChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
-        DMChannel,
-        GroupChannel
     )
     from .client import Client
     from .commands import OptionChoice
@@ -209,16 +209,20 @@ class Interaction:
                 pass
 
         if channel := data.get("channel"):
-            if (ch_type := channel.get('type')) is not None:
+            if (ch_type := channel.get("type")) is not None:
                 factory, ch_type = _threaded_channel_factory(ch_type)
 
                 if ch_type in (ChannelType.group, ChannelType.private):
-                    self.channel = factory(me=self.user, data=channel, state=self._state)
+                    self.channel = factory(
+                        me=self.user, data=channel, state=self._state
+                    )
                 elif self.guild:
-                    self.channel = factory(guild=self.guild, state=self._state, data=channel)
+                    self.channel = factory(
+                        guild=self.guild, state=self._state, data=channel
+                    )
         else:
             self.channel = self.cached_channel
-            
+
         self._channel_data = channel
 
         if message_data := data.get("message"):
