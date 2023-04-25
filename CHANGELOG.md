@@ -29,6 +29,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `custom_message` to AutoModActionMetadata.
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Added support for
+  [voice messages](https://github.com/discord/discord-api-docs/pull/6082).
+  ([#2016](https://github.com/Pycord-Development/pycord/pull/2016))
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+  ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 
 ### Changed
 
@@ -67,6 +75,8 @@ These changes are available on the `master` branch, but have not yet been releas
   working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
+- Fixed `TypeError` in AutoModRule.
+- ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 
 ## [2.4.1] - 2023-03-20
 
