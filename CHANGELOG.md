@@ -34,9 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
-- `Interaction.channel` is received from the gateway, so it can now be `DMChannel`
-  and `GroupChannel`.
-  ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
+- `Interaction.channel` is received from the gateway, so it can now be `DMChannel` and
+  `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - `DMChannel.recipients` can now be `None`
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 
