@@ -47,6 +47,7 @@ class AutoModTriggerMetadata(TypedDict, total=False):
 class AutoModActionMetadata(TypedDict, total=False):
     channel_id: Snowflake
     duration_seconds: int
+    custom_message: str
 
 
 class AutoModAction(TypedDict):
