@@ -31,7 +31,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 - Added `custom_message` to AutoModActionMetadata.
 - ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
-- Added the `data` attribute to all [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
   ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 
 ### Changed
