@@ -29,6 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
+  ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
 
 ### Changed
 
