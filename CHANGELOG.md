@@ -34,6 +34,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for
   [voice messages](https://github.com/discord/discord-api-docs/pull/6082).
   ([#2016](https://github.com/Pycord-Development/pycord/pull/2016))
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+  ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 
 ### Changed
 
