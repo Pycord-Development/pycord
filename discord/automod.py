@@ -91,7 +91,10 @@ class AutoModActionMetadata:
     )
 
     def __init__(
-        self, channel_id: int = MISSING, timeout_duration: timedelta = MISSING, custom_message: str = MISSING
+        self,
+        channel_id: int = MISSING,
+        timeout_duration: timedelta = MISSING,
+        custom_message: str = MISSING,
     ):
         self.channel_id: int = channel_id
         self.timeout_duration: timedelta = timeout_duration
