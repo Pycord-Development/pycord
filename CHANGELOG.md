@@ -31,6 +31,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 - Added `custom_message` to AutoModActionMetadata.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Added support for
+  [voice messages](https://github.com/discord/discord-api-docs/pull/6082).
+  ([#2016](https://github.com/Pycord-Development/pycord/pull/2016))
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+  ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 - Added and documented missing `AuditLogAction` enums.
   ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - `AuditLogDiff` now supports AutoMod related models.
