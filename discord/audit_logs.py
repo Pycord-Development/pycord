@@ -29,12 +29,12 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
 from . import enums, utils
 from .asset import Asset
+from .automod import AutoModAction, AutoModTriggerMetadata
 from .colour import Colour
 from .invite import Invite
 from .mixins import Hashable
 from .object import Object
 from .permissions import PermissionOverwrite, Permissions
-from .automod import AutoModAction, AutoModTriggerMetadata
 
 __all__ = (
     "AuditLogDiff",
@@ -58,12 +58,12 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.audit_log import AuditLogChange as AuditLogChangePayload
     from .types.audit_log import AuditLogEntry as AuditLogEntryPayload
+    from .types.automod import AutoModAction as AutoModActionPayload
+    from .types.automod import AutoModTriggerMetadata as AutoModTriggerMetadataPayload
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .types.role import Role as RolePayload
     from .types.snowflake import Snowflake
     from .user import User
-    from .types.automod import AutoModAction as AutoModActionPayload
-    from .types.automod import AutoModTriggerMetadata as AutoModTriggerMetadataPayload
 
 
 def _transform_permissions(entry: AuditLogEntry, data: str) -> Permissions:
@@ -85,6 +85,7 @@ def _transform_channel(
         return None
     return entry.guild.get_channel(int(data)) or Object(id=data)
 
+
 def _transform_channels(
     entry: AuditLogEntry, data: list[Snowflake] | None
 ) -> list[abc.GuildChannel | Object] | None:
@@ -92,12 +93,14 @@ def _transform_channels(
         return None
     return [_transform_channel(entry, channel) for channel in data]
 
+
 def _transform_roles(
     entry: AuditLogEntry, data: list[Snowflake] | None
 ) -> list[Role | Object] | None:
     if data is None:
         return None
     return [entry.guild.get_role(int(r)) or Object(id=r) for r in data]
+
 
 def _transform_member_id(
     entry: AuditLogEntry, data: Snowflake | None
@@ -279,7 +282,7 @@ class AuditLogChanges:
         "actions": (None, _transform_actions),
         "trigger_metadata": (None, _transform_trigger_metadata),
         "exempt_roles": (None, _transform_roles),
-        "exempt_channels": (None, _transform_channels)
+        "exempt_channels": (None, _transform_channels),
     }
 
     def __init__(
@@ -302,11 +305,23 @@ class AuditLogChanges:
             elif attr == "$remove":
                 self._handle_role(self.after, self.before, entry, elem["new_value"])  # type: ignore
                 continue
-            elif attr in ["$add_keyword_filter", "$add_regex_patterns", "$add_allow_list"]:
-                self._handle_trigger_metadata(self.before, self.after, entry, elem["new_value"], attr)
+            elif attr in [
+                "$add_keyword_filter",
+                "$add_regex_patterns",
+                "$add_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.before, self.after, entry, elem["new_value"], attr
+                )
                 continue
-            elif attr in ["$remove_keyword_filter", "$remove_regex_patterns", "$remove_allow_list"]:
-                self._handle_trigger_metadata(self.after, self.before, entry, elem["new_value"], attr)
+            elif attr in [
+                "$remove_keyword_filter",
+                "$remove_regex_patterns",
+                "$remove_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.after, self.before, entry, elem["new_value"], attr
+                )
                 continue
 
             try:

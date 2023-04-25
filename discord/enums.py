@@ -499,7 +499,7 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
             AuditLogAction.auto_moderation_block_message: None,
             AuditLogAction.auto_moderation_flag_to_channel: None,
-            AuditLogAction.auto_moderation_user_communication_disabled: None
+            AuditLogAction.auto_moderation_user_communication_disabled: None,
         }
         return lookup[self]
 
