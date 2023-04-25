@@ -1,5 +1,20 @@
 name: Type Check and Lint
-on: [push, pull_request]
+
+on:
+  push:
+    paths:
+      - "docs/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
+  pull_request:
+    branches: [ master ]
+    paths:
+      - "docs/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

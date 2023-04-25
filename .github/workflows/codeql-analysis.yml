@@ -12,10 +12,11 @@
 name: "CodeQL"
 
 on:
-  push: null
-  pull_request: null
+  push:
+  pull_request:
   schedule:
     - cron: "26 6 * * 6"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

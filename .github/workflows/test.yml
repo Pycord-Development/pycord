@@ -2,9 +2,19 @@ name: Unit Tests
 
 on:
   push:
+    paths:
+        - "discord/**"
+        - "test/**"
+        - "requirements/**"
   pull_request:
+    branches: [ master ]
+    paths:
+        - "discord/**"
+        - "test/**"
+        - "requirements/**"
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -12,6 +22,7 @@ concurrency:
 
 jobs:
   pytest:
+    name: "Test build with matrix"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -59,27 +70,3 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3.1.0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-          cache: "pip"
-          cache-dependency-path: "requirements/docs.txt"
-          check-latest: true
-      - name: Install dependencies
-        run: |
-          python -m pip install -U pip
-          pip install ".[docs]"
-      - name: Check Links
-        if: github.event_name == 'schedule'
-        run: |
-          cd docs
-          make linkcheck
-      - name: Compile to html
-        run: |
-          cd docs
-          make html
