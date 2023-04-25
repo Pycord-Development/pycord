@@ -3,15 +3,15 @@ name: Unit Tests
 on:
   push:
     paths:
-        - "discord/**"
-        - "test/**"
-        - "requirements/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths:
-        - "discord/**"
-        - "test/**"
-        - "requirements/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:

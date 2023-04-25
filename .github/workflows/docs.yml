@@ -1,45 +1,45 @@
 name: Docs Tests
 
 on:
-    push:
-        paths:
-            - "docs/**"
-            - "discord/**"
-            - "test/**"
-            - "requirements/**"
-    pull_request:
-        paths:
-            - "docs/**"
-            - "discord/**"
-            - "test/**"
-            - "requirements/**"
-    schedule:
-      - cron: "0 0 * * *"
-    workflow_dispatch:
+  push:
+    paths:
+      - "docs/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "discord/**"
+      - "test/**"
+      - "requirements/**"
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
-    docs:
-        name: "Build Docs"
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v3.1.0
-          - name: Set up Python ${{ matrix.python-version }}
-            uses: actions/setup-python@v4
-            with:
-              python-version: "3.8"
-              cache: "pip"
-              cache-dependency-path: "requirements/docs.txt"
-              check-latest: true
-          - name: Install dependencies
-            run: |
-              python -m pip install -U pip
-              pip install ".[docs]"
-          - name: Check Links
-            if: github.event_name == 'schedule'
-            run: |
-              cd docs
-              make linkcheck
-          - name: Compile to html
-            run: |
-              cd docs
-              make html
+  docs:
+    name: "Build Docs"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+          cache-dependency-path: "requirements/docs.txt"
+          check-latest: true
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install ".[docs]"
+      - name: Check Links
+        if: github.event_name == 'schedule'
+        run: |
+          cd docs
+          make linkcheck
+      - name: Compile to html
+        run: |
+          cd docs
+          make html

@@ -2,7 +2,7 @@ name: Checks
 on:
   push:
   pull_request:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 concurrency:
