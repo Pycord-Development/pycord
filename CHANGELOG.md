@@ -37,6 +37,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the `data` attribute to all
   [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
   ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
+- Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
+  ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
 
 ### Changed
 

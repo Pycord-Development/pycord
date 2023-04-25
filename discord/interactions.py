@@ -38,7 +38,12 @@ from .message import Attachment, Message
 from .object import Object
 from .permissions import Permissions
 from .user import User
-from .webhook.async_ import Webhook, async_context, handle_message_parameters
+from .webhook.async_ import (
+    Webhook,
+    WebhookMessage,
+    async_context,
+    handle_message_parameters,
+)
 
 __all__ = (
     "Interaction",
@@ -544,6 +549,44 @@ class Interaction:
             Deleted a message that is not yours.
         """
         return await self.delete_original_response(**kwargs)
+
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
+        """|coro|
+
+        Sends either a response or a message using the followup webhook determined by whether the interaction
+        has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.send_message(*args, **kwargs)
+            else:
+                return await self.followup.send(*args, **kwargs)
+        except InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
+
+    async def edit(self, *args, **kwargs) -> InteractionMessage | None:
+        """|coro|
+
+        Either respond to the interaction with an edit_message or edits the existing response, determined by
+        whether the interaction has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.InteractionMessage`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.edit_message(*args, **kwargs)
+            else:
+                return await self.edit_original_response(*args, **kwargs)
+        except InteractionResponded:
+            return await self.edit_original_response(*args, **kwargs)
 
     def to_dict(self) -> dict[str, Any]:
         """
