@@ -30,10 +30,16 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 - Added `custom_message` to AutoModActionMetadata.
-- ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Added and documented missing `AuditLogAction` enums.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
+- `AuditLogDiff` now supports AutoMod related models.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 
 ### Changed
 
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 
@@ -41,11 +47,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
-
-### Changed
-
-- Suppressed FFMPEG output when recording voice channels.
-  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 
 ### Fixed
 
@@ -66,7 +67,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 - Fixed `TypeError` in AutoModRule.
-- ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 
 ## [2.4.1] - 2023-03-20
 
