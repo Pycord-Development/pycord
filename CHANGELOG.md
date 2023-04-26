@@ -30,12 +30,24 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
 - Added `custom_message` to AutoModActionMetadata.
-- ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Added support for
+  [voice messages](https://github.com/discord/discord-api-docs/pull/6082).
+  ([#2016](https://github.com/Pycord-Development/pycord/pull/2016))
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+  ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
+- Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
+  ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
 
 ### Changed
 
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
+- `Interaction.channel` is received from the gateway, so it can now be `DMChannel` and
+  `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
+- `DMChannel.recipients` can now be `None`
+  ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 
 ### Removed
 
