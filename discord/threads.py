@@ -611,7 +611,7 @@ class Thread(Messageable, Hashable):
         Editing the thread requires :attr:`.Permissions.manage_threads`. The thread
         creator can also edit ``name``, ``archived`` or ``auto_archive_duration``.
         Note that if the thread is locked then only those with :attr:`.Permissions.manage_threads`
-        can send messages in in or unarchive a thread.
+        can send messages in it or unarchive a thread.
 
         The thread must be unarchived to be edited.
 
