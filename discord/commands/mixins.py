@@ -399,7 +399,7 @@ class Invokable(Generic[CogT, P, T]):
         self,
         func: Callback,
         name: str | None = None,
-        enabled: bool = False,
+        enabled: bool = True,
         cooldown_after_parsing: bool = False,
         parent: Invokable | None = None,
         checks: list[Check] = [],
