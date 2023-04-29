@@ -157,11 +157,7 @@ class BridgeCommand:
         The prefix-based version of this bridge command.
     """
 
-    __special_attrs__ = [
-        "slash_variant",
-        "ext_variant",
-        "parent"
-    ]
+    __special_attrs__ = ["slash_variant", "ext_variant", "parent"]
 
     def __init__(self, callback, **kwargs):
         self.parent = kwargs.pop("parent", None)
@@ -352,7 +348,7 @@ class BridgeCommandGroup(BridgeCommand):
         "ext_variant",
         "parent",
         "subcommands",
-        "mapped"
+        "mapped",
     ]
 
     ext_variant: BridgeExtGroup
