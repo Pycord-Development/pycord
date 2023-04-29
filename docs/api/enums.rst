@@ -1512,6 +1512,74 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
+    .. attribute:: auto_moderation_rule_create
+
+        A guild auto moderation rule was created.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.event_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_rule_update
+
+        A guild auto moderation rule was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_rule_delete
+
+        A guild auto moderation rule was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.event_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_block_message
+
+        A message was blocked by auto moderation.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_flag_to_channel
+
+        A message was flagged by auto moderation.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_user_communication_disabled
+
+        A member was timed out by auto moderation.
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
