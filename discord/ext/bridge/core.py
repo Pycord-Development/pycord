@@ -206,6 +206,10 @@ class BridgeCommand:
             raise AttributeError(
                 f"'{self.__class__.__name__}' object has no attribute '{name}'"
             )
+        
+    def __setattr__(self, name, value) -> None:
+        setattr(self.slash_variant, name, value)
+        setattr(self.ext_variant, name, value)
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
