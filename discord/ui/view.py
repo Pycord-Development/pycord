@@ -187,6 +187,7 @@ class View:
         self.__timeout_task: asyncio.Task[None] | None = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
         self._message: Message | InteractionMessage | None = None
+        self._parent: Interaction | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -363,9 +364,12 @@ class View:
         A callback that is called when a view's timeout elapses without being explicitly stopped.
         """
         if self.disable_on_timeout:
-            if self._message:
-                self.disable_all_items()
-                await self._message.edit(view=self)
+            self.disable_all_items()
+            mess = self._message or self._parent
+            if mess:
+                m = await mess.edit(view=self)
+                if m:
+                    self._message = m
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -437,6 +441,9 @@ class View:
     def _dispatch_item(self, item: Item, interaction: Interaction):
         if self.__stopped.done():
             return
+
+        if interaction.message:
+            self.message = interaction.message
 
         asyncio.create_task(
             self._scheduled_task(item, interaction),
