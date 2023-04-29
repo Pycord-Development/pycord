@@ -241,9 +241,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         func: CallbackT,
         **kwargs: Any,
     ):
-        super().__init__(func, **kwargs)
-
-        help_doc = kwargs.get("help")
+        help_doc = kwargs.pop("help", None)
         if help_doc is not None:
             help_doc = inspect.cleandoc(help_doc)
         else:
@@ -252,23 +250,24 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
                 help_doc = help_doc.decode("utf-8")
 
         self.help: str | None = help_doc
-
-        self.brief: str | None = kwargs.get("brief")
-        self.usage: str | None = kwargs.get("usage")
-        self.rest_is_raw: bool = kwargs.get("rest_is_raw", False)
-        self.aliases: list[str] | tuple[str] = kwargs.get("aliases", [])
-        self.extras: dict[str, Any] = kwargs.get("extras", {})
+        self.brief: str | None = kwargs.pop("brief", None)
+        self.usage: str | None = kwargs.pop("usage", None)
+        self.rest_is_raw: bool = kwargs.pop("rest_is_raw", False)
+        self.aliases: list[str] | tuple[str] = kwargs.pop("aliases", [])
+        self.extras: dict[str, Any] = kwargs.pop("extras", {})
 
         if not isinstance(self.aliases, (list, tuple)):
             raise TypeError(
                 "Aliases of a command must be a list or a tuple of strings."
             )
 
-        self.description: str = inspect.cleandoc(kwargs.get("description", ""))
-        self.hidden: bool = kwargs.get("hidden", False)
+        self.description: str = inspect.cleandoc(kwargs.pop("description", ""))
+        self.hidden: bool = kwargs.pop("hidden", False)
 
-        self.require_var_positional: bool = kwargs.get("require_var_positional", False)
-        self.ignore_extra: bool = kwargs.get("ignore_extra", True)
+        self.require_var_positional: bool = kwargs.pop("require_var_positional", False)
+        self.ignore_extra: bool = kwargs.pop("ignore_extra", True)
+
+        super().__init__(func, **kwargs)
 
     @property
     def callback(
@@ -289,7 +288,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         self.params = get_signature_parameters(func, globalns)
 
-    async def __dispatch_error(self, ctx: Context, error: Exception) -> None:
+    async def _dispatch_error(self, ctx: Context, error: Exception) -> None:
         ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
