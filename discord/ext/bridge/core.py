@@ -166,6 +166,36 @@ class BridgeCommand:
             "ext_variant", None
         ) or BridgeExtCommand(callback, **kwargs)
 
+    @property
+    def name_localizations(self) -> dict[str, str] | None:
+        """Returns name_localizations from :attr:`slash_variant`
+        You can edit/set name_localizations directly with
+        .. code-block:: python3
+            bridge_command.name_localizations["en-UK"] = ...  # or any other locale
+            # or
+            bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
+        """
+        return self.slash_variant.name_localizations
+
+    @name_localizations.setter
+    def name_localizations(self, value):
+        self.slash_variant.name_localizations = value
+
+    @property
+    def description_localizations(self) -> dict[str, str] | None:
+        """Returns description_localizations from :attr:`slash_variant`
+        You can edit/set description_localizations directly with
+        .. code-block:: python3
+            bridge_command.description_localizations["en-UK"] = ...  # or any other locale
+            # or
+            bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
+        """
+        return self.slash_variant.description_localizations
+
+    @description_localizations.setter
+    def description_localizations(self, value):
+        self.slash_variant.description_localizations = value
+
     def __getattr__(self, name):
         result = getattr(self.slash_variant, name, MISSING)
         try:
