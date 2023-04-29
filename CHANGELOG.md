@@ -12,6 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added possibility to start bot via async context manager.
+  ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
 - Added new parameters (`author`, `footer`, `image`, `thumbnail`) to `discord.Embed`.
   ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
@@ -27,27 +29,47 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `custom_message` to AutoModActionMetadata.
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Added support for
+  [voice messages](https://github.com/discord/discord-api-docs/pull/6082).
+  ([#2016](https://github.com/Pycord-Development/pycord/pull/2016))
+- Added the `data` attribute to all
+  [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
+  ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
+- Added and documented missing `AuditLogAction` enums.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
+- `AuditLogDiff` now supports AutoMod related models.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
+- Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
+  ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
 
 ### Changed
 
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
+- `Interaction.channel` is received from the gateway, so it can now be `DMChannel` and
+  `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
+- `DMChannel.recipients` can now be `None`
+  ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 
 ### Removed
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 
-### Changed
-
-- Suppressed FFMPEG output when recording voice channels.
-  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
-
 ### Fixed
 
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
+- Editing a webhook message if the thread is a forum post or if the thread is a private
+  thread ([#1981](https://github.com/Pycord-Development/pycord/pull/1981))
+- Fixed `View.message` not being set when view is sent using webhooks, including
+  `Interaction.followup.send` or when a message is edited.
+  ([#1997](https://github.com/Pycord-Development/pycord/pull/1997))
 - Fixed `None` being handled incorrectly for avatar in `ClientUser.edit`.
   ([#1994](https://github.com/Pycord-Development/pycord/pull/1994))
 - Fixed scheduled events breaking when changing the location from external to a channel.
@@ -56,6 +78,8 @@ These changes are available on the `master` branch, but have not yet been releas
   working. ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
+- Fixed `TypeError` in AutoModRule.
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 
 ## [2.4.1] - 2023-03-20
 

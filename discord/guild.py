@@ -202,50 +202,8 @@ class Guild(Hashable):
         The guild's notification settings.
     features: List[:class:`str`]
         A list of features that the guild has. The features that a guild can have are
-        subject to arbitrary change by Discord.
-
-        They are currently as follows:
-
-        - ``ANIMATED_BANNER``: Guild can upload an animated banner.
-        - ``ANIMATED_ICON``: Guild can upload an animated icon.
-        - ``APPLICATION_COMMAND_PERMISSIONS_V2``: Guild is using the old command permissions behavior.
-        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
-        - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
-        - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
-        - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
-        - ``COMMUNITY``: Guild is a community server.
-        - ``DEVELOPER_SUPPORT_SERVER``: Guild has been set as a support server on the App Directory.
-        - ``DISCOVERABLE``: Guild shows up in Server Discovery.
-        - ``FEATURABLE``: Guild can be featured in the Server Directory.
-        - ``HAS_DIRECTORY_ENTRY``: Unknown.
-        - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
-        - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
-        - ``INVITES_DISABLED``: Guild Invites are disabled.
-        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
-        - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
-        - ``MEMBER_PROFILES``: Unknown.
-        - ``MEMBER_VERIFICATION_GATE_ENABLED``: Guild has Membership Screening enabled.
-        - ``MONETIZATION_ENABLED``: Guild has enabled monetization.
-        - ``MORE_EMOJI``: Guild has increased custom emoji slots.
-        - ``MORE_STICKERS``: Guild has increased custom sticker slots.
-        - ``NEWS``: Guild can create news channels.
-        - ``NEW_THREAD_PERMISSIONS``: Guild has new thread permissions.
-        - ``PARTNERED``: Guild is a partnered server.
-        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
-        - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
-        - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
-        - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
-        - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``SEVEN_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 7 days.
-        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
-        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
-        - ``THREE_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 3 days.
-        - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
-        - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
-        - ``VERIFIED``: Guild is a verified server.
-        - ``VIP_REGIONS``: Guild has VIP voice regions.
-        - ``WELCOME_SCREEN_ENABLED``: Guild has enabled the welcome screen.
-
+        subject to arbitrary change by Discord. You can find a catalog of guild features
+        `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_.
     premium_tier: :class:`int`
         The premium tier for this guild. Corresponds to "Nitro Server" in the official UI.
         The number goes from 0 to 3 inclusive.
