@@ -351,8 +351,6 @@ class BridgeCommandGroup(BridgeCommand):
 
         return wrap
 
-    # TODO: another group decorator for sub-groups
-
 
 def bridge_command(**kwargs):
     """A decorator that is used to wrap a function as a bridge command.
