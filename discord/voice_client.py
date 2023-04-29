@@ -846,7 +846,9 @@ class VoiceClient(VoiceProtocol):
             ) * 48000  # delta receive time
             dT = data.timestamp - self.user_timestamps[data.ssrc][0]  # delta timestamp
             diff = abs(100 - dT * 100 / dRT)
-            if diff > 100 or dT != 960:  # If the difference is more than 100%
+            if (
+                diff > 60 and dT != 960
+            ):  # If the difference in change is more than 60% threshold
                 silence = dRT - 960
             else:
                 silence = dT - 960
