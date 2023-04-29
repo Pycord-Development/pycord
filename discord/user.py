@@ -404,7 +404,9 @@ class ClientUser(BaseUser):
         if username is not MISSING:
             payload["username"] = username
 
-        if avatar is not MISSING:
+        if avatar is None:
+            payload["avatar"] = None
+        elif avatar is not MISSING:
             payload["avatar"] = _bytes_to_base64_data(avatar)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
