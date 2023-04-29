@@ -157,6 +157,12 @@ class BridgeCommand:
         The prefix-based version of this bridge command.
     """
 
+    __special_attrs__ = [
+        "slash_variant",
+        "ext_variant",
+        "parent"
+    ]
+
     def __init__(self, callback, **kwargs):
         self.parent = kwargs.pop("parent", None)
         self.slash_variant: BridgeSlashCommand = kwargs.pop(
@@ -196,20 +202,34 @@ class BridgeCommand:
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
 
-    def __getattr__(self, name):
-        result = getattr(self.slash_variant, name, MISSING)
+    def __getattribute__(self, name):
         try:
-            if result is MISSING:
-                return getattr(self.ext_variant, name)
-            return result
-        except AttributeError:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+            # first, look for the attribute on the bridge command
+            return super().__getattribute__(name)
+        except AttributeError as e:
+            # if it doesn't exist, check this list, if the name of
+            # the parameter is here
+            if name is self.__special_attrs__:
+                raise e
+
+            # looks up the result in the variants.
+            # slash cmd prioritized
+            result = getattr(self.slash_variant, name, MISSING)
+            try:
+                if result is MISSING:
+                    return getattr(self.ext_variant, name)
+                return result
+            except AttributeError:
+                raise AttributeError(
+                    f"'{self.__class__.__name__}' object has no attribute '{name}'"
+                )
 
     def __setattr__(self, name, value) -> None:
-        setattr(self.slash_variant, name, value)
-        setattr(self.ext_variant, name, value)
+        if name not in self.__special_attrs__:
+            setattr(self.slash_variant, name, value)
+            setattr(self.ext_variant, name, value)
+
+        return super().__setattr__(name, value)
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
@@ -326,6 +346,14 @@ class BridgeCommandGroup(BridgeCommand):
     mapped: Optional[:class:`.SlashCommand`]
         If :func:`map_to` is used, the mapped slash command.
     """
+
+    __special_attrs__ = [
+        "slash_variant",
+        "ext_variant",
+        "parent",
+        "subcommands",
+        "mapped"
+    ]
 
     ext_variant: BridgeExtGroup
     slash_variant: BridgeSlashGroup
