@@ -58,7 +58,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - `DMChannel.recipients` can now be `None`
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
-- Attributes are now dynamically fetched on bridge commands.
+- Attributes shared between ext and slash commands are now dynamically fetched on
+  bridge commands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Removed
