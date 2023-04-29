@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 import functools
+from copy import copy
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -716,7 +717,7 @@ class Invokable(Generic[CogT, P, T]):
         except ValueError:
             pass
 
-    def copy(self):
+    def copy(self, kwargs: dict[str, Any] | None = None):
         """Creates a copy of this command.
 
         Returns
@@ -724,34 +725,13 @@ class Invokable(Generic[CogT, P, T]):
         :class:`Invokable`
             A new instance of this command.
         """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
 
-    def _ensure_assignment_on_copy(self, other: Invokable):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        if self._buckets.valid and not other._buckets.valid:
-            other._buckets = self._buckets.copy()
-        if self._max_concurrency != other._max_concurrency:
-            # _max_concurrency won't be None at this point
-            other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: dict[str, Any]):
+        thecopy = copy(self)
         if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
+            for attr, val in kwargs.items():
+                setattr(thecopy, attr, val)
+
+        return thecopy
 
     def _set_cog(self, cog: CogT):
         self.cog = cog
@@ -954,12 +934,12 @@ class Invokable(Generic[CogT, P, T]):
             if call_hooks:
                 await self._call_after_hooks(ctx)
 
-    async def __dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         # since I don't want to copy paste code, subclassed Contexts
         # dispatch it to their corresponding events
         raise NotImplementedError
 
-    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+    async def dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         ctx.command_failed = True
         cog = self.cog
 
@@ -977,4 +957,4 @@ class Invokable(Generic[CogT, P, T]):
                     wrapped = wrap_callback(local)
                     await wrapped(ctx, error)
         finally:
-            await self.__dispatch_error(ctx, error)
+            await self._dispatch_error(ctx, error)

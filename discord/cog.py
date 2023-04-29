@@ -231,7 +231,7 @@ class CogMeta(type):
 
         # Either update the command with the cog provided defaults or copy it.
         # r.e type ignore, type-checker complains about overriding a ClassVar
-        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
+        new_cls.__cog_commands__ = tuple(c.copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
 
         name_filter = lambda c: (
             "app"
