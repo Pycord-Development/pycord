@@ -2127,7 +2127,7 @@ class Guild(Hashable):
         If both the ``before`` and ``after`` parameters are provided, only before is respected.
 
         .. versionchanged:: 2.5
-            The ``before``. and ``after`` parameters were changed. They are now of the type :class:`.abc.Snowflake` instead of 
+            The ``before``. and ``after`` parameters were changed. They are now of the type :class:`.abc.Snowflake` instead of
             `SnowflakeTime` to comply with the discord api.
 
         .. versionchanged:: 2.0
