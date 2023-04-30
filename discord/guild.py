@@ -2123,7 +2123,12 @@ class Guild(Hashable):
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
         have the :attr:`~Permissions.ban_members` permission.
-        Users will always be returned in ascending order sorted by user ID. If both the ``before`` and ``after`` parameters are provided, only before is respected.
+        Users will always be returned in ascending order sorted by user ID.
+        If both the ``before`` and ``after`` parameters are provided, only before is respected.
+
+        .. versionchanged:: 2.5
+            The ``before``. and ``after`` parameters were changed. They are now of the type :class:`.abc.Snowflake` instead of 
+            `SnowflakeTime` to comply with the discord api.
 
         .. versionchanged:: 2.0
             The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
