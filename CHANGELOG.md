@@ -46,7 +46,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
   ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
-- Added `view._parent` which is set when the view was sent by 
+- Added `view._parent` which is set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 
@@ -67,7 +67,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
-- Removed `view.message` being set when the view was sent by 
+- Removed `view.message` being set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 
