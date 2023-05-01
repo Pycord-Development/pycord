@@ -365,9 +365,9 @@ class View:
         """
         if self.disable_on_timeout:
             self.disable_all_items()
-            mess = self._message or self._parent
-            if mess:
-                m = await mess.edit(view=self)
+            message = self._message or self._parent
+            if message:
+                m = await message.edit(view=self)
                 if m:
                     self._message = m
 
