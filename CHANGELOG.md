@@ -29,6 +29,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `sync_start` argument to `VoiceClient.start_recording()`. This adds silence to
+  the start of audio recordings.
+  ([#1984](https://github.com/Pycord-Development/pycord/pull/1984))
 - Added `custom_message` to AutoModActionMetadata.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 - Added support for
