@@ -83,6 +83,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 - Fixed `TypeError` in AutoModRule.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Reflecting the api for gettings bans correctly.
+  ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
 
 ## [2.4.1] - 2023-03-20
 
