@@ -141,6 +141,9 @@ class View:
     message: Optional[:class:`.Message`]
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
+    parent: Optional[:class:`.Interaction`]
+        The parent interaction which this view was sent from.
+        If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
 
     __discord_ui_view__: ClassVar[bool] = True
@@ -187,7 +190,7 @@ class View:
         self.__timeout_task: asyncio.Task[None] | None = None
         self.__stopped: asyncio.Future[bool] = loop.create_future()
         self._message: Message | InteractionMessage | None = None
-        self._parent: Interaction | None = None
+        self.parent: Interaction | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -365,7 +368,7 @@ class View:
         """
         if self.disable_on_timeout:
             self.disable_all_items()
-            message = self._message or self._parent
+            message = self._message or self.parent
             if message:
                 m = await message.edit(view=self)
                 if m:
