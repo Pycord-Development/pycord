@@ -29,6 +29,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `sync_start` argument to `VoiceClient.start_recording()`. This adds silence to
+  the start of audio recordings.
+  ([#1984](https://github.com/Pycord-Development/pycord/pull/1984))
 - Added `custom_message` to AutoModActionMetadata.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 - Added support for
@@ -37,11 +40,17 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the `data` attribute to all
   [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
   ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
+- Added and documented missing `AuditLogAction` enums.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
+- `AuditLogDiff` now supports AutoMod related models.
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
   ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
 
 ### Changed
 
+- Suppressed FFMPEG output when recording voice channels.
+  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 - `Interaction.channel` is received from the gateway, so it can now be `DMChannel` and
@@ -53,11 +62,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
-
-### Changed
-
-- Suppressed FFMPEG output when recording voice channels.
-  ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 
 ### Fixed
 
@@ -78,7 +82,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 - Fixed `TypeError` in AutoModRule.
-- ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+  ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Reflecting the api for gettings bans correctly.
+  ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
 
 ## [2.4.1] - 2023-03-20
 

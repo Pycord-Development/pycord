@@ -317,7 +317,7 @@ class AutoModTriggerMetadata:
                 inner.append(f"{attr}={value}")
         inner = " ".join(inner)
 
-        return f"<AutoModActionMetadata {inner}>"
+        return f"<AutoModTriggerMetadata {inner}>"
 
 
 class AutoModRule(Hashable):
