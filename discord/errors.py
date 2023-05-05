@@ -223,7 +223,7 @@ class ConnectionClosed(ClientException):
         self,
         socket: ClientWebSocketResponse,
         *,
-        shard_id: int | None,
+        shard_id: int | None = None,
         code: int | None = None,
     ):
         # This exception is just the same exception except
