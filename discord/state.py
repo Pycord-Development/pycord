@@ -672,8 +672,13 @@ class ConnectionState:
         self.dispatch("message", message)
         if self._messages is not None:
             self._messages.append(message)
-        # we ensure that the channel is either a TextChannel, VoiceChannel, or Thread
-        if channel and channel.__class__ in (TextChannel, VoiceChannel, Thread):
+        # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
+        if channel and channel.__class__ in (
+            TextChannel,
+            VoiceChannel,
+            StageChannel,
+            Thread,
+        ):
             channel.last_message_id = message.id  # type: ignore
 
     def parse_message_delete(self, data) -> None:
@@ -1251,8 +1256,10 @@ class ConnectionState:
         return guild.id not in self._guilds
 
     async def chunk_guild(self, guild, *, wait=True, cache=None):
+        # Note: This method makes an API call without timeout, and should be used in
+        #       conjunction with `asyncio.wait_for(..., timeout=...)`.
         cache = cache or self.member_cache_flags.joined
-        request = self._chunk_requests.get(guild.id)
+        request = self._chunk_requests.get(guild.id)  # nosec B113
         if request is None:
             self._chunk_requests[guild.id] = request = ChunkRequest(
                 guild.id, self.loop, self._get_guild, cache=cache

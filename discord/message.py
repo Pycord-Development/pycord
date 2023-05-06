@@ -159,7 +159,7 @@ class Attachment(Hashable):
         case of images. When the message is deleted, this URL might be valid for a few
         minutes or not valid at all.
     content_type: Optional[:class:`str`]
-        The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_
+        The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_.
     ephemeral: :class:`bool`
         Whether the attachment is ephemeral or not.
 
@@ -169,6 +169,16 @@ class Attachment(Hashable):
         The attachment's description.
 
         .. versionadded:: 2.0
+
+    duration_secs: Optional[:class:`float`]
+        The duration of the audio file (currently for voice messages).
+
+        .. versionadded:: 2.5
+
+    waveform: Optional[:class:`str`]
+        The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
+
+        .. versionadded:: 2.5
     """
 
     __slots__ = (
@@ -183,6 +193,8 @@ class Attachment(Hashable):
         "content_type",
         "ephemeral",
         "description",
+        "duration_secs",
+        "waveform",
     )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
@@ -197,6 +209,8 @@ class Attachment(Hashable):
         self.content_type: str | None = data.get("content_type")
         self.ephemeral: bool = data.get("ephemeral", False)
         self.description: str | None = data.get("description")
+        self.duration_secs: float | None = data.get("duration_secs")
+        self.waveform: str | None = data.get("waveform")
 
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
@@ -1468,6 +1482,7 @@ class Message(Hashable):
         message = Message(state=self._state, channel=self.channel, data=data)
 
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, self.id)
 
         if delete_after is not None:
@@ -1798,6 +1813,8 @@ class PartialMessage(Hashable):
     - :meth:`TextChannel.get_partial_message`
     - :meth:`Thread.get_partial_message`
     - :meth:`DMChannel.get_partial_message`
+    - :meth:`VoiceChannel.get_partial_message`
+    - :meth:`StageChannel.get_partial_message`
 
     Note that this class is trimmed down and has no rich attributes.
 
@@ -1819,7 +1836,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
@@ -1844,6 +1861,7 @@ class PartialMessage(Hashable):
         if channel.type not in (
             ChannelType.text,
             ChannelType.voice,
+            ChannelType.stage_voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,
@@ -1851,7 +1869,7 @@ class PartialMessage(Hashable):
             ChannelType.private_thread,
         ):
             raise TypeError(
-                "Expected TextChannel, VoiceChannel, DMChannel or Thread not"
+                "Expected TextChannel, VoiceChannel, StageChannel, DMChannel or Thread not"
                 f" {type(channel)!r}"
             )
 
@@ -2018,5 +2036,6 @@ class PartialMessage(Hashable):
             # data isn't unbound
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
+                view.message = msg
                 self._state.store_view(view, self.id)
             return msg

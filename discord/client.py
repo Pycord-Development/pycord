@@ -30,6 +30,7 @@ import logging
 import signal
 import sys
 import traceback
+from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
 
 import aiohttp
@@ -253,6 +254,27 @@ class Client:
             VoiceClient.warn_nacl = False
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
+    async def __aenter__(self) -> Client:
+        loop = asyncio.get_running_loop()
+        self.loop = loop
+        self.http.loop = loop
+        self._connection.loop = loop
+
+        self._ready = asyncio.Event()
+
+        return self
+
+    async def __aexit__(
+        self,
+        exc_t: BaseException | None,
+        exc_v: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        if not self.is_closed():
+            await self.close()
+
+    # internals
+
     def _get_websocket(
         self, guild_id: int | None = None, *, shard_id: int | None = None
     ) -> DiscordWebSocket:
@@ -435,9 +457,29 @@ class Client:
         else:
             self._schedule_event(coro, method, *args, **kwargs)
 
+        # collect the once listeners as removing them from the list
+        # while iterating over it causes issues
+        once_listeners = []
+
         # Schedule additional handlers registered with @listen
         for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
+
+            try:
+                if coro._once:  # added using @listen()
+                    once_listeners.append(coro)
+
+            except AttributeError:  # added using @Cog.add_listener()
+                # https://github.com/Pycord-Development/pycord/pull/1989
+                # Although methods are similar to functions, attributes can't be added to them.
+                # This means that we can't add the `_once` attribute in the `add_listener` method
+                # and can only be added using the `@listen` decorator.
+
+                continue
+
+        # remove the once listeners
+        for coro in once_listeners:
+            self._event_handlers[method].remove(coro)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
@@ -1204,7 +1246,7 @@ class Client:
             except ValueError:
                 pass
 
-    def listen(self, name: str = MISSING) -> Callable[[Coro], Coro]:
+    def listen(self, name: str = MISSING, once: bool = False) -> Callable[[Coro], Coro]:
         """A decorator that registers another function as an external
         event listener. Basically this allows you to listen to multiple
         events from different places e.g. such as :func:`.on_ready`
@@ -1233,6 +1275,11 @@ class Client:
             async def my_message(message):
                 print('two')
 
+            # listen to the first event only
+            @client.listen('on_ready', once=True)
+            async def on_ready():
+                print('ready!')
+
         Would print one and two in an unspecified order.
         """
 
@@ -1241,6 +1288,7 @@ class Client:
             if name == "on_application_command_error":
                 return self.event(func)
 
+            func._once = once
             self.add_listener(func, name)
             return func
 

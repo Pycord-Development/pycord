@@ -39,6 +39,7 @@ from .user import User
 
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
+    from ..interactions import InteractionChannel
 
 from .._typed_dict import NotRequired, TypedDict
 
@@ -196,6 +197,7 @@ class Interaction(TypedDict):
     data: NotRequired[InteractionData]
     guild_id: NotRequired[Snowflake]
     channel_id: NotRequired[Snowflake]
+    channel: NotRequired[InteractionChannel]
     member: NotRequired[Member]
     user: NotRequired[User]
     message: NotRequired[Message]

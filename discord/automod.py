@@ -76,6 +76,10 @@ class AutoModActionMetadata:
     timeout_duration: :class:`datetime.timedelta`
         How long the member that triggered the action should be timed out for.
         Only for actions of type :attr:`AutoModActionType.timeout`.
+    custom_message: :class:`str`
+        An additional message shown to members when their message is blocked.
+        Maximum 150 characters.
+        Only for actions of type :attr:`AutoModActionType.block_message`.
     """
 
     # maybe add a table of action types and attributes?
@@ -83,13 +87,18 @@ class AutoModActionMetadata:
     __slots__ = (
         "channel_id",
         "timeout_duration",
+        "custom_message",
     )
 
     def __init__(
-        self, channel_id: int = MISSING, timeout_duration: timedelta = MISSING
+        self,
+        channel_id: int = MISSING,
+        timeout_duration: timedelta = MISSING,
+        custom_message: str = MISSING,
     ):
         self.channel_id: int = channel_id
         self.timeout_duration: timedelta = timeout_duration
+        self.custom_message: str = custom_message
 
     def to_dict(self) -> dict:
         data = {}
@@ -99,6 +108,9 @@ class AutoModActionMetadata:
 
         if self.timeout_duration is not MISSING:
             data["duration_seconds"] = self.timeout_duration.total_seconds()
+
+        if self.custom_message is not MISSING:
+            data["custom_message"] = self.custom_message
 
         return data
 
@@ -113,12 +125,16 @@ class AutoModActionMetadata:
             # might need an explicit int cast
             kwargs["timeout_duration"] = timedelta(seconds=duration_seconds)
 
+        if (custom_message := data.get("custom_message")) is not None:
+            kwargs["custom_message"] = custom_message
+
         return cls(**kwargs)
 
     def __repr__(self) -> str:
         repr_attrs = (
             "channel_id",
             "timeout_duration",
+            "custom_message",
         )
         inner = []
 
@@ -301,7 +317,7 @@ class AutoModTriggerMetadata:
                 inner.append(f"{attr}={value}")
         inner = " ".join(inner)
 
-        return f"<AutoModActionMetadata {inner}>"
+        return f"<AutoModTriggerMetadata {inner}>"
 
 
 class AutoModRule(Hashable):
@@ -352,6 +368,7 @@ class AutoModRule(Hashable):
     """
 
     __slots__ = (
+        "__dict__",
         "_state",
         "id",
         "guild_id",

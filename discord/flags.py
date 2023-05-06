@@ -404,6 +404,14 @@ class MessageFlags(BaseFlags):
 
         return 4096
 
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+
+        .. versionadded:: 2.5
+        """
+        return 8192
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
@@ -1077,7 +1085,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
+            As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content
             of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
             intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
@@ -1337,6 +1345,14 @@ class ApplicationFlags(BaseFlags):
     def group_dm_create(self):
         """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
+
+    @flag_value
+    def application_auto_moderation_rule_create_badge(self):
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 6
 
     @flag_value
     def rpc_has_connected(self):
