@@ -93,6 +93,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 - Reflecting the api for gettings bans correctly.
   ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
+- Fixed `TypeError` when raising ConnectionClosed.
+  ([#2049](https://github.com/Pycord-Development/pycord/pull/2049))
 
 ## [2.4.1] - 2023-03-20
 
