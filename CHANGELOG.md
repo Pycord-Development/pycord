@@ -95,6 +95,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
 - Restored functionality for overriding default `on_application_command_error` via
   listeners. ([#2044](https://github.com/Pycord-Development/pycord/pull/2044))
+- Fixed unloading of cogs having bridge commands.
+  ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
 
 ## [2.4.1] - 2023-03-20
 
