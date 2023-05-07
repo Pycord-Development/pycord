@@ -678,7 +678,7 @@ class InteractionResponse:
 
         .. note::
             The follow-up response will also be non-ephemeral if the `ephemeral`
-            argument is ``False``, and ephemeral if ``True``. 
+            argument is ``False``, and ephemeral if ``True``.
 
         Parameters
         ----------
