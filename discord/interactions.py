@@ -676,6 +676,10 @@ class InteractionResponse:
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
 
+        .. note::
+            The follow-up response will also be non-ephemeral if the `ephemeral`
+            argument is ``False``, and ephemeral if ``True``. 
+
         Parameters
         ----------
         ephemeral: :class:`bool`
