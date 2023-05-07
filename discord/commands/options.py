@@ -395,6 +395,12 @@ def option(name, type=None, **kwargs):
     """A decorator that can be used instead of typehinting :class:`Option`.
 
     .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    parameter_name: :class:`str`
+        The name of the target parameter this option is mapped to.
+        This allows you to have a separate UI ``name`` and parameter name.
     """
 
     def decorator(func):
