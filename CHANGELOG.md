@@ -49,6 +49,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `view.parent` which is set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Added functions (`bridge.Bot.walk_bridge_commands` &
+  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
+  children/subcommands.
+  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Changed
 
@@ -62,6 +66,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - Store `view.message` on receiving Interaction for a component.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Attributes shared between ext and slash commands are now dynamically fetched on bridge
+  commands. ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Removed
 
