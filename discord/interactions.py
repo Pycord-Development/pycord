@@ -676,6 +676,10 @@ class InteractionResponse:
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
 
+        .. note::
+            The follow-up response will also be non-ephemeral if the `ephemeral`
+            argument is ``False``, and ephemeral if ``True``.
+
         Parameters
         ----------
         ephemeral: :class:`bool`
@@ -913,7 +917,7 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
-            view.message = await self._parent.original_response()
+            view.parent = self._parent
             self._parent._state.store_view(view)
 
         self._responded = True

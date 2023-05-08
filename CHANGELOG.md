@@ -32,6 +32,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1983](https://github.com/Pycord-Development/pycord/pull/1983))
 - Added new `application_auto_moderation_rule_create_badge` to `ApplicationFlags`.
   ([#1992](https://github.com/Pycord-Development/pycord/pull/1992))
+- Added `sync_start` argument to `VoiceClient.start_recording()`. This adds silence to
+  the start of audio recordings.
+  ([#1984](https://github.com/Pycord-Development/pycord/pull/1984))
 - Added `custom_message` to AutoModActionMetadata.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 - Added support for
@@ -46,6 +49,13 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
   ([#2026](https://github.com/Pycord-Development/pycord/pull/2026))
+- Added `view.parent` which is set when the view was sent by
+  `interaction.response.send_message`.
+  ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Added functions (`bridge.Bot.walk_bridge_commands` &
+  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
+  children/subcommands.
+  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Changed
 
@@ -57,11 +67,18 @@ These changes are available on the `master` branch, but have not yet been releas
   `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - `DMChannel.recipients` can now be `None`
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
+- Store `view.message` on receiving Interaction for a component.
+  ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Attributes shared between ext and slash commands are now dynamically fetched on bridge
+  commands. ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Removed
 
 - Removed `@client.once()` in favour of `@client.listen(once=True)`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
+- Removed `view.message` being set when the view was sent by
+  `interaction.response.send_message`.
+  ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 
 ### Fixed
 
@@ -83,6 +100,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 - Fixed `TypeError` in AutoModRule.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
+- Reflecting the api for gettings bans correctly.
+  ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
+- Restored functionality for overriding default `on_application_command_error` via
+  listeners. ([#2044](https://github.com/Pycord-Development/pycord/pull/2044))
+- Fixed unloading of cogs having bridge commands.
+  ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
 
 ## [2.4.1] - 2023-03-20
 
