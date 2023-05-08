@@ -587,7 +587,10 @@ class Cog(metaclass=CogMeta):
 
         try:
             for command in self.__cog_commands__:
-                if isinstance(command, ApplicationCommand):
+                if hasattr(command, "add_to"):
+                    bot.bridge_commands.remove(command)
+                    continue
+                elif isinstance(command, ApplicationCommand):
                     bot.remove_application_command(command)
                 elif command.parent is None:
                     bot.remove_command(command.name)

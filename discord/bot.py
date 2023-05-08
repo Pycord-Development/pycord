@@ -1178,6 +1178,8 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         This only fires if you do not specify any listeners for command error.
         """
+        if self._event_handlers.get("on_application_command_error", None):
+            return
         command = context.command
         if command and command.has_error_handler():
             return

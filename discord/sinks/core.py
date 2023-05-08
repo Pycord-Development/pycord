@@ -115,6 +115,7 @@ class RawData:
         self.decoded_data = None
 
         self.user_id = None
+        self.receive_time = time.perf_counter()
 
 
 class AudioData:
