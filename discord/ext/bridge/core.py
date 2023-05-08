@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
+from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, Callable
 
 import discord.commands.options
@@ -38,7 +39,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import filter_params, find, get
+from ...utils import MISSING, find, get
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
 from ..commands import (
@@ -156,6 +157,8 @@ class BridgeCommand:
         The prefix-based version of this bridge command.
     """
 
+    __special_attrs__ = ["slash_variant", "ext_variant", "parent"]
+
     def __init__(self, callback, **kwargs):
         self.parent = kwargs.pop("parent", None)
         self.slash_variant: BridgeSlashCommand = kwargs.pop(
@@ -166,13 +169,10 @@ class BridgeCommand:
         ) or BridgeExtCommand(callback, **kwargs)
 
     @property
-    def name_localizations(self) -> dict[str, str]:
+    def name_localizations(self) -> dict[str, str] | None:
         """Returns name_localizations from :attr:`slash_variant`
-
         You can edit/set name_localizations directly with
-
         .. code-block:: python3
-
             bridge_command.name_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
@@ -184,13 +184,10 @@ class BridgeCommand:
         self.slash_variant.name_localizations = value
 
     @property
-    def description_localizations(self) -> dict[str, str]:
+    def description_localizations(self) -> dict[str, str] | None:
         """Returns description_localizations from :attr:`slash_variant`
-
         You can edit/set description_localizations directly with
-
         .. code-block:: python3
-
             bridge_command.description_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}
@@ -201,9 +198,34 @@ class BridgeCommand:
     def description_localizations(self, value):
         self.slash_variant.description_localizations = value
 
-    @property
-    def qualified_name(self) -> str:
-        return self.slash_variant.qualified_name
+    def __getattribute__(self, name):
+        try:
+            # first, look for the attribute on the bridge command
+            return super().__getattribute__(name)
+        except AttributeError as e:
+            # if it doesn't exist, check this list, if the name of
+            # the parameter is here
+            if name is self.__special_attrs__:
+                raise e
+
+            # looks up the result in the variants.
+            # slash cmd prioritized
+            result = getattr(self.slash_variant, name, MISSING)
+            try:
+                if result is MISSING:
+                    return getattr(self.ext_variant, name)
+                return result
+            except AttributeError:
+                raise AttributeError(
+                    f"'{self.__class__.__name__}' object has no attribute '{name}'"
+                )
+
+    def __setattr__(self, name, value) -> None:
+        if name not in self.__special_attrs__:
+            setattr(self.slash_variant, name, value)
+            setattr(self.ext_variant, name, value)
+
+        return super().__setattr__(name, value)
 
     def add_to(self, bot: ExtBot) -> None:
         """Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`.
@@ -321,14 +343,24 @@ class BridgeCommandGroup(BridgeCommand):
         If :func:`map_to` is used, the mapped slash command.
     """
 
+    __special_attrs__ = [
+        "slash_variant",
+        "ext_variant",
+        "parent",
+        "subcommands",
+        "mapped",
+    ]
+
     ext_variant: BridgeExtGroup
     slash_variant: BridgeSlashGroup
 
     def __init__(self, callback, *args, **kwargs):
+        ext_var = BridgeExtGroup(callback, *args, **kwargs)
+        kwargs.update({"name": ext_var.name})
         super().__init__(
             callback,
-            ext_variant=(ext_var := BridgeExtGroup(callback, *args, **kwargs)),
-            slash_variant=BridgeSlashGroup(callback, ext_var.name, *args, **kwargs),
+            ext_variant=ext_var,
+            slash_variant=BridgeSlashGroup(callback, *args, **kwargs),
             parent=kwargs.pop("parent", None),
         )
 
@@ -338,6 +370,16 @@ class BridgeCommandGroup(BridgeCommand):
         if map_to := getattr(callback, "__custom_map_to__", None):
             kwargs.update(map_to)
             self.mapped = self.slash_variant.command(**kwargs)(callback)
+
+    def walk_commands(self) -> Iterator[BridgeCommand]:
+        """An iterator that recursively walks through all the bridge group's subcommands.
+
+        Yields
+        ------
+        :class:`.BridgeCommand`
+            A bridge command of this bridge group.
+        """
+        yield from self.subcommands
 
     def command(self, *args, **kwargs):
         """A decorator to register a function as a subcommand.
@@ -530,10 +572,15 @@ class AttachmentConverter(Converter):
             return attach
 
 
+class BooleanConverter(Converter):
+    async def convert(self, ctx, arg: bool):
+        return _convert_to_bool(str(arg))
+
+
 BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.string: str,
     SlashCommandOptionType.integer: int,
-    SlashCommandOptionType.boolean: lambda val: _convert_to_bool(str(val)),
+    SlashCommandOptionType.boolean: BooleanConverter,
     SlashCommandOptionType.user: UserConverter,
     SlashCommandOptionType.channel: GuildChannelConverter,
     SlashCommandOptionType.role: RoleConverter,
@@ -577,3 +624,4 @@ class BridgeOption(Option, Converter):
 
 
 discord.commands.options.Option = BridgeOption
+discord.Option = BridgeOption

@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
 from . import enums, utils
 from .asset import Asset
+from .automod import AutoModAction, AutoModTriggerMetadata
 from .colour import Colour
 from .invite import Invite
 from .mixins import Hashable
@@ -57,6 +58,8 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.audit_log import AuditLogChange as AuditLogChangePayload
     from .types.audit_log import AuditLogEntry as AuditLogEntryPayload
+    from .types.automod import AutoModAction as AutoModActionPayload
+    from .types.automod import AutoModTriggerMetadata as AutoModTriggerMetadataPayload
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .types.role import Role as RolePayload
     from .types.snowflake import Snowflake
@@ -81,6 +84,22 @@ def _transform_channel(
     if data is None:
         return None
     return entry.guild.get_channel(int(data)) or Object(id=data)
+
+
+def _transform_channels(
+    entry: AuditLogEntry, data: list[Snowflake] | None
+) -> list[abc.GuildChannel | Object] | None:
+    if data is None:
+        return None
+    return [_transform_channel(entry, channel) for channel in data]
+
+
+def _transform_roles(
+    entry: AuditLogEntry, data: list[Snowflake] | None
+) -> list[Role | Object] | None:
+    if data is None:
+        return None
+    return [entry.guild.get_role(int(r)) or Object(id=r) for r in data]
 
 
 def _transform_member_id(
@@ -172,6 +191,24 @@ def _transform_type(
         return enums.try_enum(enums.ChannelType, data)
 
 
+def _transform_actions(
+    entry: AuditLogEntry, data: list[AutoModActionPayload] | None
+) -> AutoModAction | None:
+    if data is None:
+        return None
+    else:
+        return [AutoModAction.from_dict(d) for d in data]
+
+
+def _transform_trigger_metadata(
+    entry: AuditLogEntry, data: list[AutoModActionPayload] | None
+) -> AutoModAction | None:
+    if data is None:
+        return None
+    else:
+        return AutoModTriggerMetadata.from_dict(data)
+
+
 class AuditLogDiff:
     def __len__(self) -> int:
         return len(self.__dict__)
@@ -240,6 +277,12 @@ class AuditLogChanges:
         ),
         "command_id": ("command_id", _transform_snowflake),
         "image_hash": ("cover", _transform_scheduled_event_cover),
+        "trigger_type": (None, _enum_transformer(enums.AutoModTriggerType)),
+        "event_type": (None, _enum_transformer(enums.AutoModEventType)),
+        "actions": (None, _transform_actions),
+        "trigger_metadata": (None, _transform_trigger_metadata),
+        "exempt_roles": (None, _transform_roles),
+        "exempt_channels": (None, _transform_channels),
     }
 
     def __init__(
@@ -255,12 +298,30 @@ class AuditLogChanges:
         for elem in sorted(data, key=lambda i: i["key"]):
             attr = elem["key"]
 
-            # special cases for role add/remove
+            # special cases for role/trigger_metadata add/remove
             if attr == "$add":
                 self._handle_role(self.before, self.after, entry, elem["new_value"])  # type: ignore
                 continue
             elif attr == "$remove":
                 self._handle_role(self.after, self.before, entry, elem["new_value"])  # type: ignore
+                continue
+            elif attr in [
+                "$add_keyword_filter",
+                "$add_regex_patterns",
+                "$add_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.before, self.after, entry, elem["new_value"], attr
+                )
+                continue
+            elif attr in [
+                "$remove_keyword_filter",
+                "$remove_regex_patterns",
+                "$remove_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.after, self.before, entry, elem["new_value"], attr
+                )
                 continue
 
             try:
@@ -354,6 +415,23 @@ class AuditLogChanges:
             data.append(role)
 
         setattr(second, "roles", data)
+
+    def _handle_trigger_metadata(
+        self,
+        first: AuditLogDiff,
+        second: AuditLogDiff,
+        entry: AuditLogEntry,
+        elem: list[AutoModTriggerMetadataPayload],
+        attr: str,
+    ) -> None:
+        if not hasattr(first, "trigger_metadata"):
+            setattr(first, "trigger_metadata", None)
+
+        key = attr.split("_", 1)[-1]
+        data = {key: elem}
+        tm = AutoModTriggerMetadata.from_dict(data)
+
+        setattr(second, "trigger_metadata", tm)
 
 
 class _AuditLogProxyMemberPrune:
