@@ -38,7 +38,7 @@ import aiohttp
 
 from .. import utils
 from ..asset import Asset
-from ..channel import PartialMessageable
+from ..channel import ForumChannel, PartialMessageable
 from ..enums import WebhookType, try_enum
 from ..errors import (
     DiscordServerError,
@@ -892,6 +892,8 @@ class WebhookMessage(Message):
             thread = Object(self._thread_id)
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
+        elif isinstance(self.channel, ForumChannel):
+            thread = Object(self.id)
 
         if attachments is MISSING:
             attachments = self.attachments or MISSING
@@ -1762,6 +1764,7 @@ class Webhook(BaseWebhook):
 
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
+            view.message = None if msg is None else msg
             self._state.store_view(view, message_id)
 
         if delete_after is not None:
@@ -1957,6 +1960,7 @@ class Webhook(BaseWebhook):
 
         message = self._create_message(data)
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, message_id)
         return message
 
