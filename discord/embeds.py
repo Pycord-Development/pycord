@@ -48,7 +48,7 @@ __all__ = (
 )
 
 
-# class None:
+# class _EmbedEmpty:
 #     def __bool__(self) -> bool:
 #         return False
 
@@ -59,7 +59,7 @@ __all__ = (
 #         return 0
 
 
-# None: Final = None()
+# EmbedEmpty: Final = _EmptyEmbed()
 
 
 class EmbedProxy:
