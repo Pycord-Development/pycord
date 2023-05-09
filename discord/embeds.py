@@ -26,16 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Final,
-    Mapping,
-    Optional,
-    Protocol,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Final, Mapping, Optional, Protocol, TypeVar
 
 from . import utils
 from .colour import Colour
@@ -88,29 +79,29 @@ if TYPE_CHECKING:
     T = TypeVar("T")
 
     class _EmbedFooterProxy(Protocol):
-        text: Optional[str]
-        icon_url: Optional[str]
+        text: str | None
+        icon_url: str | None
 
     class _EmbedMediaProxy(Protocol):
-        url: Optional[str]
-        proxy_url: Optional[str]
-        height: Optional[int]
-        width: Optional[int]
+        url: str | None
+        proxy_url: str | None
+        height: int | None
+        width: int | None
 
     class _EmbedVideoProxy(Protocol):
-        url: Optional[str]
-        height: Optional[int]
-        width: Optional[int]
+        url: str | None
+        height: int | None
+        width: int | None
 
     class _EmbedProviderProxy(Protocol):
-        name: Optional[str]
-        url: Optional[str]
+        name: str | None
+        url: str | None
 
     class _EmbedAuthorProxy(Protocol):
-        name: Optional[str]
-        url: Optional[str]
-        icon_url: Optional[str]
-        proxy_icon_url: Optional[str]
+        name: str | None
+        url: str | None
+        icon_url: str | None
+        proxy_icon_url: str | None
 
 
 class EmbedAuthor(EmbedProxy):
@@ -131,9 +122,9 @@ class EmbedAuthor(EmbedProxy):
     def __init__(
         self,
         name: str,
-        url: Optional[str] = None,
-        icon_url: Optional[str] = None,
-        proxy_icon_url: Optional[str] = None,
+        url: str | None = None,
+        icon_url: str | None = None,
+        proxy_icon_url: str | None = None,
     ) -> None:
         # layer = {
         #     k: v
@@ -167,8 +158,8 @@ class EmbedFooter(EmbedProxy):
     def __init__(
         self,
         text: str,
-        icon_url: Optional[str] = None,
-        proxy_icon_url: Optional[str] = None,
+        icon_url: str | None = None,
+        proxy_icon_url: str | None = None,
     ) -> None:
         # layer = {
         #     k: v
@@ -318,16 +309,16 @@ class Embed:
         *,
         colour: int | Colour | None = None,
         color: int | Colour | None = None,
-        title: Optional[Any] = None,
+        title: Any | None = None,
         type: EmbedType = "rich",
-        url: Optional[Any] = None,
-        description: Optional[Any] = None,
+        url: Any | None = None,
+        description: Any | None = None,
         timestamp: datetime.datetime = None,
         fields: list[EmbedField] = [],
-        author: Optional[EmbedAuthor] = None,
-        footer: Optional[EmbedFooter] = None,
-        image: Optional[str] = None,
-        thumbnail: Optional[str] = None,
+        author: EmbedAuthor | None = None,
+        footer: EmbedFooter | None = None,
+        image: str | None = None,
+        thumbnail: str | None = None,
     ):
         self.colour = colour if colour else color
         self.title = title
@@ -485,7 +476,7 @@ class Embed:
         )
 
     @property
-    def colour(self) -> Optional[Colour]:
+    def colour(self) -> Colour | None:
         return getattr(self, "_colour", None)
 
     @colour.setter
@@ -503,11 +494,11 @@ class Embed:
     color = colour
 
     @property
-    def timestamp(self) -> Optional[datetime.datetime]:
+    def timestamp(self) -> datetime.datetime | None:
         return getattr(self, "_timestamp", None)
 
     @timestamp.setter
-    def timestamp(self, value: Optional[datetime.datetime]):
+    def timestamp(self, value: datetime.datetime | None):
         if isinstance(value, datetime.datetime):
             if value.tzinfo is None:
                 value = value.astimezone()
@@ -536,8 +527,8 @@ class Embed:
     def set_footer(
         self: E,
         *,
-        text: Optional[Any] = None,
-        icon_url: Optional[Any] = None,
+        text: Any | None = None,
+        icon_url: Any | None = None,
     ) -> E:
         """Sets the footer for the embed content.
 
@@ -592,7 +583,7 @@ class Embed:
         """
         return EmbedProxy(getattr(self, "_image", {}))  # type: ignore
 
-    def set_image(self: E, *, url: Optional[Any]) -> E:
+    def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
 
         This function returns the class instance to allow for fluent-style
@@ -649,7 +640,7 @@ class Embed:
         """
         return EmbedProxy(getattr(self, "_thumbnail", {}))  # type: ignore
 
-    def set_thumbnail(self: E, *, url: Optional[Any]) -> E:
+    def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
 
         This function returns the class instance to allow for fluent-style
@@ -732,8 +723,8 @@ class Embed:
         self: E,
         *,
         name: Any,
-        url: Optional[Any] = None,
-        icon_url: Optional[Any] = None,
+        url: Any | None = None,
+        icon_url: Any | None = None,
     ) -> E:
         """Sets the author for the embed content.
 
