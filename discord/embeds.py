@@ -122,7 +122,7 @@ class EmbedAuthor(EmbedProxy):
 
     def __init__(
         self,
-        name: str,
+        name: MaybeEmpty[str] = EmptyEmbed,
         url: MaybeEmpty[str] = EmptyEmbed,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
         proxy_icon_url: MaybeEmpty[str] = EmptyEmbed,
@@ -151,7 +151,7 @@ class EmbedFooter(EmbedProxy):
 
     def __init__(
         self,
-        text: str,
+        text: MaybeEmpty[str] = EmptyEmbed,
         icon_url: MaybeEmpty[str] = EmptyEmbed,
         proxy_icon_url: MaybeEmpty[str] = EmptyEmbed,
     ) -> None:
