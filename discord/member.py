@@ -542,9 +542,7 @@ class Member(discord.abc.Messageable, _UserTag):
         is returned instead.
         """
         return (
-            self.nick or self.global_name
-            if self._user.is_migrated
-            else self.name or self.name
+            self.nick or (self.global_name or self.name if self._user.is_migrated else self.name)
         )
 
     @property
