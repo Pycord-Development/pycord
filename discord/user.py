@@ -301,6 +301,7 @@ class BaseUser(_UserTag):
 
         return self.discriminator == "0"
 
+
 class ClientUser(BaseUser):
     """Represents your Discord user.
 
