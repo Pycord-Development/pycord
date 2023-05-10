@@ -510,10 +510,7 @@ class User(BaseUser, discord.abc.Messageable):
                 f" id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
             )
         elif self.is_migrated:
-            return (
-                "<User"
-                f" id={self.id} username={self.name!r} bot={self.bot}>"
-            )
+            return "<User" f" id={self.id} username={self.name!r} bot={self.bot}>"
         else:
             return (
                 "<User"
