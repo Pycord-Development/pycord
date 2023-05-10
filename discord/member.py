@@ -282,6 +282,7 @@ class Member(discord.abc.Messageable, _UserTag):
         name: str
         id: int
         discriminator: str
+        global_name: str | None
         bot: bool
         system: bool
         created_at: datetime.datetime
@@ -540,7 +541,7 @@ class Member(discord.abc.Messageable, _UserTag):
         if they have a guild specific nickname then that
         is returned instead.
         """
-        return self.nick or self.name
+        return self.nick or self.global_name if self._user.is_migrated else self.name
 
     @property
     def display_avatar(self) -> Asset:
