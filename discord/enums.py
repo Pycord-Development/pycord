@@ -37,7 +37,6 @@ __all__ = (
     "VerificationLevel",
     "ContentFilter",
     "Status",
-    "DefaultAvatar",
     "AuditLogAction",
     "AuditLogActionCategory",
     "UserFlags",
@@ -352,21 +351,6 @@ class Status(Enum):
 
     def __str__(self):
         return self.value
-
-
-class DefaultAvatar(Enum):
-    """Default avatar"""
-
-    blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
-
-    def __str__(self):
-        return self.name
-
 
 class NotificationLevel(Enum, comparable=True):
     """Notification level"""

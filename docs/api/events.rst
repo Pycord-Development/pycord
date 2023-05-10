@@ -735,6 +735,7 @@ Members/Users
     - avatar
     - username
     - discriminator
+    - global_name
 
     This requires :attr:`Intents.members` to be enabled.
 

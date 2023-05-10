@@ -31,7 +31,6 @@ import discord.abc
 
 from .asset import Asset
 from .colour import Colour
-from .enums import DefaultAvatar
 from .flags import PublicUserFlags
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
@@ -112,7 +111,10 @@ class BaseUser(_UserTag):
             )
 
     def __str__(self) -> str:
-        return f"{self.name}#{self.discriminator}"
+        return f"{self.name}#{self.discriminator}" if not self.is_migrated else (
+            f"{self.name} ({self.global_name})" if self.global_name is not None
+            else f"{self.name}"
+        )
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
@@ -192,7 +194,7 @@ class BaseUser(_UserTag):
         This is calculated by the user's discriminator.
         """
         return Asset._from_default_avatar(
-            self._state, int(self.discriminator) % len(DefaultAvatar)
+            self._state, (self.id >> 22) % 5
         )
 
     @property
