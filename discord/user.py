@@ -111,9 +111,14 @@ class BaseUser(_UserTag):
             )
 
     def __str__(self) -> str:
-        return f"{self.name}#{self.discriminator}" if not self.is_migrated else (
-            f"{self.name} ({self.global_name})" if self.global_name is not None
-            else f"{self.name}"
+        return (
+            f"{self.name}#{self.discriminator}"
+            if not self.is_migrated
+            else (
+                f"{self.name} ({self.global_name})"
+                if self.global_name is not None
+                else f"{self.name}"
+            )
         )
 
     def __eq__(self, other: Any) -> bool:
@@ -193,9 +198,7 @@ class BaseUser(_UserTag):
         """Returns the default avatar for a given user.
         This is calculated by the user's discriminator.
         """
-        return Asset._from_default_avatar(
-            self._state, (self.id >> 22) % 5
-        )
+        return Asset._from_default_avatar(self._state, (self.id >> 22) % 5)
 
     @property
     def display_avatar(self) -> Asset:

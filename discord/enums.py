@@ -352,6 +352,7 @@ class Status(Enum):
     def __str__(self):
         return self.value
 
+
 class NotificationLevel(Enum, comparable=True):
     """Notification level"""
 
