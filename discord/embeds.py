@@ -60,6 +60,8 @@ class EmbedAuthor:
         The URL of the hyperlink created in the author's name.
     icon_url: :class:`str`
         The URL of the author icon image.
+    proxy_icon_url: :class:`str`
+        The proxied URL of the author icon image. This can't be set directly, it is set by Discord.
     """
 
     def __init__(
@@ -83,11 +85,12 @@ class EmbedAuthor:
         return self
 
     def to_dict(self) -> dict[str, str | None]:
-        return {
-            "name": str(self.name),
-            "url": str(self.url),
-            "icon_url": str(self.icon_url),
-        }
+        d = {"name": str(self.name)}
+        if self.url:
+            d["url"] = str(self.url)
+        if self.icon_url:
+            d["icon_url"] = str(self.icon_url)
+        return d
 
 
 class EmbedFooter:
@@ -101,6 +104,8 @@ class EmbedFooter:
        The text inside the footer.
     icon_url: :class:`str`
         The URL of the footer icon image.
+    proxy_icon_url: :class:`str`
+        The proxied URL of the footer icon image. This can't be set directly, it is set by Discord.
     """
 
     def __init__(
@@ -121,17 +126,34 @@ class EmbedFooter:
         return self
 
     def to_dict(self) -> dict[str, Any]:
-        return {
-            "text": str(self.text),
-            "icon_url": str(self.icon_url),
-        }
+        d = {"text": str(self.text)}
+        if self.icon_url:
+            d["icon_url"] = str(self.icon_url)
+        return d
 
 
 class EmbedMedia:  # Thumbnail, Image, Video
+    """Represents a media on the :class:`Embed` object.
+    This includes thumbnails, images, and videos.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    url: :class:`str`
+        The source URL of the media.
+    proxy_url: :class:`str`
+        The proxied URL of the media.
+    height: :class:`int`
+        The height of the media.
+    width: :class:`int`
+        The width of the media.
+    """
+
     url: str
     proxy_url: str | None
-    height: int | None
-    width: int | None
+    height: int
+    width: int
 
     @classmethod
     def from_dict(cls, data: dict[str, str | int | None]) -> EmbedMedia:
@@ -144,6 +166,18 @@ class EmbedMedia:  # Thumbnail, Image, Video
 
 
 class EmbedProvider:
+    """Represents a provider on the :class:`Embed` object.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the provider.
+    url: :class:`str`
+        The URL of the provider.
+    """
+
     name: str | None
     url: str | None
 
@@ -230,12 +264,6 @@ class Embed:
 
             .. versionadded:: 2.0
 
-    Certain properties return an ``EmbedProxy``, a type
-    that acts similar to a regular :class:`dict` except using dotted access,
-    e.g. ``embed.author.icon_url``. If the attribute
-    is invalid or empty, then a special sentinel value is returned,
-    :attr:`Embed.Empty`.
-
     For ease of use, all parameters that expect a :class:`str` are implicitly
     cast to :class:`str` for you.
 
@@ -264,9 +292,6 @@ class Embed:
     colour: Union[:class:`Colour`, :class:`int`]
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
-    Empty
-        A special sentinel value used by ``EmbedProxy`` and this class
-        to denote that the value or attribute is empty.
     """
 
     __slots__ = (
@@ -284,8 +309,6 @@ class Embed:
         "_fields",
         "description",
     )
-
-    Empty: Final = None
 
     def __init__(
         self,
@@ -496,11 +519,11 @@ class Embed:
 
     @property
     def footer(self) -> EmbedFooter | None:
-        """Returns an ``EmbedProxy`` denoting the footer contents.
+        """Returns an ``EmbedFooter`` denoting the footer contents.
 
         See :meth:`set_footer` for possible values you can access.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the footer is not set then `None` is returned.
         """
         foot = getattr(self, "_footer", None)
         if not foot:
@@ -553,16 +576,16 @@ class Embed:
 
     @property
     def image(self) -> EmbedMedia | None:
-        """Returns an ``EmbedProxy`` denoting the image contents.
+        """Returns an ``EmbedMedia`` denoting the image contents.
 
-        Possible attributes you can access are:
+        Attributes you can access are:
 
         - ``url``
         - ``proxy_url``
         - ``width``
         - ``height``
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the image is not set then `None` is returned.
         """
         img = getattr(self, "_image", None)
         if not img:
@@ -576,7 +599,7 @@ class Embed:
         chaining.
 
         .. versionchanged:: 1.4
-            Passing :attr:`Empty` removes the image.
+            Passing `None` removes the image.
 
         Parameters
         ----------
@@ -613,16 +636,16 @@ class Embed:
 
     @property
     def thumbnail(self) -> EmbedMedia | None:
-        """Returns an ``EmbedProxy`` denoting the thumbnail contents.
+        """Returns an ``EmbedMedia`` denoting the thumbnail contents.
 
-        Possible attributes you can access are:
+        Attributes you can access are:
 
         - ``url``
         - ``proxy_url``
         - ``width``
         - ``height``
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the thumbnail is not set then `None` is returned.
         """
         thumb = getattr(self, "_thumbnail", None)
         if not thumb:
@@ -636,7 +659,7 @@ class Embed:
         chaining.
 
         .. versionchanged:: 1.4
-            Passing :attr:`Empty` removes the thumbnail.
+            Passing `None` removes the thumbnail.
 
         Parameters
         ----------
@@ -673,15 +696,15 @@ class Embed:
 
     @property
     def video(self) -> EmbedMedia | None:
-        """Returns an ``EmbedProxy`` denoting the video contents.
+        """Returns an ``EmbedMedia`` denoting the video contents.
 
-        Possible attributes include:
+        Attributes include:
 
         - ``url`` for the video URL.
         - ``height`` for the video height.
         - ``width`` for the video width.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the video is not set then `None` is returned.
         """
         vid = getattr(self, "_video", None)
         if not vid:
@@ -690,11 +713,11 @@ class Embed:
 
     @property
     def provider(self) -> EmbedProvider | None:
-        """Returns an ``EmbedProxy`` denoting the provider contents.
+        """Returns an ``EmbedProvider`` denoting the provider contents.
 
         The only attributes that might be accessed are ``name`` and ``url``.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the provider is not set then `None` is returned.
         """
         prov = getattr(self, "_provider", None)
         if not prov:
@@ -703,11 +726,11 @@ class Embed:
 
     @property
     def author(self) -> EmbedAuthor | None:
-        """Returns an ``EmbedProxy`` denoting the author contents.
+        """Returns an ``EmbedAuthor`` denoting the author contents.
 
         See :meth:`set_author` for possible values you can access.
 
-        If the attribute has no value then :attr:`Empty` is returned.
+        If the author is not set then `None` is returned.
         """
         auth = getattr(self, "_author", None)
         if not auth:
