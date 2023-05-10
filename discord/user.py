@@ -64,6 +64,7 @@ class BaseUser(_UserTag):
         "name",
         "id",
         "discriminator",
+        "global_name",
         "_avatar",
         "_banner",
         "_accent_colour",
@@ -77,6 +78,7 @@ class BaseUser(_UserTag):
         name: str
         id: int
         discriminator: str
+        global_name: str | None
         bot: bool
         system: bool
         _state: ConnectionState
@@ -112,6 +114,7 @@ class BaseUser(_UserTag):
         self.name = data["username"]
         self.id = int(data["id"])
         self.discriminator = data["discriminator"]
+        self.global_name = data.get("global_name", None)
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
@@ -126,6 +129,7 @@ class BaseUser(_UserTag):
         self.name = user.name
         self.id = user.id
         self.discriminator = user.discriminator
+        self.global_name = user.global_name
         self._avatar = user._avatar
         self._banner = user._banner
         self._accent_colour = user._accent_colour
@@ -141,6 +145,7 @@ class BaseUser(_UserTag):
             "id": self.id,
             "avatar": self._avatar,
             "discriminator": self.discriminator,
+            "global_name": self.global_name,
             "bot": self.bot,
         }
 
@@ -290,6 +295,11 @@ class BaseUser(_UserTag):
 
         return any(user.id == self.id for user in message.mentions)
 
+    @property
+    def is_migrated(self) -> bool:
+        """Checks whether the user is already migrated to global name"""
+
+        return self.discriminator == "0"
 
 class ClientUser(BaseUser):
     """Represents your Discord user.
@@ -320,6 +330,11 @@ class ClientUser(BaseUser):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
+    global_name: :class: `str`
+        The user's global name.
+
+        .. versionadded:: 2.5
+
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`
@@ -361,6 +376,7 @@ class ClientUser(BaseUser):
         self._flags = data.get("flags", 0)
         self.mfa_enabled = data.get("mfa_enabled", False)
 
+    # TODO: Username might not be able to edit anymore.
     async def edit(
         self, *, username: str = MISSING, avatar: bytes = MISSING
     ) -> ClientUser:
@@ -442,6 +458,12 @@ class User(BaseUser, discord.abc.Messageable):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
+
+    global_name: :class: `str`
+        The user's global name.
+
+        .. versionadded:: 2.5
+
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`
