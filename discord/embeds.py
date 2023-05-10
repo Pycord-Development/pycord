@@ -79,13 +79,16 @@ class EmbedAuthor:
     @classmethod
     def from_dict(cls, data: dict[str, str | None]) -> EmbedAuthor:
         self = cls.__new__(cls)
-        self.name = data.get("name")
+        name = data.get("name")
+        if not name:
+            raise ValueError("name field is required")
+        self.name = name
         self.url = data.get("url")
         self.icon_url = data.get("icon_url")
         self.proxy_icon_url = data.get("proxy_icon_url")
         return self
 
-    def to_dict(self) -> dict[str, str | None]:
+    def to_dict(self) -> dict[str, str]:
         d = {"name": str(self.name)}
         if self.url:
             d["url"] = str(self.url)
@@ -128,7 +131,10 @@ class EmbedFooter:
     @classmethod
     def from_dict(cls, data: dict[str, str | None]) -> EmbedFooter:
         self = cls.__new__(cls)
-        self.text = data.get("text")
+        text = data.get("text")
+        if not text:
+            raise ValueError("text field is required")
+        self.text = text
         self.icon_url = data.get("icon_url")
         self.proxy_icon_url = data.get("proxy_icon_url")
         return self
@@ -171,12 +177,12 @@ class EmbedMedia:  # Thumbnail, Image, Video
     width: int
 
     @classmethod
-    def from_dict(cls, data: dict[str, str | int | None]) -> EmbedMedia:
+    def from_dict(cls, data: dict[str, str | int]) -> EmbedMedia:
         self = cls.__new__(cls)
-        self.url = data.get("url")
-        self.proxy_url = data.get("proxy_url")
-        self.height = data.get("height")
-        self.width = data.get("width")
+        self.url = str(data.get("url"))
+        self.proxy_url = str(data.get("proxy_url"))
+        self.height = int(data["height"])
+        self.width = int(data["width"])
         return self
 
     def __repr__(self) -> str:
@@ -231,7 +237,7 @@ class EmbedField:
         self.inline = inline
 
     @classmethod
-    def from_dict(cls, data: dict[str,]) -> EmbedField:
+    def from_dict(cls, data: dict[str, str | bool]) -> EmbedField:
         """Converts a :class:`dict` to a :class:`EmbedField` provided it is in the
         format that Discord expects it to be in.
 
@@ -246,7 +252,7 @@ class EmbedField:
         data: :class:`dict`
             The dictionary to convert into an EmbedField object.
         """
-        self: E = cls.__new__(cls)
+        self = cls.__new__(cls)
 
         self.name = data["name"]
         self.value = data["value"]
@@ -254,7 +260,7 @@ class EmbedField:
 
         return self
 
-    def to_dict(self) -> dict[str, str | bool]:
+    def to_dict(self) -> dict[str, str | bool | None]:
         """Converts this EmbedField object into a dict.
 
         Returns
@@ -343,7 +349,7 @@ class Embed:
         type: EmbedType = "rich",
         url: Any | None = None,
         description: Any | None = None,
-        timestamp: datetime.datetime = None,
+        timestamp: datetime.datetime | None = None,
         fields: list[EmbedField] = [],
         author: EmbedAuthor | None = None,
         footer: EmbedFooter | None = None,
@@ -467,7 +473,11 @@ class Embed:
         return self.__class__.from_dict(self.to_dict())
 
     def __len__(self) -> int:
-        total = len(self.title) + len(self.description)
+        total = 0
+        if self.title:
+            total += len(self.title)
+        if self.description:
+            total += len(self.description)
         for field in getattr(self, "_fields", []):
             total += len(field.name) + len(field.value)
 
@@ -614,7 +624,7 @@ class Embed:
         img = getattr(self, "_image", None)
         if not img:
             return None
-        return EmbedMedia.from_dict(img)  # type: ignore
+        return EmbedMedia.from_dict(img)
 
     def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
@@ -674,7 +684,7 @@ class Embed:
         thumb = getattr(self, "_thumbnail", None)
         if not thumb:
             return None
-        return EmbedMedia.from_dict(thumb)  # type: ignore
+        return EmbedMedia.from_dict(thumb)
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
@@ -733,7 +743,7 @@ class Embed:
         vid = getattr(self, "_video", None)
         if not vid:
             return None
-        return EmbedMedia.from_dict(vid)  # type: ignore
+        return EmbedMedia.from_dict(vid)
 
     @property
     def provider(self) -> EmbedProvider | None:
@@ -746,7 +756,7 @@ class Embed:
         prov = getattr(self, "_provider", None)
         if not prov:
             return None
-        return EmbedProvider.from_dict(prov)  # type: ignore
+        return EmbedProvider.from_dict(prov)
 
     @property
     def author(self) -> EmbedAuthor | None:
@@ -759,7 +769,7 @@ class Embed:
         auth = getattr(self, "_author", None)
         if not auth:
             return None
-        return EmbedAuthor.from_dict(auth)  # type: ignore
+        return EmbedAuthor.from_dict(auth)
 
     def set_author(
         self: E,
