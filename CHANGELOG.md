@@ -82,8 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `view.message` being set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
-- Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual classes.
-  ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
+- Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual
+  classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 
 ### Fixed
 
