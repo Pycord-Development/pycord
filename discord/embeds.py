@@ -36,38 +36,8 @@ __all__ = (
     "EmbedField",
     "EmbedAuthor",
     "EmbedFooter",
+    "EmbedMedia",
 )
-
-
-# class _EmbedEmpty:
-#     def __bool__(self) -> bool:
-#         return False
-
-#     def __repr__(self) -> str:
-#         return "Embed.Empty"
-
-#     def __len__(self) -> int:
-#         return 0
-
-
-# EmbedEmpty: Final = _EmptyEmbed()
-
-
-class EmbedProxy:
-    def __init__(self, layer: dict[str, Any]):
-        self.__dict__.update(layer)
-
-    def __len__(self) -> int:
-        return len(self.__dict__)
-
-    def __repr__(self) -> str:
-        inner = ", ".join(
-            (f"{k}={v!r}" for k, v in self.__dict__.items() if not k.startswith("_"))
-        )
-        return f"{type(self).__name__}({inner})"
-
-    def __getattr__(self, attr: str) -> None:
-        return None
 
 
 E = TypeVar("E", bound="Embed")
@@ -76,35 +46,8 @@ if TYPE_CHECKING:
     from discord.types.embed import Embed as EmbedData
     from discord.types.embed import EmbedType
 
-    T = TypeVar("T")
 
-    class _EmbedFooterProxy(Protocol):
-        text: str | None
-        icon_url: str | None
-
-    class _EmbedMediaProxy(Protocol):
-        url: str | None
-        proxy_url: str | None
-        height: int | None
-        width: int | None
-
-    class _EmbedVideoProxy(Protocol):
-        url: str | None
-        height: int | None
-        width: int | None
-
-    class _EmbedProviderProxy(Protocol):
-        name: str | None
-        url: str | None
-
-    class _EmbedAuthorProxy(Protocol):
-        name: str | None
-        url: str | None
-        icon_url: str | None
-        proxy_icon_url: str | None
-
-
-class EmbedAuthor(EmbedProxy):
+class EmbedAuthor:
     """Represents the author on the :class:`Embed` object.
 
     .. versionadded:: 2.5
@@ -124,25 +67,30 @@ class EmbedAuthor(EmbedProxy):
         name: str,
         url: str | None = None,
         icon_url: str | None = None,
-        proxy_icon_url: str | None = None,
     ) -> None:
-        # layer = {
-        #     k: v
-        #     for k, v in locals().items()
-        #     if k in {"name", "url", "icon_url", "proxy_icon_url"} and v
-        # }
-        layer = {
-            "name": name,
-            "url": url,
-            "icon_url": icon_url,
-            "proxy_icon_url": proxy_icon_url,
+        self.name: str = name
+        self.url: str | None = url
+        self.icon_url: str | None = icon_url
+        self.proxy_icon_url: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str | None]) -> EmbedAuthor:
+        self = cls.__new__(cls)
+        self.name = data.get("name")
+        self.url = data.get("url")
+        self.icon_url = data.get("icon_url")
+        self.proxy_icon_url = data.get("proxy_icon_url")
+        return self
+
+    def to_dict(self) -> dict[str, str | None]:
+        return {
+            "name": str(self.name),
+            "url": str(self.url),
+            "icon_url": str(self.icon_url),
         }
-        # remove None values
-        layer = {k: v for k, v in layer.items() if v}
-        super().__init__(layer)
 
 
-class EmbedFooter(EmbedProxy):
+class EmbedFooter:
     """Represents the footer on the :class:`Embed` object.
 
     .. versionadded:: 2.5
@@ -159,17 +107,52 @@ class EmbedFooter(EmbedProxy):
         self,
         text: str,
         icon_url: str | None = None,
-        proxy_icon_url: str | None = None,
     ) -> None:
-        # layer = {
-        #     k: v
-        #     for k, v in locals().items()
-        #     if k in {"text", "icon_url", "proxy_icon_url"} and v
-        # }
-        layer = {"text": text, "icon_url": icon_url, "proxy_icon_url": proxy_icon_url}
-        # remove None values
-        layer = {k: v for k, v in layer.items() if v}
-        super().__init__(layer)
+        self.text: str = text
+        self.icon_url: str | None = icon_url
+        self.proxy_icon_url: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str | None]) -> EmbedFooter:
+        self = cls.__new__(cls)
+        self.text = data.get("text")
+        self.icon_url = data.get("icon_url")
+        self.proxy_icon_url = data.get("proxy_icon_url")
+        return self
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "text": str(self.text),
+            "icon_url": str(self.icon_url),
+        }
+
+
+class EmbedMedia:  # Thumbnail, Image, Video
+    url: str
+    proxy_url: str | None
+    height: int | None
+    width: int | None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str | int | None]) -> EmbedMedia:
+        self = cls.__new__(cls)
+        self.url = data.get("url")
+        self.proxy_url = data.get("proxy_url")
+        self.height = data.get("height")
+        self.width = data.get("width")
+        return self
+
+
+class EmbedProvider:
+    name: str | None
+    url: str | None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str | None]) -> EmbedProvider:
+        self = cls.__new__(cls)
+        self.name = data.get("name")
+        self.url = data.get("url")
+        return self
 
 
 class EmbedField:
@@ -193,7 +176,7 @@ class EmbedField:
         self.inline = inline
 
     @classmethod
-    def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
+    def from_dict(cls, data: dict[str,]) -> EmbedField:
         """Converts a :class:`dict` to a :class:`EmbedField` provided it is in the
         format that Discord expects it to be in.
 
@@ -341,10 +324,10 @@ class Embed:
         self._fields: list[EmbedField] = fields
 
         if author:
-            self.set_author(**author.__dict__)
+            self.set_author(**author.to_dict())
 
         if footer:
-            self.set_footer(**footer.__dict__)
+            self.set_footer(**footer.to_dict())
 
         if image:
             self.set_image(url=image)
@@ -481,13 +464,13 @@ class Embed:
 
     @colour.setter
     def colour(self, value: int | Colour | None):  # type: ignore
-        if isinstance(value, (Colour, None)):
+        if value is None or isinstance(value, Colour):
             self._colour = value
         elif isinstance(value, int):
             self._colour = Colour(value=value)
         else:
             raise TypeError(
-                "Expected discord.Colour, int, or Embed.Empty but received"
+                "Expected discord.Colour, int, or None but received"
                 f" {value.__class__.__name__} instead."
             )
 
@@ -503,26 +486,26 @@ class Embed:
             if value.tzinfo is None:
                 value = value.astimezone()
             self._timestamp = value
-        elif isinstance(value, None):
+        elif value is None:
             self._timestamp = value
         else:
             raise TypeError(
-                "Expected datetime.datetime or Embed.Empty received"
+                "Expected datetime.datetime or None. Received"
                 f" {value.__class__.__name__} instead"
             )
 
     @property
-    def footer(self) -> EmbedFooter | _EmbedFooterProxy:
+    def footer(self) -> EmbedFooter | None:
         """Returns an ``EmbedProxy`` denoting the footer contents.
 
         See :meth:`set_footer` for possible values you can access.
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        f = getattr(self, "_footer", None)
-        if f is None:
-            return EmbedProxy({})
-        return EmbedFooter(**f)
+        foot = getattr(self, "_footer", None)
+        if not foot:
+            return None
+        return EmbedFooter.from_dict(foot)
 
     def set_footer(
         self: E,
@@ -569,7 +552,7 @@ class Embed:
         return self
 
     @property
-    def image(self) -> _EmbedMediaProxy:
+    def image(self) -> EmbedMedia | None:
         """Returns an ``EmbedProxy`` denoting the image contents.
 
         Possible attributes you can access are:
@@ -581,7 +564,10 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_image", {}))  # type: ignore
+        img = getattr(self, "_image", None)
+        if not img:
+            return None
+        return EmbedMedia.from_dict(img)  # type: ignore
 
     def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
@@ -626,7 +612,7 @@ class Embed:
         return self
 
     @property
-    def thumbnail(self) -> _EmbedMediaProxy:
+    def thumbnail(self) -> EmbedMedia | None:
         """Returns an ``EmbedProxy`` denoting the thumbnail contents.
 
         Possible attributes you can access are:
@@ -638,7 +624,10 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_thumbnail", {}))  # type: ignore
+        thumb = getattr(self, "_thumbnail", None)
+        if not thumb:
+            return None
+        return EmbedMedia.from_dict(thumb)  # type: ignore
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
@@ -683,7 +672,7 @@ class Embed:
         return self
 
     @property
-    def video(self) -> _EmbedVideoProxy:
+    def video(self) -> EmbedMedia | None:
         """Returns an ``EmbedProxy`` denoting the video contents.
 
         Possible attributes include:
@@ -694,30 +683,36 @@ class Embed:
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_video", {}))  # type: ignore
+        vid = getattr(self, "_video", None)
+        if not vid:
+            return None
+        return EmbedMedia.from_dict(vid)  # type: ignore
 
     @property
-    def provider(self) -> _EmbedProviderProxy:
+    def provider(self) -> EmbedProvider | None:
         """Returns an ``EmbedProxy`` denoting the provider contents.
 
         The only attributes that might be accessed are ``name`` and ``url``.
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        return EmbedProxy(getattr(self, "_provider", {}))  # type: ignore
+        prov = getattr(self, "_provider", None)
+        if not prov:
+            return None
+        return EmbedProvider.from_dict(prov)  # type: ignore
 
     @property
-    def author(self) -> EmbedAuthor | _EmbedAuthorProxy:
+    def author(self) -> EmbedAuthor | None:
         """Returns an ``EmbedProxy`` denoting the author contents.
 
         See :meth:`set_author` for possible values you can access.
 
         If the attribute has no value then :attr:`Empty` is returned.
         """
-        a = getattr(self, "_author", None)
-        if a is None:
-            return EmbedProxy({})
-        return EmbedAuthor(**a)  # type: ignore
+        auth = getattr(self, "_author", None)
+        if not auth:
+            return None
+        return EmbedAuthor.from_dict(auth)  # type: ignore
 
     def set_author(
         self: E,
