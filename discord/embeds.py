@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Final, Mapping, TypeVar
+from typing import TYPE_CHECKING, Any, Mapping, TypeVar
 
 from . import utils
 from .colour import Colour
@@ -37,6 +37,7 @@ __all__ = (
     "EmbedAuthor",
     "EmbedFooter",
     "EmbedMedia",
+    "EmbedProvider",
 )
 
 
@@ -92,6 +93,13 @@ class EmbedAuthor:
             d["icon_url"] = str(self.icon_url)
         return d
 
+    def __len__(self) -> int:
+        """Returns the total number of characters in the author name."""
+        return len(self.name)
+
+    def __repr__(self) -> str:
+        return f"<EmbedAuthor name={self.name!r} url={self.url!r} icon_url={self.icon_url!r}>"
+
 
 class EmbedFooter:
     """Represents the footer on the :class:`Embed` object.
@@ -131,6 +139,13 @@ class EmbedFooter:
             d["icon_url"] = str(self.icon_url)
         return d
 
+    def __len__(self) -> int:
+        """Returns the total number of characters in the footer text."""
+        return len(self.text)
+
+    def __repr__(self) -> str:
+        return f"<EmbedFooter text={self.text!r} icon_url={self.icon_url!r}>"
+
 
 class EmbedMedia:  # Thumbnail, Image, Video
     """Represents a media on the :class:`Embed` object.
@@ -164,6 +179,9 @@ class EmbedMedia:  # Thumbnail, Image, Video
         self.width = data.get("width")
         return self
 
+    def __repr__(self) -> str:
+        return f"<EmbedMedia url={self.url!r} proxy_url={self.proxy_url!r}> height={self.height!r} width={self.width!r}>"
+
 
 class EmbedProvider:
     """Represents a provider on the :class:`Embed` object.
@@ -187,6 +205,9 @@ class EmbedProvider:
         self.name = data.get("name")
         self.url = data.get("url")
         return self
+
+    def __repr__(self) -> str:
+        return f"<EmbedProvider name={self.name!r} url={self.url!r}>"
 
 
 class EmbedField:
@@ -246,6 +267,9 @@ class EmbedField:
             "value": self.value,
             "inline": self.inline,
         }
+
+    def __repr__(self) -> str:
+        return f"<EmbedField name={self.name!r} value={self.value!r} inline={self.inline!r}>"
 
 
 class Embed:
