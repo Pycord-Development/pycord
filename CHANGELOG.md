@@ -71,6 +71,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 - Attributes shared between ext and slash commands are now dynamically fetched on bridge
   commands. ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
+- Embed attribues like author, footer, etc now return `None` when not set, and return
+  their respective classes when set.
+  ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 
 ### Removed
 
@@ -79,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed `view.message` being set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual
+  classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 
 ### Fixed
 
