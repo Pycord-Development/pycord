@@ -553,7 +553,7 @@ class Embed:
 
     @property
     def footer(self) -> EmbedFooter | None:
-        """Returns an ``EmbedFooter`` denoting the footer contents.
+        """Returns an :class:`EmbedFooter` denoting the footer contents.
 
         See :meth:`set_footer` for possible values you can access.
 
@@ -610,7 +610,7 @@ class Embed:
 
     @property
     def image(self) -> EmbedMedia | None:
-        """Returns an ``EmbedMedia`` denoting the image contents.
+        """Returns an :class:`EmbedMedia` denoting the image contents.
 
         Attributes you can access are:
 
@@ -670,7 +670,7 @@ class Embed:
 
     @property
     def thumbnail(self) -> EmbedMedia | None:
-        """Returns an ``EmbedMedia`` denoting the thumbnail contents.
+        """Returns an :class:`EmbedMedia` denoting the thumbnail contents.
 
         Attributes you can access are:
 
@@ -730,7 +730,7 @@ class Embed:
 
     @property
     def video(self) -> EmbedMedia | None:
-        """Returns an ``EmbedMedia`` denoting the video contents.
+        """Returns an :class:`EmbedMedia` denoting the video contents.
 
         Attributes include:
 
@@ -747,7 +747,7 @@ class Embed:
 
     @property
     def provider(self) -> EmbedProvider | None:
-        """Returns an ``EmbedProvider`` denoting the provider contents.
+        """Returns an :class:`EmbedProvider` denoting the provider contents.
 
         The only attributes that might be accessed are ``name`` and ``url``.
 
@@ -760,7 +760,7 @@ class Embed:
 
     @property
     def author(self) -> EmbedAuthor | None:
-        """Returns an ``EmbedAuthor`` denoting the author contents.
+        """Returns an :class:`EmbedAuthor` denoting the author contents.
 
         See :meth:`set_author` for possible values you can access.
 
