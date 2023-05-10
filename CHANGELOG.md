@@ -14,6 +14,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added possibility to start bot via async context manager.
   ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
+- Change default for all `name_localizations` & `description_localizations` attributes
+  from being `None` to be `MISSING`.
+  ([#1866](https://github.com/Pycord-Development/pycord/pull/1866))
 - Added new parameters (`author`, `footer`, `image`, `thumbnail`) to `discord.Embed`.
   ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added new events `on_bridge_command`, `on_bridge_command_completion`, and
@@ -49,6 +52,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `view.parent` which is set when the view was sent by
   `interaction.response.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Added functions (`bridge.Bot.walk_bridge_commands` &
+  `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
+  children/subcommands.
+  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Changed
 
@@ -62,6 +69,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - Store `view.message` on receiving Interaction for a component.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Attributes shared between ext and slash commands are now dynamically fetched on bridge
+  commands. ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 
 ### Removed
 
@@ -93,6 +102,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
 - Reflecting the api for gettings bans correctly.
   ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
+- Restored functionality for overriding default `on_application_command_error` via
+  listeners. ([#2044](https://github.com/Pycord-Development/pycord/pull/2044))
+- Fixed unloading of cogs having bridge commands.
+  ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
 
 ## [2.4.1] - 2023-03-20
 
