@@ -1050,7 +1050,7 @@ class Client:
 
     async def get_or_fetch_user(self, id: int, /) -> User | None:
         """|coro|
-      
+
         Looks up a user in the user cache or fetches if not found.
 
         Parameters
