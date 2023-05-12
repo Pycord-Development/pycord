@@ -350,7 +350,7 @@ class Embed:
         url: Any | None = None,
         description: Any | None = None,
         timestamp: datetime.datetime | None = None,
-        fields: list[EmbedField] = [],
+        fields: list[EmbedField]|None = None,
         author: EmbedAuthor | None = None,
         footer: EmbedFooter | None = None,
         image: str | None = None,
@@ -374,7 +374,7 @@ class Embed:
         if timestamp:
             self.timestamp = timestamp
 
-        self._fields: list[EmbedField] = fields
+        self._fields: list[EmbedField] = fields if fields is not None else []
 
         if author:
             self.set_author(**author.to_dict())
