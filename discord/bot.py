@@ -34,7 +34,16 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, Optional, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Literal,
+    Mapping,
+    Optional,
+    TypeVar,
+)
 
 from .client import Client
 from .cog import CogMixin
@@ -501,8 +510,11 @@ class ApplicationCommandMixin(ABC):
                 )
 
         def register(
-            method: Literal["bulk", "upsert", "delete", "edit"], *args, cmd_name: str = None,
-            guild_id: Optional[int] = None, **kwargs
+            method: Literal["bulk", "upsert", "delete", "edit"],
+            *args,
+            cmd_name: str = None,
+            guild_id: int | None = None,
+            **kwargs,
         ):
             if kwargs.pop("_log", True):
                 if method == "bulk":
@@ -602,17 +614,31 @@ class ApplicationCommandMixin(ABC):
                     registered = []
                 for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
-                        await register("delete", cmd["id"], cmd_name=cmd["command"].name, guild_id=guild_id)
+                        await register(
+                            "delete",
+                            cmd["id"],
+                            cmd_name=cmd["command"].name,
+                            guild_id=guild_id,
+                        )
                         continue
                     if cmd["action"] == "edit":
                         registered.append(
-                            await register("edit", cmd["id"], cmd["command"].to_dict(), cmd_name=cmd["command"].name,
-                                           guild_id=guild_id)
+                            await register(
+                                "edit",
+                                cmd["id"],
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     elif cmd["action"] == "upsert":
                         registered.append(
-                            await register("upsert", cmd["command"].to_dict(), cmd_name=cmd["command"].name,
-                                           guild_id=guild_id)
+                            await register(
+                                "upsert",
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     else:
                         raise ValueError(f"Unknown action: {cmd['action']}")
