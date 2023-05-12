@@ -350,7 +350,7 @@ class Embed:
         url: Any | None = None,
         description: Any | None = None,
         timestamp: datetime.datetime | None = None,
-        fields: list[EmbedField]|None = None,
+        fields: list[EmbedField] | None = None,
         author: EmbedAuthor | None = None,
         footer: EmbedFooter | None = None,
         image: str | None = None,
