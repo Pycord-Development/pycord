@@ -501,7 +501,11 @@ class ApplicationCommandMixin(ABC):
                 )
 
         def register(
-            method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs
+            method: Literal["bulk", "upsert", "delete", "edit"],
+            *args,
+            cmd_name: str = None,
+            guild_id: int | None = None,
+            **kwargs,
         ):
             if kwargs.pop("_log", True):
                 if method == "bulk":
@@ -509,13 +513,12 @@ class ApplicationCommandMixin(ABC):
                         f"Bulk updating commands {[c['name'] for c in args[0]]} for"
                         f" guild {guild_id}"
                     )
-                # TODO: Find where "cmd" is defined
                 elif method == "upsert":
-                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Creating command {cmd_name} for guild {guild_id}")  # type: ignore
                 elif method == "edit":
-                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Editing command {cmd_name} for guild {guild_id}")  # type: ignore
                 elif method == "delete":
-                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Deleting command {cmd_name} for guild {guild_id}")  # type: ignore
             return _register(method, *args, **kwargs)
 
         pending_actions = []
@@ -602,15 +605,31 @@ class ApplicationCommandMixin(ABC):
                     registered = []
                 for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
-                        await register("delete", cmd["command"])
+                        await register(
+                            "delete",
+                            cmd["id"],
+                            cmd_name=cmd["command"].name,
+                            guild_id=guild_id,
+                        )
                         continue
                     if cmd["action"] == "edit":
                         registered.append(
-                            await register("edit", cmd["id"], cmd["command"].to_dict())
+                            await register(
+                                "edit",
+                                cmd["id"],
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     elif cmd["action"] == "upsert":
                         registered.append(
-                            await register("upsert", cmd["command"].to_dict())
+                            await register(
+                                "upsert",
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     else:
                         raise ValueError(f"Unknown action: {cmd['action']}")
@@ -628,7 +647,7 @@ class ApplicationCommandMixin(ABC):
                         )
         else:
             data = [cmd.to_dict() for cmd in pending]
-            registered = await register("bulk", data)
+            registered = await register("bulk", data, guild_id=guild_id)
 
         for i in registered:
             cmd = get(
