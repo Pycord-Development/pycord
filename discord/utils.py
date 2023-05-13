@@ -660,19 +660,12 @@ def _bytes_to_base64_data(data: bytes) -> str:
     return fmt.format(mime=mime, data=b64)
 
 
-if HAS_ORJSON:
 
-    def _to_json(obj: Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
+ def _to_json(obj: Any) -> str:  # type: ignore
+        return orjson.dumps(obj).decode("utf-8") if HAS_ORJSON else json.dumps(obj, separators=(",",":"), ensure_ascii=True)
 
-    _from_json = orjson.loads  # type: ignore
 
-else:
-
-    def _to_json(obj: Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
-
-    _from_json = json.loads
+_from_json = orjson.loads if HAS_ORJSON else json.loads  # type: ignore
 
 
 def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
