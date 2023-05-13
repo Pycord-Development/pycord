@@ -665,7 +665,7 @@ def _bytes_to_base64_data(data: bytes) -> str:
         return orjson.dumps(obj).decode("utf-8") if HAS_ORJSON else json.dumps(obj, separators=(",",":"), ensure_ascii=True)
 
 
-_from_json = orjson.loads if HAS_ORJSON else json.loads  # type: ignore
+_from_json = orjson.loads if HAS_ORJSON else json.loads # type: ignore
 
 
 def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
