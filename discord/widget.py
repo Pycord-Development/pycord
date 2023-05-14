@@ -202,21 +202,20 @@ class WidgetMember(BaseUser):
         self.connected_channel: WidgetChannel | None = connected_channel
 
     def __repr__(self) -> str:
-        if self.is_migrated and self.global_name is not None:
-            return (
-                f"<WidgetMember name={self.name!r} global_name={self.global_name!r}"
-                f" bot={self.bot} nick={self.nick!r}>"
-            )
-        elif self.is_migrated:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    f"<WidgetMember name={self.name!r} global_name={self.global_name!r}"
+                    f" bot={self.bot} nick={self.nick!r}>"
+                )
             return (
                 f"<WidgetMember name={self.name!r}"
                 f" bot={self.bot} nick={self.nick!r}>"
             )
-        else:
-            return (
-                f"<WidgetMember name={self.name!r} discriminator={self.discriminator!r}"
-                f" bot={self.bot} nick={self.nick!r}>"
-            )
+        return (
+            f"<WidgetMember name={self.name!r} discriminator={self.discriminator!r}"
+            f" bot={self.bot} nick={self.nick!r}>"
+        )
 
     @property
     def display_name(self) -> str:

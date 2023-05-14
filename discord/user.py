@@ -91,24 +91,23 @@ class BaseUser(_UserTag):
         self._update(data)
 
     def __repr__(self) -> str:
-        if self.is_migrated and self.global_name is not None:
-            return (
-                "<BaseUser"
-                f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
-                f" bot={self.bot} system={self.system}>"
-            )
-        elif self.is_migrated:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<BaseUser"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
+                    f" bot={self.bot} system={self.system}>"
+                )
             return (
                 "<BaseUser"
                 f" id={self.id} username={self.name!r}"
                 f" bot={self.bot} system={self.system}>"
             )
-        else:
-            return (
-                "<BaseUser"
-                f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
-                f" bot={self.bot} system={self.system}>"
-            )
+        return (
+            "<BaseUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            f" bot={self.bot} system={self.system}>"
+        )
 
     def __str__(self) -> str:
         return (
@@ -117,7 +116,7 @@ class BaseUser(_UserTag):
             else (
                 f"{self.name} ({self.global_name})"
                 if self.global_name is not None
-                else f"{self.name}"
+                else self.name
             )
         )
 
@@ -378,24 +377,23 @@ class ClientUser(BaseUser):
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
-        if self.is_migrated and self.global_name is not None:
-            return (
-                "<ClientUser"
-                f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
-                f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
-            )
-        elif self.is_migrated:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<ClientUser"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
+                    f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
+                )
             return (
                 "<ClientUser"
                 f" id={self.id} username={self.name!r}"
                 f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
             )
-        else:
-            return (
-                "<ClientUser"
-                f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
-                f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
-            )
+        return (
+            "<ClientUser"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
+            f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
+        )
 
     def _update(self, data: UserPayload) -> None:
         super()._update(data)
@@ -504,18 +502,17 @@ class User(BaseUser, discord.abc.Messageable):
         self._stored: bool = False
 
     def __repr__(self) -> str:
-        if self.is_migrated and self.global_name is not None:
-            return (
-                "<User"
-                f" id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
-            )
-        elif self.is_migrated:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<User"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
+                )
             return "<User" f" id={self.id} username={self.name!r} bot={self.bot}>"
-        else:
-            return (
-                "<User"
-                f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
-            )
+        return (
+            "<User"
+            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
+        )
 
     def __del__(self) -> None:
         try:
