@@ -315,8 +315,7 @@ class BaseUser(_UserTag):
 
     @property
     def is_migrated(self) -> bool:
-        """Checks whether the user is already migrated to global name"""
-
+        """Checks whether the user is already migrated to global name."""
         return self.discriminator == "0"
 
 
@@ -353,14 +352,12 @@ class ClientUser(BaseUser):
         The user's global name.
 
         .. versionadded:: 2.5
-
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
 
         .. versionadded:: 1.3
-
     verified: :class:`bool`
         Specifies if the user's email is verified.
     locale: Optional[:class:`str`]
@@ -490,12 +487,10 @@ class User(BaseUser, discord.abc.Messageable):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
-
     global_name: :class: `str`
         The user's global name.
 
         .. versionadded:: 2.5
-
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`

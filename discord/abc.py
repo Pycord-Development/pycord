@@ -215,12 +215,10 @@ class User(Snowflake, Protocol):
         The user's username.
     discriminator: :class:`str`
         The user's discriminator.
-
     global_name: :class: `str`
         The user's global name.
 
         .. versionadded:: 2.5
-
     avatar: :class:`~discord.Asset`
         The avatar asset the user has.
     bot: :class:`bool`
