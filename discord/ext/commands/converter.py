@@ -199,14 +199,11 @@ class MemberConverter(IDConverter[discord.Member]):
             return discord.utils.get(
                 members, name=username, discriminator=discriminator
             )
-        else:
-            members = await guild.query_members(argument, limit=100, cache=cache)
-            return discord.utils.find(
-                lambda m: m.name == argument
-                or m.nick == argument
-                or m.global_name == argument,
-                members,
-            )
+        members = await guild.query_members(argument, limit=100, cache=cache)
+        return discord.utils.find(
+            lambda m: argument in (m.nick, m.name, m.global_name),
+            members,
+        )
 
     async def query_member_by_id(self, bot, guild, user_id):
         ws = bot._get_websocket(shard_id=guild.shard_id)
