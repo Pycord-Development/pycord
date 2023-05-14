@@ -115,6 +115,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1925](https://github.com/Pycord-Development/pycord/pull/1925))
 - Fixed major TypeError when an AuditLogEntry has no user.
   ([#2079](https://github.com/Pycord-Development/pycord/pull/2079))
+- Fixed `HTTPException` when trying to create a forum thread with files.
+  ([#2075](https://github.com/Pycord-Development/pycord/pull/2075))
 
 ## [2.4.1] - 2023-03-20
 

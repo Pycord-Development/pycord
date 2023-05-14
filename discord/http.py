@@ -1170,6 +1170,7 @@ class HTTPClient:
         invitable: bool = True,
         applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
+        files: Sequence[File] | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
@@ -1177,7 +1178,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
     ) -> Response[threads.Thread]:
-        payload = {
+        payload: dict[str, Any] = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
@@ -1208,13 +1209,40 @@ class HTTPClient:
 
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
+
         # TODO: Once supported by API, remove has_message=true query parameter
         route = Route(
             "POST",
             "/channels/{channel_id}/threads?has_message=true",
             channel_id=channel_id,
         )
-        return self.request(route, json=payload, reason=reason)
+
+        if files:
+            form = [{"name": "payload_json"}]
+
+            attachments = []
+            for index, file in enumerate(files):
+                attachments.append(
+                    {
+                        "id": index,
+                        "filename": file.filename,
+                        "description": file.description,
+                    }
+                )
+                form.append(
+                    {
+                        "name": f"files[{index}]",
+                        "value": file.fp,
+                        "filename": file.filename,
+                        "content_type": "application/octet-stream",
+                    }
+                )
+
+            payload["attachments"] = attachments
+            form[0]["value"] = utils._to_json(payload)
+            return self.request(route, form=form, reason=reason)
+        else:
+            return self.request(route, json=payload, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(
