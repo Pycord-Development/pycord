@@ -451,7 +451,13 @@ class Member(discord.abc.Messageable, _UserTag):
         )
         if original != modified:
             to_return = User._copy(self._user)
-            u.name, u._avatar, u.discriminator, u.global_name, u._public_flags = modified
+            (
+                u.name,
+                u._avatar,
+                u.discriminator,
+                u.global_name,
+                u._public_flags,
+            ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
 
@@ -560,8 +566,7 @@ class Member(discord.abc.Messageable, _UserTag):
         is returned instead.
         """
         return self.nick or (
-            (self.global_name or self.name)
-            if self._user.is_migrated else self.name
+            (self.global_name or self.name) if self._user.is_migrated else self.name
         )
 
     @property
