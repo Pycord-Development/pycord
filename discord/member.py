@@ -282,7 +282,6 @@ class Member(discord.abc.Messageable, _UserTag):
         name: str
         id: int
         discriminator: str
-        global_name: str | None
         bot: bool
         system: bool
         created_at: datetime.datetime
@@ -323,24 +322,24 @@ class Member(discord.abc.Messageable, _UserTag):
         return str(self._user)
 
     def __repr__(self) -> str:
-        if self.is_migrated and self.global_name is not None:
-            return (
-                "<Member"
-                f" id={self._user.id} name={self._user.name!r} global_name={self.global_name!r}"
-                f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
-            )
-        elif self.is_migrated:
-            return (
-                "<Member"
-                f" id={self._user.id} name={self._user.name!r}"
-                f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
-            )
-        else:
-            return (
-                "<Member"
-                f" id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
-                f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
-            )
+        if self._user.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<Member"
+                    f" id={self._user.id} name={self._user.name!r} global_name={self.global_name!r}"
+                    f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
+                )
+            else:
+                return (
+                    "<Member"
+                    f" id={self._user.id} name={self._user.name!r}"
+                    f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
+                )
+        return (
+            "<Member"
+            f" id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
+            f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
+        )
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
@@ -452,7 +451,7 @@ class Member(discord.abc.Messageable, _UserTag):
         )
         if original != modified:
             to_return = User._copy(self._user)
-            u.name, u._avatar, u.discriminator, u._public_flags = modified
+            u.name, u._avatar, u.discriminator, u.global_name, u._public_flags = modified
             # Signal to dispatch on_user_update
             return to_return, u
 
@@ -491,13 +490,14 @@ class Member(discord.abc.Messageable, _UserTag):
         """The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))
 
+    @property
+    def global_name(self) -> str | None:
+        """The member's global name, if applicable."""
+        return self._user.global_name if self._user.is_migrated else None
+
     def is_on_mobile(self) -> bool:
         """A helper function that determines if a member is active on a mobile device."""
         return "mobile" in self._client_status
-
-    def global_name(self) -> str | None:
-        """The members global name if present"""
-        return self._user.global_name if self._user.is_migrated else None
 
     @property
     def colour(self) -> Colour:
@@ -560,7 +560,8 @@ class Member(discord.abc.Messageable, _UserTag):
         is returned instead.
         """
         return self.nick or (
-            self.global_name or self.name if self._user.is_migrated else self.name
+            (self.global_name or self.name)
+            if self._user.is_migrated else self.name
         )
 
     @property
