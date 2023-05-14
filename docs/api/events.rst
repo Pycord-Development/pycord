@@ -7,11 +7,11 @@ Event Reference
 
 This section outlines the different types of events listened by :class:`Client`.
 
-There are 4 ways to register an event, the first way is through the use of
+There are 3 ways to register an event, the first way is through the use of
 :meth:`Client.event`. The second way is through subclassing :class:`Client` and
 overriding the specific events. The third way is through the use of :meth:`Client.listen`,
 which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`.
-The fourth way is through the use of :meth:`Client.once`, which serves as a one-time event listener. For example:
+For example:
 
 .. code-block:: python
     :emphasize-lines: 17, 22
@@ -41,10 +41,10 @@ The fourth way is through the use of :meth:`Client.once`, which serves as a one-
     async def on_message(message: discord.Message):
         print(f"Received {message.content}")
 
-    # Runs only for the 1st 'on_message' event. Can be useful for listening to 'on_ready'
-    @client.once()
-    async def message(message: discord.Message):
-        print(f"Received {message.content}")
+    # Runs only for the 1st event dispatch. Can be useful for listening to 'on_ready'
+    @client.listen(once=True)
+    async def on_ready():
+        print("Client is ready!")
 
 
 If an event handler raises an exception, :func:`on_error` will be called
