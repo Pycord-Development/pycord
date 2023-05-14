@@ -320,9 +320,7 @@ class UserConverter(IDConverter[discord.User]):
             if result is not None:
                 return result
 
-        # TODO: We might need to lookup global_name here too
-
-        predicate = lambda u: u.name == arg
+        predicate = lambda u: arg in (u.name, u.global_name)
         result = discord.utils.find(predicate, state._users.values())
 
         if result is None:
