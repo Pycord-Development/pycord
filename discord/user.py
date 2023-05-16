@@ -133,7 +133,7 @@ class BaseUser(_UserTag):
         self.name = data["username"]
         self.id = int(data["id"])
         self.discriminator = data["discriminator"]
-        self.global_name = data.get("global_name", None)
+        self.global_name = data.get("global_name", None) or None
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
