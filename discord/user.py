@@ -291,7 +291,7 @@ class BaseUser(_UserTag):
         if they have a guild specific nickname then that
         is returned instead.
         """
-        return self.name
+        return self.global_name or self.name
 
     def mentioned_in(self, message: Message) -> bool:
         """Checks if the user is mentioned in the specified message.
