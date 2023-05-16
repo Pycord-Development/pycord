@@ -108,7 +108,7 @@ class TeamMember(BaseUser):
 
         .. describe:: str(x)
 
-            Returns the team member's name with discriminator.
+            Returns the team member's name with discriminator or global_name.
 
     .. versionadded:: 1.3
 
@@ -120,6 +120,10 @@ class TeamMember(BaseUser):
         The team member's unique ID.
     discriminator: :class:`str`
         The team member's discriminator. This is given when the username has conflicts.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be 0.
     global_name: :class: `str`
         The team member's global name.
 
