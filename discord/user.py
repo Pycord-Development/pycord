@@ -348,7 +348,7 @@ class ClientUser(BaseUser):
         .. note::
 
             If the user has migrated to the new username system, this will always be 0.
-    global_name: :class: `str`
+    global_name: :class:`str`
         The user's global name.
 
         .. versionadded:: 2.5
@@ -490,7 +490,7 @@ class User(BaseUser, discord.abc.Messageable):
         .. note::
 
             If the user has migrated to the new username system, this will always be 0.
-    global_name: :class: `str`
+    global_name: :class:`str`
         The user's global name.
 
         .. versionadded:: 2.5
