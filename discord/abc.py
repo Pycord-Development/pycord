@@ -215,7 +215,11 @@ class User(Snowflake, Protocol):
         The user's username.
     discriminator: :class:`str`
         The user's discriminator.
-    global_name: :class: `str`
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
         The user's global name.
 
         .. versionadded:: 2.5

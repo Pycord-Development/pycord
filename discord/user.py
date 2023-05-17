@@ -133,7 +133,7 @@ class BaseUser(_UserTag):
         self.name = data["username"]
         self.id = int(data["id"])
         self.discriminator = data["discriminator"]
-        self.global_name = data.get("global_name", None)
+        self.global_name = data.get("global_name", None) or None
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
@@ -195,7 +195,7 @@ class BaseUser(_UserTag):
     @property
     def default_avatar(self) -> Asset:
         """Returns the default avatar for a given user.
-        This is calculated by the user's discriminator.
+        This is calculated by the user's ID.
         """
         return Asset._from_default_avatar(self._state, (self.id >> 22) % 5)
 
@@ -286,12 +286,9 @@ class BaseUser(_UserTag):
     @property
     def display_name(self) -> str:
         """Returns the user's display name.
-
-        For regular users this is just their username, but
-        if they have a guild specific nickname then that
-        is returned instead.
+        This will be their global name if set, otherwise their username.
         """
-        return self.name
+        return self.global_name or self.name
 
     def mentioned_in(self, message: Message) -> bool:
         """Checks if the user is mentioned in the specified message.
@@ -337,7 +334,7 @@ class ClientUser(BaseUser):
 
         .. describe:: str(x)
 
-            Returns the user's name with discriminator.
+            Returns the user's name with discriminator or global_name.
 
     Attributes
     ----------
@@ -347,7 +344,11 @@ class ClientUser(BaseUser):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
-    global_name: :class: `str`
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be 0.
+    global_name: :class:`str`
         The user's global name.
 
         .. versionadded:: 2.5
@@ -475,7 +476,7 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. describe:: str(x)
 
-            Returns the user's name with discriminator.
+            Returns the user's name with discriminator or global_name.
 
     Attributes
     ----------
@@ -485,7 +486,11 @@ class User(BaseUser, discord.abc.Messageable):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
-    global_name: :class: `str`
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
         The user's global name.
 
         .. versionadded:: 2.5

@@ -446,7 +446,7 @@ class Member(discord.abc.Messageable, _UserTag):
             user["username"],
             user["avatar"],
             user["discriminator"],
-            user.get("global_name", None),
+            user.get("global_name", None) or None,
             user.get("public_flags", 0),
         )
         if original != modified:
@@ -499,7 +499,7 @@ class Member(discord.abc.Messageable, _UserTag):
     @property
     def global_name(self) -> str | None:
         """The member's global name, if applicable."""
-        return self._user.global_name if self._user.is_migrated else None
+        return self._user.global_name
 
     def is_on_mobile(self) -> bool:
         """A helper function that determines if a member is active on a mobile device."""
@@ -560,14 +560,9 @@ class Member(discord.abc.Messageable, _UserTag):
     @property
     def display_name(self) -> str:
         """Returns the user's display name.
-
-        For regular users this is just their username, but
-        if they have a guild specific nickname then that
-        is returned instead.
+        This will either be their guild specific nickname, global name or username.
         """
-        return self.nick or (
-            (self.global_name or self.name) if self._user.is_migrated else self.name
-        )
+        return self.nick or self.global_name or self.name
 
     @property
     def display_avatar(self) -> Asset:
