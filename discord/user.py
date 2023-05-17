@@ -115,7 +115,7 @@ class BaseUser(_UserTag):
             if not self.is_migrated
             else (
                 f"{self.name} ({self.global_name})"
-                if self.global_name is not None and self.name != self.global_name
+                if self.global_name is not None
                 else self.name
             )
         )
