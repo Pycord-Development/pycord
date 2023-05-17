@@ -111,6 +111,8 @@ These changes are available on the `master` branch, but have not yet been releas
   listeners. ([#2044](https://github.com/Pycord-Development/pycord/pull/2044))
 - Fixed unloading of cogs having bridge commands.
   ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
+- Fixed the Slash command syncronization method `indiviual`.
+  ([#1925](https://github.com/Pycord-Development/pycord/pull/1925))
 
 ## [2.4.1] - 2023-03-20
 
