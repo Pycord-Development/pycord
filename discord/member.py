@@ -499,7 +499,7 @@ class Member(discord.abc.Messageable, _UserTag):
     @property
     def global_name(self) -> str | None:
         """The member's global name, if applicable."""
-        return self._user.global_name if self._user.is_migrated else None
+        return self._user.global_name
 
     def is_on_mobile(self) -> bool:
         """A helper function that determines if a member is active on a mobile device."""
