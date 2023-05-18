@@ -1637,7 +1637,7 @@ class ConnectionState:
             )
             return
 
-        channel_id = data["channel_id"];
+        channel_id = data["channel_id"]
         if channel_id is not None:
             channel = guild.get_channel(int(channel_id))
             if channel is not None:
