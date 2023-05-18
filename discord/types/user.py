@@ -33,10 +33,11 @@ class PartialUser(TypedDict):
     id: Snowflake
     username: str
     discriminator: str
+    global_name: str | None
     avatar: str | None
 
 
-PremiumType = Literal[0, 1, 2]
+PremiumType = Literal[0, 1, 2, 3]
 
 
 class User(PartialUser, total=False):
