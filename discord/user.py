@@ -31,7 +31,6 @@ import discord.abc
 
 from .asset import Asset
 from .colour import Colour
-from .enums import DefaultAvatar
 from .flags import PublicUserFlags
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
@@ -64,6 +63,7 @@ class BaseUser(_UserTag):
         "name",
         "id",
         "discriminator",
+        "global_name",
         "_avatar",
         "_banner",
         "_accent_colour",
@@ -77,6 +77,7 @@ class BaseUser(_UserTag):
         name: str
         id: int
         discriminator: str
+        global_name: str | None
         bot: bool
         system: bool
         _state: ConnectionState
@@ -90,6 +91,18 @@ class BaseUser(_UserTag):
         self._update(data)
 
     def __repr__(self) -> str:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<BaseUser"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
+                    f" bot={self.bot} system={self.system}>"
+                )
+            return (
+                "<BaseUser"
+                f" id={self.id} username={self.name!r}"
+                f" bot={self.bot} system={self.system}>"
+            )
         return (
             "<BaseUser"
             f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
@@ -97,7 +110,15 @@ class BaseUser(_UserTag):
         )
 
     def __str__(self) -> str:
-        return f"{self.name}#{self.discriminator}"
+        return (
+            f"{self.name}#{self.discriminator}"
+            if not self.is_migrated
+            else (
+                f"{self.name} ({self.global_name})"
+                if self.global_name is not None
+                else self.name
+            )
+        )
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
@@ -112,6 +133,7 @@ class BaseUser(_UserTag):
         self.name = data["username"]
         self.id = int(data["id"])
         self.discriminator = data["discriminator"]
+        self.global_name = data.get("global_name", None) or None
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
@@ -126,6 +148,7 @@ class BaseUser(_UserTag):
         self.name = user.name
         self.id = user.id
         self.discriminator = user.discriminator
+        self.global_name = user.global_name
         self._avatar = user._avatar
         self._banner = user._banner
         self._accent_colour = user._accent_colour
@@ -141,6 +164,7 @@ class BaseUser(_UserTag):
             "id": self.id,
             "avatar": self._avatar,
             "discriminator": self.discriminator,
+            "global_name": self.global_name,
             "bot": self.bot,
         }
 
@@ -171,11 +195,9 @@ class BaseUser(_UserTag):
     @property
     def default_avatar(self) -> Asset:
         """Returns the default avatar for a given user.
-        This is calculated by the user's discriminator.
+        This is calculated by the user's ID.
         """
-        return Asset._from_default_avatar(
-            self._state, int(self.discriminator) % len(DefaultAvatar)
-        )
+        return Asset._from_default_avatar(self._state, (self.id >> 22) % 5)
 
     @property
     def display_avatar(self) -> Asset:
@@ -264,12 +286,9 @@ class BaseUser(_UserTag):
     @property
     def display_name(self) -> str:
         """Returns the user's display name.
-
-        For regular users this is just their username, but
-        if they have a guild specific nickname then that
-        is returned instead.
+        This will be their global name if set, otherwise their username.
         """
-        return self.name
+        return self.global_name or self.name
 
     def mentioned_in(self, message: Message) -> bool:
         """Checks if the user is mentioned in the specified message.
@@ -289,6 +308,11 @@ class BaseUser(_UserTag):
             return True
 
         return any(user.id == self.id for user in message.mentions)
+
+    @property
+    def is_migrated(self) -> bool:
+        """Checks whether the user is already migrated to global name."""
+        return self.discriminator == "0"
 
 
 class ClientUser(BaseUser):
@@ -310,7 +334,7 @@ class ClientUser(BaseUser):
 
         .. describe:: str(x)
 
-            Returns the user's name with discriminator.
+            Returns the user's name with discriminator or global_name.
 
     Attributes
     ----------
@@ -320,13 +344,20 @@ class ClientUser(BaseUser):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be 0.
+    global_name: :class:`str`
+        The user's global name.
+
+        .. versionadded:: 2.5
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
 
         .. versionadded:: 1.3
-
     verified: :class:`bool`
         Specifies if the user's email is verified.
     locale: Optional[:class:`str`]
@@ -347,6 +378,18 @@ class ClientUser(BaseUser):
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<ClientUser"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
+                    f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
+                )
+            return (
+                "<ClientUser"
+                f" id={self.id} username={self.name!r}"
+                f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
+            )
         return (
             "<ClientUser"
             f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
@@ -361,6 +404,7 @@ class ClientUser(BaseUser):
         self._flags = data.get("flags", 0)
         self.mfa_enabled = data.get("mfa_enabled", False)
 
+    # TODO: Username might not be able to edit anymore.
     async def edit(
         self, *, username: str = MISSING, avatar: bytes = MISSING
     ) -> ClientUser:
@@ -432,7 +476,7 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. describe:: str(x)
 
-            Returns the user's name with discriminator.
+            Returns the user's name with discriminator or global_name.
 
     Attributes
     ----------
@@ -442,6 +486,14 @@ class User(BaseUser, discord.abc.Messageable):
         The user's unique ID.
     discriminator: :class:`str`
         The user's discriminator. This is given when the username has conflicts.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
+        The user's global name.
+
+        .. versionadded:: 2.5
     bot: :class:`bool`
         Specifies if the user is a bot account.
     system: :class:`bool`
@@ -455,6 +507,13 @@ class User(BaseUser, discord.abc.Messageable):
         self._stored: bool = False
 
     def __repr__(self) -> str:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<User"
+                    f" id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
+                )
+            return "<User" f" id={self.id} username={self.name!r} bot={self.bot}>"
         return (
             "<User"
             f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"

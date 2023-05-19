@@ -1068,10 +1068,7 @@ class Guild(Hashable):
             if result is not None:
                 return result
 
-        def pred(m: Member) -> bool:
-            return m.nick == name or m.name == name
-
-        return utils.find(pred, members)
+        return utils.find(lambda m: name in (m.nick, m.name, m.global_name), members)
 
     def _create_channel(
         self,
