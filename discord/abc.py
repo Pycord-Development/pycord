@@ -1716,7 +1716,7 @@ class Messageable:
         .. note::
 
             Due to a limitation with the Discord API, the :class:`.Message`
-            objects returned by this method do not contain complete
+            objects returned by this method does not contain complete
             :attr:`.Message.reactions` data.
 
         Returns
