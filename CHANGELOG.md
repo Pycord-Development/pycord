@@ -56,9 +56,9 @@ These changes are available on the `master` branch, but have not yet been releas
   `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
   children/subcommands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
-- Added support for [new markdown](https://support.discord.com/hc/en-us/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-#h_01GY0DB14X1PFY87CJFFVHFW4T)
-  for `utils.remove_markdown` and
-  `utils.escape_markdown`.
+- Added support for
+  [new markdown](https://support.discord.com/hc/en-us/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-#h_01GY0DB14X1PFY87CJFFVHFW4T)
+  for `utils.remove_markdown` and `utils.escape_markdown`.
   ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
 
 ### Changed
