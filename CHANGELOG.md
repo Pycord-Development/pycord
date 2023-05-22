@@ -56,6 +56,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `BridgeCommandGroup.walk_commands`) to cycle through all bridge commands and their
   children/subcommands.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
+- Added support for usernames and modified multiple methods accordingly.
+  ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
 
 ### Changed
 
