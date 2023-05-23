@@ -58,6 +58,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
 - Added support for usernames and modified multiple methods accordingly.
   ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
+- Added `icon` and `unicode_emoji` to `Guild.create_role`.
+  ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
 
 ### Changed
 
@@ -76,6 +78,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Embed attribues like author, footer, etc now return `None` when not set, and return
   their respective classes when set.
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
+- `default_avatar` behavior changes depending on the user's username migration status
+  ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 
 ### Removed
 
