@@ -195,9 +195,10 @@ class BaseUser(_UserTag):
     @property
     def default_avatar(self) -> Asset:
         """Returns the default avatar for a given user.
-        This is calculated by the user's ID.
+        This is calculated by the user's ID if they're on the new username system, otherwise their discriminator.
         """
-        return Asset._from_default_avatar(self._state, (self.id >> 22) % 5)
+        eq = (self.id >> 22) if self.is_migrated else int(self.discriminator) 
+        return Asset._from_default_avatar(self._state, eq % 5)
 
     @property
     def display_avatar(self) -> Asset:
