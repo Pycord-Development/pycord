@@ -119,6 +119,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
 - Fixed the Slash command syncronization method `indiviual`.
   ([#1925](https://github.com/Pycord-Development/pycord/pull/1925))
+- Fixed an issue that occurred when `webhooks_update` event payload channel ID was
+  `None`. ([#2078](https://github.com/Pycord-Development/pycord/pull/2078))
 - Fixed major TypeError when an AuditLogEntry has no user.
   ([#2079](https://github.com/Pycord-Development/pycord/pull/2079))
 
