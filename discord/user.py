@@ -197,7 +197,7 @@ class BaseUser(_UserTag):
         """Returns the default avatar for a given user.
         This is calculated by the user's ID if they're on the new username system, otherwise their discriminator.
         """
-        eq = (self.id >> 22) if self.is_migrated else int(self.discriminator) 
+        eq = (self.id >> 22) if self.is_migrated else int(self.discriminator)
         return Asset._from_default_avatar(self._state, eq % 5)
 
     @property
