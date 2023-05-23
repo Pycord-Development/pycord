@@ -78,6 +78,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Embed attribues like author, footer, etc now return `None` when not set, and return
   their respective classes when set.
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
+- `default_avatar` behavior changes depending on the user's username migration status
+  ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 
 ### Removed
 
