@@ -1241,8 +1241,7 @@ class HTTPClient:
             payload["attachments"] = attachments
             form[0]["value"] = utils._to_json(payload)
             return self.request(route, form=form, reason=reason)
-        else:
-            return self.request(route, json=payload, reason=reason)
+        return self.request(route, json=payload, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:
         return self.request(
