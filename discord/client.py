@@ -1051,7 +1051,9 @@ class Client:
             yield from guild.members
 
     async def get_or_fetch_user(self, id: int, /) -> User | None:
-        """Looks up a user in the user cache or fetches if not found.
+        """|coro|
+
+        Looks up a user in the user cache or fetches if not found.
 
         Parameters
         ----------
