@@ -252,16 +252,13 @@ Channels
 
 Connection
 ----------
-.. function:: on_error(event, *args, **kwargs)
+.. function:: on_error(event, exception, *args, **kwargs)
 
     Usually when an event raises an uncaught exception, a traceback is
     printed to stderr and the exception is ignored. If you want to
     change this behaviour and handle the exception for whatever reason
     yourself, this event can be overridden. Which, when done, will
     suppress the default action of printing the traceback.
-
-    The information of the exception raised and the exception itself can
-    be retrieved with a standard call to :func:`sys.exc_info`.
 
     If you want exception to propagate out of the :class:`Client` class
     you can define an ``on_error`` handler consisting of a single empty
@@ -278,6 +275,9 @@ Connection
 
     :param event: The name of the event that raised the exception.
     :type event: :class:`str`
+
+    :param exception: The exception raised by the event.
+    :type event: :class:`Exception`
 
     :param args: The positional arguments for the event that raised the
         exception.
