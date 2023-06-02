@@ -134,6 +134,11 @@ These changes are available on the `master` branch, but have not yet been releas
   new theme colors in the app.
   ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
 
+### Changed
+
+- `Client.on_error()` now has an `exception` parameter for easier error handling.
+  ([#1945](https://github.com/Pycord-Development/pycord/pull/1945))
+
 ### Fixed
 
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
