@@ -1154,10 +1154,10 @@ class SlashCommandGroup(ApplicationCommand):
             "description_localizations", MISSING
         )
 
-        # just like ApplicationCommand
+        # similar to ApplicationCommand
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
-        cooldown = getattr(self, "__commands_cooldown__", cooldown)
+        # no need to getattr, since slash cmds groups cant be created using a decorator
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
@@ -1170,7 +1170,14 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._buckets: CooldownMapping = buckets
 
-        max_concurrency = getattr(self, "__commands_max_concurrency__", max_concurrency)
+        # no need to getattr, since slash cmds groups cant be created using a decorator
+
+        if max_concurrency is not None and not isinstance(
+            max_concurrency, MaxConcurrency
+        ):
+            raise TypeError(
+                "max_concurrency must be an instance of MaxConcurrency or None"
+            )
 
         self._max_concurrency: MaxConcurrency | None = max_concurrency
 
