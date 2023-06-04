@@ -13,10 +13,6 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
 
 
-# WARNING: This feature is very unstable and may break at any time.
-# It is not recommended to use this in production.
-
-
 async def finished_callback(sink: MP3Sink, channel: discord.TextChannel):
     mention_strs = []
     audio_segs: list[pydub.AudioSegment] = []
@@ -82,7 +78,7 @@ async def start(ctx: discord.ApplicationContext):
         MP3Sink(),
         finished_callback,
         ctx.channel,
-        sync_start=True,
+        sync_start=True,  # WARNING: This feature is very unstable and may break at any time.
     )
 
     await ctx.respond("The recording has started!")
