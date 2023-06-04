@@ -82,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 - `default_avatar` behavior changes depending on the user's username migration status
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
+- `Client.on_error()` now has an `exception` parameter for easier error handling.
+  ([#1945](https://github.com/Pycord-Development/pycord/pull/1945))
 
 ### Removed
 
@@ -137,11 +139,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Updated the values of the `Color.embed_background()` classmethod to correspond with
   new theme colors in the app.
   ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
-
-### Changed
-
-- `Client.on_error()` now has an `exception` parameter for easier error handling.
-  ([#1945](https://github.com/Pycord-Development/pycord/pull/1945))
 
 ### Fixed
 
