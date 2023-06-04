@@ -6,12 +6,15 @@ import discord
 from discord.sinks import MP3Sink
 
 bot = discord.Bot()
-connections: dict[int, discord.VoiceClient] = {}
 
 
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+
+
+# WARNING: This feature is very unstable and may break at any time.
+# It is not recommended to use this in production.
 
 
 async def finished_callback(sink: MP3Sink, channel: discord.TextChannel):
@@ -55,8 +58,7 @@ async def join(ctx: discord.ApplicationContext):
     if not voice:
         return await ctx.respond("You're not in a vc right now")
 
-    vc = await voice.channel.connect()
-    connections.update({ctx.guild.id: vc})
+    await voice.channel.connect()
 
     await ctx.respond("Joined!")
 
@@ -69,7 +71,7 @@ async def start(ctx: discord.ApplicationContext):
     if not voice:
         return await ctx.respond("You're not in a vc right now")
 
-    vc = connections.get(ctx.guild.id)
+    vc: discord.VoiceClient = ctx.voice_client
 
     if not vc:
         return await ctx.respond(
@@ -89,7 +91,7 @@ async def start(ctx: discord.ApplicationContext):
 @bot.command()
 async def stop(ctx: discord.ApplicationContext):
     """Stop the recording"""
-    vc = connections.get(ctx.guild.id)
+    vc: discord.VoiceClient = ctx.voice_client
 
     if not vc:
         return await ctx.respond("There's no recording going on right now")
@@ -102,7 +104,7 @@ async def stop(ctx: discord.ApplicationContext):
 @bot.command()
 async def leave(ctx: discord.ApplicationContext):
     """Leave the voice channel!"""
-    vc = connections.get(ctx.guild.id)
+    vc: discord.VoiceClient = ctx.voice_client
 
     if not vc:
         return await ctx.respond("I'm not in a vc right now")
