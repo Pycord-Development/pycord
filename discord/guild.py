@@ -739,7 +739,7 @@ class Guild(Hashable):
 
         .. warning::
 
-            `get_channel` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the channel is not found.
+            Consider using the `fetch_x` version of this method if this returns `None`.
 
         Parameters
         ----------
@@ -850,7 +850,7 @@ class Guild(Hashable):
         """Returns a member with the given ID.
         .. warning::
 
-            `get_member` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
+            Consider using the `fetch_x` version of this method if this returns `None`.
 
         Parameters
         ----------
@@ -888,7 +888,7 @@ class Guild(Hashable):
 
         .. warning::
 
-            `get_role` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
+            Consider using the `fetch_x` version of this method if this returns `None`.
 
         Returns
         -------
