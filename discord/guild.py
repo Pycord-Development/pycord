@@ -847,16 +847,15 @@ class Guild(Hashable):
         return list(self._members.values())
 
     def get_member(self, user_id: int, /) -> Member | None:
-        """Returns a member with the given ID.
+        """Returns a member with the given ID.       
+        .. warning::
 
+            `get_member` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
+        
         Parameters
         ----------
         user_id: :class:`int`
             The ID to search for.
-
-        .. warning::
-
-            `get_member` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
 
         Returns
         -------
