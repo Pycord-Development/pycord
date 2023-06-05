@@ -739,7 +739,7 @@ class Guild(Hashable):
 
         .. warning::
 
-            `get_channel` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
+            `get_channel` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the channel is not found.
 
         Parameters
         ----------
