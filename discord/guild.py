@@ -848,7 +848,7 @@ class Guild(Hashable):
 
     def get_member(self, user_id: int, /) -> Member | None:
         """Returns a member with the given ID.
-        
+
         .. warning::
 
             Consider using the `fetch_x` version of this method if this returns `None`. This method retrieves from the cache.
