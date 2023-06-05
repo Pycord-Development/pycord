@@ -736,9 +736,9 @@ class Guild(Hashable):
         .. note::
 
             This does *not* search for threads.
-        
+
         .. warning::
-            
+
             `get_channel` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
 
         Parameters
@@ -855,7 +855,7 @@ class Guild(Hashable):
             The ID to search for.
 
         .. warning::
-            
+
             `get_member` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
 
         Returns
@@ -888,7 +888,7 @@ class Guild(Hashable):
             The ID to search for.
 
         .. warning::
-            
+
             `get_role` and other `get_x` commands come from the cache. It may return None even if it exists. Use the `fetch_x` version of this command if the role is not found.
 
         Returns
