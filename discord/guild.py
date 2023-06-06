@@ -737,7 +737,6 @@ class Guild(Hashable):
 
             This does *not* search for threads.
 
-
         Parameters
         ----------
         channel_id: :class:`int`
@@ -746,7 +745,7 @@ class Guild(Hashable):
         Returns
         -------
         Optional[:class:`.abc.GuildChannel`]
-            The returned channel or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The returned channel or ``None`` if not found. It can return ``None`` because it retrieves from the cache.
             The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._channels.get(channel_id)
@@ -855,7 +854,7 @@ class Guild(Hashable):
         Returns
         -------
         Optional[:class:`Member`]
-            The member or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The member or ``None`` if not found. It can return ``None`` because it retrieves from the cache.
             The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._members.get(user_id)
@@ -882,11 +881,10 @@ class Guild(Hashable):
         role_id: :class:`int`
             The ID to search for.
 
-
         Returns
         -------
         Optional[:class:`Role`]
-            The role or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The role or ``None`` if not found. It can return ``None`` because it retrieves from the cache.
             The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._roles.get(role_id)
@@ -2024,7 +2022,7 @@ class Guild(Hashable):
         Returns
         -------
         :class:`Member`
-            The member from the member ID. It can return ``None`` because it retrieves from the cache. 
+            The member from the member ID. It can return ``None`` because it retrieves from the cache.
             The fetch_ version of this command makes an API call and won't return ``None``.
 
         Raises
