@@ -879,7 +879,8 @@ class Client:
         Returns
         -------
         Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, :class:`.abc.PrivateChannel`]]
-            The returned channel or ``None`` if not found.
+            The returned channel or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._connection.get_channel(id)
 
@@ -897,7 +898,8 @@ class Client:
         Returns
         -------
         Optional[:class:`.Message`]
-            The returned message or ``None`` if not found.
+            The returned message or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._connection._get_message(id)
 
@@ -958,7 +960,8 @@ class Client:
         Returns
         -------
         Optional[:class:`.Guild`]
-            The guild or ``None`` if not found.
+            The guild or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._connection._get_guild(id)
 
@@ -973,7 +976,8 @@ class Client:
         Returns
         -------
         Optional[:class:`~discord.User`]
-            The user or ``None`` if not found.
+            The user or ``None`` if not found. It can return ``None`` because it retrieves from the cache. 
+            The fetch_ version of this command makes an API call and won't return ``None``.
         """
         return self._connection.get_user(id)
 
