@@ -126,7 +126,9 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
     ):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.help_command = DefaultHelpCommand() if help_command is MISSING else help_command
+        self.help_command = (
+            DefaultHelpCommand() if help_command is MISSING else help_command
+        )
         self.strip_after_prefix = options.get("strip_after_prefix", False)
 
     @discord.utils.copy_doc(discord.Client.close)
