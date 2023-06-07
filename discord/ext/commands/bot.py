@@ -109,12 +109,8 @@ def _is_submodule(parent: str, child: str) -> bool:
     return parent == child or child.startswith(f"{parent}.")
 
 
-class _DefaultRepr:
-    def __repr__(self):
-        return "<default-help-command>"
-
-
 class BotBase(GroupMixin, discord.cog.CogMixin):
+    _help_command = None
     _supports_prefixed_commands = True
 
     def __init__(
@@ -125,18 +121,13 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             [Bot | AutoShardedBot, Message],
             str | Iterable[str] | Coroutine[Any, Any, str | Iterable[str]],
         ] = when_mentioned,
-        help_command: HelpCommand | _DefaultRepr | None = _DefaultRepr(),
+        help_command: HelpCommand | None = MISSING,
         **options,
     ):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self._help_command = None
+        self.help_command = DefaultHelpCommand() if help_command is MISSING else help_command
         self.strip_after_prefix = options.get("strip_after_prefix", False)
-
-        if isinstance(help_command, _DefaultRepr):
-            self.help_command = DefaultHelpCommand()
-        else:
-            self.help_command = help_command
 
     @discord.utils.copy_doc(discord.Client.close)
     async def close(self) -> None:
