@@ -29,7 +29,7 @@ import collections
 import collections.abc
 import sys
 import traceback
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
 
@@ -114,19 +114,24 @@ class _DefaultRepr:
         return "<default-help-command>"
 
 
-_default = _DefaultRepr()
-
-
 class BotBase(GroupMixin, discord.cog.CogMixin):
     _supports_prefixed_commands = True
 
-    def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
+    def __init__(
+        self,
+        command_prefix: str | Iterable[str] | Callable[
+            [Bot | AutoShardedBot, Message],
+            str | Iterable[str] | Coroutine[Any, Any, str | Iterable[str]],
+        ] = when_mentioned,
+        help_command: HelpCommand | _DefaultRepr | None = _DefaultRepr(),
+        **options,
+    ):
         super().__init__(**options)
         self.command_prefix = command_prefix
         self._help_command = None
         self.strip_after_prefix = options.get("strip_after_prefix", False)
 
-        if help_command is _default:
+        if isinstance(help_command, _DefaultRepr):
             self.help_command = DefaultHelpCommand()
         else:
             self.help_command = help_command
