@@ -60,8 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
 - Added `icon` and `unicode_emoji` to `Guild.create_role`.
   ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
-- Added new embeded activities, Gartic Phone and Jamspace.
-  ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
+- Added new embedded activities, Gartic Phone and Jamspace.
+  ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 
 ### Changed
 
