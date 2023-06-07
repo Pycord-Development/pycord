@@ -119,7 +119,9 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
     def __init__(
         self,
-        command_prefix: str | Iterable[str] | Callable[
+        command_prefix: str
+        | Iterable[str]
+        | Callable[
             [Bot | AutoShardedBot, Message],
             str | Iterable[str] | Coroutine[Any, Any, str | Iterable[str]],
         ] = when_mentioned,
