@@ -399,9 +399,9 @@ class Client:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
             pass
-        except Exception as exc:
+        except Exception:
             try:
-                await self.on_error(event_name, exc, *args, **kwargs)
+                await self.on_error(event_name, *args, **kwargs)
             except asyncio.CancelledError:
                 pass
 
@@ -481,9 +481,7 @@ class Client:
         for coro in once_listeners:
             self._event_handlers[method].remove(coro)
 
-    async def on_error(
-        self, event_method: str, exception: Exception, *args: Any, **kwargs: Any
-    ) -> None:
+    async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
 
         The default error handler provided by the client.
