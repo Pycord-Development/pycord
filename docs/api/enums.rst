@@ -1945,13 +1945,13 @@ of :class:`enum.Enum`.
     .. attribute:: fishington
 
         Represents the embedded application Fishington.io.
-    
+
     .. attribute:: gartic_phone
 
         Represents the embedded application Gartic Phone.
 
         .. versionadded:: 2.5
-    
+
     .. attribute:: jamspace
 
         Represents the embedded application Jamspace.
