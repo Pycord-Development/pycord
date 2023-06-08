@@ -334,13 +334,16 @@ class Select(Item[V]):
         | list[Member | User | Role]
         | list[GuildChannel | Thread]
     ):
-        """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]],
-        List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]:
-        A list of values that have been selected by the user.
+        """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | 
+        List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`]:
+        A list of values that have been selected by the user. This will be an empty list if the select has not been interacted with yet.
         """
         select_type = self._underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values
+        if self._interaction is None:
+            # The select has not been interacted with yet
+            return []
         resolved = []
         selected_values = list(self._selected_values)
         state = self._interaction._state
