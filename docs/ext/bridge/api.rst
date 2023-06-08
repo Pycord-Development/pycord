@@ -151,3 +151,8 @@ BridgeContext Subclasses
 
 .. autoclass:: discord.ext.bridge.BridgeExtContext
     :members:
+
+.. attributetable:: discord.ext.bridge.Context
+
+.. autoclass:: discord.ext.bridge.Context
+    :members:
