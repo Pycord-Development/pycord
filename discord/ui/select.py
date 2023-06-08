@@ -334,7 +334,7 @@ class Select(Item[V]):
         | list[Member | User | Role]
         | list[GuildChannel | Thread]
     ):
-        """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | 
+        """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
         List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`]:
         A list of values that have been selected by the user. This will be an empty list if the select has not been interacted with yet.
         """
