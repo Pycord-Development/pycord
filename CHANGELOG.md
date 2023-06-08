@@ -62,6 +62,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
 - Added `cooldown` and `max_concurrency` to`SlashCommandGroup`.
   ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
+- Added new embedded activities, Gartic Phone and Jamspace.
+  ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 
 ### Changed
 
@@ -71,7 +73,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 - `Interaction.channel` is received from the gateway, so it can now be `DMChannel` and
   `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
-- `DMChannel.recipients` can now be `None`
+- `DMChannel.recipients` can now be `None`.
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - Store `view.message` on receiving Interaction for a component.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
@@ -80,10 +82,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Embed attribues like author, footer, etc now return `None` when not set, and return
   their respective classes when set.
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
-- `default_avatar` behavior changes depending on the user's username migration status
+- `default_avatar` behavior changes depending on the user's username migration status.
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
-- `Client.on_error()` now has an `exception` parameter for easier error handling.
-  ([#1945](https://github.com/Pycord-Development/pycord/pull/1945))
+- Typehinted `command_prefix` and `help_command` arguments properly.
+  ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 
 ### Removed
 

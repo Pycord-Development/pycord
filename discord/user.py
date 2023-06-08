@@ -198,7 +198,8 @@ class BaseUser(_UserTag):
         This is calculated by the user's ID if they're on the new username system, otherwise their discriminator.
         """
         eq = (self.id >> 22) if self.is_migrated else int(self.discriminator)
-        return Asset._from_default_avatar(self._state, eq % 5)
+        perc = 6 if self.is_migrated else 5
+        return Asset._from_default_avatar(self._state, eq % perc)
 
     @property
     def display_avatar(self) -> Asset:
