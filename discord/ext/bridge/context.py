@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, overload, Union
+from typing import TYPE_CHECKING, Any, Union, overload
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
