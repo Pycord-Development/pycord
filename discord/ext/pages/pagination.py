@@ -428,7 +428,9 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.trigger_on_display = trigger_on_display
-        self.message: discord.Message | discord.WebhookMessage | None = None
+        self.message: discord.Message | discord.WebhookMessage | discord.InteractionMessage | None = (
+            None
+        )
 
         if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
@@ -1022,11 +1024,15 @@ class Paginator(discord.ui.View):
 
     async def edit(
         self,
-        message: discord.Message,
+        target: discord.Message
+        | discord.Interaction
+        | discord.ApplicationContext
+        | BridgeContext,
         suppress: bool | None = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         delete_after: float | None = None,
-    ) -> discord.Message | None:
+        user: discord.User | discord.Member | None = None,
+    ) -> discord.Message | discord.InteractionMessage | None:
         """Edits an existing message to replace it with the paginator contents.
 
         .. note::
@@ -1035,8 +1041,8 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        message: :class:`discord.Message`
-            The message to edit with the paginator.
+        target: Union[:class:`~discord.Message`, :class:`~discord.Interaction`, :class:`~discord.ApplicationContext`, :class:`~discord.ext.bridge.BridgeContext`]
+            The target to edit.
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1051,14 +1057,14 @@ class Paginator(discord.ui.View):
             are used instead.
         delete_after: Optional[:class:`float`]
             If set, deletes the paginator after the specified time.
+        user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
+            The user to set as the paginator's user, if a :class:`~discord.Message` is passed as the target.
 
         Returns
         -------
         Optional[:class:`discord.Message`]
             The message that was edited. Returns ``None`` if the operation failed.
         """
-        if not isinstance(message, discord.Message):
-            raise TypeError(f"expected Message not {message.__class__!r}")
 
         self.update_buttons()
 
@@ -1070,10 +1076,20 @@ class Paginator(discord.ui.View):
         if page_content.custom_view:
             self.update_custom_view(page_content.custom_view)
 
-        self.user = message.author
+        if isinstance(target, discord.Interaction):
+            self.user = target.user
+        elif isinstance(target, discord.Message):
+            if not isinstance(user, (discord.User, discord.Member)):
+                raise TypeError(
+                    f"expected User or Member not {user.__class__.__name__!r}"
+                )
+            self.user = user or target.author
+        else:
+            # BridgeContext doesn't have author, but it will always be available in the subclasses
+            self.user = target.author
 
         try:
-            self.message = await message.edit(
+            self.message = await target.edit(
                 content=page_content.content,
                 embeds=page_content.embeds,
                 files=page_content.files,
