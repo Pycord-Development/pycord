@@ -1099,6 +1099,12 @@ class Paginator(discord.ui.View):
                 allowed_mentions=allowed_mentions,
                 delete_after=delete_after,
             )
+            if self.message is None and isinstance(target, discord.Interaction):
+                # if the message is None, it means that interaction.response.edit_message was used.
+                # this can only be done if the interaction was from a component or a modal
+                # both of which have the message attribute set
+                self.message: discord.Message = target.message
+
         except (discord.NotFound, discord.Forbidden):
             pass
 
