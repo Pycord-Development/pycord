@@ -133,6 +133,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2075](https://github.com/Pycord-Development/pycord/pull/2075))
 - Fixed `before_invoke` not being run for `SlashCommandGroup`.
   ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
+- Fixed `AttributeError` when accessing a `Select`'s values when it hasn't been
+  interacted with. ([#2104](https://github.com/Pycord-Development/pycord/pull/2104))
 
 ## [2.4.1] - 2023-03-20
 
