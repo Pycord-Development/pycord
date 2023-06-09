@@ -1256,8 +1256,10 @@ class ConnectionState:
         return guild.id not in self._guilds
 
     async def chunk_guild(self, guild, *, wait=True, cache=None):
+        # Note: This method makes an API call without timeout, and should be used in
+        #       conjunction with `asyncio.wait_for(..., timeout=...)`.
         cache = cache or self.member_cache_flags.joined
-        request = self._chunk_requests.get(guild.id)
+        request = self._chunk_requests.get(guild.id)  # nosec B113
         if request is None:
             self._chunk_requests[guild.id] = request = ChunkRequest(
                 guild.id, self.loop, self._get_guild, cache=cache
@@ -1635,13 +1637,20 @@ class ConnectionState:
             )
             return
 
-        channel = guild.get_channel(int(data["channel_id"]))
-        if channel is not None:
-            self.dispatch("webhooks_update", channel)
+        channel_id = data["channel_id"]
+        if channel_id is not None:
+            channel = guild.get_channel(int(channel_id))
+            if channel is not None:
+                self.dispatch("webhooks_update", channel)
+            else:
+                _log.debug(
+                    "WEBHOOKS_UPDATE referencing an unknown channel ID: %s. Discarding.",
+                    data["channel_id"],
+                )
         else:
             _log.debug(
-                "WEBHOOKS_UPDATE referencing an unknown channel ID: %s. Discarding.",
-                data["channel_id"],
+                "WEBHOOKS_UPDATE channel ID was null for guild: %s. Discarding.",
+                data["guild_id"],
             )
 
     def parse_stage_instance_create(self, data) -> None:

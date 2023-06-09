@@ -30,6 +30,7 @@ import logging
 import signal
 import sys
 import traceback
+from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
 
 import aiohttp
@@ -253,6 +254,27 @@ class Client:
             VoiceClient.warn_nacl = False
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
+    async def __aenter__(self) -> Client:
+        loop = asyncio.get_running_loop()
+        self.loop = loop
+        self.http.loop = loop
+        self._connection.loop = loop
+
+        self._ready = asyncio.Event()
+
+        return self
+
+    async def __aexit__(
+        self,
+        exc_t: BaseException | None,
+        exc_v: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        if not self.is_closed():
+            await self.close()
+
+    # internals
+
     def _get_websocket(
         self, guild_id: int | None = None, *, shard_id: int | None = None
     ) -> DiscordWebSocket:
@@ -435,9 +457,29 @@ class Client:
         else:
             self._schedule_event(coro, method, *args, **kwargs)
 
+        # collect the once listeners as removing them from the list
+        # while iterating over it causes issues
+        once_listeners = []
+
         # Schedule additional handlers registered with @listen
         for coro in self._event_handlers.get(method, []):
             self._schedule_event(coro, method, *args, **kwargs)
+
+            try:
+                if coro._once:  # added using @listen()
+                    once_listeners.append(coro)
+
+            except AttributeError:  # added using @Cog.add_listener()
+                # https://github.com/Pycord-Development/pycord/pull/1989
+                # Although methods are similar to functions, attributes can't be added to them.
+                # This means that we can't add the `_once` attribute in the `add_listener` method
+                # and can only be added using the `@listen` decorator.
+
+                continue
+
+        # remove the once listeners
+        for coro in once_listeners:
+            self._event_handlers[method].remove(coro)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         """|coro|
@@ -1007,7 +1049,9 @@ class Client:
             yield from guild.members
 
     async def get_or_fetch_user(self, id: int, /) -> User | None:
-        """Looks up a user in the user cache or fetches if not found.
+        """|coro|
+
+        Looks up a user in the user cache or fetches if not found.
 
         Parameters
         ----------
@@ -1204,7 +1248,7 @@ class Client:
             except ValueError:
                 pass
 
-    def listen(self, name: str = MISSING) -> Callable[[Coro], Coro]:
+    def listen(self, name: str = MISSING, once: bool = False) -> Callable[[Coro], Coro]:
         """A decorator that registers another function as an external
         event listener. Basically this allows you to listen to multiple
         events from different places e.g. such as :func:`.on_ready`
@@ -1233,6 +1277,11 @@ class Client:
             async def my_message(message):
                 print('two')
 
+            # listen to the first event only
+            @client.listen('on_ready', once=True)
+            async def on_ready():
+                print('ready!')
+
         Would print one and two in an unspecified order.
         """
 
@@ -1241,6 +1290,7 @@ class Client:
             if name == "on_application_command_error":
                 return self.event(func)
 
+            func._once = once
             self.add_listener(func, name)
             return func
 
@@ -1285,64 +1335,6 @@ class Client:
         setattr(self, coro.__name__, coro)
         _log.debug("%s has successfully been registered as an event", coro.__name__)
         return coro
-
-    def once(
-        self, name: str = MISSING, check: Callable[..., bool] | None = None
-    ) -> Coro:
-        """A decorator that registers an event to listen to only once.
-
-        You can find more info about the events on the :ref:`documentation below <discord-api-events>`.
-
-        The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the event we want to listen to. This is passed to
-            :py:meth:`~discord.Client.wait_for`. Defaults to ``func.__name__``.
-        check: Optional[Callable[..., :class:`bool`]]
-            A predicate to check what to wait for. The arguments must meet the
-            parameters of the event being waited for.
-
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-
-        Example
-        -------
-
-        .. code-block:: python3
-
-            @client.once()
-            async def ready():
-                print('Ready!')
-        """
-
-        def decorator(func: Coro) -> Coro:
-            if not asyncio.iscoroutinefunction(func):
-                raise TypeError("event registered must be a coroutine function")
-
-            async def wrapped() -> None:
-                nonlocal name
-                nonlocal check
-
-                name = func.__name__ if name is MISSING else name
-
-                args = await self.wait_for(name, check=check)
-
-                arg_len = func.__code__.co_argcount
-                if arg_len == 0 and args is None:
-                    await func()
-                elif arg_len == 1:
-                    await func(args)
-                else:
-                    await func(*args)
-
-            self.loop.create_task(wrapped())
-            return func
-
-        return decorator
 
     async def change_presence(
         self,

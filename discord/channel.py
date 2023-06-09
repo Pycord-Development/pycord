@@ -1274,26 +1274,7 @@ class ForumChannel(_TextChannel):
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
-        if file is not None:
-            if not isinstance(file, File):
-                raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await state.http.send_files(
-                    self.id,
-                    files=[file],
-                    allowed_mentions=allowed_mentions,
-                    content=message_content,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    stickers=stickers,
-                    components=components,
-                )
-            finally:
-                file.close()
-
-        elif files is not None:
+        if files is not None:
             if len(files) > 10:
                 raise InvalidArgument(
                     "files parameter must be a list of up to 10 elements"
@@ -1301,26 +1282,17 @@ class ForumChannel(_TextChannel):
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
-            try:
-                data = await state.http.send_files(
-                    self.id,
-                    files=files,
-                    content=message_content,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    allowed_mentions=allowed_mentions,
-                    stickers=stickers,
-                    components=components,
-                )
-            finally:
-                for f in files:
-                    f.close()
-        else:
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be File")
+            files = [file]
+
+        try:
             data = await state.http.start_forum_thread(
                 self.id,
                 content=message_content,
                 name=name,
+                files=files,
                 embed=embed,
                 embeds=embeds,
                 nonce=nonce,
@@ -1333,6 +1305,11 @@ class ForumChannel(_TextChannel):
                 applied_tags=applied_tags,
                 reason=reason,
             )
+        finally:
+            if files is not None:
+                for f in files:
+                    f.close()
+
         ret = Thread(guild=self.guild, state=self._state, data=data)
         msg = ret.get_partial_message(data["last_message_id"])
         if view:
@@ -2838,7 +2815,9 @@ class DMChannel(discord.abc.Messageable, Hashable):
         self, *, me: ClientUser, state: ConnectionState, data: DMChannelPayload
     ):
         self._state: ConnectionState = state
-        self.recipient: User | None = state.store_user(data["recipients"][0])
+        self.recipient: User | None = None
+        if r := data.get("recipients"):
+            self.recipient: state.store_user(r[0])
         self.me: ClientUser = me
         self.id: int = int(data["id"])
 

@@ -37,7 +37,6 @@ __all__ = (
     "VerificationLevel",
     "ContentFilter",
     "Status",
-    "DefaultAvatar",
     "AuditLogAction",
     "AuditLogActionCategory",
     "UserFlags",
@@ -354,20 +353,6 @@ class Status(Enum):
         return self.value
 
 
-class DefaultAvatar(Enum):
-    """Default avatar"""
-
-    blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
-
-    def __str__(self):
-        return self.name
-
-
 class NotificationLevel(Enum, comparable=True):
     """Notification level"""
 
@@ -438,6 +423,8 @@ class AuditLogAction(Enum):
     auto_moderation_rule_update = 141
     auto_moderation_rule_delete = 142
     auto_moderation_block_message = 143
+    auto_moderation_flag_to_channel = 144
+    auto_moderation_user_communication_disabled = 145
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -496,6 +483,8 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
             AuditLogAction.auto_moderation_block_message: None,
+            AuditLogAction.auto_moderation_flag_to_channel: None,
+            AuditLogAction.auto_moderation_user_communication_disabled: None,
         }
         return lookup[self]
 
@@ -534,7 +523,7 @@ class AuditLogAction(Enum):
             return "thread"
         elif v < 122:
             return "application_command_permission"
-        elif v < 144:
+        elif v < 146:
             return "auto_moderation_rule"
 
 
@@ -848,6 +837,8 @@ class EmbeddedActivity(Enum):
     doodle_crew = 878067389634314250
     doodle_crew_dev = 878067427668275241
     fishington = 814288819477020702
+    gartic_phone = 1007373802981822582
+    jamspace = 1070087967294631976
     know_what_i_meme = 950505761862189096
     land = 903769130790969345
     letter_league = 879863686565621790

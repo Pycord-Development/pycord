@@ -404,6 +404,14 @@ class MessageFlags(BaseFlags):
 
         return 4096
 
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+
+        .. versionadded:: 2.5
+        """
+        return 8192
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
@@ -1337,6 +1345,14 @@ class ApplicationFlags(BaseFlags):
     def group_dm_create(self):
         """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
+
+    @flag_value
+    def application_auto_moderation_rule_create_badge(self):
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 6
 
     @flag_value
     def rpc_has_connected(self):

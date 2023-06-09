@@ -29,7 +29,7 @@ import asyncio
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
-from .channel import ChannelType, PartialMessageable
+from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import InteractionResponseType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
@@ -38,7 +38,12 @@ from .message import Attachment, Message
 from .object import Object
 from .permissions import Permissions
 from .user import User
-from .webhook.async_ import Webhook, async_context, handle_message_parameters
+from .webhook.async_ import (
+    Webhook,
+    WebhookMessage,
+    async_context,
+    handle_message_parameters,
+)
 
 __all__ = (
     "Interaction",
@@ -52,7 +57,9 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
+        DMChannel,
         ForumChannel,
+        GroupChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -77,6 +84,8 @@ if TYPE_CHECKING:
         ForumChannel,
         CategoryChannel,
         Thread,
+        DMChannel,
+        GroupChannel,
         PartialMessageable,
     ]
 
@@ -99,8 +108,10 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+        The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
-        The channel ID the interaction was sent from.
+        The ID of the channel the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
     user: Optional[Union[:class:`User`, :class:`Member`]]
@@ -124,6 +135,7 @@ class Interaction:
         "id",
         "type",
         "guild_id",
+        "channel",
         "channel_id",
         "data",
         "application_id",
@@ -134,6 +146,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "_channel_data",
         "_message_data",
         "_permissions",
         "_app_permissions",
@@ -169,13 +182,7 @@ class Interaction:
         self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Message | None = None
-
-        if message_data := data.get("message"):
-            self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
-            )
-
-        self._message_data = message_data
+        self.channel = None
 
         self.user: User | Member | None = None
         self._permissions: int = 0
@@ -206,6 +213,30 @@ class Interaction:
             except KeyError:
                 pass
 
+        if channel := data.get("channel"):
+            if (ch_type := channel.get("type")) is not None:
+                factory, ch_type = _threaded_channel_factory(ch_type)
+
+                if ch_type in (ChannelType.group, ChannelType.private):
+                    self.channel = factory(
+                        me=self.user, data=channel, state=self._state
+                    )
+                elif self.guild:
+                    self.channel = factory(
+                        guild=self.guild, state=self._state, data=channel
+                    )
+        else:
+            self.channel = self.cached_channel
+
+        self._channel_data = channel
+
+        if message_data := data.get("message"):
+            self.message = Message(
+                state=self._state, channel=self.channel, data=message_data
+            )
+
+        self._message_data = message_data
+
     @property
     def client(self) -> Client:
         """Returns the client that sent the interaction."""
@@ -225,7 +256,7 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
-    def channel(self) -> InteractionChannel | None:
+    def cached_channel(self) -> InteractionChannel | None:
         """The channel the
         interaction was sent from.
 
@@ -440,6 +471,7 @@ class Interaction:
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, message.id)
 
         if delete_after is not None:
@@ -517,6 +549,44 @@ class Interaction:
             Deleted a message that is not yours.
         """
         return await self.delete_original_response(**kwargs)
+
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
+        """|coro|
+
+        Sends either a response or a message using the followup webhook determined by whether the interaction
+        has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.send_message(*args, **kwargs)
+            else:
+                return await self.followup.send(*args, **kwargs)
+        except InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
+
+    async def edit(self, *args, **kwargs) -> InteractionMessage | None:
+        """|coro|
+
+        Either respond to the interaction with an edit_message or edits the existing response, determined by
+        whether the interaction has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.InteractionMessage`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.edit_message(*args, **kwargs)
+            else:
+                return await self.edit_original_response(*args, **kwargs)
+        except InteractionResponded:
+            return await self.edit_original_response(*args, **kwargs)
 
     def to_dict(self) -> dict[str, Any]:
         """
@@ -605,6 +675,10 @@ class InteractionResponse:
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
+
+        .. note::
+            The follow-up response will also be non-ephemeral if the `ephemeral`
+            argument is ``False``, and ephemeral if ``True``.
 
         Parameters
         ----------
@@ -843,7 +917,7 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
-            view.message = await self._parent.original_response()
+            view.parent = self._parent
             self._parent._state.store_view(view)
 
         self._responded = True
@@ -976,6 +1050,7 @@ class InteractionResponse:
                     file.close()
 
         if view and not view.is_finished():
+            view.message = msg
             state.store_view(view, message_id)
 
         self._responded = True
