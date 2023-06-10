@@ -181,8 +181,8 @@ class EmbedMedia:  # Thumbnail, Image, Video
         self = cls.__new__(cls)
         self.url = str(data.get("url"))
         self.proxy_url = str(data.get("proxy_url"))
-        self.height = int(data["height"])
-        self.width = int(data["width"])
+        self.height = int(height) if (height := data.get("height")) else None
+        self.width = int(width) if (width := data.get("width")) else None
         return self
 
     def __repr__(self) -> str:
