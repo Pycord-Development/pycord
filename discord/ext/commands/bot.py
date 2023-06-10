@@ -29,7 +29,7 @@ import collections
 import collections.abc
 import sys
 import traceback
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
 
@@ -109,27 +109,27 @@ def _is_submodule(parent: str, child: str) -> bool:
     return parent == child or child.startswith(f"{parent}.")
 
 
-class _DefaultRepr:
-    def __repr__(self):
-        return "<default-help-command>"
-
-
-_default = _DefaultRepr()
-
-
 class BotBase(GroupMixin, discord.cog.CogMixin):
+    _help_command = None
     _supports_prefixed_commands = True
 
-    def __init__(self, command_prefix=when_mentioned, help_command=_default, **options):
+    def __init__(
+        self,
+        command_prefix: str
+        | Iterable[str]
+        | Callable[
+            [Bot | AutoShardedBot, Message],
+            str | Iterable[str] | Coroutine[Any, Any, str | Iterable[str]],
+        ] = when_mentioned,
+        help_command: HelpCommand | None = MISSING,
+        **options,
+    ):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self._help_command = None
+        self.help_command = (
+            DefaultHelpCommand() if help_command is MISSING else help_command
+        )
         self.strip_after_prefix = options.get("strip_after_prefix", False)
-
-        if help_command is _default:
-            self.help_command = DefaultHelpCommand()
-        else:
-            self.help_command = help_command
 
     @discord.utils.copy_doc(discord.Client.close)
     async def close(self) -> None:

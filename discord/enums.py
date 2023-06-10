@@ -37,7 +37,6 @@ __all__ = (
     "VerificationLevel",
     "ContentFilter",
     "Status",
-    "DefaultAvatar",
     "AuditLogAction",
     "AuditLogActionCategory",
     "UserFlags",
@@ -352,20 +351,6 @@ class Status(Enum):
 
     def __str__(self):
         return self.value
-
-
-class DefaultAvatar(Enum):
-    """Default avatar"""
-
-    blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
-
-    def __str__(self):
-        return self.name
 
 
 class NotificationLevel(Enum, comparable=True):
@@ -852,6 +837,8 @@ class EmbeddedActivity(Enum):
     doodle_crew = 878067389634314250
     doodle_crew_dev = 878067427668275241
     fishington = 814288819477020702
+    gartic_phone = 1007373802981822582
+    jamspace = 1070087967294631976
     know_what_i_meme = 950505761862189096
     land = 903769130790969345
     letter_league = 879863686565621790

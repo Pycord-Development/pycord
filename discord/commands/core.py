@@ -184,10 +184,10 @@ class SlashCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -203,8 +203,8 @@ class SlashCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", MISSING
         )
         _validate_names(self)
 
@@ -215,8 +215,8 @@ class SlashCommand(ApplicationCommand):
         )
 
         self.description: str = description
-        self.description_localizations: dict[str, str] | None = kwargs.get(
-            "description_localizations", None
+        self.description_localizations: dict[str, str] = kwargs.get(
+            "description_localizations", MISSING
         )
         _validate_descriptions(self)
 
@@ -371,9 +371,9 @@ class SlashCommand(ApplicationCommand):
             "description": self.description,
             "options": [o.to_dict() for o in self.options],
         }
-        if self.name_localizations is not None:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
@@ -565,10 +565,10 @@ class SlashCommandGroup(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -631,11 +631,11 @@ class SlashCommandGroup(ApplicationCommand):
         self.guild_only: bool | None = kwargs.get("guild_only", None)
         self.nsfw: bool | None = kwargs.get("nsfw", None)
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", MISSING
         )
-        self.description_localizations: dict[str, str] | None = kwargs.get(
-            "description_localizations", None
+        self.description_localizations: dict[str, str] = kwargs.get(
+            "description_localizations", MISSING
         )
 
     @property
@@ -648,9 +648,9 @@ class SlashCommandGroup(ApplicationCommand):
             "description": self.description,
             "options": [c.to_dict() for c in self.subcommands],
         }
-        if self.name_localizations is not None:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
 
         if self.parent is not None:
@@ -721,10 +721,10 @@ class SlashCommandGroup(ApplicationCommand):
             :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
             :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
             event.
-        name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        name_localizations: Dict[:class:`str`, :class:`str`]
             The name localizations for this command. The values of this should be ``"locale": "name"``. See
             `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-        description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+        description_localizations: Dict[:class:`str`, :class:`str`]
             The description localizations for this command. The values of this should be ``"locale": "description"``.
             See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
@@ -843,7 +843,7 @@ class ContextMenuCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -857,8 +857,8 @@ class ContextMenuCommand(ApplicationCommand):
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
 
-        self.name_localizations: dict[str, str] | None = kwargs.get(
-            "name_localizations", None
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", MISSING
         )
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
@@ -924,7 +924,7 @@ class ContextMenuCommand(ApplicationCommand):
                 "default_member_permissions"
             ] = self.default_member_permissions.value
 
-        if self.name_localizations is not None:
+        if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
 
         return as_dict

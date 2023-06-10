@@ -1068,10 +1068,7 @@ class Guild(Hashable):
             if result is not None:
                 return result
 
-        def pred(m: Member) -> bool:
-            return m.nick == name or m.name == name
-
-        return utils.find(pred, members)
+        return utils.find(lambda m: name in (m.nick, m.name, m.global_name), members)
 
     def _create_channel(
         self,
@@ -2806,6 +2803,8 @@ class Guild(Hashable):
         colour: Colour | int = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
+        icon: bytes | None = MISSING,
+        unicode_emoji: str | None = MISSING,
     ) -> Role:
         ...
 
@@ -2819,6 +2818,8 @@ class Guild(Hashable):
         color: Colour | int = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
+        icon: bytes | None = ...,
+        unicode_emoji: str | None = ...,
     ) -> Role:
         ...
 
@@ -2832,6 +2833,8 @@ class Guild(Hashable):
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         reason: str | None = None,
+        icon: bytes | None = MISSING,
+        unicode_emoji: str | None = MISSING,
     ) -> Role:
         """|coro|
 
@@ -2862,6 +2865,13 @@ class Guild(Hashable):
             Defaults to ``False``.
         reason: Optional[:class:`str`]
             The reason for creating this role. Shows up on the audit log.
+        icon: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
+            If this argument is passed, ``unicode_emoji`` is set to None.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
+        unicode_emoji: Optional[:class:`str`]
+            The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
         Returns
         -------
@@ -2897,6 +2907,17 @@ class Guild(Hashable):
 
         if name is not MISSING:
             fields["name"] = name
+
+        if icon is not MISSING:
+            if icon is None:
+                fields["icon"] = None
+            else:
+                fields["icon"] = _bytes_to_base64_data(icon)
+                fields["unicode_emoji"] = None
+
+        if unicode_emoji is not MISSING:
+            fields["unicode_emoji"] = unicode_emoji
+            fields["icon"] = None
 
         data = await self._state.http.create_role(self.id, reason=reason, **fields)
         role = Role(guild=self, data=data, state=self._state)
