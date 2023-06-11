@@ -852,7 +852,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         self.invoke_without_command: bool = attrs.pop("invoke_without_command", False)
         super().__init__(*args, **attrs)
 
-    def copy(self: GroupT) -> GroupT:
+    def copy(self: GroupT, overrides: dict[str, Any] | None = None) -> GroupT:
         """Creates a copy of this :class:`Group`.
 
         Returns
@@ -860,7 +860,8 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         :class:`Group`
             A new instance of this group.
         """
-        ret = super().copy()
+        ret = super().copy(overrides)
+        ret.recursively_remove_all_commands()
         for cmd in self.commands:
             ret.add_command(cmd.copy())
         return ret  # type: ignore

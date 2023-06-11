@@ -403,9 +403,10 @@ class Invokable(Generic[CogT, P, T]):
         enabled: bool = True,
         cooldown_after_parsing: bool = False,
         parent: Invokable | None = None,
-        checks: list[Check] = [],
+        checks: list[Check] | None = None,
         cooldown: CooldownMapping | None = None,
         max_concurrency: MaxConcurrency | None = None,
+        **kwargs
     ):
         self.callback: Callback = func
         self.parent: Invokable | None = (
@@ -417,6 +418,9 @@ class Invokable(Generic[CogT, P, T]):
         self.name: str = str(name or func.__name__)
         self.enabled: bool = enabled
         self.cooldown_after_parsing: bool = cooldown_after_parsing
+
+        if not checks:
+            checks = []
 
         # checks
         if _checks := getattr(func, "__commands_checks__", []):
@@ -717,7 +721,7 @@ class Invokable(Generic[CogT, P, T]):
         except ValueError:
             pass
 
-    def copy(self, kwargs: dict[str, Any] | None = None):
+    def copy(self, overrides: dict[str, Any] | None = None):
         """Creates a copy of this command.
 
         Returns
@@ -727,8 +731,8 @@ class Invokable(Generic[CogT, P, T]):
         """
 
         thecopy = copy(self)
-        if kwargs:
-            for attr, val in kwargs.items():
+        if overrides:
+            for attr, val in overrides.items():
                 setattr(thecopy, attr, val)
 
         return thecopy
