@@ -406,7 +406,7 @@ class Invokable(Generic[CogT, P, T]):
         checks: list[Check] | None = None,
         cooldown: CooldownMapping | None = None,
         max_concurrency: MaxConcurrency | None = None,
-        **kwargs
+        **kwargs,
     ):
         self.callback: Callback = func
         self.parent: Invokable | None = (
