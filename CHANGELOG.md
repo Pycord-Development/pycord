@@ -64,6 +64,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 - Added `slowmode_delay` attribute to `discord.VoiceChannel`.
   ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
+
 ### Changed
 
 - Suppressed FFMPEG output when recording voice channels.
