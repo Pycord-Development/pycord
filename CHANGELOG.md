@@ -60,7 +60,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
 - Added `icon` and `unicode_emoji` to `Guild.create_role`.
   ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
-- Added `cooldown` and `max_concurrency` to`SlashCommandGroup`.
+- Added `cooldown` and `max_concurrency` to `SlashCommandGroup`.
   ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Added new embedded activities, Gartic Phone and Jamspace.
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
