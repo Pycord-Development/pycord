@@ -82,10 +82,9 @@ __all__ = (
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
 
-    from ..ext.commands.cooldowns import CooldownMapping, MaxConcurrency
-
     from .. import Permissions
     from ..cog import Cog
+    from ..ext.commands.cooldowns import CooldownMapping, MaxConcurrency
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
