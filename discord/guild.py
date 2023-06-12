@@ -749,7 +749,7 @@ class Guild(Hashable):
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the channel from the cache.
                 The :meth:`.guild.fetch_channel` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._channels.get(channel_id)
@@ -862,7 +862,7 @@ class Guild(Hashable):
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve member from the cache.
                 The :meth:`.guild.fetch_member` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._members.get(user_id)
@@ -896,7 +896,7 @@ class Guild(Hashable):
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the role from the cache.
                 The :meth:`.guild.fetch_roles` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._roles.get(role_id)

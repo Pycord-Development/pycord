@@ -881,7 +881,7 @@ class Client:
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the channel from the cache.
                 The :meth:`.Client.fetch_channel` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._connection.get_channel(id)
@@ -965,7 +965,7 @@ class Client:
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the guild from the cache.
                 The :meth:`.Client.fetch_guild` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._connection._get_guild(id)
@@ -985,7 +985,7 @@ class Client:
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the user from the cache.
                 The :meth:`.Client.fetch_user` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._connection.get_user(id)
@@ -1022,7 +1022,7 @@ class Client:
 
             .. note::
 
-                It may return ``None`` because it retrieves from the cache.
+                It may return ``None`` because it tries to retrieve the sticker from the cache.
                 The :meth:`.Client.fetch_sticker` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._connection.get_sticker(id)
