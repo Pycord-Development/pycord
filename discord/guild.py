@@ -745,7 +745,7 @@ class Guild(Hashable):
         Returns
         -------
         Optional[:class:`.abc.GuildChannel`]
-            The returned channel or ``None`` if not found. 
+            The returned channel or ``None`` if not found.
             It may return ``None`` because it retrieves from the cache.
             The fetch_ version of this command won't return ``None``, however it makes an API call.
         """
