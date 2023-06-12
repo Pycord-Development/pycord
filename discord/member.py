@@ -1092,6 +1092,6 @@ class Member(discord.abc.Messageable, _UserTag):
 
             ..note::
                 It may return ``None`` because it retrieves from the cache.
-                The :meth:`.guild._fetch_role` (you'll still have to check for users with :attr:`.role.members`) version of this command won't return ``None``, however it makes an API call.
+                The :meth:`.guild._fetch_role` (you'll still have to check for users with :attr:`.role.members`) version of this command won't return ``None``, however, it makes an API call.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
