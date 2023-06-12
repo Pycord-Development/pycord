@@ -745,7 +745,9 @@ class Guild(Hashable):
         Returns
         -------
         Optional[:class:`.abc.GuildChannel`]
-            The returned channel or ``None`` if not found.
+            The returned channel or ``None`` if not found. 
+            It may return ``None`` because it retrieves from the cache.
+            The fetch_ version of this command won't return ``None``, however it makes an API call.
         """
         return self._channels.get(channel_id)
 
@@ -854,6 +856,8 @@ class Guild(Hashable):
         -------
         Optional[:class:`Member`]
             The member or ``None`` if not found.
+            It may return ``None`` because it retrieves from the cache.
+            The fetch_ version of this command won't return ``None``, however it makes an API call.
         """
         return self._members.get(user_id)
 
@@ -883,6 +887,8 @@ class Guild(Hashable):
         -------
         Optional[:class:`Role`]
             The role or ``None`` if not found.
+            It may return ``None`` because it retrieves from the cache.
+            The fetch_ version of this command won't return ``None``, however it makes an API call.
         """
         return self._roles.get(role_id)
 
