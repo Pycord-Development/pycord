@@ -1093,6 +1093,7 @@ class Member(discord.abc.Messageable, _UserTag):
             .. note::
 
                 It may return ``None`` because it tries to retrieve the role from the cache.
+                It may not be in the cache because of intents or because of when the command was run.
                 The :meth:`.guild._fetch_role` (you'll still have to check for users with :attr:`.role.members`) version of this command won't return ``None``, however, it makes an API call.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
