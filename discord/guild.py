@@ -861,7 +861,7 @@ class Guild(Hashable):
             The member or ``None`` if not found.
 
             .. note::
-            
+
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.guild.fetch_member` version of this command won't return ``None``, however, it makes an API call.
         """

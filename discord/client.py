@@ -984,7 +984,7 @@ class Client:
             The user or ``None`` if not found.
 
             .. note::
-            
+
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.Client.fetch_user` version of this command won't return ``None``, however, it makes an API call.
         """
