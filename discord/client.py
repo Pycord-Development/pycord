@@ -879,7 +879,7 @@ class Client:
         Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, :class:`.abc.PrivateChannel`]]
             The returned channel or ``None`` if not found.
 
-            ..note
+            ..note::
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.client.fetch_channel` version of this command won't return ``None``, however it makes an API call.
         """
@@ -962,7 +962,7 @@ class Client:
         Optional[:class:`.Guild`]
             The guild or ``None`` if not found.
 
-            ..note
+            ..note::
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.client.fetch_guild` version of this command won't return ``None``, however it makes an API call.
         """
@@ -981,7 +981,7 @@ class Client:
         Optional[:class:`~discord.User`]
             The user or ``None`` if not found.
 
-            ..note
+            ..note::
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.client.fetch_user` version of this command won't return ``None``, however it makes an API call.
         """
@@ -1017,7 +1017,7 @@ class Client:
         Optional[:class:`.GuildSticker`]
             The sticker or ``None`` if not found.
 
-            ..note
+            ..note::
                 It may return ``None`` because it retrieves from the cache.
                 The :meth:`.client.fetch_sticker` version of this command won't return ``None``, however it makes an API call.
         """
