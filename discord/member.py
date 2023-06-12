@@ -1089,7 +1089,9 @@ class Member(discord.abc.Messageable, _UserTag):
         -------
         Optional[:class:`Role`]
             The role or ``None`` if not found in the member's roles.
-            It may return ``None`` because it retrieves from the cache.
-            The fetch_ version of this command won't return ``None``, however it makes an API call.
+
+            ..note
+                It may return ``None`` because it retrieves from the cache.
+                The :meth:`.guild._fetch_role` (you'll still have to check for users with :attr:`.role.members`) version of this command won't return ``None``, however it makes an API call.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
