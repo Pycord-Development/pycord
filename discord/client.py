@@ -980,8 +980,10 @@ class Client:
         -------
         Optional[:class:`~discord.User`]
             The user or ``None`` if not found.
-            It may return ``None`` because it retrieves from the cache.
-            The :meth:`.client.fetch_user` version of this command won't return ``None``, however it makes an API call.
+
+            ..note
+                It may return ``None`` because it retrieves from the cache.
+                The :meth:`.client.fetch_user` version of this command won't return ``None``, however it makes an API call.
         """
         return self._connection.get_user(id)
 
