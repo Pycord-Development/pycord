@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC
+from collections.abc import Iterator
 
 from discord.commands import ApplicationContext
 from discord.errors import CheckFailure, DiscordException
@@ -59,6 +60,21 @@ class BotBase(ABC):
             self._bridge_commands = cmds = []
 
         return cmds
+
+    def walk_bridge_commands(
+        self,
+    ) -> Iterator[BridgeCommand | BridgeCommandGroup]:
+        """An iterator that recursively walks through all the bot's bridge commands.
+
+        Yields
+        ------
+        Union[:class:`.BridgeCommand`, :class:`.BridgeCommandGroup`]
+            A bridge command or bridge group of the bot.
+        """
+        for cmd in self._bridge_commands:
+            yield cmd
+            if isinstance(cmd, BridgeCommandGroup):
+                yield from cmd.walk_commands()
 
     async def get_application_context(
         self, interaction: Interaction, cls=None

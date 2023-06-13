@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run tdg-github-action
-        uses: ribtoks/tdg-github-action@v0.4.6-beta
+        uses: ribtoks/tdg-github-action@v0.4.7-beta
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
