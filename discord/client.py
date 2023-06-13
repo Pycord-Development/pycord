@@ -882,7 +882,7 @@ class Client:
             .. note::
 
                 It may return ``None`` because it tries to retrieve the channel from the cache.
-                It may not be in the cache because of intents or because of when the command was run.
+                It may not be in the cache because of intents or because of when the method was run.
                 The :meth:`.Client.fetch_channel` version of this command won't return ``None``, however, it makes an API call.
         """
         return self._connection.get_channel(id)
