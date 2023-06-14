@@ -751,7 +751,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     def _update(self, guild: Guild, data: TextChannelPayload) -> None:
         super()._update(guild, data)
 
-    async def _get_channel(self) -> "TextChannel":
+    async def _get_channel(self) -> TextChannel:
         return self
 
     def is_news(self) -> bool:
@@ -1064,11 +1064,11 @@ class ForumChannel(_TextChannel):
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> "ForumChannel" | None:
+    ) -> ForumChannel | None:
         ...
 
     @overload
-    async def edit(self) -> "ForumChannel" | None:
+    async def edit(self) -> ForumChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
