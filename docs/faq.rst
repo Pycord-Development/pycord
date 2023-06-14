@@ -109,6 +109,18 @@ Putting both of these pieces of info together, you get the following: ::
     activity = discord.Activity(name='my activity', type=discord.ActivityType.watching)
     client = discord.Client(activity=activity)
 
+What is the difference between get_ commands and fetch_ commands?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+get_ commands retrieve from the cache and won't always raise if not found. fetch_ commands always make an API request and if not found, raise. Example: ::
+
+        role = member.guild.get_role(id)  # try to get role without an API request through the cache
+        if role is not None:
+            await member.add_roles(role)  # if the role is found and returned, then it adds the role and returns
+            return
+        
+        # if it's not found in cache, make an API request
+        role = discord.utils.get(await member.guild.fetch_roles(), id=id)
+
 How do I send a message to a specific channel?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
