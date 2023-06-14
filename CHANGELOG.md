@@ -60,6 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
 - Added `icon` and `unicode_emoji` to `Guild.create_role`.
   ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
+- Added `cooldown` and `max_concurrency` to `SlashCommandGroup`.
+  ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Added new embedded activities, Gartic Phone and Jamspace.
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 - Added `bridge.Context` as a shortcut to `Union` of subclasses.
@@ -131,6 +133,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2079](https://github.com/Pycord-Development/pycord/pull/2079))
 - Fixed `HTTPException` when trying to create a forum thread with files.
   ([#2075](https://github.com/Pycord-Development/pycord/pull/2075))
+- Fixed `before_invoke` not being run for `SlashCommandGroup`.
+  ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Fixed `AttributeError` when accessing a `Select`'s values when it hasn't been
   interacted with. ([#2104](https://github.com/Pycord-Development/pycord/pull/2104))
 
