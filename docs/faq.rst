@@ -117,7 +117,7 @@ get_ commands retrieve from the cache and won't always raise if not found. fetch
         if role is not None:
             await member.add_roles(role)  # if the role is found and returned, then it adds the role and returns
             return
-        
+
         # if it's not found in cache, make an API request
         role = discord.utils.get(await member.guild.fetch_roles(), id=id)
 
