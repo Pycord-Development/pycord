@@ -66,6 +66,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 - Added `bridge.Context` as a shortcut to `Union` of subclasses.
   ([#2106](https://github.com/Pycord-Development/pycord/pull/2106))
+- Added Annotated forms support for typehinting slash command options.
+  ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
 
 ### Changed
 
@@ -88,8 +90,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 - Typehinted `command_prefix` and `help_command` arguments properly.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
-- Support Annotated forms for typehinting slash command options
-  ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
 
 ### Removed
 
