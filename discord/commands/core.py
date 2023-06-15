@@ -733,7 +733,7 @@ class SlashCommand(ApplicationCommand):
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
-            
+
             if self._is_typing_annotated(option):
                 type_hint = get_args(option)[0]
                 metadata = option.__metadata__
@@ -746,7 +746,6 @@ class SlashCommand(ApplicationCommand):
                     option.default = None
                 else:
                     option.input_type = type_hint
-
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
@@ -835,7 +834,7 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
-    
+
     def _is_typing_annotated(self, annotation):
         return get_origin(annotation) is Annotated
 
