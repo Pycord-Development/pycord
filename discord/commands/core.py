@@ -44,6 +44,8 @@ from typing import (
     Union,
 )
 
+from typing_extensions import Annotated, get_args, get_origin
+
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
 from ..enums import MessageType, SlashCommandOptionType, try_enum
@@ -732,6 +734,19 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            if self._is_typing_annotated(option):
+                type_hint = get_args(option)[0]
+                metadata = option.__metadata__
+                # If multiple Options in metadata, the first will be used.
+                option_gen = (elem for elem in metadata if isinstance(elem, Option))
+                option = next(option_gen, Option())
+                # Handle Optional
+                if self._is_typing_optional(type_hint):
+                    option.input_type = get_args(type_hint)[0]
+                    option.default = None
+                else:
+                    option.input_type = type_hint
+
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
                     option = Option(option.__args__[0], default=None)
@@ -819,6 +834,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_annotated(self, annotation):
+        return get_origin(annotation) is Annotated
 
     @property
     def cog(self):
