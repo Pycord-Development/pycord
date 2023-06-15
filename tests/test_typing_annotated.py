@@ -1,10 +1,12 @@
-from typing import Annotated, Optional
+from typing import Optional
 
 import pytest
+from typing_extensions import Annotated
 
 import discord
 from discord import ApplicationContext
 from discord.commands.core import SlashCommand, slash_command
+
 
 def test_typing_annotated():
     async def echo(ctx, txt: Annotated[str, discord.Option()]):

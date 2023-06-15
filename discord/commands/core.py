@@ -35,7 +35,6 @@ from collections import OrderedDict
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
-    Annotated,
     Any,
     Callable,
     Coroutine,
@@ -43,9 +42,9 @@ from typing import (
     Generic,
     TypeVar,
     Union,
-    get_origin,
-    get_args
 )
+
+from typing_extensions import Annotated, get_args, get_origin
 
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
