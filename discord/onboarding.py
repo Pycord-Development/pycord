@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from random import randint
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
@@ -35,7 +35,9 @@ if TYPE_CHECKING:
     from .abc import Snowflake
     from .emoji import Emoji
     from .guild import Guild
+    from .object import Object
     from .partial_emoji import PartialEmoji
+    from .channel import TextChannel, VoiceChannel, ForumChannel
     from .types.onboarding import Onboarding as OnboardingPayload
     from .types.onboarding import OnboardingPrompt as OnboardingPromptPayload
     from .types.onboarding import PromptOption as PromptOptionPayload
