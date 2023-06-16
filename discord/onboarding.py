@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, overload
 
 from .partial_emoji import _EmojiTag
-from .utils import _get_as_snowflake, get, MISSING
+from .utils import _get_as_snowflake, get, MISSING, cached_property
 from .enums import PromptType, OnboardingMode, try_enum
 
 if TYPE_CHECKING:
@@ -70,7 +70,7 @@ class PromptOption:
 
     def __init__(
         self,
-        title: str
+        title: str,
         channels: list[Snowflake] | None = None,
         roles: list[Snowflake] | None = None,
         description: str | None = None,
