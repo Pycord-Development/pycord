@@ -216,7 +216,7 @@ class Onboarding:
 
     def __repr__(self):
         return (
-            "<Onboarding" enabled={self.enabled} default_channels={self.default_channels_channels}>"
+            "<Onboarding enabled={self.enabled} default_channels={self.default_channels_channels}>"
         )
 
     def _update(self, data: OnboardingPayload):
