@@ -3871,7 +3871,7 @@ class Guild(Hashable):
             Whether onboarding should be enabled. Setting this to True requires the guild to have ``COMMUNITY`` in :attr:`~Guild.features`
             and at least 7 ``default_channels``.
         mode: Optional[:class:`OnboardingMode`]
-            The new onboarding mode. 
+            The new onboarding mode.
         reason: Optional[:class:`str`]
             The reason that shows up on Audit log.
 
@@ -3897,8 +3897,6 @@ class Guild(Hashable):
         if mode is not MISSING:
             fields["mode"] = mode.value
 
-        new = await self._state.http.edit_onboarding(
-            self.id, fields, reason=reason
-        )
+        new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
 
         return Onboarding(data=new, guild=self)

@@ -496,7 +496,7 @@ class AuditLogAction(Enum):
             AuditLogAction.onboarding_question_update: AuditLogActionCategory.update,
             AuditLogAction.onboarding_update: AuditLogActionCategory.update,
             AuditLogAction.server_guide_create: AuditLogActionCategory.create,
-            AuditLogAction.server_guide_update: AuditLogActionCategory.update
+            AuditLogAction.server_guide_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -953,17 +953,20 @@ class ApplicationRoleConnectionMetadataType(Enum):
     boolean_equal = 7
     boolean_not_equal = 8
 
+
 class PromptType(Enum):
     """Guild Onboarding Prompt Type"""
 
     multiple_choice = 0
     dropdown = 1
 
+
 class OnboardingMode(Enum):
     """Guild Onboarding Mode"""
 
     default = 0
     advanced = 1
+
 
 T = TypeVar("T")
 

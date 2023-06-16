@@ -2878,9 +2878,7 @@ class HTTPClient:
 
     # Onboarding
 
-    def get_onboarding(
-        self, guild_id: Snowflake
-    ) -> Response[onboarding.Onboarding]:
+    def get_onboarding(self, guild_id: Snowflake) -> Response[onboarding.Onboarding]:
         return self.request(
             Route("GET", "/guilds/{guild_id}/onboarding", guild_id=guild_id)
         )

@@ -24,12 +24,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, overload
 from random import randint
+from typing import TYPE_CHECKING
 
+from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import _get_as_snowflake, get, MISSING, cached_property
-from .enums import PromptType, OnboardingMode, try_enum
+from .utils import MISSING, _get_as_snowflake, cached_property, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -46,6 +46,7 @@ __all__ = (
     "PromptOption",
     "PromptType",
 )
+
 
 class PromptOption:
     """Represents an onboarding prompt option displayed in :class:`OnboardingPrompt`
@@ -76,7 +77,7 @@ class PromptOption:
         roles: list[Snowflake] | None = None,
         description: str | None = None,
         emoji: Emoji | PartialEmoji | None = None,
-        id: int | None = None, 
+        id: int | None = None,
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
         self.id: int | None = id or randint(10000000000000000)
@@ -96,7 +97,7 @@ class PromptOption:
             "channel_ids": [channel.id for channel in self.channels],
             "role_ids": [role.id for role in self.roles],
             "emoji": None,
-            "id": str(self.id)
+            "id": str(self.id),
         }
         if self.emoji:
             dict_["emoji"] = self.emoji.to_dict()
@@ -104,9 +105,7 @@ class PromptOption:
         return dict_
 
     @classmethod
-    def _from_dict(
-        cls, data: PromptOptionPayload, guild: Guild
-    ) -> PromptOption:
+    def _from_dict(cls, data: PromptOptionPayload, guild: Guild) -> PromptOption:
         channel_ids = [int(channel_id) for channel_id in data.get("channel_ids", [])]
         channels = [guild.get_channel(channel_id) for channel_id in channel_ids]
         role_ids = [int(role_id) for role_id in data.get("role_ids", [])]
@@ -115,11 +114,14 @@ class PromptOption:
         description = data.get("description")
         emoji = data.get("emoji")
         if emoji:
-            if emoji.get("name"):  # You can currently get emoji as {'id': None, 'name': None, 'animated': False} ...
+            if emoji.get(
+                "name"
+            ):  # You can currently get emoji as {'id': None, 'name': None, 'animated': False} ...
                 emoji = PartialEmoji.from_dict(emoji)
             else:
                 emoji = None
         return cls(channels=channels, roles=roles, title=title, description=description, emoji=emoji, id=id)  # type: ignore
+
 
 class OnboardingPrompt:
     """Represents an onboarding prompt displayed in :class:`Onboarding`
@@ -192,7 +194,9 @@ class OnboardingPrompt:
         single_select = data.get("single_select")
         required = data.get("required")
         in_onboarding = data.get("in_onboarding")
-        options = [PromptOption._from_dict(option, guild) for option in data.get("options", [])]
+        options = [
+            PromptOption._from_dict(option, guild) for option in data.get("options", [])
+        ]
 
         return cls(type=type, title=title, single_select=single_select, required=required, in_onboarding=in_onboarding, options=options, id=id)  # type: ignore
 
@@ -218,9 +222,7 @@ class Onboarding:
         self._update(data)
 
     def __repr__(self):
-        return (
-            f"<Onboarding enabled={self.enabled} default_channels={self.default_channels_channels}>"
-        )
+        return f"<Onboarding enabled={self.enabled} default_channels={self.default_channels_channels}>"
 
     def _update(self, data: OnboardingPayload):
         self.guild_id: Snowflake = data["guild_id"]
@@ -228,7 +230,9 @@ class Onboarding:
             OnboardingPrompt._from_dict(prompt, self._guild)
             for prompt in data.get("prompts", [])
         ]
-        self.default_channel_ids: list[int] = [int(c) for c in data["default_channel_ids"]]
+        self.default_channel_ids: list[int] = [
+            int(c) for c in data["default_channel_ids"]
+        ]
         self.enabled: bool = data["enabled"]
         self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
 
@@ -280,7 +284,7 @@ class Onboarding:
             Whether onboarding should be enabled. Setting this to True requires the guild to have ``COMMUNITY`` in :attr:`~Guild.features`
             and at least 7 ``default_channels``.
         mode: Optional[:class:`OnboardingMode`]
-            The new onboarding mode. 
+            The new onboarding mode.
         reason: Optional[:class:`str`]
             The reason that shows up on Audit log.
 

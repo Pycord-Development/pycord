@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import Literal, TypedDict
-from .._typed_dict import NotRequired
 
+from .._typed_dict import NotRequired
 from .emoji import Emoji
 from .snowflake import Snowflake, SnowflakeList
 
 PromptType = Literal[0, 1]
 OnboardingMode = Literal[0, 1]
+
 
 class Onboarding(TypedDict):
     guild_id: Snowflake
@@ -39,6 +40,7 @@ class Onboarding(TypedDict):
     default_channel_ids: SnowflakeList
     enabled: bool
     mode: OnboardingMode
+
 
 class OnboardingPrompt(TypedDict):
     id: Snowflake
@@ -48,6 +50,7 @@ class OnboardingPrompt(TypedDict):
     single_select: bool
     required: bool
     in_onboarding: bool
+
 
 class PromptOption(TypedDict):
     id: Snowflake
