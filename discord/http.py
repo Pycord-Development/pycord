@@ -69,6 +69,7 @@ if TYPE_CHECKING:
         invite,
         member,
         message,
+        onboarding,
         role,
         scheduled_events,
         sticker,
@@ -2874,6 +2875,31 @@ class HTTPClient:
             application_id=application_id,
         )
         return self.request(r, json=payload)
+
+    # Onboarding
+
+    def get_onboarding(
+        self, guild_id: Snowflake
+    ) -> Response[onboarding.Onboarding]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/onboarding", guild_id=guild_id)
+        )
+
+    def edit_onboarding(
+        self, guild_id: Snowflake, payload: Any, *, reason: str | None = None
+    ) -> Response[onboarding.Onboarding]:
+        keys = (
+            "prompts",
+            "default_channel_ids",
+            "enabled",
+            "mode",
+        )
+        payload = {key: val for key, val in payload.items() if key in keys}
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
 
     # Misc
 

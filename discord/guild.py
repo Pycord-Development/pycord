@@ -71,6 +71,7 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
+from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -3820,3 +3821,27 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+
+    async def onboarding(self):
+        """|coro|
+
+        Returns the :class:`Onboarding` flow for the guild.
+
+        The guild must have ``COMMUNITY`` in :attr:`~Guild.features`.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The onboarding flow for the guild.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the onboarding flow failed somehow.
+        NotFound
+            The guild doesn't have onboarding or community feature is disabled.
+        """
+        data = await self._state.http.get_onboarding(self.id)
+        return Onboarding(data=data, guild=self)
