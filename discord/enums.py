@@ -67,6 +67,8 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "PromptType",
+    "OnboardingMode",
 )
 
 
@@ -425,6 +427,11 @@ class AuditLogAction(Enum):
     auto_moderation_block_message = 143
     auto_moderation_flag_to_channel = 144
     auto_moderation_user_communication_disabled = 145
+    onboarding_question_create = 163
+    onboarding_question_update = 164
+    onboarding_update = 165
+    server_guide_create = 190
+    server_guide_update = 191
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -485,6 +492,11 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_block_message: None,
             AuditLogAction.auto_moderation_flag_to_channel: None,
             AuditLogAction.auto_moderation_user_communication_disabled: None,
+            AuditLogAction.onboarding_question_create: AuditLogActionCategory.create,
+            AuditLogAction.onboarding_question_update: AuditLogActionCategory.update,
+            AuditLogAction.onboarding_update: AuditLogActionCategory.update,
+            AuditLogAction.server_guide_create: AuditLogActionCategory.create,
+            AuditLogAction.server_guide_update: AuditLogActionCategory.update
         }
         return lookup[self]
 
@@ -525,6 +537,8 @@ class AuditLogAction(Enum):
             return "application_command_permission"
         elif v < 146:
             return "auto_moderation_rule"
+        elif v < 168:
+            return "onboarding"
 
 
 class UserFlags(Enum):
