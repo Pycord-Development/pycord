@@ -3845,3 +3845,55 @@ class Guild(Hashable):
         """
         data = await self._state.http.get_onboarding(self.id)
         return Onboarding(data=data, guild=self)
+
+    async def edit_onboarding(self, **options):
+        """|coro|
+
+        A shorthand for :attr:`Onboarding.edit` without fetching the onboarding flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+
+        prompts: Optional[List[:class:`OnboardingPrompt`]]
+            The new list of prompts for this flow.
+        default_channels: Optional[List[:class:`Snowflake`]]
+            The new default channels that users are opted into.
+        enabled: Optional[:class:`bool`]
+            Whether onboarding should be enabled.
+        mode: Optional[:class:`OnboardingMode`]
+            The new onboarding mode. 
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        NotFound
+            This onboarding flow does not exist.
+        """
+
+        fields: dict[str, Any] = {}
+        if prompts is not MISSING:
+            fields["prompts"] = [prompt.to_dict() for prompt in prompts]
+
+        if default_channels is not MISSING:
+            fields["default_channel_ids"] = [channel.id for channel in default_channels]
+
+        if enabled is not MISSING:
+            fields["enabled"] = enabled
+
+        if mode is not MISSING:
+            fields["mode"] = mode.value
+
+        new = await self._state.http.edit_onboarding(
+            self.id, fields, reason=reason
+        )
+
+        return Onboarding(data=new, guild=self)
