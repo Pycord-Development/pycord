@@ -25,9 +25,10 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, overload
+from random import randint
 
 from .partial_emoji import PartialEmoji
-from .utils import _get_as_snowflake, get, MISSING, cached_property, generate_snowflake
+from .utils import _get_as_snowflake, get, MISSING, cached_property
 from .enums import PromptType, OnboardingMode, try_enum
 
 if TYPE_CHECKING:
@@ -78,7 +79,7 @@ class PromptOption:
         id: int | None = None, 
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or generate_snowflake()
+        self.id: int | None = id or randint(10000000000000000)
         self.title: str = title
         self.channels: list[Snowflake] = channels or []
         self.roles: list[Snowflake] = roles or []
@@ -155,7 +156,7 @@ class OnboardingPrompt:
         id: int | None = None,  # Currently optional as users can manually create these
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or generate_snowflake()
+        self.id: int | None = id or randint(10000000000000000)
         self.type: PromptType = type
         if isinstance(self.type, int):
             self.type = try_enum(PromptType, self.type)
