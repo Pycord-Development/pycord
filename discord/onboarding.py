@@ -26,8 +26,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, overload
 
-from .partial_emoji import _EmojiTag
-from .utils import _get_as_snowflake, get, MISSING, cached_property
+from .partial_emoji import PartialEmoji
+from .utils import _get_as_snowflake, get, MISSING, cached_property, generate_snowflake
 from .enums import PromptType, OnboardingMode, try_enum
 
 if TYPE_CHECKING:
@@ -60,7 +60,7 @@ class PromptOption:
         The channels assigned to the user when they select this option.
     roles: List[:class:`Snowflake`]
         The roles assigned to the user when they select this option.
-    emoji: :class:`Emoji`
+    emoji: Union[:class:`Emoji`, :class:`PartialEmoji`]
         The emoji displayed with the option.
     title: :class`str`
         The option's title.
@@ -77,7 +77,8 @@ class PromptOption:
         emoji: Emoji | PartialEmoji | None = None,
         id: int | None = None, 
     ):
-        self.id: int | None = id
+        # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
+        self.id: int | None = id or generate_snowflake()
         self.title: str = title
         self.channels: list[Snowflake] = channels or []
         self.roles: list[Snowflake] = roles or []
@@ -93,12 +94,11 @@ class PromptOption:
             "description": self.description,
             "channel_ids": [channel.id for channel in self.channels],
             "role_ids": [role.id for role in self.roles],
-            "emoji": None
+            "emoji": None,
+            "id": str(self.id)
         }
         if self.emoji:
             dict_["emoji"] = self.emoji.to_dict()
-        if self.id:
-            dict_["id"] = str(self.id)
 
         return dict_
 
@@ -114,7 +114,10 @@ class PromptOption:
         description = data.get("description")
         emoji = data.get("emoji")
         if emoji:
-            emoji = Emoji._from_data(emoji)
+            if emoji.get("name"):  # You can currently get emoji as {'id': None, 'name': None, 'animated': False} ...
+                emoji = PartialEmoji.from_dict(emoji)
+            else:
+                emoji = None
         return cls(channels=channels, roles=roles, title=title, description=description, emoji=emoji, id=id)  # type: ignore
 
 class OnboardingPrompt:
@@ -151,12 +154,12 @@ class OnboardingPrompt:
         in_onboarding: bool,
         id: int | None = None,  # Currently optional as users can manually create these
     ):
-        self.id: int | None = id
-        self.type: PromptType = try_enum(PromptType, type)
-        self.options: list[PromptOption] = [
-            PromptOption._from_dict(option, self._guild)
-            for option in data.get("options", [])
-        ]
+        # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
+        self.id: int | None = id or generate_snowflake()
+        self.type: PromptType = type
+        if isinstance(self.type, int):
+            self.type = try_enum(PromptType, self.type)
+        self.options: list[PromptOption] = options
         self.title: str = title
         self.single_select: bool = single_select
         self.required: bool = required
@@ -172,10 +175,9 @@ class OnboardingPrompt:
             "single_select": self.single_select,
             "required": self.required,
             "in_onboarding": self.in_onboarding,
-            "options": [option.to_dict() for option in self.options]
+            "options": [option.to_dict() for option in self.options],
+            "id": self.id,
         }
-        if self.id:
-            dict_["id"] = str(self.id)
 
         return dict_
 
@@ -189,7 +191,7 @@ class OnboardingPrompt:
         single_select = data.get("single_select")
         required = data.get("required")
         in_onboarding = data.get("in_onboarding")
-        options = [PromptOption._from_dict(option) for option in data.get("options", [])]
+        options = [PromptOption._from_dict(option, guild) for option in data.get("options", [])]
 
         return cls(type=type, title=title, single_select=single_select, required=required, in_onboarding=in_onboarding, options=options, id=id)  # type: ignore
 
