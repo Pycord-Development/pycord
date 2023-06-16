@@ -30,6 +30,7 @@ import datetime
 import functools
 import inspect
 import re
+import sys
 import types
 from collections import OrderedDict
 from enum import Enum
@@ -43,8 +44,6 @@ from typing import (
     TypeVar,
     Union,
 )
-
-from typing_extensions import Annotated, get_args, get_origin
 
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -65,6 +64,11 @@ from ..user import User
 from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
+
+if sys.version_info >= (3, 11):
+    from typing import Annotated, get_args, get_origin
+else:
+    from typing_extensions import Annotated, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
