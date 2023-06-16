@@ -152,7 +152,7 @@ class OnboardingPrompt:
         id: int | None = None,  # Currently optional as users can manually create these
     ):
         self.id: int | None = id
-        self.type: PromptType = try_enum(type)
+        self.type: PromptType = try_enum(PromptType, type)
         self.options: list[PromptOption] = [
             PromptOption._from_dict(option, self._guild)
             for option in data.get("options", [])
@@ -184,7 +184,7 @@ class OnboardingPrompt:
         cls, data: OnboardingPromptPayload, guild: Guild
     ) -> OnboardingPrompt:
         id = data.get("id")
-        type = try_enum(data.get("type"))
+        type = try_enum(PromptType, data.get("type"))
         title = data.get("title")
         single_select = data.get("single_select")
         required = data.get("required")
@@ -227,7 +227,7 @@ class Onboarding:
         ]
         self.default_channel_ids: list[int] = [int(c) for c in data["default_channel_ids"]]
         self.enabled: bool = data["enabled"]
-        self.mode: OnboardingMode = try_enum(data.get("mode"))
+        self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
 
     @property
     def guild(self) -> Guild:
