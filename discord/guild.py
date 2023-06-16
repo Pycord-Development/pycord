@@ -3827,8 +3827,6 @@ class Guild(Hashable):
 
         Returns the :class:`Onboarding` flow for the guild.
 
-        The guild must have ``COMMUNITY`` in :attr:`~Guild.features`.
-
         .. versionadded:: 2.5
 
         Returns
@@ -3862,7 +3860,7 @@ class Guild(Hashable):
         default_channels: Optional[List[:class:`Snowflake`]]
             The new default channels that users are opted into.
         enabled: Optional[:class:`bool`]
-            Whether onboarding should be enabled.
+            Whether onboarding should be enabled. Setting this to True requires the guild to have ``COMMUNITY`` in :attr:`~Guild.features`.
         mode: Optional[:class:`OnboardingMode`]
             The new onboarding mode. 
         reason: Optional[:class:`str`]
@@ -3875,8 +3873,6 @@ class Guild(Hashable):
             Editing the onboarding flow failed somehow.
         Forbidden
             You don't have permissions to edit the onboarding flow.
-        NotFound
-            This onboarding flow does not exist.
         """
 
         fields: dict[str, Any] = {}
