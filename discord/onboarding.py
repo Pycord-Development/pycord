@@ -47,7 +47,7 @@ __all__ = (
 )
 
 class PromptOption:
-    """Represents an onboarding prompt displayed in :class:`Onboarding`
+    """Represents an onboarding prompt option displayed in :class:`OnboardingPrompt`
 
     .. versionadded:: 2.5
 
