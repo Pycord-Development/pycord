@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, overload
 
 from .partial_emoji import _EmojiTag
-from .utils import _get_as_snowflake, get
+from .utils import _get_as_snowflake, get, MISSING
 from .enums import PromptType, OnboardingMode, try_enum
 
 if TYPE_CHECKING:
@@ -249,3 +249,64 @@ class Onboarding:
             self.guild.get_channel(channel_id) or Object(channel_id)
             for channel_id in self.default_channel_ids
         ]
+
+    async def edit(
+        self,
+        *,
+        prompts: list[OnboardingPrompt] | None = MISSING,
+        default_channels: list[Snowflake] | None = MISSING,
+        enabled: bool | None = MISSING,
+        mode: OnboardingMode | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> Onboarding:
+        """|coro|
+
+        Edits this onboarding flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+
+        prompts: Optional[List[:class:`OnboardingPrompt`]]
+            The new list of prompts for this flow.
+        default_channels: Optional[List[:class:`Snowflake`]]
+            The new default channels that users are opted into.
+        enabled: Optional[:class:`bool`]
+            Whether onboarding should be enabled.
+        mode: Optional[:class:`OnboardingMode`]
+            The new onboarding mode. 
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        NotFound
+            This onboarding flow does not exist.
+        """
+
+        fields: dict[str, Any] = {}
+        if prompts is not MISSING:
+            fields["prompts"] = [prompt.to_dict() for prompt in prompts]
+
+        if default_channels is not MISSING:
+            fields["default_channel_ids"] = [channel.id for channel in default_channels]
+
+        if enabled is not MISSING:
+            fields["enabled"] = enabled
+
+        if mode is not MISSING:
+            fields["mode"] = mode.value
+
+        new = await self._guild._state.http.edit_onboarding(
+            self._guild.id, fields, reason=reason
+        )
+        self._update(new)
+
+        return self
