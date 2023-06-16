@@ -3844,7 +3844,15 @@ class Guild(Hashable):
         data = await self._state.http.get_onboarding(self.id)
         return Onboarding(data=data, guild=self)
 
-    async def edit_onboarding(self, **options):
+    async def edit_onboarding(
+        self,
+        *,
+        prompts: list[OnboardingPrompt] | None = MISSING,
+        default_channels: list[Snowflake] | None = MISSING,
+        enabled: bool | None = MISSING,
+        mode: OnboardingMode | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> Onboarding:
         """|coro|
 
         A shorthand for :attr:`Onboarding.edit` without fetching the onboarding flow.
