@@ -33,11 +33,11 @@ from .utils import MISSING, _get_as_snowflake, cached_property, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
+    from .channel import ForumChannel, TextChannel, VoiceChannel
     from .emoji import Emoji
     from .guild import Guild
     from .object import Object
     from .partial_emoji import PartialEmoji
-    from .channel import TextChannel, VoiceChannel, ForumChannel
     from .types.onboarding import Onboarding as OnboardingPayload
     from .types.onboarding import OnboardingPrompt as OnboardingPromptPayload
     from .types.onboarding import PromptOption as PromptOptionPayload
