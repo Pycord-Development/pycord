@@ -185,7 +185,7 @@ class Asset(AssetMixin):
     @classmethod
     def _from_avatar_decoration(
         cls, state, user_id: int, avatar_decoration: str
-    ) -> Self:
+    ) -> Asset:
         animated = avatar_decoration.startswith("a_")
         endpoint = (
             "avatar-decoration-presets"
