@@ -190,7 +190,7 @@ class Asset(AssetMixin):
         endpoint = (
             "avatar-decoration-presets"
             if avatar_decoration.startswith(("v3", "v2"))
-            else "avatar-decorations/{user_id}"
+            else f"avatar-decorations/{user_id}"
         )
         return cls(
             state,
