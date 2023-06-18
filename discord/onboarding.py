@@ -46,7 +46,6 @@ __all__ = (
     "Onboarding",
     "OnboardingPrompt",
     "PromptOption",
-    "PromptType",
 )
 
 

@@ -224,6 +224,24 @@ Welcome Screen
 .. autoclass:: WelcomeScreenChannel()
     :members:
 
+Onboarding
+~~~~~~~~~~~~~~
+
+.. attributetable:: Onboarding
+
+.. autoclass:: Onboarding()
+    :members:
+
+.. attributetable:: OnboardingPrompt
+
+.. autoclass:: OnboardingPrompt()
+    :members:
+
+.. attributetable:: PromptOption
+
+.. autoclass:: PromptOption()
+    :members:
+
 Integration
 ~~~~~~~~~~~
 
