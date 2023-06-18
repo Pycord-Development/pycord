@@ -65,7 +65,7 @@ class PromptOption:
         The roles assigned to the user when they select this option.
     emoji: Union[:class:`Emoji`, :class:`PartialEmoji`]
         The emoji displayed with the option.
-    title: :class`str`
+    title: :class:`str`
         The option's title.
     description: Optional[:class:`str`]
         The option's description.
@@ -296,8 +296,6 @@ class Onboarding:
             Editing the onboarding flow failed somehow.
         Forbidden
             You don't have permissions to edit the onboarding flow.
-        NotFound
-            This onboarding flow does not exist.
         """
 
         fields: dict[str, Any] = {}

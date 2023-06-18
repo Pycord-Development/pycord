@@ -3838,8 +3838,6 @@ class Guild(Hashable):
         ------
         HTTPException
             Retrieving the onboarding flow failed somehow.
-        NotFound
-            The guild doesn't have onboarding or community feature is disabled.
         """
         data = await self._state.http.get_onboarding(self.id)
         return Onboarding(data=data, guild=self)

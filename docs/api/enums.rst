@@ -2293,7 +2293,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: dropdown
 
-        The options will appear in a dropdown (similar to select menus), but without the description displayed.
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
 
 .. class:: OnboardingMode
 
