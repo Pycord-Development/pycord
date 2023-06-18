@@ -68,6 +68,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2106](https://github.com/Pycord-Development/pycord/pull/2106))
 - Added Annotated forms support for typehinting slash command options.
   ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
+- Added `User.avatar_decoration`.
+  ([#2131](https://github.com/Pycord-Development/pycord/pull/2131))
 
 ### Changed
 
