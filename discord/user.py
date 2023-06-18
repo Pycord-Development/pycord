@@ -236,7 +236,9 @@ class BaseUser(_UserTag):
         """
         if self._avatar_decoration is None:
             return None
-        return Asset._from_avatar_decoration(self._state, self.id, self._avatar_decoration)
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration
+        )
 
     @property
     def accent_colour(self) -> Colour | None:
