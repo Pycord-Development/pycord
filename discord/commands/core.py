@@ -30,6 +30,7 @@ import datetime
 import functools
 import inspect
 import re
+import sys
 import types
 from collections import OrderedDict
 from enum import Enum
@@ -64,6 +65,11 @@ from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
+if sys.version_info >= (3, 11):
+    from typing import Annotated, get_args, get_origin
+else:
+    from typing_extensions import Annotated, get_args, get_origin
+
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
@@ -84,6 +90,7 @@ if TYPE_CHECKING:
 
     from .. import Permissions
     from ..cog import Cog
+    from ..ext.commands.cooldowns import CooldownMapping, MaxConcurrency
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -294,18 +301,17 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 f"The check functions for the command {self.name} failed"
             )
 
-        if hasattr(self, "_max_concurrency"):
-            if self._max_concurrency is not None:
-                # For this application, context can be duck-typed as a Message
-                await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
 
-            try:
-                self._prepare_cooldowns(ctx)
-                await self.call_before_hooks(ctx)
-            except:
-                if self._max_concurrency is not None:
-                    await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
-                raise
+        try:
+            self._prepare_cooldowns(ctx)
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
+            raise
 
     def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
         """Checks whether the command is currently on cooldown.
@@ -732,6 +738,19 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            if self._is_typing_annotated(option):
+                type_hint = get_args(option)[0]
+                metadata = option.__metadata__
+                # If multiple Options in metadata, the first will be used.
+                option_gen = (elem for elem in metadata if isinstance(elem, Option))
+                option = next(option_gen, Option())
+                # Handle Optional
+                if self._is_typing_optional(type_hint):
+                    option.input_type = get_args(type_hint)[0]
+                    option.default = None
+                else:
+                    option.input_type = type_hint
+
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
                     option = Option(option.__args__[0], default=None)
@@ -819,6 +838,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_annotated(self, annotation):
+        return get_origin(annotation) is Annotated
 
     @property
     def cog(self):
@@ -1119,6 +1141,8 @@ class SlashCommandGroup(ApplicationCommand):
         description: str | None = None,
         guild_ids: list[int] | None = None,
         parent: SlashCommandGroup | None = None,
+        cooldown: CooldownMapping | None = None,
+        max_concurrency: MaxConcurrency | None = None,
         **kwargs,
     ) -> None:
         self.name = str(name)
@@ -1152,6 +1176,33 @@ class SlashCommandGroup(ApplicationCommand):
         self.description_localizations: dict[str, str] = kwargs.get(
             "description_localizations", MISSING
         )
+
+        # similar to ApplicationCommand
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+
+        # no need to getattr, since slash cmds groups cant be created using a decorator
+
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError(
+                "Cooldown must be a an instance of CooldownMapping or None."
+            )
+
+        self._buckets: CooldownMapping = buckets
+
+        # no need to getattr, since slash cmds groups cant be created using a decorator
+
+        if max_concurrency is not None and not isinstance(
+            max_concurrency, MaxConcurrency
+        ):
+            raise TypeError(
+                "max_concurrency must be an instance of MaxConcurrency or None"
+            )
+
+        self._max_concurrency: MaxConcurrency | None = max_concurrency
 
     @property
     def module(self) -> str | None:
