@@ -109,9 +109,9 @@ Putting both of these pieces of info together, you get the following: ::
     activity = discord.Activity(name='my activity', type=discord.ActivityType.watching)
     client = discord.Client(activity=activity)
 
-What is the difference between get_ commands and fetch_ commands?
+What is the difference between get_ methods and fetch_ methods?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-get_ commands retrieve from the cache and won't always raise if not found. fetch_ commands always make an API request and if not found, raise. Example: ::
+Most "get_" methods retrieve from the cache (general store of data) and won't always raise if not found. "fetch_" methods always make an API request. If not found, the method will raise. Example: ::
 
         role = member.guild.get_role(id)  # try to get role without an API request through the cache
         if role is not None:
