@@ -233,9 +233,6 @@ class BaseUser(_UserTag):
         """Returns the user's avatar decoration, if available.
 
         .. versionadded:: 2.5
-
-        .. note::
-            This information is only available via :meth:`Client.fetch_user`.
         """
         if self._avatar_decoration is None:
             return None
