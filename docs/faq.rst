@@ -111,7 +111,7 @@ Putting both of these pieces of info together, you get the following: ::
 
 What is the difference between get_ methods and fetch_ methods?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"Get" methods retrieve objects or data from the cache (general store of data) and can return ``None`` if not found (this doesn't raise). "Fetch" methods force an API request and will raise if not found. Example: ::
+"Get" methods retrieve objects or data from the cache (general store of data) and can return ``None`` if not found (this doesn't raise an error). "Fetch" methods force an API request and will raise an error if not found. Example: ::
 
         role = member.guild.get_role(id)  # try to get role without an API request through the cache
         if role is not None:
