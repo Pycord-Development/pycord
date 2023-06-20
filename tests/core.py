@@ -21,3 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import pytest
+
+from discord.bot import Bot
+from discord.ext.testing import Test
+
+
+@pytest.fixture
+def client(event_loop):
+    return Test(Bot(loop=event_loop))

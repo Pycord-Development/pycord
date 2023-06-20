@@ -26,13 +26,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
-          cache-dependency-path: "requirements/dev.txt"
+          cache-dependency-path: "requirements/test.txt"
           check-latest: true
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8
-          pip install -r requirements/dev.txt
+          pip install -r requirements/test.txt
       - name: Setup cache
         id: cache-pytest
         uses: actions/cache@v3
@@ -47,8 +47,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
       - name: Run code coverage with pytest
         run: |
-          coverage run -m pytest
-          coverage xml
+          pytest
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v3
         with:

@@ -21,3 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
+
+# A test which imports everything. Mostly to help reduce issues with code that has
+# invalid syntax on specific versions of Python, i.e. if the new annotations are used
+# without the __future__ import.
+
+
+def test_import():
+    import discord
+
+
+def test_import_ext_bridge():
+    import discord.ext.bridge
+
+
+def test_import_ext_commands():
+    import discord.ext.commands
+
+
+def test_import_ext_pages():
+    import discord.ext.pages
+
+
+def test_import_ext_tasks():
+    import discord.ext.tasks

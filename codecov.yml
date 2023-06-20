@@ -6,20 +6,22 @@ coverage:
   status:
     project:
       default:
-        target: 0%
+        target: auto
+        threshold: 1%
+        paths:
+          - discord
       http:
-        target: 0%
-        flags:
-          - http
+        target: 55%
+        paths:
+          - tests/http
+          - discord/http.py
     patch:
       default:
-        target: 0%
+        target: 90%
+        paths:
+          - discord
       http:
-        target: 0%
-        flags:
-          - http
-
-flags:
-  http:
-    paths:
-      - discord/http.py
+        target: 100%
+        paths:
+          - tests/http
+          - discord/http.py
