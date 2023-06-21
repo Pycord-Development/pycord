@@ -949,7 +949,7 @@ class Guild(Hashable):
 
     @property
     def icon(self) -> Asset | None:
-        """Returns the guild's icon asset, if available."""
+        """Returns the guild's icon asset of type :class:`asset.Asset`, if available."""
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self._state, self.id, self._icon)
