@@ -33,6 +33,7 @@ from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import InteractionResponseType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
+from .flags import MessageFlags
 from .member import Member
 from .message import Attachment, Message
 from .object import Object
@@ -386,6 +387,7 @@ class Interaction:
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
+        suppress: bool = False,
     ) -> InteractionMessage:
         """|coro|
 
@@ -453,6 +455,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
         adapter = async_context.get()
         http = self._state.http
@@ -936,6 +939,8 @@ class InteractionResponse:
         attachments: list[Attachment] = MISSING,
         view: View | None = MISSING,
         delete_after: float | None = None,
+        suppress: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> None:
         """|coro|
 
@@ -1028,6 +1033,21 @@ class InteractionResponse:
             if "attachments" not in payload:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
+        if suppress is not MISSING:
+            payload["flags"] = MessageFlags(suppress_embeds=suppress).value
+
+        if allowed_mentions is None:
+            payload["allowed_mentions"] = (
+                state.allowed_mentions and state.allowed_mentions.to_dict()
+            )
+
+        elif state.allowed_mentions is not None:
+            payload["allowed_mentions"] = state.allowed_mentions.merge(
+                allowed_mentions
+            ).to_dict()
+        else:
+            payload["allowed_mentions"] = allowed_mentions.to_dict()
 
         adapter = async_context.get()
         http = parent._state.http
@@ -1215,6 +1235,7 @@ class InteractionMessage(Message):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
+        suppress: bool = False,
     ) -> InteractionMessage:
         """|coro|
 
@@ -1276,6 +1297,7 @@ class InteractionMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             delete_after=delete_after,
+            suppress=suppress,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:

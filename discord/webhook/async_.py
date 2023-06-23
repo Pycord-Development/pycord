@@ -53,6 +53,7 @@ from ..mixins import Hashable
 from ..object import Object
 from ..threads import Thread
 from ..user import BaseUser, User
+from ..flags import MessageFlags
 
 __all__ = (
     "Webhook",
@@ -622,6 +623,7 @@ def handle_message_parameters(
     view: View | None = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
+    suppress: bool = MISSING,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -648,8 +650,16 @@ def handle_message_parameters(
         payload["avatar_url"] = str(avatar_url)
     if username:
         payload["username"] = username
+    
+    flags = MessageFlags._from_value(0)
+    
     if ephemeral:
-        payload["flags"] = 64
+        flags.ephemeral = True
+        payload["flags"] = flags.value
+    
+    if suppress is not MISSING:
+        flags.suppress_embeds = suppress
+        payload["flags"] = flags.value
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -1845,6 +1855,7 @@ class Webhook(BaseWebhook):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
+        suppress: bool = MISSING,
     ) -> WebhookMessage:
         """|coro|
 
@@ -1939,6 +1950,7 @@ class Webhook(BaseWebhook):
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
 
         thread_id: int | None = None
