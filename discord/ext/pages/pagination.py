@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import List, overload
 
 import discord
-from discord.ext.bridge import BridgeApplicationContext, BridgeExtContext, BridgeContext
+from discord.ext.bridge import BridgeApplicationContext, BridgeContext, BridgeExtContext
 from discord.ext.commands import Context
 
 __all__ = (
