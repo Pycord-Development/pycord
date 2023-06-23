@@ -1024,7 +1024,8 @@ class Paginator(discord.ui.View):
 
     async def edit(
         self,
-        target: discord.Message
+        target: discord.PartialMessage
+        | discord.Message
         | discord.Interaction
         | discord.ApplicationContext
         | BridgeContext,
