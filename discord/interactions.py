@@ -426,6 +426,8 @@ class Interaction:
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -939,7 +941,7 @@ class InteractionResponse:
         attachments: list[Attachment] = MISSING,
         view: View | None = MISSING,
         delete_after: float | None = None,
-        suppress: bool = False,
+        suppress: bool | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
     ) -> None:
         """|coro|
@@ -971,6 +973,15 @@ class InteractionResponse:
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
 
         Raises
         ------
@@ -1035,7 +1046,9 @@ class InteractionResponse:
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
         if suppress is not MISSING:
-            payload["flags"] = MessageFlags(suppress_embeds=suppress).value
+            flags = MessageFlags._from_value(self._parent.message.flags.value)
+            flags.suppress_embeds = suppress
+            payload["flags"] = flags.value
 
         if allowed_mentions is None:
             payload["allowed_mentions"] = (
@@ -1235,7 +1248,7 @@ class InteractionMessage(Message):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
-        suppress: bool = False,
+        suppress: bool | None = MISSING,
     ) -> InteractionMessage:
         """|coro|
 
@@ -1268,6 +1281,8 @@ class InteractionMessage(Message):
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -1287,6 +1302,8 @@ class InteractionMessage(Message):
         """
         if attachments is MISSING:
             attachments = self.attachments or MISSING
+        if suppress is MISSING:
+            suppress = self.flags.suppress_embeds
         return await self._state._interaction.edit_original_response(
             content=content,
             embeds=embeds,

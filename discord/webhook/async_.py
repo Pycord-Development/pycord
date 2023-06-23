@@ -623,7 +623,7 @@ def handle_message_parameters(
     view: View | None = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
-    suppress: bool = MISSING,
+    suppress: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -650,16 +650,10 @@ def handle_message_parameters(
         payload["avatar_url"] = str(avatar_url)
     if username:
         payload["username"] = username
-    
-    flags = MessageFlags._from_value(0)
-    
-    if ephemeral:
-        flags.ephemeral = True
-        payload["flags"] = flags.value
-    
-    if suppress is not MISSING:
-        flags.suppress_embeds = suppress
-        payload["flags"] = flags.value
+
+    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
+
+    payload["flags"] = flags.value
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -837,6 +831,7 @@ class WebhookMessage(Message):
         attachments: list[Attachment] = MISSING,
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
+        suppress: bool | None = MISSING,
     ) -> WebhookMessage:
         """|coro|
 
@@ -878,6 +873,8 @@ class WebhookMessage(Message):
             the view is removed.
 
             .. versionadded:: 2.0
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -908,6 +905,9 @@ class WebhookMessage(Message):
         if attachments is MISSING:
             attachments = self.attachments or MISSING
 
+        if suppress is MISSING:
+            suppress = self.flags.suppress_embeds
+
         return await self._state._webhook.edit_message(
             self.id,
             content=content,
@@ -919,6 +919,7 @@ class WebhookMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             thread=thread,
+            suppress=suppress,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:
@@ -1855,7 +1856,7 @@ class Webhook(BaseWebhook):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
-        suppress: bool = MISSING,
+        suppress: bool = False,
     ) -> WebhookMessage:
         """|coro|
 
@@ -1903,6 +1904,8 @@ class Webhook(BaseWebhook):
             .. versionadded:: 2.0
         thread: Optional[:class:`~discord.abc.Snowflake`]
             The thread that contains the message.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Returns
         -------
