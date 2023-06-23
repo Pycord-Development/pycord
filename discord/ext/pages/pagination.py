@@ -23,10 +23,10 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import List
+from typing import List, overload
 
 import discord
-from discord.ext.bridge import BridgeContext
+from discord.ext.bridge import BridgeApplicationContext, BridgeExtContext, BridgeContext
 from discord.ext.commands import Context
 
 __all__ = (
@@ -1022,13 +1022,69 @@ class Paginator(discord.ui.View):
 
         return self.message
 
+    @overload
+    async def edit(
+        self,
+        target: discord.PartialMessage,
+        suppress: bool | None = ...,
+        allowed_mentions: discord.AllowedMentions | None = ...,
+        delete_after: float | None = ...,
+        user: discord.User | discord.Member = ...,
+    ) -> discord.Message:
+        ...
+
+    @overload
+    async def edit(
+        self,
+        target: discord.Message,
+        suppress: bool | None = ...,
+        allowed_mentions: discord.AllowedMentions | None = ...,
+        delete_after: float | None = ...,
+        user: discord.User | discord.Member = ...,
+    ) -> discord.Message | None:
+        ...
+
+    @overload
+    async def edit(
+        self,
+        target: discord.ApplicationContext | BridgeApplicationContext,
+        suppress: bool | None = ...,
+        allowed_mentions: discord.AllowedMentions | None = ...,
+        delete_after: float | None = ...,
+        user: None = ...,
+    ) -> discord.InteractionMessage:
+        ...
+
+    @overload
+    async def edit(
+        self,
+        target: BridgeExtContext,
+        suppress: bool | None = ...,
+        allowed_mentions: discord.AllowedMentions | None = ...,
+        delete_after: float | None = ...,
+        user: None = ...,
+    ) -> discord.Message | None:
+        ...
+
+    @overload
+    async def edit(
+        self,
+        target: discord.Interaction,
+        suppress: bool | None = ...,
+        allowed_mentions: discord.AllowedMentions | None = ...,
+        delete_after: float | None = ...,
+        user: None = ...,
+    ) -> discord.InteractionMessage | None:
+        ...
+
     async def edit(
         self,
         target: discord.PartialMessage
         | discord.Message
         | discord.Interaction
         | discord.ApplicationContext
-        | BridgeContext,
+        | BridgeApplicationContext
+        | BridgeExtContext,
         suppress: bool | None = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         delete_after: float | None = None,
@@ -1078,19 +1134,18 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page_content.custom_view)
 
         if isinstance(target, discord.Interaction):
-            self.user = target.user
-        elif isinstance(target, discord.Message):
+            self.user = target.user  # type: ignore
+        elif isinstance(target, (discord.Message, discord.PartialMessage)):
             if not isinstance(user, (discord.User, discord.Member)):
                 raise TypeError(
-                    f"expected User or Member not {user.__class__.__name__!r}"
+                    f"expected class discord.User or discord.Member for user parameter. Not {user.__class__.__name__!r}"
                 )
-            self.user = user or target.author
+            self.user = user
         else:
-            # BridgeContext doesn't have author, but it will always be available in the subclasses
             self.user = target.author
 
         try:
-            self.message = await target.edit(
+            self.message = await target.edit(  # type: ignore
                 content=page_content.content,
                 embeds=page_content.embeds,
                 files=page_content.files,
@@ -1100,11 +1155,17 @@ class Paginator(discord.ui.View):
                 allowed_mentions=allowed_mentions,
                 delete_after=delete_after,
             )
-            if self.message is None and isinstance(target, discord.Interaction):
-                # if the message is None, it means that interaction.response.edit_message was used.
-                # this can only be done if the interaction was from a component or a modal
-                # both of which have the message attribute set
-                self.message: discord.Message = target.message
+            if self.message is None:
+                if isinstance(target, discord.Interaction):
+                    # if the message is None, it means that interaction.response.edit_message was used.
+                    # this can only be done if the interaction was from a component or a modal
+                    # both of which have the message attribute set
+                    self.message: discord.Message = target.message  # type: ignore
+                elif isinstance(
+                    target, discord.Message
+                ):  # isinstance check was added to satisfy type checker
+                    # target was discord.Message, and edit was in-place
+                    self.message: discord.Message = target
 
         except (discord.NotFound, discord.Forbidden):
             pass
@@ -1113,7 +1174,7 @@ class Paginator(discord.ui.View):
 
     async def respond(
         self,
-        interaction: discord.Interaction | BridgeContext,
+        interaction: discord.Interaction | BridgeApplicationContext | BridgeExtContext,
         ephemeral: bool = False,
         target: discord.abc.Messageable | None = None,
         target_message: str = "Paginator sent!",
@@ -1122,7 +1183,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        interaction: Union[:class:`discord.Interaction`, :class:`BridgeContext`]
+        interaction: Union[:class:`discord.Interaction`, :class:`BridgeApplicationContext`, :class:`BridgeExtContext`]
             The interaction or BridgeContext which invoked the paginator.
             If passing a BridgeContext object, you cannot make this an ephemeral paginator.
         ephemeral: :class:`bool`
