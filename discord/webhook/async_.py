@@ -47,13 +47,13 @@ from ..errors import (
     InvalidArgument,
     NotFound,
 )
+from ..flags import MessageFlags
 from ..http import Route
 from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
 from ..threads import Thread
 from ..user import BaseUser, User
-from ..flags import MessageFlags
 
 __all__ = (
     "Webhook",
