@@ -68,7 +68,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2106](https://github.com/Pycord-Development/pycord/pull/2106))
 - Added Annotated forms support for typehinting slash command options.
   ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
-- Added `suppress` and `allowed_mentions` parameters to `Webhook` and `InteractionResponse` edit methods.
+- Added `suppress` and `allowed_mentions` parameters to `Webhook` and
+  `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
 
 ### Changed
