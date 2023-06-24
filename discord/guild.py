@@ -441,7 +441,11 @@ class Guild(Hashable):
         return role
 
     def _from_data(self, guild: GuildPayload) -> None:
-        self._member_count: int | None = guild.get("member_count")
+        member_count = guild.get("member_count")
+        # Either the payload includes member_count, or it hasn't been set yet.
+        # Prevents valid _member_count from suddenly changing to None
+        if member_count is not None or not hasattr(self, "_member_count"):
+            self._member_count: int | None = member_count
 
         self.name: str = guild.get("name")
         self.verification_level: VerificationLevel = try_enum(
