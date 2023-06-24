@@ -131,6 +131,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2075](https://github.com/Pycord-Development/pycord/pull/2075))
 - Fixed `AttributeError` when accessing a `Select`'s values when it hasn't been
   interacted with. ([#2104](https://github.com/Pycord-Development/pycord/pull/2104))
+- Fixed `Thread.applied_tags` not being updated.
+  ([#2146](https://github.com/Pycord-Development/pycord/pull/2146))
 
 ## [2.4.1] - 2023-03-20
 
