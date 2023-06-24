@@ -5,4 +5,4 @@ myst-parser==1.0.0
 sphinxext-opengraph==0.8.2
 sphinx-copybutton==0.5.2
 furo@ git+https://github.com/pradyunsg/furo@193643f
-sphinx-autodoc-typehints==1.23.0
+sphinx-autodoc-typehints==1.23.2
