@@ -652,7 +652,6 @@ def handle_message_parameters(
         payload["username"] = username
 
     flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
-
     payload["flags"] = flags.value
 
     if allowed_mentions:
