@@ -472,6 +472,7 @@ class SyncWebhookMessage(Message):
         file: File = MISSING,
         files: list[File] = MISSING,
         allowed_mentions: AllowedMentions | None = None,
+        suppress: bool | None = MISSING,
     ) -> SyncWebhookMessage:
         """Edits the message.
 
@@ -492,6 +493,8 @@ class SyncWebhookMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -517,6 +520,9 @@ class SyncWebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
+        if suppress is MISSING:
+            suppress = self.flags.suppress_embeds
+
         return self._state._webhook.edit_message(
             self.id,
             content=content,
@@ -526,6 +532,7 @@ class SyncWebhookMessage(Message):
             files=files,
             allowed_mentions=allowed_mentions,
             thread=thread,
+            suppress=suppress,
         )
 
     def delete(self, *, delay: float | None = None) -> None:
@@ -952,6 +959,7 @@ class SyncWebhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: Literal[False] = ...,
+        suppress: bool = MISSING,
     ) -> None:
         ...
 
@@ -970,6 +978,7 @@ class SyncWebhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: bool = False,
+        suppress: bool = False,
     ) -> SyncWebhookMessage | None:
         """Sends a message using the webhook.
 
@@ -1022,6 +1031,8 @@ class SyncWebhook(BaseWebhook):
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -1070,6 +1081,7 @@ class SyncWebhook(BaseWebhook):
             embeds=embeds,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
         thread_id: int | None = None
@@ -1151,6 +1163,7 @@ class SyncWebhook(BaseWebhook):
         files: list[File] = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
+        suppress: bool = False,
     ) -> SyncWebhookMessage:
         """Edits a message owned by this webhook.
 
@@ -1211,6 +1224,7 @@ class SyncWebhook(BaseWebhook):
             embeds=embeds,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
 
