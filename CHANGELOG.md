@@ -142,6 +142,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Fixed `AttributeError` when accessing a `Select`'s values when it hasn't been
   interacted with. ([#2104](https://github.com/Pycord-Development/pycord/pull/2104))
+- Fixed `before_invoke` being run twice for slash subcommands.
+  ([#2139](https://github.com/Pycord-Development/pycord/pull/2139))
 - Fixed `Guild._member_count` sometimes not being set.
   ([#2145](https://github.com/Pycord-Development/pycord/pull/2145))
 - Fixed `Thread.applied_tags` not being updated.
