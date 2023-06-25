@@ -384,7 +384,7 @@ class Guild(Hashable):
             ("name", self.name),
             ("shard_id", self.shard_id),
             ("chunked", self.chunked),
-            ("member_count", getattr(self, "_member_count", None)),
+            ("member_count", self._member_count),
         )
         inner = " ".join("%s=%r" % t for t in attrs)
         return f"<Guild {inner}>"
@@ -442,11 +442,11 @@ class Guild(Hashable):
         return role
 
     def _from_data(self, guild: GuildPayload) -> None:
-        # according to Stan, this is always available even if the guild is unavailable
-        # I don't have this guarantee when someone updates the guild.
-        member_count = guild.get("member_count", None)
-        if member_count is not None:
-            self._member_count: int = member_count
+        member_count = guild.get("member_count")
+        # Either the payload includes member_count, or it hasn't been set yet.
+        # Prevents valid _member_count from suddenly changing to None
+        if member_count is not None or not hasattr(self, "_member_count"):
+            self._member_count: int | None = member_count
 
         self.name: str = guild.get("name")
         self.verification_level: VerificationLevel = try_enum(
@@ -533,7 +533,7 @@ class Guild(Hashable):
 
         self._sync(guild)
         self._large: bool | None = (
-            None if member_count is None else self._member_count >= 250
+            None if self._member_count is None else self._member_count >= 250
         )
 
         self.owner_id: int | None = utils._get_as_snowflake(guild, "owner_id")
@@ -599,10 +599,7 @@ class Guild(Hashable):
         members, which for this library is set to the maximum of 250.
         """
         if self._large is None:
-            try:
-                return self._member_count >= 250
-            except AttributeError:
-                return len(self._members) >= 250
+            return (self._member_count or len(self._members)) >= 250
         return self._large
 
     @property
@@ -1003,10 +1000,9 @@ class Guild(Hashable):
         If this value returns ``False``, then you should request for
         offline members.
         """
-        count = getattr(self, "_member_count", None)
-        if count is None:
+        if self._member_count is None:
             return False
-        return count == len(self._members)
+        return self._member_count == len(self._members)
 
     @property
     def shard_id(self) -> int:
