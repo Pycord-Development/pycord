@@ -247,6 +247,9 @@ class Thread(Messageable, Hashable):
         except KeyError:
             pass
 
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
 
