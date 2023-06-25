@@ -71,6 +71,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
+- Allowed more classes in `paginator.edit`.
+  ([#2105](https://github.com/Pycord-Development/pycord/pull/2105))
 
 ### Changed
 
@@ -93,6 +95,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 - Typehinted `command_prefix` and `help_command` arguments properly.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
+- Renamed `message` parameter to `target in `paginator.edit`.
+  ([#2105](https://github.com/Pycord-Development/pycord/pull/2105))
 
 ### Removed
 
