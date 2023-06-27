@@ -312,6 +312,7 @@ class CommandInvokeError(CommandError):
         self.original: Exception = e
         super().__init__(f"Command raised an exception: {e.__class__.__name__}: {e}")
 
+
 ApplicationCommandError = CommandError
 ApplicationCommandInvokeError = CommandInvokeError
 

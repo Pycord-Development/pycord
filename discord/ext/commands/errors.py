@@ -28,9 +28,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable
 
 from discord.errors import (
-    CommandError,
     CheckFailure,
     ClientException,
+    CommandError,
     CommandInvokeError,
     CommandOnCooldown,
     DisabledCommand,

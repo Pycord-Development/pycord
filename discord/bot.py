@@ -34,15 +34,15 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar, Type
+from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar
 
 from .client import Client
 from .cog import CogMixin
 from .commands import (
-    BaseContext,
     ApplicationCommand,
     ApplicationContext,
     AutocompleteContext,
+    BaseContext,
     MessageCommand,
     SlashCommand,
     SlashCommandGroup,

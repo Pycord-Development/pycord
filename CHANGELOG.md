@@ -81,8 +81,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
 - Added the `reinvoke` function to `ApplicationContext`.
   ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
-- Added the `invoked_with`, `invoked_parents`, `invoked_subcommand`, `subcommand_passed`,
-  and `command_failed` parameters & attributes to `ApplicationContext`.
+- Added the `invoked_with`, `invoked_parents`, `invoked_subcommand`,
+  `subcommand_passed`, and `command_failed` parameters & attributes to
+  `ApplicationContext`.
   ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
 - Added the `source` attribute to `ext.commands.Context` & `ApplicationContext` for a
   common way to either retrieve the message or the interaction that triggered the
