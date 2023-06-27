@@ -3836,11 +3836,6 @@ class Guild(Hashable):
         reason: Optional[str]
             The reason for deleting the rule. Shows up in the audit log.
 
-        Returns
-        -------
-        AutoModRule
-            The deleted auto moderation rule.
-
         Raises
         ------
         ValueError
