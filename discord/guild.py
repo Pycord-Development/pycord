@@ -3824,7 +3824,7 @@ class Guild(Hashable):
     async def delete_auto_moderation_rule(
         self,
         *,
-        id: Optional[float] = None,
+        id: Optional[int] = None,
         name: Optional[str] = None,
         reason: Optional[str] = None,
     ) -> AutoModRule:
