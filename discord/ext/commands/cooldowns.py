@@ -24,6 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 # Cooldowns were moved to discord/commands/cooldowns.py
+# This file acts as an alias for now
+
 from ...commands.cooldowns import *
 
 __all__ = (

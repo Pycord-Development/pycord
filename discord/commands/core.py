@@ -33,10 +33,11 @@ from collections import OrderedDict
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Callable, Generator, Generic, TypeVar, Union
 
+from discord import utils
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
 from ..enums import MessageType, SlashCommandOptionType, try_enum
-from ..errors import ClientException, ValidationError
+from ..errors import ClientException, ValidationError, CheckFailure, DisabledCommand
 from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
@@ -141,6 +142,67 @@ class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
     async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
         ctx.bot.dispatch("application_command_error", ctx, error)
+
+    async def can_run(self, ctx: ApplicationContext) -> bool:
+        """|coro|
+
+        Checks if the command can be executed by checking all the predicates
+        inside the :attr:`~ApplicationCommand.checks` attribute. This also checks whether the
+        command is disabled.
+
+        .. versionchanged:: 1.3
+            Checks whether the command is disabled or not
+
+        Parameters
+        ----------
+        ctx: :class:`.ApplicationContext`
+            The ctx of the command currently being invoked.
+
+        Returns
+        -------
+        :class:`bool`
+            A boolean indicating if the command can be invoked.
+
+        Raises
+        ------
+        :class:`CommandError`
+            Any command error that was raised during a check call will be propagated
+            by this function.
+        """
+
+        if not self.enabled:
+            raise DisabledCommand(f"{self.name} command is disabled")
+
+        original = ctx.command
+        ctx.command = self
+
+        try:
+            if not await ctx.bot.can_run(ctx):
+                raise CheckFailure(
+                    f"The global check functions for command {self.qualified_name} failed."
+                )
+
+            # since slash command parents don't really use checks, we can make it
+            # a feature to have "global" checks for slash commands only
+            predicates = self.checks
+            if self.parent is not None:
+                predicates = self.parent.checks + predicates
+
+            if (cog := self.cog) and (
+                local_check := cog._get_overridden_method(cog.cog_check)
+            ):
+                ret = await utils.maybe_coroutine(local_check, ctx)
+                if not ret:
+                    return False
+
+            predicates = self.checks
+            if not predicates:
+                # since we have no checks, then we just return True.
+                return True
+
+            return await utils.async_all(predicate(ctx) for predicate in predicates)
+        finally:
+            ctx.command = original
 
     @property
     def qualified_id(self) -> int:

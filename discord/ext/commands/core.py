@@ -40,8 +40,9 @@ from typing import (
 )
 
 import discord
-
+from discord import utils
 from ...commands import (
+    BaseContext,
     ApplicationCommand,
     _BaseCommand,
     message_command,
@@ -549,6 +550,61 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
 
         return " ".join(result)
 
+    async def can_run(self, ctx: Context) -> bool:
+        """|coro|
+
+        Checks if the command can be executed by checking all the predicates
+        inside the :attr:`~Command.checks` attribute. This also checks whether the
+        command is disabled.
+
+        .. versionchanged:: 1.3
+            Checks whether the command is disabled or not
+
+        Parameters
+        ----------
+        ctx: :class:`.Context`
+            The ctx of the command currently being invoked.
+
+        Returns
+        -------
+        :class:`bool`
+            A boolean indicating if the command can be invoked.
+
+        Raises
+        ------
+        :class:`CommandError`
+            Any command error that was raised during a check call will be propagated
+            by this function.
+        """
+
+        if not self.enabled:
+            raise DisabledCommand(f"{self.name} command is disabled")
+
+        original = ctx.command
+        ctx.command = self
+
+        try:
+            if not await ctx.bot.can_run(ctx):
+                raise CheckFailure(
+                    f"The global check functions for command {self.qualified_name} failed."
+                )
+
+            if (cog := self.cog) and (
+                local_check := cog._get_overridden_method(cog.cog_check)
+            ):
+                ret = await utils.maybe_coroutine(local_check, ctx)
+                if not ret:
+                    return False
+
+            predicates = self.checks
+            if not predicates:
+                # since we have no checks, then we just return True.
+                return True
+
+            return await utils.async_all(predicate(ctx) for predicate in predicates)
+        finally:
+            ctx.command = original
+
 
 class GroupMixin(Generic[CogT]):
     """A mixin that implements common functionality for classes that behave
@@ -871,7 +927,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
         ctx.subcommand_passed = None
         early_invoke = not self.invoke_without_command
         if early_invoke:
-            await self._prepare(ctx)
+            await self.prepare(ctx)
 
         view = ctx.view
         previous = view.index
@@ -905,7 +961,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
             await self._parse_arguments(ctx)
 
             if call_hooks:
-                await self._call_before_hooks(ctx)
+                await self.call_before_hooks(ctx)
 
         view = ctx.view
         previous = view.index
@@ -924,7 +980,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
                 raise
             finally:
                 if call_hooks:
-                    await self._call_after_hooks(ctx)
+                    await self.call_after_hooks(ctx)
 
         ctx.invoked_parents.append(ctx.invoked_with)  # type: ignore
 

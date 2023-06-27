@@ -34,11 +34,12 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar
+from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar, Type
 
 from .client import Client
 from .cog import CogMixin
 from .commands import (
+    BaseContext,
     ApplicationCommand,
     ApplicationContext,
     AutocompleteContext,
@@ -1222,8 +1223,8 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         .. note::
 
            This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this
-           takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
-           :exc:`.ApplicationCommandError`.
+           takes a single parameter of type :class:`.BaseContext` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         -------
@@ -1282,14 +1283,14 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         .. note::
 
-           When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command
+           When using this function the :class:`.BaseContext` sent to a group subcommand may only parse the parent command
            and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call.
 
         .. note::
 
            This function can either be a regular function or a coroutine. Similar to a command :func:`.check`,
-           this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from
-           :exc:`.ApplicationCommandError`.
+           this takes a single parameter of type :class:`.BaseContext` and can only raise exceptions inherited from
+           :exc:`.CommandError`.
 
         Example
         -------
@@ -1318,7 +1319,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         A pre-invoke hook is called directly before the command is
         called. This makes it a useful function to set up database
         connections or any type of set up required.
-        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+        This pre-invoke hook takes a sole parameter, a :class:`.BaseContext`.
 
         .. note::
 
@@ -1348,7 +1349,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         A post-invoke hook is called directly after the command is
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
-        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+        This post-invoke hook takes a sole parameter, a :class:`.BaseContext`.
 
         .. note::
 
