@@ -3820,3 +3820,63 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+    
+    async def delete_auto_moderation_rule(
+        self,
+        *,
+        id: Optional[float] = None,
+        name: Optional[str] = None,
+        reason: Optional[str] = None,
+    ) -> AutoModRule:
+        """
+        Deletes an auto moderation rule.
+
+        Parameters
+        ----------
+        id: Optional[float]
+            The ID of the auto moderation rule.
+        name: Optional[str]
+            The name of the auto moderation rule.
+        reason: Optional[str]
+            The reason for deleting the rule. Shows up in the audit log.
+
+        Returns
+        -------
+        AutoModRule
+            The deleted auto moderation rule.
+
+        Raises
+        ------
+        ValueError
+            If neither 'id' nor 'name' is provided.
+        ValueError
+            If both 'id' and 'name' are provided.
+        ValueError
+            If no auto moderation rule is found with the given name.
+        HTTPException
+            Deleting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+        """
+
+        if not id and not name:
+            raise ValueError("Either 'id' or 'name' must be provided.")
+
+        if id and name:
+            raise ValueError("Only one of 'id' or 'name' can be provided.")
+
+        if name:
+            # Get all auto moderation rules
+            rules_response = await self._state.http.get_auto_moderation_rules(self.id)
+            rules = rules_response
+
+            # Find the rule by name
+            matching_rules = [rule for rule in rules if rule['name'] == name]
+            if not matching_rules:
+                raise ValueError(f"No auto moderation rule found with name '{name}'.")
+            id = matching_rules[0]['id']
+
+        data = await self._state.http.delete_auto_moderation_rule(
+            self.id, id, reason=reason
+        )
+        return
