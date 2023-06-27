@@ -60,8 +60,17 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2042](https://github.com/Pycord-Development/pycord/pull/2042))
 - Added `icon` and `unicode_emoji` to `Guild.create_role`.
   ([#2086](https://github.com/Pycord-Development/pycord/pull/2086))
+- Added `cooldown` and `max_concurrency` to `SlashCommandGroup`.
+  ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Added new embedded activities, Gartic Phone and Jamspace.
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
+- Added `bridge.Context` as a shortcut to `Union` of subclasses.
+  ([#2106](https://github.com/Pycord-Development/pycord/pull/2106))
+- Added Annotated forms support for typehinting slash command options.
+  ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
+- Added `suppress` and `allowed_mentions` parameters to `Webhook` and
+  `InteractionResponse` edit methods.
+  ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
 - Added `_parse_arguments` function to slash commands to parse arguments instead of in
   `prepare`. ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
 - Added the `parents`, `root_parent`, and `cog_name` attribute to slash commands.
@@ -154,8 +163,19 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2079](https://github.com/Pycord-Development/pycord/pull/2079))
 - Fixed `HTTPException` when trying to create a forum thread with files.
   ([#2075](https://github.com/Pycord-Development/pycord/pull/2075))
+- Fixed `before_invoke` not being run for `SlashCommandGroup`.
+  ([#2091](https://github.com/Pycord-Development/pycord/pull/2091))
 - Fixed `AttributeError` when accessing a `Select`'s values when it hasn't been
   interacted with. ([#2104](https://github.com/Pycord-Development/pycord/pull/2104))
+- Fixed `before_invoke` being run twice for slash subcommands.
+  ([#2139](https://github.com/Pycord-Development/pycord/pull/2139))
+- Fixed `Guild._member_count` sometimes not being set.
+  ([#2145](https://github.com/Pycord-Development/pycord/pull/2145))
+- Fixed `Thread.applied_tags` not being updated.
+  ([#2146](https://github.com/Pycord-Development/pycord/pull/2146))
+- Fixed type-hinting of `author` property of `ApplicationContext` to include typehinting
+  of `User` or `Member`.
+  ([#2148](https://github.com/Pycord-Development/pycord/pull/2148))
 
 ## [2.4.1] - 2023-03-20
 
