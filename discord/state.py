@@ -1139,10 +1139,8 @@ class ConnectionState:
         if self.member_cache_flags.joined:
             guild._add_member(member)
 
-        try:
+        if guild._member_count is not None:
             guild._member_count += 1
-        except AttributeError:
-            pass
 
         self.dispatch("member_join", member)
 
@@ -1152,10 +1150,8 @@ class ConnectionState:
 
         guild = self._get_guild(int(data["guild_id"]))
         if guild is not None:
-            try:
+            if guild._member_count is not None:
                 guild._member_count -= 1
-            except AttributeError:
-                pass
 
             member = guild.get_member(user.id)
             if member is not None:
