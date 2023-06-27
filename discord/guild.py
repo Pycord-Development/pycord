@@ -3816,13 +3816,13 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
-    
+
     async def delete_auto_moderation_rule(
         self,
         *,
-        id: Optional[int] = None,
-        name: Optional[str] = None,
-        reason: Optional[str] = None,
+        id: int | None = None,
+        name: str | None = None,
+        reason: str | None = None,
     ) -> AutoModRule:
         """
         Deletes an auto moderation rule.
@@ -3867,10 +3867,10 @@ class Guild(Hashable):
             rules = rules_response
 
             # Find the rule by name
-            matching_rules = [rule for rule in rules if rule['name'] == name]
+            matching_rules = [rule for rule in rules if rule["name"] == name]
             if not matching_rules:
                 raise ValueError(f"No auto moderation rule found with name '{name}'.")
-            id = matching_rules[0]['id']
+            id = matching_rules[0]["id"]
 
         data = await self._state.http.delete_auto_moderation_rule(
             self.id, id, reason=reason
