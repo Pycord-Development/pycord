@@ -3829,7 +3829,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        id: Optional[float]
+        id: Optional[int]
             The ID of the auto moderation rule.
         name: Optional[str]
             The name of the auto moderation rule.
