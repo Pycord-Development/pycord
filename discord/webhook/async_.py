@@ -1567,6 +1567,7 @@ class Webhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: Literal[True],
+        delete_after: float = None,
     ) -> WebhookMessage:
         ...
 
@@ -1588,6 +1589,7 @@ class Webhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: Literal[False] = ...,
+        delete_after: float = None,
     ) -> None:
         ...
 
