@@ -1368,6 +1368,28 @@ class SlashCommandGroup(ApplicationCommand):
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
 
+    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
+        # only call local hooks
+        cog = self.cog
+        if self._before_invoke is not None:
+            # should be cog if @commands.before_invoke is used
+            instance = getattr(self._before_invoke, "__self__", cog)
+            # __self__ only exists for methods, not functions
+            # however, if @command.before_invoke is used, it will be a function
+            if instance:
+                await self._before_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._before_invoke(ctx)  # type: ignore
+
+    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
+        cog = self.cog
+        if self._after_invoke is not None:
+            instance = getattr(self._after_invoke, "__self__", cog)
+            if instance:
+                await self._after_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._after_invoke(ctx)  # type: ignore
+
     def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup, None, None]:
         """An iterator that recursively walks through all slash commands and groups in this group.
 
