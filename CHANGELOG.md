@@ -148,6 +148,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2145](https://github.com/Pycord-Development/pycord/pull/2145))
 - Fixed `Thread.applied_tags` not being updated.
   ([#2146](https://github.com/Pycord-Development/pycord/pull/2146))
+- Fixed type-hinting of `author` property of `ApplicationContext` to include typehinting
+  of `User` or `Member`.
+  ([#2148](https://github.com/Pycord-Development/pycord/pull/2148))
+- Fixed missing `delete_after` parameter in overload type-hinting for `send` method in
+  `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 
 ## [2.4.1] - 2023-03-20
 
