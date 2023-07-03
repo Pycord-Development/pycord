@@ -158,7 +158,7 @@ class ScheduledEvent(Hashable):
         The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
-        It may be ``None`` because events created before October 25th, 2021, haven't
+        It may be ``None`` because events created before October 25th, 2021 haven't
         had their creators tracked.
     creator: Optional[:class:`User`]
         The resolved user object of who created the event.
