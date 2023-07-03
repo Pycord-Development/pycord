@@ -154,7 +154,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed missing `delete_after` parameter in overload type-hinting for `send` method in
   `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `fix: ScheduledEvent.creator_id` returning `str` instead of `int`.
-  ([#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
+  ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
 
 ## [2.4.1] - 2023-03-20
 
