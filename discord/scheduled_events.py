@@ -209,7 +209,7 @@ class ScheduledEvent(Hashable):
             ScheduledEventStatus, data.get("status")
         )
         self.subscriber_count: int | None = data.get("user_count", None)
-        self.creator_id = data.get("creator_id", None)
+        self.creator_id = int(data.get("creator_id", None))
         self.creator: Member | None = creator
 
         entity_metadata = data.get("entity_metadata")
