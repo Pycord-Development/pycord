@@ -1098,7 +1098,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        target: Union[:class:`~discord.PartialMessage`, :class:`~discord.Message`, :class:`~discord.Interaction`, :class:`~discord.ApplicationContext`, :class:`~discord.ext.bridge.BridgeContext`]
+        target: Union[:class:`~discord.PartialMessage`, :class:`~discord.Message`, :class:`~discord.Interaction`, :class:`~discord.ApplicationContext`, :class:`~discord.ext.bridge.Context`]
             The target to edit.
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
