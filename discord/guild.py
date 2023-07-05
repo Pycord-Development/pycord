@@ -3828,7 +3828,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        id: Optional[int]
+        id: int
             The ID of the auto moderation rule.
         reason: Optional[str]
             The reason for deleting the rule. Shows up in the audit log.
