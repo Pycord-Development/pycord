@@ -3844,4 +3844,4 @@ class Guild(Hashable):
         data = await self._state.http.delete_auto_moderation_rule(
             self.id, id, reason=reason
         )
-        return
+        return AutoModRule(state=self._state, data=data)
