@@ -75,8 +75,8 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from .. import Permissions
-    from .mixins import BaseContext
     from .cooldowns import CooldownMapping, MaxConcurrency
+    from .mixins import BaseContext
 
     P = ParamSpec("P")
 else:
