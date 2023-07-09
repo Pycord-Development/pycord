@@ -142,6 +142,7 @@ if TYPE_CHECKING:
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
+    from .commands.options import OptionChoice
     from .invite import Invite
     from .permissions import Permissions
     from .template import Template
@@ -156,6 +157,7 @@ if TYPE_CHECKING:
 else:
     cached_property = _cached_property
     AutocompleteContext = Any
+    OptionChoice = Any
 
 
 T = TypeVar("T")
@@ -1298,7 +1300,7 @@ def generate_snowflake(dt: datetime.datetime | None = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3FFFFF
 
 
-V = Union[Iterable[str], Iterable[int], Iterable[float]]
+V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
 AV = Awaitable[V]
 Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
