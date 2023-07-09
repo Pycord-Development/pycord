@@ -76,6 +76,7 @@ if TYPE_CHECKING:
 
     from .. import Permissions
     from .mixins import BaseContext
+    from .cooldowns import CooldownMapping, MaxConcurrency
 
     P = ParamSpec("P")
 else:

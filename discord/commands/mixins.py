@@ -637,6 +637,30 @@ class Invokable(Generic[CogT, P, T]):
         self._after_invoke = coro
         return coro
 
+    def error(self, coro: ErrorT) -> ErrorT:
+        """A decorator that registers a coroutine as a local error handler.
+        A local error handler is an :func:`.on_command_error`/
+        :func:`.on_application_command_error` event limited to a single command.
+        However, the actual :func:`.on_command_error`/:func:`.on_application_command_error`
+        is still invoked afterwards as the catch-all.
+
+        Parameters
+        ----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        ------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
+
+        if not asyncio.iscoroutinefunction(coro):
+            raise TypeError("The error handler must be a coroutine.")
+
+        self.on_error: Error = coro
+        return coro
+
     def add_check(self, func: Check) -> None:
         """Adds a check to the command.
 
