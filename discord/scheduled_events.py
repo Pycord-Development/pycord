@@ -157,7 +157,7 @@ class ScheduledEvent(Hashable):
         The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
         The ID of the user who created the event.
-        It may be ``None`` because events created before October 25th, 2021, haven't
+        It may be ``None`` because events created before October 25th, 2021 haven't
         had their creators tracked.
     creator: Optional[:class:`User`]
         The resolved user object of who created the event.
@@ -208,7 +208,7 @@ class ScheduledEvent(Hashable):
             ScheduledEventStatus, data.get("status")
         )
         self.subscriber_count: int | None = data.get("user_count", None)
-        self.creator_id = data.get("creator_id", None)
+        self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
 
         entity_metadata = data.get("entity_metadata")
