@@ -147,9 +147,6 @@ class Emoji(_EmojiTag, AssetMixin):
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _EmojiTag) and self.id == other.id
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return self.id >> 22
 
