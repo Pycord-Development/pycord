@@ -432,9 +432,6 @@ class Game(BaseActivity):
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Game) and other.name == self.name
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash(self.name)
 
@@ -541,9 +538,6 @@ class Streaming(BaseActivity):
             and other.name == self.name
             and other.url == self.url
         )
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self.name)
@@ -653,9 +647,6 @@ class Spotify:
             and other._sync_id == self._sync_id
             and other.start == self.start
         )
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self._session_id)
@@ -828,9 +819,6 @@ class CustomActivity(BaseActivity):
             and other.name == self.name
             and other.emoji == self.emoji
         )
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash((self.name, str(self.emoji)))
