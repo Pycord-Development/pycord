@@ -1025,7 +1025,7 @@ class Paginator(discord.ui.View):
     @overload
     async def edit(
         self,
-        target: discord.PartialMessage,
+        message: discord.PartialMessage,
         suppress: bool | None = ...,
         allowed_mentions: discord.AllowedMentions | None = ...,
         delete_after: float | None = ...,
@@ -1036,7 +1036,7 @@ class Paginator(discord.ui.View):
     @overload
     async def edit(
         self,
-        target: discord.Message,
+        message: discord.Message,
         suppress: bool | None = ...,
         allowed_mentions: discord.AllowedMentions | None = ...,
         delete_after: float | None = ...,
@@ -1047,7 +1047,7 @@ class Paginator(discord.ui.View):
     @overload
     async def edit(
         self,
-        target: discord.ApplicationContext | BridgeApplicationContext,
+        message: discord.ApplicationContext | BridgeApplicationContext,
         suppress: bool | None = ...,
         allowed_mentions: discord.AllowedMentions | None = ...,
         delete_after: float | None = ...,
@@ -1058,7 +1058,7 @@ class Paginator(discord.ui.View):
     @overload
     async def edit(
         self,
-        target: BridgeExtContext,
+        message: BridgeExtContext,
         suppress: bool | None = ...,
         allowed_mentions: discord.AllowedMentions | None = ...,
         delete_after: float | None = ...,
@@ -1069,7 +1069,7 @@ class Paginator(discord.ui.View):
     @overload
     async def edit(
         self,
-        target: discord.Interaction,
+        message: discord.Interaction,
         suppress: bool | None = ...,
         allowed_mentions: discord.AllowedMentions | None = ...,
         delete_after: float | None = ...,
@@ -1079,7 +1079,7 @@ class Paginator(discord.ui.View):
 
     async def edit(
         self,
-        target: discord.PartialMessage
+        message: discord.PartialMessage
         | discord.Message
         | discord.Interaction
         | discord.ApplicationContext
@@ -1090,16 +1090,16 @@ class Paginator(discord.ui.View):
         delete_after: float | None = None,
         user: discord.User | discord.Member | None = None,
     ) -> discord.Message | discord.InteractionMessage | None:
-        """Edits an existing message to replace it with the paginator contents.
+        """Edits an existing message to replace it with the paginator.
 
         .. note::
 
-            If invoked from an interaction, you will still need to respond to the interaction.
+            If a view was previously present on the message, it will be removed.
 
         Parameters
         ----------
-        target: Union[:class:`~discord.PartialMessage`, :class:`~discord.Message`, :class:`~discord.Interaction`, :class:`~discord.ApplicationContext`, :class:`~discord.ext.bridge.Context`]
-            The target to edit.
+        message: Union[:class:`~discord.PartialMessage`, :class:`~discord.Message`, :class:`~discord.Interaction`, :class:`~discord.ApplicationContext`, :class:`~discord.ext.bridge.Context`]
+            The message to edit with the paginator.
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1115,11 +1115,11 @@ class Paginator(discord.ui.View):
         delete_after: Optional[:class:`float`]
             If set, deletes the paginator after the specified time.
         user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
-            The user to set as the paginator's user, if a :class:`~discord.Message` is passed as the target.
+            The user to set as the paginator's user, if target message is of type :class:`~discord.Message` or :class:`~discord.PartialMessage`.
 
         Returns
         -------
-        Optional[:class:`discord.Message`]
+        :class:`~discord.Message` | :class:`~discord.InteractionMessage` | ``None``
             The message that was edited. Returns ``None`` if the operation failed.
         """
 
@@ -1133,19 +1133,19 @@ class Paginator(discord.ui.View):
         if page_content.custom_view:
             self.update_custom_view(page_content.custom_view)
 
-        if isinstance(target, discord.Interaction):
-            self.user = target.user  # type: ignore
-        elif isinstance(target, (discord.Message, discord.PartialMessage)):
+        if isinstance(message, discord.Interaction):
+            self.user = message.user  # type: ignore
+        elif isinstance(message, (discord.Message, discord.PartialMessage)):
             if not isinstance(user, (discord.User, discord.Member)):
                 raise TypeError(
                     f"expected class discord.User or discord.Member for user parameter. Not {user.__class__.__name__!r}"
                 )
             self.user = user
         else:
-            self.user = target.author
+            self.user = message.author
 
         try:
-            self.message = await target.edit(  # type: ignore
+            self.message = await message.edit(  # type: ignore
                 content=page_content.content,
                 embeds=page_content.embeds,
                 files=page_content.files,
@@ -1156,16 +1156,16 @@ class Paginator(discord.ui.View):
                 delete_after=delete_after,
             )
             if self.message is None:
-                if isinstance(target, discord.Interaction):
+                if isinstance(message, discord.Interaction):
                     # if the message is None, it means that interaction.response.edit_message was used.
                     # this can only be done if the interaction was from a component or a modal
                     # both of which have the message attribute set
-                    self.message: discord.Message = target.message  # type: ignore
+                    self.message: discord.Message = message.message  # type: ignore
                 elif isinstance(
-                    target, discord.Message
-                ):  # isinstance check was added to satisfy type checker
+                    message, discord.Message
+                ):  # isinstance check was added to satisfy type checker. this is the only other case that might return None
                     # target was discord.Message, and edit was in-place
-                    self.message: discord.Message = target
+                    self.message: discord.Message = message
 
         except (discord.NotFound, discord.Forbidden):
             pass
