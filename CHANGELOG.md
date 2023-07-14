@@ -44,7 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
   [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
   ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 - Added and documented missing `AuditLogAction` enums.
-  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030), [#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030),
+  [#TBD](https://github.com/Pycord-Development/pycord/pull/TBD))
 - `AuditLogDiff` now supports AutoMod related models.
   ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
