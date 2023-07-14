@@ -1579,6 +1579,18 @@ of :class:`enum.Enum`.
         A member was timed out by auto moderation.
 
         .. versionadded:: 2.5
+    
+    .. attribute:: creator_monetization_request_created
+
+        A creator monetization request was created.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: creator_monetization_terms_accepted
+
+        The creator monetization terms were accepted.
+
+        .. versionadded:: 2.5
 
 
 .. class:: AuditLogActionCategory
