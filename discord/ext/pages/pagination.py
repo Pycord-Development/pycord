@@ -1145,6 +1145,7 @@ class Paginator(discord.ui.View):
             self.user = message.author
 
         try:
+            # pyright thinks the return type of this method can't be assigned to Message attribute for some reason
             self.message = await message.edit(  # type: ignore
                 content=page_content.content,
                 embeds=page_content.embeds,
