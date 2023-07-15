@@ -96,8 +96,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 - Typehinted `command_prefix` and `help_command` arguments properly.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
-- Renamed `message` parameter to `target` in `paginator.edit`.
-  ([#2105](https://github.com/Pycord-Development/pycord/pull/2105))
 - Replace `orjson` support with `msgspec` support.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
 
