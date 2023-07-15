@@ -1134,7 +1134,7 @@ class Paginator(discord.ui.View):
             self.update_custom_view(page_content.custom_view)
 
         if isinstance(message, discord.Interaction):
-            self.user = message.user  # type: ignore
+            self.user = message.user
         elif isinstance(message, (discord.Message, discord.PartialMessage)):
             if not isinstance(user, (discord.User, discord.Member)):
                 raise TypeError(
