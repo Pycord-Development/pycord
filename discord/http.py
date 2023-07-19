@@ -304,8 +304,10 @@ class HTTPClient:
                                 response, use_clock=self.use_clock
                             )
                             _log.debug(
-                                "A rate limit bucket has been exhausted (bucket: %s,"
-                                " retry: %s).",
+                                (
+                                    "A rate limit bucket has been exhausted (bucket:"
+                                    " %s, retry: %s)."
+                                ),
                                 bucket,
                                 delta,
                             )
@@ -336,8 +338,10 @@ class HTTPClient:
                             is_global = data.get("global", False)
                             if is_global:
                                 _log.warning(
-                                    "Global rate limit has been hit. Retrying in %.2f"
-                                    " seconds.",
+                                    (
+                                        "Global rate limit has been hit. Retrying in"
+                                        " %.2f seconds."
+                                    ),
                                     retry_after,
                                 )
                                 self._global_over.clear()

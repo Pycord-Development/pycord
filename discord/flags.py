@@ -689,6 +689,7 @@ class Intents(BaseFlags):
 
         - :func:`on_member_join`
         - :func:`on_member_remove`
+        - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
 
@@ -1066,7 +1067,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
+            As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content
             of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
             intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.

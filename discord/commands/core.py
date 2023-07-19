@@ -910,8 +910,10 @@ class SlashCommand(ApplicationCommand):
                     ):
                         arg = ctx.guild.get_channel_or_thread(int(arg))
                         _data["_invoke_flag"] = True
-                        arg._update(_data) if isinstance(arg, Thread) else arg._update(
-                            ctx.guild, _data
+                        (
+                            arg._update(_data)
+                            if isinstance(arg, Thread)
+                            else arg._update(ctx.guild, _data)
                         )
                     else:
                         obj_type = None
@@ -1315,13 +1317,13 @@ class SlashCommandGroup(ApplicationCommand):
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
 
-    def walk_commands(self) -> Generator[SlashCommand, None, None]:
-        """An iterator that recursively walks through all slash commands in this group.
+    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup, None, None]:
+        """An iterator that recursively walks through all slash commands and groups in this group.
 
         Yields
         ------
-        :class:`.SlashCommand`
-            A slash command from the group.
+        :class:`.SlashCommand` | :class:`.SlashCommandGroup`
+            A nested slash command or slash command group from the group.
         """
         for command in self.subcommands:
             if isinstance(command, SlashCommandGroup):

@@ -279,7 +279,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: stage_raise_hand
 
-        The system message denoting that a stage event has someone has raised their hand.
+        The system message denoting that someone in a stage event is raising their hand.
 
         .. versionadded:: 2.4
 
@@ -1642,6 +1642,12 @@ of :class:`enum.Enum`.
     .. attribute:: lottie
 
         Represents a sticker with a lottie image.
+
+    .. attribute:: gif
+
+        Represents a sticker with a gif image.
+
+        .. versionadded:: 2.4
 
 .. class:: InviteTarget
 
