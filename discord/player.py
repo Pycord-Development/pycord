@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import audioop
 import io
 import json
 import logging
@@ -36,6 +35,8 @@ import sys
 import threading
 import time
 import traceback
+from math import floor
+from itertools import chain
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 from .errors import ClientException
@@ -691,8 +692,16 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         self.original.cleanup()
 
     def read(self) -> bytes:
+        maxval = 0x7FFF
+        minval = -0x8000
+
         ret = self.original.read()
-        return audioop.mul(ret, 2, min(self._volume, 2.0))
+        samples = bytes(chain.from_iterable(
+            int(floor(min(maxval, max(int.from_bytes(ret[i * 2: (i + 1) * 2], "little", signed=True) * min(self._volume, 2.0), minval))))
+            .to_bytes(2, "little", signed=True)
+            for i in range(len(ret) // 2)
+        ))
+        return samples
 
 
 class AudioPlayer(threading.Thread):
