@@ -1395,7 +1395,7 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
-        default_reaction_emoji: Emoji | int | str = MISSING
+        default_reaction_emoji: Emoji | int | str = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1493,11 +1493,19 @@ class Guild(Hashable):
 
         if default_reaction_emoji is not MISSING:
             if isinstance(default_reaction_emoji, str):
-                options["default_reaction_emoji"] = {"emoji_name": default_reaction_emoji, "emoji_id": None}
+                options["default_reaction_emoji"] = {
+                    "emoji_name": default_reaction_emoji,
+                    "emoji_id": None,
+                }
             elif isinstance(default_reaction_emoji, int):
-                options["default_reaction_emoji"] = {"emoji_name": None, "emoji_id": default_reaction_emoji}
+                options["default_reaction_emoji"] = {
+                    "emoji_name": None,
+                    "emoji_id": default_reaction_emoji,
+                }
             else:
-                options["default_reaction_emoji"] = default_reaction_emoji._to_partial()._to_forum_reaction_payload()
+                options[
+                    "default_reaction_emoji"
+                ] = default_reaction_emoji._to_partial()._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,
