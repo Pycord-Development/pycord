@@ -35,8 +35,8 @@ import sys
 import threading
 import time
 import traceback
-from math import floor
 from itertools import chain
+from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 from .errors import ClientException
@@ -701,11 +701,25 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         minval = -0x8000
 
         ret = self.original.read()
-        samples = bytes(chain.from_iterable(
-            int(floor(min(maxval, max(int.from_bytes(ret[i * 2: (i + 1) * 2], "little", signed=True) * min(self._volume, 2.0), minval))))
-            .to_bytes(2, "little", signed=True)
-            for i in range(len(ret) // 2)
-        ))
+        samples = bytes(
+            chain.from_iterable(
+                int(
+                    floor(
+                        min(
+                            maxval,
+                            max(
+                                int.from_bytes(
+                                    ret[i * 2 : (i + 1) * 2], "little", signed=True
+                                )
+                                * min(self._volume, 2.0),
+                                minval,
+                            ),
+                        )
+                    )
+                ).to_bytes(2, "little", signed=True)
+                for i in range(len(ret) // 2)
+            )
+        )
         return samples
 
 
