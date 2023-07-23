@@ -12,9 +12,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- `Guild.create_forum_channel` new parameter and `ForumChannel` new attribute:
-  `default_reaction_emoji`.
-  ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 - Added possibility to start bot via async context manager.
   ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
 - Change default for all `name_localizations` & `description_localizations` attributes
@@ -75,6 +72,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
+- `Guild.create_forum_channel` new parameter and `ForumChannel` new attribute:
+  `default_reaction_emoji`.
+  ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 
 ### Changed
 
