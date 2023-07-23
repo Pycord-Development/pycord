@@ -32,6 +32,7 @@ import discord.abc
 
 from . import utils
 from .asset import Asset
+from .emoji import Emoji
 from .enums import (
     ChannelType,
     EmbeddedActivity,
@@ -43,7 +44,6 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
-from .emoji import Emoji
 from .file import File
 from .flags import ChannelFlags
 from .invite import Invite
