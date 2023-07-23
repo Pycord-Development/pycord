@@ -43,6 +43,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
+from .emoji import Emoji
 from .file import File
 from .flags import ChannelFlags
 from .invite import Invite
@@ -1074,6 +1075,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
+        default_reaction_emoji: Emoji | int | str | None = ...,
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
@@ -1134,6 +1136,10 @@ class ForumChannel(_TextChannel):
             Whether a tag should be required to be specified when creating a thread in this channel.
 
             .. versionadded:: 2.3
+        default_reaction_emoji: Optional[class:`discord.Emoji` | :class`int` | :class`str`]
+            The default forum reaction emoji.
+
+            .. versionadded:: 2.5
 
         Returns
         -------

@@ -44,6 +44,7 @@ from typing import (
 from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
+from .partial_emoji import _EmojiTag, PartialEmoji
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import MessageFlags
@@ -506,6 +507,22 @@ class GuildChannel:
             if not isinstance(ch_type, ChannelType):
                 raise InvalidArgument("type field must be of type ChannelType")
             options["type"] = ch_type.value
+
+        try:
+            default_reaction_emoji = options["default_reaction_emoji"]
+        except KeyError:
+            pass
+        else:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(name=None, id=default_reaction_emoji)
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument("default_reaction_emoji must be of type: Emoji | int | str")
+
+            options["default_reaction_emoji"] = default_reaction_emoji._to_forum_reaction_payload()
 
         if options:
             return await self._state.http.edit_channel(

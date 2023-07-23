@@ -47,7 +47,7 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import Emoji
+from .emoji import _EmojiTag, PartialEmoji
 from .enums import (
     AuditLogAction,
     AutoModEventType,
@@ -1455,7 +1455,7 @@ class Guild(Hashable):
         HTTPException
             Creating the channel failed.
         InvalidArgument
-            The permission overwrite information is not in proper form.
+            The argument is not in proper form.
 
         Examples
         --------
@@ -1492,20 +1492,16 @@ class Guild(Hashable):
             options["nsfw"] = nsfw
 
         if default_reaction_emoji is not MISSING:
-            if isinstance(default_reaction_emoji, str):
-                options["default_reaction_emoji"] = {
-                    "emoji_name": default_reaction_emoji,
-                    "emoji_id": None,
-                }
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
             elif isinstance(default_reaction_emoji, int):
-                options["default_reaction_emoji"] = {
-                    "emoji_name": None,
-                    "emoji_id": default_reaction_emoji,
-                }
+                default_reaction_emoji = PartialEmoji(name=None, id=default_reaction_emoji)
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
             else:
-                options[
-                    "default_reaction_emoji"
-                ] = default_reaction_emoji._to_partial()._to_forum_reaction_payload()
+                raise InvalidArgument("default_reaction_emoji must be of type: Emoji | int | str")
+
+            options["default_reaction_emoji"] = default_reaction_emoji._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,
