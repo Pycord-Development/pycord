@@ -47,7 +47,7 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import PartialEmoji, _EmojiTag
+from .emoji import PartialEmoji, Emoji, _EmojiTag
 from .enums import (
     AuditLogAction,
     AutoModEventType,
