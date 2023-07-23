@@ -47,7 +47,7 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import _EmojiTag, PartialEmoji
+from .emoji import PartialEmoji, _EmojiTag
 from .enums import (
     AuditLogAction,
     AutoModEventType,
@@ -1495,13 +1495,19 @@ class Guild(Hashable):
             if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
                 default_reaction_emoji = default_reaction_emoji._to_partial()
             elif isinstance(default_reaction_emoji, int):
-                default_reaction_emoji = PartialEmoji(name=None, id=default_reaction_emoji)
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
             elif isinstance(default_reaction_emoji, str):
                 default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
             else:
-                raise InvalidArgument("default_reaction_emoji must be of type: Emoji | int | str")
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
 
-            options["default_reaction_emoji"] = default_reaction_emoji._to_forum_reaction_payload()
+            options[
+                "default_reaction_emoji"
+            ] = default_reaction_emoji._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,
