@@ -1128,6 +1128,12 @@ class ForumChannel(_TextChannel):
             The default sort order type to use to order posts in this channel.
 
             .. versionadded:: 2.3
+        default_reaction_emoji: Optional[:class:`discord.Emoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: 2.5
         available_tags: List[:class:`ForumTag`]
             The set of tags that can be used in this channel. Must be less than `20`.
 
@@ -1136,10 +1142,6 @@ class ForumChannel(_TextChannel):
             Whether a tag should be required to be specified when creating a thread in this channel.
 
             .. versionadded:: 2.3
-        default_reaction_emoji: Optional[class:`discord.Emoji` | :class`int` | :class`str`]
-            The default forum reaction emoji.
-
-            .. versionadded:: 2.5
 
         Returns
         -------

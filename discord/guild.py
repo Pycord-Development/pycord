@@ -1437,9 +1437,10 @@ class Guild(Hashable):
             To mark the channel as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
-        default_reaction_emoji: Optional[:class:`Emoji` | :class`int` | :class`str`]
+        default_reaction_emoji: Optional[:class:`Emoji` | :class:`int` | :class:`str`]
             The default reaction emoji.
-            Can be :class:`Emoji`, snowflake ID, or unicode emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
 
             .. versionadded:: v2.5
 
