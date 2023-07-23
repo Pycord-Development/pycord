@@ -109,7 +109,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- `ForumChannel` new parameter and attribute: `default_reaction_emoji`. ([#]())
+- `ForumChannel` new parameter and attribute: `default_reaction_emoji`.
+  ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
