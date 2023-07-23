@@ -1395,6 +1395,7 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: Emoji | int | str = MISSING
     ) -> ForumChannel:
         """|coro|
 
@@ -1436,6 +1437,11 @@ class Guild(Hashable):
             To mark the channel as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
+        default_reaction_emoji: Optional[:class:`Emoji` | :class`int` | :class`str`]
+            The default reaction emoji.
+            Can be :class:`Emoji`, snowflake ID, or unicode emoji.
+
+            .. versionadded:: v2.5
 
         Returns
         -------
@@ -1484,6 +1490,14 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
+
+        if default_reaction_emoji is not MISSING:
+            if isinstance(default_reaction_emoji, str):
+                options["default_reaction_emoji"] = {"emoji_name": default_reaction_emoji, "emoji_id": None}
+            elif isinstance(default_reaction_emoji, int):
+                options["default_reaction_emoji"] = {"emoji_name": None, "emoji_id": default_reaction_emoji}
+            else:
+                options["default_reaction_emoji"] = default_reaction_emoji._to_partial()._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,

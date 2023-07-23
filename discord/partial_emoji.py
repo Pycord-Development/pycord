@@ -160,10 +160,10 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     def _to_partial(self) -> PartialEmoji:
         return self
 
-    def _to_forum_tag_payload(
+    def _to_forum_reaction_payload(
         self,
-    ) -> TypedDict("TagPayload", {"emoji_id": int, "emoji_name": None}) | TypedDict(
-        "TagPayload", {"emoji_id": None, "emoji_name": str}
+    ) -> TypedDict("ReactionPayload", {"emoji_id": int, "emoji_name": None}) | TypedDict(
+        "ReactionPayload", {"emoji_id": None, "emoji_name": str}
     ):
         if self.id is None:
             return {"emoji_id": None, "emoji_name": self.name}

@@ -171,7 +171,7 @@ class ForumTag(Hashable):
         payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
-        } | self.emoji._to_forum_tag_payload()
+        } | self.emoji._to_forum_reaction_payload()
 
         if self.id:
             payload["id"] = self.id
@@ -195,6 +195,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
+        "default_reaction_emoji",
         "default_sort_order",
         "available_tags",
         "flags",
@@ -228,7 +229,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
         self._type: int = data["type"]
-
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
             self.topic: str | None = data.get("topic")
@@ -1008,6 +1008,10 @@ class ForumChannel(_TextChannel):
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
+    default_reaction_emoji: Optional[:class:`str` | class:`discord.Emoji`]
+        The default forum reaction emoji.
+
+        .. versionadded:: 2.5
     """
 
     def __init__(
@@ -1022,6 +1026,15 @@ class ForumChannel(_TextChannel):
             for tag in (data.get("available_tags") or [])
         ]
         self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
+        reaction_emoji_ctx: dict = data.get("default_reaction_emoji")
+        if reaction_emoji_ctx is not None:
+            emoji_name = reaction_emoji_ctx.get("emoji_name")
+            if emoji_name is not None:
+                self.default_reaction_emoji = reaction_emoji_ctx["emoji_name"]
+            else:
+                self.default_reaction_emoji = self._state.get_emoji(
+                    utils._get_as_snowflake(reaction_emoji_ctx, "emoji_id")
+                )
 
     @property
     def guidelines(self) -> str | None:
