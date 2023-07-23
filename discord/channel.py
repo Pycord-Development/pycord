@@ -1009,7 +1009,7 @@ class ForumChannel(_TextChannel):
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
-    default_reaction_emoji: Optional[:class:`str` | class:`discord.Emoji`]
+    default_reaction_emoji: Optional[:class:`str` | :class:`discord.Emoji`]
         The default forum reaction emoji.
 
         .. versionadded:: 2.5
