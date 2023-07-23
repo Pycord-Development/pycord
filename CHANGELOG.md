@@ -72,7 +72,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
-- `Guild.create_forum_channel` new parameter and `ForumChannel` new attribute:
+- Added `Guild.create_forum_channel` parameter and `ForumChannel` attribute:
   `default_reaction_emoji`.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 
