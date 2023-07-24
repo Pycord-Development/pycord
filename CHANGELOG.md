@@ -44,7 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
   [Raw Event payloads](https://docs.pycord.dev/en/master/api/models.html#events).
   ([#2023](https://github.com/Pycord-Development/pycord/pull/2023))
 - Added and documented missing `AuditLogAction` enums.
-  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
+  ([#2030](https://github.com/Pycord-Development/pycord/pull/2030),
+  [#2171](https://github.com/Pycord-Development/pycord/pull/2171))
 - `AuditLogDiff` now supports AutoMod related models.
   ([#2030](https://github.com/Pycord-Development/pycord/pull/2030))
 - Added `Interaction.respond` and `Interaction.edit` as shortcut responses.
@@ -93,6 +94,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 - Typehinted `command_prefix` and `help_command` arguments properly.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
+- Replace `orjson` support with `msgspec` support.
+  ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
 
 ### Removed
 
@@ -151,6 +154,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed type-hinting of `author` property of `ApplicationContext` to include typehinting
   of `User` or `Member`.
   ([#2148](https://github.com/Pycord-Development/pycord/pull/2148))
+- Fixed missing `delete_after` parameter in overload type-hinting for `send` method in
+  `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
+- Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
+  ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
 
 ## [2.4.1] - 2023-03-20
 
