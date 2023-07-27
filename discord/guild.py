@@ -3822,7 +3822,7 @@ class Guild(Hashable):
         id: int,
         *,
         reason: str | None = None,
-    ) -> AutoModRule:
+    ) -> None:
         """
         Deletes an auto moderation rule.
 
@@ -3841,7 +3841,4 @@ class Guild(Hashable):
             You do not have the Manage Guild permission.
         """
 
-        data = await self._state.http.delete_auto_moderation_rule(
-            self.id, id, reason=reason
-        )
-        return AutoModRule(state=self._state, data=data)
+        await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)
