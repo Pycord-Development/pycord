@@ -58,6 +58,7 @@ from typing import (
     NewType,
     Protocol,
     Sequence,
+    Type,
     TypeVar,
     Union,
     overload,
@@ -1392,3 +1393,7 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
+
+def initialize_if_not_none(cls: Type[T], value: Any | None) -> T | None:
+    if value:
+        return cls()
