@@ -158,6 +158,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
+- Fixed `_bytes_to_base64_data` not defined.
+  ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))
 
 ## [2.4.1] - 2023-03-20
 
