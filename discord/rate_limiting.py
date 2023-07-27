@@ -224,8 +224,6 @@ class Bucket:
             self._experiencing_reset.set()
 
             loop = asyncio.get_running_loop()
-            # NOTE: 0.5 is an offset to reset_after.
-            # maybe fine tune to a more specific number?
             loop.call_later(cast(float, reset_after), self._reset)
 
     def _reset(self) -> None:
