@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
+import array
 import asyncio
 import io
 import json
@@ -35,8 +36,6 @@ import sys
 import threading
 import time
 import traceback
-import array
-
 from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
@@ -704,7 +703,15 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         ret = self.original.read()
         samples = array.array("h")
         samples.frombytes(ret)
-        samples = array.array('h', map(lambda sample: int(floor(min(maxval, max(sample * min(self._volume, 2.0), minval)))), samples)).tobytes()
+        samples = array.array(
+            "h",
+            map(
+                lambda sample: int(
+                    floor(min(maxval, max(sample * min(self._volume, 2.0), minval)))
+                ),
+                samples,
+            ),
+        ).tobytes()
         return samples
 
 
