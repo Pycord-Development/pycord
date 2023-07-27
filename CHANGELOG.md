@@ -75,9 +75,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
-  method with a pure Python equivalent.
-  ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 - Suppressed FFMPEG output when recording voice channels.
   ([#1993](https://github.com/Pycord-Development/pycord/pull/1993))
 - Changed file-upload size limit from 8 MB to 25 MB accordingly.
@@ -99,6 +96,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Replace `orjson` support with `msgspec` support.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
+- Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
+  method with a pure Python equivalent.
+  ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 
 ### Removed
 
