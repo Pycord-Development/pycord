@@ -700,19 +700,14 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         maxval = 0x7FFF
         minval = -0x8000
 
+        volume = min(self._volume, 2.0)
         ret = self.original.read()
         samples = array.array("h")
         samples.frombytes(ret)
-        samples = array.array(
-            "h",
-            map(
-                lambda sample: int(
-                    floor(min(maxval, max(sample * min(self._volume, 2.0), minval)))
-                ),
-                samples,
-            ),
-        ).tobytes()
-        return samples
+        for i in range(len(samples)):
+            samples[i] = int(floor(min(maxval, max(samples[i] * volume, minval))))
+
+        return samples.tobytes()
 
 
 class AudioPlayer(threading.Thread):
