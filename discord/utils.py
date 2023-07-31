@@ -58,7 +58,6 @@ from typing import (
     NewType,
     Protocol,
     Sequence,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -1393,4 +1392,3 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
-

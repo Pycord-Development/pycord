@@ -23,9 +23,9 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-from asyncio.events import AbstractEventLoop
 import gc
 import time
+from asyncio.events import AbstractEventLoop
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Literal, cast
 
@@ -107,7 +107,9 @@ class GlobalRateLimit:
 class PriorityFuture(asyncio.Future):
     """A future with priority features added to it."""
 
-    def __init__(self, *, priority: int = 0, loop: AbstractEventLoop | None = None) -> None:
+    def __init__(
+        self, *, priority: int = 0, loop: AbstractEventLoop | None = None
+    ) -> None:
         super().__init__(loop=loop)
         self.priority = priority
 
@@ -129,7 +131,9 @@ class Bucket:
     """
 
     def __init__(self) -> None:
-        self._pending: asyncio.PriorityQueue[PriorityFuture[None]] = asyncio.PriorityQueue()
+        self._pending: asyncio.PriorityQueue[
+            PriorityFuture[None]
+        ] = asyncio.PriorityQueue()
         self._reserved: list[PriorityFuture] = []
         self._reset_after_set: bool = False
         self.metadata_unknown: bool = False
@@ -138,7 +142,6 @@ class Bucket:
         self.limit: int | None = None
         self._fetch_metadata = asyncio.Event()
         self._fetch_metadata.set()
-
 
     @asynccontextmanager
     async def reserve(self, priority: int = 0) -> AsyncIterator[None]:
@@ -205,7 +208,6 @@ class Bucket:
         async with self.reserve(priority=priority):
             yield
 
-
     def release(self, count: int | None = None) -> None:
         """Release *count* amount of requests.
 
@@ -229,7 +231,6 @@ class Bucket:
 
             fut.set_result(None)
 
-
     @property
     def garbage(self) -> bool:
         """Whether this bucket should be collected by the garbage collector."""
@@ -248,13 +249,11 @@ class Bucket:
 
         return False
 
-
     async def stop(self) -> None:
         """Cancel all reserved futures from use."""
 
         for fut in self._reserved:
             fut.set_exception(asyncio.CancelledError)
-
 
     def set_metadata(
         self,
@@ -288,7 +287,6 @@ class Bucket:
 
             loop = asyncio.get_running_loop()
             loop.call_later(cast(float, reset_after), self._reset)
-
 
     def _reset(self) -> None:
         self._reset_after_set = False
@@ -416,6 +414,7 @@ class BucketStorage:
         """
 
         self._temp_buckets.pop(id)
+
 
 class DynamicBucket:
     """A dynamic bucket for on-the-fly rate limits. Should not be used inside a bot directly!"""

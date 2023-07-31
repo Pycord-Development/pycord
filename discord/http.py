@@ -146,7 +146,7 @@ class HTTPClient:
         unsync_clock: bool = True,
         global_concurrency: int = 10,
         per_concurrency: int = 60,
-        bucket_storage_cls: Type[BucketStorage] = BucketStorage
+        bucket_storage_cls: type[BucketStorage] = BucketStorage,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -312,12 +312,16 @@ class HTTPClient:
                                 if is_global:
                                     self.global_dynamo = DynamicBucket()
                                     await self.global_dynamo.executed(
-                                        retry_after, remaining or 10, is_global=is_global
+                                        retry_after,
+                                        remaining or 10,
+                                        is_global=is_global,
                                     )
                                     self.global_dynamo = None
                                 else:
                                     tbucket = DynamicBucket()
-                                    await self._rate_limit.push_temp_bucket(bucket_id, tbucket)
+                                    await self._rate_limit.push_temp_bucket(
+                                        bucket_id, tbucket
+                                    )
                                     await tbucket.executed(
                                         retry_after, remaining or 10, is_global=True
                                     )
@@ -347,7 +351,7 @@ class HTTPClient:
                     # This is handling exceptions from the request
                     except OSError as e:
                         # Connection reset by peer
-                        if tries < 4 and e.errno in (54, 10054):  
+                        if tries < 4 and e.errno in (54, 10054):
                             await asyncio.sleep(1 + tries * 2)
                             continue
                         raise

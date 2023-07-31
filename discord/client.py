@@ -35,8 +35,6 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence,
 
 import aiohttp
 
-from .rate_limiting import BucketStorage
-
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
 from .appinfo import AppInfo, PartialAppInfo
@@ -54,6 +52,7 @@ from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
 from .object import Object
+from .rate_limiting import BucketStorage
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -252,7 +251,7 @@ class Client:
             loop=self.loop,
             bucket_storage_cls=options.pop("bucket_storage_cls", BucketStorage),
             global_concurrency=options.pop("concurrency", 50),
-            per_concurrency=options.pop("per", 1)
+            per_concurrency=options.pop("per", 1),
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
