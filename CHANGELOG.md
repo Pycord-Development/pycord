@@ -96,6 +96,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Replace `orjson` support with `msgspec` support.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
+- Replaces former rate limit system with a rate limit prediction and easing system.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Removed
 
@@ -106,6 +108,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 - Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual
   classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
+- Removed semi-private `MaybeUnlock` class as it is not in use anymore.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Fixed
 
