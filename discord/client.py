@@ -63,8 +63,8 @@ from .user import ClientUser, User
 from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
+from .webhook.async_ import AsyncWebhookAdapter, async_context
 from .widget import Widget
-from .webhook.async_ import async_context, AsyncWebhookAdapter
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -245,8 +245,7 @@ class Client:
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
         bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
-            options.pop("per", 1),
-            options.pop("concurrency", 50)
+            options.pop("per", 1), options.pop("concurrency", 50)
         )
 
         # we do this so things like interactions can work with AsyncWebhookAdapter

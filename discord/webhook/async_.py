@@ -30,12 +30,10 @@ import json
 import logging
 import re
 from contextvars import ContextVar
-from typing import TYPE_CHECKING, Any, Literal, NamedTuple, Type, overload
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, overload
 from urllib.parse import quote as urlquote
 
 import aiohttp
-
-from ..rate_limiting import BucketStorage, DynamicBucket
 
 from .. import utils
 from ..asset import Asset
@@ -53,6 +51,7 @@ from ..http import Route
 from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
+from ..rate_limiting import BucketStorage, DynamicBucket
 from ..threads import Thread
 from ..user import BaseUser, User
 
@@ -179,7 +178,8 @@ class AsyncWebhookAdapter:
                             data = (await response.text(encoding="utf-8")) or None
                             if (
                                 data
-                                and response.headers["Content-Type"] == "application/json"
+                                and response.headers["Content-Type"]
+                                == "application/json"
                             ):
                                 data = json.loads(data)
 
@@ -1183,7 +1183,7 @@ class Webhook(BaseWebhook):
         proxy_auth: aiohttp.BasicAuth | None = None,
         token: str | None = None,
         state=None,
-        bucket_storage: BucketStorage | None = None
+        bucket_storage: BucketStorage | None = None,
     ):
         super().__init__(data, token, state)
         self.session = session
@@ -1410,7 +1410,7 @@ class Webhook(BaseWebhook):
             proxy_auth=self.proxy_auth,
             token=self.auth_token,
             state=self._state,
-            bucket_storage=self._bucket_storage
+            bucket_storage=self._bucket_storage,
         )
 
     async def delete(self, *, reason: str | None = None, prefer_auth: bool = True):
@@ -1574,7 +1574,7 @@ class Webhook(BaseWebhook):
             proxy_auth=self.proxy_auth,
             token=self.auth_token,
             state=self._state,
-            bucket_storage=self._bucket_storage
+            bucket_storage=self._bucket_storage,
         )
 
     def _create_message(self, data):

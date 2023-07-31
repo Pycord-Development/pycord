@@ -67,7 +67,7 @@ class GlobalRateLimit:
         self.pending_reset: bool = False
         self.reset_at: int | float | None = None
 
-    async def __aenter__(self) -> "GlobalRateLimit":
+    async def __aenter__(self) -> GlobalRateLimit:
         if not self.loop:
             self.loop = asyncio.get_running_loop()
 
@@ -114,7 +114,7 @@ class PriorityFuture(asyncio.Future):
         super().__init__(loop=loop)
         self.priority = priority
 
-    def __gt__(self, other: "PriorityFuture") -> bool:
+    def __gt__(self, other: PriorityFuture) -> bool:
         return other.priority < self.priority
 
 
