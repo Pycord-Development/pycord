@@ -64,6 +64,7 @@ from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
+from .webhook.async_ import async_context, AsyncWebhookAdapter
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -198,7 +199,7 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
-    bucket_storage_cls: :class:`types.Type`[:class:`.rate_limiting.BucketStorage`]
+    bucket_storage_cls: :class:`type`[:class:`.rate_limiting.BucketStorage`]
         The class to use for storing rate limit buckets given by Discord.
 
         .. versionadded:: 2.5
@@ -243,15 +244,22 @@ class Client:
         proxy: str | None = options.pop("proxy", None)
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
+        bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
+            options.pop("per", 1),
+            options.pop("concurrency", 50)
+        )
+
+        # we do this so things like interactions can work with AsyncWebhookAdapter
+        # and rate limit prediction.
+        async_context.set(AsyncWebhookAdapter(bucket_storage))
+
         self.http: HTTPClient = HTTPClient(
+            bucket_storage,
             connector,
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
-            bucket_storage_cls=options.pop("bucket_storage_cls", BucketStorage),
-            global_concurrency=options.pop("concurrency", 50),
-            per_concurrency=options.pop("per", 1),
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}

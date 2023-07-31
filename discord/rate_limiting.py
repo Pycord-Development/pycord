@@ -22,10 +22,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import annotations
+
 import asyncio
 import gc
 import time
-from asyncio.events import AbstractEventLoop
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Literal, cast
 
@@ -108,7 +109,7 @@ class PriorityFuture(asyncio.Future):
     """A future with priority features added to it."""
 
     def __init__(
-        self, *, priority: int = 0, loop: AbstractEventLoop | None = None
+        self, *, priority: int = 0, loop: asyncio.AbstractEventLoop | None = None
     ) -> None:
         super().__init__(loop=loop)
         self.priority = priority
@@ -309,6 +310,7 @@ class BucketStorage:
     def __init__(self, per: int = 1, concurrency: int = 50) -> None:
         self._buckets: dict[str, Bucket] = {}
         self.global_concurrency = GlobalRateLimit(concurrency, per)
+        self.webhook_global_concurrency = GlobalRateLimit(30, 60)
 
         gc.callbacks.append(self._collect_buckets)
 
@@ -378,7 +380,7 @@ class BucketStorage:
             await self.append(id, buc)
             return buc
 
-    async def temp_bucket(self, id: str) -> Bucket | None:
+    async def temp_bucket(self, id: str) -> DynamicBucket | None:
         """Fetch a temporary bucket.
 
         Parameters

@@ -44,7 +44,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
-from .rate_limiting import BucketStorage, DynamicBucket, GlobalRateLimit
+from .rate_limiting import BucketStorage, DynamicBucket
 from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
@@ -138,15 +138,13 @@ class HTTPClient:
 
     def __init__(
         self,
+        bucket_storage: BucketStorage,
         connector: aiohttp.BaseConnector | None = None,
         *,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
-        global_concurrency: int = 10,
-        per_concurrency: int = 60,
-        bucket_storage_cls: type[BucketStorage] = BucketStorage,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -165,7 +163,7 @@ class HTTPClient:
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
-        self._rate_limit = bucket_storage_cls(per_concurrency, global_concurrency)
+        self._rate_limit = bucket_storage
         self.global_dynamo: DynamicBucket | None = None
 
     def recreate(self) -> None:

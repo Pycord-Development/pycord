@@ -39,9 +39,12 @@ from typing import (
     Coroutine,
     Deque,
     Sequence,
+    Type,
     TypeVar,
     Union,
 )
+
+from .rate_limiting import BucketStorage
 
 from . import utils
 from .activity import BaseActivity
