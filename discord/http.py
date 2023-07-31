@@ -165,8 +165,7 @@ class HTTPClient:
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
-        self._rate_limit = bucket_storage_cls()
-        self.global_concurrency = GlobalRateLimit(per_concurrency, global_concurrency)
+        self._rate_limit = bucket_storage_cls(per_concurrency, global_concurrency)
         self.global_dynamo: DynamicBucket | None = None
 
     def recreate(self) -> None:
@@ -244,7 +243,7 @@ class HTTPClient:
         if tbucket:
             await tbucket.wait()
 
-        async with self.global_concurrency:
+        async with self._rate_limit.global_concurrency:
             response: aiohttp.ClientResponse | None = None
             data: dict[str, Any] | str | None = None
             for tries in range(5):

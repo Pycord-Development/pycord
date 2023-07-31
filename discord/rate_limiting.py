@@ -37,6 +37,25 @@ class RateLimitException(DiscordException):
 
 
 class GlobalRateLimit:
+    """A rate limit class specifically for the global bucket.
+
+    Parameters
+    ----------
+    concurrency: :class:`int`
+        The concurrency to reset for every `per` reset.
+    per: :class:`int` | :class:`float`
+        Time to wait until resetting `concurrency.`
+
+    Attributes
+    ----------
+    current: :class:`int`
+        The current concurrency.
+    pending_reset: :class:`bool`
+        The class is pending a reset of `concurrency`.
+    reset_at :class:`int` | :class:`float` | `None`
+        When this class will next reset.
+    """
+
     def __init__(self, concurrency: int, per: float | int) -> None:
         self.concurrency: int = concurrency
         self.per: float | int = per
@@ -45,6 +64,7 @@ class GlobalRateLimit:
         self._processing: list[asyncio.Future] = []
         self.loop: asyncio.AbstractEventLoop | None = None
         self.pending_reset: bool = False
+        self.reset_at: int | float | None = None
 
     async def __aenter__(self) -> "GlobalRateLimit":
         if not self.loop:
@@ -85,23 +105,25 @@ class GlobalRateLimit:
 
 
 class PriorityFuture(asyncio.Future):
+    """A future with priority features added to it."""
+
     def __init__(self, *, priority: int = 0, loop: AbstractEventLoop | None = None) -> None:
         super().__init__(loop=loop)
         self.priority = priority
 
     def __gt__(self, other: "PriorityFuture") -> bool:
-        return other.priority > self.priority
+        return other.priority < self.priority
 
 
 class Bucket:
     """Represents a bucket in the Discord API.
 
     Attributes
-    ~~~~~~~~~~
+    ----------
     metadata_unknown: :class:`bool`
         Whether the bucket's metadata is known.
     remaining: Union[:class:`int`, None]
-        Remaining amount of requests available on this bucket.
+        The remaining number of requests available on this bucket.
     limit: Union[:class:`int`, None]
         The maximum limit of requests per reset.
     """
@@ -128,7 +150,6 @@ class Bucket:
             self.remaining = self.limit
 
         if self.remaining is not None:
-            print(1)
             prediction = self.remaining - len(self._reserved)
 
             fut = PriorityFuture(priority=priority)
@@ -152,7 +173,6 @@ class Bucket:
             return
 
         if self._fetch_metadata.is_set():
-            print(2)
             self._fetch_metadata.clear()
 
             fut = PriorityFuture()
@@ -186,11 +206,17 @@ class Bucket:
             yield
 
 
-    def remove_reserved(self, fut: PriorityFuture) -> None:
-        self._reserved.remove(fut)
-
-
     def release(self, count: int | None = None) -> None:
+        """Release *count* amount of requests.
+
+        .. warning:: This should not be used directly.
+
+        Parameters
+        ----------
+        count: :class:`int`
+            The number of requests to release.
+        """
+
         if count is not None:
             num = min(count, self._pending.qsize())
         else:
@@ -235,6 +261,20 @@ class Bucket:
         remaining: int | None = None,
         reset_after: int | None = None,
     ) -> None:
+        """Set the metadata for this Bucket.
+        If both `remaining` and `reset_after` are set to `None`
+        `metadata_unknown` is set to true, a garbage state is initialized,
+        and all pending requests are released.
+
+        Parameters
+        ----------
+        remaining: :class:`int` | `None`
+            The remaining number of requests which can be made
+            to this bucket.
+        reset_after: :class:`int` | `None`
+            When this bucket will next reset.
+        """
+
         if remaining is None and reset_after is None:
             self.metadata_unknown = True
             self.release()
@@ -258,10 +298,19 @@ class Bucket:
 
 
 class BucketStorage:
-    """A customizable, optionally replacable storage medium for buckets."""
+    """A customizable, optionally replacable storage medium for buckets.
 
-    def __init__(self) -> None:
+    Parameters
+    ----------
+    concurrency: :class:`int`
+        The concurrency to reset for every `per` reset.
+    per: :class:`int` | :class:`float`
+        Time to wait until resetting `concurrency.`
+    """
+
+    def __init__(self, per: int = 1, concurrency: int = 50) -> None:
         self._buckets: dict[str, Bucket] = {}
+        self.global_concurrency = GlobalRateLimit(concurrency, per)
 
         gc.callbacks.append(self._collect_buckets)
 
@@ -282,12 +331,46 @@ class BucketStorage:
                 del self._buckets[id]
 
     async def append(self, id: str, bucket: Bucket) -> None:
+        """Append a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        bucket: :class:`.Bucket`
+            The bucket to append.
+        """
+
         self._buckets[id] = bucket
 
     async def get(self, id: str) -> Bucket | None:
+        """Get a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.Bucket` or `None`
+        """
+
         return self._buckets.get(id)
 
     async def get_or_create(self, id: str) -> Bucket:
+        """Get or create a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.Bucket`
+        """
+
         buc = await self.get(id)
 
         if buc:
@@ -298,15 +381,45 @@ class BucketStorage:
             return buc
 
     async def temp_bucket(self, id: str) -> Bucket | None:
+        """Fetch a temporary bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.Bucket` or `None`
+        """
+
         return self._temp_buckets.get(id)
 
     async def push_temp_bucket(self, id: str, bucket: Bucket) -> None:
+        """Push a temporary bucket to storage.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        """
+
         self._temp_buckets[id] = bucket
 
     async def pop_temp_bucket(self, id: str) -> None:
+        """Pop a temporary bucket which *may* be in storage.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        """
+
         self._temp_buckets.pop(id)
 
 class DynamicBucket:
+    """A dynamic bucket for on-the-fly rate limits. Should not be used inside a bot directly!"""
+
     def __init__(self) -> None:
         self.is_global: bool | None = None
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None

@@ -35,6 +35,8 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence,
 
 import aiohttp
 
+from .rate_limiting import BucketStorage
+
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
 from .appinfo import AppInfo, PartialAppInfo
@@ -197,6 +199,21 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
+    bucket_storage_cls: :class:`types.Type`[:class:`.rate_limiting.BucketStorage`]
+        The class to use for storing rate limit buckets given by Discord.
+
+        .. versionadded:: 2.5
+    concurrency: :class:`int`
+        Number of requests per `per_concurrency` can occur.
+        This determines your global rate limit prediction, so make sure
+        it is set properly. Defaults to `50`.
+
+        .. versionadded:: 2.5
+    per: :class:`int`
+        Number of seconds to wait until resetting `global_concurrency`.
+        Defaults to `1` second.
+
+        .. versionadded:: 2.5
 
     Attributes
     -----------
@@ -233,6 +250,9 @@ class Client:
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
+            bucket_storage_cls=options.pop("bucket_storage_cls", BucketStorage),
+            global_concurrency=options.pop("concurrency", 50),
+            per_concurrency=options.pop("per", 1)
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
