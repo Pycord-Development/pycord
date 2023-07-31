@@ -196,6 +196,7 @@ class HTTPClient:
         *,
         files: Sequence[File] | None = None,
         form: Iterable[dict[str, Any]] | None = None,
+        priority: int = 0,
         **kwargs: Any,
     ) -> Any:
         bucket_id = route.bucket
@@ -246,7 +247,7 @@ class HTTPClient:
             response: aiohttp.ClientResponse | None = None
             data: dict[str, Any] | str | None = None
             for tries in range(5):
-                async with bucket.acquire():
+                async with bucket.reserve(priority=priority):
                     if files:
                         for f in files:
                             f.reset(seek=tries)
@@ -273,10 +274,15 @@ class HTTPClient:
                             data = await json_or_text(response)
 
                             # check if we have rate limit header information
-                            remaining = utils.initialize_if_not_none(int, response.headers.get("X-Ratelimit-Remaining"))
-                            reset_after = utils.initialize_if_not_none(float, response.headers.get(
+                            remaining = response.headers.get("X-Ratelimit-Remaining")
+                            reset_after = response.headers.get(
                                 "X-Ratelimit-Reset-After"
-                            ))
+                            )
+
+                            if remaining:
+                                remaining = int(remaining)
+                            if reset_after:
+                                reset_after = float(reset_after)
 
                             bucket.set_metadata(remaining, reset_after)
 

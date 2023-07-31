@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
+from asyncio.events import AbstractEventLoop
 import gc
 import time
 from contextlib import asynccontextmanager
@@ -83,129 +84,151 @@ class GlobalRateLimit:
             self.pending_reset = False
 
 
+class PriorityFuture(asyncio.Future):
+    def __init__(self, *, priority: int = 0, loop: AbstractEventLoop | None = None) -> None:
+        super().__init__(loop=loop)
+        self.priority = priority
+
+    def __gt__(self, other: "PriorityFuture") -> bool:
+        return other.priority > self.priority
+
+
 class Bucket:
-    """Represents a Discord rate limiting bucket."""
+    """Represents a bucket in the Discord API.
 
-    def __init__(self, bucket_id: str) -> None:
-        self.id = bucket_id
-        self._waiting_processing: asyncio.Queue[asyncio.Future[None]] = asyncio.Queue()
-        self._processing: list[asyncio.Future] = []
-        self._remaining: int | None = None
+    Attributes
+    ~~~~~~~~~~
+    metadata_unknown: :class:`bool`
+        Whether the bucket's metadata is known.
+    remaining: Union[:class:`int`, None]
+        Remaining amount of requests available on this bucket.
+    limit: Union[:class:`int`, None]
+        The maximum limit of requests per reset.
+    """
 
-        self._experiencing_reset = asyncio.Event()
+    def __init__(self) -> None:
+        self._pending: asyncio.PriorityQueue[PriorityFuture[None]] = asyncio.PriorityQueue()
+        self._reserved: list[PriorityFuture] = []
+        self._reset_after_set: bool = False
+        self.metadata_unknown: bool = False
 
-        self._uninitialized = asyncio.Event()
+        self.remaining: int | None = None
+        self.limit: int | None = None
+        self._fetch_metadata = asyncio.Event()
+        self._fetch_metadata.set()
 
-        self._uninitialized.set()
-        self.no_metadata = False
-        self.limit = None
-        self._reset_after_known = False
 
     @asynccontextmanager
-    async def acquire(self) -> AsyncIterator[None]:
-        # if this bucket doesn't have a rate limit
-        # just let every request pass
-        if self.no_metadata:
+    async def reserve(self, priority: int = 0) -> AsyncIterator[None]:
+        if self.metadata_unknown:
             yield
             return
 
-        # this assumes this is an older bucket
-        if self._remaining is None and self.limit is not None:
-            self._remaining = self.limit
+        if self.remaining is None and self.limit is not None:
+            self.remaining = self.limit
 
-        if self._remaining:
-            fut = asyncio.Future()
+        if self.remaining is not None:
+            print(1)
+            prediction = self.remaining - len(self._reserved)
 
-            remaining_after = self._remaining - len(self._processing)
+            fut = PriorityFuture(priority=priority)
 
-            if remaining_after <= 0:
-                # don't have to care about waiting since this queue is unlimited
-                self._waiting_processing.put_nowait(fut)
+            if prediction <= 0:
+                self._pending.put_nowait(fut)
                 await fut
 
-            self._processing.append(fut)
+            self._reserved.append(fut)
 
             try:
                 yield
             except:
-                self._release(1)
+                if self._pending.qsize() >= 1:
+                    self.release(1)
 
                 raise
             finally:
-                self._processing.remove(fut)
+                self._reserved.remove(fut)
 
             return
 
-        fut = asyncio.Future()
+        if self._fetch_metadata.is_set():
+            print(2)
+            self._fetch_metadata.clear()
 
-        # if we don't have the bucket's metadata
-        # we should let the user fire this request
-        # and see what metadata we get from it.
-        if self._uninitialized.is_set():
-            self._uninitialized.clear()
+            fut = PriorityFuture()
 
-            self._processing.append(fut)
+            self._reserved.append(fut)
 
             try:
                 yield
             except:
-                self._release(1)
+                if self._pending.qsize() >= 1:
+                    self.release(1)
 
                 raise
             else:
-                if self._remaining:
-                    self._release(self._remaining)
-                elif self.no_metadata:
-                    self._release()
+                if self.remaining is not None:
+                    self.release(self.remaining)
+                elif self.metadata_unknown:
+                    self.release()
                 else:
-                    self._release(1)
+                    if self._pending.qsize() >= 1:
+                        self.release(1)
             finally:
-                self._processing.remove(fut)
-                self._uninitialized.set()
+                self._reserved.remove(fut)
+                self._fetch_metadata.set()
+
             return
 
-        await self._uninitialized.wait()
+        await self._fetch_metadata.wait()
 
-        # after initialization reacquire and try again
-        async with self.acquire():
+        async with self.reserve(priority=priority):
             yield
 
-    def _release(self, count: int | None = None) -> None:
-        if count:
-            num = min(count, self._waiting_processing.qsize())
+
+    def remove_reserved(self, fut: PriorityFuture) -> None:
+        self._reserved.remove(fut)
+
+
+    def release(self, count: int | None = None) -> None:
+        if count is not None:
+            num = min(count, self._pending.qsize())
         else:
-            num = self._waiting_processing.qsize()
+            num = self._pending.qsize()
 
         for _ in range(num):
-            fut = self._waiting_processing.get_nowait()
+            fut = self._pending.get_nowait()
 
-            self._waiting_processing.task_done()
+            self._pending.task_done()
 
             fut.set_result(None)
+
 
     @property
     def garbage(self) -> bool:
         """Whether this bucket should be collected by the garbage collector."""
 
         # this bucket has futures reserved, do not collect yet
-        if self._processing:
+        if self._reserved:
             return False
 
         # this bucket has no limit, it is garbage
-        if self.no_metadata:
+        if self.metadata_unknown:
             return True
 
         # this bucket has yet to expire
-        if self._remaining is not None:
+        if self.remaining is not None:
             return False
 
         return False
 
-    async def force_close(self) -> None:
-        """Forcibly close this bucket from use."""
 
-        for fut in self._processing:
+    async def stop(self) -> None:
+        """Cancel all reserved futures from use."""
+
+        for fut in self._reserved:
             fut.set_exception(asyncio.CancelledError)
+
 
     def set_metadata(
         self,
@@ -213,24 +236,25 @@ class Bucket:
         reset_after: int | None = None,
     ) -> None:
         if remaining is None and reset_after is None:
-            self.no_metadata = True
-            self._release()
+            self.metadata_unknown = True
+            self.release()
         else:
-            self._remaining = remaining
+            self.remaining = remaining
 
-            if self._experiencing_reset.is_set():
+            if self._reset_after_set:
                 return
 
-            self._experiencing_reset.set()
+            self._reset_after_set = True
 
             loop = asyncio.get_running_loop()
             loop.call_later(cast(float, reset_after), self._reset)
 
-    def _reset(self) -> None:
-        self._experiencing_reset.clear()
-        self._remaining = None
 
-        self._release()
+    def _reset(self) -> None:
+        self._reset_after_set = False
+        self.remaining = None
+
+        self.release(self.limit)
 
 
 class BucketStorage:
@@ -261,8 +285,14 @@ class BucketStorage:
         return self._buckets.get(id)
 
     async def get_or_create(self, id: str) -> Bucket:
-        return await self.get(id) or Bucket(id)
+        buc = await self.get(id)
 
+        if buc:
+            return buc
+        else:
+            buc = Bucket()
+            await self.append(id, buc)
+            return buc
 
 class DynamicBucket:
     def __init__(self) -> None:

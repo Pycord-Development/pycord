@@ -1394,6 +1394,3 @@ def filter_params(params, **kwargs):
 
     return params
 
-def initialize_if_not_none(cls: Type[T], value: Any | None) -> T | None:
-    if value:
-        return cls()
