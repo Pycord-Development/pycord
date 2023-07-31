@@ -413,7 +413,7 @@ class BucketStorage:
             This bucket's identifier.
         """
 
-        self._temp_buckets.pop(id)
+        self._temp_buckets.pop(id, None)
 
 
 class DynamicBucket:
