@@ -260,11 +260,14 @@ class Bucket:
 class BucketStorage:
     """A customizable, optionally replacable storage medium for buckets."""
 
-    def __init__(self, global_concurrency: int = 10, per_concurrency: int = 60) -> None:
+    def __init__(self) -> None:
         self._buckets: dict[str, Bucket] = {}
-        self.global_concurrency = GlobalRateLimit(per_concurrency, global_concurrency)
 
         gc.callbacks.append(self._collect_buckets)
+
+        # temporary buckets, different from normal "permanent" buckets
+        # which cannot be tracked via remaining or reset_after in headers
+        self._temp_buckets: dict[str, DynamicBucket] = {}
 
     def _collect_buckets(
         self, phase: Literal["start", "stop"], info: dict[str, int]
@@ -294,16 +297,24 @@ class BucketStorage:
             await self.append(id, buc)
             return buc
 
+    async def temp_bucket(self, id: str) -> Bucket | None:
+        return self._temp_buckets.get(id)
+
+    async def push_temp_bucket(self, id: str, bucket: Bucket) -> None:
+        self._temp_buckets[id] = bucket
+
+    async def pop_temp_bucket(self, id: str) -> None:
+        self._temp_buckets.pop(id)
+
 class DynamicBucket:
     def __init__(self) -> None:
         self.is_global: bool | None = None
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None
-        self.rate_limited: bool = False
+        self.rate_limited: bool = True
 
     async def executed(
         self, reset_after: int | float, limit: int, is_global: bool
     ) -> None:
-        self.rate_limited = True
         self.is_global = is_global
         self._reset_after = reset_after
         self._request_queue = asyncio.Queue()
@@ -312,7 +323,7 @@ class DynamicBucket:
 
         self.is_global = False
 
-        # NOTE: This could break if someone did a second global rate limit somehow
+        # NOTE: This could break if someone did a second rate limit somehow
         requests_passed: int = 0
         for _ in range(self._request_queue.qsize() - 1):
             if requests_passed == limit:
@@ -325,6 +336,7 @@ class DynamicBucket:
             requests_passed += 1
             e = await self._request_queue.get()
             e.set()
+        self.rate_limited = False
 
     async def wait(self) -> None:
         if not self.rate_limited:

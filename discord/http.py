@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, Type, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -44,7 +44,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
-from .rate_limiting import BucketStorage, DynamicBucket
+from .rate_limiting import BucketStorage, DynamicBucket, GlobalRateLimit
 from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
@@ -146,6 +146,7 @@ class HTTPClient:
         unsync_clock: bool = True,
         global_concurrency: int = 10,
         per_concurrency: int = 60,
+        bucket_storage_cls: Type[BucketStorage] = BucketStorage
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -164,8 +165,8 @@ class HTTPClient:
         self.user_agent: str = user_agent.format(
             __version__, sys.version_info, aiohttp.__version__
         )
-        self._rate_limit = BucketStorage(global_concurrency, per_concurrency)
-        self._temp_buckets: dict[str, DynamicBucket] = {}
+        self._rate_limit = bucket_storage_cls()
+        self.global_concurrency = GlobalRateLimit(per_concurrency, global_concurrency)
         self.global_dynamo: DynamicBucket | None = None
 
     def recreate(self) -> None:
@@ -238,12 +239,12 @@ class HTTPClient:
         if self.global_dynamo and self.global_dynamo.rate_limited:
             await self.global_dynamo.wait()
 
-        tbucket = self._temp_buckets.get(bucket_id)
+        tbucket = await self._rate_limit.temp_bucket(bucket_id)
 
         if tbucket:
             await tbucket.wait()
 
-        async with self._rate_limit.global_concurrency:
+        async with self.global_concurrency:
             response: aiohttp.ClientResponse | None = None
             data: dict[str, Any] | str | None = None
             for tries in range(5):
@@ -316,11 +317,12 @@ class HTTPClient:
                                     )
                                     self.global_dynamo = None
                                 else:
-                                    self._temp_buckets[bucket_id] = tbucket = DynamicBucket()
+                                    tbucket = DynamicBucket()
+                                    await self._rate_limit.push_temp_bucket(bucket_id, tbucket)
                                     await tbucket.executed(
                                         retry_after, remaining or 10, is_global=True
                                     )
-                                    self._temp_buckets.pop(bucket_id, None)
+                                    await self._rate_limit.pop_temp_bucket(bucket_id)
 
                                 _log.debug(
                                     "Done sleeping for the rate limit. Retrying..."
