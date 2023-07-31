@@ -1173,7 +1173,7 @@ class Webhook(BaseWebhook):
         .. versionadded:: 2.0
     """
 
-    __slots__: tuple[str, ...] = ("session", "proxy", "proxy_auth")
+    __slots__: tuple[str, ...] = ("session", "proxy", "proxy_auth", "_bucket_storage")
 
     def __init__(
         self,
