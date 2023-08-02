@@ -160,7 +160,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
 - Fixed initial message inside of the create thread payload sending legacy beta payload.
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
-- Fixed a misplaced payload object inside of the create thread payload.
+- Fixed a misplaced payload object inside of the thread creation payload.
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 
 ## [2.4.1] - 2023-03-20
