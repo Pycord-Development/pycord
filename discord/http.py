@@ -1183,37 +1183,42 @@ class HTTPClient:
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
         }
-        if content:
-            payload["content"] = content
 
         if applied_tags:
             payload["applied_tags"] = applied_tags
 
+        message = {}
+
+        if content:
+            message["content"] = content
+
         if embed:
-            payload["embeds"] = [embed]
+            message["embeds"] = [embed]
 
         if embeds:
-            payload["embeds"] = embeds
+            message["embeds"] = embeds
 
         if nonce:
-            payload["nonce"] = nonce
+            message["nonce"] = nonce
 
         if allowed_mentions:
-            payload["allowed_mentions"] = allowed_mentions
+            message["allowed_mentions"] = allowed_mentions
 
         if components:
-            payload["components"] = components
+            message["components"] = components
 
         if stickers:
-            payload["sticker_ids"] = stickers
+            message["sticker_ids"] = stickers
 
         if rate_limit_per_user:
-            payload["rate_limit_per_user"] = rate_limit_per_user
+            message["rate_limit_per_user"] = rate_limit_per_user
 
-        # TODO: Once supported by API, remove has_message=true query parameter
+        if message != {}:
+            payload["message"] = message
+
         route = Route(
             "POST",
-            "/channels/{channel_id}/threads?has_message=true",
+            "/channels/{channel_id}/threads",
             channel_id=channel_id,
         )
 
