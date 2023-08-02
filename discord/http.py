@@ -1214,7 +1214,7 @@ class HTTPClient:
             message["rate_limit_per_user"] = rate_limit_per_user
 
         if message != {}:
-            payload['message'] = message
+            payload["message"] = message
 
         route = Route(
             "POST",
