@@ -1187,6 +1187,9 @@ class HTTPClient:
         if applied_tags:
             payload["applied_tags"] = applied_tags
 
+        if rate_limit_per_user:
+            payload["rate_limit_per_user"] = rate_limit_per_user
+
         message = {}
 
         if content:
@@ -1209,9 +1212,6 @@ class HTTPClient:
 
         if stickers:
             message["sticker_ids"] = stickers
-
-        if rate_limit_per_user:
-            message["rate_limit_per_user"] = rate_limit_per_user
 
         if message != {}:
             payload["message"] = message
