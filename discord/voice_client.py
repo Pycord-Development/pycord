@@ -628,7 +628,7 @@ class VoiceClient(VoiceProtocol):
         source: AudioSource,
         *,
         after: Callable[[Exception | None], Any] = None,
-        wait_finish: bool = False
+        wait_finish: bool = False,
     ) -> None:
         """Plays an :class:`AudioSource`.
 
