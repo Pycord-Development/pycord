@@ -72,7 +72,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
-- Added `VoiceClient.wait_end` coroutine method.
+- Added `wait_finish` parameter to `VoiceClient` for awaiting the end of a play.
   ([#2194](https://github.com/Pycord-Development/pycord/pull/2194))
 
 ### Changed

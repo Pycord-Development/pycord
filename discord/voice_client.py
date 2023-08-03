@@ -544,30 +544,6 @@ class VoiceClient(VoiceProtocol):
         """
         await self.channel.guild.change_voice_state(channel=channel)
 
-    async def wait_end(self, timeout: float | None = None) -> None:
-        """|coro|
-
-        Waits for audio player to stop streaming.
-
-        .. versionadded:: v2.5
-
-        Parameters
-        ----------
-        timeout: float | None
-            Optional timeout in seconds.
-
-        Raises
-        ------
-        TimeoutError
-            Timeout of ``timeout`` seconds exceeded.
-        """
-        if self._player is not None and not (
-            await self._state.loop.run_in_executor(
-                None, self._player._end.wait, timeout
-            )
-        ):
-            raise TimeoutError(f"Timeout of {timeout} seconds exceeded")
-
     def is_connected(self) -> bool:
         """Indicates if the voice client is connected to voice."""
         return self._connected.is_set()
@@ -648,7 +624,11 @@ class VoiceClient(VoiceProtocol):
         ]
 
     def play(
-        self, source: AudioSource, *, after: Callable[[Exception | None], Any] = None
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] = None,
+        wait_finish: bool = False
     ) -> None:
         """Plays an :class:`AudioSource`.
 
@@ -667,6 +647,14 @@ class VoiceClient(VoiceProtocol):
             The finalizer that is called after the stream is exhausted.
             This function must have a single parameter, ``error``, that
             denotes an optional exception that was raised during playing.
+        wait_finish: bool
+            If True, an awaitable will be returned, which can be used to wait for
+            audio to stop playing. This awaitable will return an exception if raised,
+            or None when no exception is raised.
+
+            If False, None is returned and the function does not block.
+
+            .. versionadded:: v2.5
 
         Raises
         ------
@@ -692,8 +680,22 @@ class VoiceClient(VoiceProtocol):
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder()
 
+        future = None
+        if wait_finish:
+            future = asyncio.Future()
+            after_callback = after
+
+            def _after(exc: Exception | None):
+                if callable(after_callback):
+                    after_callback(exc)
+
+                future.set_result(exc)
+
+            after = _after
+
         self._player = AudioPlayer(source, self, after=after)
         self._player.start()
+        return future
 
     def unpack_audio(self, data):
         """Takes an audio packet received from Discord and decodes it into pcm audio data.
