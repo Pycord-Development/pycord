@@ -373,12 +373,11 @@ class BucketStorage:
 
         buc = await self.get(id)
 
-        if buc:
-            return buc
-        else:
+        if not buc:
             buc = Bucket()
             await self.append(id, buc)
-            return buc
+
+        return buc
 
     async def temp_bucket(self, id: str) -> DynamicBucket | None:
         """Fetch a temporary bucket.
