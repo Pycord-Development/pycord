@@ -552,19 +552,18 @@ class VoiceClient(VoiceProtocol):
         .. versionadded:: v2.5
 
         Parameters
-        -----------
+        ----------
         timeout: float | None
             Optional timeout in seconds.
 
         Raises
-        -----------
+        ------
         TimeoutError
             Timeout of ``timeout`` seconds exceeded.
         """
-        if (
-            self._player is not None and not
-            (
-                await self._state.loop.run_in_executor(None, self._player._end.wait, timeout)
+        if self._player is not None and not (
+            await self._state.loop.run_in_executor(
+                None, self._player._end.wait, timeout
             )
         ):
             raise TimeoutError(f"Timeout of {timeout} seconds exceeded")
