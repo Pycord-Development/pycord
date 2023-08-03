@@ -544,6 +544,31 @@ class VoiceClient(VoiceProtocol):
         """
         await self.channel.guild.change_voice_state(channel=channel)
 
+    async def wait_end(self, timeout: float | None = None) -> None:
+        """|coro|
+
+        Waits for audio player to stop streaming.
+
+        .. versionadded:: v2.5
+
+        Parameters
+        -----------
+        timeout: float | None
+            Optional timeout in seconds.
+
+        Raises
+        -----------
+        TimeoutError
+            Timeout of ``timeout`` seconds exceeded.
+        """
+        if (
+            self._player is not None and not
+            (
+                await self._state.loop.run_in_executor(None, self._player._end.wait, timeout)
+            )
+        ):
+            raise TimeoutError(f"Timeout of {timeout} seconds exceeded")
+
     def is_connected(self) -> bool:
         """Indicates if the voice client is connected to voice."""
         return self._connected.is_set()
