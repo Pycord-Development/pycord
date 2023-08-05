@@ -113,7 +113,7 @@ class AsyncWebhookAdapter:
         files: list[File] | None = None,
         reason: str | None = None,
         auth_token: str | None = None,
-        params: dict[str, Any] | None = None
+        params: dict[str, Any] | None = None,
     ) -> Any:
         headers: dict[str, str] = {}
         files = files or []
@@ -171,15 +171,12 @@ class AsyncWebhookAdapter:
                         data = (await response.text(encoding="utf-8")) or None
                         if (
                             data
-                            and response.headers["Content-Type"]
-                            == "application/json"
+                            and response.headers["Content-Type"] == "application/json"
                         ):
                             data = json.loads(data)
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
-                        reset_after = response.headers.get(
-                            "X-Ratelimit-Reset-After"
-                        )
+                        reset_after = response.headers.get("X-Ratelimit-Reset-After")
 
                         if remaining:
                             remaining = int(remaining)
@@ -224,9 +221,7 @@ class AsyncWebhookAdapter:
                                 )
                                 await self._rate_limit.pop_temp_bucket(bucket_id)
 
-                            _log.debug(
-                                "Done sleeping for the rate limit. Retrying..."
-                            )
+                            _log.debug("Done sleeping for the rate limit. Retrying...")
 
                             continue
 
