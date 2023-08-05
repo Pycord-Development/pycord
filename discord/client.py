@@ -262,7 +262,9 @@ class Client:
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
-            maximum_rate_limit_wait_time=options.pop('maximum_rate_limit_wait_time', -1)
+            maximum_rate_limit_wait_time=options.pop(
+                "maximum_rate_limit_wait_time", -1
+            ),
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
