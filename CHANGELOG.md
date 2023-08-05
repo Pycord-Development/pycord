@@ -162,7 +162,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
 - Fixed a misplaced payload object inside of the thread creation payload.
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
-- Fixed infinity loop of `discord.ext.tasks.Loop` when task's `tzinfo` is not `None` or UTC
+- Fixed infinity loop of `discord.ext.tasks.Loop` when task's `tzinfo` is not `None` or
+  UTC
 
 ## [2.4.1] - 2023-03-20
 

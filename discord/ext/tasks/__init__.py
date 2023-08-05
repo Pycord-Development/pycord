@@ -588,17 +588,21 @@ class Loop(Generic[LF]):
 
         if self._current_loop == 0:
             self._time_index += 1
-            if next_time > datetime.datetime.now(
-                next_time.tzinfo
-                        if next_time.tzinfo is not None
-                        else datetime.timezone.utc
-            ).timetz():
+            if (
+                next_time
+                > datetime.datetime.now(
+                    next_time.tzinfo
+                    if next_time.tzinfo is not None
+                    else datetime.timezone.utc
+                ).timetz()
+            ):
                 return datetime.datetime.combine(
                     datetime.datetime.now(
                         next_time.tzinfo
                         if next_time.tzinfo is not None
                         else datetime.timezone.utc
-                    ), next_time
+                    ),
+                    next_time,
                 )
             else:
                 return datetime.datetime.combine(
@@ -611,7 +615,9 @@ class Loop(Generic[LF]):
                     next_time,
                 )
 
-        next_date = cast(datetime.datetime, self._last_iteration.astimezone(next_time.tzinfo))
+        next_date = cast(
+            datetime.datetime, self._last_iteration.astimezone(next_time.tzinfo)
+        )
         if next_time < next_date.timetz():
             next_date += datetime.timedelta(days=1)
 
