@@ -43,9 +43,9 @@ class GlobalRateLimit:
     Parameters
     ----------
     concurrency: :class:`int`
-        The concurrency to reset for every `per` reset.
+        The concurrency to reset every `per` seconds.
     per: :class:`int` | :class:`float`
-        Time to wait until resetting `concurrency.`
+        Number of seconds to wait until resetting `concurrency`.
 
     Attributes
     ----------
@@ -54,7 +54,7 @@ class GlobalRateLimit:
     pending_reset: :class:`bool`
         The class is pending a reset of `concurrency`.
     reset_at :class:`int` | :class:`float` | `None`
-        When this class will next reset.
+        Unix timestamp of when this class will next reset.
     """
 
     def __init__(self, concurrency: int, per: float | int) -> None:
@@ -272,7 +272,7 @@ class Bucket:
             The remaining number of requests which can be made
             to this bucket.
         reset_after: :class:`int` | `None`
-            When this bucket will next reset.
+            The number of seconds until this bucket will next reset.
         """
 
         if remaining is None and reset_after is None:
@@ -302,9 +302,9 @@ class BucketStorage:
     Parameters
     ----------
     concurrency: :class:`int`
-        The concurrency to reset for every `per` reset.
+        The concurrency to reset every `per` seconds.
     per: :class:`int` | :class:`float`
-        Time to wait until resetting `concurrency.`
+        Number of seconds to wait until resetting `concurrency`.
     """
 
     def __init__(self, per: int = 1, concurrency: int = 50) -> None:
