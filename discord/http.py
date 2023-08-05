@@ -145,6 +145,7 @@ class HTTPClient:
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
+        maximum_rate_limit_wait_time: int | float = -1
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -156,6 +157,7 @@ class HTTPClient:
         self.proxy: str | None = proxy
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
+        self.maximum_rate_limit_wait_time = maximum_rate_limit_wait_time
 
         user_agent = (
             "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
@@ -306,6 +308,9 @@ class HTTPClient:
                                 retry_after: float = data["retry_after"]
                                 _log.warning(fmt, retry_after, bucket_id)
                                 is_global: bool = data.get("global", False)
+
+                                if retry_after > self.maximum_rate_limit_wait_time and self.maximum_rate_limit_wait_time != -1:
+                                    raise HTTPException(response, f'rate limit wait costed over maximum of {self.maximum_rate_limit_wait_time}')
 
                                 if is_global:
                                     self.global_dynamo = DynamicBucket()

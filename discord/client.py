@@ -214,6 +214,9 @@ class Client:
         Defaults to `1` second.
 
         .. versionadded:: 2.5
+    maximum_rate_limit_time: :class:`int`
+        The maximum time the client is allowed to wait on a rate limit,
+        or otherwise error out. Defaults to `-1`, or infinite.
 
     Attributes
     -----------
@@ -259,6 +262,7 @@ class Client:
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
+            maximum_rate_limit_wait_time=options.pop('maximum_rate_limit_wait_time', -1)
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
