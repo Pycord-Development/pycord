@@ -251,10 +251,6 @@ class Client:
             options.pop("per", 1), options.pop("concurrency", 50)
         )
 
-        # we do this so things like interactions can work with AsyncWebhookAdapter
-        # and rate limit prediction.
-        async_context.set(AsyncWebhookAdapter(bucket_storage))
-
         self.http: HTTPClient = HTTPClient(
             bucket_storage,
             connector,
