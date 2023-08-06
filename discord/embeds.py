@@ -139,7 +139,7 @@ class EmbedFooter:
         self.proxy_icon_url = data.get("proxy_icon_url")
         return self
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, str]:
         d = {"text": str(self.text)}
         if self.icon_url:
             d["icon_url"] = str(self.icon_url)
