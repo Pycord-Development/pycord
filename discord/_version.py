@@ -38,7 +38,7 @@ from typing import Literal, NamedTuple
 from .utils import deprecated
 
 try:
-    __version__ = version("py-cord")
+    __version__ = version("py-cord-dev")
 except PackageNotFoundError:
     # Package is not installed
     try:

@@ -4,14 +4,14 @@ Pycord
 .. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
    :target: https://pycord.dev/discord
    :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/v/py-cord-dev.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
+   :target: https://pypi.python.org/pypi/py-cord-dev
    :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/py-cord.svg?style=for-the-badge&logo=python&logoColor=white
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/pyversions/py-cord-dev.svg?style=for-the-badge&logo=python&logoColor=white
+   :target: https://pypi.python.org/pypi/py-cord-dev
    :alt: PyPI supported Python versions
-.. image:: https://img.shields.io/pypi/dm/py-cord?color=blueviolet&logo=pypi&logoColor=white&style=for-the-badge
-   :target: https://pypi.python.org/pypi/py-cord
+.. image:: https://img.shields.io/pypi/dm/py-cord-dev?color=blueviolet&logo=pypi&logoColor=white&style=for-the-badge
+   :target: https://pypi.python.org/pypi/py-cord-dev
    :alt: PyPI downloads
 .. image:: https://img.shields.io/github/v/release/Pycord-Development/pycord?include_prereleases&label=Latest%20Release&logo=github&sort=semver&style=for-the-badge&logoColor=white
    :target: https://github.com/Pycord-Development/pycord/releases
@@ -37,29 +37,29 @@ To install the library without full voice support, run the following command:
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U py-cord
+    python3 -m pip install -U py-cord-dev
 
     # Windows
-    py -3 -m pip install -U py-cord
+    py -3 -m pip install -U py-cord-dev
 
 Otherwise, to get full voice support, run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[voice]"
+    python3 -m pip install -U "py-cord-dev[voice]"
 
     # Windows
-    py -3 -m pip install -U py-cord[voice]
+    py -3 -m pip install -U py-cord-dev[voice]
 
 To install additional packages for speedup, run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
+    python3 -m pip install -U "py-cord-dev[speed]"
     # Windows
-    py -3 -m pip install -U py-cord[speed]
+    py -3 -m pip install -U py-cord-dev[speed]
 
 
 To install the development version, do the following:

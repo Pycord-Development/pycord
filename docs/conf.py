@@ -142,7 +142,7 @@ copyright = "2015-2021, Rapptz & 2021-present, Pycord Development"
 #
 
 # The full version, including alpha/beta/rc tags.
-release = get_version("py-cord")
+release = get_version("py-cord-dev")
 
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])

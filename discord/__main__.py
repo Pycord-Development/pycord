@@ -44,12 +44,12 @@ def show_version() -> None:
 
     version_info = discord.version_info
     entries.append(
-        "- py-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info)
+        "- py-cord-dev v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info)
     )
     if version_info.releaselevel != "final":
-        pkg = pkg_resources.get_distribution("py-cord")
+        pkg = pkg_resources.get_distribution("py-cord-dev")
         if pkg:
-            entries.append(f"    - py-cord pkg_resources: v{pkg.version}")
+            entries.append(f"    - py-cord-dev pkg_resources: v{pkg.version}")
 
     entries.append(f"- aiohttp v{aiohttp.__version__}")
     uname = platform.uname()
