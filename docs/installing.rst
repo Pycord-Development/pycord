@@ -26,35 +26,35 @@ Installing
 
     For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::
 
-        python3 -m pip install -U py-cord --pre
+        python3 -m pip install -U py-cord-dev --pre
 
     For Windows users, this command should be used to install the pre-release: ::
 
-        py -3 -m pip install -U py-cord --pre
+        py -3 -m pip install -U py-cord-dev --pre
 
 You can get the library directly from PyPI: ::
 
-    python3 -m pip install -U py-cord
+    python3 -m pip install -U py-cord-dev
 
 If you are using Windows, then the following should be used instead: ::
 
-    py -3 -m pip install -U py-cord
+    py -3 -m pip install -U py-cord-dev
 
 
-To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g.
+To install additional packages for speedup,  you should use ``py-cord-dev[speed]`` instead of ``py-cord-dev``, e.g.
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
+    python3 -m pip install -U "py-cord-dev[speed]"
 
     # Windows
-    py -3 -m pip install -U py-cord[speed]
+    py -3 -m pip install -U py-cord-dev[speed]
 
 
-To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::
+To get voice support, you should use ``py-cord-dev[voice]`` instead of ``py-cord-dev``, e.g. ::
 
-    python3 -m pip install -U py-cord[voice]
+    python3 -m pip install -U py-cord-dev[voice]
 
 On Linux environments, installing voice requires getting the following dependencies:
 
@@ -105,7 +105,7 @@ However, for the quick and dirty:
 
     .. code-block:: shell
 
-        $ pip install -U py-cord
+        $ pip install -U py-cord-dev
 
 Congratulations. You now have a virtual environment all set up.
 

@@ -6,11 +6,11 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "py-cord"
+name = "py-cord-dev"
 authors = [
     {name = "Pycord Development"}
 ]
-description = "A Python wrapper for the Discord API"
+description = "A Python wrapper for the Discord API. Temporary release"
 readme = "README.rst"
 requires-python = ">=3.8"
 license = {text = "MIT"}
