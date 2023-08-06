@@ -186,7 +186,7 @@ class EmbedMedia:  # Thumbnail, Image, Video
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
         return self
-    
+
     def to_dict(self) -> dict[str, str]:
         return {"url": str(self.url)}
 
@@ -576,7 +576,7 @@ class Embed:
                 del self._footer
             except AttributeError:
                 pass
-    
+
         self._footer = value.to_dict()
 
     def set_footer(
@@ -640,7 +640,7 @@ class Embed:
         if not img:
             return None
         return EmbedMedia.to_dict(img)
-    
+
     @image.setter
     def image(self, value: EmbedMedia | None):
         if value is None:
@@ -648,7 +648,7 @@ class Embed:
                 del self._image
             except AttributeError:
                 pass
-        
+
         self._image = value.to_dict()
 
     def set_image(self: E, *, url: Any | None) -> E:
@@ -710,7 +710,7 @@ class Embed:
         if not thumb:
             return None
         return EmbedMedia.from_dict(thumb)
-    
+
     @thumbnail.setter
     def thumbnail(self, value: EmbedMedia | None):
         if value is None:
@@ -805,7 +805,7 @@ class Embed:
         if not auth:
             return None
         return EmbedAuthor.from_dict(auth)
-    
+
     @author.setter
     def author(self, value: EmbedAuthor | None):
         if value is None:
