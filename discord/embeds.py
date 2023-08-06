@@ -186,6 +186,9 @@ class EmbedMedia:  # Thumbnail, Image, Video
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
         return self
+    
+    def to_dict(self) -> dict[str, str]:
+        return {"url": str(self.url)}
 
     def __repr__(self) -> str:
         return f"<EmbedMedia url={self.url!r} proxy_url={self.proxy_url!r}> height={self.height!r} width={self.width!r}>"
@@ -566,6 +569,16 @@ class Embed:
             return None
         return EmbedFooter.from_dict(foot)
 
+    @footer.setter
+    def footer(self, value: EmbedFooter | None):
+        if value is None:
+            try:
+                del self._footer
+            except AttributeError:
+                pass
+    
+        self._footer = value.to_dict()
+
     def set_footer(
         self: E,
         *,
@@ -627,6 +640,16 @@ class Embed:
         if not img:
             return None
         return EmbedMedia.from_dict(img)
+    
+    @image.setter
+    def image(self, value: EmbedMedia | None):
+        if value is None:
+            try:
+                del self._image
+            except AttributeError:
+                pass
+        
+        self._image = value.to_dict()
 
     def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
@@ -687,6 +710,16 @@ class Embed:
         if not thumb:
             return None
         return EmbedMedia.from_dict(thumb)
+    
+    @thumbnail.setter
+    def thumbnail(self, value: EmbedMedia | None):
+        if value is None:
+            try:
+                del self._thumbnail
+            except AttributeError:
+                pass
+
+        self._thumbnail = value.from_dict()
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
@@ -772,6 +805,16 @@ class Embed:
         if not auth:
             return None
         return EmbedAuthor.from_dict(auth)
+    
+    @author.setter
+    def author(self, value: EmbedAuthor | None):
+        if value is None:
+            try:
+                del self._author
+            except AttributeError:
+                pass
+
+        self._author = value.to_dict()
 
     def set_author(
         self: E,
