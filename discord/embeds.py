@@ -639,7 +639,7 @@ class Embed:
         img = getattr(self, "_image", None)
         if not img:
             return None
-        return EmbedMedia.from_dict(img)
+        return EmbedMedia.to_dict(img)
     
     @image.setter
     def image(self, value: EmbedMedia | None):
@@ -719,7 +719,7 @@ class Embed:
             except AttributeError:
                 pass
 
-        self._thumbnail = value.from_dict()
+        self._thumbnail = value.to_dict()
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
