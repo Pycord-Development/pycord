@@ -84,6 +84,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
 - Added missing setters for Embed properties.
   ([#2198](https://github.com/Pycord-Development/pycord/pull/2198))
+- Added more classes in `paginator.edit`.
+  ([#2105](https://github.com/Pycord-Development/pycord/pull/2105))
 
 ### Changed
 
