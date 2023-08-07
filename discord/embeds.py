@@ -361,8 +361,8 @@ class Embed:
         fields: list[EmbedField] | None = None,
         author: EmbedAuthor | None = None,
         footer: EmbedFooter | None = None,
-        image: str | None = None,
-        thumbnail: str | None = None,
+        image: str | EmbedMedia | None = None,
+        thumbnail: str | EmbedMedia | None = None,
     ):
         self.colour = colour if colour else color
         self.title = title
@@ -386,8 +386,11 @@ class Embed:
 
         self.author = author
         self.footer = footer
-        self.image = image
-        self.thumbnail = thumbnail
+        
+        if image:
+            self.set_image(url=image.url)
+        if thumbnail:
+            self.set_thumbnail(url=image.url)
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -640,9 +643,11 @@ class Embed:
         return EmbedMedia.from_dict(img)
 
     @image.setter
-    def image(self, value: EmbedMedia | None):
+    def image(self, value: str | EmbedMedia | None):
         if value is None:
             self.remove_image()
+        elif isinstance(value, str):
+            self.set_image(url=value)
         elif isinstance(value, EmbedMedia):
             self.set_image(url=value.url)
         else:
@@ -712,9 +717,11 @@ class Embed:
         return EmbedMedia.from_dict(thumb)
 
     @thumbnail.setter
-    def thumbnail(self, value: EmbedMedia | None):
+    def thumbnail(self, value: str | EmbedMedia | None):
         if value is None:
             self.remove_thumbnail()
+        elif isinstance(value, str):
+            self.set_thumbnail(url=value)
         elif isinstance(value, EmbedMedia):
             self.set_thumbnail(url=value.url)
         else:
