@@ -160,7 +160,7 @@ class Activity(BaseActivity):
     type: :class:`ActivityType`
         The type of activity currently being done.
     state: Optional[:class:`str`]
-        The user's current state. For example, "In Game".
+        The user's current party status or text used for a custom status.
     details: Optional[:class:`str`]
         The detail of the user's current activity.
     timestamps: Dict[:class:`str`, :class:`int`]
@@ -229,7 +229,6 @@ class Activity(BaseActivity):
         self.assets: ActivityAssets = kwargs.pop("assets", {})
         self.party: ActivityParty = kwargs.pop("party", {})
         self.application_id: int | None = _get_as_snowflake(kwargs, "application_id")
-        self.name: str | None = kwargs.pop("name", None)
         self.url: str | None = kwargs.pop("url", None)
         self.flags: int = kwargs.pop("flags", 0)
         self.sync_id: str | None = kwargs.pop("sync_id", None)
@@ -242,6 +241,9 @@ class Activity(BaseActivity):
             if isinstance(activity_type, ActivityType)
             else try_enum(ActivityType, activity_type)
         )
+        self.name: str | None = kwargs.pop(
+            "name", "Custom Status" if self.type == ActivityType.custom else None
+        )
 
         emoji = kwargs.pop("emoji", None)
         self.emoji: PartialEmoji | None = (
@@ -252,6 +254,7 @@ class Activity(BaseActivity):
         attrs = (
             ("type", self.type),
             ("name", self.name),
+            ("state", self.state),
             ("url", self.url),
             ("details", self.details),
             ("application_id", self.application_id),
@@ -275,6 +278,7 @@ class Activity(BaseActivity):
         ret["type"] = int(self.type)
         if self.emoji:
             ret["emoji"] = self.emoji.to_dict()
+        print(ret)
         return ret
 
     @property
