@@ -278,7 +278,6 @@ class Activity(BaseActivity):
         ret["type"] = int(self.type)
         if self.emoji:
             ret["emoji"] = self.emoji.to_dict()
-        print(ret)
         return ret
 
     @property
