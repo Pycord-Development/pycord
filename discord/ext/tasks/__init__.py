@@ -594,11 +594,7 @@ class Loop(Generic[LF]):
                 )
             else:
                 return datetime.datetime.combine(
-                    datetime.datetime.now(
-                        next_time.tzinfo
-                        if next_time.tzinfo is not None
-                        else datetime.timezone.utc
-                    )
+                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc)
                     + datetime.timedelta(days=1),
                     next_time,
                 )
