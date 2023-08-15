@@ -586,11 +586,7 @@ class Loop(Generic[LF]):
             self._time_index += 1
             if (
                 next_time
-                > datetime.datetime.now(
-                    next_time.tzinfo
-                    if next_time.tzinfo is not None
-                    else datetime.timezone.utc
-                ).timetz()
+                > datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc).timetz()
             ):
                 return datetime.datetime.combine(
                     datetime.datetime.now(
