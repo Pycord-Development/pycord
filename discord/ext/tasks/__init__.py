@@ -575,11 +575,7 @@ class Loop(Generic[LF]):
             if self._current_loop == 0:
                 # if we're at the last index on the first iteration, we need to sleep until tomorrow
                 return datetime.datetime.combine(
-                    datetime.datetime.now(
-                        self._time[0].tzinfo
-                        if self._time[0].tzinfo is not None
-                        else datetime.timezone.utc
-                    )
+                    datetime.datetime.now(self._time[0].tzinfo or datetime.timezone.utc)
                     + datetime.timedelta(days=1),
                     self._time[0],
                 )
