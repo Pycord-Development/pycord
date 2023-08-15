@@ -589,11 +589,7 @@ class Loop(Generic[LF]):
                 > datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc).timetz()
             ):
                 return datetime.datetime.combine(
-                    datetime.datetime.now(
-                        next_time.tzinfo
-                        if next_time.tzinfo is not None
-                        else datetime.timezone.utc
-                    ),
+                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc),
                     next_time,
                 )
             else:
