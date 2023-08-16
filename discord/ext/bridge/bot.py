@@ -98,7 +98,7 @@ class BotBase(ABC):
         command.add_to(self)  # type: ignore
 
         self.bridge_commands.append(command)
-        
+
     def bridge_command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
         the internal command list via :meth:`~.Bot.add_bridge_command`.
@@ -116,7 +116,7 @@ class BotBase(ABC):
             return result
 
         return decorator
-        
+
     def command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
         the internal command list via :meth:`~.Bot.add_bridge_command`.
