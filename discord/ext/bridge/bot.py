@@ -98,8 +98,26 @@ class BotBase(ABC):
         command.add_to(self)  # type: ignore
 
         self.bridge_commands.append(command)
-
+        
     def bridge_command(self, **kwargs):
+        """A shortcut decorator that invokes :func:`bridge_command` and adds it to
+        the internal command list via :meth:`~.Bot.add_bridge_command`.
+
+        Returns
+        -------
+        Callable[..., :class:`BridgeCommand`]
+            A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and
+            traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`.
+        """
+
+        def decorator(func) -> BridgeCommand:
+            result = bridge_command(**kwargs)(func)
+            self.add_bridge_command(result)
+            return result
+
+        return decorator
+        
+    def command(self, **kwargs):
         """A shortcut decorator that invokes :func:`bridge_command` and adds it to
         the internal command list via :meth:`~.Bot.add_bridge_command`.
 
