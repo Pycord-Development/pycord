@@ -221,9 +221,9 @@ class Activity(BaseActivity):
         "buttons",
     )
 
-    def __init__(self, state: str | None = None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.state: str | None = state
+        self.state: str | None = kwargs.pop("state", None)
         self.details: str | None = kwargs.pop("details", None)
         self.timestamps: ActivityTimestamps = kwargs.pop("timestamps", {})
         self.assets: ActivityAssets = kwargs.pop("assets", {})
