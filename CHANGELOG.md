@@ -72,6 +72,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
+- Added `wait_finish` parameter to `VoiceClient.play` for awaiting the end of a play.
+  ([#2194](https://github.com/Pycord-Development/pycord/pull/2194))
 - Added `ForumChannel.default_reaction_emoji` attribute.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 - Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
@@ -163,6 +165,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
+- Fixed initial message inside of the create thread payload sending legacy beta payload.
+  ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
+- Fixed a misplaced payload object inside of the thread creation payload.
+  ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 
 ## [2.4.1] - 2023-03-20
 
