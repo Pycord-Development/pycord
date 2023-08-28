@@ -624,7 +624,11 @@ class VoiceClient(VoiceProtocol):
         ]
 
     def play(
-        self, source: AudioSource, *, after: Callable[[Exception | None], Any] = None
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] = None,
+        wait_finish: bool = False,
     ) -> None:
         """Plays an :class:`AudioSource`.
 
@@ -643,6 +647,14 @@ class VoiceClient(VoiceProtocol):
             The finalizer that is called after the stream is exhausted.
             This function must have a single parameter, ``error``, that
             denotes an optional exception that was raised during playing.
+        wait_finish: bool
+            If True, an awaitable will be returned, which can be used to wait for
+            audio to stop playing. This awaitable will return an exception if raised,
+            or None when no exception is raised.
+
+            If False, None is returned and the function does not block.
+
+            .. versionadded:: v2.5
 
         Raises
         ------
@@ -668,8 +680,22 @@ class VoiceClient(VoiceProtocol):
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder()
 
+        future = None
+        if wait_finish:
+            future = asyncio.Future()
+            after_callback = after
+
+            def _after(exc: Exception | None):
+                if callable(after_callback):
+                    after_callback(exc)
+
+                future.set_result(exc)
+
+            after = _after
+
         self._player = AudioPlayer(source, self, after=after)
         self._player.start()
+        return future
 
     def unpack_audio(self, data):
         """Takes an audio packet received from Discord and decodes it into pcm audio data.
@@ -700,7 +726,7 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
-    def start_recording(self, sink, callback, *args):
+    def start_recording(self, sink, callback, *args, sync_start: bool = False):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
         Must be in a voice channel to use.
@@ -716,6 +742,9 @@ class VoiceClient(VoiceProtocol):
             A function which is called after the bot has stopped recording.
         *args:
             Args which will be passed to the callback function.
+        sync_start: :class:`bool`
+            If True, the recordings of subsequent users will start with silence.
+            This is useful for recording audio just as it was heard.
 
         Raises
         ------
@@ -738,6 +767,7 @@ class VoiceClient(VoiceProtocol):
         self.decoder = opus.DecodeManager(self)
         self.decoder.start()
         self.recording = True
+        self.sync_start = sync_start
         self.sink = sink
         sink.init(self)
 
@@ -796,8 +826,9 @@ class VoiceClient(VoiceProtocol):
         # it by user, handles pcm files and
         # silence that should be added.
 
-        self.user_timestamps = {}
+        self.user_timestamps: dict[int, tuple[int, float]] = {}
         self.starting_time = time.perf_counter()
+        self.first_packet_timestamp: float
         while self.recording:
             ready, _, err = select.select([self.socket], [], [self.socket], 0.01)
             if not ready:
@@ -815,27 +846,46 @@ class VoiceClient(VoiceProtocol):
 
         self.stopping_time = time.perf_counter()
         self.sink.cleanup()
-        callback = asyncio.run_coroutine_threadsafe(
-            callback(self.sink, *args), self.loop
-        )
+        callback = asyncio.run_coroutine_threadsafe(callback(sink, *args), self.loop)
         result = callback.result()
 
         if result is not None:
             print(result)
 
-    def recv_decoded_audio(self, data):
-        if data.ssrc not in self.user_timestamps:
-            self.user_timestamps.update({data.ssrc: data.timestamp})
-            # Add silence when they were not being recorded.
-            silence = 0
-        else:
-            silence = data.timestamp - self.user_timestamps[data.ssrc] - 960
-            self.user_timestamps[data.ssrc] = data.timestamp
+    def recv_decoded_audio(self, data: RawData):
+        # Add silence when they were not being recorded.
+        if data.ssrc not in self.user_timestamps:  # First packet from user
+            if (
+                not self.user_timestamps or not self.sync_start
+            ):  # First packet from anyone
+                self.first_packet_timestamp = data.receive_time
+                silence = 0
+
+            else:  # Previously received a packet from someone else
+                silence = (
+                    (data.receive_time - self.first_packet_timestamp) * 48000
+                ) - 960
+
+        else:  # Previously received a packet from user
+            dRT = (
+                data.receive_time - self.user_timestamps[data.ssrc][1]
+            ) * 48000  # delta receive time
+            dT = data.timestamp - self.user_timestamps[data.ssrc][0]  # delta timestamp
+            diff = abs(100 - dT * 100 / dRT)
+            if (
+                diff > 60 and dT != 960
+            ):  # If the difference in change is more than 60% threshold
+                silence = dRT - 960
+            else:
+                silence = dT - 960
+
+        self.user_timestamps.update({data.ssrc: (data.timestamp, data.receive_time)})
 
         data.decoded_data = (
-            struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
+            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
+
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
         self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])

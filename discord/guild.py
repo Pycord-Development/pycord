@@ -202,50 +202,8 @@ class Guild(Hashable):
         The guild's notification settings.
     features: List[:class:`str`]
         A list of features that the guild has. The features that a guild can have are
-        subject to arbitrary change by Discord.
-
-        They are currently as follows:
-
-        - ``ANIMATED_BANNER``: Guild can upload an animated banner.
-        - ``ANIMATED_ICON``: Guild can upload an animated icon.
-        - ``APPLICATION_COMMAND_PERMISSIONS_V2``: Guild is using the old command permissions behavior.
-        - ``AUTO_MODERATION``: Guild has enabled the auto moderation system.
-        - ``BANNER``: Guild can upload and use a banner. (i.e. :attr:`.banner`)
-        - ``CHANNEL_BANNER``: Guild can upload and use a channel banners.
-        - ``COMMERCE``: Guild can sell things using store channels, which have now been removed.
-        - ``COMMUNITY``: Guild is a community server.
-        - ``DEVELOPER_SUPPORT_SERVER``: Guild has been set as a support server on the App Directory.
-        - ``DISCOVERABLE``: Guild shows up in Server Discovery.
-        - ``FEATURABLE``: Guild can be featured in the Server Directory.
-        - ``HAS_DIRECTORY_ENTRY``: Unknown.
-        - ``HUB``: Hubs contain a directory channel that let you find school-related, student-run servers for your school or university.
-        - ``INTERNAL_EMPLOYEE_ONLY``: Indicates that only users with the staff badge can join the guild.
-        - ``INVITES_DISABLED``: Guild Invites are disabled.
-        - ``INVITE_SPLASH``: Guild's invite page can have a special splash.
-        - ``LINKED_TO_HUB``: 'Guild is linked to a hub.
-        - ``MEMBER_PROFILES``: Unknown.
-        - ``MEMBER_VERIFICATION_GATE_ENABLED``: Guild has Membership Screening enabled.
-        - ``MONETIZATION_ENABLED``: Guild has enabled monetization.
-        - ``MORE_EMOJI``: Guild has increased custom emoji slots.
-        - ``MORE_STICKERS``: Guild has increased custom sticker slots.
-        - ``NEWS``: Guild can create news channels.
-        - ``NEW_THREAD_PERMISSIONS``: Guild has new thread permissions.
-        - ``PARTNERED``: Guild is a partnered server.
-        - ``PREMIUM_TIER_3_OVERRIDE``: Forces the server to server boosting level 3 (specifically created by Discord Staff Member "Jethro" for their personal server).
-        - ``PREVIEW_ENABLED``: Guild can be viewed before being accepted via Membership Screening.
-        - ``ROLE_ICONS``: Guild can set an image or emoji as a role icon.
-        - ``ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE``: Role subscriptions are available for purchasing.
-        - ``ROLE_SUBSCRIPTIONS_ENABLED``: Guild is able to view and manage role subscriptions.
-        - ``SEVEN_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 7 days.
-        - ``TEXT_IN_VOICE_ENABLED``: Guild has a chat button inside voice channels that opens a dedicated text channel in a sidebar similar to thread view.
-        - ``THREADS_ENABLED_TESTING``: Used by bot developers to test their bots with threads in guilds with 5 or fewer members and a bot. Also gives the premium thread features.
-        - ``THREE_DAY_THREAD_ARCHIVE``: Users can set the thread archive time to 3 days.
-        - ``TICKETED_EVENTS_ENABLED``: Guild has enabled ticketed events.
-        - ``VANITY_URL``: Guild can have a vanity invite URL (e.g. discord.gg/discord-api).
-        - ``VERIFIED``: Guild is a verified server.
-        - ``VIP_REGIONS``: Guild has VIP voice regions.
-        - ``WELCOME_SCREEN_ENABLED``: Guild has enabled the welcome screen.
-
+        subject to arbitrary change by Discord. You can find a catalog of guild features
+        `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_.
     premium_tier: :class:`int`
         The premium tier for this guild. Corresponds to "Nitro Server" in the official UI.
         The number goes from 0 to 3 inclusive.
@@ -425,7 +383,7 @@ class Guild(Hashable):
             ("name", self.name),
             ("shard_id", self.shard_id),
             ("chunked", self.chunked),
-            ("member_count", getattr(self, "_member_count", None)),
+            ("member_count", self._member_count),
         )
         inner = " ".join("%s=%r" % t for t in attrs)
         return f"<Guild {inner}>"
@@ -483,11 +441,11 @@ class Guild(Hashable):
         return role
 
     def _from_data(self, guild: GuildPayload) -> None:
-        # according to Stan, this is always available even if the guild is unavailable
-        # I don't have this guarantee when someone updates the guild.
-        member_count = guild.get("member_count", None)
-        if member_count is not None:
-            self._member_count: int = member_count
+        member_count = guild.get("member_count")
+        # Either the payload includes member_count, or it hasn't been set yet.
+        # Prevents valid _member_count from suddenly changing to None
+        if member_count is not None or not hasattr(self, "_member_count"):
+            self._member_count: int | None = member_count
 
         self.name: str = guild.get("name")
         self.verification_level: VerificationLevel = try_enum(
@@ -574,7 +532,7 @@ class Guild(Hashable):
 
         self._sync(guild)
         self._large: bool | None = (
-            None if member_count is None else self._member_count >= 250
+            None if self._member_count is None else self._member_count >= 250
         )
 
         self.owner_id: int | None = utils._get_as_snowflake(guild, "owner_id")
@@ -640,10 +598,7 @@ class Guild(Hashable):
         members, which for this library is set to the maximum of 250.
         """
         if self._large is None:
-            try:
-                return self._member_count >= 250
-            except AttributeError:
-                return len(self._members) >= 250
+            return (self._member_count or len(self._members)) >= 250
         return self._large
 
     @property
@@ -1044,10 +999,9 @@ class Guild(Hashable):
         If this value returns ``False``, then you should request for
         offline members.
         """
-        count = getattr(self, "_member_count", None)
-        if count is None:
+        if self._member_count is None:
             return False
-        return count == len(self._members)
+        return self._member_count == len(self._members)
 
     @property
     def shard_id(self) -> int:
@@ -1110,10 +1064,7 @@ class Guild(Hashable):
             if result is not None:
                 return result
 
-        def pred(m: Member) -> bool:
-            return m.nick == name or m.name == name
-
-        return utils.find(pred, members)
+        return utils.find(lambda m: name in (m.nick, m.name, m.global_name), members)
 
     def _create_channel(
         self,
@@ -2158,13 +2109,19 @@ class Guild(Hashable):
     def bans(
         self,
         limit: int | None = None,
-        before: SnowflakeTime | None = None,
-        after: SnowflakeTime | None = None,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
     ) -> BanIterator:
         """|coro|
 
         Retrieves an :class:`.AsyncIterator` that enables receiving the guild's bans. In order to use this, you must
         have the :attr:`~Permissions.ban_members` permission.
+        Users will always be returned in ascending order sorted by user ID.
+        If both the ``before`` and ``after`` parameters are provided, only before is respected.
+
+        .. versionchanged:: 2.5
+            The ``before``. and ``after`` parameters were changed. They are now of the type :class:`.abc.Snowflake` instead of
+            `SnowflakeTime` to comply with the discord api.
 
         .. versionchanged:: 2.0
             The ``limit``, ``before``. and ``after`` parameters were added. Now returns a :class:`.BanIterator` instead
@@ -2176,14 +2133,10 @@ class Guild(Hashable):
         ----------
         limit: Optional[:class:`int`]
             The number of bans to retrieve. Defaults to 1000.
-        before: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
-            Retrieve bans before this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
-            If the datetime is naive, it is assumed to be local time.
-        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
-            Retrieve bans after this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
-            If the datetime is naive, it is assumed to be local time.
+        before: Optional[:class:`.abc.Snowflake`]
+            Retrieve bans before the given user.
+        after: Optional[:class:`.abc.Snowflake`]
+            Retrieve bans after the given user.
 
         Yields
         ------
@@ -2846,6 +2799,8 @@ class Guild(Hashable):
         colour: Colour | int = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
+        icon: bytes | None = MISSING,
+        unicode_emoji: str | None = MISSING,
     ) -> Role:
         ...
 
@@ -2859,6 +2814,8 @@ class Guild(Hashable):
         color: Colour | int = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
+        icon: bytes | None = ...,
+        unicode_emoji: str | None = ...,
     ) -> Role:
         ...
 
@@ -2872,6 +2829,8 @@ class Guild(Hashable):
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         reason: str | None = None,
+        icon: bytes | None = MISSING,
+        unicode_emoji: str | None = MISSING,
     ) -> Role:
         """|coro|
 
@@ -2902,6 +2861,13 @@ class Guild(Hashable):
             Defaults to ``False``.
         reason: Optional[:class:`str`]
             The reason for creating this role. Shows up on the audit log.
+        icon: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
+            If this argument is passed, ``unicode_emoji`` is set to None.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
+        unicode_emoji: Optional[:class:`str`]
+            The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
+            Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
         Returns
         -------
@@ -2937,6 +2903,17 @@ class Guild(Hashable):
 
         if name is not MISSING:
             fields["name"] = name
+
+        if icon is not MISSING:
+            if icon is None:
+                fields["icon"] = None
+            else:
+                fields["icon"] = _bytes_to_base64_data(icon)
+                fields["unicode_emoji"] = None
+
+        if unicode_emoji is not MISSING:
+            fields["unicode_emoji"] = unicode_emoji
+            fields["icon"] = None
 
         data = await self._state.http.create_role(self.id, reason=reason, **fields)
         role = Role(guild=self, data=data, state=self._state)

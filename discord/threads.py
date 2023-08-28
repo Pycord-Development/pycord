@@ -247,6 +247,9 @@ class Thread(Messageable, Hashable):
         except KeyError:
             pass
 
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
 
@@ -611,7 +614,7 @@ class Thread(Messageable, Hashable):
         Editing the thread requires :attr:`.Permissions.manage_threads`. The thread
         creator can also edit ``name``, ``archived`` or ``auto_archive_duration``.
         Note that if the thread is locked then only those with :attr:`.Permissions.manage_threads`
-        can unarchive a thread.
+        can send messages in it or unarchive a thread.
 
         The thread must be unarchived to be edited.
 

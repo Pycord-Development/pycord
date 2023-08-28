@@ -116,9 +116,6 @@ class BaseFlags:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash(self.value)
 
@@ -403,6 +400,14 @@ class MessageFlags(BaseFlags):
         """
 
         return 4096
+
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+
+        .. versionadded:: 2.5
+        """
+        return 8192
 
 
 @fill_with_flags()

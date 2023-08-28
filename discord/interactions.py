@@ -29,16 +29,22 @@ import asyncio
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
-from .channel import ChannelType, PartialMessageable
+from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import InteractionResponseType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
+from .flags import MessageFlags
 from .member import Member
 from .message import Attachment, Message
 from .object import Object
 from .permissions import Permissions
 from .user import User
-from .webhook.async_ import Webhook, async_context, handle_message_parameters
+from .webhook.async_ import (
+    Webhook,
+    WebhookMessage,
+    async_context,
+    handle_message_parameters,
+)
 
 __all__ = (
     "Interaction",
@@ -52,7 +58,9 @@ if TYPE_CHECKING:
 
     from .channel import (
         CategoryChannel,
+        DMChannel,
         ForumChannel,
+        GroupChannel,
         StageChannel,
         TextChannel,
         VoiceChannel,
@@ -77,6 +85,8 @@ if TYPE_CHECKING:
         ForumChannel,
         CategoryChannel,
         Thread,
+        DMChannel,
+        GroupChannel,
         PartialMessageable,
     ]
 
@@ -99,8 +109,10 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+        The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
-        The channel ID the interaction was sent from.
+        The ID of the channel the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
     user: Optional[Union[:class:`User`, :class:`Member`]]
@@ -124,6 +136,7 @@ class Interaction:
         "id",
         "type",
         "guild_id",
+        "channel",
         "channel_id",
         "data",
         "application_id",
@@ -134,6 +147,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "_channel_data",
         "_message_data",
         "_permissions",
         "_app_permissions",
@@ -169,13 +183,7 @@ class Interaction:
         self._app_permissions: int = int(data.get("app_permissions", 0))
 
         self.message: Message | None = None
-
-        if message_data := data.get("message"):
-            self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
-            )
-
-        self._message_data = message_data
+        self.channel = None
 
         self.user: User | Member | None = None
         self._permissions: int = 0
@@ -206,6 +214,30 @@ class Interaction:
             except KeyError:
                 pass
 
+        if channel := data.get("channel"):
+            if (ch_type := channel.get("type")) is not None:
+                factory, ch_type = _threaded_channel_factory(ch_type)
+
+                if ch_type in (ChannelType.group, ChannelType.private):
+                    self.channel = factory(
+                        me=self.user, data=channel, state=self._state
+                    )
+                elif self.guild:
+                    self.channel = factory(
+                        guild=self.guild, state=self._state, data=channel
+                    )
+        else:
+            self.channel = self.cached_channel
+
+        self._channel_data = channel
+
+        if message_data := data.get("message"):
+            self.message = Message(
+                state=self._state, channel=self.channel, data=message_data
+            )
+
+        self._message_data = message_data
+
     @property
     def client(self) -> Client:
         """Returns the client that sent the interaction."""
@@ -225,7 +257,7 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
-    def channel(self) -> InteractionChannel | None:
+    def cached_channel(self) -> InteractionChannel | None:
         """The channel the
         interaction was sent from.
 
@@ -355,6 +387,7 @@ class Interaction:
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
+        suppress: bool = False,
     ) -> InteractionMessage:
         """|coro|
 
@@ -393,6 +426,8 @@ class Interaction:
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -422,6 +457,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
         adapter = async_context.get()
         http = self._state.http
@@ -519,6 +555,44 @@ class Interaction:
         """
         return await self.delete_original_response(**kwargs)
 
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
+        """|coro|
+
+        Sends either a response or a message using the followup webhook determined by whether the interaction
+        has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.send_message(*args, **kwargs)
+            else:
+                return await self.followup.send(*args, **kwargs)
+        except InteractionResponded:
+            return await self.followup.send(*args, **kwargs)
+
+    async def edit(self, *args, **kwargs) -> InteractionMessage | None:
+        """|coro|
+
+        Either respond to the interaction with an edit_message or edits the existing response, determined by
+        whether the interaction has been responded to or not.
+
+        Returns
+        -------
+        Union[:class:`discord.InteractionMessage`, :class:`discord.WebhookMessage`]:
+            The response, its type depending on whether it's an interaction response or a followup.
+        """
+        try:
+            if not self.response.is_done():
+                return await self.response.edit_message(*args, **kwargs)
+            else:
+                return await self.edit_original_response(*args, **kwargs)
+        except InteractionResponded:
+            return await self.edit_original_response(*args, **kwargs)
+
     def to_dict(self) -> dict[str, Any]:
         """
         Converts this interaction object into a dict.
@@ -606,6 +680,10 @@ class InteractionResponse:
         - :attr:`InteractionType.application_command`
         - :attr:`InteractionType.component`
         - :attr:`InteractionType.modal_submit`
+
+        .. note::
+            The follow-up response will also be non-ephemeral if the `ephemeral`
+            argument is ``False``, and ephemeral if ``True``.
 
         Parameters
         ----------
@@ -844,7 +922,7 @@ class InteractionResponse:
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
-            view.message = await self._parent.original_response()
+            view.parent = self._parent
             self._parent._state.store_view(view)
 
         self._responded = True
@@ -863,6 +941,8 @@ class InteractionResponse:
         attachments: list[Attachment] = MISSING,
         view: View | None = MISSING,
         delete_after: float | None = None,
+        suppress: bool | None = MISSING,
+        allowed_mentions: AllowedMentions | None = None,
     ) -> None:
         """|coro|
 
@@ -893,6 +973,15 @@ class InteractionResponse:
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
 
         Raises
         ------
@@ -955,6 +1044,23 @@ class InteractionResponse:
             if "attachments" not in payload:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
+
+        if suppress is not MISSING:
+            flags = MessageFlags._from_value(self._parent.message.flags.value)
+            flags.suppress_embeds = suppress
+            payload["flags"] = flags.value
+
+        if allowed_mentions is None:
+            payload["allowed_mentions"] = (
+                state.allowed_mentions and state.allowed_mentions.to_dict()
+            )
+
+        elif state.allowed_mentions is not None:
+            payload["allowed_mentions"] = state.allowed_mentions.merge(
+                allowed_mentions
+            ).to_dict()
+        else:
+            payload["allowed_mentions"] = allowed_mentions.to_dict()
 
         adapter = async_context.get()
         http = parent._state.http
@@ -1142,6 +1248,7 @@ class InteractionMessage(Message):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
+        suppress: bool | None = MISSING,
     ) -> InteractionMessage:
         """|coro|
 
@@ -1174,6 +1281,8 @@ class InteractionMessage(Message):
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -1193,6 +1302,8 @@ class InteractionMessage(Message):
         """
         if attachments is MISSING:
             attachments = self.attachments or MISSING
+        if suppress is MISSING:
+            suppress = self.flags.suppress_embeds
         return await self._state._interaction.edit_original_response(
             content=content,
             embeds=embeds,
@@ -1203,6 +1314,7 @@ class InteractionMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             delete_after=delete_after,
+            suppress=suppress,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:
