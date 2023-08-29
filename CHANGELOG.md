@@ -168,8 +168,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
 - Fixed a misplaced payload object inside of the thread creation payload.
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
-- Fixed `DMChannel.recipient` being None and consequently `User.dm_channel` also being None.
-  ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
+- Fixed `DMChannel.recipient` being None and consequently `User.dm_channel` also being
+  None. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
 
 ## [2.4.1] - 2023-03-20
 
