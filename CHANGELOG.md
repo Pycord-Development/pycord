@@ -164,6 +164,9 @@ These changes are available on the `master` branch, but have not yet been releas
   `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
+- Fixed type-hinting of `values` argument of `basic_autocomplete` to include typehinting
+  of `Iterable[OptionChoice]`.
+  ([#2164](https://github.com/Pycord-Development/pycord/pull/2164)) 
 - Fixed initial message inside of the create thread payload sending legacy beta payload.
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
 - Fixed a misplaced payload object inside of the thread creation payload.
