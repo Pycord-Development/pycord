@@ -92,10 +92,7 @@ class Reaction:
         "burst",
         "me_burst",
         "_count_details",
-        "count_details",
         "_burst_colours",
-        "burst_colours",
-        "burst_colors",
     )
 
     def __init__(
