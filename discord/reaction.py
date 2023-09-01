@@ -84,7 +84,19 @@ class Reaction:
         Whether this reaction is a burst (super) reaction.
     """
 
-    __slots__ = ("message", "count", "emoji", "me", "burst", "me_burst", "_count_details", "count_details", "_burst_colours", "burst_colours", "burst_colors")
+    __slots__ = (
+        "message",
+        "count",
+        "emoji",
+        "me",
+        "burst",
+        "me_burst",
+        "_count_details",
+        "count_details",
+        "_burst_colours",
+        "burst_colours",
+        "burst_colors",
+    )
 
     def __init__(
         self,
@@ -108,7 +120,8 @@ class Reaction:
     def burst_colours(self) -> list[Colour]:
         """Returns a list possible :class:`Colour`s this super reaction can be.
 
-        There is an alias for this named :attr:`burst_colors`."""
+        There is an alias for this named :attr:`burst_colors`.
+        """
 
         # We recieve a list of #FFFFFF, so omit the # and convert to base 16
         return [Colour(int(c[1:], 16)) for c in self._burst_colours]
@@ -117,7 +130,8 @@ class Reaction:
     def burst_colors(self) -> list[Colour]:
         """Returns a list possible :class:`Color`s this super reaction can be.
 
-        There is an alias for this named :attr:`burst_colours`."""
+        There is an alias for this named :attr:`burst_colours`.
+        """
 
         return self.burst_colours
 
@@ -199,7 +213,11 @@ class Reaction:
         await self.message.clear_reaction(self.emoji)
 
     def users(
-        self, *, limit: int | None = None, after: Snowflake | None = None, type: ReactionType | None = None
+        self,
+        *,
+        limit: int | None = None,
+        after: Snowflake | None = None,
+        type: ReactionType | None = None,
     ) -> ReactionIterator:
         """Returns an :class:`AsyncIterator` representing the users that have reacted to the message.
 
@@ -247,7 +265,7 @@ class Reaction:
             await channel.send(f'{winner} has won the raffle.')
 
         Getting super reactors: ::
-        
+
             users = await reaction.users(type=ReactionType.burst).flatten()
         """
 
@@ -263,6 +281,7 @@ class Reaction:
             type = type.value
 
         return ReactionIterator(self.message, emoji, limit, after, type)
+
 
 class ReactionCountDetails:
     """Represents a breakdown of the normal and burst reaction counts for the emoji.

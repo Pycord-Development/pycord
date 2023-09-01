@@ -213,7 +213,12 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
 
             after = self.after.id if self.after else None
             data: list[PartialUserPayload] = await self.getter(
-                self.channel_id, self.message.id, self.emoji, retrieve, after=after, type=self.type
+                self.channel_id,
+                self.message.id,
+                self.emoji,
+                retrieve,
+                after=after,
+                type=self.type,
             )
 
             if data:
