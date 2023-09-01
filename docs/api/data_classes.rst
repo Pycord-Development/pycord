@@ -83,6 +83,16 @@ Embed
 .. autoclass:: EmbedFooter
     :members:
 
+.. attributetable:: EmbedMedia
+
+.. autoclass:: EmbedMedia
+    :members:
+
+.. attributetable:: EmbedProvider
+
+.. autoclass:: EmbedProvider
+    :members:
+
 
 
 Flags

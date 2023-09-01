@@ -690,7 +690,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         The entry ID.
     guild_id: :class:`int`
         The ID of the guild this action came from.
-    user_id: :class:`int`
+    user_id: Optional[:class:`int`]
         The ID of the user who initiated this action.
     target_id: Optional[:class:`int`]
         The ID of the target that got changed.
@@ -721,7 +721,9 @@ class RawAuditLogEntryEvent(_RawReprMixin):
 
     def __init__(self, data: AuditLogEntryEvent) -> None:
         self.id = int(data["id"])
-        self.user_id = int(data["user_id"])
+        self.user_id = data.get("user_id")
+        if self.user_id:
+            self.user_id = int(self.user_id)
         self.guild_id = int(data["guild_id"])
         self.target_id = data.get("target_id")
         if self.target_id:

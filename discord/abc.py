@@ -215,6 +215,14 @@ class User(Snowflake, Protocol):
         The user's username.
     discriminator: :class:`str`
         The user's discriminator.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
+        The user's global name.
+
+        .. versionadded:: 2.5
     avatar: :class:`~discord.Asset`
         The avatar asset the user has.
     bot: :class:`bool`
@@ -225,6 +233,7 @@ class User(Snowflake, Protocol):
 
     name: str
     discriminator: str
+    global_name: str | None
     avatar: Asset
     bot: bool
 

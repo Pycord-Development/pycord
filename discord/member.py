@@ -230,7 +230,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         .. describe:: str(x)
 
-            Returns the member's name with the discriminator.
+            Returns the member's name with the discriminator or global_name.
 
     Attributes
     ----------
@@ -322,6 +322,19 @@ class Member(discord.abc.Messageable, _UserTag):
         return str(self._user)
 
     def __repr__(self) -> str:
+        if self._user.is_migrated:
+            if self.global_name is not None:
+                return (
+                    "<Member"
+                    f" id={self._user.id} name={self._user.name!r} global_name={self.global_name!r}"
+                    f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
+                )
+            else:
+                return (
+                    "<Member"
+                    f" id={self._user.id} name={self._user.name!r}"
+                    f" bot={self._user.bot} nick={self.nick!r} guild={self.guild!r}>"
+                )
         return (
             "<Member"
             f" id={self._user.id} name={self._user.name!r} discriminator={self._user.discriminator!r}"
@@ -330,9 +343,6 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self._user)
@@ -427,17 +437,24 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def _update_inner_user(self, user: UserPayload) -> tuple[User, User] | None:
         u = self._user
-        original = (u.name, u._avatar, u.discriminator, u._public_flags)
+        original = (u.name, u._avatar, u.discriminator, u.global_name, u._public_flags)
         # These keys seem to always be available
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
+            user.get("global_name", None) or None,
             user.get("public_flags", 0),
         )
         if original != modified:
             to_return = User._copy(self._user)
-            u.name, u._avatar, u.discriminator, u._public_flags = modified
+            (
+                u.name,
+                u._avatar,
+                u.discriminator,
+                u.global_name,
+                u._public_flags,
+            ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
 
@@ -475,6 +492,11 @@ class Member(discord.abc.Messageable, _UserTag):
     def web_status(self) -> Status:
         """The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))
+
+    @property
+    def global_name(self) -> str | None:
+        """The member's global name, if applicable."""
+        return self._user.global_name
 
     def is_on_mobile(self) -> bool:
         """A helper function that determines if a member is active on a mobile device."""
@@ -535,12 +557,9 @@ class Member(discord.abc.Messageable, _UserTag):
     @property
     def display_name(self) -> str:
         """Returns the user's display name.
-
-        For regular users this is just their username, but
-        if they have a guild specific nickname then that
-        is returned instead.
+        This will either be their guild specific nickname, global name or username.
         """
-        return self.nick or self.name
+        return self.nick or self.global_name or self.name
 
     @property
     def display_avatar(self) -> Asset:

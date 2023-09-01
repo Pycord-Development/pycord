@@ -21,7 +21,7 @@ async def userinfo(ctx: commands.Context, user: discord.User):
     # the value passed as `user` to a `discord.User` instance.
     # The documentation notes what can be converted and, in the case of `discord.User`,
     # you pass an ID, mention or username (discriminator optional)
-    # E.g. 80088516616269824, @Danny or Danny#0007
+    # E.g. 90339695967350784, @Desch or Desch#3091
 
     # NOTE: Type hinting acts as a converter within the `commands` framework only.
     # In standard Python, it is used for documentation and IDE assistance purposes.

@@ -207,7 +207,7 @@ class ApplicationContext(discord.abc.Messageable):
         """
         return self.interaction.user  # type: ignore # command user will never be None
 
-    author = user
+    author: Member | User = user
 
     @property
     def voice_client(self) -> VoiceProtocol | None:

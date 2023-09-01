@@ -66,11 +66,11 @@ from typing import (
 from .errors import HTTPException, InvalidArgument
 
 try:
-    import orjson
+    import msgspec
 except ModuleNotFoundError:
-    HAS_ORJSON = False
+    HAS_MSGSPEC = False
 else:
-    HAS_ORJSON = True
+    HAS_MSGSPEC = True
 
 
 __all__ = (
@@ -142,6 +142,7 @@ if TYPE_CHECKING:
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
+    from .commands.options import OptionChoice
     from .invite import Invite
     from .permissions import Permissions
     from .template import Template
@@ -156,6 +157,7 @@ if TYPE_CHECKING:
 else:
     cached_property = _cached_property
     AutocompleteContext = Any
+    OptionChoice = Any
 
 
 T = TypeVar("T")
@@ -660,12 +662,12 @@ def _bytes_to_base64_data(data: bytes) -> str:
     return fmt.format(mime=mime, data=b64)
 
 
-if HAS_ORJSON:
+if HAS_MSGSPEC:
 
     def _to_json(obj: Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
+        return msgspec.json.encode(obj).decode("utf-8")
 
-    _from_json = orjson.loads  # type: ignore
+    _from_json = msgspec.json.decode  # type: ignore
 
 else:
 
@@ -1298,7 +1300,7 @@ def generate_snowflake(dt: datetime.datetime | None = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3FFFFF
 
 
-V = Union[Iterable[str], Iterable[int], Iterable[float]]
+V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
 AV = Awaitable[V]
 Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]

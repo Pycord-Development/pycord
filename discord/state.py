@@ -1139,10 +1139,8 @@ class ConnectionState:
         if self.member_cache_flags.joined:
             guild._add_member(member)
 
-        try:
+        if guild._member_count is not None:
             guild._member_count += 1
-        except AttributeError:
-            pass
 
         self.dispatch("member_join", member)
 
@@ -1152,10 +1150,8 @@ class ConnectionState:
 
         guild = self._get_guild(int(data["guild_id"]))
         if guild is not None:
-            try:
+            if guild._member_count is not None:
                 guild._member_count -= 1
-            except AttributeError:
-                pass
 
             member = guild.get_member(user.id)
             if member is not None:
@@ -1637,13 +1633,20 @@ class ConnectionState:
             )
             return
 
-        channel = guild.get_channel(int(data["channel_id"]))
-        if channel is not None:
-            self.dispatch("webhooks_update", channel)
+        channel_id = data["channel_id"]
+        if channel_id is not None:
+            channel = guild.get_channel(int(channel_id))
+            if channel is not None:
+                self.dispatch("webhooks_update", channel)
+            else:
+                _log.debug(
+                    "WEBHOOKS_UPDATE referencing an unknown channel ID: %s. Discarding.",
+                    data["channel_id"],
+                )
         else:
             _log.debug(
-                "WEBHOOKS_UPDATE referencing an unknown channel ID: %s. Discarding.",
-                data["channel_id"],
+                "WEBHOOKS_UPDATE channel ID was null for guild: %s. Discarding.",
+                data["guild_id"],
             )
 
     def parse_stage_instance_create(self, data) -> None:
