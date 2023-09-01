@@ -134,7 +134,7 @@ class Reaction:
 
     @property
     def count_details(self):
-        """The individual counts of normal and super reactions made."""
+        """Returns :class:`ReactionCountDetails` for the individual counts of normal and super reactions made."""
         return ReactionCountDetails(self._count_details)
 
     # TODO: typeguard
