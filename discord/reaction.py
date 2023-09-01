@@ -27,9 +27,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from .colour import Colour
+from .enums import ReactionType
 from .iterators import ReactionIterator
 
-__all__ = ("Reaction",)
+__all__ = ("Reaction", "ReactionCountDetails")
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -37,6 +39,7 @@ if TYPE_CHECKING:
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .types.message import Reaction as ReactionPayload
+    from .types.message import ReactionCountDetails as ReactionCountDetailsPayload
 
 
 class Reaction:
@@ -70,16 +73,18 @@ class Reaction:
     emoji: Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]
         The reaction emoji. May be a custom emoji, or a unicode emoji.
     count: :class:`int`
-        Number of times this reaction was made
+        The combined total of normal and super reactions for this emoji.
     me: :class:`bool`
-        If the user sent this reaction.
+        If the user sent this as a normal reaction.
+    me_burst: :class:`bool`
+        If the user sent this as a super reaction.
     message: :class:`Message`
         Message this reaction is for.
     burst: :class:`bool`
         Whether this reaction is a burst (super) reaction.
     """
 
-    __slots__ = ("message", "count", "emoji", "me")
+    __slots__ = ("message", "count", "emoji", "me", "burst", "me_burst", "_count_details", "count_details", "_burst_colours", "burst_colours", "burst_colors")
 
     def __init__(
         self,
@@ -93,8 +98,33 @@ class Reaction:
             emoji or message._state.get_reaction_emoji(data["emoji"])
         )
         self.count: int = data.get("count", 1)
+        self._count_details: ReactionCountDetailsPayload = data.get("count_details", {})
         self.me: bool = data.get("me")
         self.burst: bool = data.get("burst")
+        self.me_burst: bool = data.get("me_burst")
+        self._burst_colours: list[Colour] = data.get("burst_colors", [])
+
+    @property
+    def burst_colours(self) -> list[Colour]:
+        """Returns a list possible :class:`Colour`s this super reaction can be.
+
+        There is an alias for this named :attr:`burst_colors`."""
+
+        # We recieve a list of #FFFFFF, so omit the # and convert to base 16
+        return [Colour(int(c[1:], 16)) for c in self._burst_colours]
+
+    @property
+    def burst_colors(self) -> list[Colour]:
+        """Returns a list possible :class:`Color`s this super reaction can be.
+
+        There is an alias for this named :attr:`burst_colours`."""
+
+        return self.burst_colours
+
+    @property
+    def count_details(self):
+        """The individual counts of normal and super reactions made."""
+        return ReactionCountDetails(self._count_details)
 
     # TODO: typeguard
     def is_custom_emoji(self) -> bool:
@@ -169,7 +199,7 @@ class Reaction:
         await self.message.clear_reaction(self.emoji)
 
     def users(
-        self, *, limit: int | None = None, after: Snowflake | None = None
+        self, *, limit: int | None = None, after: Snowflake | None = None, type: ReactionType | None = None
     ) -> ReactionIterator:
         """Returns an :class:`AsyncIterator` representing the users that have reacted to the message.
 
@@ -184,6 +214,8 @@ class Reaction:
             reacted to the message.
         after: Optional[:class:`abc.Snowflake`]
             For pagination, reactions are sorted by member.
+        type: Optional[:class:`ReactionType`]
+            The type of reaction to get users for. Defaults to `normal`.
 
         Yields
         ------
@@ -213,6 +245,10 @@ class Reaction:
             # users is now a list of User...
             winner = random.choice(users)
             await channel.send(f'{winner} has won the raffle.')
+
+        Getting super reactors: ::
+        
+            users = await reaction.users(type=ReactionType.burst).flatten()
         """
 
         if not isinstance(self.emoji, str):
@@ -223,4 +259,22 @@ class Reaction:
         if limit is None:
             limit = self.count
 
-        return ReactionIterator(self.message, emoji, limit, after)
+        if isinstance(type, ReactionType):
+            type = type.value
+
+        return ReactionIterator(self.message, emoji, limit, after, type)
+
+class ReactionCountDetails:
+    """Represents a breakdown of the normal and burst reaction counts for the emoji.
+
+    Attributes
+    ----------
+    normal: :class:`int`
+        The number of normal reactions for this emoji.
+    burst: :class:`bool`
+        The number of super reactions for this emoji.
+    """
+
+    def __init__(self, data: ReactionCountDetailsPayload):
+        self.normal = data.get("normal", 0)
+        self.burst = data.get("burst", 0)

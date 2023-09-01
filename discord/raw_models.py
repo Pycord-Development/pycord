@@ -29,7 +29,7 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, try_enum
+from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
 from .types.user import User
 
 if TYPE_CHECKING:
@@ -202,8 +202,6 @@ class RawReactionActionEvent(_RawReprMixin):
         The guild ID where the reaction got added or removed, if applicable.
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being used.
-    burst: :class:`bool`
-        Whether this reaction is a burst (super) reaction.
     member: Optional[:class:`Member`]
         The member who added the reaction. Only available if `event_type` is `REACTION_ADD`
         and the reaction is inside a guild.
@@ -216,6 +214,15 @@ class RawReactionActionEvent(_RawReprMixin):
         ``REACTION_REMOVE`` for reaction removal.
 
         .. versionadded:: 1.3
+    burst: :class:`bool`
+        Whether this reaction is a burst (super) reaction.
+    burst_colours: Optional[:class:`list`]
+        A list of hex codes this reaction can be. Only available if `event_type` is `REACTION_ADD`
+        and this emoji has super reactions available.
+    burst_colors: Optional[:class:`list`]
+        Alias for :attr:`burst_colours`.
+    type: :class:`ReactionType`
+        The type of reaction added.
     data: :class:`dict`
         The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-add>`_.
 
@@ -229,6 +236,9 @@ class RawReactionActionEvent(_RawReprMixin):
         "guild_id",
         "emoji",
         "burst",
+        "burst_colours",
+        "burst_colors",
+        "type",
         "event_type",
         "member",
         "data",
@@ -244,6 +254,9 @@ class RawReactionActionEvent(_RawReprMixin):
         self.event_type: str = event_type
         self.member: Member | None = None
         self.burst: bool = data.get("burst")
+        self.burst_colours: list = data.get("burst_colors", [])
+        self.burst_colors: list = self.burst_colours
+        self.type: ReactionType = try_enum(data.get("type", 0))
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -274,10 +287,6 @@ class RawReactionClearEvent(_RawReprMixin):
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
-        # For some reason this event has `burst` even though it makes no sense
-        # It's been included for now, but subject to change?
-        # May also indicate there's a separate route to clear burst reactions
-        self.burst: bool = data.get("burst")
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -302,9 +311,13 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being removed.
     burst: :class:`bool`
-        Whether this reaction is a burst (super) reaction.
-
-        .. versionadded:: 2.5
+        Whether this reaction was a burst (super) reaction.
+    burst_colours: :class:`list`
+        The available HEX codes of the removed super reaction.
+    burst_colors: Optional[:class:`list`]
+        Alias for :attr:`burst_colours`.
+    type: :class:`ReactionType`
+        The type of reaction removed.
     data: :class:`dict`
         The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji>`_.
 
@@ -318,6 +331,9 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
         self.burst: bool = data.get("burst")
+        self.burst_colours: list = data.get("burst_colors", [])
+        self.burst_colors: list = self.burst_colours
+        self.type: ReactionType = try_enum(data.get("type", 0))
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
