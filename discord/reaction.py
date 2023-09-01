@@ -115,7 +115,7 @@ class Reaction:
 
     @property
     def burst_colours(self) -> list[Colour]:
-        """Returns a list possible :class:`Colour`s this super reaction can be.
+        """Returns a list possible :class:`Colour` this super reaction can be.
 
         There is an alias for this named :attr:`burst_colors`.
         """
@@ -125,7 +125,7 @@ class Reaction:
 
     @property
     def burst_colors(self) -> list[Colour]:
-        """Returns a list possible :class:`Color`s this super reaction can be.
+        """Returns a list possible :class:`Color` this super reaction can be.
 
         There is an alias for this named :attr:`burst_colours`.
         """

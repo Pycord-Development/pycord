@@ -2292,3 +2292,17 @@ of :class:`enum.Enum`.
     .. attribute:: slurs
 
         Represents the slurs keyword preset rule.
+
+.. class:: ReactionType
+
+    Represents a Reaction's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: normal
+
+        Represents a normal reaction.
+
+    .. attribute:: burst
+
+        Represents a super reaction.
