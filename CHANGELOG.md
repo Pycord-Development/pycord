@@ -87,20 +87,24 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 - Changed the behavior of retrieving bans to accurately reflect the API.
   ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
-- Changed `Interaction.channel` to be received from the gateway, allowing it to be `DMChannel` or `GroupChannel`. ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
+- Changed `Interaction.channel` to be received from the gateway, allowing it to be
+  `DMChannel` or `GroupChannel`.
+  ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - Changed `DMChannel.recipients` to potentially be `None`.
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
-- Changed the behavior to store `view.message` when receiving an Interaction for a component.
-  ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
-- Changed the fetching of attributes shared between text-based and Slash Commands in Bridge Commands to be dynamic. ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
-- Changed `discord.Embed` attributes (such as author, footer, etc.) now return `None` when not set, and return
-  their respective classes when set.
+- Changed the behavior to store `view.message` when receiving an Interaction for a
+  component. ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
+- Changed the fetching of attributes shared between text-based and Slash Commands in
+  Bridge Commands to be dynamic.
+  ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
+- Changed `discord.Embed` attributes (such as author, footer, etc.) now return `None`
+  when not set, and return their respective classes when set.
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 - Changed `default_avatar` behavior depending on the user's username migration status.
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
 - Changed type-hinted `command_prefix` and `help_command` arguments properly.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
-- Changed the support from `orjson` to `msgspec` in the codebase. 
+- Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
 
 ### Removed
@@ -129,13 +133,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1998](https://github.com/Pycord-Development/pycord/pull/1998))
 - Fixed boolean converter breaking for Bridge Commands.
   ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
-- Fixed Bridge Command Options not working. 
+- Fixed Bridge Command Options not working.
   ([#1999](https://github.com/Pycord-Development/pycord/pull/1999))
 - Fixed `TypeError` being raised when passing `name` argument to bridge groups.
   ([#2000](https://github.com/Pycord-Development/pycord/pull/2000))
 - Fixed `TypeError` in `AutoModRule`.
   ([#2029](https://github.com/Pycord-Development/pycord/pull/2029))
-- Fixed the functionality to override the default `on_application_command_error` behavior using listeners.
+- Fixed the functionality to override the default `on_application_command_error`
+  behavior using listeners.
   ([#2044](https://github.com/Pycord-Development/pycord/pull/2044))
 - Fixed unloading of cogs having Bridge Commands.
   ([#2048](https://github.com/Pycord-Development/pycord/pull/2048))
