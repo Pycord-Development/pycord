@@ -157,15 +157,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2145](https://github.com/Pycord-Development/pycord/pull/2145))
 - Fixed `Thread.applied_tags` not being updated.
   ([#2146](https://github.com/Pycord-Development/pycord/pull/2146))
-- Fixed type-hinting of `author` property of `ApplicationContext` to include type-hinting
-  of `User` or `Member`.
+- Fixed type-hinting of `author` property of `ApplicationContext` to include
+  type-hinting of `User` or `Member`.
   ([#2148](https://github.com/Pycord-Development/pycord/pull/2148))
 - Fixed missing `delete_after` parameter in overload type-hinting for `send` method in
   `Webhook` class. ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
-- Fixed type-hinting of `values` argument of `basic_autocomplete` to include type-hinting
-  of `Iterable[OptionChoice]`.
+- Fixed type-hinting of `values` argument of `basic_autocomplete` to include
+  type-hinting of `Iterable[OptionChoice]`.
   ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))
 - Fixed initial message inside of the create thread payload sending legacy beta payload.
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
@@ -189,7 +189,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the voice IP discovery due to the recent
   [announced change](https://discord.com/channels/613425648685547541/697138785317814292/1080623873629884486).
   ([#1955](https://github.com/Pycord-Development/pycord/pull/1955))
-- Fixed `reason` being passed to the wrong method in `guild.create_auto_moderation_rule`.
+- Fixed `reason` being passed to the wrong method in
+  `guild.create_auto_moderation_rule`.
   ([#1960](https://github.com/Pycord-Development/pycord/pull/1960))
 
 ## [2.4.0] - 2023-02-10
