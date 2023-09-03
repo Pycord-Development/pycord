@@ -78,6 +78,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added
   [`USE_CLYDE_AI` permission](https://github.com/discord/discord-api-docs/pull/6354).
   ([#2224](https://github.com/Pycord-Development/pycord/pull/2224))
+
 ### Changed
 
 - Changed default for all `name_localizations` & `description_localizations` attributes
