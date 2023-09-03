@@ -180,7 +180,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(0b11111111111111111111111111111111111111111)
+        return cls(0b110000011111111111111111111111111111111111111111)
 
     @classmethod
     def all_channel(cls: type[P]) -> P:
@@ -242,8 +242,11 @@ class Permissions(BaseFlags):
         .. versionchanged:: 2.0
            Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`,
            :attr:`send_messages_in_threads` and :attr:`use_external_stickers` permissions.
+
+        .. versionchanged:: 2.5
+           Added :attr:`use_clyde_ai` permission.
         """
-        return cls(0b111110010000000000001111111100001000000)
+        return cls(0b100000000111110010000000000001111111100001000000)
 
     @classmethod
     def voice(cls: type[P]) -> P:
@@ -618,6 +621,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 46
 
+    @flag_value
+    def use_clyde_ai(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can interact with the Clyde AI bot.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 47
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
@@ -736,6 +747,7 @@ class PermissionOverwrite:
         start_embedded_activities: bool | None
         moderate_members: bool | None
         send_voice_messages: bool | None
+        use_clyde_ai: bool | None
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}

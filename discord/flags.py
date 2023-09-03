@@ -255,12 +255,12 @@ class SystemChannelFlags(BaseFlags):
     @flag_value
     def join_notifications(self):
         """:class:`bool`: Returns ``True`` if the system channel is used for member join notifications."""
-        return 1
+        return 1 << 0
 
     @flag_value
     def premium_subscriptions(self):
         """:class:`bool`: Returns ``True`` if the system channel is used for "Nitro boosting" notifications."""
-        return 2
+        return 1 << 1
 
     @flag_value
     def guild_reminder_notifications(self):
@@ -268,7 +268,7 @@ class SystemChannelFlags(BaseFlags):
 
         .. versionadded:: 2.0
         """
-        return 4
+        return 1 << 2
 
     @flag_value
     def join_notification_replies(self):
@@ -276,7 +276,23 @@ class SystemChannelFlags(BaseFlags):
 
         .. versionadded:: 2.0
         """
-        return 8
+        return 1 << 3
+
+    @flag_value
+    def role_subscription_purchase_notifications(self):
+        """:class:`bool`: Returns ``True`` if the system channel is used for role subscription purchase and renewal notifications.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 4
+
+    @flag_value
+    def role_subscription_purchase_notifications_replies(self):
+        """:class:`bool`: Returns ``True`` if the system channel is allowing role subscription purchase sticker replies.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 5
 
 
 @fill_with_flags()
