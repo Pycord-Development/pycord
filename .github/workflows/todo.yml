@@ -4,7 +4,7 @@ jobs:
   todo:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run tdg-github-action
         uses: ribtoks/tdg-github-action@v0.4.7-beta
         with:
