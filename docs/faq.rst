@@ -113,13 +113,12 @@ What is the difference between get_ methods and fetch_ methods?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 "Get" methods retrieve objects or data from the cache (general store of data) and can return ``None`` if not found. "Fetch" methods force an API request and will raise an error if not found. Example: ::
 
-        role = member.guild.get_role(id)  # try to get role without an API request through the cache
-        if role is not None:
-            await member.add_roles(role)  # if the role is found and returned, then it adds the role and returns
-            return
+        # --- Get example ---
+        role = member.guild.get_role(id)  # Try to get role without an API request through the cache
+        await member.add_roles(role)  # If the role is found, then it adds the role
 
-        # if it's not found in cache, make an API request
-        role = discord.utils.get(await member.guild.fetch_roles(), id=id)
+        # --- Fetch example
+        role = discord.utils.get(await member.guild.fetch_roles(), id=id)  # This will obtain the role via an API request
 
 How do I send a message to a specific channel?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
