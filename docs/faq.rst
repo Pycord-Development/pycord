@@ -117,7 +117,7 @@ What is the difference between get_ methods and fetch_ methods?
         role = member.guild.get_role(id)  # Try to get role without an API request through the cache
         await member.add_roles(role)  # If the role is found, then it adds the role
 
-Example: ::
+::
         # --- Fetch example
         role = discord.utils.get(await member.guild.fetch_roles(), id=id)  # This will obtain the role via an API request
 
