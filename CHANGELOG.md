@@ -64,8 +64,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2102](https://github.com/Pycord-Development/pycord/pull/2102))
 - Added `bridge.Context` as a shortcut to `Union` of subclasses.
   ([#2106](https://github.com/Pycord-Development/pycord/pull/2106))
-- Added `slowmode_delay` attribute to `discord.VoiceChannel`.
-  ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
 - Added Annotated forms support for type-hinting slash command options.
   ([#2124](https://github.com/Pycord-Development/pycord/pull/2124))
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
