@@ -176,6 +176,12 @@ class EmbedMedia:  # Thumbnail, Image, Video
     height: int | None
     width: int | None
 
+    def __init__(self, url: str):
+        self.url = url
+        self.proxy_url = None
+        self.height = None
+        self.width = None
+
     @classmethod
     def from_dict(cls, data: dict[str, str | int]) -> EmbedMedia:
         self = cls.__new__(cls)
@@ -355,8 +361,8 @@ class Embed:
         fields: list[EmbedField] | None = None,
         author: EmbedAuthor | None = None,
         footer: EmbedFooter | None = None,
-        image: str | None = None,
-        thumbnail: str | None = None,
+        image: str | EmbedMedia | None = None,
+        thumbnail: str | EmbedMedia | None = None,
     ):
         self.colour = colour if colour else color
         self.title = title
@@ -378,17 +384,10 @@ class Embed:
 
         self._fields: list[EmbedField] = fields if fields is not None else []
 
-        if author:
-            self.set_author(**author.to_dict())
-
-        if footer:
-            self.set_footer(**footer.to_dict())
-
-        if image:
-            self.set_image(url=image)
-
-        if thumbnail:
-            self.set_thumbnail(url=thumbnail)
+        self.author = author
+        self.footer = footer
+        self.image = image
+        self.thumbnail = thumbnail
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -566,6 +565,18 @@ class Embed:
             return None
         return EmbedFooter.from_dict(foot)
 
+    @footer.setter
+    def footer(self, value: EmbedFooter | None):
+        if value is None:
+            self.remove_footer()
+        elif isinstance(value, EmbedFooter):
+            self._footer = value.to_dict()
+        else:
+            raise TypeError(
+                "Expected EmbedFooter or None. Received"
+                f" {value.__class__.__name__} instead"
+            )
+
     def set_footer(
         self: E,
         *,
@@ -628,6 +639,20 @@ class Embed:
             return None
         return EmbedMedia.from_dict(img)
 
+    @image.setter
+    def image(self, value: str | EmbedMedia | None):
+        if value is None:
+            self.remove_image()
+        elif isinstance(value, str):
+            self.set_image(url=value)
+        elif isinstance(value, EmbedMedia):
+            self.set_image(url=value.url)
+        else:
+            raise TypeError(
+                "Expected discord.EmbedMedia, or None but received"
+                f" {value.__class__.__name__} instead."
+            )
+
     def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
 
@@ -687,6 +712,20 @@ class Embed:
         if not thumb:
             return None
         return EmbedMedia.from_dict(thumb)
+
+    @thumbnail.setter
+    def thumbnail(self, value: str | EmbedMedia | None):
+        if value is None:
+            self.remove_thumbnail()
+        elif isinstance(value, str):
+            self.set_thumbnail(url=value)
+        elif isinstance(value, EmbedMedia):
+            self.set_thumbnail(url=value.url)
+        else:
+            raise TypeError(
+                "Expected discord.EmbedMedia, or None but received"
+                f" {value.__class__.__name__} instead."
+            )
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
@@ -772,6 +811,18 @@ class Embed:
         if not auth:
             return None
         return EmbedAuthor.from_dict(auth)
+
+    @author.setter
+    def author(self, value: EmbedAuthor | None):
+        if value is None:
+            self.remove_author()
+        elif isinstance(value, EmbedAuthor):
+            self._author = value.to_dict()
+        else:
+            raise TypeError(
+                "Expected discord.EmbedAuthor, or None but received"
+                f" {value.__class__.__name__} instead."
+            )
 
     def set_author(
         self: E,
