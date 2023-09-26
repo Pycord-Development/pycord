@@ -1484,12 +1484,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
 
+        .. versionadded:: 2.0
     slowmode_delay: :class:`int`
         The number of seconds a member must wait between sending messages
         in this channel. A value of `0` denotes that it is disabled.
         Bots and users with :attr:`~Permissions.manage_channels` or
         :attr:`~Permissions.manage_messages` bypass slowmode.
-
+        
         .. versionadded:: 2.5
     flags: :class:`ChannelFlags`
         Extra features of the channel.
