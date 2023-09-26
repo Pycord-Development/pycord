@@ -75,7 +75,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2206](https://github.com/Pycord-Development/pycord/pull/2206))
 - Added function `Guild.delete_auto_moderation_rule`.
   ([#2153](https://github.com/Pycord-Development/pycord/pull/2153))
-- Added `slowmode_delay` attribute to `discord.VoiceChannel`.
+- Added `slowmode_delay` support to `VoiceChannel`.
   ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
 
 ### Changed
