@@ -1490,7 +1490,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         Bots and users with :attr:`~Permissions.manage_channels` or
         :attr:`~Permissions.manage_messages` bypass slowmode.
 
-        .. versionadded:: 2.0
+        .. versionadded:: 2.5
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
