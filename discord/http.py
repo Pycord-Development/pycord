@@ -1173,6 +1173,7 @@ class HTTPClient:
         invitable: bool = True,
         applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
+        files: Sequence[File] | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
@@ -1182,7 +1183,7 @@ class HTTPClient:
         tag: ForumTag | None = None,
         tags: list[ForumTag] | None = None,
     ) -> Response[threads.Thread]:
-        payload = {
+        payload: dict[str, Any] = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
@@ -1213,6 +1214,7 @@ class HTTPClient:
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
 
+
         if tag:
             payload["applied_tags"] = [tag.id]
 
@@ -1224,6 +1226,31 @@ class HTTPClient:
 
         route = Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id)
         query = {"use_nested_fields": 1}
+
+        if files:
+            form = [{"name": "payload_json"}]
+
+            attachments = []
+            for index, file in enumerate(files):
+                attachments.append(
+                    {
+                        "id": index,
+                        "filename": file.filename,
+                        "description": file.description,
+                    }
+                )
+                form.append(
+                    {
+                        "name": f"files[{index}]",
+                        "value": file.fp,
+                        "filename": file.filename,
+                        "content_type": "application/octet-stream",
+                    }
+                )
+
+            payload["attachments"] = attachments
+            form[0]["value"] = utils._to_json(payload)
+            return self.request(route, form=form, reason=reason)
         return self.request(route, json=payload, params=query, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:

@@ -116,9 +116,6 @@ class BaseFlags:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash(self.value)
 
@@ -403,6 +400,14 @@ class MessageFlags(BaseFlags):
         """
 
         return 4096
+
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+
+        .. versionadded:: 2.5
+        """
+        return 8192
 
 
 @fill_with_flags()
@@ -717,12 +722,22 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
-        """:class:`bool`: Whether guild ban related events are enabled.
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: 2.5
+            Changed to an alias.
+        """
+        return 1 << 2
+
+    @flag_value
+    def moderation(self):
+        """:class:`bool`: Whether guild moderation related events are enabled.
 
         This corresponds to the following events:
 
+        - :func:`on_audit_log_entry`
         - :func:`on_member_ban`
         - :func:`on_member_unban`
 
@@ -1327,6 +1342,14 @@ class ApplicationFlags(BaseFlags):
     def group_dm_create(self):
         """:class:`bool`: Returns ``True`` if the application can create group DMs."""
         return 1 << 5
+
+    @flag_value
+    def application_auto_moderation_rule_create_badge(self):
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 6
 
     @flag_value
     def rpc_has_connected(self):

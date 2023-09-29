@@ -501,7 +501,11 @@ class ApplicationCommandMixin(ABC):
                 )
 
         def register(
-            method: Literal["bulk", "upsert", "delete", "edit"], *args, **kwargs
+            method: Literal["bulk", "upsert", "delete", "edit"],
+            *args,
+            cmd_name: str = None,
+            guild_id: int | None = None,
+            **kwargs,
         ):
             if kwargs.pop("_log", True):
                 if method == "bulk":
@@ -509,13 +513,12 @@ class ApplicationCommandMixin(ABC):
                         f"Bulk updating commands {[c['name'] for c in args[0]]} for"
                         f" guild {guild_id}"
                     )
-                # TODO: Find where "cmd" is defined
                 elif method == "upsert":
-                    _log.debug(f"Creating command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Creating command {cmd_name} for guild {guild_id}")  # type: ignore
                 elif method == "edit":
-                    _log.debug(f"Editing command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Editing command {cmd_name} for guild {guild_id}")  # type: ignore
                 elif method == "delete":
-                    _log.debug(f"Deleting command {cmd['name']} for guild {guild_id}")  # type: ignore
+                    _log.debug(f"Deleting command {cmd_name} for guild {guild_id}")  # type: ignore
             return _register(method, *args, **kwargs)
 
         pending_actions = []
@@ -602,15 +605,31 @@ class ApplicationCommandMixin(ABC):
                     registered = []
                 for cmd in filtered_no_action:
                     if cmd["action"] == "delete":
-                        await register("delete", cmd["command"])
+                        await register(
+                            "delete",
+                            cmd["id"],
+                            cmd_name=cmd["command"].name,
+                            guild_id=guild_id,
+                        )
                         continue
                     if cmd["action"] == "edit":
                         registered.append(
-                            await register("edit", cmd["id"], cmd["command"].to_dict())
+                            await register(
+                                "edit",
+                                cmd["id"],
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     elif cmd["action"] == "upsert":
                         registered.append(
-                            await register("upsert", cmd["command"].to_dict())
+                            await register(
+                                "upsert",
+                                cmd["command"].to_dict(),
+                                cmd_name=cmd["command"].name,
+                                guild_id=guild_id,
+                            )
                         )
                     else:
                         raise ValueError(f"Unknown action: {cmd['action']}")
@@ -628,7 +647,7 @@ class ApplicationCommandMixin(ABC):
                         )
         else:
             data = [cmd.to_dict() for cmd in pending]
-            registered = await register("bulk", data)
+            registered = await register("bulk", data, guild_id=guild_id)
 
         for i in registered:
             cmd = get(
@@ -1130,7 +1149,6 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
     def __init__(self, description=None, *args, **options):
         super().__init__(*args, **options)
-        self.extra_events = {}  # TYPE: Dict[str, List[CoroFunc]]
         self.__cogs = {}  # TYPE: Dict[str, Cog]
         self.__extensions = {}  # TYPE: Dict[str, types.ModuleType]
         self._checks = []  # TYPE: List[Check]
@@ -1178,9 +1196,8 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         This only fires if you do not specify any listeners for command error.
         """
-        if self.extra_events.get("on_application_command_error", None):
+        if self._event_handlers.get("on_application_command_error", None):
             return
-
         command = context.command
         if command and command.has_error_handler():
             return
@@ -1295,102 +1312,6 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         # type-checker doesn't distinguish between functions and methods
         return await async_all(f(ctx) for f in data)  # type: ignore
-
-    # listener registration
-
-    def add_listener(self, func: CoroFunc, name: str = MISSING) -> None:
-        """The non decorator alternative to :meth:`.listen`.
-
-        Parameters
-        ----------
-        func: :ref:`coroutine <coroutine>`
-            The function to call.
-        name: :class:`str`
-            The name of the event to listen for. Defaults to ``func.__name__``.
-
-        Example
-        -------
-
-        .. code-block:: python3
-
-            async def on_ready(): pass
-            async def my_message(message): pass
-
-            bot.add_listener(on_ready)
-            bot.add_listener(my_message, 'on_message')
-        """
-        name = func.__name__ if name is MISSING else name
-
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Listeners must be coroutines")
-
-        if name in self.extra_events:
-            self.extra_events[name].append(func)
-        else:
-            self.extra_events[name] = [func]
-
-    def remove_listener(self, func: CoroFunc, name: str = MISSING) -> None:
-        """Removes a listener from the pool of listeners.
-
-        Parameters
-        ----------
-        func
-            The function that was used as a listener to remove.
-        name: :class:`str`
-            The name of the event we want to remove. Defaults to
-            ``func.__name__``.
-        """
-
-        name = func.__name__ if name is MISSING else name
-
-        if name in self.extra_events:
-            try:
-                self.extra_events[name].remove(func)
-            except ValueError:
-                pass
-
-    def listen(self, name: str = MISSING) -> Callable[[CFT], CFT]:
-        """A decorator that registers another function as an external
-        event listener. Basically this allows you to listen to multiple
-        events from different places e.g. such as :func:`.on_ready`
-
-        The functions being listened to must be a :ref:`coroutine <coroutine>`.
-
-        Raises
-        ------
-        TypeError
-            The function being listened to is not a coroutine.
-
-        Example
-        -------
-
-        .. code-block:: python3
-
-            @bot.listen()
-            async def on_message(message):
-                print('one')
-
-            # in some other file...
-
-            @bot.listen('on_message')
-            async def my_message(message):
-                print('two')
-
-        Would print one and two in an unspecified order.
-        """
-
-        def decorator(func: CFT) -> CFT:
-            self.add_listener(func, name)
-            return func
-
-        return decorator
-
-    def dispatch(self, event_name: str, *args: Any, **kwargs: Any) -> None:
-        # super() will resolve to Client
-        super().dispatch(event_name, *args, **kwargs)  # type: ignore
-        ev = f"on_{event_name}"
-        for event in self.extra_events.get(ev, []):
-            self._schedule_event(event, ev, *args, **kwargs)  # type: ignore
 
     def before_invoke(self, coro):
         """A decorator that registers a coroutine as a pre-invoke hook.

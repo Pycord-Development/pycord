@@ -207,7 +207,7 @@ class ApplicationContext(discord.abc.Messageable):
         """
         return self.interaction.user  # type: ignore # command user will never be None
 
-    author = user
+    author: Member | User = user
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
@@ -266,26 +266,12 @@ class ApplicationContext(discord.abc.Messageable):
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
-    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
-        """|coro|
-
-        Sends either a response or a message using the followup webhook determined by whether the interaction
-        has been responded to or not.
-
-        Returns
-        -------
-        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
-            The response, its type depending on whether it's an interaction response or a followup.
-        """
-        try:
-            if not self.interaction.response.is_done():
-                return await self.interaction.response.send_message(
-                    *args, **kwargs
-                )  # self.response
-            else:
-                return await self.followup.send(*args, **kwargs)  # self.send_followup
-        except discord.errors.InteractionResponded:
-            return await self.followup.send(*args, **kwargs)
+    @property
+    @discord.utils.copy_doc(Interaction.respond)
+    def respond(
+        self, *args, **kwargs
+    ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
+        return self.interaction.respond
 
     @property
     @discord.utils.copy_doc(InteractionResponse.send_message)

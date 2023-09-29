@@ -77,6 +77,7 @@ if TYPE_CHECKING:
         DMChannel,
         GroupChannel,
         PartialMessageable,
+        StageChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -97,7 +98,7 @@ if TYPE_CHECKING:
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable
+        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
@@ -214,6 +215,14 @@ class User(Snowflake, Protocol):
         The user's username.
     discriminator: :class:`str`
         The user's discriminator.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
+        The user's global name.
+
+        .. versionadded:: 2.5
     avatar: :class:`~discord.Asset`
         The avatar asset the user has.
     bot: :class:`bool`
@@ -224,6 +233,7 @@ class User(Snowflake, Protocol):
 
     name: str
     discriminator: str
+    global_name: str | None
     avatar: Asset
     bot: bool
 
@@ -1292,6 +1302,8 @@ class Messageable:
     The following implement this ABC:
 
     - :class:`~discord.TextChannel`
+    - :class:`~discord.VoiceChannel`
+    - :class:`~discord.StageChannel`
     - :class:`~discord.DMChannel`
     - :class:`~discord.GroupChannel`
     - :class:`~discord.User`
@@ -1478,7 +1490,7 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
-        slient: :class:`bool`
+        silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.4
