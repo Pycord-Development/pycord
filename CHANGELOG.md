@@ -699,6 +699,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1350](https://github.com/Pycord-Development/pycord/pull/1350))
 - Make `TextChannel._get_channel` async.
   ([#1358](https://github.com/Pycord-Development/pycord/pull/1358))
+- Fix `AttributeError` when serializing commands with Annotated typehint
+  ([#2243](https://github.com/Pycord-Development/pycord/pull/2243))
 
 ## [2.0.0-beta.7] - 2022-04-09
 
