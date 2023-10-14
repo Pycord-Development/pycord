@@ -15,7 +15,9 @@ def test_typing_annotated():
     bot = discord.Bot()
     bot.add_application_command(cmd)
     dict_result = cmd.to_dict()
-    assert dict_result.get("options")[0].get("type") == SlashCommandOptionType.string.value
+    assert (
+        dict_result.get("options")[0].get("type") == SlashCommandOptionType.string.value
+    )
 
 
 def test_typing_annotated_decorator():
@@ -40,7 +42,7 @@ def test_typing_annotated_cog():
 
         @slash_command()
         async def echo(
-                self, ctx, txt: Annotated[str, discord.Option(description="Some text")]
+            self, ctx, txt: Annotated[str, discord.Option(description="Some text")]
         ):
             await ctx.respond(txt)
 
@@ -65,7 +67,7 @@ def test_typing_annotated_cog_slashgroup():
 
         @grp.command()
         async def echo(
-                self, ctx, txt: Annotated[str, discord.Option(description="Some text")]
+            self, ctx, txt: Annotated[str, discord.Option(description="Some text")]
         ):
             await ctx.respond(txt)
 
