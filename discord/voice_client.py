@@ -740,7 +740,7 @@ class VoiceClient(VoiceProtocol):
         """
         if not self.is_connected():
             raise RecordingException("Not connected to voice channel.")
-        
+
         self.empty_socket()
 
         ready, _, err = select.select([self.socket], [], [self.socket], 0.01)
@@ -763,7 +763,7 @@ class VoiceClient(VoiceProtocol):
 
         if data.decrypted_data == b"\xf8\xff\xfe":  # Frame of silence
             return False
-        
+
         return True
 
     def start_recording(self, sink, callback, *args, sync_start: bool = False):
