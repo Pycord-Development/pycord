@@ -726,6 +726,46 @@ class VoiceClient(VoiceProtocol):
 
         self.decoder.decode(data)
 
+    def is_speaking(self) -> bool:
+        """Returns a :class:`bool` indicating whether any user is currently speaking in the current voice channel the bot is in.
+        Returns True if a user is speaking, False if package has arived but the frame is silent and None if there is no package.
+        Must be in a voice channel to use.
+
+        .. versionadded:: not yet
+
+        Raises
+        ------
+        RecordingException
+            Not connected to a voice channel.
+        """
+        if not self.is_connected():
+            raise RecordingException("Not connected to voice channel.")
+        
+        self.empty_socket()
+
+        ready, _, err = select.select([self.socket], [], [self.socket], 0.01)
+        if not ready and err:
+            print(f"Socket error: {err}")
+
+        try:
+            data = self.socket.recv(4096)
+        except OSError:
+            return
+
+        if 200 <= data[1] <= 204:
+            # RTCP received.
+            # RTCP provides information about the connection
+            # as opposed to actual audio data, so it's not
+            # important at the moment.
+            return
+
+        data = RawData(data, self)
+
+        if data.decrypted_data == b"\xf8\xff\xfe":  # Frame of silence
+            return False
+        
+        return True
+
     def start_recording(self, sink, callback, *args, sync_start: bool = False):
         """The bot will begin recording audio from the current voice channel it is in.
         This function uses a thread so the current code line will not be stopped.
