@@ -190,8 +190,9 @@ class Interaction:
         self.user: User | Member | None = None
         self._permissions: int = 0
 
-        if (_guild_data := data.get("guild")):
-            self._state._get_create_guild(_guild_data)
+        self._guild: Guild | None = None
+        if self.guild is None and (_guild_data := data.get("guild")):
+            self._guild = Guild(data=data, state=self)
 
         self._guild_data = _guild_data
 
@@ -253,6 +254,8 @@ class Interaction:
     @property
     def guild(self) -> Guild | None:
         """The guild the interaction was sent from."""
+        if self._guild:
+            return self._guild
         return self._state and self._state._get_guild(self.guild_id)
 
     def is_command(self) -> bool:
