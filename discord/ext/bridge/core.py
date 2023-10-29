@@ -591,6 +591,8 @@ BRIDGE_CONVERTER_MAPPING = {
 
 
 class BridgeOption(Option, Converter):
+    """Slash command option for bridge commands. Otherwise equivalent in every way to :class:`discord.Option`."""
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
@@ -621,7 +623,3 @@ class BridgeOption(Option, Converter):
             return converted
         except ValueError as exc:
             raise BadArgument() from exc
-
-
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption
