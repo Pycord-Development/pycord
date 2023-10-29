@@ -149,6 +149,8 @@ class Interaction:
         "custom_id",
         "_channel_data",
         "_message_data",
+        "_guild_data",
+        "_guild",
         "_permissions",
         "_app_permissions",
         "_state",
@@ -187,6 +189,11 @@ class Interaction:
 
         self.user: User | Member | None = None
         self._permissions: int = 0
+
+        if (_guild_data := data.get("guild")):
+            self._state._get_create_guild(_guild_data)
+
+        self._guild_data = _guild_data
 
         # TODO: there's a potential data loss here
         if self.guild_id:
