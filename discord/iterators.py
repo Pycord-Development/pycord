@@ -182,10 +182,11 @@ class _FilteredAsyncIterator(_AsyncIterator[T]):
 
 
 class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
-    def __init__(self, message, emoji, limit=100, after=None):
+    def __init__(self, message, emoji, limit=100, after=None, type=None):
         self.message = message
         self.limit = limit
         self.after = after
+        self.type = type
         state = message._state
         self.getter = state.http.get_reaction_users
         self.state = state
@@ -212,7 +213,12 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
 
             after = self.after.id if self.after else None
             data: list[PartialUserPayload] = await self.getter(
-                self.channel_id, self.message.id, self.emoji, retrieve, after=after
+                self.channel_id,
+                self.message.id,
+                self.emoji,
+                retrieve,
+                after=after,
+                type=self.type,
             )
 
             if data:
