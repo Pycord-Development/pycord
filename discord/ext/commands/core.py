@@ -49,6 +49,7 @@ from ...commands import (
     message_command,
     slash_command,
     user_command,
+    Option
 )
 from ...enums import ChannelType
 from ...errors import *
@@ -562,7 +563,13 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
-        required = param.default is param.empty
+        if isinstance(param.annotation, Option):
+            required = param.annotation.required or param.annotation.default is None
+            default = param.annotation.default
+        else:
+            required = (param.default is param.empty)
+            default = param.default
+
         converter = get_converter(param)
         consume_rest_is_special = (
             param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
@@ -599,7 +606,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 ):
                     return await converter._construct_default(ctx)
                 raise MissingRequiredArgument(param)
-            return param.default
+            return default
 
         previous = view.index
         if consume_rest_is_special:
