@@ -180,6 +180,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 - Fixed `DMChannel.recipient` being `None` and consequently `User.dm_channel` also being
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
+- Fixed `Option` not working on bridge commands because `ext.commands.Command` doesn't
+  recognize them. ([#2256](https://github.com/Pycord-Development/pycord/pull/2256))
 
 ## [2.4.1] - 2023-03-20
 
