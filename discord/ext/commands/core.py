@@ -45,11 +45,11 @@ import discord
 
 from ...commands import (
     ApplicationCommand,
+    Option,
     _BaseCommand,
     message_command,
     slash_command,
     user_command,
-    Option
 )
 from ...enums import ChannelType
 from ...errors import *
@@ -567,7 +567,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             required = param.annotation.required or param.annotation.default is None
             default = param.annotation.default
         else:
-            required = (param.default is param.empty)
+            required = param.default is param.empty
             default = param.default
 
         converter = get_converter(param)
