@@ -636,8 +636,9 @@ class Intents(BaseFlags):
     @classmethod
     def all(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled."""
-        bits = max(cls.VALID_FLAGS.values()).bit_length()
-        value = ((1 << bits) - 1) - (1 << 19) - (1 << 18) - (1 << 17)  # Removing the unused flags
+        shifts = list(dict.fromkeys([flag.bit_length() - 1 for flag in cls.VALID_FLAGS.values()]))
+        value = sum(1 << shift for shift in shifts)
+
         self = cls.__new__(cls)
         self.value = value
         return self
