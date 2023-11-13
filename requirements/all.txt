@@ -1,4 +1,3 @@
--r dev.txt
--r docs.txt
--r speed.txt
--r voice.txt
+msgspec~=0.18.4
+aiohttp[speedups]
+PyNaCl>=1.3.0,<1.6
