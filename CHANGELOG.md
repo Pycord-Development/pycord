@@ -11,6 +11,7 @@ possible (see our [Version Guarantees] for more info).
 These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
+
 - Added one command to install both packages for speedup and voice support.
   ([#2261](https://github.com/Pycord-Development/pycord/pull/2261))
 - Added possibility to start bot via async context manager.
