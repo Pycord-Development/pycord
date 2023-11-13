@@ -56,6 +56,11 @@ To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, 
 
     python3 -m pip install -U py-cord[voice]
 
+
+To get both voice support and speedup with one command, you should use ``py-cord[all]`` instead of ``py-cord``, e.g. ::
+
+    python3 -m pip install -U py-cord[all]
+
 On Linux environments, installing voice requires getting the following dependencies:
 
 - `libffi <https://github.com/libffi/libffi>`_
