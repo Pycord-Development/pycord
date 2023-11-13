@@ -61,6 +61,7 @@ dependencies = {file = "requirements/_.txt"}
 docs = {file = "requirements/docs.txt"}
 speed = {file = "requirements/speed.txt"}
 voice = {file = "requirements/voice.txt"}
+all = {file = "requirements/all.txt"}
 
 [tool.setuptools_scm]
 
