@@ -142,7 +142,7 @@ class Option:
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
-        The autocomplete handler for the option. Use :func:`discord.utils.basic_autocomplete` to create the callable.
+        The autocomplete handler for the option. :func:`discord.utils.basic_autocomplete` may be used to create the callable.
 
         .. note::
 
