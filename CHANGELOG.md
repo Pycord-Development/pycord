@@ -182,6 +182,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
 - Fixed ffmpeg being terminated prematurely when piping audio stream.
   ([#2240](https://github.com/Pycord-Development/pycord/pull/2240))
+- Fixed tasks looping infinitely when `tzinfo` is neither `None` nor UTC.
+  ([#2196](https://github.com/Pycord-Development/pycord/pull/2196))
 
 ## [2.4.1] - 2023-03-20
 
