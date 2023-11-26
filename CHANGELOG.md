@@ -178,8 +178,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
 - Fixed a misplaced payload object inside of the thread creation payload.
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
-- Fixed tasks looping infinitely when `tzinfo` is neither `None` nor UTC.
-  ([#2196](https://github.com/Pycord-Development/pycord/pull/2196))
 - Fixed `DMChannel.recipient` being `None` and consequently `User.dm_channel` also being
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
 - Fixed ffmpeg being terminated prematurely when piping audio stream.
