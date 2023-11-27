@@ -575,7 +575,7 @@ class Loop(Generic[LF]):
             if self._current_loop == 0:
                 # if we're at the last index on the first iteration, we need to sleep until tomorrow
                 return datetime.datetime.combine(
-                    datetime.datetime.now(datetime.timezone.utc)
+                    datetime.datetime.now(self._time[0].tzinfo or datetime.timezone.utc)
                     + datetime.timedelta(days=1),
                     self._time[0],
                 )
@@ -584,18 +584,26 @@ class Loop(Generic[LF]):
 
         if self._current_loop == 0:
             self._time_index += 1
-            if next_time > datetime.datetime.now(datetime.timezone.utc).timetz():
+            if (
+                next_time
+                > datetime.datetime.now(
+                    next_time.tzinfo or datetime.timezone.utc
+                ).timetz()
+            ):
                 return datetime.datetime.combine(
-                    datetime.datetime.now(datetime.timezone.utc), next_time
+                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc),
+                    next_time,
                 )
             else:
                 return datetime.datetime.combine(
-                    datetime.datetime.now(datetime.timezone.utc)
+                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc)
                     + datetime.timedelta(days=1),
                     next_time,
                 )
 
-        next_date = cast(datetime.datetime, self._last_iteration)
+        next_date = cast(
+            datetime.datetime, self._last_iteration.astimezone(next_time.tzinfo)
+        )
         if next_time < next_date.timetz():
             next_date += datetime.timedelta(days=1)
 
