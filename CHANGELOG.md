@@ -171,6 +171,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2156](https://github.com/Pycord-Development/pycord/pull/2156))
 - Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`.
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
+- Fixed `_bytes_to_base64_data` not defined.
+  ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))
 - Fixed type-hinting of `values` argument of `basic_autocomplete` to include
   type-hinting of `Iterable[OptionChoice]`.
   ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))
@@ -180,6 +182,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 - Fixed `DMChannel.recipient` being `None` and consequently `User.dm_channel` also being
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
+- Fixed ffmpeg being terminated prematurely when piping audio stream.
+  ([#2240](https://github.com/Pycord-Development/pycord/pull/2240))
+- Fixed tasks looping infinitely when `tzinfo` is neither `None` nor UTC.
+  ([#2196](https://github.com/Pycord-Development/pycord/pull/2196))
 
 ## [2.4.1] - 2023-03-20
 
