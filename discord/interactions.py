@@ -191,10 +191,9 @@ class Interaction:
         self._permissions: int = 0
 
         self._guild: Guild | None = None
-        if self.guild is None and (_guild_data := data.get("guild")):
-            self._guild = Guild(data=data, state=self)
-
-        self._guild_data = _guild_data
+        self._guild_data = data.get("guild")
+        if self.guild is None and self._guild_data:
+            self._guild = Guild(data=self._guild_data, state=self)
 
         # TODO: there's a potential data loss here
         if self.guild_id:
