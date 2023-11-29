@@ -75,6 +75,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2206](https://github.com/Pycord-Development/pycord/pull/2206))
 - Added function `Guild.delete_auto_moderation_rule`.
   ([#2153](https://github.com/Pycord-Development/pycord/pull/2153))
+- Added `VoiceChannel.slowmode_delay`.
+  ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
 
 ### Changed
 
@@ -180,6 +182,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 - Fixed `DMChannel.recipient` being `None` and consequently `User.dm_channel` also being
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
+- Fixed ffmpeg being terminated prematurely when piping audio stream.
+  ([#2240](https://github.com/Pycord-Development/pycord/pull/2240))
+- Fixed tasks looping infinitely when `tzinfo` is neither `None` nor UTC.
+  ([#2196](https://github.com/Pycord-Development/pycord/pull/2196))
+- Fixed `AttributeError` when running permission checks without the `bot` scope.
+  ([#2113](https://github.com/Pycord-Development/pycord/issues/2113))
 - Fixed `Option` not working on bridge commands because `ext.commands.Command` doesn't
   recognize them. ([#2256](https://github.com/Pycord-Development/pycord/pull/2256))
 

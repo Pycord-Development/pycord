@@ -1329,6 +1329,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "user_limit",
         "_state",
         "position",
+        "slowmode_delay",
         "_overwrites",
         "category_id",
         "rtc_region",
@@ -1376,6 +1377,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
                 data, "last_message_id"
             )
             self.position: int = data.get("position")
+            self.slowmode_delay = data.get("rate_limit_per_user", 0)
             self.bitrate: int = data.get("bitrate")
             self.user_limit: int = data.get("user_limit")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
@@ -1483,6 +1485,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
 
         .. versionadded:: 2.0
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages
+        in this channel. A value of `0` denotes that it is disabled.
+        Bots and users with :attr:`~Permissions.manage_channels` or
+        :attr:`~Permissions.manage_messages` bypass slowmode.
+
+        .. versionadded:: 2.5
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
@@ -1791,6 +1800,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
+        slowmode_delay: int = ...,
         reason: str | None = ...,
     ) -> VoiceChannel | None:
         ...
