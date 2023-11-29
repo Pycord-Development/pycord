@@ -186,6 +186,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2240](https://github.com/Pycord-Development/pycord/pull/2240))
 - Fixed tasks looping infinitely when `tzinfo` is neither `None` nor UTC.
   ([#2196](https://github.com/Pycord-Development/pycord/pull/2196))
+- Fixed `AttributeError` when running permission checks without the `bot` scope.
+  ([#2113](https://github.com/Pycord-Development/pycord/issues/2113))
 
 ## [2.4.1] - 2023-03-20
 
