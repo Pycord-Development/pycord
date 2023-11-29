@@ -564,11 +564,11 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         if isinstance(param.annotation, Option):
-            required = param.annotation.required or param.annotation.default is None
             default = param.annotation.default
+            required = param.annotation.required or default is None
         else:
-            required = param.default is param.empty
             default = param.default
+            required = default is param.empty
 
         converter = get_converter(param)
         consume_rest_is_special = (
