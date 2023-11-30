@@ -180,8 +180,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2192](https://github.com/Pycord-Development/pycord/pull/2192))
 - Fixed `DMChannel.recipient` being `None` and consequently `User.dm_channel` also being
   `None`. ([#2219](https://github.com/Pycord-Development/pycord/pull/2219))
-- Fixed `discord.Intents.all()` returning the wrong value.
-  ([#2195](https://github.com/Pycord-Development/pycord/issues/2195))
+- Fixed `Intents.all()` returning the wrong value.
+  ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 
 ## [2.4.1] - 2023-03-20
 
