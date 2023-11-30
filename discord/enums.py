@@ -67,6 +67,7 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "ReactionType",
 )
 
 
@@ -942,6 +943,13 @@ class ApplicationRoleConnectionMetadataType(Enum):
     datetime_greater_than_or_equal = 6
     boolean_equal = 7
     boolean_not_equal = 8
+
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
 
 
 T = TypeVar("T")
